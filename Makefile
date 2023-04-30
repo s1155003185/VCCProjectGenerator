@@ -20,9 +20,11 @@
 
 # Gtest
 # to add new gtest, follow unittest
+# change project name in dynamic_library_test.cpp
+
 
 # Project Info
-PROJECT := libVCCCore
+PROJECT := libVCCProjGenerator
 
 # Compiler Info
 # must have CXXFLAGS for default compile flags, .cpp.o only use CXXFLAGS

@@ -32,9 +32,9 @@ struct DllHandle
 
 TEST(DllTest, LoadDll) {
     #ifdef _WIN32
-    const DllHandle h("libVCCCore.dll");
+    const DllHandle h("libVCCProjGenerator.dll");
     #else
-    const DllHandle h("bin/Debug/libVCCCore.so");
+    const DllHandle h("bin/Debug/libVCCProjGenerator.so");
     if (h.Get() == nullptr) {
         fprintf(stderr, "%s\n", dlerror());
     }
