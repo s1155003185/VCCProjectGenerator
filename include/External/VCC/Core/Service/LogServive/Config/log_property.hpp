@@ -12,7 +12,7 @@ namespace vcc
     {
         // General
         GETSET(bool, IsConsoleLog, true);
-        GETSET(PATH, FilePath, "");
+        GETSET(PATH, FilePath, L"");
         // Command
         GETSET(bool, IsLogCommand, true);
         GETSET(bool, IsLogCommandResult, true);

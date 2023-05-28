@@ -11,5 +11,5 @@ namespace vcc
     #endif
 
     #define THROW_EXCEPTION_DEBUG(exceptionType, message) \
-        throw Exception(exceptionType, str2wstr(__FILE__) + L":" + std::to_wstring(__LINE__) + L": " + message)
+        throw Exception(exceptionType, str2wstr(__FILE__) + L":" + std::to_wstring(__LINE__) + L":\r\n" + message)
 }

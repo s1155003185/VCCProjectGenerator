@@ -1,7 +1,9 @@
 #include "git_service.hpp"
 
+#include <filesystem>
 #include <regex>
 
+#include "exception_macro.hpp"
 #include "git_constant.hpp"
 #include "log_property.hpp"
 #include "process_service.hpp"
@@ -49,5 +51,28 @@ namespace vcc
         if (!workspace.empty())
             cmd += L" " + workspace;
         ProcessService::Execute(logProperty, GIT_LOG_ID, userId, cmd);
+    }
+
+
+    void GitService::CloneResponse(LogProperty &logProperty, std::wstring url, std::wstring branch, std::wstring dist)
+    {
+        std::wstring cmd = L"";
+        trim(dist);
+        std::wstring currentDirectory = std::filesystem::current_path().wstring();
+
+        try {
+            if (!dist.empty())
+                std::filesystem::current_path(dist);
+
+            std::wstring cmd = L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"");
+            ProcessService::Execute(logProperty, GIT_LOG_ID, L"", cmd);
+
+        } catch (Exception &ex) {
+            THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+        } catch (exception &ex) {
+            THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, str2wstr(std::string(ex.what())));
+        }
+        if (!dist.empty())
+            std::filesystem::current_path(currentDirectory);
     }
 }
