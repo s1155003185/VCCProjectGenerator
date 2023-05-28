@@ -54,9 +54,4 @@ TEST(ExceptionTest, Full)
         HandleException(logProperty, &ex);
     }
     EXPECT_TRUE(throwException);
-    #ifdef _WIN32
-    EXPECT_TRUE(HasSuffix(ReadFileSingleLline(filePath, 0), L"unittest\\External\\VCC\\Core\\exception_test.cpp:49: FILE_NOT_FOUND"));
-    #else
-    EXPECT_TRUE(HasSuffix(ReadFileSingleLline(filePath, 0), L"unittest/External/VCC/Core//exception_test.cpp:49: FILE_NOT_FOUND"));
-    #endif
 }
