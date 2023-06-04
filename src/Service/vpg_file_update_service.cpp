@@ -63,6 +63,9 @@ std::wstring VPGFileUpdateService::DownloadVCCResource(VPGDllType dllType, std::
 
 std::wstring VPGFileUpdateService::DownloadVCCResource(VPGInterfaceType interfaceType, std::wstring directory, bool forceUpdate, int64_t logLevel)
 {
+    if (directory.length() == 0) 
+        directory = VPGFileUpdateService::_DefaultFolder();
+
     std::wstring url = L"";
     switch (interfaceType) {
         case VPGInterfaceType::VCC:
