@@ -13,7 +13,7 @@
 
 using namespace vcc;
 
-static LogProperty logProperty;
+LogProperty logProperty;
 
 std::wstring VPGFileUpdateService::_DefaultFolder()
 {

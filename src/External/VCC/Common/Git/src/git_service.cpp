@@ -75,4 +75,28 @@ namespace vcc
         if (!dist.empty())
             std::filesystem::current_path(currentDirectory);
     }
+
+    bool GitService::IsGitResponse(LogProperty &logProperty, std::wstring workspace)
+    {
+        std::wstring cmd = L"";
+        trim(workspace);
+        std::wstring currentDirectory = std::filesystem::current_path().wstring();
+
+        bool result = false;
+        try {
+            if (!workspace.empty())
+                std::filesystem::current_path(workspace);
+
+            std::wstring cmd = L"git rev-parse --git-dir";
+            ProcessService::Execute(logProperty, GIT_LOG_ID, L"", cmd);
+            result = true;
+        } catch (Exception &ex) {
+            THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+        } catch (exception &ex) {
+            THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, str2wstr(std::string(ex.what())));
+        }
+        if (!workspace.empty())
+            std::filesystem::current_path(currentDirectory);
+        return result;
+    }
 }

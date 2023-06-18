@@ -38,6 +38,10 @@ TEST_F(GitServiceTest, Version)
 
 TEST_F(GitServiceTest, InitializeLocalResponse)
 {
+    // init
     GitService::InitializeWorkspace(*this->GetLogPropery(), L"", this->GetWorkspace());
     EXPECT_TRUE(filesystem::exists(this->GetWorkspace() + L"/.git/HEAD"));
+    
+    // check existance
+    EXPECT_TRUE(GitService::IsGitResponse(*this->GetLogPropery(), this->GetWorkspace()));
 }

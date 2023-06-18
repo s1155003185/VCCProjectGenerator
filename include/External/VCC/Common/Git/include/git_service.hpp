@@ -21,5 +21,7 @@ namespace vcc
         static void InitializeWorkspace(LogProperty &logProperty, std::wstring userId, std::wstring workspace);
     
         static void CloneResponse(LogProperty &logProperty, std::wstring url, std::wstring branch, std::wstring dist);
+
+        static bool IsGitResponse(LogProperty &logProperty, std::wstring workspace);
     };
 }
