@@ -22,7 +22,6 @@ namespace vcc
             ProcessService() : BaseService() {}
             ~ProcessService() {}
 
-            static std::wstring Execute(std::wstring command);
-            static std::wstring Execute(LogProperty &logProperty, std::wstring id, std::wstring userId, std::wstring command);
+            static std::wstring Execute(LogProperty &logProperty, std::wstring id, std::wstring command);
     };
 }

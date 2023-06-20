@@ -8,15 +8,9 @@
 
 namespace vcc
 {
-    std::wstring CommandService::Execute(std::wstring cmd)
+    std::wstring CommandService::Execute(LogProperty &logProperty, std::wstring id, std::wstring cmd)
     {
-        LogProperty defaultLogProperty;
-        return CommandService::Execute(defaultLogProperty, L"", L"", cmd);
-    }
-
-    std::wstring CommandService::Execute(LogProperty &logProperty, std::wstring id, std::wstring userId, std::wstring cmd)
-    {
-        LogService::LogCommand(logProperty, id, userId, cmd);
+        LogService::LogCommand(logProperty, id, cmd);
 
         char buffer[1024];
         FILE* p = popen(wstr2str(cmd).c_str(), "r");
@@ -40,7 +34,7 @@ namespace vcc
         if (WEXITSTATUS(status) != 0)
         #endif
             THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, result);
-        LogService::LogCommandResult(logProperty, id, userId, result);
+        LogService::LogCommandResult(logProperty, id, result);
         return result;
     }
 }

@@ -13,29 +13,18 @@
 
 using namespace vcc;
 
-LogProperty logProperty;
-
-std::wstring VPGFileUpdateService::_DefaultFolder()
+std::wstring VPGFileUpdateService::_DefaultFolder(LogProperty &logProperty)
 {
     #ifdef __WIN32
     static_assert(false); // need to consider window documents path
     #endif
 
-    return CommandService::Execute(L"echo ~/Documents");
+    return CommandService::Execute(logProperty, L"", L"echo ~/Documents");
 }
 
-void InitLogProperty()
-{
-    logProperty.SetIsConsoleLog(true);
-    logProperty.SetFilePath(std::filesystem::current_path());
-    logProperty.SetIsLogCommand(true);
-    logProperty.SetIsLogCommandResult(true);
-}
-
-std::wstring VPGFileUpdateService::_DownloadVCCResource(std::wstring url, wstring branch, std::wstring directory, bool forceUpdate, int64_t logLevel)
+std::wstring VPGFileUpdateService::_DownloadVCCResource(LogProperty &logProperty, std::wstring url, wstring branch, std::wstring directory, bool forceUpdate, int64_t logLevel)
 {
     try {
-        InitLogProperty();
         GitService::CloneResponse(logProperty, url, branch, directory);
     } catch (Exception &ex) {
         THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
@@ -43,10 +32,10 @@ std::wstring VPGFileUpdateService::_DownloadVCCResource(std::wstring url, wstrin
     return L"";
 }
 
-std::wstring VPGFileUpdateService::DownloadVCCResource(VPGDllType dllType, std::wstring directory, bool forceUpdate, int64_t logLevel)
+std::wstring VPGFileUpdateService::DownloadVCCResource(LogProperty &logProperty, VPGDllType dllType, std::wstring directory, bool forceUpdate, int64_t logLevel)
 {
     if (directory.length() == 0) 
-        directory = VPGFileUpdateService::_DefaultFolder();
+        directory = VPGFileUpdateService::_DefaultFolder(logProperty);
 
     std::wstring url = L"";
     switch (dllType) {
@@ -57,14 +46,14 @@ std::wstring VPGFileUpdateService::DownloadVCCResource(VPGDllType dllType, std::
             url = L"https://github.com/s1155003185/VCCSimpleTemplateDLL.git";
             break;
     }
-    VPGFileUpdateService::_DownloadVCCResource(url, L"", directory, forceUpdate, logLevel);
+    VPGFileUpdateService::_DownloadVCCResource(logProperty, url, L"", directory, forceUpdate, logLevel);
     return L"";
 }
 
-std::wstring VPGFileUpdateService::DownloadVCCResource(VPGInterfaceType interfaceType, std::wstring directory, bool forceUpdate, int64_t logLevel)
+std::wstring VPGFileUpdateService::DownloadVCCResource(LogProperty &logProperty, VPGInterfaceType interfaceType, std::wstring directory, bool forceUpdate, int64_t logLevel)
 {
     if (directory.length() == 0) 
-        directory = VPGFileUpdateService::_DefaultFolder();
+        directory = VPGFileUpdateService::_DefaultFolder(logProperty);
 
     std::wstring url = L"";
     switch (interfaceType) {
@@ -75,6 +64,6 @@ std::wstring VPGFileUpdateService::DownloadVCCResource(VPGInterfaceType interfac
             url = L"https://github.com/s1155003185/VCCSimpleTemplateEXE.git";
             break;
     }
-    VPGFileUpdateService::_DownloadVCCResource(url, L"", directory, forceUpdate, logLevel);
+    VPGFileUpdateService::_DownloadVCCResource(logProperty, url, L"", directory, forceUpdate, logLevel);
     return L"";
 }

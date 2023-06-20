@@ -51,7 +51,7 @@ TEST(ExceptionTest, Full)
     catch(exception &ex)
     {
         throwException = true;
-        HandleException(logProperty, &ex);
+        HandleException(logProperty, L"", &ex);
     }
     EXPECT_TRUE(throwException);
 }

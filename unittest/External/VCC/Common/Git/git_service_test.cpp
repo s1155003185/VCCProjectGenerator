@@ -32,14 +32,14 @@ class GitServiceTest : public testing::Test
 
 TEST_F(GitServiceTest, Version)
 {
-    std::wstring version = GitService::GetVersion(*this->GetLogPropery(), L"");
+    std::wstring version = GitService::GetVersion(*this->GetLogPropery());
     EXPECT_TRUE(regex_match(version, wregex(L"[0-9]+.[0-9]+.[0-9]+")));
 }
 
 TEST_F(GitServiceTest, InitializeLocalResponse)
 {
     // init
-    GitService::InitializeWorkspace(*this->GetLogPropery(), L"", this->GetWorkspace());
+    GitService::InitializeWorkspace(*this->GetLogPropery(), this->GetWorkspace());
     EXPECT_TRUE(filesystem::exists(this->GetWorkspace() + L"/.git/HEAD"));
     
     // check existance

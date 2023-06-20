@@ -10,28 +10,16 @@
 #include "string_helper.hpp"
 
 namespace vcc
-{
-    std::wstring GitService::Execute(std::wstring command)
+{   
+    std::wstring GitService::Execute(LogProperty &logProperty, std::wstring command)
     {
-        LogProperty defaultLogProperty;
-        return GitService::Execute(defaultLogProperty, L"", command);
+        return ProcessService::Execute(logProperty, GIT_LOG_ID, command);
     }
     
-    std::wstring GitService::Execute(LogProperty &logProperty, std::wstring userId, std::wstring command)
-    {
-        return ProcessService::Execute(logProperty, GIT_LOG_ID, userId, command);
-    }
-
-    std::wstring GitService::GetVersion()
-    {
-        LogProperty defaultLogProperty;
-        return GitService::GetVersion(defaultLogProperty, L"");
-    }
-    
-    std::wstring GitService::GetVersion(LogProperty &logProperty, std::wstring userId)
+    std::wstring GitService::GetVersion(LogProperty &logProperty)
     {
         std::wstring cmd = L"git --version";
-        std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, userId, cmd);
+        std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, cmd);
         
         std::wsmatch m;
         if (std::regex_search(cmdResult, m, std::wregex(L"[0-9]+.[0-9]+.[0-9]+")))
@@ -39,18 +27,12 @@ namespace vcc
         return L"";
     }
 
-    void GitService::InitializeWorkspace(std::wstring workspace)
-    {
-        LogProperty defaultLogProperty;
-        GitService::InitializeWorkspace(defaultLogProperty, L"", workspace);
-    }
-
-    void GitService::InitializeWorkspace(LogProperty &logProperty, std::wstring userId, std::wstring workspace)
+    void GitService::InitializeWorkspace(LogProperty &logProperty, std::wstring workspace)
     {
         std::wstring cmd = L"git init";
         if (!workspace.empty())
             cmd += L" " + workspace;
-        ProcessService::Execute(logProperty, GIT_LOG_ID, userId, cmd);
+        ProcessService::Execute(logProperty, GIT_LOG_ID, cmd);
     }
 
 
@@ -65,7 +47,7 @@ namespace vcc
                 std::filesystem::current_path(dist);
 
             std::wstring cmd = L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"");
-            ProcessService::Execute(logProperty, GIT_LOG_ID, L"", cmd);
+            ProcessService::Execute(logProperty, GIT_LOG_ID, cmd);
 
         } catch (Exception &ex) {
             THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
@@ -88,7 +70,7 @@ namespace vcc
                 std::filesystem::current_path(workspace);
 
             std::wstring cmd = L"git rev-parse --git-dir";
-            ProcessService::Execute(logProperty, GIT_LOG_ID, L"", cmd);
+            ProcessService::Execute(logProperty, GIT_LOG_ID, cmd);
             result = true;
         } catch (Exception &ex) {
             THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());

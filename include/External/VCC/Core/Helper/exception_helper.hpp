@@ -9,18 +9,18 @@
 
 namespace vcc
 {
-    inline void HandleException(LogProperty &logProperty, exception *ex)
+    inline void HandleException(LogProperty &logProperty, std::wstring id, exception *ex)
     {
         IException *iex = dynamic_cast<IException *>(ex); 
         if (iex != nullptr)
-            LogService::LogError(logProperty, iex->GetErrorMessage());
+            LogService::LogError(logProperty, id, iex->GetErrorMessage());
         else
-            LogService::LogError(logProperty, str2wstr(std::string(ex->what())));
+            LogService::LogError(logProperty, id, str2wstr(std::string(ex->what())));
     }
 
-    inline void HandleException(exception *ex)
+    inline void HandleException(std::wstring id, exception *ex)
     {
         LogProperty defaultProperty;
-        HandleException(defaultProperty, ex);
+        HandleException(defaultProperty, id, ex);
     }
 }

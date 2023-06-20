@@ -3,6 +3,7 @@
 #include "class_macro.hpp"
 
 #include "action_type.hpp"
+#include "log_property.hpp"
 #include "log_service.hpp"
 
 namespace vcc
@@ -22,15 +23,19 @@ namespace vcc
             virtual void _LogRedo() 
             { 
                 std::wstring message = this->_GetRedoMessage();
-                if (!message.empty()) 
-                    LogService::LogInfo(message); 
+                if (!message.empty()) {
+                    LogProperty defaultProperty;
+                    LogService::LogInfo(defaultProperty, L"", message); 
+                }
             }
             
             virtual void _LogUndo() 
             { 
                 std::wstring message = this->_GetUndoMessage();
-                if (!message.empty()) 
-                    LogService::LogInfo(message); 
+                if (!message.empty()) {
+                    LogProperty defaultProperty;
+                    LogService::LogInfo(defaultProperty, L"", message); 
+                }
             }
 
         public:   
