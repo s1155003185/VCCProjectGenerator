@@ -6,11 +6,15 @@
 #include "file_constant.hpp"
 #include "log_type.hpp"
 
+#include <string>
+
 namespace vcc
 {
     class LogProperty : public BaseProperty
     {
         // General
+        GETSET(std::wstring, UserID, L"");
+        
         GETSET(bool, IsConsoleLog, true);
         GETSET(PATH, FilePath, L"");
         // Command

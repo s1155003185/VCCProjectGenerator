@@ -13,7 +13,7 @@ TEST(ProcessTest, Normal)
     logProperty.SetIsConsoleLog(false);
     logProperty.SetIsLogCommand(false);
     logProperty.SetIsLogCommandResult(false);
-    EXPECT_TRUE(HasPrefix(ProcessService::Execute(logProperty, L"", L"", L"git --version"), L"git version"));
+    EXPECT_TRUE(HasPrefix(ProcessService::Execute(logProperty, L"", L"git --version"), L"git version"));
 }
 
 TEST(ProcessTest, Exception)
@@ -25,7 +25,7 @@ TEST(ProcessTest, Exception)
 
     bool isError = false;
     try {
-        ProcessService::Execute(logProperty, L"", L"", L"git -version");
+        ProcessService::Execute(logProperty, L"", L"git -version");
     } catch (exception &e) {
         string exceptStr(e.what());
         EXPECT_TRUE(exceptStr.find("unknown option") != string::npos);

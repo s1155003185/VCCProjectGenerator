@@ -105,15 +105,9 @@ namespace vcc
             #endif
         }
 
-        std::wstring ProcessService::Execute(std::wstring command)
+        std::wstring ProcessService::Execute(LogProperty &logProperty, std::wstring id, std::wstring command)
         {
-            LogProperty defaultProperty;
-            return ProcessService::Execute(defaultProperty, L"PROCESS", L"", command);
-        }
-
-        std::wstring ProcessService::Execute(LogProperty &logProperty, std::wstring id, std::wstring userId, std::wstring command)
-        {
-            LogService::LogProcess(logProperty, id, userId, command);
+            LogService::LogProcess(logProperty, id, command);
 
             std::wstring result = L"";
             try {
@@ -121,7 +115,7 @@ namespace vcc
             } catch (exception &e) {
                 THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, str2wstr(std::string(e.what())));
             }
-            LogService::LogProcessResult(logProperty, id, userId, result);
+            LogService::LogProcessResult(logProperty, id, result);
             return result;
         }
 }

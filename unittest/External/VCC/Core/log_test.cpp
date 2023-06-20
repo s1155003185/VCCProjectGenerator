@@ -15,6 +15,7 @@ TEST(LogServiceTest, LogTest)
     remove(filePath);
     
     LogProperty property;
+    property.SetUserID(L"user");
     property.SetIsConsoleLog(false);
     property.SetIsLogCommand(true);
     property.SetIsLogCommandResult(true);
@@ -23,15 +24,15 @@ TEST(LogServiceTest, LogTest)
     property.SetIsLogSQL(true);
     property.SetIsLogSQLResult(true);
     property.SetFilePath(filePath);
-    std::wstring logInfoStr = LogService::LogInfo(property, L"id", L"user", L"message");
-    std::wstring logWarningStr = LogService::LogWarning(property, L"id", L"user", L"message");
-    std::wstring logErrorStr = LogService::LogError(property, L"id", L"user", L"message");
-    std::wstring logCommandStr = LogService::LogCommand(property, L"id", L"user", L"message");
-    std::wstring logCommandResultStr = LogService::LogCommandResult(property, L"id", L"user", L"message");
-    std::wstring logProcessStr = LogService::LogProcess(property, L"id", L"user", L"message");
-    std::wstring logProcessResultStr = LogService::LogProcessResult(property, L"id", L"user", L"message");
-    std::wstring logSQLStr = LogService::LogSQL(property, L"id", L"user", L"message");
-    std::wstring logSQLResultStr = LogService::LogSQLResult(property, L"id", L"user", L"message");
+    std::wstring logInfoStr = LogService::LogInfo(property, L"id", L"message");
+    std::wstring logWarningStr = LogService::LogWarning(property, L"id", L"message");
+    std::wstring logErrorStr = LogService::LogError(property, L"id", L"message");
+    std::wstring logCommandStr = LogService::LogCommand(property, L"id", L"message");
+    std::wstring logCommandResultStr = LogService::LogCommandResult(property, L"id", L"message");
+    std::wstring logProcessStr = LogService::LogProcess(property, L"id", L"message");
+    std::wstring logProcessResultStr = LogService::LogProcessResult(property, L"id", L"message");
+    std::wstring logSQLStr = LogService::LogSQL(property, L"id", L"message");
+    std::wstring logSQLResultStr = LogService::LogSQLResult(property, L"id", L"message");
     EXPECT_EQ(logInfoStr, ReadFileSingleLline(filePath, 0));
     EXPECT_EQ(logWarningStr, ReadFileSingleLline(filePath, 1));
     EXPECT_EQ(logErrorStr, ReadFileSingleLline(filePath, 2));
