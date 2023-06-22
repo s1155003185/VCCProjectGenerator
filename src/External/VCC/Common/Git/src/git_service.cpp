@@ -29,12 +29,13 @@ namespace vcc
 
     void GitService::InitializeWorkspace(LogProperty &logProperty, std::wstring workspace)
     {
-        std::wstring cmd = L"git init";
-        if (!workspace.empty())
-            cmd += L" " + workspace;
-        ProcessService::Execute(logProperty, GIT_LOG_ID, cmd);
+        try {
+            std::wstring cmd = L"git init";
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
+        } catch (Exception &ex) {
+            THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+        }
     }
-
 
     void GitService::CloneResponse(LogProperty &logProperty, std::wstring url, std::wstring branch, std::wstring dist)
     {
@@ -43,8 +44,6 @@ namespace vcc
             ProcessService::Execute(logProperty, GIT_LOG_ID, dist, cmd);
         } catch (Exception &ex) {
             THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
-        } catch (exception &ex) {
-            THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, str2wstr(std::string(ex.what())));
         }
     }
 
@@ -57,8 +56,6 @@ namespace vcc
             result = true;
         } catch (Exception &ex) {
             THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
-        } catch (exception &ex) {
-            THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, str2wstr(std::string(ex.what())));
         }
         return result;
     }

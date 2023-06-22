@@ -135,19 +135,18 @@ namespace vcc
                 THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, str2wstr(std::string(e.what())));
                 return result;
             }
-            
             try {
                 result = ProcessService::Execute(logProperty, id, command);
             } catch (Exception &e) {
                 THROW_EXCEPTION(e.GetErrorType(), e.GetErrorMessage());
-            } 
+            }
             try {
                 if (!workspace.empty())
                     std::filesystem::current_path(currentDirectory);
             } catch (exception &e) {
                 THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, str2wstr(std::string(e.what())));
                 return result;
-            }
+            }            
             return result;
         }
 }
