@@ -35,6 +35,8 @@ namespace vcc
         #endif
             THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, result);
         LogService::LogCommandResult(logProperty, id, result);
+
+        trim(result);
         return result;
     }
 }

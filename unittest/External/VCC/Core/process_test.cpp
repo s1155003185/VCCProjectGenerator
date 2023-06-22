@@ -16,6 +16,15 @@ TEST(ProcessTest, Normal)
     EXPECT_TRUE(HasPrefix(ProcessService::Execute(logProperty, L"", L"git --version"), L"git version"));
 }
 
+TEST(ProcessTest, NormalWithWorkspace)
+{
+    LogProperty logProperty;
+    logProperty.SetIsConsoleLog(false);
+    logProperty.SetIsLogCommand(false);
+    logProperty.SetIsLogCommandResult(false);
+    EXPECT_TRUE(HasPrefix(ProcessService::Execute(logProperty, L"", L"..", L"git --version"), L"git version"));
+}
+
 TEST(ProcessTest, Exception)
 {
     LogProperty logProperty;
