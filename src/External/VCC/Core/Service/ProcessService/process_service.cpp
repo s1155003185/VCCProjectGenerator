@@ -107,6 +107,8 @@ namespace vcc
 
         std::wstring ProcessService::Execute(LogProperty &logProperty, std::wstring id, std::wstring command)
         {
+            trim(command);
+
             LogService::LogProcess(logProperty, id, command);
 
             std::wstring result = L"";
@@ -116,6 +118,36 @@ namespace vcc
                 THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, str2wstr(std::string(e.what())));
             }
             LogService::LogProcessResult(logProperty, id, result);
+            trim(result);
+            return result;
+        }
+
+        std::wstring ProcessService::Execute(LogProperty &logProperty, std::wstring id, std::wstring workspace, std::wstring command)
+        {
+            trim(workspace);
+            std::wstring currentDirectory = L"";
+            std::wstring result = L"";
+            try {
+                currentDirectory = std::filesystem::current_path().wstring();
+                if (!workspace.empty())
+                    std::filesystem::current_path(workspace);
+            } catch (exception &e) {
+                THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, str2wstr(std::string(e.what())));
+                return result;
+            }
+            
+            try {
+                result = ProcessService::Execute(logProperty, id, command);
+            } catch (Exception &e) {
+                THROW_EXCEPTION(e.GetErrorType(), e.GetErrorMessage());
+            } 
+            try {
+                if (!workspace.empty())
+                    std::filesystem::current_path(currentDirectory);
+            } catch (exception &e) {
+                THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, str2wstr(std::string(e.what())));
+                return result;
+            }
             return result;
         }
 }

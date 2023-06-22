@@ -38,47 +38,28 @@ namespace vcc
 
     void GitService::CloneResponse(LogProperty &logProperty, std::wstring url, std::wstring branch, std::wstring dist)
     {
-        std::wstring cmd = L"";
-        trim(dist);
-        std::wstring currentDirectory = std::filesystem::current_path().wstring();
-
         try {
-            if (!dist.empty())
-                std::filesystem::current_path(dist);
-
             std::wstring cmd = L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"");
-            ProcessService::Execute(logProperty, GIT_LOG_ID, cmd);
-
+            ProcessService::Execute(logProperty, GIT_LOG_ID, dist, cmd);
         } catch (Exception &ex) {
             THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
         } catch (exception &ex) {
             THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, str2wstr(std::string(ex.what())));
         }
-        if (!dist.empty())
-            std::filesystem::current_path(currentDirectory);
     }
 
     bool GitService::IsGitResponse(LogProperty &logProperty, std::wstring workspace)
     {
-        std::wstring cmd = L"";
-        trim(workspace);
-        std::wstring currentDirectory = std::filesystem::current_path().wstring();
-
         bool result = false;
         try {
-            if (!workspace.empty())
-                std::filesystem::current_path(workspace);
-
             std::wstring cmd = L"git rev-parse --git-dir";
-            ProcessService::Execute(logProperty, GIT_LOG_ID, cmd);
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
             result = true;
         } catch (Exception &ex) {
             THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
         } catch (exception &ex) {
             THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, str2wstr(std::string(ex.what())));
         }
-        if (!workspace.empty())
-            std::filesystem::current_path(currentDirectory);
         return result;
     }
 }
