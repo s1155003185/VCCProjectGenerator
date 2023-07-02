@@ -8,7 +8,6 @@ namespace vcc
 {
     class BaseManager : public IManager
     {
-        THREAD_SAFE
         GET(ManagerType, Type, ManagerType::NA)
 
     protected:

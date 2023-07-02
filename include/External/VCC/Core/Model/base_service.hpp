@@ -7,7 +7,6 @@ namespace vcc
 {
     class BaseService : public IService
     {
-        THREAD_SAFE
         protected:
             BaseService() {}
             ~BaseService() {}

@@ -121,6 +121,7 @@
         "variant": "cpp",
         "__functional_base_03": "cpp",
         "__memory": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "shared_mutex": "cpp"
     }
 }
