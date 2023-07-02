@@ -7,7 +7,6 @@ namespace vcc
 {
     class BaseProperty : public IProperty
     {
-        THREAD_SAFE
         protected:
             BaseProperty() {}
             ~BaseProperty() {}

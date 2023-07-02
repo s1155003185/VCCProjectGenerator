@@ -3,6 +3,8 @@
 #include "i_action.hpp"
 
 #include <memory>
+#include <mutex>
+#include <shared_mutex>
 #include <stdint.h>
 
 namespace vcc
@@ -15,6 +17,8 @@ namespace vcc
         GET(int64_t, MaxSeqNo, -1)
 
     private:
+        mutable std::shared_mutex _mutex;
+
         int64_t _GetFirstSeqNo(bool fromBeginning);
         int64_t _Redo(int64_t noOfStep);
         int64_t _Undo(int64_t noOfStep);

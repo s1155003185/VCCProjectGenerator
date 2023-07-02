@@ -8,7 +8,6 @@ namespace vcc
 {
     class BaseObject : public IObject
     {
-        THREAD_SAFE
         GET(ObjectType, Type, ObjectType::NA)
 
         protected:

@@ -14,7 +14,6 @@ using namespace vcc;
 
 class GitServiceTest : public testing::Test 
 {
-    THREAD_SAFE
     GETOBJ(LogProperty, LogPropery);
     GET(wstring, Workspace, L"bin/Debug/Git/");
     public:
@@ -38,6 +37,9 @@ TEST_F(GitServiceTest, Version)
 
 TEST_F(GitServiceTest, InitializeLocalResponse)
 {
+    if (!std::filesystem::exists(this->GetWorkspace()))
+        std::filesystem::create_directory(this->GetWorkspace());
+
     // init
     GitService::InitializeWorkspace(*this->GetLogPropery(), this->GetWorkspace());
     EXPECT_TRUE(filesystem::exists(this->GetWorkspace() + L"/.git/HEAD"));

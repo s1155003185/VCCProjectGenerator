@@ -6,14 +6,18 @@
 #include "log_property.hpp"
 #include "log_service.hpp"
 
+#include <mutex>
+#include <shared_mutex>
+
 namespace vcc
 {
     class BaseAction : public IAction
     {
-        THREAD_SAFE
         GET(ActionType, Type, ActionType::NA)
 
         private:
+            mutable std::shared_mutex _mutex;
+
             size_t _SeqNo = 0;
             BaseAction() {}
         protected:
@@ -39,19 +43,29 @@ namespace vcc
             }
 
         public:   
-            virtual size_t GetSeqNo() override { LOCK_GUAND; return this->_SeqNo; }
-            virtual void SetSeqNo(size_t seqNo) override { LOCK_GUAND; this->_SeqNo = seqNo; }
+            virtual size_t GetSeqNo() override 
+            { 
+                std::shared_lock lock(this->_mutex); 
+                return this->_SeqNo;
+            }
+            virtual void SetSeqNo(size_t seqNo) override 
+            { 
+                std::unique_lock lock(this->_mutex); 
+                this->_SeqNo = seqNo; 
+            }
 
             virtual void Redo() override 
             {
-                LOCK_GUAND;
+                std::unique_lock lock(this->_mutex);
+
                 this->_DoRedo();
                 this->_LogRedo();
             }
 
             virtual void Undo() override
             {
-                LOCK_GUAND;
+                std::unique_lock lock(this->_mutex);
+
                 this->_DoUndo();
                 this->_LogUndo();
             }
