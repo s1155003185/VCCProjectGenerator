@@ -27,23 +27,25 @@ namespace vcc
         return L"";
     }
 
-    void GitService::InitializeWorkspace(LogProperty &logProperty, std::wstring workspace)
+    std::wstring GitService::InitializeWorkspace(LogProperty &logProperty, std::wstring workspace)
     {
         try {
             std::wstring cmd = L"git init";
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
+            return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
         } catch (Exception &ex) {
             THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
         }
+        return L"";
     }
 
-    void GitService::CloneResponse(LogProperty &logProperty, std::wstring url, std::wstring branch, std::wstring dist)
+    std::wstring GitService::CloneResponse(LogProperty &logProperty, std::wstring url, std::wstring branch, std::wstring dist)
     {
         try {
             std::wstring cmd = L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"");
-            ProcessService::Execute(logProperty, GIT_LOG_ID, dist, cmd);
+            return ProcessService::Execute(logProperty, GIT_LOG_ID, dist, cmd);
         } catch (Exception &ex) {
             THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+            return L"";
         }
     }
 
