@@ -9,21 +9,14 @@ using namespace vcc;
 
 TEST(CommandTest, Normal)
 {
-    LogProperty logProperty;
-    logProperty.SetIsConsoleLog(false);
-    logProperty.SetIsLogCommand(false);
-    logProperty.SetIsLogCommandResult(false);
+    LogProperty logProperty(LogPropertyType::None);
     EXPECT_TRUE(HasPrefix(CommandService::Execute(logProperty, L"", L"git --version"), L"git version"));
 }
 
 // Terminal cannot cap exception console log
 // TEST(CommandTest, Exception)
 // {
-//     LogProperty logProperty;
-//     logProperty.SetIsConsoleLog(false);
-//     logProperty.SetIsLogCommand(false);
-//     logProperty.SetIsLogCommandResult(false);
-    
+//     LogProperty logProperty(LogPropertyType::None);
 //     bool isException = false;
 //     try {
 //         CommandService::Execute(logProperty, L"", "git -version");
