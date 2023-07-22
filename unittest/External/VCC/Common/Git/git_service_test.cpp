@@ -46,4 +46,8 @@ TEST_F(GitServiceTest, InitializeLocalResponse)
     
     // check existance
     EXPECT_TRUE(GitService::IsGitResponse(*this->GetLogPropery(), this->GetWorkspace()));
+
+    // pull
+    // cannot test for local response
+    //EXPECT_NO_THROW(GitService::Pull(*this->GetLogPropery(), this->GetWorkspace()));
 }

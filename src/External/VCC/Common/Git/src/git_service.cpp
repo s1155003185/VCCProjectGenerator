@@ -16,6 +16,7 @@ namespace vcc
         return ProcessService::Execute(logProperty, GIT_LOG_ID, command);
     }
     
+    // General
     std::wstring GitService::GetVersion(LogProperty &logProperty)
     {
         std::wstring cmd = L"git --version";
@@ -27,6 +28,21 @@ namespace vcc
         return L"";
     }
 
+    // Validation
+    bool GitService::IsGitResponse(LogProperty &logProperty, std::wstring workspace)
+    {
+        bool result = false;
+        try {
+            std::wstring cmd = L"git rev-parse --git-dir";
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
+            result = true;
+        } catch (Exception &ex) {
+            THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+        }
+        return result;
+    }
+
+    // Initialization
     std::wstring GitService::InitializeWorkspace(LogProperty &logProperty, std::wstring workspace)
     {
         try {
@@ -49,16 +65,15 @@ namespace vcc
         }
     }
 
-    bool GitService::IsGitResponse(LogProperty &logProperty, std::wstring workspace)
+    // Action
+    std::wstring GitService::Pull(LogProperty &logProperty, std::wstring workspace)
     {
-        bool result = false;
         try {
-            std::wstring cmd = L"git rev-parse --git-dir";
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
-            result = true;
+            std::wstring cmd = L"git pull";
+            return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
         } catch (Exception &ex) {
             THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+            return L"";
         }
-        return result;
     }
 }
