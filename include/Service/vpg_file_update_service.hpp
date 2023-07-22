@@ -12,12 +12,12 @@ class VPGFileUpdateService
 {
     private:
         static std::wstring _DefaultFolder(LogProperty &logProperty);
-        static std::wstring _DownloadVCCResource(LogProperty &logProperty, std::wstring url, std::wstring branch, std::wstring directory, bool forceUpdate, int64_t logLevel);
+        static std::wstring _DownloadVCCResource(LogProperty &logProperty, std::wstring url, std::wstring branch, std::wstring directory, bool forceUpdate);
 
     public:
         VPGFileUpdateService() {}
         ~VPGFileUpdateService() {}
 
-        static std::wstring DownloadVCCResource(LogProperty &logProperty, VPGDllType dllType, std::wstring directory, bool forceUpdate, int64_t logLevel);
-        static std::wstring DownloadVCCResource(LogProperty &logProperty, VPGInterfaceType interfaceType, std::wstring directory, bool forceUpdate, int64_t logLevel);
+        static std::wstring DownloadVCCResource(LogProperty &logProperty, VPGDllType dllType, std::wstring directory, bool forceUpdate);
+        static std::wstring DownloadVCCResource(LogProperty &logProperty, VPGInterfaceType interfaceType, std::wstring directory, bool forceUpdate);
 };
