@@ -6,22 +6,20 @@
 
 // command the test because require connection
 
-// TEST(FileUpdateService, Download_ForceUpdate)
+// TEST(FileUpdateService, Download)
 // {
 //     LogProperty logProperty(LogPropertyType::None);
-
-//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGDllType::VCC, L"", true);
-//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGDllType::CPP, L"", true);
-//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGInterfaceType::VCC, L"", true);
-//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGInterfaceType::CPP, L"", true);
+//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGDllType::VCC, L"");
+//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGDllType::CPP, L"");
+//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGInterfaceType::VCC, L"");
+//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGInterfaceType::CPP, L"");
 // }
 
-// TEST(FileUpdateService, Download_ProjectExist)
+// TEST(FileUpdateService, Upload)
 // {
 //     LogProperty logProperty(LogPropertyType::None);
-
-//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGDllType::VCC, L"", false);
-//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGDllType::CPP, L"", false);
-//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGDllType::VCC, L"",  false);
-//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGDllType::CPP, L"", false);
+//     VPGFileUpdateService::UpdateVCCResource(logProperty, VPGDllType::VCC, L"");
+//     VPGFileUpdateService::UpdateVCCResource(logProperty, VPGDllType::CPP, L"");
+//     VPGFileUpdateService::UpdateVCCResource(logProperty, VPGInterfaceType::VCC, L"");
+//     VPGFileUpdateService::UpdateVCCResource(logProperty, VPGInterfaceType::CPP, L"");
 // }

@@ -8,67 +8,135 @@
 #include "command_service.hpp"
 #include "exception.hpp"
 #include "exception_macro.hpp"
+#include "file_constant.hpp"
+#include "file_helper.hpp"
 #include "git_service.hpp"
 #include "log_property.hpp"
 
 using namespace vcc;
 
+constexpr auto URL = L"https://github.com/s1155003185/";
+constexpr auto URL_GIT = L".git"; 
+constexpr auto CPP_DLL =  L"VCCSimpleTemplateDLL";
+constexpr auto CPP_EXE = L"VCCSimpleTemplateEXE";
+constexpr auto VCC_DLL = L"VCCModuleDLL";
+constexpr auto VCC_EXE = L"VCCModuleDLL";
+
+
+
 std::wstring VPGFileUpdateService::_DefaultFolder(LogProperty &logProperty)
 {
-    #ifdef __WIN32
-    static_assert(false); // need to consider window documents path
-    #endif
-
-    return CommandService::Execute(logProperty, L"", L"echo ~/Documents");
-}
-
-std::wstring VPGFileUpdateService::_DownloadVCCResource(LogProperty &logProperty, std::wstring url, wstring branch, std::wstring directory, bool forceUpdate)
-{
-    std::wstring result = L"";
     try {
-        result += GitService::CloneResponse(logProperty, url, branch, directory);
+        #ifdef __WIN32
+        static_assert(false); // need to consider window documents path
+        #endif
 
-        if (forceUpdate) {
-            result += !result.empty() ? L"\r\n" : L"";
-            result += GitService::Pull(logProperty, directory);
-        }
+        return CommandService::Execute(logProperty, L"", L"echo ~/Documents");
     } catch (Exception &ex) {
         THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
-        return L"";
+    }
+    return L"";
+}
+
+std::wstring VPGFileUpdateService::_GetProjectName(VPGDllType dllType)
+{
+    std::wstring result = L"";
+    switch (dllType) {
+        case VPGDllType::VCC:
+            result += VCC_DLL;
+            break;
+        case VPGDllType::CPP:
+            result += CPP_DLL;
+            break;
+        default:
+            assert(false);
     }
     return result;
 }
 
-std::wstring VPGFileUpdateService::DownloadVCCResource(LogProperty &logProperty, VPGDllType dllType, std::wstring directory, bool forceUpdate)
+std::wstring VPGFileUpdateService::_GetProjectName(VPGInterfaceType interfaceType)
 {
-    if (directory.length() == 0) 
-        directory = VPGFileUpdateService::_DefaultFolder(logProperty);
-
-    std::wstring url = L"";
-    switch (dllType) {
-        case VPGDllType::VCC:
-            url = L"https://github.com/s1155003185/VCCModuleDLL.git";
-            break;
-        case VPGDllType::CPP:
-            url = L"https://github.com/s1155003185/VCCSimpleTemplateDLL.git";
-            break;
-    }
-    return VPGFileUpdateService::_DownloadVCCResource(logProperty, url, L"", directory, forceUpdate);
-}
-
-std::wstring VPGFileUpdateService::DownloadVCCResource(LogProperty &logProperty, VPGInterfaceType interfaceType, std::wstring directory, bool forceUpdate)
-{
-    if (directory.length() == 0) 
-        directory = VPGFileUpdateService::_DefaultFolder(logProperty);
-
-    std::wstring url = L"";
+    std::wstring result = L"";
     switch (interfaceType) {
         case VPGInterfaceType::VCC:
-            url = L"https://github.com/s1155003185/VCCModuleDLL.git";
+            result += VCC_EXE;
             break;
         case VPGInterfaceType::CPP:
-            url = L"https://github.com/s1155003185/VCCSimpleTemplateEXE.git";
+            result += CPP_EXE;
             break;
+        default:
+            assert(false);
     }
-    return VPGFileUpdateService::_DownloadVCCResource(logProperty, url, L"", directory, forceUpdate);
+    return result;
+}
+
+std::wstring VPGFileUpdateService::_DownloadVCCResource(LogProperty &logProperty, std::wstring url, wstring branch, std::wstring directory)
+{
+    try {
+        return GitService::CloneResponse(logProperty, url, branch, directory);
+    } catch (Exception &ex) {
+        THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+    }
+    return L"";
+}
+
+std::wstring VPGFileUpdateService::DownloadVCCResource(LogProperty &logProperty, VPGDllType dllType, std::wstring directory)
+{
+    try {
+        if (directory.length() == 0) 
+            directory = VPGFileUpdateService::_DefaultFolder(logProperty);
+
+        std::wstring url = URL + VPGFileUpdateService::_GetProjectName(dllType) + URL_GIT;
+        return VPGFileUpdateService::_DownloadVCCResource(logProperty, url, L"", directory);
+    } catch (Exception &ex) {
+        THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+    }
+}
+
+std::wstring VPGFileUpdateService::DownloadVCCResource(LogProperty &logProperty, VPGInterfaceType interfaceType, std::wstring directory)
+{
+    try {
+        if (directory.length() == 0) 
+            directory = VPGFileUpdateService::_DefaultFolder(logProperty);
+
+        std::wstring url = URL + VPGFileUpdateService::_GetProjectName(interfaceType) + URL_GIT;
+        return VPGFileUpdateService::_DownloadVCCResource(logProperty, url, L"", directory);
+    } catch (Exception &ex) {
+        THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+    }
+}
+
+std::wstring VPGFileUpdateService::_UpdateVCCResource(LogProperty &logProperty, std::wstring workspace)
+{
+    try {
+        return GitService::Pull(logProperty, workspace);
+    } catch (Exception &ex) {
+        THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+    }
+}
+
+std::wstring VPGFileUpdateService::UpdateVCCResource(LogProperty &logProperty, VPGDllType dllType, std::wstring directory)
+{
+    try {
+        if (directory.length() == 0) 
+            directory = VPGFileUpdateService::_DefaultFolder(logProperty);
+
+        std::wstring workspace = PathConcat(directory, VPGFileUpdateService::_GetProjectName(dllType));
+        return GitService::Pull(logProperty, workspace);
+    } catch (Exception &ex) {
+        THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+    }
+}
+
+std::wstring VPGFileUpdateService::UpdateVCCResource(LogProperty &logProperty, VPGInterfaceType interfaceType, std::wstring directory)
+{
+    try {
+        if (directory.length() == 0) 
+            directory = VPGFileUpdateService::_DefaultFolder(logProperty);
+
+        std::wstring workspace = PathConcat(directory, VPGFileUpdateService::_GetProjectName(interfaceType));
+        return GitService::Pull(logProperty, workspace);
+    } catch (Exception &ex) {
+        THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+    }
 }

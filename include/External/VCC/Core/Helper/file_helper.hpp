@@ -63,4 +63,12 @@ namespace vcc
 		fileStream.close();
 		return result;
 	}
+
+	inline std::wstring PathConcat(std::wstring directory, std::wstring addition)
+	{
+		PATH dir(directory);
+		PATH add(addition);
+		dir /= add;
+		return dir.wstring();
+	}
 }
