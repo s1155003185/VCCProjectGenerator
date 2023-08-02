@@ -4,7 +4,6 @@
 #include "base_exception.hpp"
 #include "i_exception.hpp"
 #include "exception.hpp"
-#include "exception_helper.hpp"
 #include "exception_macro.hpp"
 #include "exception_type.hpp"
 #include "file_helper.hpp"
@@ -46,12 +45,11 @@ TEST(ExceptionTest, Full)
     bool throwException = false;
     try
     {
-        THROW_EXCEPTION(ExceptionType::FILE_NOT_FOUND, L"FILE_NOT_FOUND");
+        THROW_EXCEPTION_M(ExceptionType::FILE_NOT_FOUND, L"FILE_NOT_FOUND");
     }
     catch(exception &ex)
     {
         throwException = true;
-        HandleException(logProperty, L"", &ex);
     }
     EXPECT_TRUE(throwException);
 }

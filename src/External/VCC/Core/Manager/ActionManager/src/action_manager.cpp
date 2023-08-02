@@ -11,9 +11,10 @@ namespace vcc
     {
         try {
             return this->_Actions.empty() ? -1 : (fromBeginning ? this->_Actions.begin()->first : this->_Actions.rbegin()->first);
-        } catch (exception &e) {
-            THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, str2wstr(e.what()));
+        } catch (std::exception &ex) {
+            THROW_EXCEPTION(ex);
         }
+        return -1;
     }
 
     int64_t ActionManager::_Redo(int64_t noOfStep) 

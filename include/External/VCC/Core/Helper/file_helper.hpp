@@ -21,14 +21,14 @@ namespace vcc
 		if (!std::filesystem::is_directory(dir))
 		{
 			if (!isForce)
-				THROW_EXCEPTION(ExceptionType::DIRECTORY_NOT_FOUND, dir.wstring() + L"Directory not found.");
+				THROW_EXCEPTION_M(ExceptionType::DIRECTORY_NOT_FOUND, dir.wstring() + L"Directory not found.");
 			else if (!std::filesystem::create_directories(dir))
-				THROW_EXCEPTION(ExceptionType::DIRECTORY_CANNOT_CREATE, dir.wstring() + L"Directory not found.");
+				THROW_EXCEPTION_M(ExceptionType::DIRECTORY_CANNOT_CREATE, dir.wstring() + L"Directory not found.");
 		}
 		if (!std::filesystem::exists(filePath))
 		{
 			if (!isForce)
-				THROW_EXCEPTION(ExceptionType::FILE_NOT_FOUND, filePath.wstring() + L": File not found.");
+				THROW_EXCEPTION_M(ExceptionType::FILE_NOT_FOUND, filePath.wstring() + L": File not found.");
 		}
 		std::wofstream fileStream(filePath, ios_base::app);
 		fileStream << line << NL;
@@ -45,9 +45,9 @@ namespace vcc
 		
 		PATH dir = filePath.parent_path();
 		if (!std::filesystem::is_directory(dir))
-			THROW_EXCEPTION(ExceptionType::DIRECTORY_NOT_FOUND, dir.wstring() + L": Directory not found.");
+			THROW_EXCEPTION_M(ExceptionType::DIRECTORY_NOT_FOUND, dir.wstring() + L": Directory not found.");
 		if (!std::filesystem::exists(filePath))
-			THROW_EXCEPTION(ExceptionType::FILE_NOT_FOUND, filePath.wstring() + L": File not found.");
+			THROW_EXCEPTION_M(ExceptionType::FILE_NOT_FOUND, filePath.wstring() + L": File not found.");
 		
 		std::wifstream fileStream(filePath, ios_base::in);
 		std::wstring line, result;

@@ -115,7 +115,7 @@ namespace vcc
             try {
                 result = ProcessService::_Execute(command);
             } catch (exception &e) {
-                THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, str2wstr(std::string(e.what())));
+                THROW_EXCEPTION(e);
             }
             LogService::LogProcessResult(logProperty, id, result);
             trim(result);
@@ -132,19 +132,19 @@ namespace vcc
                 if (!workspace.empty())
                     std::filesystem::current_path(workspace);
             } catch (exception &e) {
-                THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, str2wstr(std::string(e.what())));
+                THROW_EXCEPTION(e);
                 return result;
             }
             try {
                 result = ProcessService::Execute(logProperty, id, command);
             } catch (Exception &e) {
-                THROW_EXCEPTION(e.GetErrorType(), e.GetErrorMessage());
+                THROW_EXCEPTION(e);
             }
             try {
                 if (!workspace.empty())
                     std::filesystem::current_path(currentDirectory);
             } catch (exception &e) {
-                THROW_EXCEPTION(ExceptionType::CUSTOM_ERROR, str2wstr(std::string(e.what())));
+                THROW_EXCEPTION(e);
                 return result;
             }            
             return result;

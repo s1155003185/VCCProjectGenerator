@@ -32,8 +32,8 @@ std::wstring VPGFileUpdateService::_DefaultFolder(LogProperty &logProperty)
         #endif
 
         return CommandService::Execute(logProperty, L"", L"echo ~/Documents");
-    } catch (Exception &ex) {
-        THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+    } catch (std::exception &ex) {
+        THROW_EXCEPTION(ex);
     }
     return L"";
 }
@@ -74,8 +74,8 @@ std::wstring VPGFileUpdateService::_DownloadVCCResource(LogProperty &logProperty
 {
     try {
         return GitService::CloneResponse(logProperty, url, branch, directory);
-    } catch (Exception &ex) {
-        THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+    } catch (std::exception &ex) {
+        THROW_EXCEPTION(ex);
     }
     return L"";
 }
@@ -88,9 +88,10 @@ std::wstring VPGFileUpdateService::DownloadVCCResource(LogProperty &logProperty,
 
         std::wstring url = URL + VPGFileUpdateService::_GetProjectName(dllType) + URL_GIT;
         return VPGFileUpdateService::_DownloadVCCResource(logProperty, url, L"", directory);
-    } catch (Exception &ex) {
-        THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+    } catch (std::exception &ex) {
+        THROW_EXCEPTION(ex);
     }
+    return L"";
 }
 
 std::wstring VPGFileUpdateService::DownloadVCCResource(LogProperty &logProperty, VPGInterfaceType interfaceType, std::wstring directory)
@@ -101,18 +102,20 @@ std::wstring VPGFileUpdateService::DownloadVCCResource(LogProperty &logProperty,
 
         std::wstring url = URL + VPGFileUpdateService::_GetProjectName(interfaceType) + URL_GIT;
         return VPGFileUpdateService::_DownloadVCCResource(logProperty, url, L"", directory);
-    } catch (Exception &ex) {
-        THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+    } catch (std::exception &ex) {
+        THROW_EXCEPTION(ex);
     }
+    return L"";
 }
 
 std::wstring VPGFileUpdateService::_UpdateVCCResource(LogProperty &logProperty, std::wstring workspace)
 {
     try {
         return GitService::Pull(logProperty, workspace);
-    } catch (Exception &ex) {
-        THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+    } catch (std::exception &ex) {
+        THROW_EXCEPTION(ex);
     }
+    return L"";
 }
 
 std::wstring VPGFileUpdateService::UpdateVCCResource(LogProperty &logProperty, VPGDllType dllType, std::wstring directory)
@@ -123,9 +126,10 @@ std::wstring VPGFileUpdateService::UpdateVCCResource(LogProperty &logProperty, V
 
         std::wstring workspace = PathConcat(directory, VPGFileUpdateService::_GetProjectName(dllType));
         return GitService::Pull(logProperty, workspace);
-    } catch (Exception &ex) {
-        THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+    } catch (std::exception &ex) {
+        THROW_EXCEPTION(ex);
     }
+    return L"";
 }
 
 std::wstring VPGFileUpdateService::UpdateVCCResource(LogProperty &logProperty, VPGInterfaceType interfaceType, std::wstring directory)
@@ -136,7 +140,8 @@ std::wstring VPGFileUpdateService::UpdateVCCResource(LogProperty &logProperty, V
 
         std::wstring workspace = PathConcat(directory, VPGFileUpdateService::_GetProjectName(interfaceType));
         return GitService::Pull(logProperty, workspace);
-    } catch (Exception &ex) {
-        THROW_EXCEPTION(ex.GetErrorType(), ex.GetErrorMessage());
+    } catch (std::exception &ex) {
+        THROW_EXCEPTION(ex);
     }
+    return L"";
 }
