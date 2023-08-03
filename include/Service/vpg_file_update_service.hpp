@@ -4,10 +4,11 @@
 
 #include <string>
 
+using namespace vcc;
+
 enum class VPGDllType;
 enum class VPGInterfaceType;
 
-using namespace vcc;
 class VPGFileUpdateService
 {
     private:

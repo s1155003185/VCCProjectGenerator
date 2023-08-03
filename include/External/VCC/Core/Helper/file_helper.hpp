@@ -64,11 +64,33 @@ namespace vcc
 		return result;
 	}
 
-	inline std::wstring PathConcat(std::wstring directory, std::wstring addition)
+	inline std::wstring ConcatPath(std::wstring directory, std::wstring addition)
 	{
 		PATH dir(directory);
 		PATH add(addition);
 		dir /= add;
 		return dir.wstring();
+	}
+
+	inline bool IsDirectoryExists(const std::wstring &path)
+	{
+		return std::filesystem::exists(path) && std::filesystem::is_directory(path);
+	}
+
+	inline void CreateDirectory(const std::wstring &path)
+	{
+		if (IsDirectoryExists(path))
+			return;
+
+		try
+		{
+			PATH currentPath(path);
+			CreateDirectory(currentPath.parent_path().wstring());
+			filesystem::create_directories(path);
+		}
+		catch(std::exception& e)
+		{
+			THROW_EXCEPTION(e);
+		}
 	}
 }

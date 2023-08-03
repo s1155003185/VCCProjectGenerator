@@ -124,7 +124,7 @@ std::wstring VPGFileUpdateService::UpdateVCCResource(LogProperty &logProperty, V
         if (directory.length() == 0) 
             directory = VPGFileUpdateService::_DefaultFolder(logProperty);
 
-        std::wstring workspace = PathConcat(directory, VPGFileUpdateService::_GetProjectName(dllType));
+        std::wstring workspace = ConcatPath(directory, VPGFileUpdateService::_GetProjectName(dllType));
         return GitService::Pull(logProperty, workspace);
     } catch (std::exception &ex) {
         THROW_EXCEPTION(ex);
@@ -138,7 +138,7 @@ std::wstring VPGFileUpdateService::UpdateVCCResource(LogProperty &logProperty, V
         if (directory.length() == 0) 
             directory = VPGFileUpdateService::_DefaultFolder(logProperty);
 
-        std::wstring workspace = PathConcat(directory, VPGFileUpdateService::_GetProjectName(interfaceType));
+        std::wstring workspace = ConcatPath(directory, VPGFileUpdateService::_GetProjectName(interfaceType));
         return GitService::Pull(logProperty, workspace);
     } catch (std::exception &ex) {
         THROW_EXCEPTION(ex);
