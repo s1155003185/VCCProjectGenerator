@@ -1,13 +1,9 @@
 #pragma once
 
-enum class VPGDllType
+enum class VPGProjectType
 {
-    VCC,
-    CPP
-};
-
-enum class VPGInterfaceType
-{
-    VCC,
-    CPP
+    VCCDll,
+    VCCInterface,
+    CPPDll,
+    CPPInterface
 };

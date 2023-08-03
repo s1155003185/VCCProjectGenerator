@@ -9,7 +9,7 @@ enum class ExceptionType
 	DIRECTORY_CANNOT_CREATE,
     // File
 	FILE_NOT_FOUND,
-	FILE_CANNOT_OPEN,
+	FILE_IS_BLOCKED,
     // vccobj - end
     CUSTOM_ERROR = 9999,
 };

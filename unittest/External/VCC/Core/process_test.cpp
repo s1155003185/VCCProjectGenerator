@@ -10,13 +10,13 @@ using namespace vcc;
 TEST(ProcessTest, Normal)
 {
     LogProperty logProperty(LogPropertyType::None);
-    EXPECT_TRUE(HasPrefix(ProcessService::Execute(logProperty, L"", L"git --version"), L"git version"));
+    EXPECT_TRUE(ProcessService::Execute(logProperty, L"", L"git --version").starts_with(L"git version"));
 }
 
 TEST(ProcessTest, NormalWithWorkspace)
 {
     LogProperty logProperty(LogPropertyType::None);
-    EXPECT_TRUE(HasPrefix(ProcessService::Execute(logProperty, L"", L"..", L"git --version"), L"git version"));
+    EXPECT_TRUE(ProcessService::Execute(logProperty, L"", L"..", L"git --version").starts_with(L"git version"));
 }
 
 TEST(ProcessTest, Exception)

@@ -3,7 +3,6 @@
 #include "base_property.hpp"
 #include "class_macro.hpp"
 
-#include "file_constant.hpp"
 #include "log_type.hpp"
 
 #include <string>
@@ -22,7 +21,7 @@ namespace vcc
         GETSET(std::wstring, UserID, L"");
         
         GETSET(bool, IsConsoleLog, true);
-        GETSET(PATH, FilePath, L"");
+        GETSET(std::wstring, FilePath, L"");
         // Command
         GETSET(bool, IsLogCommand, true);
         GETSET(bool, IsLogCommandResult, true);
