@@ -23,7 +23,7 @@ TEST(LogServiceTest, LogTest)
     property.SetIsLogProcessResult(true);
     property.SetIsLogSQL(true);
     property.SetIsLogSQLResult(true);
-    property.SetFilePath(filePath);
+    property.SetFilePath(filePath.wstring());
     std::wstring logInfoStr = LogService::LogInfo(property, L"id", L"message");
     std::wstring logWarningStr = LogService::LogWarning(property, L"id", L"message");
     std::wstring logErrorStr = LogService::LogError(property, L"id", L"message");
@@ -33,13 +33,13 @@ TEST(LogServiceTest, LogTest)
     std::wstring logProcessResultStr = LogService::LogProcessResult(property, L"id", L"message");
     std::wstring logSQLStr = LogService::LogSQL(property, L"id", L"message");
     std::wstring logSQLResultStr = LogService::LogSQLResult(property, L"id", L"message");
-    EXPECT_EQ(logInfoStr, ReadFileSingleLline(filePath, 0));
-    EXPECT_EQ(logWarningStr, ReadFileSingleLline(filePath, 1));
-    EXPECT_EQ(logErrorStr, ReadFileSingleLline(filePath, 2));
-    EXPECT_EQ(logCommandStr, ReadFileSingleLline(filePath, 3));
-    EXPECT_EQ(logCommandResultStr, ReadFileSingleLline(filePath, 4));
-    EXPECT_EQ(logProcessStr, ReadFileSingleLline(filePath, 5));
-    EXPECT_EQ(logProcessResultStr, ReadFileSingleLline(filePath, 6));
-    EXPECT_EQ(logSQLStr, ReadFileSingleLline(filePath, 7));
-    EXPECT_EQ(logSQLResultStr, ReadFileSingleLline(filePath, 8));
+    EXPECT_EQ(logInfoStr, ReadFileSingleLine(filePath.wstring(), 0));
+    EXPECT_EQ(logWarningStr, ReadFileSingleLine(filePath.wstring(), 1));
+    EXPECT_EQ(logErrorStr, ReadFileSingleLine(filePath.wstring(), 2));
+    EXPECT_EQ(logCommandStr, ReadFileSingleLine(filePath.wstring(), 3));
+    EXPECT_EQ(logCommandResultStr, ReadFileSingleLine(filePath.wstring(), 4));
+    EXPECT_EQ(logProcessStr, ReadFileSingleLine(filePath.wstring(), 5));
+    EXPECT_EQ(logProcessResultStr, ReadFileSingleLine(filePath.wstring(), 6));
+    EXPECT_EQ(logSQLStr, ReadFileSingleLine(filePath.wstring(), 7));
+    EXPECT_EQ(logSQLResultStr, ReadFileSingleLine(filePath.wstring(), 8));
 }

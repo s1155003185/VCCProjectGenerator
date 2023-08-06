@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <exception>
+#include <filesystem>
 
 #include "base_exception.hpp"
 #include "i_exception.hpp"
@@ -40,7 +41,7 @@ TEST(ExceptionTest, Full)
     
     LogProperty logProperty;
     logProperty.SetIsConsoleLog(false);
-    logProperty.SetFilePath(filePath);
+    logProperty.SetFilePath(filePath.wstring());
 
     bool throwException = false;
     try

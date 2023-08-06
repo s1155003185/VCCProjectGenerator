@@ -14,13 +14,36 @@ using namespace vcc;
 class FileConverseServiceTest : public testing::Test 
 {
     GETOBJ(LogProperty, LogPropery);
-    GET(wstring, Workspace, L"bin/Debug/Workspace/");
+    GET(wstring, Workspace, L"bin/Debug/FileConverseServiceTest/");
+    GET(wstring, WorkspaceSource, L"bin/Debug/FileConverseServiceTest/WorkspaceSource");
+    GET(wstring, WorkspaceTarget, L"bin/Debug/FileConverseServiceTest/WorkspaceTarget");
+
+    GET(wstring, FilePathSourceA, L"bin/Debug/FileConverseServiceTest/WorkspaceSource/FileA.txt");
+    GET(wstring, FilePathTargetB, L"bin/Debug/FileConverseServiceTest/WorkspaceTarget/FileB.txt");
+    GET(wstring, FilePathSourceC, L"bin/Debug/FileConverseServiceTest/WorkspaceSource/FileC.txt");
+    GET(wstring, FilePathTargetC, L"bin/Debug/FileConverseServiceTest/WorkspaceTarget/FileC.txt");
+
 
     public:
 
         void SetUp() override
         {
             this->_LogPropery.SetIsConsoleLog(false);
+            filesystem::remove_all(PATH(this->GetWorkspace()));
+            CreateDirectory(this->GetWorkspace());
+
+            VPGFileConverseService::CheckAndCreateDirectory(*this->GetLogPropery(), this->GetWorkspace());
+            CreateDirectory(this->GetWorkspaceSource());
+            CreateDirectory(this->GetWorkspaceTarget());
+
+            // FIle A
+            AppendFileSingleLine(this->GetFilePathSourceA(), L"File A", true);
+            // File B
+            AppendFileSingleLine(this->GetFilePathTargetB(), L"File B", true);
+            // File C
+            AppendFileSingleLine(this->GetFilePathSourceC(), L"File C Source", true);
+            AppendFileSingleLine(this->GetFilePathTargetC(), L"File C Target", true);
+
         }
 
         void TearDown() override
@@ -37,8 +60,6 @@ class FileConverseServiceTest : public testing::Test
 
 TEST_F(FileConverseServiceTest, CheckAndCreateDirectory)
 {
-    VPGFileConverseService::CheckAndCreateDirectory(*this->GetLogPropery(), this->GetWorkspace());
-
     // bin
     EXPECT_TRUE(this->CheckFolderExists(L"bin"));
     EXPECT_TRUE(this->CheckFolderExists(L"bin/Debug"));
@@ -52,4 +73,19 @@ TEST_F(FileConverseServiceTest, CheckAndCreateDirectory)
 
     // unittest
     EXPECT_TRUE(this->CheckFolderExists(L"unittest"));
+}
+
+TEST_F(FileConverseServiceTest, GetFileDifferenceInWorkspaces)
+{
+    std::vector<std::wstring> needToAdd;
+    std::vector<std::wstring> needToDelete;
+    std::vector<std::wstring> needToModify;
+    VPGFileConverseService::GetFileDifferenceInWorkspaces(this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
+        needToAdd, needToDelete, needToModify);
+    EXPECT_EQ((int)needToAdd.size(), 1);
+    EXPECT_TRUE((int)needToAdd.at(0).ends_with(L"FileA.txt"));
+    EXPECT_EQ((int)needToDelete.size(), 1);
+    EXPECT_TRUE((int)needToDelete.at(0).ends_with(L"FileB.txt"));
+    EXPECT_EQ((int)needToModify.size(), 1);
+    EXPECT_TRUE((int)needToModify.at(0).ends_with(L"FileC.txt"));
 }

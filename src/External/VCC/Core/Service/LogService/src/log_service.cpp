@@ -33,10 +33,10 @@ namespace vcc
 			logMessage += L" [" + logProperty.GetUserID() + L"] ";
 		logMessage += L" " + message;
 		if (logProperty.GetIsConsoleLog())
-			std::wcout << logMessage << endl;
+			std::wcout << logMessage << std::endl;
 
 		if (!logProperty.GetFilePath().empty()) {
-			AppendFileSingleLline(logProperty.GetFilePath(), logMessage, true);
+			AppendFileSingleLine(logProperty.GetFilePath(), logMessage, true);
 		}
 		return logMessage;
 	}

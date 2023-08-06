@@ -10,7 +10,7 @@ using namespace vcc;
 TEST(CommandTest, Normal)
 {
     LogProperty logProperty(LogPropertyType::None);
-    EXPECT_TRUE(HasPrefix(CommandService::Execute(logProperty, L"", L"git --version"), L"git version"));
+    EXPECT_TRUE(CommandService::Execute(logProperty, L"", L"git --version").starts_with(L"git version"));
 }
 
 // Terminal cannot cap exception console log
