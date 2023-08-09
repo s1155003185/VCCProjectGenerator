@@ -16,8 +16,6 @@ class VPGFileConverseService
 
         // create project
         static void CheckAndCreateDirectory(LogProperty &logProperty, std::wstring workspace);
-        static void GetFileDifferenceInWorkspaces(std::wstring sourceWorkspace, std::wstring targetWorkspace,
-            std::vector<std::wstring> &needToAdd, std::vector<std::wstring> &needToDelete, std::vector<std::wstring> &needToModify);
 
         // file compare
 

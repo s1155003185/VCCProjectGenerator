@@ -74,18 +74,3 @@ TEST_F(FileConverseServiceTest, CheckAndCreateDirectory)
     // unittest
     EXPECT_TRUE(this->CheckFolderExists(L"unittest"));
 }
-
-TEST_F(FileConverseServiceTest, GetFileDifferenceInWorkspaces)
-{
-    std::vector<std::wstring> needToAdd;
-    std::vector<std::wstring> needToDelete;
-    std::vector<std::wstring> needToModify;
-    VPGFileConverseService::GetFileDifferenceInWorkspaces(this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
-        needToAdd, needToDelete, needToModify);
-    EXPECT_EQ((int)needToAdd.size(), 1);
-    EXPECT_TRUE((int)needToAdd.at(0).ends_with(L"FileA.txt"));
-    EXPECT_EQ((int)needToDelete.size(), 1);
-    EXPECT_TRUE((int)needToDelete.at(0).ends_with(L"FileB.txt"));
-    EXPECT_EQ((int)needToModify.size(), 1);
-    EXPECT_TRUE((int)needToModify.at(0).ends_with(L"FileC.txt"));
-}
