@@ -28,7 +28,7 @@ std::wstring VPGFileUpdateService::_DownloadVCCResource(LogProperty &logProperty
 std::wstring VPGFileUpdateService::DownloadVCCResource(LogProperty &logProperty, VPGProjectType projectType, std::wstring directory)
 {
     try {
-        if (directory.length() == 0) 
+        if (directory.empty()) 
             directory = VPGGlobal::GetDefaultFolder();
         return VPGFileUpdateService::_DownloadVCCResource(logProperty, VPGGlobal::GetProjecURL(projectType), L"", directory);
     } catch (std::exception &ex) {
@@ -50,9 +50,7 @@ std::wstring VPGFileUpdateService::_UpdateVCCResource(LogProperty &logProperty, 
 std::wstring VPGFileUpdateService::UpdateVCCResource(LogProperty &logProperty, VPGProjectType projectType, std::wstring directory)
 {
     try {
-        if (directory.length() == 0) 
-            directory = VPGGlobal::GetDefaultFolder();
-        return GitService::Pull(logProperty, ConcatPath(directory, VPGGlobal::GetProjectName(projectType)));
+        return GitService::Pull(logProperty, VPGGlobal::GetProjectLocalDirectory(projectType, directory));
     } catch (std::exception &ex) {
         THROW_EXCEPTION(ex);
     }

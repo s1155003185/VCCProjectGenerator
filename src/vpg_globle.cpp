@@ -4,6 +4,7 @@
 
 #include "command_service.hpp"
 #include "exception_macro.hpp"
+#include "file_helper.hpp"
 #include "log_property.hpp"
 
 #include "vpg_project_type.hpp"
@@ -31,6 +32,13 @@ std::wstring VPGGlobal::GetDefaultFolder()
         THROW_EXCEPTION(ex);
     }
     return L"";
+}
+
+std::wstring VPGGlobal::GetProjectLocalDirectory(VPGProjectType projectType, std::wstring parentFolder)
+{
+    if (parentFolder.length() == 0) 
+        parentFolder = VPGGlobal::GetDefaultFolder();
+    return ConcatPath(parentFolder, VPGGlobal::GetProjectName(projectType));
 }
 
 std::wstring VPGGlobal::GetProjectName(VPGProjectType projectType)
