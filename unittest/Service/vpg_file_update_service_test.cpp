@@ -9,17 +9,17 @@
 // TEST(FileUpdateService, Download)
 // {
 //     LogProperty logProperty(LogPropertyType::None);
-//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGDllType::VCC, L"");
-//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGDllType::CPP, L"");
-//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGInterfaceType::VCC, L"");
-//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGInterfaceType::CPP, L"");
+//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGProjectType::VCCDll, L"");
+//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGProjectType::VCCInterface, L"");
+//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGProjectType::CPPDll, L"");
+//     VPGFileUpdateService::DownloadVCCResource(logProperty, VPGProjectType::CPPInterface, L"");
 // }
 
 // TEST(FileUpdateService, Upload)
 // {
 //     LogProperty logProperty(LogPropertyType::None);
-//     VPGFileUpdateService::UpdateVCCResource(logProperty, VPGDllType::VCC, L"");
-//     VPGFileUpdateService::UpdateVCCResource(logProperty, VPGDllType::CPP, L"");
-//     VPGFileUpdateService::UpdateVCCResource(logProperty, VPGInterfaceType::VCC, L"");
-//     VPGFileUpdateService::UpdateVCCResource(logProperty, VPGInterfaceType::CPP, L"");
+//     VPGFileUpdateService::UpdateVCCResource(logProperty, VPGProjectType::VCCDll, L"");
+//     VPGFileUpdateService::UpdateVCCResource(logProperty, VPGProjectType::VCCInterface, L"");
+//     VPGFileUpdateService::UpdateVCCResource(logProperty, VPGProjectType::CPPDll, L"");
+//     VPGFileUpdateService::UpdateVCCResource(logProperty, VPGProjectType::CPPInterface, L"");
 // }
