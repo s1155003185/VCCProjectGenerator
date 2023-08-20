@@ -1,13 +1,19 @@
 #pragma once
-#include "base_service.hpp"
 
 #include <string>
 
+#include "base_service.hpp"
 #include "log_property.hpp"
-#include "log_type.hpp"
 
 namespace vcc
 {
+    enum class LogType
+    {
+        Error,
+        Warning,
+        Info
+    };
+
 	class LogService : public BaseService
 	{
 	private:
