@@ -1,11 +1,9 @@
 #pragma once
 
+#include <string>
+
 #include "base_property.hpp"
 #include "class_macro.hpp"
-
-#include "log_type.hpp"
-
-#include <string>
 
 namespace vcc
 {
@@ -33,7 +31,7 @@ namespace vcc
         GETSET(bool, IsLogSQLResult, true);
     public:
         LogProperty() {}
-        LogProperty(LogPropertyType logPropertyType) {
+        LogProperty(LogPropertyType logPropertyType, std::wstring filePath = L"") {
             switch (logPropertyType)
             {
             case LogPropertyType::None:
@@ -51,6 +49,8 @@ namespace vcc
                 break;
             case LogPropertyType::All:
                 this->SetIsConsoleLog(true);
+                this->SetFilePath(filePath);
+                assert(!filePath.empty());
 
                 this->SetIsLogCommand(true);
                 this->SetIsLogCommandResult(true);
