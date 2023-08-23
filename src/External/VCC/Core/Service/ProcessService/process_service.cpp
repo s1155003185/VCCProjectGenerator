@@ -108,7 +108,7 @@ namespace vcc
 
         std::wstring ProcessService::Execute(LogProperty &logProperty, std::wstring id, std::wstring command)
         {
-            trim(command);
+            Trim(command);
 
             LogService::LogProcess(logProperty, id, command);
 
@@ -119,13 +119,13 @@ namespace vcc
                 THROW_EXCEPTION(e);
             }
             LogService::LogProcessResult(logProperty, id, result);
-            trim(result);
+            Trim(result);
             return result;
         }
 
         std::wstring ProcessService::Execute(LogProperty &logProperty, std::wstring id, std::wstring workspace, std::wstring command)
         {
-            trim(workspace);
+            Trim(workspace);
             std::wstring currentDirectory = L"";
             std::wstring result = L"";
             try {

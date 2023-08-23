@@ -36,7 +36,7 @@ namespace vcc
             THROW_EXCEPTION_M(ExceptionType::CUSTOM_ERROR, result);
         LogService::LogCommandResult(logProperty, id, result);
 
-        trim(result);
+        Trim(result);
         return result;
     }
 }
