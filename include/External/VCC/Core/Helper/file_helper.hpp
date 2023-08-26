@@ -9,7 +9,7 @@ namespace vcc
     // helper
 	std::wstring ConcatPath(std::wstring directory, std::wstring addition);
 	void GetFileDifferenceBetweenWorkspaces(std::wstring sourceWorkspace, std::wstring targetWorkspace,
-		std::vector<std::wstring> &needToAdd, std::vector<std::wstring> &needToDelete, std::vector<std::wstring> &needToModify);
+		std::vector<std::wstring> &needToAdd, std::vector<std::wstring> &needToModify, std::vector<std::wstring> &needToDelete);
 
 	// validation
 	bool IsDirectoryExists(const std::wstring &path);

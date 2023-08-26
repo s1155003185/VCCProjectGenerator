@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <regex>
 #include <string>
 
 #include "exception.hpp"
@@ -25,7 +26,7 @@ namespace vcc
     }
 
     void GetFileDifferenceBetweenWorkspaces(std::wstring sourceWorkspace, std::wstring targetWorkspace, 
-        std::vector<std::wstring> &needToAdd, std::vector<std::wstring> &needToDelete, std::vector<std::wstring> &needToModify)
+        std::vector<std::wstring> &needToAdd, std::vector<std::wstring> &needToModify, std::vector<std::wstring> &needToDelete)
     {
         std::vector<std::wstring> srcFileList, tarFileList;
         for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(sourceWorkspace)))
@@ -105,7 +106,7 @@ namespace vcc
 
     void CreateDirectory(const std::wstring &path)
     {
-        if (IsDirectoryExists(path))
+        if (path.empty() || IsDirectoryExists(path))
             return;
 
         try

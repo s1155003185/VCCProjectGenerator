@@ -60,7 +60,7 @@ TEST_F(FileTest, GetFileDifferenceBetweenWorkspacesTest)
     std::vector<std::wstring> needToDelete;
     std::vector<std::wstring> needToModify;
     GetFileDifferenceBetweenWorkspaces(this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
-        needToAdd, needToDelete, needToModify);
+        needToAdd, needToModify, needToDelete);
     EXPECT_EQ((int)needToAdd.size(), 1);
     EXPECT_TRUE((int)needToAdd.at(0).ends_with(L"FileA.txt"));
     EXPECT_EQ((int)needToDelete.size(), 1);
