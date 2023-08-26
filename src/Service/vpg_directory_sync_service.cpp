@@ -11,6 +11,7 @@
 #include "log_property.hpp"
 #include "log_service.hpp"
 
+#include "vpg_file_sync_service.hpp"
 #include "vpg_global.hpp"
 #include "vpg_project_type.hpp"
 
@@ -143,8 +144,7 @@ void VPGDirectorySyncService::_SyncWorkspace(LogProperty &logProperty, std::wstr
                 continue;
 
             if (IsFile(sourcePath)) {
-                filesystem::copy(PATH(sourcePath), PATH(targetPath), std::filesystem::copy_options::overwrite_existing);
-                LogService::LogInfo(logProperty, L"", L"Added File: " + targetPath);
+                VPGFileSyncService::CopyFile(logProperty, sourcePath, targetPath);
             } else {
                 CreateDirectory(targetPath);
                 LogService::LogInfo(logProperty, L"", L"Added Directory: " + targetPath);
@@ -164,8 +164,7 @@ void VPGDirectorySyncService::_SyncWorkspace(LogProperty &logProperty, std::wstr
                 continue;
             
             // modify file
-            std::filesystem::copy_file(PATH(sourcePath), PATH(targetPath), std::filesystem::copy_options::overwrite_existing);
-            LogService::LogInfo(logProperty, L"", L"Updated File: " + targetPath);
+            VPGFileSyncService::CopyFile(logProperty, sourcePath, targetPath);
         }
     } catch (std::exception &ex) {
         THROW_EXCEPTION(ex);
