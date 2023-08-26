@@ -6,7 +6,7 @@
 #include "class_macro.hpp"
 #include "file_helper.hpp"
 #include "log_property.hpp"
-#include "vpg_file_converse_service.hpp"
+#include "vpg_directory_sync_service.hpp"
 #include "vpg_project_type.hpp"
 
 using namespace std;
