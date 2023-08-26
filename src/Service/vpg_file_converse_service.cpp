@@ -17,7 +17,7 @@
 using namespace std;
 using namespace vcc;
 
-void VPGFileConverseService::CheckAndCreateDirectory(LogProperty &logProperty, std::wstring workspace)
+void VPGDirectorySyncService::CheckAndCreateDirectory(LogProperty &logProperty, std::wstring workspace)
 {
     try {
         // All type has same project structure
@@ -48,7 +48,7 @@ void VPGFileConverseService::CheckAndCreateDirectory(LogProperty &logProperty, s
     }
 }
 
-bool VPGFileConverseService::_ShouldInclude(const std::wstring &path, const std::vector<std::wstring> &includeOnlyFileFilter)
+bool VPGDirectorySyncService::_ShouldInclude(const std::wstring &path, const std::vector<std::wstring> &includeOnlyFileFilter)
 {
     if (includeOnlyFileFilter.empty())
         return true;
@@ -68,7 +68,7 @@ bool VPGFileConverseService::_ShouldInclude(const std::wstring &path, const std:
     return result;
 }
 
-bool VPGFileConverseService::_ShouldExclude(const std::wstring &path, const std::vector<std::wstring> &excludeOnlyFileFilter)
+bool VPGDirectorySyncService::_ShouldExclude(const std::wstring &path, const std::vector<std::wstring> &excludeOnlyFileFilter)
 {
     if (excludeOnlyFileFilter.empty())
         return false;
@@ -87,7 +87,7 @@ bool VPGFileConverseService::_ShouldExclude(const std::wstring &path, const std:
     return result;
 }
 
-void VPGFileConverseService::_SyncWorkspace(LogProperty &logProperty, std::wstring sourceWorkspace, std::wstring targetWorkspace,
+void VPGDirectorySyncService::_SyncWorkspace(LogProperty &logProperty, std::wstring sourceWorkspace, std::wstring targetWorkspace,
             const std::vector<std::wstring> &includeOnlyFileFilter, const std::vector<std::wstring> &excludeOnlyFileFilter)
 {
     try {
@@ -106,9 +106,9 @@ void VPGFileConverseService::_SyncWorkspace(LogProperty &logProperty, std::wstri
                 }                
             }
 
-            if (!VPGFileConverseService::_ShouldInclude(path, includeOnlyFileFilter))
+            if (!VPGDirectorySyncService::_ShouldInclude(path, includeOnlyFileFilter))
                 continue;
-            if (VPGFileConverseService::_ShouldExclude(path, excludeOnlyFileFilter))
+            if (VPGDirectorySyncService::_ShouldExclude(path, excludeOnlyFileFilter))
                 continue;
 
 
@@ -137,9 +137,9 @@ void VPGFileConverseService::_SyncWorkspace(LogProperty &logProperty, std::wstri
                 }                
             }
 
-            if (!VPGFileConverseService::_ShouldInclude(path, includeOnlyFileFilter))
+            if (!VPGDirectorySyncService::_ShouldInclude(path, includeOnlyFileFilter))
                 continue;
-            if (VPGFileConverseService::_ShouldExclude(path, excludeOnlyFileFilter))
+            if (VPGDirectorySyncService::_ShouldExclude(path, excludeOnlyFileFilter))
                 continue;
 
             if (IsFile(sourcePath)) {
@@ -154,9 +154,9 @@ void VPGFileConverseService::_SyncWorkspace(LogProperty &logProperty, std::wstri
 
         // Modify
         for (auto path : needToModify) {
-            if (!VPGFileConverseService::_ShouldInclude(path, includeOnlyFileFilter))
+            if (!VPGDirectorySyncService::_ShouldInclude(path, includeOnlyFileFilter))
                 continue;
-            if (VPGFileConverseService::_ShouldExclude(path, excludeOnlyFileFilter))
+            if (VPGDirectorySyncService::_ShouldExclude(path, excludeOnlyFileFilter))
                 continue;
 
             std::wstring sourcePath = ConcatPath(sourceWorkspace, path);
@@ -174,12 +174,12 @@ void VPGFileConverseService::_SyncWorkspace(LogProperty &logProperty, std::wstri
     }
 }
 
-void VPGFileConverseService::SyncWorkspace(LogProperty &logProperty, VPGProjectType projectType, std::wstring projectLocalDirectoryParent, std::wstring workspace,
+void VPGDirectorySyncService::SyncWorkspace(LogProperty &logProperty, VPGProjectType projectType, std::wstring projectLocalDirectoryParent, std::wstring workspace,
     const std::vector<std::wstring> &includeOnlyFileFilter, const std::vector<std::wstring> &excludeOnlyFileFilter)
 {
     try {
         std::wstring projectLocalDirectory = VPGGlobal::GetProjectLocalDirectory(projectType, projectLocalDirectoryParent);
-        VPGFileConverseService::_SyncWorkspace(logProperty, projectLocalDirectory, workspace, includeOnlyFileFilter, excludeOnlyFileFilter);
+        VPGDirectorySyncService::_SyncWorkspace(logProperty, projectLocalDirectory, workspace, includeOnlyFileFilter, excludeOnlyFileFilter);
     } catch (std::exception &ex) {
         THROW_EXCEPTION(ex);
     }

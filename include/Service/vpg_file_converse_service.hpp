@@ -9,9 +9,9 @@ using namespace vcc;
 
 enum class VPGProjectType;
 
-class VPGFileConverseService
+class VPGDirectorySyncService
 {
-    friend class VPGFileConverseServiceTest;
+    friend class VPGDirectorySyncServiceTest;
     
     private:
         static bool _ShouldInclude(const std::wstring &path, const std::vector<std::wstring> &includeOnlyRegex);
@@ -20,8 +20,8 @@ class VPGFileConverseService
             const std::vector<std::wstring> &includeOnlyRegex, const std::vector<std::wstring> &excludeRegex);
 
     public:
-        VPGFileConverseService() {}
-        ~VPGFileConverseService() {}
+        VPGDirectorySyncService() {}
+        ~VPGDirectorySyncService() {}
 
         // create project
         static void CheckAndCreateDirectory(LogProperty &logProperty, std::wstring workspace);

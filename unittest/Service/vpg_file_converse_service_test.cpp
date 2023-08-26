@@ -12,12 +12,12 @@
 using namespace std;
 using namespace vcc;
 
-class VPGFileConverseServiceTest : public testing::Test 
+class VPGDirectorySyncServiceTest : public testing::Test 
 {
     GETOBJ(LogProperty, LogPropery);
-    GET(wstring, Workspace, L"bin/Debug/FileConverseServiceTest/");
-    GET(wstring, WorkspaceSource, L"bin/Debug/FileConverseServiceTestSource");
-    GET(wstring, WorkspaceTarget, L"bin/Debug/FileConverseServiceTestTarget");
+    GET(wstring, Workspace, L"bin/Debug/DirectorySyncServiceTest/");
+    GET(wstring, WorkspaceSource, L"bin/Debug/DirectorySyncServiceTestSource");
+    GET(wstring, WorkspaceTarget, L"bin/Debug/DirectorySyncServiceTestTarget");
 
     private:
         void CreateFolderInSourceWorkspace(std::wstring folder)
@@ -77,7 +77,7 @@ class VPGFileConverseServiceTest : public testing::Test
             std::vector<std::wstring> includeOnly;
             std::vector<std::wstring> excludes;
             excludes.push_back(L"*FilterOut/");
-            VPGFileConverseService::_SyncWorkspace(*this->GetLogPropery(), 
+            VPGDirectorySyncService::_SyncWorkspace(*this->GetLogPropery(), 
                 this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
                 includeOnly, excludes);
         }
@@ -103,15 +103,15 @@ class VPGFileConverseServiceTest : public testing::Test
             std::vector<std::wstring> includeOnly;
             includeOnly.push_back(L"*IncludeOnly/");
             std::vector<std::wstring> excludes;
-            VPGFileConverseService::_SyncWorkspace(*this->GetLogPropery(), 
+            VPGDirectorySyncService::_SyncWorkspace(*this->GetLogPropery(), 
                 this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
                 includeOnly, excludes);
         }
 };
 
-TEST_F(VPGFileConverseServiceTest, CheckAndCreateDirectory)
+TEST_F(VPGDirectorySyncServiceTest, CheckAndCreateDirectory)
 {
-    VPGFileConverseService::CheckAndCreateDirectory(*this->GetLogPropery(), this->GetWorkspace());
+    VPGDirectorySyncService::CheckAndCreateDirectory(*this->GetLogPropery(), this->GetWorkspace());
     // bin
     EXPECT_TRUE(this->CheckFolderExists(L"bin"));
     EXPECT_TRUE(this->CheckFolderExists(L"bin/Debug"));
@@ -127,7 +127,7 @@ TEST_F(VPGFileConverseServiceTest, CheckAndCreateDirectory)
     EXPECT_TRUE(this->CheckFolderExists(L"unittest"));
 }
 
-TEST_F(VPGFileConverseServiceTest, SyncWorkspaceFolderWithExclude)
+TEST_F(VPGDirectorySyncServiceTest, SyncWorkspaceFolderWithExclude)
 {
     this->CreateSyncWorkspaceFolderWithExcludeTestCase();
     EXPECT_TRUE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"FolderAdd")));
@@ -138,7 +138,7 @@ TEST_F(VPGFileConverseServiceTest, SyncWorkspaceFolderWithExclude)
     EXPECT_TRUE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"FolderDeleteFilterOut")));
 }
 
-TEST_F(VPGFileConverseServiceTest, SyncWorkspaceFolderIncludeOnly)
+TEST_F(VPGDirectorySyncServiceTest, SyncWorkspaceFolderIncludeOnly)
 {
     this->CreateSyncWorkspaceFolderIncludeOnlyTestCase();
     EXPECT_FALSE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"FolderAdd")));
