@@ -66,6 +66,11 @@ namespace vcc
         return std::filesystem::exists(path) && std::filesystem::is_regular_file(path);
     }
 
+	bool IsFileExists(const std::wstring &path)
+    {
+        return std::filesystem::exists(path) && std::filesystem::is_regular_file(path);
+    }
+
     void ValidateFile(const std::wstring &path)
     {
         if (!std::filesystem::exists(path))

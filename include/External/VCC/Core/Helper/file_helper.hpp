@@ -15,6 +15,7 @@ namespace vcc
 	bool IsDirectoryExists(const std::wstring &path);
 	
 	bool IsFile(const std::wstring &path);
+	bool IsFileExists(const std::wstring &path);
     void ValidateFile(const std::wstring &path);
 	bool IsFileEqual(const std::wstring &pathA, const std::wstring &pathB);
 

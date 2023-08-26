@@ -36,6 +36,14 @@ class VPGDirectorySyncServiceTest : public testing::Test
                 CreateDirectory(ConcatPath(this->GetWorkspaceTarget(), folder));
         }
 
+        void CreateFileInSourceWorkspace(std::wstring fileName, std::wstring content)
+        {
+            AppendFileSingleLine(ConcatPath(this->GetWorkspaceSource(), fileName), content, true);
+        }
+        void CreateFileInTargetWorkspace(std::wstring fileName, std::wstring content)
+        {
+            AppendFileSingleLine(ConcatPath(this->GetWorkspaceTarget(), fileName), content, true);
+        }
     public:
 
         void SetUp() override
@@ -107,6 +115,59 @@ class VPGDirectorySyncServiceTest : public testing::Test
                 this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
                 includeOnly, excludes);
         }
+
+        void CreateSyncWorkspaceFileWithExcludeTestCase() 
+        {
+            this->CreateFolderInSourceWorkspace(L"");
+            this->CreateFileInSourceWorkspace(L"FileAdd", L"FileAdd");
+            this->CreateFileInSourceWorkspace(L"FileModify", L"FileModifyFrom");
+            //this->CreateFileInSourceWorkspace(L"FileDelete", L"FileDelete");
+            this->CreateFileInSourceWorkspace(L"FileAddFilterOut", L"FileAdd");
+            this->CreateFileInSourceWorkspace(L"FileModifyFilterOut", L"FileModifyFrom");
+            //this->CreateFileInSourceWorkspace(L"FileDeleteFilterOut", L"FileDelete");
+
+            this->CreateFolderInTargetWorkspace(L"");
+            //this->CreateFileInTargetWorkspace(L"FileAdd", L"FileAdd");
+            this->CreateFileInTargetWorkspace(L"FileModify", L"FileModifyTo");
+            this->CreateFileInTargetWorkspace(L"FileDelete", L"FileDelete");
+            //this->CreateFileInTargetWorkspace(L"FileAddFilterOut", L"FileAdd");
+            this->CreateFileInTargetWorkspace(L"FileModifyFilterOut", L"FileModifyTo");
+            this->CreateFileInTargetWorkspace(L"FileDeleteFilterOut", L"FileDelete");
+
+
+            std::vector<std::wstring> includeOnly;
+            std::vector<std::wstring> excludes;
+            excludes.push_back(L"*FilterOut");
+            VPGDirectorySyncService::_SyncWorkspace(*this->GetLogPropery(), 
+                this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
+                includeOnly, excludes);
+        }
+        
+        void CreateSyncWorkspaceFileIncludeOnlyTestCase()
+        {
+            this->CreateFolderInSourceWorkspace(L"");
+            this->CreateFileInSourceWorkspace(L"FileAdd", L"FileAdd");
+            this->CreateFileInSourceWorkspace(L"FileModify", L"FileModifyFrom");
+            //this->CreateFileInSourceWorkspace(L"FileDelete", L"FileDelete");
+            this->CreateFileInSourceWorkspace(L"FileAddIncludeOnly", L"FileAdd");
+            this->CreateFileInSourceWorkspace(L"FileModifyIncludeOnly", L"FileModifyFrom");
+            //this->CreateFileInSourceWorkspace(L"FileDeleteIncludeOnly", L"FileDelete");
+
+            this->CreateFolderInTargetWorkspace(L"");
+            //this->CreateFileInTargetWorkspace(L"FileAdd", L"FileAdd");
+            this->CreateFileInTargetWorkspace(L"FileModify", L"FileModifyTo");
+            this->CreateFileInTargetWorkspace(L"FileDelete", L"FileDelete");
+            //this->CreateFileInTargetWorkspace(L"FileAddIncludeOnly", L"FileAdd");
+            this->CreateFileInTargetWorkspace(L"FileModifyIncludeOnly", L"FileModifyTo");
+            this->CreateFileInTargetWorkspace(L"FileDeleteIncludeOnly", L"FileDelete");
+
+            std::vector<std::wstring> includeOnly;
+            includeOnly.push_back(L"*IncludeOnly");
+            std::vector<std::wstring> excludes;
+            VPGDirectorySyncService::_SyncWorkspace(*this->GetLogPropery(), 
+                this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
+                includeOnly, excludes);
+        }
 };
 
 TEST_F(VPGDirectorySyncServiceTest, CheckAndCreateDirectory)
@@ -147,4 +208,26 @@ TEST_F(VPGDirectorySyncServiceTest, SyncWorkspaceFolderIncludeOnly)
     EXPECT_TRUE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"FolderAddIncludeOnly")));
     EXPECT_TRUE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"FolderUpdateIncludeOnly")));
     EXPECT_FALSE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"FolderDeleteIncludeOnly")));
+}
+
+TEST_F(VPGDirectorySyncServiceTest, SyncWorkspaceFileWithExclude)
+{
+    this->CreateSyncWorkspaceFileWithExcludeTestCase();
+    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileAdd")));
+    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileModify")));
+    EXPECT_FALSE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileDelete")));
+    EXPECT_FALSE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileAddFilterOut")));
+    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileModifyFilterOut")));
+    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileDeleteFilterOut")));
+}
+
+TEST_F(VPGDirectorySyncServiceTest, SyncWorkspaceFileIncludeOnly)
+{
+    this->CreateSyncWorkspaceFileIncludeOnlyTestCase();
+    EXPECT_FALSE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileAdd")));
+    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileModify")));
+    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileDelete")));
+    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileAddIncludeOnly")));
+    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileModifyIncludeOnly")));
+    EXPECT_FALSE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileDeleteIncludeOnly")));
 }

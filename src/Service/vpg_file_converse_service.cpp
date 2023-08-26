@@ -143,8 +143,7 @@ void VPGDirectorySyncService::_SyncWorkspace(LogProperty &logProperty, std::wstr
                 continue;
 
             if (IsFile(sourcePath)) {
-                std::wstring targetParentDirectory = PATH(sourcePath).parent_path().wstring();
-                copy(PATH(sourcePath), PATH(targetParentDirectory), std::filesystem::copy_options::overwrite_existing);
+                filesystem::copy(PATH(sourcePath), PATH(targetPath), std::filesystem::copy_options::overwrite_existing);
                 LogService::LogInfo(logProperty, L"", L"Added File: " + targetPath);
             } else {
                 CreateDirectory(targetPath);
@@ -165,8 +164,7 @@ void VPGDirectorySyncService::_SyncWorkspace(LogProperty &logProperty, std::wstr
                 continue;
             
             // modify file
-            std::wstring targetParentDirectory = PATH(sourcePath).parent_path().wstring();
-            std::filesystem::copy_file(PATH(sourcePath), PATH(targetParentDirectory), std::filesystem::copy_options::overwrite_existing);
+            std::filesystem::copy_file(PATH(sourcePath), PATH(targetPath), std::filesystem::copy_options::overwrite_existing);
             LogService::LogInfo(logProperty, L"", L"Updated File: " + targetPath);
         }
     } catch (std::exception &ex) {
