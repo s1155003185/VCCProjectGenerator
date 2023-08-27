@@ -35,6 +35,7 @@ namespace vcc
 	std::map<wchar_t, std::wstring> GetEscapeStringMap(const EscapeStringType &type);
 	std::wstring ConvertSpecialCharacterToEscapeString(const EscapeStringType &type, const wchar_t &c);
 	std::wstring GetEscapeString(const EscapeStringType &type, const std::wstring &str);
+	std::wstring GetUnescapeString(const EscapeStringType &type, const std::wstring &str);
 	std::wstring GetRegexFromFileFilter(const std::wstring &fileFilter);
 
 }

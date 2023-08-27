@@ -9,6 +9,7 @@
 
 #include "exception.hpp"
 #include "exception_macro.hpp"
+#include "map_helper.hpp"
 
 namespace vcc
 {
@@ -162,7 +163,6 @@ namespace vcc
 		return std::wstring(1, c);
 	}
 
-
 	std::wstring GetEscapeString(const EscapeStringType &type, const std::wstring &str)
     {
         std::wstring result = L"";
@@ -178,6 +178,55 @@ namespace vcc
         return result;
     }
 
+	std::wstring GetUnescapeString(const EscapeStringType &type, const std::wstring &str)
+	{
+        std::wstring result = L"";
+        try 
+        {
+			std::map<wchar_t, std::wstring> escapeMap;
+			switch (type)
+			{
+			case EscapeStringType::XML:
+				escapeMap = GetEscapeStringMap(type);
+				break;
+			default:
+				break;
+			}
+
+			for (size_t i = 0; i < str.length(); i++) {
+				switch (type)
+				{
+					case EscapeStringType::Regex:
+						if (str[i] == L'\\')
+							i++;
+						result += str[i];
+						break;
+					case EscapeStringType::XML:
+					{
+						bool isEscape = false;
+						for (auto &pair : escapeMap) {
+							if (str.substr(i).starts_with(pair.second)) {
+								result += pair.first;
+								isEscape = true;
+								i += pair.second.length() - 1;
+								break;
+							}
+						}
+						if (!isEscape)
+							result += str[i];
+						break;
+					}
+				default:
+					break;
+				}
+			}
+        }
+        catch(std::exception& ex)
+        {
+            THROW_EXCEPTION(ex);
+        }
+        return result;
+	}
 
     std::wstring GetRegexFromFileFilter(const std::wstring &fileFilter)
     {

@@ -20,6 +20,7 @@ TEST(StringTest, EscapeString)
         expectedStr += L"\\" + std::wstring(1, sc);
     }
     EXPECT_EQ(GetEscapeString(EscapeStringType::Regex, originalStr), expectedStr);
+    EXPECT_EQ(GetUnescapeString(EscapeStringType::Regex, expectedStr), originalStr);
 
     // XML
     specialChars = GetSpecialCharacters(EscapeStringType::XML);
@@ -30,6 +31,7 @@ TEST(StringTest, EscapeString)
         expectedStr += GetEscapeStringMap(EscapeStringType::XML)[sc];
     }
     EXPECT_EQ(GetEscapeString(EscapeStringType::XML, originalStr), expectedStr);
+    EXPECT_EQ(GetUnescapeString(EscapeStringType::XML, expectedStr), originalStr);
 }
 
 TEST(StringTest, GetRegexFromFileFilter)
