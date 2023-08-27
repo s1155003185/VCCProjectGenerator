@@ -1,6 +1,7 @@
 #include "string_helper.hpp"
 
 #include <algorithm>
+#include <map>
 #include <math.h>
 #include <memory>
 #include <string>
@@ -8,6 +9,7 @@
 
 #include "exception.hpp"
 #include "exception_macro.hpp"
+#include "map_helper.hpp"
 
 namespace vcc
 {
@@ -104,44 +106,70 @@ namespace vcc
 
     std::vector<wchar_t> GetSpecialCharacters(const EscapeStringType &type)
     {
-        std::vector<wchar_t> result;
         switch (type)
         {
             case EscapeStringType::Regex:
-                result = { L'\\', L'^', L'$', L'.', L'|', L'?', L'*', L'+', L'(', L')', L'[', L']', L'{', L'}' };
+                return { L'\\', L'^', L'$', L'.', L'|', L'?', L'*', L'+', L'(', L')', L'[', L']', L'{', L'}' };
+			case EscapeStringType::XML:
+				return { L'<', L'>', L'"', L'`', L'&' };
+            default:
+                assert(false);
+        }
+        return {};
+    }
+
+	std::map<wchar_t, std::wstring> GetEscapeStringMap(const EscapeStringType &type)
+	{
+		std::map<wchar_t, std::wstring> result;
+		switch (type)
+        {
+            case EscapeStringType::XML:
+				return {
+					{L'<', L"&lt;"},
+					{L'>', L"&gt;"},
+					{L'"', L"&quot;"},
+					{L'`', L"&apos;"},
+					{L'&', L"&amp;"}
+				};
                 break;
             default:
                 assert(false);
         }
-        return result;
-    }
+		return {};
+	}
 
-    wchar_t GetEscapeCharacter(const EscapeStringType &type)
-    {
-        switch (type)
+	std::wstring ConvertSpecialCharacterToEscapeString(const EscapeStringType &type, const wchar_t &c)
+	{
+        try 
         {
-            case EscapeStringType::Regex:
-                return L'\\';
-            default:
-                assert(false);
+			vector<wchar_t> specialChars = GetSpecialCharacters(type);
+			if (!std::count(specialChars.begin(), specialChars.end(), c))
+				return std::wstring(1, c);
+	
+			switch (type)
+			{
+				case EscapeStringType::Regex:
+					return L"\\" + std::wstring(1, c);
+				case EscapeStringType::XML:
+					return GetEscapeStringMap(type)[c];
+				default:
+					assert(false);
+			}
         }
-        return '\0';
-    }
+        catch(std::exception& ex)
+        {
+            THROW_EXCEPTION(ex);
+        }
+		return std::wstring(1, c);
+	}
 
 	std::wstring GetEscapeString(const EscapeStringType &type, const std::wstring &str)
     {
         std::wstring result = L"";
         try 
         {
-            std::vector<wchar_t> specChars = GetSpecialCharacters(type);
-            std::wstring escapChar = std::wstring(1, GetEscapeCharacter(type));
-            for (auto c : str) {
-                if (std::count(specChars.begin(), specChars.end(), c)) {
-                    result += escapChar + std::wstring(1, c);
-                } else {
-                    result += std::wstring(1, c);
-                }
-            }
+			for (auto c : str)
+				result += ConvertSpecialCharacterToEscapeString(type, c);
         }
         catch(std::exception& ex)
         {
@@ -150,6 +178,55 @@ namespace vcc
         return result;
     }
 
+	std::wstring GetUnescapeString(const EscapeStringType &type, const std::wstring &str)
+	{
+        std::wstring result = L"";
+        try 
+        {
+			std::map<wchar_t, std::wstring> escapeMap;
+			switch (type)
+			{
+			case EscapeStringType::XML:
+				escapeMap = GetEscapeStringMap(type);
+				break;
+			default:
+				break;
+			}
+
+			for (size_t i = 0; i < str.length(); i++) {
+				switch (type)
+				{
+					case EscapeStringType::Regex:
+						if (str[i] == L'\\')
+							i++;
+						result += str[i];
+						break;
+					case EscapeStringType::XML:
+					{
+						bool isEscape = false;
+						for (auto &pair : escapeMap) {
+							if (str.substr(i).starts_with(pair.second)) {
+								result += pair.first;
+								isEscape = true;
+								i += pair.second.length() - 1;
+								break;
+							}
+						}
+						if (!isEscape)
+							result += str[i];
+						break;
+					}
+				default:
+					break;
+				}
+			}
+        }
+        catch(std::exception& ex)
+        {
+            THROW_EXCEPTION(ex);
+        }
+        return result;
+	}
 
     std::wstring GetRegexFromFileFilter(const std::wstring &fileFilter)
     {

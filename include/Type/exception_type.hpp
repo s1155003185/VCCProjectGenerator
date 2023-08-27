@@ -10,6 +10,8 @@ enum class ExceptionType
     // File
 	FILE_NOT_FOUND,
 	FILE_IS_BLOCKED,
+	// parser
+	READER_ERROR,
     // vccobj - end
     CUSTOM_ERROR = 9999,
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 #include <string>
 #include <regex>
 
@@ -8,7 +9,8 @@ namespace vcc
 
 	enum class EscapeStringType
 	{
-		Regex
+		Regex,
+		XML
 	};
 
 	std::wstring str2wstr(const std::string& str);
@@ -30,8 +32,10 @@ namespace vcc
 
 	// regex
 	std::vector<wchar_t> GetSpecialCharacters(const EscapeStringType &type);
-	wchar_t GetEscapeCharacter(const EscapeStringType &type);
+	std::map<wchar_t, std::wstring> GetEscapeStringMap(const EscapeStringType &type);
+	std::wstring ConvertSpecialCharacterToEscapeString(const EscapeStringType &type, const wchar_t &c);
 	std::wstring GetEscapeString(const EscapeStringType &type, const std::wstring &str);
+	std::wstring GetUnescapeString(const EscapeStringType &type, const std::wstring &str);
 	std::wstring GetRegexFromFileFilter(const std::wstring &fileFilter);
 
 }
