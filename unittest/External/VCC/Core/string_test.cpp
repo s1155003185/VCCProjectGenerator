@@ -21,6 +21,15 @@ TEST(StringTest, EscapeString)
     }
     EXPECT_EQ(GetEscapeString(EscapeStringType::Regex, originalStr), expectedStr);
 
+    // XML
+    specialChars = GetSpecialCharacters(EscapeStringType::XML);
+    originalStr = L"";
+    expectedStr = L"";
+    for (auto sc : specialChars) {
+        originalStr += sc;
+        expectedStr += GetEscapeStringMap(EscapeStringType::XML)[sc];
+    }
+    EXPECT_EQ(GetEscapeString(EscapeStringType::XML, originalStr), expectedStr);
 }
 
 TEST(StringTest, GetRegexFromFileFilter)
