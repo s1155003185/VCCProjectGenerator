@@ -71,16 +71,6 @@ namespace vcc
         return result;
     }
 
-    void XMLReader::_ToNextChar(const std::wstring &xmlData, size_t &pos)
-    {
-        pos++;
-        while (pos < xmlData.length()) {
-            if (!std::iswspace(xmlData[pos]))
-                break;
-            pos++;
-        }
-    }
-
     bool XMLReader::_IsNextCharTagEnd(const std::wstring &xmlData, size_t &pos)
     {
         try
@@ -96,7 +86,7 @@ namespace vcc
             } else if (xmlData[pos] == L'>') {
                 return true;
             }else if (std::iswspace(xmlData[pos])) {
-                _ToNextChar(xmlData, pos);
+                GetNextCharPos(xmlData, pos, false);
                 return _IsNextCharTagEnd(xmlData, pos);
             }
         }
@@ -235,7 +225,7 @@ namespace vcc
                     pos = endPos;
                     break;
                 }
-                _ToNextChar(xmlData, pos);
+                GetNextCharPos(xmlData, pos, false);
             }
         }
         catch(std::exception& e)
@@ -246,10 +236,24 @@ namespace vcc
 
     XMLElement XMLReader::ParseXML(const std::wstring &xml)
     {
-        XMLElement root;
         try
         {
             size_t pos = 0;
+            return this->ParseXML(xml, pos);
+        }
+        catch(std::exception& e)
+        {
+            THROW_EXCEPTION(e);
+        }
+        XMLElement empty;
+        return empty;
+    }
+
+    XMLElement XMLReader::ParseXML(const std::wstring &xml, size_t &pos)
+    {
+        XMLElement root;
+        try
+        {;
             ParseXMLElement(xml, pos, root);
         }
         catch(std::exception& e)

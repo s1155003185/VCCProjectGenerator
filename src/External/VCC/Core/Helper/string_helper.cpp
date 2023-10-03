@@ -89,6 +89,33 @@ namespace vcc
 		RTrim(str);
 	}
 
+	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos)
+	{
+		if (!fromCurrentPos)
+			pos++;
+		while (pos < str.length()) {
+			if (!std::iswspace(str[pos])) {
+				return;
+			}
+			pos++;
+		}
+	}
+
+	// std::wstring GetNextToken(const std::wstring &str, size_t &pos, bool fromCurrentPos)
+	// {
+	// 	GetNextCharPos(str, pos, fromCurrentPos);
+	// 	std::wstring result = L"";
+	// 	while (pos < str.length()) {
+	// 		if (std::iswspace(str[pos])) {
+	// 			result += std::wstring(1, str[pos]);
+	// 			pos--;
+	// 			break;
+	// 		}
+	// 		pos++;
+	// 	}
+	// 	return result;
+	// }
+
     void Replace(std::wstring &str, const std::wstring& from, const std::wstring &to)
     {
         str.replace(str.find(from), from.length(), to);
