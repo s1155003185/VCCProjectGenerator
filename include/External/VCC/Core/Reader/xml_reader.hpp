@@ -32,6 +32,8 @@ namespace vcc
         public:
             void ParseXMLTag(const std::wstring &xmlData, size_t &pos, XMLElement &element);
             void ParseXMLElement(const std::wstring &xmlData, size_t &pos, XMLElement &element);
+
             XMLElement ParseXML(const std::wstring &xml);
+            XMLElement ParseXML(const std::wstring &xml, size_t &pos);
     };
 }

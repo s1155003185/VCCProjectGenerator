@@ -27,6 +27,11 @@ namespace vcc
 	void RTrim(std::wstring &str);
 	void Trim(std::wstring &str);
 
+	// search
+	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos = true);
+	//std::wstring GetNextToken(const std::wstring &str, size_t &pos, bool fromCurrentPos = true);
+
+	// process
 	void Replace(std::wstring &str, const std::wstring& from, const std::wstring &to);
 	void ReplaceAll(std::wstring &str, const std::wstring& from, const std::wstring &to);
 
