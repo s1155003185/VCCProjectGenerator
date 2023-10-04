@@ -28,7 +28,7 @@ namespace vcc
 	void Trim(std::wstring &str);
 
 	// search
-	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos = true);
+	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos);
 	//std::wstring GetNextToken(const std::wstring &str, size_t &pos, bool fromCurrentPos = true);
 
 	// process

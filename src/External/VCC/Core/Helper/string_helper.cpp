@@ -91,11 +91,12 @@ namespace vcc
 
 	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos)
 	{
-		if (fromCurrentPos && !std::iswspace(str[pos]))
-			return;
+		if (!fromCurrentPos)
+			pos++;
 		while (pos < str.length()) {
-			if (!std::iswspace(str[pos]))
+			if (!std::iswspace(str[pos])) {
 				return;
+			}
 			pos++;
 		}
 	}

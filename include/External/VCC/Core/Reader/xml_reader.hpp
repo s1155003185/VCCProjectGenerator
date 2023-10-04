@@ -23,11 +23,10 @@ namespace vcc
 
     class XMLReader
     {
-        private:
+        protected:
             std::wstring _GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg);
             std::wstring _GetString(const std::wstring &xmlData, size_t &pos);
             std::wstring _GetTag(const std::wstring &xmlData, size_t &pos);
-            void _ToNextChar(const std::wstring &xmlData, size_t &pos);
             bool _IsNextCharTagEnd(const std::wstring &xmlData, size_t &pos);
         public:
             void ParseXMLTag(const std::wstring &xmlData, size_t &pos, XMLElement &element);

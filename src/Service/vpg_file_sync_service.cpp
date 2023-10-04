@@ -46,8 +46,8 @@ std::wstring VPGFileSyncService::SyncFileContent(const std::wstring &src, const 
         size_t srcPos = 0;
         size_t destPos = 0;
 
-        GetNextCharPos(src, srcPos);
-        GetNextCharPos(dest, destPos);
+        GetNextCharPos(src, srcPos, true);
+        GetNextCharPos(dest, destPos, true);
 
         if (dest.starts_with(commandDelimiter)) {
             
