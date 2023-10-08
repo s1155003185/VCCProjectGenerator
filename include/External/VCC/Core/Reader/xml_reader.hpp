@@ -19,6 +19,7 @@ namespace vcc
         std::vector<XMLAttribute> Attributes;
         std::vector<XMLElement> Children;
         std::wstring Text;
+        std::wstring FullText;
     };
 
     class XMLReader
@@ -29,10 +30,13 @@ namespace vcc
             std::wstring _GetTag(const std::wstring &xmlData, size_t &pos);
             bool _IsNextCharTagEnd(const std::wstring &xmlData, size_t &pos);
         public:
-            void ParseXMLTag(const std::wstring &xmlData, size_t &pos, XMLElement &element);
-            void ParseXMLElement(const std::wstring &xmlData, size_t &pos, XMLElement &element);
+            XMLReader() = default;
+            virtual ~XMLReader() {}
 
-            XMLElement ParseXML(const std::wstring &xml);
-            XMLElement ParseXML(const std::wstring &xml, size_t &pos);
+            virtual void ParseXMLTag(const std::wstring &xmlData, size_t &pos, XMLElement &element);
+            virtual void ParseXMLElement(const std::wstring &xmlData, size_t &pos, XMLElement &element);
+
+            XMLElement Parse(const std::wstring &xml);
+            XMLElement Parse(const std::wstring &xml, size_t &pos);
     };
 }

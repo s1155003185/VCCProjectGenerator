@@ -27,7 +27,20 @@ namespace vcc
     private: \
         type _##var; \
     public: \
-        type *Get##var() { return &_##var; }\
+        type *Get##var() { return &_##var; }
+        
+    #define GETOBJU(type, var, ...) \
+    private: \
+        std::unique_ptr<type> _##var = std::make_unique<type>(__VA_ARGS__); \
+    public: \
+        type* Get##var() { return _##var.get(); } \
+        void Set##var(std::unique_ptr<type>&& ptr) { _##var = std::move(ptr); }
+
+    #define GETOBJS(type, var, ...) \
+    private: \
+        std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
+    public: \
+        std::shared_ptr<type> Get##var() { return _##var; }
 
     // std::vector
     #define VECTOR(type, var) \

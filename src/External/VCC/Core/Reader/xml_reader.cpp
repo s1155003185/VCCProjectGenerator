@@ -165,28 +165,21 @@ namespace vcc
                     return;
                 pos++;
 
-                std::wstring endTag = L"</" + (!element.Namespace.empty() ? (element.Namespace + L":") : L"") + element.Name + L">";
                 while (pos < dataLength)
                 {
                     XMLElement child;
                     ParseXMLElement(xmlData, pos, child);
                     if (!child.Name.empty()) {
                         element.Children.push_back(child);
-                        std::wstring childEndTag = L"</" + (!child.Namespace.empty() ? (child.Namespace + L":") : L"") + child.Name + L">";
-                        pos++;
-                        if (!xmlData.substr(pos).starts_with(childEndTag))
-                            THROW_EXCEPTION_M(ExceptionType::READER_ERROR, _GetErrorMessage(pos, xmlData[pos], L"end tab " + childEndTag + L" missing"));
-                        pos += childEndTag.length();
-                    }
-                    else
+                        
+                        std::wstring endTag = L"</" + (!child.Namespace.empty() ? (child.Namespace + L":") : L"") + child.Name + L">";
+                        if (!child.FullText.ends_with(endTag))
+                            THROW_EXCEPTION_M(ExceptionType::READER_ERROR, _GetErrorMessage(pos, xmlData[pos], L"end tab " + endTag + L" missing"));
+                        }
+                    else {
                         element.Text = child.Text;
-                    pos++;
-                    if (xmlData.substr(pos).starts_with(endTag)) {
-                        pos--;
                         break;
-                    }
-                    if (pos >= dataLength)
-                        THROW_EXCEPTION_M(ExceptionType::READER_ERROR, _GetErrorMessage(pos, xmlData[pos], L"end tab " + endTag + L" missing"));
+                    }                   
                     pos++;
                 }
             }
@@ -202,12 +195,14 @@ namespace vcc
         size_t dataLength = xmlData.length();
         try
         {
+            size_t startPos = pos;
             while (pos < dataLength) {
                 if (std::iswspace(xmlData[pos])) {
                     // nothing to do
                 } else if (pos + 1 < dataLength && xmlData[pos] == L'<' && xmlData[pos + 1] == L'/') {
-                    pos--;
-                    return;
+                    while (pos < dataLength && xmlData[pos] != L'>')
+                        pos++;
+                    break;
                 }else if (xmlData[pos] == L'<') {
                     ParseXMLTag(xmlData, pos, element);
                 } else {
@@ -227,6 +222,7 @@ namespace vcc
                 }
                 GetNextCharPos(xmlData, pos, false);
             }
+            element.FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
         }
         catch(std::exception& e)
         {
@@ -234,12 +230,12 @@ namespace vcc
         }
     }
 
-    XMLElement XMLReader::ParseXML(const std::wstring &xml)
+    XMLElement XMLReader::Parse(const std::wstring &xml)
     {
         try
         {
             size_t pos = 0;
-            return this->ParseXML(xml, pos);
+            return this->Parse(xml, pos);
         }
         catch(std::exception& e)
         {
@@ -249,11 +245,11 @@ namespace vcc
         return empty;
     }
 
-    XMLElement XMLReader::ParseXML(const std::wstring &xml, size_t &pos)
+    XMLElement XMLReader::Parse(const std::wstring &xml, size_t &pos)
     {
         XMLElement root;
         try
-        {;
+        {
             ParseXMLElement(xml, pos, root);
         }
         catch(std::exception& e)
