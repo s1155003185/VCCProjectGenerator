@@ -25,18 +25,25 @@ namespace vcc
     class XMLReader
     {
         protected:
-            std::wstring _GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg);
-            std::wstring _GetString(const std::wstring &xmlData, size_t &pos);
-            std::wstring _GetTag(const std::wstring &xmlData, size_t &pos);
-            bool _IsNextCharTagEnd(const std::wstring &xmlData, size_t &pos);
+            virtual std::wstring GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg);
+            virtual std::wstring GetString(const std::wstring &xmlData, size_t &pos);
+            virtual std::wstring GetTag(const std::wstring &xmlData, size_t &pos);
+            virtual bool IsNextCharTagEnd(const std::wstring &xmlData, size_t &pos);
+            virtual bool IsXMLHeader(const std::wstring &xmlData, size_t &pos);
+            virtual void ParseXMLHeader(const std::wstring &xmlData, size_t &pos); // TODO: handle <?...?> and <!...>
+            
         public:
             XMLReader() = default;
             virtual ~XMLReader() {}
 
+            // header
+            virtual bool ParseXMLTagHeader(const std::wstring &xmlData, size_t &pos, XMLElement &element); // ture if have tag end
+            
+            // tag
             virtual void ParseXMLTag(const std::wstring &xmlData, size_t &pos, XMLElement &element);
             virtual void ParseXMLElement(const std::wstring &xmlData, size_t &pos, XMLElement &element);
 
-            XMLElement Parse(const std::wstring &xml);
-            XMLElement Parse(const std::wstring &xml, size_t &pos);
+            virtual XMLElement Parse(const std::wstring &xml);
+            virtual XMLElement Parse(const std::wstring &xml, size_t &pos);
     };
 }
