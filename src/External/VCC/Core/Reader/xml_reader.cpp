@@ -164,6 +164,27 @@ namespace vcc
         // tag end with no ceontent
         return xmlData[pos - 1] != L'/';
     }
+
+    void XMLReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, XMLElement &element)
+    {
+        while (pos < xmlData.length())
+        {
+            XMLElement child;
+            ParseXMLElement(xmlData, pos, child);
+            if (!child.Name.empty()) {
+                element.Children.push_back(child);
+                
+                std::wstring endTag = L"</" + (!child.Namespace.empty() ? (child.Namespace + L":") : L"") + child.Name + L">";
+                if (!child.FullText.ends_with(endTag))
+                    THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"end tab " + endTag + L" missing"));
+                }
+            else {
+                element.Text = child.Text;
+                break;
+            }                   
+            pos++;
+        }
+    }
     
     void XMLReader::ParseXMLTag(const std::wstring &xmlData, size_t &pos, XMLElement &element)
     {
@@ -181,24 +202,7 @@ namespace vcc
             if (!ParseXMLTagHeader(xmlData, pos, element))
                 return;
             pos++;
-
-            while (pos < xmlData.length())
-            {
-                XMLElement child;
-                ParseXMLElement(xmlData, pos, child);
-                if (!child.Name.empty()) {
-                    element.Children.push_back(child);
-                    
-                    std::wstring endTag = L"</" + (!child.Namespace.empty() ? (child.Namespace + L":") : L"") + child.Name + L">";
-                    if (!child.FullText.ends_with(endTag))
-                        THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"end tab " + endTag + L" missing"));
-                    }
-                else {
-                    element.Text = child.Text;
-                    break;
-                }                   
-                pos++;
-            }
+            ParseXMLTagContent(xmlData, pos, element);
         }
         catch(std::exception& e)
         {
