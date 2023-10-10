@@ -104,86 +104,124 @@ namespace vcc
 
     void XMLReader::ParseXMLHeader(const std::wstring &xmlData, size_t &pos)
     {
-        // TODO: handle <?...?> and <!...>
-        while (pos < xmlData.length()) {
-            if (xmlData[pos] == L'"') {
-                GetString(xmlData, pos);
+        try
+        {
+            // TODO: handle <?...?> and <!...>
+            while (pos < xmlData.length()) {
+                if (xmlData[pos] == L'"') {
+                    GetString(xmlData, pos);
+                }
+                if(xmlData[pos] == L'>') {
+                    break;
+                }                    
+                pos++;
             }
-            if(xmlData[pos] == L'>') {
-                break;
-            }                    
-            pos++;
+        }
+        catch(std::exception& e)
+        {
+            THROW_EXCEPTION(e);
         }
     }
             
     bool XMLReader::ParseXMLTagHeader(const std::wstring &xmlData, size_t &pos, XMLElement &element)
     {
-        if (xmlData[pos] != L'<')
-            THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"char is not < but " + std::wstring(1, xmlData[pos])));
-            
-        pos++;
-        size_t dataLength = xmlData.length();
-        if (pos >= dataLength)
-            THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"> missing"));
-        
-        // tag name
-        std::wstring tagName = GetTag(xmlData, pos);
-        if (tagName.empty()) {
-            if (pos + 1 < dataLength && xmlData[pos + 1] == L'/') {
-                pos--;
-                return false;
-            }
-            THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"tag name missing"));
-        }
-        pos++;
-        if (pos >= dataLength)
-            THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"> missing"));
-
-        if (xmlData[pos] == L':') {
-            element.Namespace = tagName;
+        try
+        {
+            if (xmlData[pos] != L'<')
+                THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"char is not < but " + std::wstring(1, xmlData[pos])));
+                
             pos++;
-            tagName = GetTag(xmlData, pos);
-            if (tagName.empty())
+            size_t dataLength = xmlData.length();
+            if (pos >= dataLength)
+                THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"> missing"));
+            
+            // tag name
+            std::wstring tagName = GetTag(xmlData, pos);
+            if (tagName.empty()) {
+                if (pos + 1 < dataLength && xmlData[pos + 1] == L'/') {
+                    pos--;
+                    return false;
+                }
                 THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"tag name missing"));
+            }
             pos++;
             if (pos >= dataLength)
                 THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"> missing"));
+
+            if (xmlData[pos] == L':') {
+                element.Namespace = tagName;
+                pos++;
+                tagName = GetTag(xmlData, pos);
+                if (tagName.empty())
+                    THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"tag name missing"));
+                pos++;
+                if (pos >= dataLength)
+                    THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"> missing"));
+            }
+            element.Name = tagName;
+            while (!IsNextCharTagEnd(xmlData, pos)) {
+                XMLAttribute attr;
+                attr.Name = GetTag(xmlData, pos);
+                pos++;
+                if (pos >= dataLength || xmlData[pos] != L'=')
+                    THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"= missing"));
+                pos++;
+                attr.Value = GetString(xmlData, pos);
+                element.Attributes.push_back(attr);
+                pos++;
+            }
+            // tag end with no ceontent
+            return xmlData[pos - 1] != L'/';
         }
-        element.Name = tagName;
-        while (!IsNextCharTagEnd(xmlData, pos)) {
-            XMLAttribute attr;
-            attr.Name = GetTag(xmlData, pos);
-            pos++;
-            if (pos >= dataLength || xmlData[pos] != L'=')
-                THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"= missing"));
-            pos++;
-            attr.Value = GetString(xmlData, pos);
-            element.Attributes.push_back(attr);
-            pos++;
+        catch(std::exception& e)
+        {
+            THROW_EXCEPTION(e);
         }
-        // tag end with no ceontent
-        return xmlData[pos - 1] != L'/';
+        return false;
     }
 
     void XMLReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, XMLElement &element)
     {
-        while (pos < xmlData.length())
+        try
         {
-            XMLElement child;
-            ParseXMLElement(xmlData, pos, child);
-            if (!child.Name.empty()) {
-                element.Children.push_back(child);
-                
-                std::wstring endTag = L"</" + (!child.Namespace.empty() ? (child.Namespace + L":") : L"") + child.Name + L">";
-                if (!child.FullText.ends_with(endTag))
-                    THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"end tab " + endTag + L" missing"));
-                }
-            else {
-                element.Text = child.Text;
-                break;
-            }                   
-            pos++;
+            while (pos < xmlData.length())
+            {
+                XMLElement child;
+                ParseXMLElement(xmlData, pos, child);
+                if (!child.Name.empty()) {
+                    element.Children.push_back(child);
+                    
+                    std::wstring endTag = L"</" + (!child.Namespace.empty() ? (child.Namespace + L":") : L"") + child.Name + L">";
+                    if (!child.FullText.ends_with(endTag))
+                        THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"end tab " + endTag + L" missing"));
+                    }
+                else {
+                    element.Text = child.Text;
+                    break;
+                }                   
+                pos++;
+            }
         }
+        catch(std::exception& e)
+        {
+            THROW_EXCEPTION(e);
+        }
+    }
+    
+    void XMLReader::RemoveXMLTagTail(const std::wstring &xmlData, size_t &pos, XMLElement &element)
+    {
+        try
+        {
+            GetNextCharPos(xmlData, pos, true);
+            std::wstring endTag = L"</" + (!element.Namespace.empty() ? (element.Namespace + L":") : L"") + element.Name + L">";
+            if (!xmlData.substr(pos).starts_with(endTag))
+                THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"end tab " + endTag + L" missing"));
+            pos += endTag.length() - 1;
+        }
+        catch(std::exception& e)
+        {
+            THROW_EXCEPTION(e);
+        } 
     }
     
     void XMLReader::ParseXMLTag(const std::wstring &xmlData, size_t &pos, XMLElement &element)
@@ -195,14 +233,18 @@ namespace vcc
             if (xmlData[pos] != L'<')
                 THROW_EXCEPTION_M(ExceptionType::READER_ERROR, GetErrorMessage(pos, xmlData[pos], L"char is not < but " + std::wstring(1, xmlData[pos])));
             
-            if (IsXMLHeader(xmlData, pos)) {
+            // remove xml header
+            while (IsXMLHeader(xmlData, pos)) {
                 ParseXMLHeader(xmlData, pos);
-                return;
+                GetNextCharPos(xmlData, pos, false);
             }
+            // content
             if (!ParseXMLTagHeader(xmlData, pos, element))
                 return;
             pos++;
             ParseXMLTagContent(xmlData, pos, element);
+            pos++;
+            RemoveXMLTagTail(xmlData, pos, element);
         }
         catch(std::exception& e)
         {
@@ -220,11 +262,12 @@ namespace vcc
                 if (std::iswspace(xmlData[pos])) {
                     // nothing to do
                 } else if (pos + 1 < dataLength && xmlData[pos] == L'<' && xmlData[pos + 1] == L'/') {
-                    while (pos < dataLength && xmlData[pos] != L'>')
-                        pos++;
-                    break;
+                    // parent tag end
+                    pos--;
+                    return;
                 }else if (xmlData[pos] == L'<') {
                     ParseXMLTag(xmlData, pos, element);
+                    break;
                 } else {
                     size_t endPos = pos;
                     while (endPos < dataLength) {

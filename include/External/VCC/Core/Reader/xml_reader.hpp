@@ -36,11 +36,12 @@ namespace vcc
             XMLReader() = default;
             virtual ~XMLReader() {}
 
-            // header
+            // tag
             virtual bool ParseXMLTagHeader(const std::wstring &xmlData, size_t &pos, XMLElement &element); // ture if have tag end
             virtual void ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, XMLElement &element);
+            virtual void RemoveXMLTagTail(const std::wstring &xmlData, size_t &pos, XMLElement &element);
 
-            // tag
+            // content
             virtual void ParseXMLTag(const std::wstring &xmlData, size_t &pos, XMLElement &element);
             virtual void ParseXMLElement(const std::wstring &xmlData, size_t &pos, XMLElement &element);
 
