@@ -7,50 +7,64 @@
 
 using namespace vcc;
 
-VPGCodeReader::VPGCodeReader(std::wstring commandDelimiter)
+void VPGCodeReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, XMLElement &element)
 {
-    this->_CommandDelimiter = commandDelimiter;
+    try
+    {
+        size_t startPos = pos;
+        std::wstring endTag = L"</" + (!element.Namespace.empty() ? (element.Namespace + L":") : L"") + element.Name + L">";
+        while (pos < xmlData.length())
+        {
+            if (xmlData.substr(pos).starts_with(endTag)) {
+                pos--;
+                break;
+            }  
+            pos++;
+        }
+        element.Text = pos < xmlData.length() ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
+    }
+    catch(std::exception& e)
+    {
+        THROW_EXCEPTION(e);
+    }
 }
 
 void VPGCodeReader::ParseXMLElement(const std::wstring &xmlData, size_t &pos, XMLElement &element)
 {
-        size_t dataLength = xmlData.length();
-        try
-        {
-            wstring str = L"";
-            while (pos < dataLength) {
-                str += std::wstring(1, xmlData[pos]);
-                
-                // if (std::iswspace(xmlData[pos])) {
-                //     // nothing to do
-                // } else if (pos + 1 < dataLength && xmlData[pos] == L'<' && xmlData[pos + 1] == L'/') {
-                //     pos--;
-                //     return;
-                // }else if (xmlData[pos] == L'<') {
-                //     ParseXMLTag(xmlData, pos, element);
-                // } else {
-                //     size_t endPos = pos;
-                //     while (endPos < dataLength) {
-                //         if (xmlData[endPos] == L'<') {
-                //             endPos--;
-                //             break;
-                //         }
-                //         endPos++;
-                //     }
-                //     // if not space or tab, then it must be text
-                //     element.Text = GetUnescapeString(EscapeStringType::XML, xmlData.substr(pos, endPos - pos + 1));
-                //     Trim(element.Text);
-                //     pos = endPos;
-                //     break;
-                // }
+   size_t dataLength = xmlData.length();
+    try
+    {
+        size_t startPos = pos;
+        while (pos < dataLength) {
+            if (xmlData.substr(pos).starts_with(L"<vcc:")) {
+                pos--;
+                XMLElement previous;
+                previous.Text = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
+                previous.FullText = previous.Text;
+                element.Children.push_back(previous);
 
+                pos++;
+                startPos = pos;
 
+                XMLElement tmp;
+                ParseXMLTag(xmlData, pos, tmp);
+                tmp.FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
+                element.Children.push_back(tmp);
 
-                GetNextCharPos(xmlData, pos, false);
-            }
+                pos++;
+                startPos = pos;
+            } else
+                pos++;
         }
-        catch(std::exception& e)
-        {
-            THROW_EXCEPTION(e);
+        if (startPos < xmlData.length() - 1) {
+            XMLElement tmp;
+            tmp.Text = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
+            tmp.FullText = tmp.Text;
+            element.Children.push_back(tmp);
         }
+    }
+    catch(std::exception& e)
+    {
+        THROW_EXCEPTION(e);
+    }
 }
