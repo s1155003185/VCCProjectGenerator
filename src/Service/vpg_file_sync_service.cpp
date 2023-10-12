@@ -9,7 +9,7 @@
 #include "exception_type.hpp"
 #include "file_helper.hpp"
 #include "log_property.hpp"
-#include "xml_reader.hpp"
+#include "vpg_code_reader.hpp"
 
 using namespace vcc;
 
@@ -41,17 +41,9 @@ std::wstring VPGFileSyncService::SyncFileContent(const std::wstring &src, const 
     try
     {
         VPGFileContentSyncMode mode = defaultMode;
-        std::unique_ptr<XMLReader> reader = std::make_unique<XMLReader>();
-
-        size_t srcPos = 0;
-        size_t destPos = 0;
-
-        GetNextCharPos(src, srcPos, true);
-        GetNextCharPos(dest, destPos, true);
-
-        if (dest.starts_with(commandDelimiter)) {
-            
-        }
+        std::unique_ptr<VPGCodeReader> reader = std::make_unique<VPGCodeReader>();
+        XMLElement srcElement = reader->Parse(src);
+        XMLElement tarElement = reader->Parse(dest);
 
 
         // 1. read first line to determine sync mode. Dest first, then src. If not exists, then default
