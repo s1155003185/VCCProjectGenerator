@@ -97,59 +97,59 @@ TEST_F(VPGFileSyncServiceTest, DEFAULT_MODE_SKIP)
 }
 
 // Tag
-// TEST_F(VPGFileSyncServiceTest, FULL_TAG)
-// {
-//     std::wstring result = this->GetFullHeader();
-//     result = L"    a\r\n";
-//     result += L"// <vcc:tagA action:\"RESERVE\">\r\n";
-//     result += L"// BLOCK 1\r\n";
-//     result += L"// </vcc:tagA>\r\n";
-//     result += L"    b\r\n";
-//     result += L"// <vcc:tagB action:\"REPLACE\">\r\n";
-//     result += L"// BLOCK B\r\n";
-//     result += L"// </vcc:tagB>\r\n";
-//     result += L"    c\r\n";
-//     result += L"// <vcc:tagC action:\"REPLACE\">\r\n";
-//     result += L"// BLOCK C\r\n";
-//     result += L"// </vcc:tagC>\r\n";
-//     result = L"    d\r\n";
-//     result += L"// <vcc:tagD action:\"RESERVE\">\r\n";
-//     result += L"// BLOCK 4\r\n";
-//     result += L"// </vcc:tagD>\r\n";
-//     result += L"    e\r\n";
-//     result += L"// <vcc:tagE action:\"REPLACE\">\r\n";
-//     result += L"// BLOCK E\r\n";
-//     result += L"// </vcc:tagE>\r\n";
-//     EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetFullHeader() + this->GetCodeA(), this->GetFullHeader() + this->GetCodeB(), VPGFileContentSyncMode::Skip, this->GetCommandDelimitermmand()),
-//                 result);
-// }
+TEST_F(VPGFileSyncServiceTest, FULL_TAG)
+{
+    std::wstring result = this->GetFullHeader();
+    result = L"    a\r\n";
+    result += L"// <vcc:tagA action:\"RESERVE\">\r\n";
+    result += L"// BLOCK 1\r\n";
+    result += L"// </vcc:tagA>\r\n";
+    result += L"    b\r\n";
+    result += L"// <vcc:tagB action:\"REPLACE\">\r\n";
+    result += L"// BLOCK B\r\n";
+    result += L"// </vcc:tagB>\r\n";
+    result += L"    c\r\n";
+    result += L"// <vcc:tagC action:\"REPLACE\">\r\n";
+    result += L"// BLOCK C\r\n";
+    result += L"// </vcc:tagC>\r\n";
+    result = L"    d\r\n";
+    result += L"// <vcc:tagD action:\"RESERVE\">\r\n";
+    result += L"// BLOCK 4\r\n";
+    result += L"// </vcc:tagD>\r\n";
+    result += L"    e\r\n";
+    result += L"// <vcc:tagE action:\"REPLACE\">\r\n";
+    result += L"// BLOCK E\r\n";
+    result += L"// </vcc:tagE>\r\n";
+    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetFullHeader() + this->GetCodeA(), this->GetFullHeader() + this->GetCodeB(), VPGFileContentSyncMode::Skip, this->GetCommandDelimitermmand()),
+                result);
+}
 
-// TEST_F(VPGFileSyncServiceTest, DEMAND_TAG)
-// {
-//     std::wstring result = this->GetDemandHeader();
-//     result += L"    1\r\n";
-//     result += L"// <vcc:tagA action:\"RESERVE\">\r\n";
-//     result += L"// BLOCK 1\r\n";
-//     result += L"// </vcc:tagA>\r\n";
-//     result += L"    2\r\n";
-//     result += L"// <vcc:tagB action:\"REPLACE\">\r\n";
-//     result += L"// BLOCK B\r\n";
-//     result += L"// </vcc:tagB>\r\n";
-//     result += L"    3\r\n";
-//     result += L"// <vcc:tagE action:\"REPLACE\">\r\n";
-//     result += L"// BLOCK E\r\n";
-//     result += L"// </vcc:tagE>\r\n";
-//     result = L"    4\r\n";
-//     result += L"// <vcc:tagD action:\"RESERVE\">\r\n";
-//     result += L"// BLOCK 4\r\n";
-//     result += L"// </vcc:tagD>\r\n";
-//     result += L"    5\r\n";
-//     result += L"// <vcc:tagC action:\"REPLACE\">\r\n";
-//     result += L"// BLOCK C\r\n";
-//     result += L"// </vcc:tagC>\r\n";
-//     EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetDemandHeader() + this->GetCodeA(), this->GetDemandHeader() + this->GetCodeB(), VPGFileContentSyncMode::Skip, this->GetCommandDelimitermmand()),
-//                 result);
-// }
+TEST_F(VPGFileSyncServiceTest, DEMAND_TAG)
+{
+    std::wstring result = this->GetDemandHeader();
+    result += L"    1\r\n";
+    result += L"// <vcc:tagA action:\"RESERVE\">\r\n";
+    result += L"// BLOCK 1\r\n";
+    result += L"// </vcc:tagA>\r\n";
+    result += L"    2\r\n";
+    result += L"// <vcc:tagB action:\"REPLACE\">\r\n";
+    result += L"// BLOCK B\r\n";
+    result += L"// </vcc:tagB>\r\n";
+    result += L"    3\r\n";
+    result += L"// <vcc:tagE action:\"REPLACE\">\r\n";
+    result += L"// BLOCK E\r\n";
+    result += L"// </vcc:tagE>\r\n";
+    result = L"    4\r\n";
+    result += L"// <vcc:tagD action:\"RESERVE\">\r\n";
+    result += L"// BLOCK 4\r\n";
+    result += L"// </vcc:tagD>\r\n";
+    result += L"    5\r\n";
+    result += L"// <vcc:tagC action:\"REPLACE\">\r\n";
+    result += L"// BLOCK C\r\n";
+    result += L"// </vcc:tagC>\r\n";
+    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetDemandHeader() + this->GetCodeA(), this->GetDemandHeader() + this->GetCodeB(), VPGFileContentSyncMode::Skip, this->GetCommandDelimitermmand()),
+                result);
+}
 
 TEST_F(VPGFileSyncServiceTest, SKIP_TAG_REPLACE)
 {
