@@ -11,7 +11,6 @@ void VPGCodeReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos,
 {
     try
     {
-        size_t startPos = pos;
         std::wstring endTag = L"</" + (!element.Namespace.empty() ? (element.Namespace + L":") : L"") + element.Name + L">";
         while (pos < xmlData.length())
         {
@@ -21,7 +20,6 @@ void VPGCodeReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos,
             }  
             pos++;
         }
-        element.Text = pos < xmlData.length() ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
     }
     catch(std::exception& e)
     {
@@ -39,8 +37,7 @@ void VPGCodeReader::ParseXMLElement(const std::wstring &xmlData, size_t &pos, XM
             if (xmlData.substr(pos).starts_with(L"<vcc:")) {
                 pos--;
                 XMLElement previous;
-                previous.Text = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
-                previous.FullText = previous.Text;
+                previous.FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
                 element.Children.push_back(previous);
 
                 pos++;
@@ -58,8 +55,7 @@ void VPGCodeReader::ParseXMLElement(const std::wstring &xmlData, size_t &pos, XM
         }
         if (startPos < xmlData.length() - 1) {
             XMLElement tmp;
-            tmp.Text = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
-            tmp.FullText = tmp.Text;
+            tmp.FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
             element.Children.push_back(tmp);
         }
     }
