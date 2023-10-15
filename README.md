@@ -1,4 +1,4 @@
-# Versioning Commond Codebase Project / Versioning Coding Cooperation Project
+# Versioning Common Codebase Project / Versioning Coding Cooperation Project
 # VCCProjectGeneratorDLL
 
 ## Release Log
