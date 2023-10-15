@@ -16,9 +16,17 @@ namespace vcc
 	std::wstring str2wstr(const std::string& str);
 	std::string wstr2str(const std::wstring &wstr);
 
+	void ToLower(std::wstring &str);
+	void ToUpper(std::wstring &str);
+
+	// Padding
 	std::string PadLeft(const std::string str, size_t length, char c);
 	std::string PadRight(const std::string str, size_t length, char c);
 
+	std::wstring PadLeft(const std::wstring str, size_t length, wchar_t c);
+	std::wstring PadRight(const std::wstring str, size_t length, wchar_t c);
+
+	// Trim
 	void LTrim(std::string &str);
 	void RTrim(std::string &str);
 	void Trim(std::string &str);

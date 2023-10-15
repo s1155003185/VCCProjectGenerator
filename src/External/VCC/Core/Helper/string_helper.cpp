@@ -35,6 +35,16 @@ namespace vcc
 		return str;
 	}
 
+	void ToLower(std::wstring &str)
+	{
+		std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+	}
+
+	void ToUpper(std::wstring &str)
+	{
+		std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+	}
+
 	std::string PadLeft(const std::string str, size_t length, char c)
 	{
 		if (length <= str.length())
@@ -47,6 +57,20 @@ namespace vcc
 		if (length <= str.length())
 			return str;
 		return str + std::string(length - std::min(length, str.length()), c);
+	}
+
+	std::wstring PadLeft(const std::wstring str, size_t length, wchar_t c)
+	{
+		if (length <= str.length())
+			return str;
+		return std::wstring(length - std::min(length, str.length()), c) + str;
+	}
+
+	std::wstring PadRight(const std::wstring str, size_t length, wchar_t c)
+	{
+		if (length <= str.length())
+			return str;
+		return str + std::wstring(length - std::min(length, str.length()), c);
 	}
 
 	void LTrim(std::string &str)
