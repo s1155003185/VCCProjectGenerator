@@ -126,7 +126,7 @@ namespace vcc
         }
     }
 
-    std::wstring ReadFileSingleLine(std::wstring filePath, int index) 
+    std::wstring ReadFileOneLine(std::wstring filePath, int index) 
     {
         try {
             ValidateFile(filePath);
@@ -150,7 +150,7 @@ namespace vcc
         return L"";
     }
 
-    void AppendFileSingleLine(std::wstring filePath, std::wstring line, bool isForce) 
+    void AppendFileOneLine(std::wstring filePath, std::wstring line, bool isForce) 
     {
         try {
             // 1. Check directory exists

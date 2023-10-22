@@ -36,7 +36,7 @@ namespace vcc
 			std::wcout << logMessage << std::endl;
 
 		if (!logProperty.GetFilePath().empty()) {
-			AppendFileSingleLine(logProperty.GetFilePath(), logMessage, true);
+			AppendFileOneLine(logProperty.GetFilePath(), logMessage, true);
 		}
 		return logMessage;
 	}

@@ -21,6 +21,6 @@ namespace vcc
 
 	// action
 	void CreateDirectory(const std::wstring &path);
-	std::wstring ReadFileSingleLine(std::wstring filePath, int index);
-	void AppendFileSingleLine(std::wstring filePath, std::wstring line, bool isForce);
+	std::wstring ReadFileOneLine(std::wstring filePath, int index);
+	void AppendFileOneLine(std::wstring filePath, std::wstring line, bool isForce);
 }
