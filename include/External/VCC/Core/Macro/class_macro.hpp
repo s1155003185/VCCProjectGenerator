@@ -36,11 +36,15 @@ namespace vcc
         type* Get##var() { return _##var.get(); } \
         void Set##var(std::unique_ptr<type>&& ptr) { _##var = std::move(ptr); }
 
+    #define GETUPTR(type, var, ...) GETOBJU(type, var, ...)
+
     #define GETOBJS(type, var, ...) \
     private: \
         std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
     public: \
         std::shared_ptr<type> Get##var() { return _##var; }
+
+    #define GETSPTR(type, var, ...) GETOBJS(type, var, ...)
 
     // std::vector
     #define VECTOR(type, var) \

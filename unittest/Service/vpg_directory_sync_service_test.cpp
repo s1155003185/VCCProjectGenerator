@@ -38,11 +38,11 @@ class VPGDirectorySyncServiceTest : public testing::Test
 
         void CreateFileInSourceWorkspace(std::wstring fileName, std::wstring content)
         {
-            AppendFileSingleLine(ConcatPath(this->GetWorkspaceSource(), fileName), content, true);
+            AppendFileOneLine(ConcatPath(this->GetWorkspaceSource(), fileName), content, true);
         }
         void CreateFileInTargetWorkspace(std::wstring fileName, std::wstring content)
         {
-            AppendFileSingleLine(ConcatPath(this->GetWorkspaceTarget(), fileName), content, true);
+            AppendFileOneLine(ConcatPath(this->GetWorkspaceTarget(), fileName), content, true);
         }
     public:
 

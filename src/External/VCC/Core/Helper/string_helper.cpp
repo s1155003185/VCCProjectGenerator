@@ -44,6 +44,11 @@ namespace vcc
 	{
 		std::transform(str.begin(), str.end(), str.begin(), ::toupper);
 	}
+	
+	bool HasPrefix(const std::wstring &str, const std::wstring &prefix, const size_t &pos)
+	{
+		return str.find(prefix, pos) == pos;
+	}
 
 	std::string PadLeft(const std::string str, size_t length, char c)
 	{
@@ -124,21 +129,6 @@ namespace vcc
 			pos++;
 		}
 	}
-
-	// std::wstring GetNextToken(const std::wstring &str, size_t &pos, bool fromCurrentPos)
-	// {
-	// 	GetNextCharPos(str, pos, fromCurrentPos);
-	// 	std::wstring result = L"";
-	// 	while (pos < str.length()) {
-	// 		if (std::iswspace(str[pos])) {
-	// 			result += std::wstring(1, str[pos]);
-	// 			pos--;
-	// 			break;
-	// 		}
-	// 		pos++;
-	// 	}
-	// 	return result;
-	// }
 
     void Replace(std::wstring &str, const std::wstring& from, const std::wstring &to)
     {

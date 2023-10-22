@@ -34,12 +34,12 @@ class FileTest : public testing::Test
             CreateDirectory(this->GetWorkspaceTarget());
 
             // FIle A
-            AppendFileSingleLine(this->GetFilePathSourceA(), L"File A", true);
+            AppendFileOneLine(this->GetFilePathSourceA(), L"File A", true);
             // File B
-            AppendFileSingleLine(this->GetFilePathTargetB(), L"File B", true);
+            AppendFileOneLine(this->GetFilePathTargetB(), L"File B", true);
             // File C
-            AppendFileSingleLine(this->GetFilePathSourceC(), L"File C Source", true);
-            AppendFileSingleLine(this->GetFilePathTargetC(), L"File C Target", true);
+            AppendFileOneLine(this->GetFilePathSourceC(), L"File C Source", true);
+            AppendFileOneLine(this->GetFilePathTargetC(), L"File C Target", true);
 
         }
 
