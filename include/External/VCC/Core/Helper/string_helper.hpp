@@ -19,6 +19,8 @@ namespace vcc
 	void ToLower(std::wstring &str);
 	void ToUpper(std::wstring &str);
 
+	bool HasPrefix(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
+
 	// Padding
 	std::string PadLeft(const std::string str, size_t length, char c);
 	std::string PadRight(const std::string str, size_t length, char c);
@@ -36,8 +38,7 @@ namespace vcc
 	void Trim(std::wstring &str);
 
 	// search
-	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos);
-	//std::wstring GetNextToken(const std::wstring &str, size_t &pos, bool fromCurrentPos = true);
+	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos = false);
 
 	// process
 	void Replace(std::wstring &str, const std::wstring& from, const std::wstring &to);
