@@ -50,6 +50,32 @@ namespace vcc
 		return str.find(prefix, pos) == pos;
 	}
 
+	std::vector<std::wstring> SplitStringByUpperCase(const std::wstring &str, bool splitDigit, bool splitSpecialChar)
+	{
+		std::vector<std::wstring> results;
+		std::wstring currentToken;
+		for (wchar_t c : str) {
+			bool pushCurrentToken = std::iswupper(c)
+				|| std::iswspace(c)
+				|| (splitSpecialChar && !std::isalnum(c))
+				|| (splitDigit && std::iswdigit(c));
+
+			bool addCharToCurrentToken = !std::iswspace(c) && (std::iswalnum(c) || !splitSpecialChar);
+
+			if (pushCurrentToken) {
+				Trim(currentToken);
+				if (!currentToken.empty())
+					results.push_back(currentToken);
+				currentToken = L"";
+			}
+			if (addCharToCurrentToken)
+				currentToken += std::wstring(1, c);
+		}
+		if (!currentToken.empty())
+			results.push_back(currentToken);
+		return results;
+	}
+
 	std::string PadLeft(const std::string str, size_t length, char c)
 	{
 		if (length <= str.length())
@@ -128,6 +154,22 @@ namespace vcc
 			}
 			pos++;
 		}
+	}
+	
+	size_t CountSubstr(const std::wstring &str, const std::wstring subStr)
+	{
+		size_t count = 0;
+		size_t pos = 0;
+
+		while (pos < str.length())
+		{
+			pos = str.find(subStr, pos);
+			if (pos == std::wstring::npos)
+				break;
+			count++;
+			pos += subStr.length();
+		}
+		return count;
 	}
 
     void Replace(std::wstring &str, const std::wstring& from, const std::wstring &to)

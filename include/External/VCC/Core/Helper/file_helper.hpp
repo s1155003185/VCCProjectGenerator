@@ -20,7 +20,12 @@ namespace vcc
 	bool IsFileEqual(const std::wstring &pathA, const std::wstring &pathB);
 
 	// action
-	void CreateDirectory(const std::wstring &path);
-	std::wstring ReadFileOneLine(std::wstring filePath, int index);
-	void AppendFileOneLine(std::wstring filePath, std::wstring line, bool isForce);
+	void CreateDirectory(const std::wstring &path);	
+	std::wstring ReadFile(const std::wstring &filePath);
+	void ReadFilePerLine(const std::wstring &filePath, std::function<void(std::wstring)> action);
+	std::wstring ReadFileOneLine(const std::wstring &filePath, int index);
+
+	// write file
+	void WriteFile(const std::wstring &filePath, const std::wstring &content, bool isForce);
+	void AppendFileOneLine(const std::wstring &filePath, const std::wstring &line, bool isForce);
 }

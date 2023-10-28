@@ -23,6 +23,7 @@ namespace vcc
     public: \
         static type Get##var() { return def; }
 
+    // object
     #define GETOBJ(type, var) \
     private: \
         type _##var; \
