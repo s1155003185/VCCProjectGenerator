@@ -10,7 +10,7 @@ using namespace vcc;
 // Property: Generate Object Type, Object Class, PropertyAccessor, Interface // TODO: Interface
 // Type: Generate Interface // TODO: Interface
 
-class VPGEnumClass;
+struct VPGEnumClass;
 class VPGFileGenerationService
 {   
     public:

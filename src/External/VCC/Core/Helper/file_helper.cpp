@@ -126,7 +126,41 @@ namespace vcc
         }
     }
 
-    std::wstring ReadFileOneLine(std::wstring filePath, int index) 
+    std::wstring ReadFile(const std::wstring &filePath)
+    {
+        std::wstring result = L"";
+        try {
+            ValidateFile(filePath);
+
+            std::wifstream fileStream(filePath, ios_base::in);
+            wchar_t c;
+            while (fileStream.get(c)) {
+                result += wstring(1, c);
+            }
+            fileStream.close();
+        } catch (std::exception &e) {
+            THROW_EXCEPTION(e);
+        }
+        return result;
+    }
+
+	void ReadFilePerLine(const std::wstring &filePath, std::function<void(std::wstring)> action)
+    {
+        try {
+            ValidateFile(filePath);
+
+            std::wifstream fileStream(filePath, ios_base::in);
+            std::wstring line;
+            while (std::getline(fileStream, line)) {
+                action(line);
+            }
+            fileStream.close();
+        } catch (std::exception &e) {
+            THROW_EXCEPTION(e);
+        }
+    }
+
+    std::wstring ReadFileOneLine(const std::wstring &filePath, int index) 
     {
         try {
             ValidateFile(filePath);
@@ -150,7 +184,7 @@ namespace vcc
         return L"";
     }
 
-    void AppendFileOneLine(std::wstring filePath, std::wstring line, bool isForce) 
+    void AppendFileOneLine(const std::wstring &filePath, const std::wstring &line, bool isForce) 
     {
         try {
             // 1. Check directory exists

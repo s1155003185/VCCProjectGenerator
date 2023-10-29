@@ -61,7 +61,8 @@ class VPGFileGenerationServiceTest : public testing::Test
             code += L"    EnumA, // GETSET(std::wstring, EnumA, L\"Default\") \r\n";
             code += L"    EnumB, // GET(int64_t, EnumB, 0) \r\n";
             code += L"    EnumC, // GETOBJ(ClassA, EnumC) \r\n";
-            code += L"    EnumD  // GETUPTR(ClassB, EnumD, 1, 2, 3) \r\n";
+            code += L"    EnumD, // GETUPTR(ClassB, EnumD, 1, 2, 3) \r\n";
+            code += L"    EnumE\r\n";
             code += L"};";
             this->CreateFileInSourceWorkspace(L"vcc_a_property.hpp", code);
         }

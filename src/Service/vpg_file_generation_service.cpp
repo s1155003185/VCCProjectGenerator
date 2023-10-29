@@ -21,20 +21,16 @@ std::set<std::wstring> VPGFileGenerationService::GetClassMacroList(const std::ws
     std::set<std::wstring> results;
     try {
         std::wstring filePath = ConcatPath(projWorkspace, classMacroFilePath);
-        std::wifstream inputFile(filePath);
-
         std::wstring prefix = L"#define ";
         size_t prefixLen = wcslen(prefix.c_str());
-        std::wstring line;
-        while (std::getline(inputFile, line)) {
+        ReadFilePerLine(filePath, [prefix, prefixLen, &results](std::wstring line) {
             Trim(line);
             if (line.starts_with(prefix) && line.find(L"(") != std::wstring::npos) {
                 std::wstring type = line.substr(prefixLen, line.find(L"(") - prefixLen);
                 Trim(type);
                 results.insert(type);
             }
-        }
-        inputFile.close();
+        });
     } catch (std::exception &ex) {
         THROW_EXCEPTION(ex);
     }
@@ -43,17 +39,38 @@ std::set<std::wstring> VPGFileGenerationService::GetClassMacroList(const std::ws
 
 void VPGFileGenerationService::GenerateObjectTypeFile(LogProperty &logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::vector<std::wstring> &propertyTypeList)
 {
+    try {
+        LogService::LogInfo(logProperty, logId, L"Generate object type file: " + hppFilePath);
 
+        LogService::LogInfo(logProperty, logId, L"Generate object type file completed.");
+    } catch (std::exception &ex) {
+        THROW_EXCEPTION(ex);
+    }
 }
 
 void VPGFileGenerationService::GeneratePropertyClassFile(LogProperty &logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::vector<VPGEnumClass> &enumClassList)
 {
+    try {
+        LogService::LogInfo(logProperty, logId, L"Generate object type file: " + hppFilePath);
 
+        LogService::LogInfo(logProperty, logId, L"Generate object type file completed.");
+    } catch (std::exception &ex) {
+        THROW_EXCEPTION(ex);
+    }
 }
 
 void VPGFileGenerationService::GeneratePropertyPropertyAccessorFile(LogProperty &logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::wstring &cppFilePath, const std::vector<VPGEnumClass> &enumClassList)
 {
+    try {
+        LogService::LogInfo(logProperty, logId, L"Generate property accessor file: " + hppFilePath);
 
+        LogService::LogInfo(logProperty, logId, L"Generate property accessor file completed.");
+        LogService::LogInfo(logProperty, logId, L"Generate property accessor file: " + cppFilePath);
+
+        LogService::LogInfo(logProperty, logId, L"Generate property accessor file completed.");
+    } catch (std::exception &ex) {
+        THROW_EXCEPTION(ex);
+    }
 }
 
 void VPGFileGenerationService::GernerateProperty(LogProperty &logProperty, const std::wstring &projPrefix, const std::wstring &projWorkspace, const std::wstring &typeWorkspace, 
@@ -92,14 +109,7 @@ void VPGFileGenerationService::GernerateProperty(LogProperty &logProperty, const
                 // ------------------------------------------------------------------------------------------ //
                 LogService::LogWarning(logProperty, logId, L"Parse file start: " + path);
 
-                std::wstring fileContent = L"";
-                std::wstring line;
-                std::wifstream inputFile(filePath);
-                while (std::getline(inputFile, line)) {
-                    fileContent += line + L"\n";
-                }
-                inputFile.close();
-
+                std::wstring fileContent = ReadFile(path);
                 Trim(fileContent);
                 if (fileContent.empty())
                     continue;
@@ -119,7 +129,7 @@ void VPGFileGenerationService::GernerateProperty(LogProperty &logProperty, const
                     VPGFileGenerationService::GeneratePropertyClassFile(logProperty, projPrefix, objDirectory, enumClassList);
                     VPGFileGenerationService::GeneratePropertyPropertyAccessorFile(logProperty, projPrefix, propertyAccessorDirectory, propertyAccessorDirectory, enumClassList);
                 }
-                LogService::LogInfo(logProperty, logId, L"Parse file complete: " + path);
+                LogService::LogInfo(logProperty, logId, L"Parse file completed: " + path);
                 // ------------------------------------------------------------------------------------------ //
                 //                                      Parse File End                                        //
                 // ------------------------------------------------------------------------------------------ //
@@ -130,7 +140,7 @@ void VPGFileGenerationService::GernerateProperty(LogProperty &logProperty, const
         // ------------------------------------------------------------------------------------------ //
         //                               Generate Object Type File                                    //
         // ------------------------------------------------------------------------------------------ //
-        VPGFileGenerationService::GenerateObjectTypeFile(logProperty, projPrefix, ConcatPath(objTypeDirectory, (!filePrefix.empty() ? (filePrefix + L"_") : L"") + L"object_type.hpp"), objectTypeList);
+        VPGFileGenerationService::GenerateObjectTypeFile(logProperty, projPrefix, ConcatPath(objTypeDirectory, (!filePrefix.empty() ? (filePrefix + L"_") : L"") + objectTypeHppFileName), objectTypeList);
 
         LogService::LogInfo(logProperty, logId, L"Generate Property Finished.");
     } catch (std::exception &ex) {
