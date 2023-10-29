@@ -24,5 +24,8 @@ namespace vcc
 	std::wstring ReadFile(const std::wstring &filePath);
 	void ReadFilePerLine(const std::wstring &filePath, std::function<void(std::wstring)> action);
 	std::wstring ReadFileOneLine(const std::wstring &filePath, int index);
+
+	// write file
+	void WriteFile(const std::wstring &filePath, const std::wstring &content, bool isForce);
 	void AppendFileOneLine(const std::wstring &filePath, const std::wstring &line, bool isForce);
 }

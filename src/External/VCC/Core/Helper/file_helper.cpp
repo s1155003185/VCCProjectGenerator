@@ -184,6 +184,31 @@ namespace vcc
         return L"";
     }
 
+	void WriteFile(const std::wstring &filePath, const std::wstring &content, bool isForce)
+    {
+        try {
+            PATH _filePath(filePath);		
+            PATH dir = PATH(_filePath).parent_path();
+            if (!IsDirectoryExists(dir.wstring()))
+            {
+                if (!isForce)
+                    THROW_EXCEPTION_M(ExceptionType::DIRECTORY_NOT_FOUND, dir.wstring() + L"Directory not found.");
+                else if (!std::filesystem::create_directories(dir))
+                    THROW_EXCEPTION_M(ExceptionType::DIRECTORY_CANNOT_CREATE, dir.wstring() + L"Directory not found.");
+            }
+
+            std::wofstream file(filePath, std::ios::out | std::ios::binary);
+            if (file.is_open()) {
+                file << content;
+                file.close();
+            } else {
+                THROW_EXCEPTION_M(ExceptionType::FILE_IS_BLOCKED, L"Cannot open file: " + filePath);
+            }
+        } catch (std::exception &e) {
+            THROW_EXCEPTION(e);
+        }
+    }
+
     void AppendFileOneLine(const std::wstring &filePath, const std::wstring &line, bool isForce) 
     {
         try {

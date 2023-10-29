@@ -6,6 +6,7 @@
 namespace vcc
 {
     constexpr auto NL = L"\n";
+	constexpr auto INDENT = L"    ";
 
 	enum class EscapeStringType
 	{

@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <numeric>
 #include <string>
 
 #include "exception_macro.hpp"
@@ -41,7 +42,14 @@ void VPGFileGenerationService::GenerateObjectTypeFile(LogProperty &logProperty, 
 {
     try {
         LogService::LogInfo(logProperty, logId, L"Generate object type file: " + hppFilePath);
-
+        std::wstring content = L"#pragma once\r\n";
+        content += L"\r\n";
+        content += L"enum class " + classPrefix + L"ObjectType {\r\n";
+        for (size_t i = 0; i < propertyTypeList.size(); i++) {
+            content += INDENT + propertyTypeList.at(i) + (i < propertyTypeList.size() - 1 ? L"," : L"") + L"\r\n";
+        }
+        content += L"}\r\n";
+        WriteFile(hppFilePath, content, true);
         LogService::LogInfo(logProperty, logId, L"Generate object type file completed.");
     } catch (std::exception &ex) {
         THROW_EXCEPTION(ex);
@@ -88,7 +96,7 @@ void VPGFileGenerationService::GernerateProperty(LogProperty &logProperty, const
         VPGEnumClassReader enumClassReader;
         std::wstring filePrefix = projPrefix;
         ToLower(filePrefix);
-        std::wstring fileSuffix = L"";
+        std::wstring classSuffix = L"Property";
 
         LogService::LogInfo(logProperty, logId, L"Generate property start.");
         std::vector<std::wstring> objectTypeList;
@@ -118,10 +126,16 @@ void VPGFileGenerationService::GernerateProperty(LogProperty &logProperty, const
                 enumClassReader.Parse(fileContent, enumClassList);
                 for (const VPGEnumClass &enumClass : enumClassList) {
                     if (!projPrefix.empty() && !HasPrefix(enumClass.Name, projPrefix)) {
-                        LogService::LogWarning(logProperty, logId, L"Suffix property.hpp missing. Skip: " + path);
+                        LogService::LogWarning(logProperty, logId, L"Class Prefix " + projPrefix + L" missing. Skip: " + enumClass.Name);
                         continue;
                     }
-                    objectTypeList.push_back(enumClass.Name);
+                    if (!enumClass.Name.ends_with(classSuffix)) {
+                        LogService::LogWarning(logProperty, logId, L"Class Suffix " + classSuffix + L" missing. Skip: " + enumClass.Name);
+                        continue;
+                    }
+                    std::wstring className = enumClass.Name.substr(!projPrefix.empty() ? projPrefix.size() : 0);
+                    className = className.substr(0, className.size() - classSuffix.size());
+                    objectTypeList.push_back(className);
 
                     // ------------------------------------------------------------------------------------------ //
                     //                               Generate Object Type File                                    //

@@ -102,5 +102,35 @@ TEST_F(VPGFileGenerationServiceTest, GenerateProperty)
 {
     VPGFileGenerationService::GernerateProperty(*this->GetLogProperty(), L"VCC", L"", this->GetWorkspaceSource(), 
         this->GetWorkspaceTarget(), this->GetWorkspaceTarget(), this->GetWorkspaceTarget());
-    EXPECT_TRUE(true);
+
+    // ------------------------------------------------------------------------------------------ //
+    //                                      Object Type File                                      //
+    // ------------------------------------------------------------------------------------------ //
+    std::wstring objectTypeFileContent = ReadFile(ConcatPath(this->GetWorkspaceTarget(), L"vcc_object_type.hpp"));
+    std::wstring expectedObjectTypeFileContent = L"";
+    expectedObjectTypeFileContent += L"#pragma once\r\n";
+    expectedObjectTypeFileContent += L"\r\n";
+    expectedObjectTypeFileContent += L"enum class VCCObjectType {\r\n";
+    expectedObjectTypeFileContent += L"    Object\r\n";
+    expectedObjectTypeFileContent += L"}\r\n";
+    EXPECT_EQ(objectTypeFileContent, expectedObjectTypeFileContent);
+
+    // ------------------------------------------------------------------------------------------ //
+    //                                      Class File                                            //
+    // ------------------------------------------------------------------------------------------ //
+
+    // std::wstring objectClassFileContent = ReadFile(ConcatPath(this->GetWorkspaceTarget(), L"vcc_a.hpp"));
+    // std::wstring expectedObjectClassFileContent = L"";
+    // EXPECT_EQ(objectClassFileContent, expectedObjectClassFileContent);
+
+    // ------------------------------------------------------------------------------------------ //
+    //                                      Property Accessor File                                //
+    // ------------------------------------------------------------------------------------------ //
+    // std::wstring objectPropertyAccessorFileContentHpp = ReadFile(ConcatPath(this->GetWorkspaceTarget(), L"vcc_a_property_accessor.hpp"));
+    // std::wstring objectPropertyAccessorFileContentCpp = ReadFile(ConcatPath(this->GetWorkspaceTarget(), L"vcc_a_property_accessor.cpp"));
+    // std::wstring expectedOBjectPropertyAccessorFileContentHpp = L"";
+    // std::wstring expectedOBjectPropertyAccessorFileContentCpp = L"";
+    // EXPECT_EQ(objectPropertyAccessorFileContentHpp, expectedOBjectPropertyAccessorFileContentHpp);
+    // EXPECT_EQ(objectPropertyAccessorFileContentCpp, expectedOBjectPropertyAccessorFileContentCpp);
+
 }
