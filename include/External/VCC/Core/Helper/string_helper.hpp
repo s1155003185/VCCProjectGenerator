@@ -5,8 +5,8 @@
 
 namespace vcc
 {
-    constexpr auto NL = L"\n";
-	constexpr auto INDENT = L"    ";
+    const auto NL = L"\n";
+	const std::wstring INDENT = L"    ";
 
 	enum class EscapeStringType
 	{
@@ -21,6 +21,8 @@ namespace vcc
 	void ToUpper(std::wstring &str);
 
 	bool HasPrefix(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
+
+	std::vector<std::wstring> SplitStringByUpperCase(const std::wstring &str, bool splitDigit, bool splitSpecialChar);
 
 	// Padding
 	std::string PadLeft(const std::string str, size_t length, char c);
