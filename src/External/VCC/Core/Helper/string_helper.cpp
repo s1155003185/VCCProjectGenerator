@@ -155,6 +155,22 @@ namespace vcc
 			pos++;
 		}
 	}
+	
+	size_t CountSubstr(const std::wstring &str, const std::wstring subStr)
+	{
+		size_t count = 0;
+		size_t pos = 0;
+
+		while (pos < str.length())
+		{
+			pos = str.find(subStr, pos);
+			if (pos == std::wstring::npos)
+				break;
+			count++;
+			pos += subStr.length();
+		}
+		return count;
+	}
 
     void Replace(std::wstring &str, const std::wstring& from, const std::wstring &to)
     {

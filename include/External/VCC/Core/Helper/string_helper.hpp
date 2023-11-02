@@ -42,6 +42,7 @@ namespace vcc
 
 	// search
 	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos = false);
+	size_t CountSubstr(const std::wstring &str, const std::wstring subStr);
 
 	// process
 	void Replace(std::wstring &str, const std::wstring& from, const std::wstring &to);
