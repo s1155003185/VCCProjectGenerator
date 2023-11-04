@@ -25,7 +25,7 @@ class VPGFileGenerationService
         static void GeneratePropertyClassFile(LogProperty &logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::vector<VPGEnumClass> &enumClassList);
         static void GeneratePropertyPropertyAccessorFile(LogProperty &logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::wstring &cppFilePath, const std::vector<VPGEnumClass> &enumClassList);
         static void GernerateProperty(LogProperty &logProperty, const std::wstring &projPrefix, const std::wstring &projWorkspace, const std::wstring &typeWorkspace, 
-            const std::wstring &objTypeDirectory, const std::wstring &objDirectory, const std::wstring &propertyAccessorDirectory);
+            const std::wstring &objTypeDirectoryHpp, const std::wstring &objDirectoryHpp, const std::wstring &propertyAccessorDirectoryHpp, const std::wstring &propertyAccessorDirectoryCpp);
         // TODO
         // void GenerateType(const std::wstring &srcWorkspace, const &destWorkspace);
 };

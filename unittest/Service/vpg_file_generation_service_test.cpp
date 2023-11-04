@@ -8,13 +8,12 @@
 #include "file_helper.hpp"
 #include "log_service.hpp"
 #include "vpg_file_generation_service.hpp"
+#include "string_helper.hpp"
 
 using namespace std;
 
 class VPGFileGenerationServiceTest : public testing::Test 
 {
-    
-
     GETOBJU(LogProperty, LogProperty, LogPropertyType::None);
     GET(wstring, Workspace, L"bin/Debug/FileGenerationServiceTest");
     GET(wstring, WorkspaceSource, L"bin/Debug/FileGenerationServiceTestSource");
@@ -62,7 +61,8 @@ class VPGFileGenerationServiceTest : public testing::Test
             code += L"    EnumB, // GET(int64_t, EnumB, 0) \r\n";
             code += L"    EnumC, // GETOBJ(ClassA, EnumC) \r\n";
             code += L"    EnumD, // GETUPTR(ClassB, EnumD, 1, 2, 3) \r\n";
-            code += L"    EnumE\r\n";
+            code += L"    EnumE,  // GETSET(EnumClass, EnumE, EnumClass::OptionA)\r\n";
+            code += L"    EnumF // Nothing\r\n";
             code += L"};";
             this->CreateFileInSourceWorkspace(L"vcc_a_property.hpp", code);
         }
@@ -101,7 +101,7 @@ TEST_F(VPGFileGenerationServiceTest, GetClassMacroList)
 TEST_F(VPGFileGenerationServiceTest, GenerateProperty)
 {
     VPGFileGenerationService::GernerateProperty(*this->GetLogProperty(), L"VCC", L"", this->GetWorkspaceSource(), 
-        this->GetWorkspaceTarget(), this->GetWorkspaceTarget(), this->GetWorkspaceTarget());
+        this->GetWorkspaceTarget(), this->GetWorkspaceTarget(), this->GetWorkspaceTarget(), this->GetWorkspaceTarget());
 
     // ------------------------------------------------------------------------------------------ //
     //                                      Object Type File                                      //
@@ -112,16 +112,43 @@ TEST_F(VPGFileGenerationServiceTest, GenerateProperty)
     expectedObjectTypeFileContent += L"\r\n";
     expectedObjectTypeFileContent += L"enum class VCCObjectType {\r\n";
     expectedObjectTypeFileContent += L"    Object\r\n";
-    expectedObjectTypeFileContent += L"}\r\n";
+    expectedObjectTypeFileContent += L"};\r\n";
     EXPECT_EQ(objectTypeFileContent, expectedObjectTypeFileContent);
 
     // ------------------------------------------------------------------------------------------ //
     //                                      Class File                                            //
     // ------------------------------------------------------------------------------------------ //
 
-    // std::wstring objectClassFileContent = ReadFile(ConcatPath(this->GetWorkspaceTarget(), L"vcc_a.hpp"));
-    // std::wstring expectedObjectClassFileContent = L"";
-    // EXPECT_EQ(objectClassFileContent, expectedObjectClassFileContent);
+    std::wstring objectClassFileContent = ReadFile(ConcatPath(this->GetWorkspaceTarget(), L"vcc_a.hpp"));
+    std::wstring expectedObjectClassFileContent = L"";
+    expectedObjectClassFileContent += L"#pragma once\r\n";
+    expectedObjectClassFileContent += L"\r\n";
+    expectedObjectClassFileContent += L"#include \"base_object.hpp\"\r\n";
+    expectedObjectClassFileContent += L"#include \"class_marco.hpp\"\r\n";
+    expectedObjectClassFileContent += L"\r\n";
+    expectedObjectClassFileContent += L"using namespace vcc;\r\n";
+    expectedObjectClassFileContent += L"\r\n";
+    expectedObjectClassFileContent += L"class ClassA;\r\n";
+    expectedObjectClassFileContent += L"class ClassB;\r\n";
+    expectedObjectClassFileContent += L"class EnumClass;\r\n";
+    expectedObjectClassFileContent += L"class Object : public BaseObject\r\n";
+    expectedObjectClassFileContent += L"{\r\n";
+    expectedObjectClassFileContent += INDENT + L"GETSET(std::wstring, EnumA, L\"Default\")\r\n";
+    expectedObjectClassFileContent += INDENT + L"GET(int64_t, EnumB, 0)\r\n";
+    expectedObjectClassFileContent += INDENT + L"GETOBJ(ClassA, EnumC)\r\n";
+    expectedObjectClassFileContent += INDENT + L"GETUPTR(ClassB, EnumD, 1, 2, 3)\r\n";
+    expectedObjectClassFileContent += INDENT + L"GETSET(EnumClass, EnumE, EnumClass::OptionA)\r\n";
+    expectedObjectClassFileContent += L"\r\n";
+    expectedObjectClassFileContent += INDENT + L"public:\r\n";
+    expectedObjectClassFileContent += INDENT + INDENT + L"Object() : BaseObject(ObjectType::Object) {}\r\n";
+    expectedObjectClassFileContent += INDENT + INDENT + L"~Object() {}\r\n";
+    expectedObjectClassFileContent += L"\r\n";
+    expectedObjectClassFileContent += INDENT + INDENT +  L"virtual std::wstring GetKey() override { return L\"\"; }\r\n";
+    expectedObjectClassFileContent += INDENT + INDENT +  L"virtual std::wstring ToString() override { return L\"\"; }\r\n";
+    expectedObjectClassFileContent += INDENT + INDENT +  L"virtual std::shared_ptr<IObject> Clone() override { return make_shared<Object>(*this); }\r\n";
+    expectedObjectClassFileContent += L"};\r\n";
+    expectedObjectClassFileContent += L"\r\n";
+    EXPECT_EQ(objectClassFileContent, expectedObjectClassFileContent);
 
     // ------------------------------------------------------------------------------------------ //
     //                                      Property Accessor File                                //
