@@ -1,5 +1,6 @@
 #pragma once
 
+#include <assert.h>
 #include <string>
 
 #include "base_property.hpp"
@@ -32,6 +33,11 @@ namespace vcc
     public:
         LogProperty() {}
         LogProperty(LogPropertyType logPropertyType, std::wstring filePath = L"") {
+            Init(logPropertyType, filePath);
+        }
+        ~LogProperty() {}
+
+        void Init(LogPropertyType logPropertyType, std::wstring filePath = L"") {
             switch (logPropertyType)
             {
             case LogPropertyType::None:
@@ -66,6 +72,5 @@ namespace vcc
                 break;
             }
         }
-        ~LogProperty() {}
     };
 }
