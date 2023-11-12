@@ -44,8 +44,8 @@ void VPGDirectorySyncService::CheckAndCreateDirectory(LogProperty &logProperty, 
                 LogService::LogInfo(logProperty, L"", L"Create Directory: " + path);
             }        
         }
-    } catch (std::exception &ex) {
-        THROW_EXCEPTION(ex);
+    } catch (const std::exception &e) {
+        THROW_EXCEPTION(e);
     }
 }
 
@@ -63,8 +63,8 @@ bool VPGDirectorySyncService::_ShouldInclude(const std::wstring &path, const std
             }
         }
         return result;
-    } catch (std::exception &ex) {
-        THROW_EXCEPTION(ex);
+    } catch (const std::exception &e) {
+        THROW_EXCEPTION(e);
     }
     return result;
 }
@@ -82,8 +82,8 @@ bool VPGDirectorySyncService::_ShouldExclude(const std::wstring &path, const std
                 break;
             }
         }
-    } catch (std::exception &ex) {
-        THROW_EXCEPTION(ex);
+    } catch (const std::exception &e) {
+        THROW_EXCEPTION(e);
     }
     return result;
 }
@@ -166,8 +166,8 @@ void VPGDirectorySyncService::_SyncWorkspace(LogProperty &logProperty, std::wstr
             // modify file
             VPGFileSyncService::CopyFile(logProperty, sourcePath, targetPath);
         }
-    } catch (std::exception &ex) {
-        THROW_EXCEPTION(ex);
+    } catch (const std::exception &e) {
+        THROW_EXCEPTION(e);
     }
 }
 
@@ -177,7 +177,7 @@ void VPGDirectorySyncService::SyncWorkspace(LogProperty &logProperty, VPGProject
     try {
         std::wstring projectLocalDirectory = VPGGlobal::GetProjectLocalDirectory(projectType, projectLocalDirectoryParent);
         VPGDirectorySyncService::_SyncWorkspace(logProperty, projectLocalDirectory, workspace, includeOnlyFileFilter, excludeOnlyFileFilter);
-    } catch (std::exception &ex) {
-        THROW_EXCEPTION(ex);
+    } catch (const std::exception &e) {
+        THROW_EXCEPTION(e);
     }
 }

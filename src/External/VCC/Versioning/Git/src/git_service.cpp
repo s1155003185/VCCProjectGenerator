@@ -36,8 +36,8 @@ namespace vcc
             std::wstring cmd = L"git rev-parse --git-dir";
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
             result = true;
-        } catch (std::exception &ex) {
-            THROW_EXCEPTION(ex);
+        } catch (const std::exception &e) {
+            THROW_EXCEPTION(e);
         }
         return result;
     }
@@ -48,8 +48,8 @@ namespace vcc
         try {
             std::wstring cmd = L"git init";
             return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
-        } catch (std::exception &ex) {
-            THROW_EXCEPTION(ex);
+        } catch (const std::exception &e) {
+            THROW_EXCEPTION(e);
         }
         return L"";
     }
@@ -59,8 +59,8 @@ namespace vcc
         try {
             std::wstring cmd = L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"");
             return ProcessService::Execute(logProperty, GIT_LOG_ID, dist, cmd);
-        } catch (std::exception &ex) {
-            THROW_EXCEPTION(ex);
+        } catch (const std::exception &e) {
+            THROW_EXCEPTION(e);
         }
         return L"";
     }
@@ -71,8 +71,8 @@ namespace vcc
         try {
             std::wstring cmd = L"git pull";
             return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
-        } catch (std::exception &ex) {
-            THROW_EXCEPTION(ex);
+        } catch (const std::exception &e) {
+            THROW_EXCEPTION(e);
         }
         return L"";
     }

@@ -103,8 +103,8 @@ namespace vcc
             return std::equal(std::istreambuf_iterator<char>(f1.rdbuf()),
                 std::istreambuf_iterator<char>(),
                 std::istreambuf_iterator<char>(f2.rdbuf()));
-        } catch (std::exception &ex) {
-            THROW_EXCEPTION_M(ExceptionType::FILE_IS_BLOCKED, str2wstr(ex.what()));
+        } catch (const std::exception &e) {
+            THROW_EXCEPTION_M(ExceptionType::FILE_IS_BLOCKED, str2wstr(e.what()));
         }
         return false;
     }
@@ -138,7 +138,7 @@ namespace vcc
                 result += wstring(1, c);
             }
             fileStream.close();
-        } catch (std::exception &e) {
+        } catch (const std::exception &e) {
             THROW_EXCEPTION(e);
         }
         return result;
@@ -155,7 +155,7 @@ namespace vcc
                 action(line);
             }
             fileStream.close();
-        } catch (std::exception &e) {
+        } catch (const std::exception &e) {
             THROW_EXCEPTION(e);
         }
     }
@@ -178,7 +178,7 @@ namespace vcc
             }
             fileStream.close();
             return result;
-        } catch (std::exception &e) {
+        } catch (const std::exception &e) {
             THROW_EXCEPTION(e);
         }
         return L"";
@@ -204,7 +204,7 @@ namespace vcc
             } else {
                 THROW_EXCEPTION_M(ExceptionType::FILE_IS_BLOCKED, L"Cannot open file: " + filePath);
             }
-        } catch (std::exception &e) {
+        } catch (const std::exception &e) {
             THROW_EXCEPTION(e);
         }
     }
@@ -233,7 +233,7 @@ namespace vcc
             std::wofstream fileStream(_filePath, ios_base::app);
             fileStream << line << NL;
             fileStream.close();
-        } catch (std::exception &e) {
+        } catch (const std::exception &e) {
             THROW_EXCEPTION(e);
         }
     }

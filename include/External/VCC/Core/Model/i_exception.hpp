@@ -12,9 +12,9 @@ namespace vcc
             IException() {}
             ~IException() {}
         public:
-            virtual ExceptionType GetErrorType() = 0;
-            virtual int64_t GetErrorCode() = 0;
-            virtual std::wstring GetErrorMessage() = 0;
-            virtual void SetErrorMessage(std::wstring message) = 0;
+            virtual ExceptionType GetErrorType() const = 0;
+            virtual int64_t GetErrorCode() const = 0;
+            virtual std::wstring GetErrorMessage() const = 0;
+            virtual void SetErrorMessage(const std::wstring &message) = 0;
     };
 }

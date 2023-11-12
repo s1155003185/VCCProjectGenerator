@@ -11,8 +11,8 @@ namespace vcc
     {
         try {
             return this->_Actions.empty() ? -1 : (fromBeginning ? this->_Actions.begin()->first : this->_Actions.rbegin()->first);
-        } catch (std::exception &ex) {
-            THROW_EXCEPTION(ex);
+        } catch (const std::exception &e) {
+            THROW_EXCEPTION(e);
         }
         return -1;
     }

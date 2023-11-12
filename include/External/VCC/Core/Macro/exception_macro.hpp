@@ -5,14 +5,14 @@
 
 namespace vcc
 {
-    inline void ____HandleException(std::exception &ex, std::wstring file, std::wstring line)
+    inline void ____HandleException(const std::exception &e, std::wstring file, std::wstring line)
     {
         std::wstring prefix = file + L":" + line + L":\r\n"; 
-        IException *iex = dynamic_cast<IException *>(&ex); 
-        if (iex != nullptr)
-            throw Exception(iex->GetErrorType(), prefix + iex->GetErrorMessage());
+        const IException *ie = dynamic_cast<const IException *>(&e); 
+        if (ie != nullptr)
+            throw Exception(ie->GetErrorType(), prefix + ie->GetErrorMessage());
         else
-            throw Exception(ExceptionType::CUSTOM_ERROR, prefix + str2wstr(std::string(ex.what())));
+            throw Exception(ExceptionType::CUSTOM_ERROR, prefix + str2wstr(std::string(e.what())));
     }
 
     #ifdef __DEBUGLOG__

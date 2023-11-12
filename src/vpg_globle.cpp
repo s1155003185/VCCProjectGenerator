@@ -28,8 +28,8 @@ std::wstring VPGGlobal::GetDefaultFolder()
         #endif
 
         return CommandService::Execute(logProperty, L"", L"echo ~/Documents");
-    } catch (std::exception &ex) {
-        THROW_EXCEPTION(ex);
+    } catch (const std::exception &e) {
+        THROW_EXCEPTION(e);
     }
     return L"";
 }

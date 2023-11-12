@@ -239,9 +239,9 @@ namespace vcc
 					assert(false);
 			}
         }
-        catch(std::exception& ex)
+        catch(const std::exception& e)
         {
-            THROW_EXCEPTION(ex);
+            THROW_EXCEPTION(e);
         }
 		return std::wstring(1, c);
 	}
@@ -254,9 +254,9 @@ namespace vcc
 			for (auto c : str)
 				result += ConvertSpecialCharacterToEscapeString(type, c);
         }
-        catch(std::exception& ex)
+        catch(const std::exception& e)
         {
-            THROW_EXCEPTION(ex);
+            THROW_EXCEPTION(e);
         }
         return result;
     }
@@ -304,9 +304,9 @@ namespace vcc
 				}
 			}
         }
-        catch(std::exception& ex)
+        catch(const std::exception& e)
         {
-            THROW_EXCEPTION(ex);
+            THROW_EXCEPTION(e);
         }
         return result;
 	}

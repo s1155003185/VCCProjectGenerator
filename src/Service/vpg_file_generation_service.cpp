@@ -35,8 +35,8 @@ std::set<std::wstring> VPGFileGenerationService::GetClassMacroList(const std::ws
                 results.insert(type);
             }
         });
-    } catch (std::exception &ex) {
-        THROW_EXCEPTION(ex);
+    } catch (const std::exception &e) {
+        THROW_EXCEPTION(e);
     }
     return results;
 }
@@ -54,8 +54,8 @@ void VPGFileGenerationService::GenerateObjectTypeFile(LogProperty &logProperty, 
         content += L"};\r\n";
         WriteFile(hppFilePath, content, true);
         LogService::LogInfo(logProperty, logId, L"Generate object type file completed.");
-    } catch (std::exception &ex) {
-        THROW_EXCEPTION(ex);
+    } catch (const std::exception &e) {
+        THROW_EXCEPTION(e);
     }
 }
 
@@ -113,8 +113,8 @@ void VPGFileGenerationService::GeneratePropertyClassFile(LogProperty &logPropert
 
         WriteFile(hppFilePath, content, true);
         LogService::LogInfo(logProperty, logId, L"Generate object class file completed.");
-    } catch (std::exception &ex) {
-        THROW_EXCEPTION(ex);
+    } catch (const std::exception &e) {
+        THROW_EXCEPTION(e);
     }
 }
 
@@ -130,8 +130,8 @@ void VPGFileGenerationService::GeneratePropertyPropertyAccessorFile(LogProperty 
         content = L"";
         WriteFile(cppFilePath, content, true);
         LogService::LogInfo(logProperty, logId, L"Generate property accessor file completed.");
-    } catch (std::exception &ex) {
-        THROW_EXCEPTION(ex);
+    } catch (const std::exception &e) {
+        THROW_EXCEPTION(e);
     }
 }
 
@@ -219,7 +219,7 @@ void VPGFileGenerationService::GernerateProperty(LogProperty &logProperty, const
         VPGFileGenerationService::GenerateObjectTypeFile(logProperty, projPrefix, ConcatPath(objTypeDirectoryHpp, (!filePrefix.empty() ? (filePrefix + L"_") : L"") + objectTypeHppFileName), objectTypeList);
 
         LogService::LogInfo(logProperty, logId, L"Generate Property Finished.");
-    } catch (std::exception &ex) {
-        THROW_EXCEPTION(ex);
+    } catch (const std::exception &e) {
+        THROW_EXCEPTION(e);
     }
 }

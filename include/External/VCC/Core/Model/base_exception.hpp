@@ -26,10 +26,10 @@ namespace vcc
             ~BaseException() {}
         
         public:
-            virtual ExceptionType GetErrorType() override { return this->_Type; }
-            virtual int64_t GetErrorCode() override { return static_cast<int64_t>(this->_Type); }
-            virtual std::wstring GetErrorMessage() override { return this->_Message; }
-            virtual void SetErrorMessage(std::wstring message) override { this->_Message = message; }
+            virtual ExceptionType GetErrorType() const override { return this->_Type; }
+            virtual int64_t GetErrorCode() const  override { return static_cast<int64_t>(this->_Type); }
+            virtual std::wstring GetErrorMessage() const override { return this->_Message; }
+            virtual void SetErrorMessage(const std::wstring &message) override { this->_Message = std::wstring(message); }
 
             virtual const char* what() const throw () override
             {
