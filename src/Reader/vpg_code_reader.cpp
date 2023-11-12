@@ -21,7 +21,7 @@ void VPGCodeReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos,
             pos++;
         }
     }
-    catch(std::exception& e)
+    catch(const std::exception& e)
     {
         THROW_EXCEPTION(e);
     }
@@ -34,14 +34,18 @@ void VPGCodeReader::ParseXMLElement(const std::wstring &xmlData, size_t &pos, XM
     {
         size_t startPos = pos;
         while (pos < dataLength) {
-            if (xmlData.substr(pos).starts_with(L"<vcc:")) {
-                pos--;
-                XMLElement previous;
-                previous.FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
-                element.Children.push_back(previous);
+            if (HasPrefix(xmlData, L"//", pos) && HasPrefixTrimSpace(xmlData, L"//<vcc:", pos)) {
+                if (pos > 0) {
+                    pos--;
+                    XMLElement previous;
+                    previous.FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
+                    element.Children.push_back(previous);
 
-                pos++;
-                startPos = pos;
+                    pos++;
+                    startPos = pos;
+                }
+
+                pos = xmlData.find(L"<", pos);
 
                 XMLElement tmp;
                 ParseXMLTag(xmlData, pos, tmp);
@@ -59,7 +63,7 @@ void VPGCodeReader::ParseXMLElement(const std::wstring &xmlData, size_t &pos, XM
             element.Children.push_back(tmp);
         }
     }
-    catch(std::exception& e)
+    catch(const std::exception& e)
     {
         THROW_EXCEPTION(e);
     }

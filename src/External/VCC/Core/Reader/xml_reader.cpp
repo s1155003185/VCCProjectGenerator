@@ -36,7 +36,7 @@ namespace vcc
                     THROW_EXCEPTION_M(ExceptionType::READER_ERROR, _GetErrorMessage(pos, xmlData[pos], L"ending \" missing"));
             }
         }
-        catch(std::exception& e)
+        catch(const std::exception& e)
         {
             THROW_EXCEPTION(e);
         }
@@ -62,7 +62,7 @@ namespace vcc
                 endPos++;
             }
         }
-        catch(std::exception& e)
+        catch(const std::exception& e)
         {
             THROW_EXCEPTION(e);
         }
@@ -90,7 +90,7 @@ namespace vcc
                 return _IsNextCharTagEnd(xmlData, pos);
             }
         }
-        catch(std::exception& e)
+        catch(const std::exception& e)
         {
             THROW_EXCEPTION(e);
         }
@@ -117,7 +117,7 @@ namespace vcc
                 pos++;
             }
         }
-        catch(std::exception& e)
+        catch(const std::exception& e)
         {
             THROW_EXCEPTION(e);
         }
@@ -173,7 +173,7 @@ namespace vcc
             // tag end with no ceontent
             return xmlData[pos - 1] != L'/';
         }
-        catch(std::exception& e)
+        catch(const std::exception& e)
         {
             THROW_EXCEPTION(e);
         }
@@ -202,7 +202,7 @@ namespace vcc
                 pos++;
             }
         }
-        catch(std::exception& e)
+        catch(const std::exception& e)
         {
             THROW_EXCEPTION(e);
         }
@@ -218,7 +218,7 @@ namespace vcc
                 THROW_EXCEPTION_M(ExceptionType::READER_ERROR, _GetErrorMessage(pos, xmlData[pos], L"end tab " + endTag + L" missing"));
             pos += endTag.length() - 1;
         }
-        catch(std::exception& e)
+        catch(const std::exception& e)
         {
             THROW_EXCEPTION(e);
         } 
@@ -246,7 +246,7 @@ namespace vcc
             pos++;
             RemoveXMLTagTail(xmlData, pos, element);
         }
-        catch(std::exception& e)
+        catch(const std::exception& e)
         {
             THROW_EXCEPTION(e);
         }        
@@ -287,7 +287,7 @@ namespace vcc
             }
             element.FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
         }
-        catch(std::exception& e)
+        catch(const std::exception& e)
         {
             THROW_EXCEPTION(e);
         }
@@ -300,7 +300,7 @@ namespace vcc
             size_t pos = 0;
             return this->Parse(xml, pos);
         }
-        catch(std::exception& e)
+        catch(const std::exception& e)
         {
             THROW_EXCEPTION(e);
         }
@@ -315,7 +315,7 @@ namespace vcc
         {
             ParseXMLElement(xml, pos, root);
         }
-        catch(std::exception& e)
+        catch(const std::exception& e)
         {
             THROW_EXCEPTION(e);
         }        

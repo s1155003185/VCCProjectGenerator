@@ -40,7 +40,7 @@ VPGFileContentSyncMode VPGFileSyncService::_GetSyncMode(const XMLElement &codeEl
             }
         }
     }
-    catch(std::exception& e)
+    catch(const std::exception& e)
     {
         THROW_EXCEPTION(e);
     }
@@ -58,7 +58,7 @@ VPGFileContentSyncTag VPGFileSyncService::_GetSyncTag(std::wstring tagValue)
             return VPGFileContentSyncTag::Replace;
         THROW_EXCEPTION_M(ExceptionType::CUSTOM_ERROR, L"Unknow Tag " + tagValue);
     }
-    catch(std::exception& e)
+    catch(const std::exception& e)
     {
         THROW_EXCEPTION(e);
     }
@@ -74,7 +74,7 @@ const XMLElement *VPGFileSyncService::_GetTagFromCode(const XMLElement &code, co
                 return &(code.Children.at(i));
         }
     }
-    catch(std::exception& e)
+    catch(const std::exception& e)
     {
         THROW_EXCEPTION(e);
     }
@@ -93,7 +93,7 @@ bool VPGFileSyncService::_IsTagReplace(const XMLElement &child)
             }
         }
     }
-    catch(std::exception& e)
+    catch(const std::exception& e)
     {
         THROW_EXCEPTION(e);
     }
@@ -112,7 +112,7 @@ bool VPGFileSyncService::_IsTagReserve(const XMLElement &child)
             }
         }
     }
-    catch(std::exception& e)
+    catch(const std::exception& e)
     {
         THROW_EXCEPTION(e);
     }
@@ -134,7 +134,7 @@ void VPGFileSyncService::CopyFile(LogProperty &logProperty, const std::wstring &
         else
             LogService::LogInfo(logProperty, L"", L"Updated File: " + destgetPath);
     }
-    catch(std::exception& e)
+    catch(const std::exception& e)
     {
         THROW_EXCEPTION(e);
     }
@@ -257,7 +257,7 @@ std::wstring VPGFileSyncService::SyncFileContent(const std::wstring &src, const 
             break;
         }
     }
-    catch(std::exception& e)
+    catch(const std::exception& e)
     {
         THROW_EXCEPTION(e);
     }

@@ -50,6 +50,41 @@ namespace vcc
 		return str.find(prefix, pos) == pos;
 	}
 
+	bool HasPrefixTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &pos)
+	{
+		std::wstring trimPrefix = std::wstring(prefix);
+		Trim(trimPrefix);
+		if (trimPrefix != prefix)
+			THROW_EXCEPTION_M(ExceptionType::CUSTOM_ERROR, L"Prefix contains space.");
+
+		if (prefix.empty())
+			return true;
+
+		bool result = true;
+		try
+		{
+			size_t prefixPos = 0;
+			size_t currentPos = pos;
+			while (currentPos < str.length()) {
+				if (!std::iswspace(str[currentPos])) {
+					if (str[currentPos] != prefix[prefixPos]) {
+						result = false;
+						break;
+					}
+					prefixPos++;
+				}
+				if (prefixPos >= prefix.length())
+					break;
+				currentPos++;
+			}
+		}
+		catch(...)
+		{
+			result = false;
+		}
+		return result;
+	}
+
 	std::vector<std::wstring> SplitStringByUpperCase(const std::wstring &str, bool splitDigit, bool splitSpecialChar)
 	{
 		std::vector<std::wstring> results;

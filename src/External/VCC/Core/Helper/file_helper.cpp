@@ -120,7 +120,7 @@ namespace vcc
             CreateDirectory(currentPath.parent_path().wstring());
             filesystem::create_directories(path);
         }
-        catch(std::exception& e)
+        catch(const std::exception& e)
         {
             THROW_EXCEPTION(e);
         }

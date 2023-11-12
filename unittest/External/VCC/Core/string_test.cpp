@@ -10,6 +10,21 @@ using namespace std;
 using namespace vcc;
 
 /* ---------------------------------------------------------------------------------------------------- */
+/*                                      Has Prefix                                                      */
+/* ---------------------------------------------------------------------------------------------------- */
+TEST(StringTest, HasPrefixTrimSpace_NoSpace)
+{
+    std::wstring prefix = L"//<vcc:abc";
+    EXPECT_TRUE(HasPrefixTrimSpace(prefix, prefix));
+}
+
+TEST(StringTest, HasPrefixTrimSpace_Space)
+{
+    std::wstring prefix = L"//<vcc:abc";
+    std::wstring text = L"// <vcc:abc";
+    EXPECT_TRUE(HasPrefixTrimSpace(text, prefix));
+}
+/* ---------------------------------------------------------------------------------------------------- */
 /*                                      Split String By Upper Case                                      */
 /* ---------------------------------------------------------------------------------------------------- */
 TEST(StringTest, SplitStringByUpperCase_Normal)
