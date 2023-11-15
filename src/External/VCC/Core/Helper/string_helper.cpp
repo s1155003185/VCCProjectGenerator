@@ -4,6 +4,7 @@
 #include <map>
 #include <math.h>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -83,6 +84,56 @@ namespace vcc
 			result = false;
 		}
 		return result;
+	}
+
+	std::vector<std::wstring> SplitString(std::wstring str, std::wstring delimiter, bool isIgnoreDelimiterInString)
+	{
+		std::vector<std::wstring> results;
+		if (str.empty())
+			return results;
+
+		size_t pos = 0;
+		std::wstring currentStr = L"";
+		bool inString = false;
+		while (pos < str.length()) {
+			if (inString) {
+				if (str[pos] == L'"') {
+					inString = false;
+				} else if (str[pos] == L'\\') {
+					currentStr += std::wstring(1, str[pos]);
+					pos++;					
+				}
+				currentStr += std::wstring(1, str[pos]);
+				pos++;
+			} else {
+				if (HasPrefix(str, delimiter, pos)) {
+					results.push_back(currentStr);
+					currentStr = L"";
+					pos += delimiter.length();
+				} else {
+					inString = str[pos] == L'"' && isIgnoreDelimiterInString;
+					currentStr += std::wstring(1, str[pos]);
+					pos++;
+				}
+			}
+		}
+		if (!currentStr.empty() || !results.empty())
+			results.push_back(currentStr);
+		return results;
+	}
+
+	std::vector<std::wstring> SplitStringByLine(std::wstring str)
+	{
+		std::vector<std::wstring> results;
+		if (str.empty())
+			return results;
+		
+		std::wistringstream iss(str);
+		std::wstring line;
+		while (std::getline(iss, line)) {
+			results.push_back(line);
+		}
+		return results;
 	}
 
 	std::vector<std::wstring> SplitStringByUpperCase(const std::wstring &str, bool splitDigit, bool splitSpecialChar)

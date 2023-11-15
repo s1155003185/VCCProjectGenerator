@@ -23,6 +23,8 @@ namespace vcc
 	bool HasPrefix(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
 	bool HasPrefixTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
 
+	std::vector<std::wstring> SplitString(std::wstring str, std::wstring delimiter, bool isIgnoreDelimiterInString = true);
+	std::vector<std::wstring> SplitStringByLine(std::wstring str);
 	std::vector<std::wstring> SplitStringByUpperCase(const std::wstring &str, bool splitDigit, bool splitSpecialChar);
 
 	// Padding
