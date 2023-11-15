@@ -101,7 +101,56 @@ TEST_F(VPGFileSyncServiceTest, DEFAULT_MODE_SKIP)
                 this->GetStrB());
 }
 
-// Tag
+// Tag - Full and Demand result is the same
+TEST_F(VPGFileSyncServiceTest, FULL_RESERVE)
+{
+    std::wstring srcCode = this->GetFullHeader();
+    srcCode += L"// <vcc:tagA sync=\"RESERVE\">\r\n";
+    srcCode += L"    int i = 1\r\n";
+    srcCode += L"    int j = 1\r\n";
+    srcCode += L"    a = L\"a\"\r\n";
+    srcCode += L"    b = L\"b\"\r\n";
+    srcCode += L"    // commandA = commandA\r\n";
+    srcCode += L"    // commandB = commandB\r\n";
+    srcCode += L"// </vcc:tagA>\r\n";
+
+    std::wstring destCode = this->GetFullHeader();
+    destCode += L"// <vcc:tagA sync=\"RESERVE\">\r\n";
+    destCode += L"    int j = 2\r\n";
+    destCode += L"    int k = 2\r\n";
+    destCode += L"    b = L\"b\"\r\n";
+    destCode += L"    c = L\"c\"\r\n";
+    destCode += L"    // commandB = commandB\r\n";
+    destCode += L"    // commandC = commandC\r\n";
+    destCode += L"// </vcc:tagA>\r\n";
+    EXPECT_EQ(VPGFileSyncService::SyncFileContent(srcCode, destCode, VPGFileContentSyncMode::NA), destCode);
+}
+
+TEST_F(VPGFileSyncServiceTest, FULL_REPLACE)
+{
+    std::wstring srcCode = this->GetFullHeader();
+    srcCode += L"// <vcc:tagA sync=\"REPLACE\">\r\n";
+    srcCode += L"    int i = 1;\r\n";
+    srcCode += L"    int j = 1;\r\n";
+    srcCode += L"    a = L\"a\";\r\n";
+    srcCode += L"    b = L\"b\";\r\n";
+    srcCode += L"    // commandA = commandA\r\n";
+    srcCode += L"    // commandB = commandB\r\n";
+    srcCode += L"// </vcc:tagA>\r\n";
+
+    std::wstring destCode = this->GetFullHeader();
+    destCode += L"// <vcc:tagA sync=\"REPLACE\">\r\n";
+    destCode += L"    int j = 2;\r\n";
+    destCode += L"    int k = 2;\r\n";
+    destCode += L"    b = L\"b\";\r\n";
+    destCode += L"    c = L\"c\";\r\n";
+    destCode += L"    // commandB = commandB\r\n";
+    destCode += L"    // commandC = commandC\r\n";
+    destCode += L"// </vcc:tagA>\r\n";
+    EXPECT_EQ(VPGFileSyncService::SyncFileContent(srcCode, destCode, VPGFileContentSyncMode::NA), srcCode);
+}
+
+// Multi Tag
 TEST_F(VPGFileSyncServiceTest, FULL_TAG)
 {
     std::wstring result = this->GetFullHeader();

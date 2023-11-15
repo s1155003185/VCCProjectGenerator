@@ -25,6 +25,53 @@ TEST(StringTest, HasPrefixTrimSpace_Space)
     EXPECT_TRUE(HasPrefixTrimSpace(text, prefix));
 }
 /* ---------------------------------------------------------------------------------------------------- */
+/*                                      Split String                                                    */
+/* ---------------------------------------------------------------------------------------------------- */
+TEST(StringTest, SplitString_HeadAndTail)
+{
+    std::wstring str = L";Ab;Cd;\"CommandA;CommandB;\";;Last;";
+    std::vector<std::wstring> expectedResult = { L"", L"Ab", L"Cd", L"\"CommandA", L"CommandB", L"\"", L"", L"Last", L"" };
+    EXPECT_EQ(expectedResult, SplitString(str, L";"));
+}
+
+TEST(StringTest, SplitString_SplitDelimiterInString)
+{
+    std::wstring str = L"Ab;Cd;\"CommandA;CommandB;\";;Last";
+    std::vector<std::wstring> expectedResult = { L"Ab", L"Cd", L"\"CommandA", L"CommandB", L"\"", L"", L"Last" };
+    EXPECT_EQ(expectedResult, SplitString(str, L";"));
+}
+
+TEST(StringTest, SplitString_NotSplitDelimiterInString_NoEscape)
+{
+    std::wstring str = L"Ab;Cd;\"CommandA\\\";\\\"CommandB;\";Last";
+    std::vector<std::wstring> expectedResult = { L"Ab", L"Cd", L"\"CommandA\\\"", L"\\\"CommandB;\"", L"Last" };
+    EXPECT_EQ(expectedResult, SplitString(str, L";",  { L"\"" }, { L"\"" }, { L"" }));
+}
+
+TEST(StringTest, SplitString_NotSplitDelimiterInString)
+{
+    std::wstring str = L"Ab;Cd;\"CommandA\\\";\\\"CommandB;\";Last";
+    std::vector<std::wstring> expectedResult = { L"Ab", L"Cd", L"\"CommandA\\\";\\\"CommandB;\"", L"Last" };
+    EXPECT_EQ(expectedResult, SplitString(str, L";",  { L"\"" }, { L"\"" }, { L"\\" }));
+}
+
+TEST(StringTest, SplitString_MultiDelimiter)
+{
+    std::wstring str = L"Ab;Cd;\"CommandA;CommandB;\";Last";
+    std::vector<std::wstring> expectedResult = { L"Ab;Cd;\"", L"mmandA;", L"mmandB;\";Last" };
+    EXPECT_EQ(expectedResult, SplitString(str, L"Co"));
+}
+/* ---------------------------------------------------------------------------------------------------- */
+/*                                      Split String By Line                                            */
+/* ---------------------------------------------------------------------------------------------------- */
+TEST(StringTest, SplitStringByLine)
+{
+    std::wstring str = L"Ab\r\nCd\r\n\"Command\\r\\nCommand\"\r\nLast Line\r\n";
+    std::vector<std::wstring> expectedResult = { L"Ab\r", L"Cd\r", L"\"Command\\r\\nCommand\"\r", L"Last Line\r"};
+    EXPECT_EQ(expectedResult, SplitStringByLine(str));
+}
+
+/* ---------------------------------------------------------------------------------------------------- */
 /*                                      Split String By Upper Case                                      */
 /* ---------------------------------------------------------------------------------------------------- */
 TEST(StringTest, SplitStringByUpperCase_Normal)

@@ -4,6 +4,7 @@
 #include <map>
 #include <math.h>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -83,6 +84,82 @@ namespace vcc
 			result = false;
 		}
 		return result;
+	}
+
+	std::vector<std::wstring> SplitString(std::wstring str, const std::wstring &delimiter, 
+		const std::vector<std::wstring> &commandOpenList, const std::vector<std::wstring> &commandCloseList, const std::vector<std::wstring> &commandEscapeList)
+	{
+		std::vector<std::wstring> results;
+		if (str.empty())
+			return results;
+
+		try
+		{
+			if (!(commandOpenList.size() == commandCloseList.size() && (commandEscapeList.empty() || commandCloseList.size() == commandEscapeList.size())))
+				THROW_EXCEPTION_M(ExceptionType::CUSTOM_ERROR, L"Command Open, Close, Escape List having different size.");
+
+			size_t pos = 0;
+			std::wstring currentStr = L"";
+			int64_t commandIndex = -1;
+			while (pos < str.length()) {
+				if (commandIndex >= 0) {
+					if (HasPrefix(str, commandCloseList[commandIndex], pos)) {
+						currentStr += commandCloseList[commandIndex];
+						pos += commandCloseList[commandIndex].length();
+						commandIndex = -1;
+					} else if (!commandEscapeList.empty() && !commandEscapeList[commandIndex].empty() && HasPrefix(str, commandEscapeList[commandIndex], pos)) {
+						currentStr += commandEscapeList[commandIndex];
+						pos += commandEscapeList[commandIndex].length();
+						for (size_t i = 0; i < commandCloseList[commandIndex].size(); i++) {
+							if (pos < str.length()) {
+								currentStr += str[pos];
+								pos++;
+							}
+						}
+					} else {
+						currentStr += std::wstring(1, str[pos]);
+						pos++;
+					}
+				} else {
+					if (HasPrefix(str, delimiter, pos)) {
+						results.push_back(currentStr);
+						currentStr = L"";
+						pos += delimiter.length();
+					} else {
+						for (size_t i = 0; i < commandOpenList.size(); i++) {
+							if (HasPrefix(str, commandOpenList[i], pos)) {
+								commandIndex = i;
+								break;
+							}
+						}
+						currentStr += std::wstring(1, str[pos]);
+						pos++;
+					}
+				}
+			}
+			if (!currentStr.empty() || !results.empty())
+				results.push_back(currentStr);
+
+        }
+        catch(const std::exception& e)
+        {
+            THROW_EXCEPTION(e);
+        }
+		return results;
+	}
+
+	std::vector<std::wstring> SplitStringByLine(std::wstring str)
+	{
+		std::vector<std::wstring> results;
+		if (str.empty())
+			return results;
+		
+		std::wistringstream iss(str);
+		std::wstring line;
+		while (std::getline(iss, line)) {
+			results.push_back(line);
+		}
+		return results;
 	}
 
 	std::vector<std::wstring> SplitStringByUpperCase(const std::wstring &str, bool splitDigit, bool splitSpecialChar)
