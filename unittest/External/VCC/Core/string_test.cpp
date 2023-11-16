@@ -41,10 +41,17 @@ TEST(StringTest, SplitString_SplitDelimiterInString)
     EXPECT_EQ(expectedResult, SplitString(str, L";"));
 }
 
+TEST(StringTest, SplitString_NotSplitDelimiterInString_NoEscape)
+{
+    std::wstring str = L"Ab;Cd;\"CommandA\\\";\\\"CommandB;\";Last";
+    std::vector<std::wstring> expectedResult = { L"Ab", L"Cd", L"\"CommandA\\\"", L"\\\"CommandB;\"", L"Last" };
+    EXPECT_EQ(expectedResult, SplitString(str, L";",  { L"\"" }, { L"\"" }, { L"" }));
+}
+
 TEST(StringTest, SplitString_NotSplitDelimiterInString)
 {
-    std::wstring str = L"Ab;Cd;\"CommandA;CommandB;\";Last";
-    std::vector<std::wstring> expectedResult = { L"Ab", L"Cd", L"\"CommandA;CommandB;\"", L"Last" };
+    std::wstring str = L"Ab;Cd;\"CommandA\\\";\\\"CommandB;\";Last";
+    std::vector<std::wstring> expectedResult = { L"Ab", L"Cd", L"\"CommandA\\\";\\\"CommandB;\"", L"Last" };
     EXPECT_EQ(expectedResult, SplitString(str, L";",  { L"\"" }, { L"\"" }, { L"\\" }));
 }
 

@@ -107,9 +107,15 @@ namespace vcc
 						currentStr += commandCloseList[commandIndex];
 						pos += commandCloseList[commandIndex].length();
 						commandIndex = -1;
-					} else if (HasPrefix(str, commandEscapeList[commandIndex], pos)) {
+					} else if (!commandEscapeList[commandIndex].empty() && HasPrefix(str, commandEscapeList[commandIndex], pos)) {
 						currentStr += commandEscapeList[commandIndex];
 						pos += commandEscapeList[commandIndex].length();
+						for (size_t i = 0; i < commandCloseList[commandIndex].size(); i++) {
+							if (pos < str.length()) {
+								currentStr += str[pos];
+								pos++;
+							}
+						}
 					} else {
 						currentStr += std::wstring(1, str[pos]);
 						pos++;
