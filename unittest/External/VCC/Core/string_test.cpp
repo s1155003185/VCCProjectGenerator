@@ -31,28 +31,28 @@ TEST(StringTest, SplitString_HeadAndTail)
 {
     std::wstring str = L";Ab;Cd;\"CommandA;CommandB;\";;Last;";
     std::vector<std::wstring> expectedResult = { L"", L"Ab", L"Cd", L"\"CommandA", L"CommandB", L"\"", L"", L"Last", L"" };
-    EXPECT_EQ(expectedResult, SplitString(str, L";", false));
+    EXPECT_EQ(expectedResult, SplitString(str, L";"));
 }
 
 TEST(StringTest, SplitString_SplitDelimiterInString)
 {
     std::wstring str = L"Ab;Cd;\"CommandA;CommandB;\";;Last";
     std::vector<std::wstring> expectedResult = { L"Ab", L"Cd", L"\"CommandA", L"CommandB", L"\"", L"", L"Last" };
-    EXPECT_EQ(expectedResult, SplitString(str, L";", false));
+    EXPECT_EQ(expectedResult, SplitString(str, L";"));
 }
 
 TEST(StringTest, SplitString_NotSplitDelimiterInString)
 {
     std::wstring str = L"Ab;Cd;\"CommandA;CommandB;\";Last";
     std::vector<std::wstring> expectedResult = { L"Ab", L"Cd", L"\"CommandA;CommandB;\"", L"Last" };
-    EXPECT_EQ(expectedResult, SplitString(str, L";", true));
+    EXPECT_EQ(expectedResult, SplitString(str, L";",  { L"\"" }, { L"\"" }, { L"\\" }));
 }
 
 TEST(StringTest, SplitString_MultiDelimiter)
 {
     std::wstring str = L"Ab;Cd;\"CommandA;CommandB;\";Last";
     std::vector<std::wstring> expectedResult = { L"Ab;Cd;\"", L"mmandA;", L"mmandB;\";Last" };
-    EXPECT_EQ(expectedResult, SplitString(str, L"Co", false));
+    EXPECT_EQ(expectedResult, SplitString(str, L"Co"));
 }
 /* ---------------------------------------------------------------------------------------------------- */
 /*                                      Split String By Line                                            */

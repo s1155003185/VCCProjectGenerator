@@ -86,39 +86,59 @@ namespace vcc
 		return result;
 	}
 
-	std::vector<std::wstring> SplitString(std::wstring str, std::wstring delimiter, bool isIgnoreDelimiterInString)
+	std::vector<std::wstring> SplitString(std::wstring str, const std::wstring &delimiter, 
+		const std::vector<std::wstring> &commandOpenList, const std::vector<std::wstring> &commandCloseList, const std::vector<std::wstring> &commandEscapeList)
 	{
 		std::vector<std::wstring> results;
 		if (str.empty())
 			return results;
 
-		size_t pos = 0;
-		std::wstring currentStr = L"";
-		bool inString = false;
-		while (pos < str.length()) {
-			if (inString) {
-				if (str[pos] == L'"') {
-					inString = false;
-				} else if (str[pos] == L'\\') {
-					currentStr += std::wstring(1, str[pos]);
-					pos++;					
-				}
-				currentStr += std::wstring(1, str[pos]);
-				pos++;
-			} else {
-				if (HasPrefix(str, delimiter, pos)) {
-					results.push_back(currentStr);
-					currentStr = L"";
-					pos += delimiter.length();
+		try
+		{
+			if (!(commandOpenList.size() == commandCloseList.size() && commandCloseList.size() == commandEscapeList.size()))
+				THROW_EXCEPTION_M(ExceptionType::CUSTOM_ERROR, L"Command Open, Close, Escape List having different size.");
+
+			size_t pos = 0;
+			std::wstring currentStr = L"";
+			int64_t commandIndex = -1;
+			while (pos < str.length()) {
+				if (commandIndex >= 0) {
+					if (HasPrefix(str, commandCloseList[commandIndex], pos)) {
+						currentStr += commandCloseList[commandIndex];
+						pos += commandCloseList[commandIndex].length();
+						commandIndex = -1;
+					} else if (HasPrefix(str, commandEscapeList[commandIndex], pos)) {
+						currentStr += commandEscapeList[commandIndex];
+						pos += commandEscapeList[commandIndex].length();
+					} else {
+						currentStr += std::wstring(1, str[pos]);
+						pos++;
+					}
 				} else {
-					inString = str[pos] == L'"' && isIgnoreDelimiterInString;
-					currentStr += std::wstring(1, str[pos]);
-					pos++;
+					if (HasPrefix(str, delimiter, pos)) {
+						results.push_back(currentStr);
+						currentStr = L"";
+						pos += delimiter.length();
+					} else {
+						for (size_t i = 0; i < commandOpenList.size(); i++) {
+							if (HasPrefix(str, commandOpenList[i], pos)) {
+								commandIndex = i;
+								break;
+							}
+						}
+						currentStr += std::wstring(1, str[pos]);
+						pos++;
+					}
 				}
 			}
-		}
-		if (!currentStr.empty() || !results.empty())
-			results.push_back(currentStr);
+			if (!currentStr.empty() || !results.empty())
+				results.push_back(currentStr);
+
+        }
+        catch(const std::exception& e)
+        {
+            THROW_EXCEPTION(e);
+        }
 		return results;
 	}
 
