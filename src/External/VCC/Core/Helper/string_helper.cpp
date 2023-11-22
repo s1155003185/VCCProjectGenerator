@@ -95,7 +95,7 @@ namespace vcc
 
 		try
 		{
-			if (!(commandOpenList.size() == commandCloseList.size() && commandCloseList.size() == commandEscapeList.size()))
+			if (!(commandOpenList.size() == commandCloseList.size() && (commandEscapeList.empty() || commandCloseList.size() == commandEscapeList.size())))
 				THROW_EXCEPTION_M(ExceptionType::CUSTOM_ERROR, L"Command Open, Close, Escape List having different size.");
 
 			size_t pos = 0;
@@ -107,7 +107,7 @@ namespace vcc
 						currentStr += commandCloseList[commandIndex];
 						pos += commandCloseList[commandIndex].length();
 						commandIndex = -1;
-					} else if (!commandEscapeList[commandIndex].empty() && HasPrefix(str, commandEscapeList[commandIndex], pos)) {
+					} else if (!commandEscapeList.empty() && !commandEscapeList[commandIndex].empty() && HasPrefix(str, commandEscapeList[commandIndex], pos)) {
 						currentStr += commandEscapeList[commandIndex];
 						pos += commandEscapeList[commandIndex].length();
 						for (size_t i = 0; i < commandCloseList[commandIndex].size(); i++) {
