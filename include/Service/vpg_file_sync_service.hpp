@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <string>
 
 #include "log_property.hpp"
@@ -19,6 +20,7 @@ constexpr auto FORCE_MODE = L"FORCE";
 // tag
 constexpr auto REPLACE_TAG = L"REPLACE";
 constexpr auto RESERVE_TAG = L"RESERVE";
+constexpr auto PROPERTY_RESERVE_TAG = L"PROPERTYRESERVE";
 
 enum class VPGFileContentSyncMode
 {
@@ -33,7 +35,8 @@ enum class VPGFileContentSyncTag
 {
     NA,
     Replace,
-    Reserve
+    Reserve,
+    PropertyReserve
 };
 
 class VPGFileSyncService
@@ -44,6 +47,12 @@ class VPGFileSyncService
         static const XMLElement *_GetTagFromCode(const XMLElement &code, const std::wstring tagName);
         static bool _IsTagReplace(const XMLElement &child);
         static bool _IsTagReserve(const XMLElement &child);
+        static bool _IsTagPropertyReserve(const XMLElement &child);
+
+        static std::wstring _GetNextToken(const std::wstring &str, size_t &pos);
+        static std::wstring _GetPosOfStringUntilCodeEnd(const std::wstring &str, size_t &pos);
+        static std::map<std::wstring, std::wstring> _GetProperyList(const std::wstring &str);
+        static std::wstring _GeneratePropertyDemandTag(const XMLElement &src, const XMLElement &dest);
 
         static std::wstring _GenerateForceCode(const VPGFileContentSyncMode &srcMode, const VPGFileContentSyncMode &destMode, const XMLElement &src, const XMLElement &dest);
         static std::wstring _GenerateFullCode(const VPGFileContentSyncMode &srcMode, const VPGFileContentSyncMode &destMode, const XMLElement &src, const XMLElement &dest);

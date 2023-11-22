@@ -1,6 +1,7 @@
 #include "vpg_file_sync_service.hpp"
 
 #include <filesystem>
+#include <map>
 #include <memory>
 #include <string>
 
@@ -9,6 +10,7 @@
 #include "exception_type.hpp"
 #include "file_helper.hpp"
 #include "log_property.hpp"
+#include "vector_helper.hpp"
 #include "xml_reader.hpp"
 
 #include "vpg_code_reader.hpp"
@@ -54,8 +56,10 @@ VPGFileContentSyncTag VPGFileSyncService::_GetSyncTag(std::wstring tagValue)
         ToUpper(tagValue);
         if (tagValue == RESERVE_TAG)
             return VPGFileContentSyncTag::Reserve;
-        if (tagValue == REPLACE_TAG)
+        else if (tagValue == REPLACE_TAG)
             return VPGFileContentSyncTag::Replace;
+        else if (tagValue == PROPERTY_RESERVE_TAG)
+            return VPGFileContentSyncTag::PropertyReserve;
         THROW_EXCEPTION_M(ExceptionType::CUSTOM_ERROR, L"Unknow Tag " + tagValue);
     }
     catch(const std::exception& e)
@@ -86,11 +90,8 @@ bool VPGFileSyncService::_IsTagReplace(const XMLElement &child)
     try
     {
         for (XMLAttribute attr : child.Attributes){
-            if (attr.Name == SYNC_TOKEN) {
-                std::wstring value = attr.Value;
-                ToUpper(value);
-                return value == REPLACE_TAG;
-            }
+            if (attr.Name == SYNC_TOKEN)
+                return _GetSyncTag(attr.Value) == VPGFileContentSyncTag::Replace;
         }
     }
     catch(const std::exception& e)
@@ -105,11 +106,24 @@ bool VPGFileSyncService::_IsTagReserve(const XMLElement &child)
     try
     {
         for (XMLAttribute attr : child.Attributes){
-            if (attr.Name == SYNC_TOKEN) {
-                std::wstring value = attr.Value;
-                ToUpper(value);
-                return value == RESERVE_TAG;
-            }
+            if (attr.Name == SYNC_TOKEN)
+                return _GetSyncTag(attr.Value) == VPGFileContentSyncTag::Reserve;
+        }
+    }
+    catch(const std::exception& e)
+    {
+        THROW_EXCEPTION(e);
+    }
+    return false;
+}
+
+bool VPGFileSyncService::_IsTagPropertyReserve(const XMLElement &child)
+{
+    try
+    {
+        for (XMLAttribute attr : child.Attributes) {
+            if (attr.Name == SYNC_TOKEN)
+                return _GetSyncTag(attr.Value) == VPGFileContentSyncTag::PropertyReserve;
         }
     }
     catch(const std::exception& e)
@@ -138,6 +152,125 @@ void VPGFileSyncService::CopyFile(LogProperty &logProperty, const std::wstring &
     {
         THROW_EXCEPTION(e);
     }
+}
+
+std::wstring VPGFileSyncService::_GetNextToken(const std::wstring &str, size_t &pos)
+{
+    std::wstring result = L"";
+    try
+    {
+        if (std::iswspace(str[pos]))
+            THROW_EXCEPTION_M(ExceptionType::CUSTOM_ERROR, L"Char cannot be space");
+        bool isStartWithAlnum = std::iswalnum(str[pos]);
+        while (pos < str.length()) {
+            if (std::iswspace(str[pos])) {
+                pos--;
+                break;
+            } else if ((isStartWithAlnum && std::iswalnum(str[pos]))
+                || (!isStartWithAlnum && !std::iswalnum(str[pos]))) {
+                result += std::wstring(1, str[pos]);
+            } else {
+                pos--;
+                break;
+            }
+            pos++;
+        }
+    }
+    catch(const std::exception& e)
+    {
+        THROW_EXCEPTION(e);
+    }
+    return result;
+}
+
+std::wstring VPGFileSyncService::_GetPosOfStringUntilCodeEnd(const std::wstring &str, size_t &pos)
+{
+    std::wstring result = L"";
+    return result;
+}
+
+std::map<std::wstring, std::wstring> VPGFileSyncService::_GetProperyList(const std::wstring &str)
+{
+    std::map<std::wstring, std::wstring> results;
+    try
+    {
+        std::vector<std::wstring> leftCommand = { L"//", L"/*" };
+        std::vector<std::wstring> rightCommand = { L"\n", L"*/" };
+
+        std::vector<std::wstring> lines = SplitString(str, L";", leftCommand, rightCommand);
+        for (const std::wstring &line : lines) {
+            std::vector<std::wstring> eqToken = SplitString(line, L"=", leftCommand, rightCommand);
+            if (eqToken.size() < 2)
+                continue;
+            // left as variable
+            std::wstring leftStr = eqToken.at(0);
+            Trim(leftStr);
+            while (!std::isalnum(leftStr.back()))
+                leftStr.pop_back();
+            Trim(leftStr);
+            std::wstring typeStr = SplitString(leftStr, L" ", leftCommand, rightCommand).back();
+            // right as value
+            eqToken.erase(eqToken.begin());
+            std::wstring valueStr = ConcatVector(eqToken, L"=");
+            Trim(valueStr);
+            results[typeStr] = valueStr;
+        }
+    }
+    catch(const std::exception& e)
+    {
+        THROW_EXCEPTION(e);
+    }
+    return results;
+}
+
+#include <iostream>
+std::wstring VPGFileSyncService::_GeneratePropertyDemandTag(const XMLElement &src, const XMLElement &dest)
+{
+    std::wstring result = L"";
+    try
+    {
+        std::vector<std::wstring> srcLine = SplitStringByLine(src.FullText);
+        std::vector<std::wstring> destLine = SplitStringByLine(dest.FullText);
+
+        XMLReader xmlReader;
+        XMLElement srcXml = xmlReader.Parse(src.FullText.substr(src.FullText.find(L"<vcc")));
+        XMLElement destXml = xmlReader.Parse(dest.FullText.substr(dest.FullText.find(L"<vcc")));
+
+        size_t srcPosOfCommandDelimiter = src.FullText.rfind(L"//");
+        if (srcPosOfCommandDelimiter == wstring::npos)
+            THROW_EXCEPTION_M(ExceptionType::CUSTOM_ERROR, L"Src Command Delimiter // missing");
+
+        size_t destPosOfCommandDelimiter = dest.FullText.rfind(L"//");
+        if (destPosOfCommandDelimiter == wstring::npos)
+            THROW_EXCEPTION_M(ExceptionType::CUSTOM_ERROR, L"Dest Command Delimiter // missing");
+
+        // add header
+        size_t srcPos = src.FullText.find(srcXml.Text);
+        size_t destPos = dest.FullText.find(destXml.Text);
+        result += dest.FullText.substr(0, destPos);
+
+        std::map<std::wstring, std::wstring> destProperties = VPGFileSyncService::_GetProperyList(dest.FullText.substr(destPos, destPosOfCommandDelimiter - destPos));
+
+        // if meet "=", then get previous string as variable
+        std::wstring variable = L"";
+        size_t endPos = srcPos;
+        GetNextCharPos(src.FullText, endPos, true);
+        result += src.FullText.substr(srcPos, endPos - srcPos);
+        endPos = srcPos;
+        while (srcPos < srcPosOfCommandDelimiter) {
+            variable = VPGFileSyncService::_GetNextToken(src.FullText, endPos);
+            std::wcout << variable << std::endl;
+            GetNextCharPos(src.FullText, endPos, false);
+        }
+
+        // add Tail
+        result += dest.FullText.substr(destPosOfCommandDelimiter);
+    }
+    catch(const std::exception& e)
+    {
+        THROW_EXCEPTION(e);
+    }    
+    return result;
 }
 
 std::wstring VPGFileSyncService::_GenerateForceCode(const VPGFileContentSyncMode &srcMode, const VPGFileContentSyncMode &destMode, const XMLElement &src, const XMLElement &dest)
@@ -182,6 +315,8 @@ std::wstring VPGFileSyncService::_GenerateFullCode(const VPGFileContentSyncMode 
                 const XMLElement *destTag = VPGFileSyncService::_GetTagFromCode(dest, child.Name);
                 if (destTag != nullptr && VPGFileSyncService::_IsTagReserve(*destTag)) {
                     result += destTag->FullText;
+                } else if (destTag != nullptr && VPGFileSyncService::_IsTagPropertyReserve(*destTag)) {
+                    result += _GeneratePropertyDemandTag(child, *destTag);
                 } else
                     result += child.FullText;
             } else
@@ -212,6 +347,8 @@ std::wstring VPGFileSyncService::_GenerateDemandCode(const VPGFileContentSyncMod
                 const XMLElement *srcTag = VPGFileSyncService::_GetTagFromCode(src, child.Name);
                 if (srcTag != nullptr && VPGFileSyncService::_IsTagReplace(child)) {
                     result += srcTag->FullText;
+                } else if (srcTag != nullptr && VPGFileSyncService::_IsTagPropertyReserve(*srcTag)) {
+                    result += _GeneratePropertyDemandTag(*srcTag, child);
                 } else
                     result += child.FullText;
             } else
