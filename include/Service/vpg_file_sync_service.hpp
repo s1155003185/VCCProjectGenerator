@@ -29,6 +29,7 @@ enum class VPGFileContentSyncMode
     Skip
 };
 
+// TODO: PropertyReserve / PropertyAltert
 enum class VPGFileContentSyncTag
 {
     NA,
