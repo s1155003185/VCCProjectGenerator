@@ -51,8 +51,8 @@ class VPGFileSyncService
         static std::wstring _GenerateDemandCode(const VPGFileContentSyncMode &srcMode, const VPGFileContentSyncMode &destMode, const XMLElement &src, const XMLElement &dest);
         static std::wstring _GenerateSkipCode(const std::wstring &dest);
     public:
-        VPGFileSyncService() {}
+        VPGFileSyncService() = default;
         ~VPGFileSyncService() {}
         static void CopyFile(LogProperty &logProperty, const std::wstring &sourcePath, const std::wstring &destgetPath);
-        static std::wstring SyncFileContent(const std::wstring &src, const std::wstring &dest, const VPGFileContentSyncMode &defaultMode);
+        static std::wstring SyncFileContent(const std::wstring &src, const std::wstring &dest, const VPGFileContentSyncMode &defaultMode, const std::wstring &commandDelimiter);
 };

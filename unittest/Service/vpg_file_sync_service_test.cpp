@@ -79,25 +79,25 @@ class VPGFileSyncServiceTest : public testing::Test
 // Mode
 TEST_F(VPGFileSyncServiceTest, DEFAULT_MODE_FORCE)
 {
-    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetStrA(), this->GetStrB(), VPGFileContentSyncMode::Force),
+    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetStrA(), this->GetStrB(), VPGFileContentSyncMode::Force, L"//"),
                 this->GetStrA());
 }
 
 TEST_F(VPGFileSyncServiceTest, DEFAULT_MODE_FULL)
 {
-    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetStrA(), this->GetStrB(), VPGFileContentSyncMode::Full),
+    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetStrA(), this->GetStrB(), VPGFileContentSyncMode::Full, L"//"),
                 this->GetStrA());
 }
 
 TEST_F(VPGFileSyncServiceTest, DEFAULT_MODE_DEMAND)
 {
-    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetStrA(), this->GetStrB(), VPGFileContentSyncMode::Demand),
+    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetStrA(), this->GetStrB(), VPGFileContentSyncMode::Demand, L"//"),
                 this->GetStrB());
 }
 
 TEST_F(VPGFileSyncServiceTest, DEFAULT_MODE_SKIP)
 {
-    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetStrA(), this->GetStrB(), VPGFileContentSyncMode::Skip),
+    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetStrA(), this->GetStrB(), VPGFileContentSyncMode::Skip, L"//"),
                 this->GetStrB());
 }
 
@@ -123,7 +123,7 @@ TEST_F(VPGFileSyncServiceTest, FULL_RESERVE)
     destCode += L"    // commandB = commandB\r\n";
     destCode += L"    // commandC = commandC\r\n";
     destCode += L"// </vcc:tagA>\r\n";
-    EXPECT_EQ(VPGFileSyncService::SyncFileContent(srcCode, destCode, VPGFileContentSyncMode::NA), destCode);
+    EXPECT_EQ(VPGFileSyncService::SyncFileContent(srcCode, destCode, VPGFileContentSyncMode::NA, L"//"), destCode);
 }
 
 TEST_F(VPGFileSyncServiceTest, FULL_REPLACE)
@@ -147,7 +147,7 @@ TEST_F(VPGFileSyncServiceTest, FULL_REPLACE)
     destCode += L"    // commandB = commandB\r\n";
     destCode += L"    // commandC = commandC\r\n";
     destCode += L"// </vcc:tagA>\r\n";
-    EXPECT_EQ(VPGFileSyncService::SyncFileContent(srcCode, destCode, VPGFileContentSyncMode::NA), srcCode);
+    EXPECT_EQ(VPGFileSyncService::SyncFileContent(srcCode, destCode, VPGFileContentSyncMode::NA, L"//"), srcCode);
 }
 
 // Multi Tag
@@ -174,7 +174,7 @@ TEST_F(VPGFileSyncServiceTest, FULL_TAG)
     result += L"// <vcc:tagE sync=\"REPLACE\">\r\n";
     result += L"// BLOCK E\r\n";
     result += L"// </vcc:tagE>\r\n";
-    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetFullHeader() + this->GetCodeA(), this->GetFullHeader() + this->GetCodeB(), VPGFileContentSyncMode::Skip),
+    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetFullHeader() + this->GetCodeA(), this->GetFullHeader() + this->GetCodeB(), VPGFileContentSyncMode::Skip, L"//"),
                 result);
 }
 
@@ -201,24 +201,24 @@ TEST_F(VPGFileSyncServiceTest, DEMAND_TAG)
     result += L"// <vcc:tagC sync=\"REPLACE\">\r\n";
     result += L"// BLOCK C\r\n";
     result += L"// </vcc:tagC>\r\n";
-    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetDemandHeader() + this->GetCodeA(), this->GetDemandHeader() + this->GetCodeB(), VPGFileContentSyncMode::Skip),
+    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetDemandHeader() + this->GetCodeA(), this->GetDemandHeader() + this->GetCodeB(), VPGFileContentSyncMode::Skip, L"//"),
                 result);
 }
 
 TEST_F(VPGFileSyncServiceTest, SKIP_TAG)
 {
-    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetSkipHeader() + this->GetCodeA(), this->GetSkipHeader() + this->GetCodeB(), VPGFileContentSyncMode::Skip),
+    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetSkipHeader() + this->GetCodeA(), this->GetSkipHeader() + this->GetCodeB(), VPGFileContentSyncMode::Skip, L"//"),
                 this->GetSkipHeader() + this->GetCodeB());
 }
 
 TEST_F(VPGFileSyncServiceTest, FORCE_TAG)
 {
-    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetForceHeader() + this->GetCodeA(), this->GetForceHeader() + this->GetCodeB(), VPGFileContentSyncMode::Skip),
+    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetForceHeader() + this->GetCodeA(), this->GetForceHeader() + this->GetCodeB(), VPGFileContentSyncMode::Skip, L"//"),
                 this->GetForceHeader() + this->GetCodeA());
 }
 
 TEST_F(VPGFileSyncServiceTest, DifferentTags)
 {
-    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetSkipHeader() + this->GetCodeA(), this->GetForceHeader() + this->GetCodeB(), VPGFileContentSyncMode::Skip),
+    EXPECT_EQ(VPGFileSyncService::SyncFileContent(this->GetSkipHeader() + this->GetCodeA(), this->GetForceHeader() + this->GetCodeB(), VPGFileContentSyncMode::Skip, L"//"),
                 this->GetForceHeader() + this->GetCodeA());
 }

@@ -8,7 +8,7 @@
 
 class VPGCodeReaderTest : public testing::Test 
 {
-    GETOBJU(VPGCodeReader, Reader)
+    GETOBJU(VPGCodeReader, Reader, L"//")
     public:
 
         void SetUp() override
@@ -178,6 +178,53 @@ TEST_F(VPGCodeReaderTest, FULL)
 
     std::wstring fullText = L"";
     for (size_t i = 0; i < 7; i++) {
+        fullText += element.Children.at(i).FullText;
+    }
+    EXPECT_EQ(fullText, str);
+}
+
+TEST_F(VPGCodeReaderTest, ReadMe)
+{
+    std::wstring str = L"";
+    str += L"#\t<vcc:vccproj sync=\"FULL\"/>\r\n";
+    str += L"\t\ta\r\n";
+    str += L"#\t<vcc:tagA action=\"RESERVE\">\r\n";
+    str += L"\t\tBLOCK A\r\n";
+    str += L"#\t</vcc:tagA>\r\n";
+    str += L"\t\tb\r\n";
+    str += L"#\t<vcc:tagB action=\"REPLACE\">\r\n";
+    str += L"\t\tBLOCK B\r\n";
+    str += L"#\t</vcc:tagB>\r\n";
+    str += L"\t\tEND";
+
+    std::unique_ptr<VPGCodeReader> reader = std::make_unique<VPGCodeReader>(L"#");
+
+    XMLElement element = reader->Parse(str);
+    EXPECT_EQ(element.Children.size(), (size_t)6);
+    EXPECT_EQ(element.Children.at(0).Namespace, L"vcc");
+    EXPECT_EQ(element.Children.at(0).Name, L"vccproj");
+    EXPECT_EQ(element.Children.at(0).Attributes.size(), (size_t)1);
+    EXPECT_EQ(element.Children.at(0).Attributes.at(0).Name, L"sync");
+    EXPECT_EQ(element.Children.at(0).Attributes.at(0).Value, L"FULL");
+    EXPECT_EQ(element.Children.at(0).FullText, L"#\t<vcc:vccproj sync=\"FULL\"/>");
+    EXPECT_EQ(element.Children.at(1).FullText, L"\r\n\t\ta\r\n");
+    EXPECT_EQ(element.Children.at(2).Namespace, L"vcc");
+    EXPECT_EQ(element.Children.at(2).Name, L"tagA");
+    EXPECT_EQ(element.Children.at(2).Attributes.size(), (size_t)1);
+    EXPECT_EQ(element.Children.at(2).Attributes.at(0).Name, L"action");
+    EXPECT_EQ(element.Children.at(2).Attributes.at(0).Value, L"RESERVE");
+    EXPECT_EQ(element.Children.at(2).FullText, L"#\t<vcc:tagA action=\"RESERVE\">\r\n\t\tBLOCK A\r\n#\t</vcc:tagA>");
+    EXPECT_EQ(element.Children.at(3).FullText, L"\r\n\t\tb\r\n");
+    EXPECT_EQ(element.Children.at(4).Namespace, L"vcc");
+    EXPECT_EQ(element.Children.at(4).Name, L"tagB");
+    EXPECT_EQ(element.Children.at(4).Attributes.size(), (size_t)1);
+    EXPECT_EQ(element.Children.at(4).Attributes.at(0).Name, L"action");
+    EXPECT_EQ(element.Children.at(4).Attributes.at(0).Value, L"REPLACE");
+    EXPECT_EQ(element.Children.at(4).FullText, L"#\t<vcc:tagB action=\"REPLACE\">\r\n\t\tBLOCK B\r\n#\t</vcc:tagB>");
+    EXPECT_EQ(element.Children.at(5).FullText, L"\r\n\t\tEND");
+
+    std::wstring fullText = L"";
+    for (size_t i = 0; i < 6; i++) {
         fullText += element.Children.at(i).FullText;
     }
     EXPECT_EQ(fullText, str);

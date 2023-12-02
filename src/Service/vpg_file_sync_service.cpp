@@ -228,12 +228,12 @@ std::wstring VPGFileSyncService::_GenerateSkipCode(const std::wstring &dest)
     return std::wstring(dest);
 }
 
-std::wstring VPGFileSyncService::SyncFileContent(const std::wstring &src, const std::wstring &dest, const VPGFileContentSyncMode &defaultMode)
+std::wstring VPGFileSyncService::SyncFileContent(const std::wstring &src, const std::wstring &dest, const VPGFileContentSyncMode &defaultMode, const std::wstring &commandDelimiter)
 {
     std::wstring result = L"";
     try
     {
-        std::unique_ptr<VPGCodeReader> reader = std::make_unique<VPGCodeReader>();
+        std::unique_ptr<VPGCodeReader> reader = std::make_unique<VPGCodeReader>(commandDelimiter);
         XMLElement srcElement = reader->Parse(src);
         XMLElement destElement = reader->Parse(dest);
 

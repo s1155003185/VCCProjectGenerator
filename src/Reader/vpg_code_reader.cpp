@@ -7,6 +7,11 @@
 
 using namespace vcc;
 
+VPGCodeReader::VPGCodeReader(std::wstring commandDelimiter)
+{
+    this->_CommandDelimiter = commandDelimiter;
+}
+
 void VPGCodeReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, XMLElement &element)
 {
     try
@@ -34,7 +39,7 @@ void VPGCodeReader::ParseXMLElement(const std::wstring &xmlData, size_t &pos, XM
     {
         size_t startPos = pos;
         while (pos < dataLength) {
-            if (HasPrefix(xmlData, L"//", pos) && HasPrefixTrimSpace(xmlData, L"//<vcc:", pos)) {
+            if (HasPrefix(xmlData, this->_CommandDelimiter, pos) && HasPrefixTrimSpace(xmlData, this->_CommandDelimiter + L"<vcc:", pos)) {
                 if (pos > 0) {
                     pos--;
                     XMLElement previous;
