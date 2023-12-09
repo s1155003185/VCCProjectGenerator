@@ -27,7 +27,7 @@ namespace vcc
     std::wstring ReadStdOut(void);
     std::wstring ReadStdError(void);
     
-    std::wstring process_service_win(std::wstring command)
+    std::wstring ProcessServiceWin(std::wstring command)
     {
         // ref to https://learn.microsoft.com/en-us/windows/win32/procthread/creating-a-child-process-with-redirected-input-and-output
         SECURITY_ATTRIBUTES saAttr;

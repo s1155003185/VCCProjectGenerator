@@ -21,13 +21,7 @@ using namespace vcc;
 std::wstring VPGGlobal::GetDefaultFolder()
 {
     try {
-        LogProperty logProperty(LogPropertyType::None);
-
-        #ifdef __WIN32
-        static_assert(false); // need to consider window documents path
-        #endif
-
-        return CommandService::Execute(logProperty, L"", L"echo ~/Documents");
+        return GetSystemFolderPath(SystemFolderType::LocalDocuments);
     } catch (const std::exception &e) {
         THROW_EXCEPTION(e);
     }

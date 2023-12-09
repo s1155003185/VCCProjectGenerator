@@ -12,7 +12,7 @@ namespace vcc
         if (ie != nullptr)
             throw Exception(ie->GetErrorType(), prefix + ie->GetErrorMessage());
         else
-            throw Exception(ExceptionType::CUSTOM_ERROR, prefix + str2wstr(std::string(e.what())));
+            throw Exception(ExceptionType::CustomError, prefix + str2wstr(std::string(e.what())));
     }
 
     #ifdef __DEBUGLOG__
@@ -20,7 +20,7 @@ namespace vcc
     #define THROW_EXCEPTION_M(exceptionType, message) THROW_EXCEPTION_DEBUG_W(exceptionType, message)
     #else
     #define THROW_EXCEPTION(e) throw e
-    #define THROW_EXCEPTION(exceptionType, message) throw Exception(exceptionType, message)
+    #define THROW_EXCEPTION_M(exceptionType, message) throw Exception(exceptionType, message)
     #endif
 
 

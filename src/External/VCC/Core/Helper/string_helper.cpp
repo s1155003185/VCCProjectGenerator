@@ -56,7 +56,7 @@ namespace vcc
 		std::wstring trimPrefix = std::wstring(prefix);
 		Trim(trimPrefix);
 		if (trimPrefix != prefix)
-			THROW_EXCEPTION_M(ExceptionType::CUSTOM_ERROR, L"Prefix contains space.");
+			THROW_EXCEPTION_M(ExceptionType::CustomError, L"Prefix contains space.");
 
 		if (prefix.empty())
 			return true;
@@ -96,7 +96,7 @@ namespace vcc
 		try
 		{
 			if (!(commandOpenList.size() == commandCloseList.size() && (commandEscapeList.empty() || commandCloseList.size() == commandEscapeList.size())))
-				THROW_EXCEPTION_M(ExceptionType::CUSTOM_ERROR, L"Command Open, Close, Escape List having different size.");
+				THROW_EXCEPTION_M(ExceptionType::CustomError, L"Command Open, Close, Escape List having different size.");
 
 			size_t pos = 0;
 			std::wstring currentStr = L"";

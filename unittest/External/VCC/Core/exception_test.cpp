@@ -19,7 +19,7 @@ TEST(ExceptionTest, General)
     bool throwException = false;
     try 
     {
-        throw Exception(ExceptionType::FILE_NOT_FOUND, L"FILE_NOT_FOUND");
+        throw Exception(ExceptionType::FileNotFound, L"FILE_NOT_FOUND");
     } 
     catch (exception &ex) 
     {
@@ -46,7 +46,7 @@ TEST(ExceptionTest, Full)
     bool throwException = false;
     try
     {
-        THROW_EXCEPTION_M(ExceptionType::FILE_NOT_FOUND, L"FILE_NOT_FOUND");
+        THROW_EXCEPTION_M(ExceptionType::FileNotFound, L"FILE_NOT_FOUND");
     }
     catch(exception &ex)
     {

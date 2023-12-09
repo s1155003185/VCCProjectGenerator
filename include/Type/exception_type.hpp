@@ -2,16 +2,17 @@
 
 enum class ExceptionType
 {
-	NO_ERROR = 0,
+	NoError = 0,
     // vccobj - begin
 	// Directory
-	DIRECTORY_NOT_FOUND,
-	DIRECTORY_CANNOT_CREATE,
+	DirectoryNotFound,
+	DirectoryCannotCreate,
     // File
-	FILE_NOT_FOUND,
-	FILE_IS_BLOCKED,
+	FileNotFound,
+	FileIsBlocked,
+	FileCannotOpen,
 	// parser
-	READER_ERROR,
+	ReaderError,
     // vccobj - end
-    CUSTOM_ERROR = 9999,
+    CustomError = 9999,
 };

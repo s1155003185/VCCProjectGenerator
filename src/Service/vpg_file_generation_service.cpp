@@ -141,7 +141,7 @@ void VPGFileGenerationService::GernerateProperty(LogProperty &logProperty, const
     try {
         std::set<std::wstring> classMacroList = VPGFileGenerationService::GetClassMacroList(projWorkspace);
         if (classMacroList.empty())
-            THROW_EXCEPTION_M(ExceptionType::FILE_NOT_FOUND, classMacroFilePath + L" missing");
+            THROW_EXCEPTION_M(ExceptionType::FileNotFound, classMacroFilePath + L" missing");
 
         //Generate Object Type, Object Class, PropertyAccessor,
         // 1. get all files from directory

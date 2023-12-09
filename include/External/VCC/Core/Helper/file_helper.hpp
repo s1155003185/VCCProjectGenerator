@@ -1,10 +1,36 @@
 #pragma once
 
+#include <functional>
 #include <string>
+#include <vector>
 
 namespace vcc
 {
     #define PATH std::filesystem::path
+
+	enum class SystemFolderType
+	{
+		AdminTools,
+		AppData,
+		CommonAdminTools,
+		CommonAppdata,
+		CommonDocuments,
+		Cookies,
+		FlagCreate,
+		FlagDontVerify,
+		History,
+		InternetCache,
+		LocalAppData,
+		LocalPictures,
+		LocalDocuments,
+		ProgramFiles,
+		ProgramFilesCommon,
+		System,
+		Windows
+	};
+
+	// system
+	std::wstring GetSystemFolderPath(SystemFolderType fileType);
 
     // helper
 	std::wstring ConcatPath(std::wstring directory, std::wstring addition);
@@ -28,4 +54,5 @@ namespace vcc
 	// write file
 	void WriteFile(const std::wstring &filePath, const std::wstring &content, bool isForce);
 	void AppendFileOneLine(const std::wstring &filePath, const std::wstring &line, bool isForce);
+
 }

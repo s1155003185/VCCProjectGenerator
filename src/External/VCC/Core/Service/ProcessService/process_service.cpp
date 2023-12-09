@@ -26,7 +26,7 @@ namespace vcc
         #ifdef _WIN32
         std::wstring ProcessService::_ExecuteWindow(std::wstring command)
         {
-            return process_service_win(command);
+            return ProcessServiceWin(command);
         }
         #else
         std::wstring ProcessService::_ExecuteLinux(std::string command)

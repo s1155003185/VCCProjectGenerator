@@ -10,10 +10,25 @@
 #include "exception_type.hpp"
 #include "vector_helper.hpp"
 
+#ifdef __WIN32
+#include "file_helper_win.hpp"
+#else
+#include "file_helper_linux.hpp"
+#endif
+
 using namespace std;
 
 namespace vcc
 {
+	std::wstring GetSystemFolderPath(SystemFolderType fileType)
+    {
+        #ifdef __WIN32
+        return GetSystemFolderPathWindow(fileType);
+        #else
+        return GetSystemFolderPathLinux(fileType);
+        #endif
+    }
+
     std::wstring ConcatPath(std::wstring directory, std::wstring addition)
     {
         if (addition.starts_with(L"/") || addition.starts_with(L"\\"))
@@ -74,13 +89,13 @@ namespace vcc
     void ValidateFile(const std::wstring &path)
     {
         if (!std::filesystem::exists(path))
-            THROW_EXCEPTION_M(ExceptionType::FILE_NOT_FOUND, path + L": File not found.");
+            THROW_EXCEPTION_M(ExceptionType::FileNotFound, path + L": File not found.");
 
         if (!std::filesystem::is_regular_file(path))
-            THROW_EXCEPTION_M(ExceptionType::FILE_NOT_FOUND, path + L": Path is not a file.");
+            THROW_EXCEPTION_M(ExceptionType::FileNotFound, path + L": Path is not a file.");
 
         if (std::filesystem::is_block_file(path))
-            THROW_EXCEPTION_M(ExceptionType::FILE_IS_BLOCKED, path + L": File is blocked.");
+            THROW_EXCEPTION_M(ExceptionType::FileIsBlocked, path + L": File is blocked.");
     }
 
     bool IsFileEqual(const std::wstring &pathA, const std::wstring &pathB)
@@ -89,8 +104,8 @@ namespace vcc
             ValidateFile(pathA);
             ValidateFile(pathB);
 
-            std::ifstream f1(pathA, std::ifstream::binary|std::ifstream::ate);
-            std::ifstream f2(pathB, std::ifstream::binary|std::ifstream::ate);
+            std::ifstream f1(pathA.c_str(), std::ifstream::binary|std::ifstream::ate);
+            std::ifstream f2(pathB.c_str(), std::ifstream::binary|std::ifstream::ate);
 
             if (f1.fail() || f2.fail())
                 return false;
@@ -104,7 +119,7 @@ namespace vcc
                 std::istreambuf_iterator<char>(),
                 std::istreambuf_iterator<char>(f2.rdbuf()));
         } catch (const std::exception &e) {
-            THROW_EXCEPTION_M(ExceptionType::FILE_IS_BLOCKED, str2wstr(e.what()));
+            THROW_EXCEPTION_M(ExceptionType::FileIsBlocked, str2wstr(e.what()));
         }
         return false;
     }
@@ -132,11 +147,13 @@ namespace vcc
         try {
             ValidateFile(filePath);
 
-            std::wifstream fileStream(filePath, ios_base::in);
-            wchar_t c;
-            while (fileStream.get(c)) {
-                result += wstring(1, c);
-            }
+            std::wifstream fileStream(filePath.c_str(), ios_base::binary);
+            if (!fileStream)
+                THROW_EXCEPTION_M(ExceptionType::FileCannotOpen, L"Cannot Open File " + filePath);
+            
+            std::wstringstream buffer;
+            buffer << fileStream.rdbuf();
+            result = buffer.str();
             fileStream.close();
         } catch (const std::exception &e) {
             THROW_EXCEPTION(e);
@@ -149,7 +166,7 @@ namespace vcc
         try {
             ValidateFile(filePath);
 
-            std::wifstream fileStream(filePath, ios_base::in);
+            std::wifstream fileStream(filePath.c_str(), ios_base::in);
             std::wstring line;
             while (std::getline(fileStream, line)) {
                 action(line);
@@ -165,7 +182,7 @@ namespace vcc
         try {
             ValidateFile(filePath);
 
-            std::wifstream fileStream(filePath, ios_base::in);
+            std::wifstream fileStream(filePath.c_str(), ios_base::in);
             std::wstring line, result;
             int cnt = 0;
             while (std::getline(fileStream, line))
@@ -192,17 +209,17 @@ namespace vcc
             if (!IsDirectoryExists(dir.wstring()))
             {
                 if (!isForce)
-                    THROW_EXCEPTION_M(ExceptionType::DIRECTORY_NOT_FOUND, dir.wstring() + L"Directory not found.");
+                    THROW_EXCEPTION_M(ExceptionType::DirectoryNotFound, dir.wstring() + L"Directory not found.");
                 else if (!std::filesystem::create_directories(dir))
-                    THROW_EXCEPTION_M(ExceptionType::DIRECTORY_CANNOT_CREATE, dir.wstring() + L"Directory not found.");
+                    THROW_EXCEPTION_M(ExceptionType::DirectoryCannotCreate, dir.wstring() + L"Directory not found.");
             }
 
-            std::wofstream file(filePath, std::ios::out | std::ios::binary);
+            std::wofstream file(filePath.c_str(), std::ios::out | std::ios::binary);
             if (file.is_open()) {
                 file << content;
                 file.close();
             } else {
-                THROW_EXCEPTION_M(ExceptionType::FILE_IS_BLOCKED, L"Cannot open file: " + filePath);
+                THROW_EXCEPTION_M(ExceptionType::FileIsBlocked, L"Cannot open file: " + filePath);
             }
         } catch (const std::exception &e) {
             THROW_EXCEPTION(e);
@@ -221,14 +238,14 @@ namespace vcc
             if (!IsDirectoryExists(dir.wstring()))
             {
                 if (!isForce)
-                    THROW_EXCEPTION_M(ExceptionType::DIRECTORY_NOT_FOUND, dir.wstring() + L"Directory not found.");
+                    THROW_EXCEPTION_M(ExceptionType::DirectoryNotFound, dir.wstring() + L"Directory not found.");
                 else if (!std::filesystem::create_directories(dir))
-                    THROW_EXCEPTION_M(ExceptionType::DIRECTORY_CANNOT_CREATE, dir.wstring() + L"Directory not found.");
+                    THROW_EXCEPTION_M(ExceptionType::DirectoryCannotCreate, dir.wstring() + L"Directory not found.");
             }
             if (!std::filesystem::exists(_filePath))
             {
                 if (!isForce)
-                    THROW_EXCEPTION_M(ExceptionType::FILE_NOT_FOUND, _filePath.wstring() + L": File not found.");
+                    THROW_EXCEPTION_M(ExceptionType::FileNotFound, _filePath.wstring() + L": File not found.");
             }
             std::wofstream fileStream(_filePath, ios_base::app);
             fileStream << line << NL;
