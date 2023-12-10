@@ -1,9 +1,10 @@
 #pragma once
 
+// TODO: need review
 enum class ExceptionType
 {
 	NoError = 0,
-    // vccobj - begin
+	// <vcc:exceptionType action:"ALERT">
 	// Directory
 	DirectoryNotFound,
 	DirectoryCannotCreate,
@@ -13,6 +14,6 @@ enum class ExceptionType
 	FileCannotOpen,
 	// parser
 	ReaderError,
-    // vccobj - end
+	// </vcc:exceptionType>
     CustomError = 9999,
 };
