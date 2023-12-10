@@ -8,25 +8,26 @@ namespace vcc
 {
     #define PATH std::filesystem::path
 
+	// TODO: Support folder type
 	enum class SystemFolderType
 	{
-		AdminTools,
-		AppData,
-		CommonAdminTools,
-		CommonAppdata,
-		CommonDocuments,
-		Cookies,
-		FlagCreate,
-		FlagDontVerify,
-		History,
-		InternetCache,
-		LocalAppData,
-		LocalPictures,
-		LocalDocuments,
-		ProgramFiles,
-		ProgramFilesCommon,
-		System,
-		Windows
+		// AdminTools,
+		// AppData,
+		// CommonAdminTools,
+		// CommonAppdata,
+		// CommonDocuments,
+		// Cookies,
+		// FlagCreate,
+		// FlagDontVerify,
+		// History,
+		// InternetCache,
+		// LocalAppData,
+		// LocalPictures,
+		LocalDocuments
+		// ProgramFiles,
+		// ProgramFilesCommon,
+		// System,
+		// Windows
 	};
 
 	// system
