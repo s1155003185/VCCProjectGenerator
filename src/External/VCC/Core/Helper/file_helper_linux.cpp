@@ -1,7 +1,10 @@
 #ifndef __WIN32
 
 #include "file_helper_linux.hpp"
+
+#include "command_service.hpp"
 #include "file_helper.hpp"
+#include "log_service.hpp"
 
 namespace vcc
 {
