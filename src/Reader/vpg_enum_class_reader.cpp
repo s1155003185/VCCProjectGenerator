@@ -89,11 +89,11 @@ std::wstring VPGEnumClassReader::_GetType(const std::wstring &macroStr, size_t &
     {
         pos = macroStr.find(L"(");
         if (pos == std::wstring::npos)
-            THROW_EXCEPTION_M(ExceptionType::ReaderError, L"GetType: Macro ( missing");
+            THROW_EXCEPTION_MSG(ExceptionType::ReaderError, L"GetType: Macro ( missing");
         pos++;
         size_t endPos = macroStr.find(L",");
         if (endPos == std::wstring::npos)
-            THROW_EXCEPTION_M(ExceptionType::ReaderError, L"GetType: Macro , missing");
+            THROW_EXCEPTION_MSG(ExceptionType::ReaderError, L"GetType: Macro , missing");
         result = macroStr.substr(pos, endPos - pos);
         pos = endPos;
         Trim(result);
@@ -114,7 +114,7 @@ std::wstring VPGEnumClassReader::_GetPropertyName(const std::wstring &macroStr, 
         if (endPos == std::wstring::npos) {
             endPos = macroStr.find_last_of(L")");
             if (endPos == std::wstring::npos) 
-                THROW_EXCEPTION_M(ExceptionType::ReaderError, L"GetPropertyName: Macro , or ) missing");
+                THROW_EXCEPTION_MSG(ExceptionType::ReaderError, L"GetPropertyName: Macro , or ) missing");
         }
         result = macroStr.substr(pos, endPos - pos);
         pos = endPos;
@@ -134,7 +134,7 @@ std::wstring VPGEnumClassReader::_GetDefaultValue(const std::wstring &macroStr, 
     {
         size_t endPos = macroStr.find_last_of(L")");
         if (endPos == std::wstring::npos) 
-            THROW_EXCEPTION_M(ExceptionType::ReaderError, L"GetDefaultValue: Macro ) missing");
+            THROW_EXCEPTION_MSG(ExceptionType::ReaderError, L"GetDefaultValue: Macro ) missing");
 
         result = macroStr.substr(pos, endPos - pos);
         pos = endPos;
@@ -205,7 +205,7 @@ std::wstring VPGEnumClassReader::_GetCommand(const std::wstring &cppCode, size_t
             result = cppCode.substr(pos, endPos - pos);
             pos = endPos + 1;
         } else
-            THROW_EXCEPTION_M(ExceptionType::ReaderError, _GetErrorMessage(pos, cppCode[pos], L"// or /* missing."));    
+            THROW_EXCEPTION_MSG(ExceptionType::ReaderError, _GetErrorMessage(pos, cppCode[pos], L"// or /* missing."));    
     }
     catch(const std::exception& e)
     {
@@ -254,7 +254,7 @@ void VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, V
     try
     {
         if (!HasPrefix(cppCode, L"enum", pos))
-            THROW_EXCEPTION_M(ExceptionType::ReaderError, _GetErrorMessage(pos, cppCode[pos], L"enum missing."));
+            THROW_EXCEPTION_MSG(ExceptionType::ReaderError, _GetErrorMessage(pos, cppCode[pos], L"enum missing."));
             
         pos += 4; // length of "enum"
         GetNextCharPos(cppCode, pos, false);
@@ -263,7 +263,7 @@ void VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, V
             GetNextCharPos(cppCode, pos, false);
         }
         if (!std::iswalpha(cppCode[pos]))
-            THROW_EXCEPTION_M(ExceptionType::ReaderError, _GetErrorMessage(pos, cppCode[pos], L"Class Name missing."));
+            THROW_EXCEPTION_MSG(ExceptionType::ReaderError, _GetErrorMessage(pos, cppCode[pos], L"Class Name missing."));
 
         enumClass.Name = _GetEnum(cppCode, pos);
         GetNextCharPos(cppCode, pos, false);
@@ -276,14 +276,14 @@ void VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, V
             GetNextCharPos(cppCode, pos, false);
         }
         if (cppCode[pos] != L'{')
-            THROW_EXCEPTION_M(ExceptionType::ReaderError, _GetErrorMessage(pos, cppCode[pos], L"{ missing."));
+            THROW_EXCEPTION_MSG(ExceptionType::ReaderError, _GetErrorMessage(pos, cppCode[pos], L"{ missing."));
         GetNextCharPos(cppCode, pos, false);
 
         _ParseProperties(cppCode, pos, enumClass);
         GetNextCharPos(cppCode, pos, false);
 
         if (cppCode[pos] != L'}')
-            THROW_EXCEPTION_M(ExceptionType::ReaderError, _GetErrorMessage(pos, cppCode[pos], L"} missing."));
+            THROW_EXCEPTION_MSG(ExceptionType::ReaderError, _GetErrorMessage(pos, cppCode[pos], L"} missing."));
     }
     catch(const std::exception& e)
     {

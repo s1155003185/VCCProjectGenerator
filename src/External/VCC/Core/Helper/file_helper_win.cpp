@@ -84,7 +84,7 @@ namespace vcc
 			else
                 result = str2wstr(path);
         } catch (const std::exception &e) {
-            THROW_EXCEPTION_M(ExceptionType::CustomError, str2wstr(e.what()));
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, str2wstr(e.what()));
         }
         return result;
     }

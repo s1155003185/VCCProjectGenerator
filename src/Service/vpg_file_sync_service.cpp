@@ -56,7 +56,7 @@ VPGFileContentSyncTag VPGFileSyncService::_GetSyncTag(std::wstring tagValue)
             return VPGFileContentSyncTag::Reserve;
         if (tagValue == REPLACE_TAG)
             return VPGFileContentSyncTag::Replace;
-        THROW_EXCEPTION_M(ExceptionType::CustomError, L"Unknow Tag " + tagValue);
+        THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknow Tag " + tagValue);
     }
     catch(const std::exception& e)
     {
@@ -124,7 +124,7 @@ void VPGFileSyncService::CopyFile(LogProperty &logProperty, const std::wstring &
     try
     {
         if (!IsFileExists(sourcePath))
-            THROW_EXCEPTION_M(ExceptionType::FileNotFound, sourcePath + L": File not found.");
+            THROW_EXCEPTION_MSG(ExceptionType::FileNotFound, sourcePath + L": File not found.");
 
         bool isModified = IsFileExists(destgetPath);
         if (isModified)
@@ -255,7 +255,7 @@ std::wstring VPGFileSyncService::SyncFileContent(const std::wstring &src, const 
         case VPGFileContentSyncMode::Skip:
             return VPGFileSyncService::_GenerateSkipCode(dest);
         default:
-            THROW_EXCEPTION_M(ExceptionType::CustomError, L"Unknown File Content Sync Mode");
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknown File Content Sync Mode");
             break;
         }
     }

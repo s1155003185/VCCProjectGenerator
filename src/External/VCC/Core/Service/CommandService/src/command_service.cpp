@@ -15,7 +15,7 @@ namespace vcc
         char buffer[1024];
         FILE* p = popen(wstr2str(cmd).c_str(), "r");
         if (p == nullptr)
-            THROW_EXCEPTION_M(ExceptionType::CustomError, L"Cannot Execute Command: " + cmd);
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Cannot Execute Command: " + cmd);
     
         std::wstring result;
         try {
@@ -25,7 +25,7 @@ namespace vcc
             }
         } catch (exception &e) {
             pclose(p);
-            THROW_EXCEPTION_M(ExceptionType::CustomError, str2wstr(e.what()));
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, str2wstr(e.what()));
         }
         int status = pclose(p);
         #ifdef _WIN32
@@ -33,7 +33,7 @@ namespace vcc
         #else
         if (WEXITSTATUS(status) != 0)
         #endif
-            THROW_EXCEPTION_M(ExceptionType::CustomError, result);
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, result);
         LogService::LogCommandResult(logProperty, id, result);
 
         Trim(result);

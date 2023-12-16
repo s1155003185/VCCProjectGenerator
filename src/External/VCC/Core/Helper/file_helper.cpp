@@ -90,13 +90,13 @@ namespace vcc
     void ValidateFile(const std::wstring &path)
     {
         if (!std::filesystem::exists(path))
-            THROW_EXCEPTION_M(ExceptionType::FileNotFound, path + L": File not found.");
+            THROW_EXCEPTION_MSG(ExceptionType::FileNotFound, path + L": File not found.");
 
         if (!std::filesystem::is_regular_file(path))
-            THROW_EXCEPTION_M(ExceptionType::FileNotFound, path + L": Path is not a file.");
+            THROW_EXCEPTION_MSG(ExceptionType::FileNotFound, path + L": Path is not a file.");
 
         if (std::filesystem::is_block_file(path))
-            THROW_EXCEPTION_M(ExceptionType::FileIsBlocked, path + L": File is blocked.");
+            THROW_EXCEPTION_MSG(ExceptionType::FileIsBlocked, path + L": File is blocked.");
     }
 
     bool IsFileEqual(const std::wstring &pathA, const std::wstring &pathB)
@@ -120,7 +120,7 @@ namespace vcc
                 std::istreambuf_iterator<char>(),
                 std::istreambuf_iterator<char>(f2.rdbuf()));
         } catch (const std::exception &e) {
-            THROW_EXCEPTION_M(ExceptionType::FileIsBlocked, str2wstr(e.what()));
+            THROW_EXCEPTION_MSG(ExceptionType::FileIsBlocked, str2wstr(e.what()));
         }
         return false;
     }
@@ -150,7 +150,7 @@ namespace vcc
 
             std::wifstream fileStream(filePath.c_str(), ios_base::binary);
             if (!fileStream)
-                THROW_EXCEPTION_M(ExceptionType::FileCannotOpen, L"Cannot Open File " + filePath);
+                THROW_EXCEPTION_MSG(ExceptionType::FileCannotOpen, L"Cannot Open File " + filePath);
             
             std::wstringstream buffer;
             buffer << fileStream.rdbuf();
@@ -210,9 +210,9 @@ namespace vcc
             if (!IsDirectoryExists(dir.wstring()))
             {
                 if (!isForce)
-                    THROW_EXCEPTION_M(ExceptionType::DirectoryNotFound, dir.wstring() + L"Directory not found.");
+                    THROW_EXCEPTION_MSG(ExceptionType::DirectoryNotFound, dir.wstring() + L"Directory not found.");
                 else if (!std::filesystem::create_directories(dir))
-                    THROW_EXCEPTION_M(ExceptionType::DirectoryCannotCreate, dir.wstring() + L"Directory not found.");
+                    THROW_EXCEPTION_MSG(ExceptionType::DirectoryCannotCreate, dir.wstring() + L"Directory not found.");
             }
 
             std::wofstream file(filePath.c_str(), std::ios::out | std::ios::binary);
@@ -220,7 +220,7 @@ namespace vcc
                 file << content;
                 file.close();
             } else {
-                THROW_EXCEPTION_M(ExceptionType::FileIsBlocked, L"Cannot open file: " + filePath);
+                THROW_EXCEPTION_MSG(ExceptionType::FileIsBlocked, L"Cannot open file: " + filePath);
             }
         } catch (const std::exception &e) {
             THROW_EXCEPTION(e);
@@ -239,14 +239,14 @@ namespace vcc
             if (!IsDirectoryExists(dir.wstring()))
             {
                 if (!isForce)
-                    THROW_EXCEPTION_M(ExceptionType::DirectoryNotFound, dir.wstring() + L"Directory not found.");
+                    THROW_EXCEPTION_MSG(ExceptionType::DirectoryNotFound, dir.wstring() + L"Directory not found.");
                 else if (!std::filesystem::create_directories(dir))
-                    THROW_EXCEPTION_M(ExceptionType::DirectoryCannotCreate, dir.wstring() + L"Directory not found.");
+                    THROW_EXCEPTION_MSG(ExceptionType::DirectoryCannotCreate, dir.wstring() + L"Directory not found.");
             }
             if (!std::filesystem::exists(_filePath))
             {
                 if (!isForce)
-                    THROW_EXCEPTION_M(ExceptionType::FileNotFound, _filePath.wstring() + L": File not found.");
+                    THROW_EXCEPTION_MSG(ExceptionType::FileNotFound, _filePath.wstring() + L": File not found.");
             }
             std::wofstream fileStream(_filePath, ios_base::app);
             fileStream << line << NL;
