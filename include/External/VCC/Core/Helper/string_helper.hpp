@@ -5,7 +5,7 @@
 
 namespace vcc
 {
-    const auto NL = L"\n";
+    const auto NL = L"\r\n";
 	const std::wstring INDENT = L"    ";
 
 	enum class EscapeStringType

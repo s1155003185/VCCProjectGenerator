@@ -190,6 +190,8 @@ namespace vcc
             {
                 if (cnt == index) {
                     result = line;
+                    if (!result.empty() && result.at(result.length() - 1) == '\r')
+                        result.pop_back();
                     break;
                 }
                 cnt++;
