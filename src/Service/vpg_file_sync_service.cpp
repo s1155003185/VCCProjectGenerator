@@ -15,6 +15,11 @@
 
 using namespace vcc;
 
+bool VPGFileSyncService::_IsSyncTag(const std::wstring &tag)
+{
+    return tag == SYNC_TOKEN_LONG || tag == SYNC_TOKEN_SHORT;
+}
+
 VPGFileContentSyncMode VPGFileSyncService::_GetSyncMode(const XMLElement &codeElemet)
 {
     try
@@ -22,7 +27,7 @@ VPGFileContentSyncMode VPGFileSyncService::_GetSyncMode(const XMLElement &codeEl
         for (XMLElement child : codeElemet.Children) {
             if (child.Namespace == VCC_NAMESPACE && child.Name == VCC_NAME) {
                 for (XMLAttribute attr : child.Attributes) {
-                    if (attr.Name == SYNC_TOKEN) {
+                    if (_IsSyncTag(attr.Name)) {
                         std::wstring value = attr.Value;
                         ToUpper(value);
                         if (value == FORCE_MODE) {
@@ -86,7 +91,7 @@ bool VPGFileSyncService::_IsTagReplace(const XMLElement &child)
     try
     {
         for (XMLAttribute attr : child.Attributes){
-            if (attr.Name == SYNC_TOKEN) {
+            if (_IsSyncTag(attr.Name)) {
                 std::wstring value = attr.Value;
                 ToUpper(value);
                 return value == REPLACE_TAG;
@@ -105,7 +110,7 @@ bool VPGFileSyncService::_IsTagReserve(const XMLElement &child)
     try
     {
         for (XMLAttribute attr : child.Attributes){
-            if (attr.Name == SYNC_TOKEN) {
+            if (_IsSyncTag(attr.Name)) {
                 std::wstring value = attr.Value;
                 ToUpper(value);
                 return value == RESERVE_TAG;

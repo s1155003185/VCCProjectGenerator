@@ -8,7 +8,11 @@
 constexpr auto VCC_NAMESPACE = L"vcc";
 constexpr auto VCC_NAME = L"vccproj";
 
-constexpr auto SYNC_TOKEN = L"sync";
+constexpr auto SYNC_TOKEN_SHORT = L"sync";
+constexpr auto SYNC_TOKEN_LONG = L"synchronization";
+
+// constexpr auto GEN_TOKEN_SHORT = L"gen";
+// constexpr auto GEN_TOKEN_LONG = L"generation";
 
 // xml
 constexpr auto FULL_MODE = L"FULL";
@@ -40,6 +44,8 @@ enum class VPGFileContentSyncTag
 class VPGFileSyncService
 {
     private:
+        static bool _IsSyncTag(const std::wstring &tag);
+
         static VPGFileContentSyncMode _GetSyncMode(const XMLElement &codeElemet);
         static VPGFileContentSyncTag _GetSyncTag(std::wstring tagValue);
         static const XMLElement *_GetTagFromCode(const XMLElement &code, const std::wstring tagName);
