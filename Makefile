@@ -71,8 +71,13 @@ INC := include
 SRC := src
 LIB := lib
 LFLAGS :=
+ifeq ($(OS),Windows_NT)
+DEBUG_FOLDER := bin\Debug
+RELEASE_FOLDER := bin\Release
+else
 DEBUG_FOLDER := bin/Debug
 RELEASE_FOLDER := bin/Release
+endif
 
 # exclude folder
 ifeq ($(OS),Windows_NT)
@@ -161,9 +166,10 @@ INCDIRS = -I$(INC) $(INCDIRS_SUB)
 #LFLAGS :=
 
 # Command
-RM			:= del /q /f
-RMDIR		:= rmdir /s /q
-MKDIR		:= mkdir
+RM := del /q /f
+RMDIR := rmdir /s /q
+MKDIR := mkdir
+CP := xcopy
 
 else
 #----------------------------------#
@@ -209,6 +215,7 @@ INCDIRS = $(INCDIRS_SUB)
 RM := rm -f
 RMDIR := rm -rf
 MKDIR := mkdir -p
+CP := cp -a
 endif
 
 ALL_PROJECT_O_FILES_EXE := $(ALL_PROJECT_CPP_FILES_EXE:.cpp=.o)
@@ -235,6 +242,7 @@ all: debug
 #----------------------------------#
 debug:
 	$(MAKE) create_debug_folder
+	$(MAKE) copy_debug_lib
 ifneq ($(DLL_PROJ_NAME),)
 	$(MAKE) debug_dll
 endif
@@ -247,6 +255,7 @@ endif
 release:
 	$(MAKE) create_release_folder
 	$(MAKE) clean_release
+	$(MAKE) copy_release_lib
 ifneq ($(DLL_PROJ_NAME),)
 	$(MAKE) release_dll
 endif
@@ -326,10 +335,44 @@ release_exe:
 #------------- TOOLS  -------------#
 #----------------------------------#
 create_debug_folder:
-	$(MKDIR) bin/Debug
+ifeq ($(OS),Windows_NT)
+ifeq ($(wildcard $(DEBUG_FOLDER)),)
+	$(MKDIR) "$(DEBUG_FOLDER)"
+endif
+else
+	$(MKDIR) "$(DEBUG_FOLDER)"
+endif
 
 create_release_folder:
-	$(MKDIR) bin/Release
+ifeq ($(OS),Windows_NT)
+ifeq ($(wildcard $(RELEASE_FOLDER)),)
+	$(MKDIR) "$(RELEASE_FOLDER)"
+endif
+else
+	$(MKDIR) "$(RELEASE_FOLDER)"
+endif
+
+copy_debug_lib:
+ifeq ($(OS),Windows_NT)
+ifeq ($(wildcard $(LIB)),)
+	$(MKDIR) "$(LIB)"
+endif
+	$(CP) "$(LIB)"  "$(DEBUG_FOLDER)" /E /H /C /I /D
+else
+	$(MKDIR) "$(LIB)"
+	$(CP) "$(LIB)/."  "$(DEBUG_FOLDER)"
+endif
+
+copy_release_lib:
+ifeq ($(OS),Windows_NT)
+ifeq ($(wildcard $(LIB)),)
+	$(MKDIR) "$(LIB)"
+endif
+	$(CP) "$(LIB)" "$(RELEASE_FOLDER)" /E /H /C /I /D
+else
+	$(MKDIR) "$(LIB)"
+	$(CP) "$(LIB)/."  "$(RELEASE_FOLDER)"
+endif
 
 #----------------------------------#
 #------------- Clean  -------------#
