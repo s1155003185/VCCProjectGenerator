@@ -12,10 +12,10 @@
 
 #include "vpg_enum_class_reader.hpp"
 
-constexpr auto classMacroFilePath = L"include/External/VCC/Core/Macro/class_macro.hpp";
-constexpr auto logId = L"File Generation";
+const std::wstring classMacroFilePath = L"include/External/VCC/Core/Macro/class_macro.hpp";
+const std::wstring logId = L"File Generation";
 
-constexpr auto objectTypeHppFileName = L"object_type.hpp";
+const std::wstring objectTypeHppFileName = L"object_type.hpp";
 const std::wstring propertyFileSuffix = L"property.hpp";
 const std::wstring proeprtyClassNameSuffix = L"Property";
 const std::wstring propertyAccessorFileSuffixWithoutExtention = L"property_accessor";

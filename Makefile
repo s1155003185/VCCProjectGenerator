@@ -234,6 +234,7 @@ all: debug
 #------------- Overall-------------#
 #----------------------------------#
 debug:
+	$(MAKE) create_debug_folder
 ifneq ($(DLL_PROJ_NAME),)
 	$(MAKE) debug_dll
 endif
@@ -244,6 +245,7 @@ endif
 	@echo Build Debug Complete!
 
 release:
+	$(MAKE) create_release_folder
 	$(MAKE) clean_release
 ifneq ($(DLL_PROJ_NAME),)
 	$(MAKE) release_dll
@@ -319,6 +321,15 @@ release_exe:
 	$(LFLAGS) \
 	-o $(RELEASE_FOLDER)/$(MAIN_EXE)
 	@echo Build RELEASE EXE Complete
+
+#----------------------------------#
+#------------- TOOLS  -------------#
+#----------------------------------#
+create_debug_folder:
+	$(MKDIR) bin/Debug
+
+create_release_folder:
+	$(MKDIR) bin/Release
 
 #----------------------------------#
 #------------- Clean  -------------#
