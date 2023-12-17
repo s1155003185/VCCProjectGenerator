@@ -161,9 +161,10 @@ INCDIRS = -I$(INC) $(INCDIRS_SUB)
 #LFLAGS :=
 
 # Command
-RM			:= del /q /f
-RMDIR		:= rmdir /s /q
-MKDIR		:= mkdir
+RM := del /q /f
+RMDIR := rmdir /s /q
+MKDIR := mkdir
+CP := cp
 
 else
 #----------------------------------#
@@ -209,6 +210,7 @@ INCDIRS = $(INCDIRS_SUB)
 RM := rm -f
 RMDIR := rm -rf
 MKDIR := mkdir -p
+CP := cp -a
 endif
 
 ALL_PROJECT_O_FILES_EXE := $(ALL_PROJECT_CPP_FILES_EXE:.cpp=.o)
@@ -235,6 +237,7 @@ all: debug
 #----------------------------------#
 debug:
 	$(MAKE) create_debug_folder
+	$(MAKE) copy_debug_lib
 ifneq ($(DLL_PROJ_NAME),)
 	$(MAKE) debug_dll
 endif
@@ -246,6 +249,7 @@ endif
 
 release:
 	$(MAKE) create_release_folder
+	$(MAKE) copy_release_lib
 	$(MAKE) clean_release
 ifneq ($(DLL_PROJ_NAME),)
 	$(MAKE) release_dll
@@ -326,10 +330,18 @@ release_exe:
 #------------- TOOLS  -------------#
 #----------------------------------#
 create_debug_folder:
-	$(MKDIR) bin/Debug
+	$(MKDIR) $(DEBUG_FOLDER)
 
 create_release_folder:
-	$(MKDIR) bin/Release
+	$(MKDIR) $(RELEASE_FOLDER)
+
+copy_debug_lib:
+	$(MKDIR) $(LIB)
+	$(CP) $(LIB)/.  $(DEBUG_FOLDER)
+
+copy_release_lib:
+	$(MKDIR) $(LIB)
+	$(CP) $(LIB)/.  $(RELEASE_FOLDER)
 
 #----------------------------------#
 #------------- Clean  -------------#
