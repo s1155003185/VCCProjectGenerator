@@ -32,8 +32,8 @@
 #---------- Project Name ----------#
 #----------------------------------#
 PROJECT_NAME := VCCProjGenerator
-DLL_PROJ_NAME := lib$(PROJECT_NAME)
-EXE_PROJ_NAME := $(PROJECT_NAME)
+DLL_PROJ_NAME := libvpg
+EXE_PROJ_NAME := vpg
 # </vcc:name>
 # <vcc:property sync:"ALERT">
 #----------------------------------#

@@ -3,6 +3,8 @@
 
 ## Release Log
 
+### 2023-12-18 Rename library and executable to libvpg and vpg
+
 ### 2023-12-06 Change Project and MakeFile to CPP Complex Mode
 
 ### 2023-11-04 Generate Object Type File and Class Files
