@@ -34,8 +34,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/david/Desktop/VSCode/VCCProjectGenerator/VCCProjectGeneratorDLL",
-      "program": "/Users/david/Desktop/VSCode/VCCProjectGenerator/VCCProjectGeneratorDLL/build/Debug/outDebug"
+      "cwd": "/Users/david/Desktop/VSCode/VCCProjectGenerator",
+      "program": "/Users/david/Desktop/VSCode/VCCProjectGenerator/build/Debug/outDebug"
     }
   ]
 }
