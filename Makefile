@@ -34,13 +34,13 @@
 PROJECT_NAME := VCCProjGenerator
 DLL_PROJ_NAME := libvpg
 EXE_PROJ_NAME := vpg
+GTEST_PROJ_NAME := unittest
 # </vcc:name>
 # <vcc:property sync:"ALERT">
 #----------------------------------#
 #---------- Project Info ----------#
 #----------------------------------#
 # gtest
-GTEST_PROJECT_NAME := unittest
 GTEST_FOLDER := unittest
 EXE_MAIN_CPP_FILES := main.cpp
 DLL_MAIN_HPP_FILES := DllFunctions.h 
@@ -133,7 +133,7 @@ ifeq ($(OS),Windows_NT)
 #----------------------------------#
 MAIN_EXE := $(EXE_PROJ_NAME).exe
 MAIN_DLL := $(DLL_PROJ_NAME).dll
-GTESTMAIN := $(GTEST_PROJECT_NAME).exe
+GTESTMAIN := $(GTEST_PROJ_NAME).exe
 
 # All Sub Directory - Source need *.cpp instead of directory
 # g++ param
@@ -177,7 +177,7 @@ else
 #----------------------------------#
 MAIN_EXE := $(EXE_PROJ_NAME)
 MAIN_DLL := $(DLL_PROJ_NAME).so
-GTESTMAIN := $(GTEST_PROJECT_NAME)
+GTESTMAIN := $(GTEST_PROJ_NAME)
 
 # All Sub Directory - Source need *.cpp instead of directory
 # g++ param
@@ -249,7 +249,9 @@ endif
 ifneq ($(EXE_PROJ_NAME),)
 	$(MAKE) debug_exe
 endif
+ifneq ($(GTEST_PROJ_NAME),)
 	$(MAKE) gtest
+endif
 	@echo Build Debug Complete!
 
 release:
