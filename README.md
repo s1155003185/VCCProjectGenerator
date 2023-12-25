@@ -5,11 +5,10 @@
 Auto handle project update if using VCCModule. 
 
 ## Compile
-1. Create an empty folder 
-2. Pull VCCProjectGeneratorEXE and VCCProjectGeneratorDLL
-3. make VCCProjectGeneratorDLL
-4. make VCCProjectGeneratorEXE
-5. program in Debug folder or Release Folder
+1. Pull VCCProjectGenerator
+2. cd VCCProjectGenerator
+3. make release
+4. program in bin/Release
 
 ## Command - Version
 vccproj -v

@@ -14,7 +14,7 @@ using namespace std;
 
 class VPGFileGenerationServiceTest : public testing::Test 
 {
-    GETOBJU(LogProperty, LogProperty, LogPropertyType::None);
+    GETUPTR(LogProperty, LogProperty, LogPropertyType::None);
     GET(wstring, Workspace, L"bin/Debug/FileGenerationServiceTest");
     GET(wstring, WorkspaceSource, L"bin/Debug/FileGenerationServiceTestSource");
     GET(wstring, WorkspaceTarget, L"bin/Debug/FileGenerationServiceTestTarget");
@@ -86,8 +86,6 @@ TEST_F(VPGFileGenerationServiceTest, GetClassMacroList)
         L"STATICGET",
         L"GETOBJ",
         L"GETUPTR",
-        L"GETOBJU",
-        L"GETOBJS",
         L"GETSPTR",
         L"VECTOR",
         L"SET",

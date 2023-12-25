@@ -18,6 +18,12 @@ constexpr auto VCC_EXE = L"VCCModuleDLL";
 
 using namespace vcc;
 
+
+std::wstring VPGGlobal::GetVersion()
+{
+    return L"0.0.1";
+}
+
 std::wstring VPGGlobal::GetDefaultFolder()
 {
     try {
