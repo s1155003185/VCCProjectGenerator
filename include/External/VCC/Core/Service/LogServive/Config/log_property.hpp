@@ -19,17 +19,17 @@ namespace vcc
         // General
         GETSET(std::wstring, UserID, L"");
         
-        GETSET(bool, IsConsoleLog, true);
+        GETSET(bool, IsConsoleLog, false);
         GETSET(std::wstring, FilePath, L"");
         // Command
-        GETSET(bool, IsLogCommand, true);
-        GETSET(bool, IsLogCommandResult, true);
+        GETSET(bool, IsLogCommand, false);
+        GETSET(bool, IsLogCommandResult, false);
         // Process
-        GETSET(bool, IsLogProcess, true);
-        GETSET(bool, IsLogProcessResult, true);
+        GETSET(bool, IsLogProcess, false);
+        GETSET(bool, IsLogProcessResult, false);
         // SQL
-        GETSET(bool, IsLogSQL, true);
-        GETSET(bool, IsLogSQLResult, true);
+        GETSET(bool, IsLogSQL, false);
+        GETSET(bool, IsLogSQLResult, false);
     public:
         LogProperty() {}
         LogProperty(LogPropertyType logPropertyType, std::wstring filePath = L"") {

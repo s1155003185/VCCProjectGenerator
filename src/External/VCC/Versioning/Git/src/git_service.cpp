@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <regex>
+#include <string>
 
 #include "exception_macro.hpp"
 #include "git_constant.hpp"
@@ -33,11 +34,11 @@ namespace vcc
     {
         bool result = false;
         try {
-            std::wstring cmd = L"git rev-parse --git-dir";
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
-            result = true;
-        } catch (const std::exception &e) {
-            THROW_EXCEPTION(e);
+            std::wstring cmd = L"git rev-parse --is-inside-work-tree";
+            std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
+            result = cmdResult.find(L"true") != std::wstring::npos;
+        } catch (...) {
+            result = false;
         }
         return result;
     }
@@ -54,11 +55,23 @@ namespace vcc
         return L"";
     }
 
-    std::wstring GitService::CloneResponse(LogProperty &logProperty, std::wstring url, std::wstring branch, std::wstring dist)
+    std::wstring GitService::Clone(LogProperty &logProperty, std::wstring url, std::wstring branch, std::wstring dist, int64_t depth)
     {
         try {
-            std::wstring cmd = L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"");
+            std::wstring cmd = L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"") 
+                + (depth > 0 ? (L" --depth " + std::to_wstring(depth)) : L"");
             return ProcessService::Execute(logProperty, GIT_LOG_ID, dist, cmd);
+        } catch (const std::exception &e) {
+            THROW_EXCEPTION(e);
+        }
+        return L"";
+    }
+
+    std::wstring GitService::CheckOut(LogProperty &logProperty, std::wstring workspace, std::wstring branch)
+    {
+        try {
+            std::wstring cmd = L"git checkout " + branch;
+            return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
         } catch (const std::exception &e) {
             THROW_EXCEPTION(e);
         }

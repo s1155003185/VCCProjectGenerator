@@ -6,6 +6,7 @@
 #include <string>
 
 #include "class_macro.hpp"
+#include "file_helper.hpp"
 #include "git_service.hpp"
 #include "log_property.hpp"
 
@@ -35,7 +36,7 @@ TEST_F(GitServiceTest, Version)
     EXPECT_TRUE(regex_match(version, wregex(L"[0-9]+.[0-9]+.[0-9]+")));
 }
 
-TEST_F(GitServiceTest, InitializeLocalResponse)
+TEST_F(GitServiceTest, FullTest)
 {
     if (!std::filesystem::exists(this->GetWorkspace()))
         std::filesystem::create_directory(this->GetWorkspace());
@@ -46,6 +47,13 @@ TEST_F(GitServiceTest, InitializeLocalResponse)
     
     // check existance
     EXPECT_TRUE(GitService::IsGitResponse(*this->GetLogPropery(), this->GetWorkspace()));
+
+    // Create a new file
+    WriteFile(ConcatPath(this->GetWorkspace(), L"test.txt"), L"hi", true);
+ 
+    // push
+    
+    // 
 
     // pull
     // cannot test for local response

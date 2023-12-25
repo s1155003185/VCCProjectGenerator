@@ -8,7 +8,7 @@
 
 class VPGCodeReaderTest : public testing::Test 
 {
-    GETOBJU(VPGCodeReader, Reader, L"//")
+    GETUPTR(VPGCodeReader, Reader, L"//")
     public:
 
         void SetUp() override

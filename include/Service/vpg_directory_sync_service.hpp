@@ -27,6 +27,6 @@ class VPGDirectorySyncService
         static void CheckAndCreateDirectory(LogProperty &logProperty, std::wstring workspace);
 
         // file sync
-        static void SyncWorkspace(LogProperty &logProperty, VPGProjectType projectType, std::wstring projectLocalDirectoryParent, std::wstring workspace,
+        static void SyncWorkspace(LogProperty &logProperty, VPGProjectType projectType, std::wstring workspace,
             const std::vector<std::wstring> &includeOnlyRegex, const std::vector<std::wstring> &excludeRegex);
 };

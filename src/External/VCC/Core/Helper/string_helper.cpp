@@ -18,10 +18,9 @@ namespace vcc
 	{
 		if (str.empty())
 			return L"";
-		int len = str.size() + 1;
-		std::unique_ptr<wchar_t[]> p(new wchar_t[len]);
-		mbstowcs(p.get(), str.c_str(), len);
-		std::wstring wstr(p.get());
+		std::wstring wstr;
+		wstr.resize(str.size());
+		std::mbstowcs(&wstr[0], str.c_str(), wstr.size());
 		return wstr;
 	}
 
@@ -29,10 +28,9 @@ namespace vcc
 	{
 		if (wstr.empty())
 			return "";
-		int len = wstr.size() * 4 + 1;
-		std::unique_ptr<char[]> p(new char[len]);
-		wcstombs(p.get(), wstr.c_str(), len);
-		std::string str(p.get());
+		std::string str;
+		str.resize(wstr.size() * sizeof(wchar_t));
+		std::wcstombs(&str[0], wstr.c_str(), str.size());
 		return str;
 	}
 
@@ -84,6 +82,11 @@ namespace vcc
 			result = false;
 		}
 		return result;
+	}
+
+	bool HasSuffix(const std::wstring &str, const std::wstring &suffix)
+	{
+		return str.ends_with(suffix);
 	}
 
 	std::vector<std::wstring> SplitString(std::wstring str, const std::wstring &delimiter, 
