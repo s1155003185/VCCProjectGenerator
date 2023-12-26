@@ -10,14 +10,16 @@ Auto handle project update if using VCCModule.
 3. make release
 4. program in bin/Release
 
+The Git template folder will stored in ~\Document\vcc first.
+
 ## Command - Version / Add / Update
 vpg <Mode>
-[-w <Workspace>] [-i <Interface>] [-v <tag version>] [-s <Source Directory>] [-p <Plugin>]
-[--SourceFullHistory] [--ExcludeUnitTest] [--ExcludeExternalUnitTest]
+[-w <Workspace>] [-i <Interface>] [-v <tag version>] [-p <Plugin>]
+[--ExcludeUnitTest] [--ExcludeExternalUnitTest]
 
 ## Command - Generate
 vpg -G 
-[-w <Workspace>] [-i <Interface>] [-s <Source Directory>]
+[-w <Workspace>] [-i <Interface>]
 [-type <Object Type File Path>] [-obj <Object Property Type Directory>] [-act <Action Type Directory>] [-err <Error Type Directory>]
 
 ### Definition
@@ -39,7 +41,6 @@ where
     - VCCEXE
     - VCCCOMPLEXE
 -v tag version. If not specify, use master.
--s Git Source Copy of VCCModule. Default ~\Document\vcc
 -p Plugin Module. This param can be stated multiple times. Value can be
     - VCC/Versioning/Git
 

@@ -30,3 +30,9 @@ TEST_F(VPGProcessManagerTest, Empty)
     std::vector<std::wstring> cmds;
     this->GetManager()->Execute(cmds);
 }
+
+TEST_F(VPGProcessManagerTest, AddCpp)
+{
+    
+
+}

@@ -34,8 +34,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "${workspaceFolder}",
-      "program": "${workspaceFolder}/bin/Debug/vpg"
+      "cwd": "/Users/david/Desktop/VSCode/VCCProjectGenerator",
+      "program": "/Users/david/Desktop/VSCode/VCCProjectGenerator/build/Debug/outDebug"
     }
   ]
 }

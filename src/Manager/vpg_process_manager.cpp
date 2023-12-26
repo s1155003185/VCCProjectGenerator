@@ -19,7 +19,7 @@ void VPGProcessManager::InitLogProperty()
 void VPGProcessManager::Add()
 {
     try {
-        VPGFileUpdateService::DownloadVCCResource(*this->GetLogProperty(), this->GetVPGProjectType(), this->GetTagVersion(), this->GetWorkspace());
+        VPGFileUpdateService::DownloadVCCResource(*this->GetLogProperty(), this->GetVPGProjectType(), this->GetBranch(), L"");
 
     } catch (const std::exception &e) {
         THROW_EXCEPTION(e);
@@ -48,14 +48,14 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
         return;
 
     this->InitLogProperty();
-    
+
     try {
         std::wstring mode = cmds[1];
         if (mode == L"-V") {
             std::wcout << L"VCCProjectGenerator version " << VPGGlobal::GetVersion() << std::endl;
             return;        
         }
-        
+
         for (size_t i = 2; i < cmds.size(); i++) {
             std::wstring cmd = cmds[i];
             if (!HasPrefix(cmd, L"-")) {
@@ -91,9 +91,7 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
                                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknown argument " + cmd2);
                         }
                     } else if (cmd == L"-v") {
-                        this->_TagVersion = cmd2;
-                    } else if (cmd == L"-s") {
-                        this->_SourceDirectory = cmd2;
+                        this->_Branch = cmd2;
                     } else if (cmd == L"-p") {
                         this->_Plugins.push_back(cmd2);
                     } else
@@ -102,9 +100,7 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
                     THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Argument missing for " + cmd);
             } else {
                 // double tag, no second argument
-                if (cmd == L"--SourceFullHistory")
-                    this->_IsSourceFullHistory = true;
-                else if (cmd == L"--ExcludeUnitTest")
+                if (cmd == L"--ExcludeUnitTest")
                     this->_IsExcludeUnitTest = true;
                 else if (cmd == L"--ExcludeExternalUnitTest")
                     this->_IsExcludeExternalUnitTest = true;

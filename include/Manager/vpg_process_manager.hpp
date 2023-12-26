@@ -16,12 +16,10 @@ class VPGProcessManager
     // project
     GETSET(std::wstring, Workspace, L"");
     GETSET(VPGProjectType, VPGProjectType, VPGProjectType::VccComplex);
-    GETSET(std::wstring, TagVersion, L"");
-    GETSET(std::wstring, SourceDirectory, L"");
+    GETSET(std::wstring, Branch, L"");
     VECTOR(std::wstring, Plugins);
     
     // option
-    GETSET(bool, IsSourceFullHistory, false);
     GETSET(bool, IsExcludeUnitTest, false);
     GETSET(bool, IsExcludeExternalUnitTest, false);
 
