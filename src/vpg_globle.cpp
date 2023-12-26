@@ -11,10 +11,8 @@
 
 constexpr auto URL = L"https://github.com/s1155003185/";
 constexpr auto URL_GIT = L".git"; 
-constexpr auto CPP_DLL =  L"VCCSimpleTemplateDLL";
-constexpr auto CPP_EXE = L"VCCSimpleTemplateEXE";
-constexpr auto VCC_DLL = L"VCCModuleDLL";
-constexpr auto VCC_EXE = L"VCCModuleDLL";
+constexpr auto CPP_GIT_PROJ_NAME =  L"VCCSimpleTemplateCPP";
+constexpr auto VCC_GIT_PROJ_NAME = L"VCCModule";
 
 using namespace vcc;
 
@@ -45,17 +43,15 @@ std::wstring VPGGlobal::GetProjectName(VPGProjectType projectType)
 {
     std::wstring result = L"";
     switch (projectType) {
-        case VPGProjectType::VCCDll:
-            result += VCC_DLL;
+        case VPGProjectType::VccComplex:
+        case VPGProjectType::VccDll:
+        case VPGProjectType::VccExe:
+            result += VCC_GIT_PROJ_NAME;
             break;
-        case VPGProjectType::VCCInterface:
-            result += VCC_EXE;
-            break;
-        case VPGProjectType::CPPDll:
-            result += CPP_DLL;
-            break;
-        case VPGProjectType::CPPInterface:
-            result += CPP_EXE;
+        case VPGProjectType::CppComplex:
+        case VPGProjectType::CppDll:
+        case VPGProjectType::CppExe:
+            result += CPP_GIT_PROJ_NAME;
             break;
         default:
             assert(false);

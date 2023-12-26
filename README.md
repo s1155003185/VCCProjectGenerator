@@ -10,34 +10,38 @@ Auto handle project update if using VCCModule.
 3. make release
 4. program in bin/Release
 
-## Command - Version
-vccproj -v
+## Command - Version / Add / Update
+vpg <Mode>
+[-w <Workspace>] [-i <Interface>] [-v <tag version>] [-s <Source Directory>] [-p <Plugin>]
+[--SourceFullHistory] [--ExcludeUnitTest] [--ExcludeExternalUnitTest]
 
-## Command - Add
-vccproj -A
-[-w <Workspace>] [-l <DLL Directory>] [-i=<Interface> <Interface Directory>] [-s <Source Directory>]
-[-SourceForceRefresh] [-SourceFullHistory] [-ExcludeExternalUnitTest]
-
-## Command - Update
-vccproj -U 
-[-w <Workspace>] [-l <DLL Directory>] [-i=<Interface> <Interface Directory>] [-s <Source Directory>]
+## Command - Generate
+vpg -G 
+[-w <Workspace>] [-i <Interface>] [-s <Source Directory>]
 [-type <Object Type File Path>] [-obj <Object Property Type Directory>] [-act <Action Type Directory>] [-err <Error Type Directory>]
-[-SourceForceRefresh] [-SourceFullHistory] [-ExcludeExternalUnitTest] [-ForceUpdateVCCModel] 
 
 ### Definition
 #### Mode
--v Get Version
+<Mode> Must be -V or -A or -U 
+where
+-V Get Version
 -A Add Mode
 -U Update Mode
-
-#### GitSource
--s Git Source Copy of VCCModule. Default Document\VCCProject
+-G Generate Mode
 
 #### Project Workspace
-##### Note <> means path. Support "path". If lib and int not stated, then it is a c++ application without dll.
 -w Workspace, Full Path or Path relative to current directory. Default Current Directory.
--l VCCModule c++ dll project directory. Path relative to wsp. If only dll project, no need to state. Mandatory if have UI project.
--i UI project directory. Interface can be CPP, VCC, JAVA, SWITF (only CPP support at the moment). Path relative to wsp. Link lib to UI. If UI Project already exists, then just link but create. Mandatory if have UI project.
+-i Interface. Value can be
+    - CPPDLL
+    - CPPEXE
+    - CPPCOMPLEX
+    - VCCDLL
+    - VCCEXE
+    - VCCCOMPLEXE
+-v tag version. If not specify, use master.
+-s Git Source Copy of VCCModule. Default ~\Document\vcc
+-p Plugin Module. This param can be stated multiple times. Value can be
+    - VCC/Versioning/Git
 
 #### Enum to Object (Will generate to UI under same folder)
 -type File Path of Object Type. Path relative to -lib. Must only have one enum class. If UI has multi libraries, must different name to avoid compile error.
@@ -46,12 +50,9 @@ vccproj -U
 -err Path (including subpath) that contains Errors. Path relative to -lib.
 
 #### Control
--SourceForceRefresh Force pull Git response in -src.
 -SourceFullHistory If first pull Git response, then pull whole batch history. Default 10 lastest history.
+-ExcludeUnitTest Dont generate unit test.
 -ExcludeExternalUnitTest Ignore unit test under external. If want to customize VCCModule, recommend to keep unit test.
--ForceUpdateVCCModel Force update project from -src.
-
-
 
 ## Release Log
 

@@ -86,6 +86,11 @@ namespace vcc
 		return result;
 	}
 
+	bool HasSuffix(const std::wstring &str, const std::wstring &suffix)
+	{
+		return str.ends_with(suffix);
+	}
+
 	std::vector<std::wstring> SplitString(std::wstring str, const std::wstring &delimiter, 
 		const std::vector<std::wstring> &commandOpenList, const std::vector<std::wstring> &commandCloseList, const std::vector<std::wstring> &commandEscapeList)
 	{
