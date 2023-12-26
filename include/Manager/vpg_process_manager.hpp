@@ -4,12 +4,15 @@
 #include <vector>
 
 #include "class_macro.hpp"
+#include "log_property.hpp"
 #include "vpg_project_type.hpp"
 
 using namespace vcc;
 
 class VPGProcessManager
 {
+    GETUPTR(LogProperty, LogProperty, LogPropertyType::None);
+
     // project
     GETSET(std::wstring, Workspace, L"");
     GETSET(VPGProjectType, VPGProjectType, VPGProjectType::VccComplex);
@@ -25,6 +28,8 @@ class VPGProcessManager
     public:
         VPGProcessManager() = default;
         ~VPGProcessManager() {};
+
+        void InitLogProperty();
 
         void Add();
         void Update();

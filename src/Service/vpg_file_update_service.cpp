@@ -15,32 +15,12 @@
 
 using namespace vcc;
 
-std::wstring VPGFileUpdateService::_DownloadVCCResource(LogProperty &logProperty, std::wstring url, wstring branch, std::wstring directory)
-{
-    try {
-        return GitService::CloneResponse(logProperty, url, branch, directory);
-    } catch (const std::exception &e) {
-        THROW_EXCEPTION(e);
-    }
-    return L"";
-}
-
-std::wstring VPGFileUpdateService::DownloadVCCResource(LogProperty &logProperty, VPGProjectType projectType, std::wstring directory)
+std::wstring VPGFileUpdateService::DownloadVCCResource(LogProperty &logProperty, VPGProjectType projectType, std::wstring branch, std::wstring directory)
 {
     try {
         if (directory.empty()) 
             directory = VPGGlobal::GetDefaultFolder();
-        return VPGFileUpdateService::_DownloadVCCResource(logProperty, VPGGlobal::GetProjecURL(projectType), L"", directory);
-    } catch (const std::exception &e) {
-        THROW_EXCEPTION(e);
-    }
-    return L"";
-}
-
-std::wstring VPGFileUpdateService::_UpdateVCCResource(LogProperty &logProperty, std::wstring workspace)
-{
-    try {
-        return GitService::Pull(logProperty, workspace);
+        return GitService::CloneResponse(logProperty, VPGGlobal::GetProjecURL(projectType), branch, directory);
     } catch (const std::exception &e) {
         THROW_EXCEPTION(e);
     }

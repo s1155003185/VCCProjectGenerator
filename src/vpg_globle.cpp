@@ -25,7 +25,7 @@ std::wstring VPGGlobal::GetVersion()
 std::wstring VPGGlobal::GetDefaultFolder()
 {
     try {
-        return GetSystemFolderPath(SystemFolderType::LocalDocuments);
+        return ConcatPath(GetSystemFolderPath(SystemFolderType::LocalDocuments), L"vcc");
     } catch (const std::exception &e) {
         THROW_EXCEPTION(e);
     }

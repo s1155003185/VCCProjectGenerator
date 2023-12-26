@@ -5,15 +5,21 @@
 
 #include "exception_macro.hpp"
 #include "string_helper.hpp"
+#include "vpg_file_update_service.hpp"
 #include "vpg_global.hpp"
 #include "vpg_project_type.hpp"
 
 using namespace vcc;
 
+void VPGProcessManager::InitLogProperty()
+{
+    this->GetLogProperty()->SetIsConsoleLog(true);
+}
+
 void VPGProcessManager::Add()
 {
     try {
-        
+        VPGFileUpdateService::DownloadVCCResource(*this->GetLogProperty(), this->GetVPGProjectType(), this->GetTagVersion(), this->GetWorkspace());
 
     } catch (const std::exception &e) {
         THROW_EXCEPTION(e);
@@ -41,6 +47,8 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
     if (cmds.size() < 2)
         return;
 
+    this->InitLogProperty();
+    
     try {
         std::wstring mode = cmds[1];
         if (mode == L"-V") {
