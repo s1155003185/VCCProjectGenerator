@@ -22,7 +22,7 @@ std::wstring VPGGlobal::GetVersion()
     return L"0.0.1";
 }
 
-std::wstring VPGGlobal::GetVccDefaultFolder()
+std::wstring VPGGlobal::GetVccLocalResponseFolder()
 {
     try {
         return ConcatPath(GetSystemFolderPath(SystemFolderType::LocalDocuments), L"vcc");
@@ -32,10 +32,10 @@ std::wstring VPGGlobal::GetVccDefaultFolder()
     return L"";
 }
 
-std::wstring VPGGlobal::GetVccProjectDefaultDirectory(VPGProjectType projectType)
+std::wstring VPGGlobal::GetVccProjectLocalResponseDirectory(VPGProjectType projectType)
 {
     try {
-        return ConcatPath(VPGGlobal::GetVccDefaultFolder(), VPGGlobal::GetProjectName(projectType));
+        return ConcatPath(VPGGlobal::GetVccLocalResponseFolder(), VPGGlobal::GetProjectName(projectType));
     } catch (const std::exception &e) {
         THROW_EXCEPTION(e);
     }

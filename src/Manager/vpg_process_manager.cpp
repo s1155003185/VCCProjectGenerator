@@ -21,7 +21,7 @@ void VPGProcessManager::VerifyLocalResponse()
     try {
         // 1. Check if source file exists, if not exist then clone
         // 2. Check if version != branch, then checkout
-        std::wstring localResponseDirectory = VPGGlobal::GetVccProjectDefaultDirectory(this->GetVPGProjectType());
+        std::wstring localResponseDirectory = VPGGlobal::GetVccProjectLocalResponseDirectory(this->GetVPGProjectType());
 
         LogService::LogInfo(*this->GetLogProperty(), L"", L"Check VCC Local response existance: " + localResponseDirectory);
 
