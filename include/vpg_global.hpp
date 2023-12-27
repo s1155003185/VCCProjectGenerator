@@ -7,8 +7,8 @@ class VPGGlobal
 {
     public:
         static std::wstring GetVersion();
-        static std::wstring GetDefaultFolder();
-        static std::wstring GetProjectLocalDirectory(VPGProjectType projectType, std::wstring parentFolder);
+        static std::wstring GetVccDefaultFolder();
+        static std::wstring GetVccProjectDefaultDirectory(VPGProjectType projectType);
         static std::wstring GetProjectName(VPGProjectType projectType);
         static std::wstring GetProjecURL(VPGProjectType projectType);
 };

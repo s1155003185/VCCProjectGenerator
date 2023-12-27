@@ -171,11 +171,11 @@ void VPGDirectorySyncService::_SyncWorkspace(LogProperty &logProperty, std::wstr
     }
 }
 
-void VPGDirectorySyncService::SyncWorkspace(LogProperty &logProperty, VPGProjectType projectType, std::wstring projectLocalDirectoryParent, std::wstring workspace,
+void VPGDirectorySyncService::SyncWorkspace(LogProperty &logProperty, VPGProjectType projectType, std::wstring workspace,
     const std::vector<std::wstring> &includeOnlyFileFilter, const std::vector<std::wstring> &excludeOnlyFileFilter)
 {
     try {
-        std::wstring projectLocalDirectory = VPGGlobal::GetProjectLocalDirectory(projectType, projectLocalDirectoryParent);
+        std::wstring projectLocalDirectory = VPGGlobal::GetVccProjectDefaultDirectory(projectType);
         VPGDirectorySyncService::_SyncWorkspace(logProperty, projectLocalDirectory, workspace, includeOnlyFileFilter, excludeOnlyFileFilter);
     } catch (const std::exception &e) {
         THROW_EXCEPTION(e);

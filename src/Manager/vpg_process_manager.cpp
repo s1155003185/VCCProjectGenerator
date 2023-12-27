@@ -4,8 +4,8 @@
 #include <string>
 
 #include "exception_macro.hpp"
+#include "file_helper.hpp"
 #include "string_helper.hpp"
-#include "vpg_file_update_service.hpp"
 #include "vpg_global.hpp"
 #include "vpg_project_type.hpp"
 
@@ -16,10 +16,35 @@ void VPGProcessManager::InitLogProperty()
     this->GetLogProperty()->SetIsConsoleLog(true);
 }
 
+void VPGProcessManager::VerifyLocalResponse()
+{
+    try {
+        // 1. Check if source file exists, if not exist then clone
+        // 2. Check if version != branch, then checkout
+        std::wstring localResponseDirectory = VPGGlobal::GetVccProjectDefaultDirectory(this->GetVPGProjectType());
+
+        LogService::LogInfo(*this->GetLogProperty(), L"", L"Check VCC Local response existance: " + localResponseDirectory);
+
+        // return GitService::CloneResponse(logProperty, VPGGlobal::GetProjecURL(projectType), branch, VPGGlobal::GetVccDefaultFolder());
+        
+        // return GitService::Pull(logProperty, VPGGlobal::GetVccProjectDefaultDirectory(projectType));
+        
+        // if (IsDirectoryExists(localResponseDirectory)) {
+        // }
+        // VPGFileUpdateService::DownloadVCCResource(*this->GetLogProperty(), this->GetVPGProjectType(), this->GetBranch());
+
+    } catch (const std::exception &e) {
+        THROW_EXCEPTION(e);
+    }
+}
+
 void VPGProcessManager::Add()
 {
     try {
-        VPGFileUpdateService::DownloadVCCResource(*this->GetLogProperty(), this->GetVPGProjectType(), this->GetBranch(), L"");
+        this->VerifyLocalResponse();
+
+        // Copy all nessary files to dest
+
 
     } catch (const std::exception &e) {
         THROW_EXCEPTION(e);
@@ -29,6 +54,9 @@ void VPGProcessManager::Add()
 void VPGProcessManager::Update()
 {
     try {
+        this->VerifyLocalResponse();
+        // Compare the files with dist, sync files
+
     } catch (const std::exception &e) {
         THROW_EXCEPTION(e);
     }

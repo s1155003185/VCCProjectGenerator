@@ -65,6 +65,17 @@ namespace vcc
         return L"";
     }
 
+    std::wstring GitService::CheckOut(LogProperty &logProperty, std::wstring workspace, std::wstring branch)
+    {
+        try {
+            std::wstring cmd = L"git checkout " + branch;
+            return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
+        } catch (const std::exception &e) {
+            THROW_EXCEPTION(e);
+        }
+        return L"";
+    }
+
     // Action
     std::wstring GitService::Pull(LogProperty &logProperty, std::wstring workspace)
     {

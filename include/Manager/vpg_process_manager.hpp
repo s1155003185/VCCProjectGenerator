@@ -28,6 +28,7 @@ class VPGProcessManager
         ~VPGProcessManager() {};
 
         void InitLogProperty();
+        void VerifyLocalResponse();
 
         void Add();
         void Update();
