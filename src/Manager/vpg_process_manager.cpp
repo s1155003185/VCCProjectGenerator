@@ -5,6 +5,7 @@
 
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
+#include "git_service.hpp"
 #include "string_helper.hpp"
 #include "vpg_global.hpp"
 #include "vpg_project_type.hpp"
@@ -22,11 +23,21 @@ void VPGProcessManager::VerifyLocalResponse()
         // 1. Check if source file exists, if not exist then clone
         // 2. Check if version != branch, then checkout
         std::wstring localResponseDirectory = VPGGlobal::GetVccProjectLocalResponseDirectory(this->GetVPGProjectType());
+        std::wstring gitUrl = VPGGlobal::GetProjecURL(this->GetVPGProjectType());
 
         LogService::LogInfo(*this->GetLogProperty(), L"", L"Check VCC Local response existance: " + localResponseDirectory);
+        if (IsDirectoryExists(localResponseDirectory)) {
+            LogService::LogInfo(*this->GetLogProperty(), L"", L"Done.");
+            LogService::LogInfo(*this->GetLogProperty(), L"", L"Check Version.");
 
-        // return GitService::CloneResponse(logProperty, VPGGlobal::GetProjecURL(projectType), branch, VPGGlobal::GetVccDefaultFolder());
-        
+        } else {
+            LogService::LogInfo(*this->GetLogProperty(), L"", L"Not Exists.");
+            LogService::LogInfo(*this->GetLogProperty(), L"", L"Clone from " + gitUrl);
+            GitService::CloneResponse(*this->GetLogProperty(), gitUrl, this->GetBranch(), VPGGlobal::GetVccLocalResponseFolder());
+            LogService::LogInfo(*this->GetLogProperty(), L"", L"Done.");
+        }
+
+        // return 
         // return GitService::Pull(logProperty, VPGGlobal::GetVccProjectDefaultDirectory(projectType));
         
         // if (IsDirectoryExists(localResponseDirectory)) {
@@ -137,6 +148,11 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
             }
         }
 
+        // validation
+        if (this->_VPGProjectType == VPGProjectType::NA)
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Interface Type missing");
+        
+        // process
         if (mode == L"-A")
             this->Add();
         else if (mode == L"-U")

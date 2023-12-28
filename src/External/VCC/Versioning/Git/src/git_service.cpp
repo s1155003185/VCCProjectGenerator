@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <regex>
+#include <string>
 
 #include "exception_macro.hpp"
 #include "git_constant.hpp"
@@ -33,11 +34,11 @@ namespace vcc
     {
         bool result = false;
         try {
-            std::wstring cmd = L"git rev-parse --git-dir";
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
-            result = true;
-        } catch (const std::exception &e) {
-            THROW_EXCEPTION(e);
+            std::wstring cmd = L"git rev-parse --is-inside-work-tree";
+            std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
+            result = cmdResult.find(L"true") != std::wstring::npos;
+        } catch (...) {
+            result = false;
         }
         return result;
     }

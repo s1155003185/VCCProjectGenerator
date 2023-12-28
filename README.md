@@ -13,8 +13,8 @@ Auto handle project update if using VCCModule.
 The Git template folder will stored in ~\Document\vcc first.
 
 ## Command - Version / Add / Update
-vpg <Mode>
-[-w <Workspace>] [-i <Interface>] [-v <tag version>] [-p <Plugin>]
+vpg <Mode> -i <Interface>
+[-w <Workspace>]  [-v <tag version>] [-p <Plugin>]
 [--ExcludeUnitTest] [--ExcludeExternalUnitTest]
 
 ## Command - Generate
@@ -32,7 +32,6 @@ where
 -G Generate Mode
 
 #### Project Workspace
--w Workspace, Full Path or Path relative to current directory. Default Current Directory.
 -i Interface. Value can be
     - CPPDLL
     - CPPEXE
@@ -40,7 +39,9 @@ where
     - VCCDLL
     - VCCEXE
     - VCCCOMPLEXE
--v tag version. If not specify, use master.
+
+-w Workspace. Default Current Directory.
+-v tag/branch version. Default master.
 -p Plugin Module. This param can be stated multiple times. Value can be
     - VCC/Versioning/Git
 
@@ -51,7 +52,6 @@ where
 -err Path (including subpath) that contains Errors. Path relative to -lib.
 
 #### Control
--SourceFullHistory If first pull Git response, then pull whole batch history. Default 10 lastest history.
 -ExcludeUnitTest Dont generate unit test.
 -ExcludeExternalUnitTest Ignore unit test under external. If want to customize VCCModule, recommend to keep unit test.
 
