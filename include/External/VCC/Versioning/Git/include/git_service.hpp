@@ -21,7 +21,7 @@ namespace vcc
 
         // Initialization
         static std::wstring InitializeWorkspace(LogProperty &logProperty, std::wstring workspace);
-        static std::wstring CloneResponse(LogProperty &logProperty, std::wstring url, std::wstring branch, std::wstring dist);
+        static std::wstring Clone(LogProperty &logProperty, std::wstring url, std::wstring branch, std::wstring dist, int64_t depth = -1);
         static std::wstring CheckOut(LogProperty &logProperty, std::wstring workspace, std::wstring branch);
 
         // Action

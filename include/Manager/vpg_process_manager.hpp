@@ -17,6 +17,7 @@ class VPGProcessManager
     GETSET(std::wstring, Workspace, L"");
     GETSET(VPGProjectType, VPGProjectType, VPGProjectType::NA);
     GETSET(std::wstring, Branch, L"");
+    GETSET(int64_t, LogDepth, -1);
     VECTOR(std::wstring, Plugins);
     
     // option

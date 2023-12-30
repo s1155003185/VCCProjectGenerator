@@ -55,10 +55,11 @@ namespace vcc
         return L"";
     }
 
-    std::wstring GitService::CloneResponse(LogProperty &logProperty, std::wstring url, std::wstring branch, std::wstring dist)
+    std::wstring GitService::Clone(LogProperty &logProperty, std::wstring url, std::wstring branch, std::wstring dist, int64_t depth)
     {
         try {
-            std::wstring cmd = L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"");
+            std::wstring cmd = L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"") 
+                + (depth > 0 ? (L" --depth " + std::to_wstring(depth)) : L"");
             return ProcessService::Execute(logProperty, GIT_LOG_ID, dist, cmd);
         } catch (const std::exception &e) {
             THROW_EXCEPTION(e);

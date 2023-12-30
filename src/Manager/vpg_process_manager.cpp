@@ -33,7 +33,7 @@ void VPGProcessManager::VerifyLocalResponse()
         } else {
             LogService::LogInfo(*this->GetLogProperty(), L"", L"Not Exists.");
             LogService::LogInfo(*this->GetLogProperty(), L"", L"Clone from " + gitUrl);
-            GitService::CloneResponse(*this->GetLogProperty(), gitUrl, this->GetBranch(), VPGGlobal::GetVccLocalResponseFolder());
+            GitService::Clone(*this->GetLogProperty(), gitUrl, this->GetBranch(), VPGGlobal::GetVccLocalResponseFolder(), this->GetLogDepth());
             LogService::LogInfo(*this->GetLogProperty(), L"", L"Done.");
         }
 
@@ -131,6 +131,8 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
                         }
                     } else if (cmd == L"-v") {
                         this->_Branch = cmd2;
+                    } else if (cmd == L"-d") {
+                        this->_LogDepth = std::stoi(cmd2);
                     } else if (cmd == L"-p") {
                         this->_Plugins.push_back(cmd2);
                     } else

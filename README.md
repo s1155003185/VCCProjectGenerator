@@ -14,7 +14,7 @@ The Git template folder will stored in ~\Document\vcc first.
 
 ## Command - Version / Add / Update
 vpg <Mode> -i <Interface>
-[-w <Workspace>]  [-v <tag version>] [-p <Plugin>]
+[-w <Workspace>]  [-v <tag version>] [-p <Plugin>] [-d <deep>]
 [--ExcludeUnitTest] [--ExcludeExternalUnitTest]
 
 ## Command - Generate
@@ -44,6 +44,7 @@ where
 -v tag/branch version. Default master.
 -p Plugin Module. This param can be stated multiple times. Value can be
     - VCC/Versioning/Git
+-d History Depth. Default all history
 
 #### Enum to Object (Will generate to UI under same folder)
 -type File Path of Object Type. Path relative to -lib. Must only have one enum class. If UI has multi libraries, must different name to avoid compile error.
