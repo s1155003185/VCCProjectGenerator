@@ -5,7 +5,6 @@
 #include <string>
 
 #include "exception_macro.hpp"
-#include "git_constant.hpp"
 #include "log_property.hpp"
 #include "process_service.hpp"
 #include "string_helper.hpp"
