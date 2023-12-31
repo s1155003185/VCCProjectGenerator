@@ -42,7 +42,7 @@ TEST_F(GitServiceTest, FullTest)
         std::filesystem::create_directory(this->GetWorkspace());
 
     // init
-    GitService::InitializeWorkspace(*this->GetLogPropery(), this->GetWorkspace());
+    GitService::Initialize(*this->GetLogPropery(), this->GetWorkspace());
     EXPECT_TRUE(filesystem::exists(this->GetWorkspace() + L"/.git/HEAD"));
     
     // check existance
