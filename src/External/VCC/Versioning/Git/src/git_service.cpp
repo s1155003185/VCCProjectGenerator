@@ -19,12 +19,14 @@ namespace vcc
     // General
     std::wstring GitService::GetVersion(LogProperty &logProperty)
     {
-        std::wstring cmd = L"git --version";
-        std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, cmd);
-        
-        std::wsmatch m;
-        if (std::regex_search(cmdResult, m, std::wregex(L"[0-9]+.[0-9]+.[0-9]+")))
-            return m[0];
+        try {
+            std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git --version");
+            std::wsmatch m;
+            if (std::regex_search(cmdResult, m, std::wregex(L"[0-9]+.[0-9]+.[0-9]+")))
+                return m[0];
+        } catch (const std::exception &e) {
+            THROW_EXCEPTION(e);
+        }
         return L"";
     }
 
@@ -33,8 +35,8 @@ namespace vcc
     {
         bool result = false;
         try {
-            std::wstring cmd = L"git rev-parse --is-inside-work-tree";
-            std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
+            std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace,
+                L"git rev-parse --is-inside-work-tree");
             result = cmdResult.find(L"true") != std::wstring::npos;
         } catch (...) {
             result = false;
@@ -46,8 +48,7 @@ namespace vcc
     std::wstring GitService::InitializeWorkspace(LogProperty &logProperty, std::wstring workspace)
     {
         try {
-            std::wstring cmd = L"git init";
-            return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
+            return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git init");
         } catch (const std::exception &e) {
             THROW_EXCEPTION(e);
         }
@@ -57,9 +58,8 @@ namespace vcc
     std::wstring GitService::Clone(LogProperty &logProperty, std::wstring url, std::wstring branch, std::wstring dist, int64_t depth)
     {
         try {
-            std::wstring cmd = L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"") 
-                + (depth > 0 ? (L" --depth " + std::to_wstring(depth)) : L"");
-            return ProcessService::Execute(logProperty, GIT_LOG_ID, dist, cmd);
+            return ProcessService::Execute(logProperty, GIT_LOG_ID, dist, 
+                L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"") + (depth > 0 ? (L" --depth " + std::to_wstring(depth)) : L""));
         } catch (const std::exception &e) {
             THROW_EXCEPTION(e);
         }
@@ -69,8 +69,7 @@ namespace vcc
     std::wstring GitService::CheckOut(LogProperty &logProperty, std::wstring workspace, std::wstring branch)
     {
         try {
-            std::wstring cmd = L"git checkout " + branch;
-            return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
+            return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout " + branch);
         } catch (const std::exception &e) {
             THROW_EXCEPTION(e);
         }
@@ -81,8 +80,7 @@ namespace vcc
     std::wstring GitService::Pull(LogProperty &logProperty, std::wstring workspace)
     {
         try {
-            std::wstring cmd = L"git pull";
-            return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, cmd);
+            return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git pull");
         } catch (const std::exception &e) {
             THROW_EXCEPTION(e);
         }
