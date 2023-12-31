@@ -45,10 +45,10 @@ namespace vcc
     }
 
     // Initialization
-    std::wstring GitService::InitializeWorkspace(LogProperty &logProperty, std::wstring workspace)
+    std::wstring GitService::Initialize(LogProperty &logProperty, std::wstring workspace)
     {
         try {
-            return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git init");
+            return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git init" + (!workspace.empty() ? (L" " + workspace) : L""));
         } catch (const std::exception &e) {
             THROW_EXCEPTION(e);
         }
