@@ -7,11 +7,11 @@
 
 namespace vcc
 {
-    class CommandService : public BaseService
+    class TerminalService : public BaseService
     {
         public:
-            CommandService() : BaseService() {}
-            ~CommandService() {}
+            TerminalService() : BaseService() {}
+            ~TerminalService() {}
 
             static std::wstring Execute(LogProperty &logProperty, std::wstring id, std::wstring cmd);
     };

@@ -28,8 +28,8 @@ namespace vcc
 		static std::wstring LogWarning(LogProperty &logProperty, std::wstring id, std::wstring message);
 		static std::wstring LogError(LogProperty &logProperty, std::wstring id, std::wstring message);
 		// Command
-		static std::wstring LogCommand(LogProperty &logProperty, std::wstring id, std::wstring message);
-		static std::wstring LogCommandResult(LogProperty &logProperty, std::wstring id, std::wstring message);
+		static std::wstring LogTerminal(LogProperty &logProperty, std::wstring id, std::wstring message);
+		static std::wstring LogTerminalResult(LogProperty &logProperty, std::wstring id, std::wstring message);
 		// Process
 		static std::wstring LogProcess(LogProperty &logProperty, std::wstring id, std::wstring message);
 		static std::wstring LogProcessResult(LogProperty &logProperty, std::wstring id, std::wstring message);

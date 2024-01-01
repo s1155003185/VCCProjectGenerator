@@ -56,16 +56,16 @@ namespace vcc
 		return LogService::_logMessage(logProperty, LogType::Error, id, message);
 	}
 
-	std::wstring LogService::LogCommand(LogProperty &logProperty, std::wstring id, std::wstring message)
+	std::wstring LogService::LogTerminal(LogProperty &logProperty, std::wstring id, std::wstring message)
 	{
-		if (!logProperty.GetIsLogCommand())
+		if (!logProperty.GetIsLogTerminal())
 			return L"";
 		return LogService::_logMessage(logProperty, LogType::Info, id, message);
 	}
 
-	std::wstring LogService::LogCommandResult(LogProperty &logProperty, std::wstring id, std::wstring message)
+	std::wstring LogService::LogTerminalResult(LogProperty &logProperty, std::wstring id, std::wstring message)
 	{
-		if (!logProperty.GetIsLogCommandResult())
+		if (!logProperty.GetIsLogTerminalResult())
 			return L"";
 		return LogService::_logMessage(logProperty, LogType::Info, id, message);
 	}

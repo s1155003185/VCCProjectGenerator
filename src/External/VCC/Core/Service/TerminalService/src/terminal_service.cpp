@@ -1,4 +1,4 @@
-#include "command_service.hpp"
+#include "terminal_service.hpp"
 
 #include "exception_macro.hpp"
 #include "exception_type.hpp"
@@ -8,9 +8,9 @@
 
 namespace vcc
 {
-    std::wstring CommandService::Execute(LogProperty &logProperty, std::wstring id, std::wstring cmd)
+    std::wstring TerminalService::Execute(LogProperty &logProperty, std::wstring id, std::wstring cmd)
     {
-        LogService::LogCommand(logProperty, id, cmd);
+        LogService::LogTerminal(logProperty, id, cmd);
 
         char buffer[1024];
         FILE* p = popen(wstr2str(cmd).c_str(), "r");
@@ -34,7 +34,7 @@ namespace vcc
         if (WEXITSTATUS(status) != 0)
         #endif
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, result);
-        LogService::LogCommandResult(logProperty, id, result);
+        LogService::LogTerminalResult(logProperty, id, result);
 
         Trim(result);
         return result;

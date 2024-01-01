@@ -7,6 +7,8 @@ namespace vcc
 {
     constexpr auto GIT_LOG_ID = L"GIT";
 
+    // CheckSum
+
     class GitService : public BaseService
     {
         public:
