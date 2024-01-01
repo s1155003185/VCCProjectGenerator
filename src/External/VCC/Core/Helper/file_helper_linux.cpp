@@ -2,7 +2,7 @@
 
 #include "file_helper_linux.hpp"
 
-#include "command_service.hpp"
+#include "terminal_service.hpp"
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
 #include "log_service.hpp"
@@ -72,7 +72,7 @@ namespace vcc
 				break;
 			}
             LogProperty logProperty(LogPropertyType::None);
-            result = CommandService::Execute(logProperty, L"", L"echo ~/" + folderName);
+            result = TerminalService::Execute(logProperty, L"", L"echo ~/" + folderName);
         } catch (const std::exception &e) {
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, str2wstr(e.what()));
         }

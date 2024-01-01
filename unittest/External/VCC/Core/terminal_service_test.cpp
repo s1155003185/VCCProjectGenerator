@@ -1,16 +1,16 @@
 #include <gtest/gtest.h>
 
-#include "command_service.hpp"
+#include "terminal_service.hpp"
 #include "log_property.hpp"
 #include "string_helper.hpp"
 
 using namespace std;
 using namespace vcc;
 
-TEST(CommandTest, Normal)
+TEST(TerminalTest, Normal)
 {
     LogProperty logProperty(LogPropertyType::None);
-    EXPECT_TRUE(CommandService::Execute(logProperty, L"", L"git --version").starts_with(L"git version"));
+    EXPECT_TRUE(TerminalService::Execute(logProperty, L"", L"git --version").starts_with(L"git version"));
 }
 
 // Terminal cannot cap exception console log
@@ -19,7 +19,7 @@ TEST(CommandTest, Normal)
 //     LogProperty logProperty(LogPropertyType::None);
 //     bool isException = false;
 //     try {
-//         CommandService::Execute(logProperty, L"", "git -version");
+//         TerminalService::Execute(logProperty, L"", "git -version");
 //     } catch (...) {
 //         isException = true;
 //     }

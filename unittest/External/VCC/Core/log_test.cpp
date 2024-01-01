@@ -17,8 +17,8 @@ TEST(LogServiceTest, LogTest)
     LogProperty property;
     property.SetUserID(L"user");
     property.SetIsConsoleLog(false);
-    property.SetIsLogCommand(true);
-    property.SetIsLogCommandResult(true);
+    property.SetIsLogTerminal(true);
+    property.SetIsLogTerminalResult(true);
     property.SetIsLogProcess(true);
     property.SetIsLogProcessResult(true);
     property.SetIsLogSQL(true);
@@ -27,8 +27,8 @@ TEST(LogServiceTest, LogTest)
     std::wstring logInfoStr = LogService::LogInfo(property, L"id", L"message");
     std::wstring logWarningStr = LogService::LogWarning(property, L"id", L"message");
     std::wstring logErrorStr = LogService::LogError(property, L"id", L"message");
-    std::wstring logCommandStr = LogService::LogCommand(property, L"id", L"message");
-    std::wstring logCommandResultStr = LogService::LogCommandResult(property, L"id", L"message");
+    std::wstring LogTerminalStr = LogService::LogTerminal(property, L"id", L"message");
+    std::wstring LogTerminalResultStr = LogService::LogTerminalResult(property, L"id", L"message");
     std::wstring logProcessStr = LogService::LogProcess(property, L"id", L"message");
     std::wstring logProcessResultStr = LogService::LogProcessResult(property, L"id", L"message");
     std::wstring logSQLStr = LogService::LogSQL(property, L"id", L"message");
@@ -36,8 +36,8 @@ TEST(LogServiceTest, LogTest)
     EXPECT_EQ(logInfoStr, ReadFileOneLine(filePath.wstring(), 0));
     EXPECT_EQ(logWarningStr, ReadFileOneLine(filePath.wstring(), 1));
     EXPECT_EQ(logErrorStr, ReadFileOneLine(filePath.wstring(), 2));
-    EXPECT_EQ(logCommandStr, ReadFileOneLine(filePath.wstring(), 3));
-    EXPECT_EQ(logCommandResultStr, ReadFileOneLine(filePath.wstring(), 4));
+    EXPECT_EQ(LogTerminalStr, ReadFileOneLine(filePath.wstring(), 3));
+    EXPECT_EQ(LogTerminalResultStr, ReadFileOneLine(filePath.wstring(), 4));
     EXPECT_EQ(logProcessStr, ReadFileOneLine(filePath.wstring(), 5));
     EXPECT_EQ(logProcessResultStr, ReadFileOneLine(filePath.wstring(), 6));
     EXPECT_EQ(logSQLStr, ReadFileOneLine(filePath.wstring(), 7));
