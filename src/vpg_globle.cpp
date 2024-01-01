@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "command_service.hpp"
+#include "terminal_service.hpp"
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
 #include "log_property.hpp"
