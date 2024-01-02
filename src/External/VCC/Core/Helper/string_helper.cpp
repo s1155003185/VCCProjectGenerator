@@ -51,9 +51,12 @@ namespace vcc
 
 	bool IsEmptyOrWhitespace(const std::wstring &str)
 	{
-		std::wstring tmpStr = std::wstring(str);
-		Trim(tmpStr);
-		return IsEmpty(tmpStr);
+		bool result = true;
+		for (const wchar_t &c : str) {
+			if (!std::iswspace(c))
+				return false;
+		}
+		return true;
 	}
 	
 	bool HasPrefix(const std::wstring &str, const std::wstring &prefix, const size_t &pos)
