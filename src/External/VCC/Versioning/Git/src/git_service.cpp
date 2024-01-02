@@ -11,7 +11,7 @@
 
 namespace vcc
 {   
-    std::wstring GitService::Execute(LogProperty &logProperty, std::wstring command)
+    std::wstring GitService::Execute(LogProperty &logProperty, const std::wstring &command)
     {
         return ProcessService::Execute(logProperty, GIT_LOG_ID, command);
     }
@@ -31,7 +31,7 @@ namespace vcc
     }
 
     // Validation
-    bool GitService::IsGitResponse(LogProperty &logProperty, std::wstring workspace)
+    bool GitService::IsGitResponse(LogProperty &logProperty, const std::wstring &workspace)
     {
         bool result = false;
         try {
@@ -45,7 +45,7 @@ namespace vcc
     }
 
     // Initialization
-    std::wstring GitService::Initialize(LogProperty &logProperty, std::wstring workspace)
+    std::wstring GitService::Initialize(LogProperty &logProperty, const std::wstring &workspace)
     {
         try {
             return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git init");
@@ -55,7 +55,7 @@ namespace vcc
         return L"";
     }
 
-    std::wstring GitService::Clone(LogProperty &logProperty, std::wstring url, std::wstring branch, std::wstring dist, int64_t depth)
+    std::wstring GitService::Clone(LogProperty &logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth)
     {
         try {
             return ProcessService::Execute(logProperty, GIT_LOG_ID, dist, 
@@ -66,7 +66,7 @@ namespace vcc
         return L"";
     }
 
-    std::wstring GitService::CheckOut(LogProperty &logProperty, std::wstring workspace, std::wstring branch)
+    std::wstring GitService::CheckOut(LogProperty &logProperty, const std::wstring &workspace, const std::wstring &branch)
     {
         try {
             return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout " + branch);
@@ -77,7 +77,7 @@ namespace vcc
     }
 
     // Action
-    std::wstring GitService::Pull(LogProperty &logProperty, std::wstring workspace)
+    std::wstring GitService::Pull(LogProperty &logProperty, const std::wstring &workspace)
     {
         try {
             return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git pull");
