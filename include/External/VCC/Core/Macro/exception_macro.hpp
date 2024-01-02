@@ -28,4 +28,6 @@ namespace vcc
 
     #define THROW_EXCEPTION_STACK_TRACE(exceptionType, message) \
         throw Exception(exceptionType, str2wstr(__FILE__) + L":" + std::to_wstring(__LINE__) + L":\r\n" + message)
+
+    #define TRY_CATCH(...) try { __VA_ARGS__ } catch (const std::exception &e) { THROW_EXCEPTION(e); }
 }

@@ -9,6 +9,10 @@ namespace vcc
 
     // CheckSum
 
+    class GitConfig {
+
+    };
+
     class GitService : public BaseService
     {
         public:
@@ -19,11 +23,11 @@ namespace vcc
 
         // General
         static std::wstring GetVersion(LogProperty &logProperty);
-        //static void GetConfig();
-
-
-        // Validation
         static bool IsGitResponse(LogProperty &logProperty, const std::wstring &workspace);
+
+        // Config
+        static GitConfig GetGlobalConfig(LogProperty &logProperty);
+        static GitConfig GetLocalConfig(LogProperty &logProperty, const std::wstring &workspace);
 
         // Initialization
         static std::wstring Initialize(LogProperty &logProperty, const std::wstring &workspace);
