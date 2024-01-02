@@ -43,6 +43,21 @@ namespace vcc
 	{
 		std::transform(str.begin(), str.end(), str.begin(), ::toupper);
 	}
+
+	bool IsEmpty(const std::wstring &str)
+	{
+		return str.empty();
+	}
+
+	bool IsEmptyOrWhitespace(const std::wstring &str)
+	{
+		bool result = true;
+		for (const wchar_t &c : str) {
+			if (!std::iswspace(c))
+				return false;
+		}
+		return true;
+	}
 	
 	bool HasPrefix(const std::wstring &str, const std::wstring &prefix, const size_t &pos)
 	{

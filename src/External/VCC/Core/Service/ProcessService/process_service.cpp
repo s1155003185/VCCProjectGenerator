@@ -24,12 +24,12 @@ namespace vcc
 {
 
         #ifdef _WIN32
-        std::wstring ProcessService::_ExecuteWindow(std::wstring command)
+        std::wstring ProcessService::_ExecuteWindow(const std::wstring &command)
         {
             return ProcessServiceWin(command);
         }
         #else
-        std::wstring ProcessService::_ExecuteLinux(std::string command)
+        std::wstring ProcessService::_ExecuteLinux(const std::string &command)
         {
             std::wstring result = L"";
             // convert to token
@@ -97,7 +97,7 @@ namespace vcc
         }
         #endif
 
-        std::wstring ProcessService::_Execute(std::wstring command)
+        std::wstring ProcessService::_Execute(const std::wstring &command)
         {
             #ifdef _WIN32
             return ProcessService::_ExecuteWindow(command);
@@ -106,10 +106,8 @@ namespace vcc
             #endif
         }
 
-        std::wstring ProcessService::Execute(LogProperty &logProperty, std::wstring id, std::wstring command)
+        std::wstring ProcessService::Execute(LogProperty &logProperty, const std::wstring &id, const std::wstring &command)
         {
-            Trim(command);
-
             LogService::LogProcess(logProperty, id, command);
 
             std::wstring result = L"";
@@ -123,14 +121,13 @@ namespace vcc
             return result;
         }
 
-        std::wstring ProcessService::Execute(LogProperty &logProperty, std::wstring id, std::wstring workspace, std::wstring command)
+        std::wstring ProcessService::Execute(LogProperty &logProperty, const std::wstring &id, const std::wstring &workspace, const std::wstring &command)
         {
-            Trim(workspace);
             std::wstring currentDirectory = L"";
             std::wstring result = L"";
             try {
                 currentDirectory = std::filesystem::current_path().wstring();
-                if (!workspace.empty())
+                if (!IsEmptyOrWhitespace(workspace))
                     std::filesystem::current_path(workspace);
             } catch (exception &e) {
                 THROW_EXCEPTION(e);
@@ -142,7 +139,7 @@ namespace vcc
                 THROW_EXCEPTION(e);
             }
             try {
-                if (!workspace.empty())
+                if (!IsEmptyOrWhitespace(workspace))
                     std::filesystem::current_path(currentDirectory);
             } catch (exception &e) {
                 THROW_EXCEPTION(e);

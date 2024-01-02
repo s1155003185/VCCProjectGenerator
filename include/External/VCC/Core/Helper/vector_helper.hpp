@@ -5,11 +5,17 @@
 
 namespace vcc
 {
+    template<typename T>
+    inline bool IsEmpty(const std::vector<T> &v)
+    {
+        return v.empty();
+    }
+
     // Concat
     inline std::wstring ConcatVector(const std::vector<std::wstring> &v, std::wstring delimitor)
     {
         std::wstring result = L"";
-        if (v.empty())
+        if (IsEmpty(v))
             return result;
         for (std::wstring str : v) {
             result += str + delimitor;

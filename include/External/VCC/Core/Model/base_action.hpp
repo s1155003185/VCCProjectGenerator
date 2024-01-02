@@ -5,6 +5,7 @@
 #include "action_type.hpp"
 #include "log_property.hpp"
 #include "log_service.hpp"
+#include "string_helper.hpp"
 
 #include <mutex>
 #include <shared_mutex>
@@ -27,7 +28,7 @@ namespace vcc
             virtual void _LogRedo() 
             { 
                 std::wstring message = this->_GetRedoMessage();
-                if (!message.empty()) {
+                if (!IsEmptyOrWhitespace(message)) {
                     LogProperty defaultProperty;
                     LogService::LogInfo(defaultProperty, L"", message); 
                 }
@@ -36,7 +37,7 @@ namespace vcc
             virtual void _LogUndo() 
             { 
                 std::wstring message = this->_GetUndoMessage();
-                if (!message.empty()) {
+                if (!IsEmptyOrWhitespace(message)) {
                     LogProperty defaultProperty;
                     LogService::LogInfo(defaultProperty, L"", message); 
                 }
