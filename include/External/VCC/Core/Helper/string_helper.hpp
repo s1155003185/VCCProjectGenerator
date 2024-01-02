@@ -20,6 +20,9 @@ namespace vcc
 	void ToLower(std::wstring &str);
 	void ToUpper(std::wstring &str);
 
+	bool IsEmpty(const std::wstring &str);
+	bool IsEmptyOrWhitespace(const std::wstring &str);
+
 	bool HasPrefix(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
 	bool HasPrefixTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
 	bool HasSuffix(const std::wstring &str, const std::wstring &suffix);
