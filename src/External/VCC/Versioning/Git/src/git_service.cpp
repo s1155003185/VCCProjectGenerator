@@ -13,20 +13,21 @@ namespace vcc
 {   
     std::wstring GitService::Execute(LogProperty &logProperty, const std::wstring &command)
     {
-        return ProcessService::Execute(logProperty, GIT_LOG_ID, command);
+        TRY_CATCH(
+            return ProcessService::Execute(logProperty, GIT_LOG_ID, command);
+        )
+        return L"";
     }
     
     // General
     std::wstring GitService::GetVersion(LogProperty &logProperty)
     {
-        try {
+        TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git --version");
             std::wsmatch m;
             if (std::regex_search(cmdResult, m, std::wregex(L"[0-9]+.[0-9]+.[0-9]+")))
                 return m[0];
-        } catch (const std::exception &e) {
-            THROW_EXCEPTION(e);
-        }
+        )
         return L"";
     }
 
@@ -47,43 +48,35 @@ namespace vcc
     // Initialization
     std::wstring GitService::Initialize(LogProperty &logProperty, const std::wstring &workspace)
     {
-        try {
+        TRY_CATCH(
             return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git init");
-        } catch (const std::exception &e) {
-            THROW_EXCEPTION(e);
-        }
+        )
         return L"";
     }
 
     std::wstring GitService::Clone(LogProperty &logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth)
     {
-        try {
+        TRY_CATCH(
             return ProcessService::Execute(logProperty, GIT_LOG_ID, dist, 
                 L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"") + (depth > 0 ? (L" --depth " + std::to_wstring(depth)) : L""));
-        } catch (const std::exception &e) {
-            THROW_EXCEPTION(e);
-        }
+        )
         return L"";
     }
 
     std::wstring GitService::CheckOut(LogProperty &logProperty, const std::wstring &workspace, const std::wstring &branch)
     {
-        try {
+        TRY_CATCH(
             return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout " + branch);
-        } catch (const std::exception &e) {
-            THROW_EXCEPTION(e);
-        }
+        )
         return L"";
     }
 
     // Action
     std::wstring GitService::Pull(LogProperty &logProperty, const std::wstring &workspace)
     {
-        try {
+        TRY_CATCH(
             return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git pull");
-        } catch (const std::exception &e) {
-            THROW_EXCEPTION(e);
-        }
+        )
         return L"";
     }
 }
