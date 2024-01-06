@@ -130,12 +130,16 @@ namespace vcc
                 if (!IsEmptyOrWhitespace(workspace))
                     std::filesystem::current_path(workspace);
             } catch (exception &e) {
+                if (!IsEmptyOrWhitespace(workspace))
+                    std::filesystem::current_path(currentDirectory);
                 THROW_EXCEPTION(e);
                 return result;
             }
             try {
                 result = ProcessService::Execute(logProperty, id, command);
             } catch (Exception &e) {
+                if (!IsEmptyOrWhitespace(workspace))
+                    std::filesystem::current_path(currentDirectory);
                 THROW_EXCEPTION(e);
             }
             try {

@@ -36,6 +36,12 @@ TEST_F(GitServiceTest, Version)
     EXPECT_TRUE(regex_match(version, wregex(L"[0-9]+.[0-9]+.[0-9]+")));
 }
 
+TEST_F(GitServiceTest, IsGitResponse)
+{
+    EXPECT_TRUE(GitService::IsGitResponse(*this->GetLogPropery(), this->GetWorkspace()));
+    //EXPECT_FALSE(GitService::IsGitResponse(*this->GetLogPropery(), GetSystemFolderPath(SystemFolderType::LocalDocuments)));
+}
+
 TEST_F(GitServiceTest, FullTest)
 {
     if (!std::filesystem::exists(this->GetWorkspace()))
