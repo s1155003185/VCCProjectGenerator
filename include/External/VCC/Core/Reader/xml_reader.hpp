@@ -4,22 +4,45 @@
 #include <string>
 #include <vector>
 
+#include "base_object.hpp"
+#include "class_macro.hpp"
+
 namespace vcc
 {
     // TODO: Not Complete
-    struct XMLAttribute 
+    class XMLAttribute : public BaseObject
     {
-        std::wstring Name;
-        std::wstring Value;
+        friend class XMLReader;
+        GETSET(std::wstring, Name, L"");
+        GETSET(std::wstring, Value, L"");
+        
+        public:
+            XMLAttribute() : BaseObject() {}
+            virtual ~XMLAttribute() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<XMLAttribute>(*this);
+            }
     };
 
-    struct XMLElement {
-        std::wstring Namespace;
-        std::wstring Name;
-        std::vector<XMLAttribute> Attributes;
-        std::vector<XMLElement> Children;
-        std::wstring Text;
-        std::wstring FullText;
+    class XMLElement : public BaseObject 
+    {
+        friend class XMLReader;
+
+        GETSET(std::wstring, Namespace, L"");
+        GETSET(std::wstring, Name, L"");
+        VECTOR(XMLAttribute, Attributes);
+        VECTOR(XMLElement, Children);
+        GETSET(std::wstring, Text, L"");
+        GETSET(std::wstring, FullText, L"");
+
+        public:
+            XMLElement() : BaseObject() {}
+            virtual ~XMLElement() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<XMLElement>(*this);
+            }
     };
 
     class XMLReader

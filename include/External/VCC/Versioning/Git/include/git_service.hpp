@@ -1,6 +1,7 @@
 #pragma once
 #include "base_service.hpp"
 
+#include "class_macro.hpp"
 #include "log_property.hpp"
 
 namespace vcc
@@ -10,6 +11,7 @@ namespace vcc
     // CheckSum
 
     class GitConfig {
+        std::wstring UserName;
 
     };
 
@@ -19,22 +21,22 @@ namespace vcc
             GitService() : BaseService() {}
             ~GitService() {}
 
-        static std::wstring Execute(LogProperty &logProperty, const std::wstring &command);
+        static std::wstring Execute(const LogProperty &logProperty, const std::wstring &command);
 
         // General
-        static std::wstring GetVersion(LogProperty &logProperty);
-        static bool IsGitResponse(LogProperty &logProperty, const std::wstring &workspace);
+        static std::wstring GetVersion(const LogProperty &logProperty);
+        static bool IsGitResponse(const LogProperty &logProperty, const std::wstring &workspace);
 
         // Config
-        static GitConfig GetGlobalConfig(LogProperty &logProperty);
-        static GitConfig GetLocalConfig(LogProperty &logProperty, const std::wstring &workspace);
+        static GitConfig GetGlobalConfig(const LogProperty &logProperty);
+        static GitConfig GetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace);
 
         // Initialization
-        static std::wstring Initialize(LogProperty &logProperty, const std::wstring &workspace);
-        static std::wstring Clone(LogProperty &logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth = -1);
-        static std::wstring CheckOut(LogProperty &logProperty, const std::wstring &workspace, const std::wstring &branch);
+        static std::wstring Initialize(const LogProperty &logProperty, const std::wstring &workspace);
+        static std::wstring Clone(const LogProperty &logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth = -1);
+        static std::wstring CheckOut(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &branch);
 
         // Action
-        static std::wstring Pull(LogProperty &logProperty, const std::wstring &workspace);
+        static std::wstring Pull(const LogProperty &logProperty, const std::wstring &workspace);
     };
 }

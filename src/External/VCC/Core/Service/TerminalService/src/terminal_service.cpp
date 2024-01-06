@@ -8,7 +8,7 @@
 
 namespace vcc
 {
-    std::wstring TerminalService::Execute(LogProperty &logProperty, std::wstring id, std::wstring cmd)
+    std::wstring TerminalService::Execute(const LogProperty &logProperty, std::wstring id, std::wstring cmd)
     {
         LogService::LogTerminal(logProperty, id, cmd);
 

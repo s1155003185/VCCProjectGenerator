@@ -5,50 +5,47 @@
 
 namespace vcc
 {
+    //------------------------------------------------------------------------------------------------------//
+    //----------------------------------------------- Module -----------------------------------------------//
+    //------------------------------------------------------------------------------------------------------//
     // general
     #define GETSET(type, var, def) \
     private: \
-        type _##var = def; \
+        mutable type _##var = def; \
     public: \
-        type Get##var() { return _##var; }\
-        void Set##var(type val) { _##var = val; }
+        const type& Get##var() const { return _##var; }\
+        void Set##var(type val) const { _##var = val; }
 
     #define GET(type, var, def) \
     private: \
-        type _##var = def; \
+        mutable type _##var = def; \
     public: \
-        type Get##var() { return _##var; }\
+        const type &Get##var() const { return _##var; }\
 
     #define STATICGET(type, var, def) \
     public: \
-        static type Get##var() { return def; }
+        static const type& Get##var() const { return def; }
 
     // object
-    #define GETOBJ(type, var) \
-    private: \
-        type _##var; \
-    public: \
-        type *Get##var() { return &_##var; }
-        
     #define GETUPTR(type, var, ...) \
     private: \
-        std::unique_ptr<type> _##var = std::make_unique<type>(__VA_ARGS__); \
+        mutable std::unique_ptr<type> _##var = std::make_unique<type>(__VA_ARGS__); \
     public: \
-        type* Get##var() { return _##var.get(); } \
+        const type* Get##var() const { return _##var.get(); } \
         void Set##var(std::unique_ptr<type>&& ptr) { _##var = std::move(ptr); }
 
     #define GETSPTR(type, var, ...) \
     private: \
-        std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
+        mutable std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
     public: \
-        std::shared_ptr<type> Get##var() { return _##var; }
+        const std::shared_ptr<type> const Get##var() { return _##var; }
 
     // std::vector
     #define VECTOR(type, var) \
     private: \
-        std::vector<type> _##var; \
+        mutable std::vector<type> _##var; \
     public: \
-        std::vector<type> *Get##var() { return &_##var; } \
+        const std::vector<type>* Get##var() const { return &_##var; } \
         void Insert##var(type value) { this->_##var.push_back(value); } \
         void Insert##var(size_t index, type value) { this->_##var.insert(this->_##var.begin() + index, value); } \
         void Insert##var(std::vector<type> &value) { this-> Insert##var(0, value); } \
@@ -58,9 +55,9 @@ namespace vcc
 
     #define SET(type, var) \
     private: \
-        std::set<type> _##var; \
+        mutable std::set<type> _##var; \
     public: \
-        std::set<type> *Get##var() { return &_##var; } \
+        const std::set<type> *Get##var() const { return &_##var; } \
         void Insert##var(type value) {  this->_##var.insert(value); } \
         void Insert##var(std::set<type> value) { this->_##var.insert(value.begin(), value.end()); } \
         void Remove##var(type value) { this->_##var.erase(value); } \
@@ -68,8 +65,18 @@ namespace vcc
 
     #define MAP(keyType, valueType, var) \
     private: \
-        std::map<keyType, valueType> _##var; \
+        mutable std::map<keyType, valueType> _##var; \
     public: \
-        std::map<keyType, valueType> *Get##var() { return &_##var; }
+        const std::map<keyType, valueType>* Get##var() const { return &_##var; }
+
+    //------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------- VCC Object ---------------------------------------------//
+    //------------------------------------------------------------------------------------------------------//
+    #define MANAGER(type, var, ...) \
+    private: \
+        std::unique_ptr<type> _##var = std::make_unique<type>(__VA_ARGS__); \
+    public: \
+        type* Get##var() { return _##var.get(); } \
+        void Set##var(std::unique_ptr<type>&& ptr) { _##var = std::move(ptr); }
         
 }

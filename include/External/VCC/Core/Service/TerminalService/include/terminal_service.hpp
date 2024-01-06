@@ -13,6 +13,6 @@ namespace vcc
             TerminalService() : BaseService() {}
             ~TerminalService() {}
 
-            static std::wstring Execute(LogProperty &logProperty, std::wstring id, std::wstring cmd);
+            static std::wstring Execute(const LogProperty &logProperty, std::wstring id, std::wstring cmd);
     };
 }

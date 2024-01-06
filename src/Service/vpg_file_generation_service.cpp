@@ -23,7 +23,7 @@ const std::wstring propertyAccessorFileSuffixWithoutExtention = L"property_acces
 std::set<std::wstring> VPGFileGenerationService::GetClassMacroList(const std::wstring &projWorkspace)
 {
     std::set<std::wstring> results;
-    try {
+    TRY_CATCH(
         std::wstring filePath = ConcatPath(projWorkspace, classMacroFilePath);
         std::wstring prefix = L"#define ";
         size_t prefixLen = wcslen(prefix.c_str());
@@ -35,15 +35,13 @@ std::set<std::wstring> VPGFileGenerationService::GetClassMacroList(const std::ws
                 results.insert(type);
             }
         });
-    } catch (const std::exception &e) {
-        THROW_EXCEPTION(e);
-    }
+    )
     return results;
 }
 
-void VPGFileGenerationService::GenerateObjectTypeFile(LogProperty &logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::vector<std::wstring> &propertyTypeList)
+void VPGFileGenerationService::GenerateObjectTypeFile(const LogProperty &logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::vector<std::wstring> &propertyTypeList)
 {
-    try {
+    TRY_CATCH(
         LogService::LogInfo(logProperty, logId, L"Generate object type file: " + hppFilePath);
         std::wstring content = L"#pragma once\r\n";
         content += L"\r\n";
@@ -54,14 +52,12 @@ void VPGFileGenerationService::GenerateObjectTypeFile(LogProperty &logProperty, 
         content += L"};\r\n";
         WriteFile(hppFilePath, content, true);
         LogService::LogInfo(logProperty, logId, L"Generate object type file completed.");
-    } catch (const std::exception &e) {
-        THROW_EXCEPTION(e);
-    }
+    )
 }
 
-void VPGFileGenerationService::GeneratePropertyClassFile(LogProperty &logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::vector<VPGEnumClass> &enumClassList)
+void VPGFileGenerationService::GeneratePropertyClassFile(const LogProperty &logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::vector<VPGEnumClass> &enumClassList)
 {
-    try {
+    TRY_CATCH(
         LogService::LogInfo(logProperty, logId, L"Generate object class file: " + hppFilePath);
         std::wstring content = L"#pragma once\r\n";
         content += L"\r\n";
@@ -73,30 +69,30 @@ void VPGFileGenerationService::GeneratePropertyClassFile(LogProperty &logPropert
         
         // generate external class
         for (const VPGEnumClass &enumClass : enumClassList) {
-            for (const VPGEnumClassProperty &property : enumClass.Properties) {
+            for (const VPGEnumClassProperty &property : *enumClass.GetProperties()) {
                 // handle enum without macro case
-                if (property.Macro.empty())
+                if (property.GetMacro().empty())
                     continue;
                 // TODO: parse all class to get class list (include .hpp file?)
                 // TODO: need to get type list to handle enum class
-                if (std::iswupper(property.Type[0])) {
-                    content += L"class " + property.Type + L";\r\n";
+                if (std::iswupper(property.GetType()[0])) {
+                    content += L"class " + property.GetType() + L";\r\n";
                 }
             }
         }
         // generate class
         for (const VPGEnumClass &enumClass : enumClassList) {
-            std::wstring className = enumClass.Name.substr(!classPrefix.empty() ? classPrefix.length() : 0);
+            std::wstring className = enumClass.GetName().substr(!classPrefix.empty() ? classPrefix.length() : 0);
             className = className.substr(0, className.length() - proeprtyClassNameSuffix.length());
 
             content += L"class " + className + L" : public BaseObject\r\n";
             content += L"{\r\n";
             // generate properties
-            for (const VPGEnumClassProperty &property : enumClass.Properties) {
+            for (const VPGEnumClassProperty &property : *enumClass.GetProperties()) {
                 // handle enum without macro case
-                if (property.Macro.empty())
+                if (property.GetMacro().empty())
                     continue;
-                content += INDENT + property.Macro + L"\r\n";
+                content += INDENT + property.GetMacro() + L"\r\n";
             }
             content += L"\r\n";
             content += INDENT + L"public:\r\n";
@@ -113,14 +109,12 @@ void VPGFileGenerationService::GeneratePropertyClassFile(LogProperty &logPropert
 
         WriteFile(hppFilePath, content, true);
         LogService::LogInfo(logProperty, logId, L"Generate object class file completed.");
-    } catch (const std::exception &e) {
-        THROW_EXCEPTION(e);
-    }
+    )
 }
 
-void VPGFileGenerationService::GeneratePropertyPropertyAccessorFile(LogProperty &logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::wstring &cppFilePath, const std::vector<VPGEnumClass> &enumClassList)
+void VPGFileGenerationService::GeneratePropertyPropertyAccessorFile(const LogProperty &logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::wstring &cppFilePath, const std::vector<VPGEnumClass> &enumClassList)
 {
-    try {
+    TRY_CATCH(
         LogService::LogInfo(logProperty, logId, L"Generate property accessor file: " + hppFilePath);
         std::wstring content = L"";
         WriteFile(hppFilePath, content, true);
@@ -130,15 +124,13 @@ void VPGFileGenerationService::GeneratePropertyPropertyAccessorFile(LogProperty 
         content = L"";
         WriteFile(cppFilePath, content, true);
         LogService::LogInfo(logProperty, logId, L"Generate property accessor file completed.");
-    } catch (const std::exception &e) {
-        THROW_EXCEPTION(e);
-    }
+    )
 }
 
-void VPGFileGenerationService::GernerateProperty(LogProperty &logProperty, const std::wstring &projPrefix, const std::wstring &projWorkspace, const std::wstring &typeWorkspace, 
+void VPGFileGenerationService::GernerateProperty(const LogProperty &logProperty, const std::wstring &projPrefix, const std::wstring &projWorkspace, const std::wstring &typeWorkspace, 
     const std::wstring &objTypeDirectoryHpp, const std::wstring &objDirectoryHpp, const std::wstring &propertyAccessorDirectoryHpp, const std::wstring &propertyAccessorDirectoryCpp)
 {
-    try {
+    TRY_CATCH(
         std::set<std::wstring> classMacroList = VPGFileGenerationService::GetClassMacroList(projWorkspace);
         if (classMacroList.empty())
             THROW_EXCEPTION_MSG(ExceptionType::FileNotFound, classMacroFilePath + L" missing");
@@ -179,15 +171,15 @@ void VPGFileGenerationService::GernerateProperty(LogProperty &logProperty, const
                 std::vector<VPGEnumClass> enumClassList;
                 enumClassReader.Parse(fileContent, enumClassList);
                 for (const VPGEnumClass &enumClass : enumClassList) {
-                    if (!projPrefix.empty() && !HasPrefix(enumClass.Name, projPrefix)) {
-                        LogService::LogWarning(logProperty, logId, L"Class Prefix " + projPrefix + L" missing. Skip: " + enumClass.Name);
+                    if (!projPrefix.empty() && !HasPrefix(enumClass.GetName(), projPrefix)) {
+                        LogService::LogWarning(logProperty, logId, L"Class Prefix " + projPrefix + L" missing. Skip: " + enumClass.GetName());
                         continue;
                     }
-                    if (!enumClass.Name.ends_with(classSuffix)) {
-                        LogService::LogWarning(logProperty, logId, L"Class Suffix " + classSuffix + L" missing. Skip: " + enumClass.Name);
+                    if (!enumClass.GetName().ends_with(classSuffix)) {
+                        LogService::LogWarning(logProperty, logId, L"Class Suffix " + classSuffix + L" missing. Skip: " + enumClass.GetName());
                         continue;
                     }
-                    std::wstring classNameWithoutPrefix = enumClass.Name.substr(!projPrefix.empty() ? projPrefix.size() : 0);
+                    std::wstring classNameWithoutPrefix = enumClass.GetName().substr(!projPrefix.empty() ? projPrefix.size() : 0);
                     classNameWithoutPrefix = classNameWithoutPrefix.substr(0, classNameWithoutPrefix.size() - classSuffix.size());
                     objectTypeList.push_back(classNameWithoutPrefix);
                     
@@ -219,7 +211,5 @@ void VPGFileGenerationService::GernerateProperty(LogProperty &logProperty, const
         VPGFileGenerationService::GenerateObjectTypeFile(logProperty, projPrefix, ConcatPath(objTypeDirectoryHpp, (!filePrefix.empty() ? (filePrefix + L"_") : L"") + objectTypeHppFileName), objectTypeList);
 
         LogService::LogInfo(logProperty, logId, L"Generate Property Finished.");
-    } catch (const std::exception &e) {
-        THROW_EXCEPTION(e);
-    }
+    )
 }

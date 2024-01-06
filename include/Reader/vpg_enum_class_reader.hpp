@@ -3,23 +3,44 @@
 #include <string>
 #include <vector>
 
+#include "base_object.hpp"
 #include "class_macro.hpp"
 
-struct VPGEnumClassProperty
+using namespace vcc;
+
+class VPGEnumClassProperty : public BaseObject
 {
-    std::wstring Enum = L"";
-    std::wstring Macro = L"";
-    std::wstring Type = L"";
-    std::wstring PropertyName = L"";
-    std::wstring DefaultValue = L"";
-    std::wstring Command = L"";
+    friend class VPGEnumClassReader;
+    GETSET(std::wstring, Enum, L"");
+    GETSET(std::wstring, Macro, L"");
+    GETSET(std::wstring, Type, L"");
+    GETSET(std::wstring, PropertyName, L"");
+    GETSET(std::wstring, DefaultValue, L"");
+    GETSET(std::wstring, Command, L"");
+
+    public:
+        VPGEnumClassProperty() : BaseObject() {}
+        virtual ~VPGEnumClassProperty() {}
+
+        virtual std::shared_ptr<IObject> Clone() override {
+            return std::make_shared<VPGEnumClassProperty>(*this);
+        }
 };
 
-struct VPGEnumClass
+class VPGEnumClass : public BaseObject
 {
-    std::wstring Name = L"";
-    std::wstring Command = L"";
-    std::vector<VPGEnumClassProperty> Properties;
+    friend class VPGEnumClassReader;
+    GETSET(std::wstring, Name, L"");
+    GETSET(std::wstring, Command, L"");
+    VECTOR(VPGEnumClassProperty, Properties);
+
+    public:
+        VPGEnumClass() : BaseObject() {}
+        virtual ~VPGEnumClass() {}
+
+        virtual std::shared_ptr<IObject> Clone() override {
+            return std::make_shared<VPGEnumClass>(*this);
+        }
 };
 
 class VPGEnumClassReader

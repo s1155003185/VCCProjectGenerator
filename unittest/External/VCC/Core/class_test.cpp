@@ -18,8 +18,6 @@ class ClassMacroTestClassElement : public BaseObject
         ClassMacroTestClassElement(int i) : BaseObject(ObjectType::NA) { this->_Index = i; }
         virtual ~ClassMacroTestClassElement() {}
         
-        virtual std::wstring GetKey() override { return L""; }
-        virtual std::wstring ToString() override { return L"Child.ToString"; };
         virtual std::shared_ptr<IObject> Clone() override { return make_shared<ClassMacroTestClassElement>(*this); };
 };
 
@@ -37,16 +35,8 @@ class ClassMacroTestClass : public BaseObject
         ClassMacroTestClass() : BaseObject(ObjectType::NA) {}
         virtual ~ClassMacroTestClass() {}
         
-        virtual std::wstring GetKey() override { return L""; }
-        virtual std::wstring ToString() override { return L"Parent.ToString"; };
         virtual std::shared_ptr<IObject> Clone() override { return make_shared<ClassMacroTestClass>(*this); };
 };
-
-TEST(ClassMacroTest, TOSTRING) 
-{
-    unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
-    EXPECT_EQ(testClass->ToString(), L"Parent.ToString");
-}
 
 TEST(ClassMacroTest, CLONE) 
 {
@@ -56,7 +46,6 @@ TEST(ClassMacroTest, CLONE)
     shared_ptr<ClassMacroTestClass> cloneClass = std::dynamic_pointer_cast<ClassMacroTestClass>(testClass->Clone());
     EXPECT_EQ(testClass->GetN(), cloneClass->GetN());
 }
-
 
 TEST(ClassMacroTest, GETSET) 
 {

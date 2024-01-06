@@ -13,7 +13,7 @@
 
 namespace vcc
 {   
-    std::wstring GitService::Execute(LogProperty &logProperty, const std::wstring &command)
+    std::wstring GitService::Execute(const LogProperty &logProperty, const std::wstring &command)
     {
         TRY_CATCH(
             return ProcessService::Execute(logProperty, GIT_LOG_ID, command);
@@ -21,7 +21,7 @@ namespace vcc
         return L"";
     }
     
-    std::wstring GitService::GetVersion(LogProperty &logProperty)
+    std::wstring GitService::GetVersion(const LogProperty &logProperty)
     {
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git --version");
@@ -32,7 +32,7 @@ namespace vcc
         return L"";
     }
 
-    bool GitService::IsGitResponse(LogProperty &logProperty, const std::wstring &workspace)
+    bool GitService::IsGitResponse(const LogProperty &logProperty, const std::wstring &workspace)
     {
         bool result = false;
         try {
@@ -45,17 +45,20 @@ namespace vcc
         return result;
     }
 
-    GitConfig GitService::GetGlobalConfig(LogProperty &logProperty)
+    GitConfig GitService::GetGlobalConfig(const LogProperty &logProperty)
     {
         GitConfig config;
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global --list");
+
+
+
             std::wcout << cmdResult << std::endl;
         )
         return config;
     }
 
-    GitConfig GitService::GetLocalConfig(LogProperty &logProperty, const std::wstring &workspace)
+    GitConfig GitService::GetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace)
     {
         GitConfig config;
         TRY_CATCH(
@@ -66,7 +69,7 @@ namespace vcc
     }
 
     // Initialization
-    std::wstring GitService::Initialize(LogProperty &logProperty, const std::wstring &workspace)
+    std::wstring GitService::Initialize(const LogProperty &logProperty, const std::wstring &workspace)
     {
         TRY_CATCH(
             return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git init");
@@ -74,7 +77,7 @@ namespace vcc
         return L"";
     }
 
-    std::wstring GitService::Clone(LogProperty &logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth)
+    std::wstring GitService::Clone(const LogProperty &logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth)
     {
         TRY_CATCH(
             return ProcessService::Execute(logProperty, GIT_LOG_ID, dist, 
@@ -83,7 +86,7 @@ namespace vcc
         return L"";
     }
 
-    std::wstring GitService::CheckOut(LogProperty &logProperty, const std::wstring &workspace, const std::wstring &branch)
+    std::wstring GitService::CheckOut(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &branch)
     {
         TRY_CATCH(
             return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout " + branch);
@@ -92,7 +95,7 @@ namespace vcc
     }
 
     // Action
-    std::wstring GitService::Pull(LogProperty &logProperty, const std::wstring &workspace)
+    std::wstring GitService::Pull(const LogProperty &logProperty, const std::wstring &workspace)
     {
         TRY_CATCH(
             return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git pull");
