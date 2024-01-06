@@ -10,7 +10,7 @@ using namespace vcc;
 
 class VPGProcessManagerTest : public testing::Test 
 {
-    GETUPTR(VPGProcessManager, Manager);
+    MANAGER(VPGProcessManager, Manager);
 
     public:
 
@@ -29,10 +29,4 @@ TEST_F(VPGProcessManagerTest, Empty)
 {
     std::vector<std::wstring> cmds;
     this->GetManager()->Execute(cmds);
-}
-
-TEST_F(VPGProcessManagerTest, AddCpp)
-{
-    
-
 }

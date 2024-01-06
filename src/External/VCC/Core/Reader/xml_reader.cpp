@@ -149,7 +149,7 @@ namespace vcc
                 THROW_EXCEPTION_MSG(ExceptionType::ReaderError, _GetErrorMessage(pos, xmlData[pos], L"> missing"));
 
             if (xmlData[pos] == L':') {
-                element.Namespace = tagName;
+                element._Namespace = tagName;
                 pos++;
                 tagName = _GetTag(xmlData, pos);
                 if (tagName.empty())
@@ -158,16 +158,16 @@ namespace vcc
                 if (pos >= dataLength)
                     THROW_EXCEPTION_MSG(ExceptionType::ReaderError, _GetErrorMessage(pos, xmlData[pos], L"> missing"));
             }
-            element.Name = tagName;
+            element._Name = tagName;
             while (!_IsNextCharTagEnd(xmlData, pos)) {
                 XMLAttribute attr;
-                attr.Name = _GetTag(xmlData, pos);
+                attr._Name = _GetTag(xmlData, pos);
                 pos++;
                 if (pos >= dataLength || xmlData[pos] != L'=')
                     THROW_EXCEPTION_MSG(ExceptionType::ReaderError, _GetErrorMessage(pos, xmlData[pos], L"= missing"));
                 pos++;
-                attr.Value = _GetString(xmlData, pos);
-                element.Attributes.push_back(attr);
+                attr._Value = _GetString(xmlData, pos);
+                element._Attributes.push_back(attr);
                 pos++;
             }
             // tag end with no ceontent
@@ -188,15 +188,15 @@ namespace vcc
             {
                 XMLElement child;
                 ParseXMLElement(xmlData, pos, child);
-                if (!child.Name.empty()) {
-                    element.Children.push_back(child);
+                if (!child._Name.empty()) {
+                    element._Children.push_back(child);
                     
-                    std::wstring endTag = L"</" + (!child.Namespace.empty() ? (child.Namespace + L":") : L"") + child.Name + L">";
-                    if (!child.FullText.ends_with(endTag))
+                    std::wstring endTag = L"</" + (!child._Namespace.empty() ? (child._Namespace + L":") : L"") + child._Name + L">";
+                    if (!child._FullText.ends_with(endTag))
                         THROW_EXCEPTION_MSG(ExceptionType::ReaderError, _GetErrorMessage(pos, xmlData[pos], L"end tab " + endTag + L" missing"));
                     }
                 else {
-                    element.Text = child.Text;
+                    element._Text = child._Text;
                     break;
                 }                   
                 pos++;
@@ -213,7 +213,7 @@ namespace vcc
         try
         {
             GetNextCharPos(xmlData, pos, true);
-            std::wstring endTag = L"</" + (!element.Namespace.empty() ? (element.Namespace + L":") : L"") + element.Name + L">";
+            std::wstring endTag = L"</" + (!element._Namespace.empty() ? (element._Namespace + L":") : L"") + element._Name + L">";
             if (!xmlData.substr(pos).starts_with(endTag))
                 THROW_EXCEPTION_MSG(ExceptionType::ReaderError, _GetErrorMessage(pos, xmlData[pos], L"end tab " + endTag + L" missing"));
             pos += endTag.length() - 1;
@@ -278,14 +278,14 @@ namespace vcc
                         endPos++;
                     }
                     // if not space or tab, then it must be text
-                    element.Text = GetUnescapeString(EscapeStringType::XML, xmlData.substr(pos, endPos - pos + 1));
-                    Trim(element.Text);
+                    element._Text = GetUnescapeString(EscapeStringType::XML, xmlData.substr(pos, endPos - pos + 1));
+                    Trim(element._Text);
                     pos = endPos;
                     break;
                 }
                 GetNextCharPos(xmlData, pos, false);
             }
-            element.FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
+            element._FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
         }
         catch(const std::exception& e)
         {

@@ -16,7 +16,7 @@ void VPGCodeReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos,
 {
     try
     {
-        std::wstring endTag = L"</" + (!element.Namespace.empty() ? (element.Namespace + L":") : L"") + element.Name + L">";
+        std::wstring endTag = L"</" + (!element.GetNamespace().empty() ? (element.GetNamespace() + L":") : L"") + element.GetName() + L">";
         while (pos < xmlData.length())
         {
             if (xmlData.substr(pos).starts_with(endTag)) {
@@ -43,8 +43,8 @@ void VPGCodeReader::ParseXMLElement(const std::wstring &xmlData, size_t &pos, XM
                 if (pos > 0) {
                     pos--;
                     XMLElement previous;
-                    previous.FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
-                    element.Children.push_back(previous);
+                    previous.SetFullText(pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos));
+                    element.InsertChildren(previous);
 
                     pos++;
                     startPos = pos;
@@ -54,8 +54,8 @@ void VPGCodeReader::ParseXMLElement(const std::wstring &xmlData, size_t &pos, XM
 
                 XMLElement tmp;
                 ParseXMLTag(xmlData, pos, tmp);
-                tmp.FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
-                element.Children.push_back(tmp);
+                tmp.SetFullText(pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos));
+                element.InsertChildren(tmp);
 
                 pos++;
                 startPos = pos;
@@ -64,8 +64,8 @@ void VPGCodeReader::ParseXMLElement(const std::wstring &xmlData, size_t &pos, XM
         }
         if (startPos < xmlData.length() - 1) {
             XMLElement tmp;
-            tmp.FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
-            element.Children.push_back(tmp);
+            tmp.SetFullText(pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos));
+            element.InsertChildren(tmp);
         }
     }
     catch(const std::exception& e)

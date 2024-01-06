@@ -59,7 +59,7 @@ class VPGFileGenerationServiceTest : public testing::Test
             code += L"{\r\n";
             code += L"    EnumA, // GETSET(std::wstring, EnumA, L\"Default\") \r\n";
             code += L"    EnumB, // GET(int64_t, EnumB, 0) \r\n";
-            code += L"    EnumC, // GETOBJ(ClassA, EnumC) \r\n";
+            code += L"    EnumC, // GETUPTR(ClassA, EnumC) \r\n";
             code += L"    EnumD, // GETUPTR(ClassB, EnumD, 1, 2, 3) \r\n";
             code += L"    EnumE,  // GETSET(EnumClass, EnumE, EnumClass::OptionA)\r\n";
             code += L"    EnumF // Nothing\r\n";
@@ -84,12 +84,12 @@ TEST_F(VPGFileGenerationServiceTest, GetClassMacroList)
         L"GETSET",
         L"GET",
         L"STATICGET",
-        L"GETOBJ",
         L"GETUPTR",
         L"GETSPTR",
         L"VECTOR",
         L"SET",
         L"MAP",
+        L"MANAGER"
     };
 
     std::set<std::wstring> results = VPGFileGenerationService::GetClassMacroList(L"");
@@ -133,7 +133,7 @@ TEST_F(VPGFileGenerationServiceTest, GenerateProperty)
     expectedObjectClassFileContent += L"{\r\n";
     expectedObjectClassFileContent += INDENT + L"GETSET(std::wstring, EnumA, L\"Default\")\r\n";
     expectedObjectClassFileContent += INDENT + L"GET(int64_t, EnumB, 0)\r\n";
-    expectedObjectClassFileContent += INDENT + L"GETOBJ(ClassA, EnumC)\r\n";
+    expectedObjectClassFileContent += INDENT + L"GETUPTR(ClassA, EnumC)\r\n";
     expectedObjectClassFileContent += INDENT + L"GETUPTR(ClassB, EnumD, 1, 2, 3)\r\n";
     expectedObjectClassFileContent += INDENT + L"GETSET(EnumClass, EnumE, EnumClass::OptionA)\r\n";
     expectedObjectClassFileContent += L"\r\n";

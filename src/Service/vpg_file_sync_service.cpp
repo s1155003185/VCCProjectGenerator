@@ -24,11 +24,11 @@ VPGFileContentSyncMode VPGFileSyncService::_GetSyncMode(const XMLElement &codeEl
 {
     try
     {
-        for (XMLElement child : codeElemet.Children) {
-            if (child.Namespace == VCC_NAMESPACE && child.Name == VCC_NAME) {
-                for (XMLAttribute attr : child.Attributes) {
-                    if (_IsSyncTag(attr.Name)) {
-                        std::wstring value = attr.Value;
+        for (const XMLElement &child : *codeElemet.GetChildren()) {
+            if (child.GetNamespace() == VCC_NAMESPACE && child.GetName() == VCC_NAME) {
+                for (const XMLAttribute &attr : *child.GetAttributes()) {
+                    if (_IsSyncTag(attr.GetName())) {
+                        std::wstring value = attr.GetValue();
                         ToUpper(value);
                         if (value == FORCE_MODE) {
                             return VPGFileContentSyncMode::Force;
@@ -74,9 +74,9 @@ const XMLElement *VPGFileSyncService::_GetTagFromCode(const XMLElement &code, co
 {
     try
     {
-        for (size_t i = 0; i < code.Children.size(); i++) {
-            if (code.Children.at(i).Namespace == VCC_NAMESPACE && code.Children.at(i).Name == tagName)
-                return &(code.Children.at(i));
+        for (size_t i = 0; i < code.GetChildren()->size(); i++) {
+            if (code.GetChildren()->at(i).GetNamespace() == VCC_NAMESPACE && code.GetChildren()->at(i).GetName() == tagName)
+                return &(code.GetChildren()->at(i));
         }
     }
     catch(const std::exception& e)
@@ -90,9 +90,9 @@ bool VPGFileSyncService::_IsTagReplace(const XMLElement &child)
 {
     try
     {
-        for (XMLAttribute attr : child.Attributes){
-            if (_IsSyncTag(attr.Name)) {
-                std::wstring value = attr.Value;
+        for (const XMLAttribute &attr : *child.GetAttributes()){
+            if (_IsSyncTag(attr.GetName())) {
+                std::wstring value = attr.GetValue();
                 ToUpper(value);
                 return value == REPLACE_TAG;
             }
@@ -109,9 +109,9 @@ bool VPGFileSyncService::_IsTagReserve(const XMLElement &child)
 {
     try
     {
-        for (XMLAttribute attr : child.Attributes){
-            if (_IsSyncTag(attr.Name)) {
-                std::wstring value = attr.Value;
+        for (const XMLAttribute &attr : *child.GetAttributes()){
+            if (_IsSyncTag(attr.GetName())) {
+                std::wstring value = attr.GetValue();
                 ToUpper(value);
                 return value == RESERVE_TAG;
             }
@@ -124,7 +124,7 @@ bool VPGFileSyncService::_IsTagReserve(const XMLElement &child)
     return false;
 }
 
-void VPGFileSyncService::CopyFile(LogProperty &logProperty, const std::wstring &sourcePath, const std::wstring &destgetPath)
+void VPGFileSyncService::CopyFile(const LogProperty &logProperty, const std::wstring &sourcePath, const std::wstring &destgetPath)
 {
     try
     {
@@ -151,19 +151,19 @@ std::wstring VPGFileSyncService::_GenerateForceCode(const VPGFileContentSyncMode
 {
     std::wstring result = L"";
     if (destMode == VPGFileContentSyncMode::NA) {
-        for (XMLElement child : src.Children)
-            result += child.FullText;
+        for (const XMLElement &child : *src.GetChildren())
+            result += child.GetFullText();
     } else {
-        for (XMLElement child : dest.Children) {
-            result += child.FullText;
-            if (child.Namespace == VCC_NAMESPACE && child.Name == VCC_NAME)
+        for (const XMLElement &child : *dest.GetChildren()) {
+            result += child.GetFullText();
+            if (child.GetNamespace() == VCC_NAMESPACE && child.GetName() == VCC_NAME)
                 break;
         }
         bool shouldSkip = srcMode != VPGFileContentSyncMode::NA;
-        for (XMLElement child : src.Children) {
+        for (const XMLElement &child : *src.GetChildren()) {
             if (!shouldSkip)
-                result += child.FullText;
-            if (child.Namespace == VCC_NAMESPACE && child.Name == VCC_NAME)
+                result += child.GetFullText();
+            if (child.GetNamespace() == VCC_NAMESPACE && child.GetName() == VCC_NAME)
                 shouldSkip = false;
         }
     }
@@ -175,26 +175,26 @@ std::wstring VPGFileSyncService::_GenerateFullCode(const VPGFileContentSyncMode 
     std::wstring result = L"";
     // if dest has header then add header, skip source header
     if (destMode != VPGFileContentSyncMode::NA) {
-        for (XMLElement child : dest.Children) {
-            result += child.FullText;
-            if (child.Namespace == VCC_NAMESPACE && child.Name == VCC_NAME)
+        for (const XMLElement &child : *dest.GetChildren()) {
+            result += child.GetFullText();
+            if (child.GetNamespace() == VCC_NAMESPACE && child.GetName() == VCC_NAME)
                 break;
         }
     }
     bool shouldSkip = srcMode != VPGFileContentSyncMode::NA;
-    for (XMLElement child : src.Children) {
+    for (const XMLElement &child : *src.GetChildren()) {
         if (!shouldSkip) {
             // if find tag then search tag in source, if reserve, then use source
-            if (child.Namespace == VCC_NAMESPACE) {
-                const XMLElement *destTag = VPGFileSyncService::_GetTagFromCode(dest, child.Name);
+            if (child.GetNamespace() == VCC_NAMESPACE) {
+                const XMLElement *destTag = VPGFileSyncService::_GetTagFromCode(dest, child.GetName());
                 if (destTag != nullptr && VPGFileSyncService::_IsTagReserve(*destTag)) {
-                    result += destTag->FullText;
+                    result += destTag->GetFullText();
                 } else
-                    result += child.FullText;
+                    result += child.GetFullText();
             } else
-                result += child.FullText;
+                result += child.GetFullText();
         }
-        if (child.Namespace == VCC_NAMESPACE && child.Name == VCC_NAME)
+        if (child.GetNamespace() == VCC_NAMESPACE && child.GetName() == VCC_NAME)
             shouldSkip = false;
     }
     return result;
@@ -205,26 +205,26 @@ std::wstring VPGFileSyncService::_GenerateDemandCode(const VPGFileContentSyncMod
     std::wstring result = L"";
     // if dest has header then add header, skip source header
     if (destMode != VPGFileContentSyncMode::NA) {
-        for (XMLElement child : dest.Children) {
-            result += child.FullText;
-            if (child.Namespace == VCC_NAMESPACE && child.Name == VCC_NAME)
+        for (const XMLElement &child : *dest.GetChildren()) {
+            result += child.GetFullText();
+            if (child.GetNamespace() == VCC_NAMESPACE && child.GetName() == VCC_NAME)
                 break;
         }
     }
     bool shouldSkip = srcMode != VPGFileContentSyncMode::NA;
-    for (XMLElement child : dest.Children) {
+    for (const XMLElement &child : *dest.GetChildren()) {
         if (!shouldSkip) {
             // if find tag then search tag in source, if reserve, then use source
-            if (child.Namespace == VCC_NAMESPACE) {
-                const XMLElement *srcTag = VPGFileSyncService::_GetTagFromCode(src, child.Name);
+            if (child.GetNamespace() == VCC_NAMESPACE) {
+                const XMLElement *srcTag = VPGFileSyncService::_GetTagFromCode(src, child.GetName());
                 if (srcTag != nullptr && VPGFileSyncService::_IsTagReplace(child)) {
-                    result += srcTag->FullText;
+                    result += srcTag->GetFullText();
                 } else
-                    result += child.FullText;
+                    result += child.GetFullText();
             } else
-                result += child.FullText;
+                result += child.GetFullText();
         }
-        if (child.Namespace == VCC_NAMESPACE && child.Name == VCC_NAME)
+        if (child.GetNamespace() == VCC_NAMESPACE && child.GetName() == VCC_NAME)
             shouldSkip = false;
     }
     return result;

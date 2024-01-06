@@ -12,7 +12,7 @@ using namespace vcc;
 
 class FileTest : public testing::Test 
 {
-    GETOBJ(LogProperty, LogPropery);
+    GETUPTR(LogProperty, LogProperty);
     GET(wstring, Workspace, L"bin/Debug/FileTest/");
     GET(wstring, WorkspaceSource, L"bin/Debug/FileTest/WorkspaceSource");
     GET(wstring, WorkspaceTarget, L"bin/Debug/FileTest/WorkspaceTarget");
@@ -27,7 +27,7 @@ class FileTest : public testing::Test
 
         void SetUp() override
         {
-            this->_LogPropery.SetIsConsoleLog(false);
+            this->_LogProperty->SetIsConsoleLog(false);
             filesystem::remove_all(PATH(this->GetWorkspace()));
             CreateDirectory(this->GetWorkspace());
             CreateDirectory(this->GetWorkspaceSource());
