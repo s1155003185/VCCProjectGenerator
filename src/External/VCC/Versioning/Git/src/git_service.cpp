@@ -4,6 +4,8 @@
 #include <regex>
 #include <string>
 
+#include <iostream>
+
 #include "exception_macro.hpp"
 #include "log_property.hpp"
 #include "process_service.hpp"
@@ -19,7 +21,6 @@ namespace vcc
         return L"";
     }
     
-    // General
     std::wstring GitService::GetVersion(LogProperty &logProperty)
     {
         TRY_CATCH(
@@ -31,7 +32,6 @@ namespace vcc
         return L"";
     }
 
-    // Validation
     bool GitService::IsGitResponse(LogProperty &logProperty, const std::wstring &workspace)
     {
         bool result = false;
@@ -43,6 +43,26 @@ namespace vcc
             result = false;
         }
         return result;
+    }
+
+    GitConfig GitService::GetGlobalConfig(LogProperty &logProperty)
+    {
+        GitConfig config;
+        TRY_CATCH(
+            std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global --list");
+            std::wcout << cmdResult << std::endl;
+        )
+        return config;
+    }
+
+    GitConfig GitService::GetLocalConfig(LogProperty &logProperty, const std::wstring &workspace)
+    {
+        GitConfig config;
+        TRY_CATCH(
+            std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --global --list");
+            std::wcout << cmdResult << std::endl;
+        )
+        return config;
     }
 
     // Initialization
