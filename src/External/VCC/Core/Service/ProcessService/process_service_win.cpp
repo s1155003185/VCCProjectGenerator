@@ -22,12 +22,12 @@ namespace vcc
 
     // HANDLE hFile = NULL;
     
-    void CreateChildProcess(std::wstring command); 
+    void CreateChildProcess(const std::wstring &command); 
     //void WriteToPipe(void); 
     std::wstring ReadStdOut(void);
     std::wstring ReadStdError(void);
     
-    std::wstring ProcessServiceWin(std::wstring command)
+    std::wstring ProcessServiceWin(const std::wstring &command)
     {
         // ref to https://learn.microsoft.com/en-us/windows/win32/procthread/creating-a-child-process-with-redirected-input-and-output
         SECURITY_ATTRIBUTES saAttr;
@@ -76,7 +76,7 @@ namespace vcc
         return ReadStdOut();
     } 
     
-    void CreateChildProcess(std::wstring command)
+    void CreateChildProcess(const std::wstring &command)
     { 
         PROCESS_INFORMATION pi; 
         STARTUPINFOW si;
@@ -107,6 +107,19 @@ namespace vcc
             throw std::runtime_error("Create Process: " + std::to_string(GetLastError()));
         else 
         {
+            // mute stdout
+            HANDLE hNullDevice = CreateFileW(L"nul", GENERIC_WRITE, FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, 0, nullptr);
+            if (hNullDevice != INVALID_HANDLE_VALUE)
+            {
+                // Redirect the stdout handle to the null device handle
+                SetHandleInformation(si.hStdOutput, HANDLE_FLAG_INHERIT, 0);
+                SetStdHandle(STD_OUTPUT_HANDLE, hNullDevice);
+                CloseHandle(hNullDevice);
+            }
+
+            // Wait for the child process to exit
+            WaitForSingleObject(pi.hProcess, INFINITE);
+
             CloseHandle(pi.hProcess);
             CloseHandle(pi.hThread);
             

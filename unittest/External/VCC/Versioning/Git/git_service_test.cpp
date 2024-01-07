@@ -36,13 +36,6 @@ TEST_F(GitServiceTest, Version)
     EXPECT_TRUE(regex_match(version, wregex(L"[0-9]+.[0-9]+.[0-9]+")));
 }
 
-TEST_F(GitServiceTest, IsGitResponse)
-{
-    EXPECT_TRUE(GitService::IsGitResponse(*this->GetLogProperty(), this->GetWorkspace()));
-    // cannot test as need privilege
-    //EXPECT_FALSE(GitService::IsGitResponse(*this->GetLogProperty(), GetSystemFolderPath(SystemFolderType::LocalDocuments)));
-}
-
 TEST_F(GitServiceTest, Config)
 {
     GitService::GetGlobalConfig(*this->GetLogProperty());

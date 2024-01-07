@@ -8,6 +8,6 @@
 
 namespace vcc 
 {
-    std::wstring ProcessServiceWin(std::wstring command);
+    std::wstring ProcessServiceWin(const std::wstring &command);
 }
 #endif

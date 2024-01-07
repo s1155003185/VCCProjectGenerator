@@ -41,7 +41,7 @@ namespace vcc
             result = cmdResult.find(L"true") != std::wstring::npos;
         } catch (...) {
             result = false;
-        }
+         }
         return result;
     }
 
