@@ -22,12 +22,12 @@ namespace vcc
 
     // HANDLE hFile = NULL;
     
-    void CreateChildProcess(std::wstring command); 
+    void CreateChildProcess(const std::wstring &command); 
     //void WriteToPipe(void); 
     std::wstring ReadStdOut(void);
     std::wstring ReadStdError(void);
     
-    std::wstring ProcessServiceWin(std::wstring command)
+    std::wstring ProcessServiceWin(const std::wstring &command)
     {
         // ref to https://learn.microsoft.com/en-us/windows/win32/procthread/creating-a-child-process-with-redirected-input-and-output
         SECURITY_ATTRIBUTES saAttr;
@@ -76,7 +76,7 @@ namespace vcc
         return ReadStdOut();
     } 
     
-    void CreateChildProcess(std::wstring command)
+    void CreateChildProcess(const std::wstring &command)
     { 
         PROCESS_INFORMATION pi; 
         STARTUPINFOW si;
