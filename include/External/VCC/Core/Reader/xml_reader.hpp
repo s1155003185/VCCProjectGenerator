@@ -69,7 +69,7 @@ namespace vcc
             virtual void ParseXMLTag(const std::wstring &xmlData, size_t &pos, XMLElement &element);
             virtual void ParseXMLElement(const std::wstring &xmlData, size_t &pos, XMLElement &element);
 
-            virtual XMLElement Parse(const std::wstring &xml);
-            virtual XMLElement Parse(const std::wstring &xml, size_t &pos);
+            virtual void Parse(const std::wstring &xml, XMLElement &element);
+            virtual void Parse(const std::wstring &xml, size_t &pos, XMLElement &element);
     };
 }
