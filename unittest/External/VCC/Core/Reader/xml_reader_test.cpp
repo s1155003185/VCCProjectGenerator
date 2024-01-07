@@ -11,7 +11,8 @@ TEST(XMLReaderTest, ParserSimple_String)
 {
     std::unique_ptr<XMLReader> reader = std::make_unique<XMLReader>();
     std::wstring xml = L" abc  ";
-    XMLElement element = reader->Parse(xml);
+    XMLElement element;
+    reader->Parse(xml, element);
     EXPECT_EQ(element.GetNamespace(), L"");
     EXPECT_EQ(element.GetName(), L"");
     EXPECT_EQ(element.GetAttributes()->size(), (size_t)0);
@@ -24,7 +25,8 @@ TEST(XMLReaderTest, ParserSimple_SingleTag)
 {
     std::unique_ptr<XMLReader> reader = std::make_unique<XMLReader>();
     std::wstring xml = L"<br/>";
-    XMLElement element = reader->Parse(xml);
+    XMLElement element;
+    reader->Parse(xml, element);
     EXPECT_EQ(element.GetNamespace(), L"");
     EXPECT_EQ(element.GetName(), L"br");
     EXPECT_EQ(element.GetAttributes()->size(), (size_t)0);
@@ -37,7 +39,8 @@ TEST(XMLReaderTest, ParserSimple_TagWithString)
 {
     std::unique_ptr<XMLReader> reader = std::make_unique<XMLReader>();
     std::wstring xml = L"<h1>abc</h1>";
-    XMLElement element = reader->Parse(xml);
+    XMLElement element;
+    reader->Parse(xml, element);
     EXPECT_EQ(element.GetNamespace(), L"");
     EXPECT_EQ(element.GetName(), L"h1");
     EXPECT_EQ(element.GetAttributes()->size(), (size_t)0);
@@ -50,7 +53,8 @@ TEST(XMLReaderTest, ParserSimple_EmptyTag)
 {
     std::unique_ptr<XMLReader> reader = std::make_unique<XMLReader>();
     std::wstring xml = L"<h2></h2>";
-    XMLElement element = reader->Parse(xml);
+    XMLElement element;
+    reader->Parse(xml, element);
     EXPECT_EQ(element.GetNamespace(), L"");
     EXPECT_EQ(element.GetName(), L"h2");
     EXPECT_EQ(element.GetAttributes()->size(), (size_t)0);
@@ -63,7 +67,8 @@ TEST(XMLReaderTest, ParserSimple_Namespace)
 {
     std::unique_ptr<XMLReader> reader = std::make_unique<XMLReader>();
     std::wstring xml = L"<a:h2></a:h2>";
-    XMLElement element = reader->Parse(xml);
+    XMLElement element;
+    reader->Parse(xml, element);
     EXPECT_EQ(element.GetNamespace(), L"a");
     EXPECT_EQ(element.GetName(), L"h2");
     EXPECT_EQ(element.GetAttributes()->size(), (size_t)0);
@@ -76,7 +81,8 @@ TEST(XMLReaderTest, ParserSimple_TagWithEscapeString)
 {
     std::unique_ptr<XMLReader> reader = std::make_unique<XMLReader>();
     std::wstring xml = L"<b:h3>&quot;&amp;&quot;</b:h3>";
-    XMLElement element = reader->Parse(xml);
+    XMLElement element;
+    reader->Parse(xml, element);
     EXPECT_EQ(element.GetNamespace(), L"b");
     EXPECT_EQ(element.GetName(), L"h3");
     EXPECT_EQ(element.GetAttributes()->size(), (size_t)0);
@@ -89,7 +95,8 @@ TEST(XMLReaderTest, ParserSimple_TagWithProperties)
 {
     std::unique_ptr<XMLReader> reader = std::make_unique<XMLReader>();
     std::wstring xml = L"<img src=\"img.jpg\" width=\"111\" height=\"222.222\">abc</img>";
-    XMLElement element = reader->Parse(xml);
+    XMLElement element;
+    reader->Parse(xml, element);
     EXPECT_EQ(element.GetNamespace(), L"");
     EXPECT_EQ(element.GetName(), L"img");
     EXPECT_EQ(element.GetAttributes()->size(), (size_t)3);
@@ -113,7 +120,8 @@ TEST(XMLReaderTest, Full)
     xml += L"    <f:td>&quot;Beta&quot;</f:td>\r\n";
     xml += L"    <f:td>&amp;gamma</f:td>\r\n";
     xml += L"</f:table>";
-    XMLElement element = reader->Parse(xml);
+    XMLElement element;
+    reader->Parse(xml, element);
     EXPECT_EQ(element.GetNamespace(), L"f");
     EXPECT_EQ(element.GetName(), L"table");
     EXPECT_EQ(element.GetAttributes()->size(), (size_t)0);

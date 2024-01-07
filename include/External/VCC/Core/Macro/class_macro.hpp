@@ -10,6 +10,7 @@ namespace vcc
     //----------------------------------------------- Module -----------------------------------------------//
     //------------------------------------------------------------------------------------------------------//
     // general
+    
     #define GETSET(type, var, def) \
     protected: \
         mutable type _##var = def; \
@@ -28,6 +29,7 @@ namespace vcc
         static const type& Get##var() const { return def; }
 
     // object
+    
     #define GETUPTR(type, var, ...) \
     protected: \
         mutable std::unique_ptr<type> _##var = std::make_unique<type>(__VA_ARGS__); \
@@ -42,6 +44,7 @@ namespace vcc
         const std::shared_ptr<type> const Get##var() { return _##var; }
 
     // std::vector
+    
     #define VECTOR(type, var) \
     protected: \
         mutable std::vector<type> _##var; \
@@ -74,6 +77,7 @@ namespace vcc
     //------------------------------------------------------------------------------------------------------//
     //--------------------------------------------- VCC Object ---------------------------------------------//
     //------------------------------------------------------------------------------------------------------//
+    
     #define MANAGER(type, var, ...) \
     protected: \
         std::unique_ptr<type> _##var = std::make_unique<type>(__VA_ARGS__); \

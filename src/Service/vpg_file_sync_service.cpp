@@ -241,8 +241,10 @@ std::wstring VPGFileSyncService::SyncFileContent(const std::wstring &src, const 
     try
     {
         std::unique_ptr<VPGCodeReader> reader = std::make_unique<VPGCodeReader>(commandDelimiter);
-        XMLElement srcElement = reader->Parse(src);
-        XMLElement destElement = reader->Parse(dest);
+        XMLElement srcElement;
+        XMLElement destElement;
+        reader->Parse(src, srcElement);
+        reader->Parse(dest, destElement);
 
         VPGFileContentSyncMode srcSyncMode = _GetSyncMode(srcElement);
         VPGFileContentSyncMode destSyncMode = _GetSyncMode(destElement);

@@ -25,7 +25,8 @@ class VPGCodeReaderTest : public testing::Test
 TEST_F(VPGCodeReaderTest, SimpleString)
 {
     std::wstring str = L"abc";
-    XMLElement element = this->GetReader()->Parse(str);
+    XMLElement element;
+    this->GetReader()->Parse(str, element);
     EXPECT_EQ(element.GetChildren()->size(), (size_t)1);
     EXPECT_EQ(element.GetChildren()->at(0).GetFullText(), str);
 }
@@ -35,7 +36,8 @@ TEST_F(VPGCodeReaderTest, Command)
     std::wstring str = L"  // comment\r\n";
                     str += L" abc // abc \r\n";
                     str += L" not for vcc // <abc edf/> \r\n";
-    XMLElement element = this->GetReader()->Parse(str);
+    XMLElement element;
+    this->GetReader()->Parse(str, element);
     EXPECT_EQ(element.GetChildren()->size(), (size_t)1);
     EXPECT_EQ(element.GetChildren()->at(0).GetFullText(), str);
 }
@@ -43,7 +45,8 @@ TEST_F(VPGCodeReaderTest, Command)
 TEST_F(VPGCodeReaderTest, VCCTag)
 {
     std::wstring str = L"  // <vcc:vccproj sync=\"FULL\"/>\r\n";
-    XMLElement element = this->GetReader()->Parse(str);
+    XMLElement element;
+    this->GetReader()->Parse(str, element);
     EXPECT_EQ(element.GetChildren()->size(), (size_t)3);
     EXPECT_EQ(element.GetChildren()->at(0).GetFullText(), L"  ");
     EXPECT_EQ(element.GetChildren()->at(1).GetNamespace(), L"vcc");
@@ -76,7 +79,8 @@ TEST_F(VPGCodeReaderTest, Mixed)
     str += L"    // </vcc:tagB>\r\n";
     str += L"    END";
 
-    XMLElement element = this->GetReader()->Parse(str);
+    XMLElement element;
+    this->GetReader()->Parse(str, element);
     EXPECT_EQ(element.GetChildren()->size(), (size_t)5);
     EXPECT_EQ(element.GetChildren()->at(0).GetFullText(), L"    ");
     EXPECT_EQ(element.GetChildren()->at(1).GetNamespace(), L"vcc");
@@ -113,7 +117,8 @@ TEST_F(VPGCodeReaderTest, Nested)
     str += L"    // </vcc:tagA>\r\n";
     str += L"    END";
 
-    XMLElement element = this->GetReader()->Parse(str);
+    XMLElement element;
+    this->GetReader()->Parse(str, element);
     EXPECT_EQ(element.GetChildren()->size(), (size_t)5);
     EXPECT_EQ(element.GetChildren()->at(0).GetFullText(), L"    ");
     EXPECT_EQ(element.GetChildren()->at(1).GetNamespace(), L"vcc");
@@ -151,7 +156,8 @@ TEST_F(VPGCodeReaderTest, FULL)
     str += L"    // </vcc:tagB>\r\n";
     str += L"    END";
 
-    XMLElement element = this->GetReader()->Parse(str);
+    XMLElement element;
+    this->GetReader()->Parse(str, element);
     EXPECT_EQ(element.GetChildren()->size(), (size_t)7);
     EXPECT_EQ(element.GetChildren()->at(0).GetFullText(), L"    ");
     EXPECT_EQ(element.GetChildren()->at(1).GetNamespace(), L"vcc");
@@ -198,8 +204,8 @@ TEST_F(VPGCodeReaderTest, ReadMe)
     str += L"\t\tEND";
 
     std::unique_ptr<VPGCodeReader> reader = std::make_unique<VPGCodeReader>(L"#");
-
-    XMLElement element = reader->Parse(str);
+    XMLElement element;
+    reader->Parse(str, element);
     EXPECT_EQ(element.GetChildren()->size(), (size_t)6);
     EXPECT_EQ(element.GetChildren()->at(0).GetNamespace(), L"vcc");
     EXPECT_EQ(element.GetChildren()->at(0).GetName(), L"vccproj");

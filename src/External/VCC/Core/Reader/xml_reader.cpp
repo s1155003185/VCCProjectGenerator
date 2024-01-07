@@ -293,32 +293,28 @@ namespace vcc
         }
     }
 
-    XMLElement XMLReader::Parse(const std::wstring &xml)
+    void XMLReader::Parse(const std::wstring &xml, XMLElement &element)
     {
         try
         {
             size_t pos = 0;
-            return this->Parse(xml, pos);
+            this->Parse(xml, pos, element);
         }
         catch(const std::exception& e)
         {
             THROW_EXCEPTION(e);
         }
-        XMLElement empty;
-        return empty;
     }
 
-    XMLElement XMLReader::Parse(const std::wstring &xml, size_t &pos)
+    void XMLReader::Parse(const std::wstring &xml, size_t &pos, XMLElement &element)
     {
-        XMLElement root;
         try
         {
-            ParseXMLElement(xml, pos, root);
+            ParseXMLElement(xml, pos, element);
         }
         catch(const std::exception& e)
         {
             THROW_EXCEPTION(e);
-        }        
-        return root;
+        }
     }
 }
