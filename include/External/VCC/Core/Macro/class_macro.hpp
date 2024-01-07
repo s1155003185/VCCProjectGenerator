@@ -11,14 +11,14 @@ namespace vcc
     //------------------------------------------------------------------------------------------------------//
     // general
     #define GETSET(type, var, def) \
-    private: \
+    protected: \
         mutable type _##var = def; \
     public: \
         const type& Get##var() const { return _##var; }\
         void Set##var(type val) const { _##var = val; }
 
     #define GET(type, var, def) \
-    private: \
+    protected: \
         mutable type _##var = def; \
     public: \
         const type &Get##var() const { return _##var; }\
@@ -29,21 +29,21 @@ namespace vcc
 
     // object
     #define GETUPTR(type, var, ...) \
-    private: \
+    protected: \
         mutable std::unique_ptr<type> _##var = std::make_unique<type>(__VA_ARGS__); \
     public: \
         const type* Get##var() const { return _##var.get(); } \
         void Set##var(std::unique_ptr<type>&& ptr) { _##var = std::move(ptr); }
 
     #define GETSPTR(type, var, ...) \
-    private: \
+    protected: \
         mutable std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
     public: \
         const std::shared_ptr<type> const Get##var() { return _##var; }
 
     // std::vector
     #define VECTOR(type, var) \
-    private: \
+    protected: \
         mutable std::vector<type> _##var; \
     public: \
         const std::vector<type>* Get##var() const { return &_##var; } \
@@ -55,7 +55,7 @@ namespace vcc
         void Clear##var() { this->_##var.clear(); }
 
     #define SET(type, var) \
-    private: \
+    protected: \
         mutable std::set<type> _##var; \
     public: \
         const std::set<type> *Get##var() const { return &_##var; } \
@@ -65,16 +65,17 @@ namespace vcc
         void Clear##var() { this->_##var.clear(); }
 
     #define MAP(keyType, valueType, var) \
-    private: \
+    protected: \
         mutable std::map<keyType, valueType> _##var; \
     public: \
-        const std::map<keyType, valueType>* Get##var() const { return &_##var; }
+        const std::map<keyType, valueType>* Get##var() const { return &_##var; } \
+        void Insert##var(keyType key, valueType value) const { _##var.insert(std::make_pair(key, value)); }
 
     //------------------------------------------------------------------------------------------------------//
     //--------------------------------------------- VCC Object ---------------------------------------------//
     //------------------------------------------------------------------------------------------------------//
     #define MANAGER(type, var, ...) \
-    private: \
+    protected: \
         std::unique_ptr<type> _##var = std::make_unique<type>(__VA_ARGS__); \
     public: \
         type* Get##var() { return _##var.get(); } \
