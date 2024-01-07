@@ -35,15 +35,13 @@ namespace vcc
     bool GitService::IsGitResponse(const LogProperty &logProperty, const std::wstring &workspace)
     {
         bool result = false;
-        //try {
-        TRY_CATCH(
+        try {
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace,
                 L"git rev-parse --is-inside-work-tree");
             result = cmdResult.find(L"true") != std::wstring::npos;
-        )
-        // } catch (...) {
-        //     result = false;
-        // }
+        } catch (...) {
+            result = false;
+         }
         return result;
     }
 
