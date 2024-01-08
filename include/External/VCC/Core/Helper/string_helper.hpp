@@ -10,6 +10,7 @@ namespace vcc
 
 	enum class EscapeStringType
 	{
+		DoubleQuote,
 		Regex,
 		XML
 	};

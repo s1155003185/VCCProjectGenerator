@@ -18,19 +18,16 @@ namespace vcc
 	{
 		if (str.empty())
 			return L"";
-		std::wstring wstr;
-		wstr.resize(str.size());
-		std::mbstowcs(&wstr[0], str.c_str(), wstr.size());
-		return wstr;
+		std::wstringstream wss;
+		wss << str.c_str();
+		return wss.str();
 	}
 
 	std::string wstr2str(const std::wstring &wstr)
 	{
 		if (wstr.empty())
 			return "";
-		std::string str;
-		str.resize(wstr.size() * sizeof(wchar_t));
-		std::wcstombs(&str[0], wstr.c_str(), str.size());
+		std::string str(wstr.begin(), wstr.end());
 		return str;
 	}
 
@@ -320,6 +317,8 @@ namespace vcc
     {
         switch (type)
         {
+			case EscapeStringType::DoubleQuote:
+				return { L'\\', L'"' }; 
             case EscapeStringType::Regex:
                 return { L'\\', L'^', L'$', L'.', L'|', L'?', L'*', L'+', L'(', L')', L'[', L']', L'{', L'}' };
 			case EscapeStringType::XML:
@@ -360,6 +359,8 @@ namespace vcc
 	
 			switch (type)
 			{
+				case EscapeStringType::DoubleQuote:
+					return L"\\" + std::wstring(1, c);
 				case EscapeStringType::Regex:
 					return L"\\" + std::wstring(1, c);
 				case EscapeStringType::XML:
@@ -408,6 +409,11 @@ namespace vcc
 			for (size_t i = 0; i < str.length(); i++) {
 				switch (type)
 				{
+					case EscapeStringType::DoubleQuote:
+						if (str[i] == L'\\')
+							i++;
+						result += str[i];
+						break;
 					case EscapeStringType::Regex:
 						if (str[i] == L'\\')
 							i++;
