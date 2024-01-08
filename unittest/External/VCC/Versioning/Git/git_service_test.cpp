@@ -38,9 +38,13 @@ TEST_F(GitServiceTest, Version)
 
 TEST_F(GitServiceTest, Config)
 {
-    GitService::GetGlobalConfig(*this->GetLogProperty());
-
-    //GitService::GetLocalConfig(*this->GetLogProperty(), this->GetWorkspace());
+    GitConfig config = GitService::GetGlobalConfig(*this->GetLogProperty());
+    std::wstring userName = GitService::GetGlobalUserName(*this->GetLogProperty());
+    std::wstring userEmail = GitService::GetGlobalUserEmail(*this->GetLogProperty());
+    EXPECT_TRUE(!config.GetUserName().empty());
+    EXPECT_TRUE(!config.GetUserEmail().empty());
+    EXPECT_EQ(config.GetUserName(), userName);
+    EXPECT_EQ(config.GetUserEmail(), userEmail);
 }
 
 TEST_F(GitServiceTest, FullTest)

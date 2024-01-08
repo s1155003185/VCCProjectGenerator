@@ -1,6 +1,9 @@
 #pragma once
 #include "base_service.hpp"
 
+#include <memory>
+
+#include "base_object.hpp"
 #include "class_macro.hpp"
 #include "log_property.hpp"
 
@@ -10,9 +13,18 @@ namespace vcc
 
     // CheckSum
 
-    class GitConfig {
-        std::wstring UserName;
+    class GitConfig : public BaseObject {
+        GETSET(std::wstring, UserName, L"");
+        GETSET(std::wstring, UserEmail, L"");
+        MAP(std::wstring, std::wstring, Configs);
 
+        public:
+            GitConfig() : BaseObject() {}
+            virtual ~GitConfig() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitConfig>();
+            }
     };
 
     class GitService : public BaseService
@@ -27,9 +39,25 @@ namespace vcc
         static std::wstring GetVersion(const LogProperty &logProperty);
         static bool IsGitResponse(const LogProperty &logProperty, const std::wstring &workspace);
 
-        // Config
+        // Global Config
         static GitConfig GetGlobalConfig(const LogProperty &logProperty);
+        static std::wstring GetGlobalConfig(const LogProperty &logProperty, const std::wstring &key);
+        static void SetGlobalConfig(const LogProperty &logProperty, const std::wstring &key, const std::wstring &value);
+        
+        static std::wstring GetGlobalUserName(const LogProperty &logProperty);
+        static void SetGlobalUserName(const LogProperty &logProperty, const std::wstring &value);
+        static std::wstring GetGlobalUserEmail(const LogProperty &logProperty);
+        static void SetGlobalUserEmail(const LogProperty &logProperty, const std::wstring &value);
+
+        // Local Config
         static GitConfig GetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace);
+        static std::wstring GetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key);
+        static void SetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key, const std::wstring &value);
+
+        static std::wstring GetLocalUserName(const LogProperty &logProperty, const std::wstring &workspace);
+        static void SetLocalUserName(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &value);
+        static std::wstring GetLocalUserEmail(const LogProperty &logProperty, const std::wstring &workspace);
+        static void SetLocalUserEmail(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &value);
 
         // Initialization
         static std::wstring Initialize(const LogProperty &logProperty, const std::wstring &workspace);

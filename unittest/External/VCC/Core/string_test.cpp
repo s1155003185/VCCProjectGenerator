@@ -127,10 +127,21 @@ TEST(StringTest, SplitStringByUpperCase_WithSpecialChar)
 /* ---------------------------------------------------------------------------------------------------- */
 TEST(StringTest, EscapeString)
 {
-    // Regex
-    std::vector<wchar_t> specialChars = GetSpecialCharacters(EscapeStringType::Regex);
+    // Double Quote
+    std::vector<wchar_t> specialChars = GetSpecialCharacters(EscapeStringType::DoubleQuote);
     std::wstring originalStr = L"";
     std::wstring expectedStr = L"";
+    for (auto sc : specialChars) {
+        originalStr += sc;
+        expectedStr += L"\\" + std::wstring(1, sc);
+    }
+    EXPECT_EQ(GetEscapeString(EscapeStringType::DoubleQuote, originalStr), expectedStr);
+    EXPECT_EQ(GetUnescapeString(EscapeStringType::DoubleQuote, expectedStr), originalStr);
+
+    // Regex
+    specialChars = GetSpecialCharacters(EscapeStringType::Regex);
+    originalStr = L"";
+    expectedStr = L"";
     for (auto sc : specialChars) {
         originalStr += sc;
         expectedStr += L"\\" + std::wstring(1, sc);

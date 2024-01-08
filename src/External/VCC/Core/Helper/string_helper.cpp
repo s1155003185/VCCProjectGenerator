@@ -320,6 +320,8 @@ namespace vcc
     {
         switch (type)
         {
+			case EscapeStringType::DoubleQuote:
+				return { L'\\', L'"' }; 
             case EscapeStringType::Regex:
                 return { L'\\', L'^', L'$', L'.', L'|', L'?', L'*', L'+', L'(', L')', L'[', L']', L'{', L'}' };
 			case EscapeStringType::XML:
@@ -360,6 +362,8 @@ namespace vcc
 	
 			switch (type)
 			{
+				case EscapeStringType::DoubleQuote:
+					return L"\\" + std::wstring(1, c);
 				case EscapeStringType::Regex:
 					return L"\\" + std::wstring(1, c);
 				case EscapeStringType::XML:
@@ -408,6 +412,11 @@ namespace vcc
 			for (size_t i = 0; i < str.length(); i++) {
 				switch (type)
 				{
+					case EscapeStringType::DoubleQuote:
+						if (str[i] == L'\\')
+							i++;
+						result += str[i];
+						break;
 					case EscapeStringType::Regex:
 						if (str[i] == L'\\')
 							i++;
