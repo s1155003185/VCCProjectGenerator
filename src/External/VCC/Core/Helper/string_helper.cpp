@@ -18,19 +18,16 @@ namespace vcc
 	{
 		if (str.empty())
 			return L"";
-		std::wstring wstr;
-		wstr.resize(str.size());
-		std::mbstowcs(&wstr[0], str.c_str(), wstr.size());
-		return wstr;
+		std::wstringstream wss;
+		wss << str.c_str();
+		return wss.str();
 	}
 
 	std::string wstr2str(const std::wstring &wstr)
 	{
 		if (wstr.empty())
 			return "";
-		std::string str;
-		str.resize(wstr.size() * sizeof(wchar_t));
-		std::wcstombs(&str[0], wstr.c_str(), str.size());
+		std::string str(wstr.begin(), wstr.end());
 		return str;
 	}
 

@@ -49,8 +49,9 @@ TEST_F(GitServiceTest, Config)
 
 TEST_F(GitServiceTest, FullTest)
 {
-    if (!std::filesystem::exists(this->GetWorkspace()))
-        std::filesystem::create_directory(this->GetWorkspace());
+    if (std::filesystem::exists(this->GetWorkspace()))
+        std::filesystem::remove_all(this->GetWorkspace());
+    std::filesystem::create_directory(this->GetWorkspace());
 
     // init
     GitService::Initialize(*this->GetLogProperty(), this->GetWorkspace());
@@ -58,6 +59,18 @@ TEST_F(GitServiceTest, FullTest)
     
     // check existance
     EXPECT_TRUE(GitService::IsGitResponse(*this->GetLogProperty(), this->GetWorkspace()));
+
+    // config
+    GitConfig config = GitService::GetLocalConfig(*this->GetLogProperty(), this->GetWorkspace());
+    EXPECT_TRUE(config.GetUserName().empty());
+    EXPECT_TRUE(config.GetUserEmail().empty());
+    
+    GitService::SetLocalUserName(*this->GetLogProperty(), this->GetWorkspace(), L"test");
+    GitService::SetLocalUserEmail(*this->GetLogProperty(), this->GetWorkspace(), L"test@test.com");
+    EXPECT_EQ(GitService::GetLocalUserName(*this->GetLogProperty(), this->GetWorkspace()), L"test");
+    EXPECT_EQ(GitService::GetLocalUserEmail(*this->GetLogProperty(), this->GetWorkspace()), L"test@test.com");
+    EXPECT_EQ(GitService::GetUserName(*this->GetLogProperty(), this->GetWorkspace()), L"test");
+    EXPECT_EQ(GitService::GetUserEmail(*this->GetLogProperty(), this->GetWorkspace()), L"test@test.com");
 
     // Create a new file
     WriteFile(ConcatPath(this->GetWorkspace(), L"test.txt"), L"hi", true);

@@ -48,6 +48,57 @@ namespace vcc
         return result;
     }
 
+    GitConfig GitService::GetConfig(const LogProperty &logProperty, const std::wstring &workspace)
+    {
+        GitConfig result;
+        TRY_CATCH(
+            result = GitService::GetLocalConfig(logProperty, workspace);
+            GitConfig globalResult = GitService::GetGlobalConfig(logProperty);
+            if (result.GetUserName().empty())
+                result.SetUserName(globalResult.GetUserName());
+            if (result.GetUserEmail().empty())
+                result.SetUserEmail(globalResult.GetUserEmail());
+            for (auto config : *globalResult.GetConfigs()) {
+                if (result.GetConfigs()->find(config.first) != result.GetConfigs()->end())
+                    result.InsertConfigs(config.first, config.second);
+            }
+        )
+        return result;
+    }
+
+    std::wstring GitService::GetConfig(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key)
+    {
+        std::wstring result = L"";
+        TRY_CATCH(
+            try {
+                result = GitService::GetLocalConfig(logProperty, workspace, key);           
+            } catch (...) {
+                result = L"";
+            }
+            if (result.empty())
+                result = GitService::GetGlobalConfig(logProperty, key);
+        )
+        return result;
+    }
+
+    std::wstring GitService::GetUserName(const LogProperty &logProperty, const std::wstring &workspace)
+    {
+        std::wstring result = L"";
+        TRY_CATCH(
+            result = GitService::GetConfig(logProperty, workspace, GIT_CONFIG_USER_NAME);
+        )
+        return result;        
+    }
+    
+    std::wstring GitService::GetUserEmail(const LogProperty &logProperty, const std::wstring &workspace)
+    {
+        std::wstring result = L"";
+        TRY_CATCH(
+            result = GitService::GetConfig(logProperty, workspace, GIT_CONFIG_USER_EMAIL);
+        )
+        return result;
+    }
+
     GitConfig GitService::GetGlobalConfig(const LogProperty &logProperty)
     {
         GitConfig config;
@@ -74,7 +125,8 @@ namespace vcc
     std::wstring GitService::GetGlobalConfig(const LogProperty &logProperty, const std::wstring &key)
     {
         TRY_CATCH(
-            return SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global " + key)).at(0);
+            std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global " + key);
+            return IsEmptyOrWhitespace(cmdResult) ? L"" : SplitStringByLine(cmdResult).at(0);
         )
         return L"";
     }
@@ -82,7 +134,7 @@ namespace vcc
     void GitService::SetGlobalConfig(const LogProperty &logProperty, const std::wstring &key, const std::wstring &value)
     {
         TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global " + key + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, value) + L"\"");
+            ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global " + key + L" " + value);
         )
     }
 
@@ -141,7 +193,8 @@ namespace vcc
     std::wstring GitService::GetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key)
     {
         TRY_CATCH(
-            return SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local " + key)).at(0);
+            std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local " + key);
+            return IsEmptyOrWhitespace(cmdResult) ? L"" : SplitStringByLine(cmdResult).at(0);
         )
         return L"";
     }
@@ -149,7 +202,7 @@ namespace vcc
     void GitService::SetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key, const std::wstring &value)
     {
         TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local " + key + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, value) + L"\"");
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local " + key + L" " + value);
         )
     }
 
