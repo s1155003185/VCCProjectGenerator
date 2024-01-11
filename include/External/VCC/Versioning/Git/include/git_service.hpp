@@ -40,12 +40,14 @@ namespace vcc
         static bool IsGitResponse(const LogProperty &logProperty, const std::wstring &workspace);
 
         // Global Config
-        static GitConfig GetConfig(const LogProperty &logProperty, const std::wstring &workspace);
+        static bool IsConfigExists(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key);
+        static void GetConfig(const LogProperty &logProperty, const std::wstring &workspace, GitConfig &config);
         static std::wstring GetConfig(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key);
         static std::wstring GetUserName(const LogProperty &logProperty, const std::wstring &workspace);
         static std::wstring GetUserEmail(const LogProperty &logProperty, const std::wstring &workspace);
         
-        static GitConfig GetGlobalConfig(const LogProperty &logProperty);
+        static bool IsGlobalConfigExists(const LogProperty &logProperty, const std::wstring &key);
+        static void GetGlobalConfig(const LogProperty &logProperty, GitConfig &config);
         static std::wstring GetGlobalConfig(const LogProperty &logProperty, const std::wstring &key);
         static void SetGlobalConfig(const LogProperty &logProperty, const std::wstring &key, const std::wstring &value);
         
@@ -55,7 +57,8 @@ namespace vcc
         static void SetGlobalUserEmail(const LogProperty &logProperty, const std::wstring &value);
 
         // Local Config
-        static GitConfig GetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace);
+        static bool IsLocalConfigExists(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key);
+        static void GetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace, GitConfig &config);
         static std::wstring GetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key);
         static void SetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key, const std::wstring &value);
 

@@ -48,22 +48,33 @@ namespace vcc
         return result;
     }
 
-    GitConfig GitService::GetConfig(const LogProperty &logProperty, const std::wstring &workspace)
+    bool GitService::IsConfigExists(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key)
     {
-        GitConfig result;
+        bool result = false;
+        try {
+            GitService::GetConfig(logProperty, workspace, key);
+            result = true;
+        } catch (...) {
+            result = false;
+        }
+        return result;
+    }
+
+    void GitService::GetConfig(const LogProperty &logProperty, const std::wstring &workspace, GitConfig &config)
+    {
         TRY_CATCH(
-            result = GitService::GetLocalConfig(logProperty, workspace);
-            GitConfig globalResult = GitService::GetGlobalConfig(logProperty);
-            if (result.GetUserName().empty())
-                result.SetUserName(globalResult.GetUserName());
-            if (result.GetUserEmail().empty())
-                result.SetUserEmail(globalResult.GetUserEmail());
-            for (auto config : *globalResult.GetConfigs()) {
-                if (result.GetConfigs()->find(config.first) != result.GetConfigs()->end())
-                    result.InsertConfigs(config.first, config.second);
+            GitService::GetLocalConfig(logProperty, workspace, config);
+            GitConfig globalResult;
+            GitService::GetGlobalConfig(logProperty, globalResult);
+            if (config.GetUserName().empty())
+                config.SetUserName(globalResult.GetUserName());
+            if (config.GetUserEmail().empty())
+                config.SetUserEmail(globalResult.GetUserEmail());
+            for (auto tmpConfig : *globalResult.GetConfigs()) {
+                if (config.GetConfigs()->find(tmpConfig.first) != config.GetConfigs()->end())
+                    config.InsertConfigs(tmpConfig.first, tmpConfig.second);
             }
         )
-        return result;
     }
 
     std::wstring GitService::GetConfig(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key)
@@ -99,9 +110,21 @@ namespace vcc
         return result;
     }
 
-    GitConfig GitService::GetGlobalConfig(const LogProperty &logProperty)
+    bool GitService::IsGlobalConfigExists(const LogProperty &logProperty, const std::wstring &key)
     {
-        GitConfig config;
+        bool result = false;
+        try {
+            GitConfig config;
+            GitService::GetConfig(logProperty, key, config);
+            result = true;
+        } catch (...) {
+            result = false;
+        }
+        return result;        
+    }
+
+    void GitService::GetGlobalConfig(const LogProperty &logProperty, GitConfig &config)
+    {
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global --list");
             if (!IsEmptyOrWhitespace(cmdResult)) {
@@ -119,7 +142,6 @@ namespace vcc
 
             }
         )
-        return config;
     }
 
     std::wstring GitService::GetGlobalConfig(const LogProperty &logProperty, const std::wstring &key)
@@ -168,9 +190,20 @@ namespace vcc
         )
     }
 
-    GitConfig GitService::GetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace)
+    bool GitService::IsLocalConfigExists(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key)
     {
-        GitConfig config;
+        bool result = false;
+        try {
+            GitService::GetLocalConfig(logProperty, workspace, key);
+            result = true;
+        } catch (...) {
+            result = false;
+        }
+        return result;       
+    }
+
+    void GitService::GetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace, GitConfig &config)
+    {
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local --list");
             if (!IsEmptyOrWhitespace(cmdResult)) {
@@ -187,7 +220,6 @@ namespace vcc
                 }
             }
         )
-        return config;
     }
 
     std::wstring GitService::GetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key)

@@ -38,7 +38,8 @@ TEST_F(GitServiceTest, Version)
 
 TEST_F(GitServiceTest, Config)
 {
-    GitConfig config = GitService::GetGlobalConfig(*this->GetLogProperty());
+    GitConfig config;
+    GitService::GetGlobalConfig(*this->GetLogProperty(), config);
     std::wstring userName = GitService::GetGlobalUserName(*this->GetLogProperty());
     std::wstring userEmail = GitService::GetGlobalUserEmail(*this->GetLogProperty());
     EXPECT_TRUE(!config.GetUserName().empty());
@@ -61,9 +62,11 @@ TEST_F(GitServiceTest, FullTest)
     EXPECT_TRUE(GitService::IsGitResponse(*this->GetLogProperty(), this->GetWorkspace()));
 
     // config
-    GitConfig config = GitService::GetLocalConfig(*this->GetLogProperty(), this->GetWorkspace());
+    GitConfig config;
+    GitService::GetLocalConfig(*this->GetLogProperty(), this->GetWorkspace(), config);
     EXPECT_TRUE(config.GetUserName().empty());
     EXPECT_TRUE(config.GetUserEmail().empty());
+    EXPECT_FALSE(GitService::IsLocalConfigExists(*this->GetLogProperty(), this->GetWorkspace(), L"user.name"));
     
     GitService::SetLocalUserName(*this->GetLogProperty(), this->GetWorkspace(), L"test");
     GitService::SetLocalUserEmail(*this->GetLogProperty(), this->GetWorkspace(), L"test@test.com");
@@ -71,6 +74,7 @@ TEST_F(GitServiceTest, FullTest)
     EXPECT_EQ(GitService::GetLocalUserEmail(*this->GetLogProperty(), this->GetWorkspace()), L"test@test.com");
     EXPECT_EQ(GitService::GetUserName(*this->GetLogProperty(), this->GetWorkspace()), L"test");
     EXPECT_EQ(GitService::GetUserEmail(*this->GetLogProperty(), this->GetWorkspace()), L"test@test.com");
+    EXPECT_TRUE(GitService::IsLocalConfigExists(*this->GetLogProperty(), this->GetWorkspace(), L"user.name"));
 
     // Create a new file
     WriteFile(ConcatPath(this->GetWorkspace(), L"test.txt"), L"hi", true);
