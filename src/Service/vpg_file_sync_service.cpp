@@ -124,7 +124,7 @@ bool VPGFileSyncService::_IsTagReserve(const XMLElement &child)
     return false;
 }
 
-void VPGFileSyncService::CopyFile(const LogProperty &logProperty, const std::wstring &sourcePath, const std::wstring &destgetPath)
+void VPGFileSyncService::CopyFile(const LogProperty *logProperty, const std::wstring &sourcePath, const std::wstring &destgetPath)
 {
     try
     {

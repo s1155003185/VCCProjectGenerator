@@ -59,6 +59,6 @@ class VPGFileSyncService
     public:
         VPGFileSyncService() = default;
         ~VPGFileSyncService() {}
-        static void CopyFile(const LogProperty &logProperty, const std::wstring &sourcePath, const std::wstring &destgetPath);
+        static void CopyFile(const LogProperty *logProperty, const std::wstring &sourcePath, const std::wstring &destgetPath);
         static std::wstring SyncFileContent(const std::wstring &src, const std::wstring &dest, const VPGFileContentSyncMode &defaultMode, const std::wstring &commandDelimiter);
 };

@@ -98,7 +98,7 @@ TEST_F(VPGFileGenerationServiceTest, GetClassMacroList)
 
 TEST_F(VPGFileGenerationServiceTest, GenerateProperty)
 {
-    VPGFileGenerationService::GernerateProperty(*this->GetLogProperty(), L"VCC", L"", this->GetWorkspaceSource(), 
+    VPGFileGenerationService::GernerateProperty(this->GetLogProperty(), L"VCC", L"", this->GetWorkspaceSource(), 
         this->GetWorkspaceTarget(), this->GetWorkspaceTarget(), this->GetWorkspaceTarget(), this->GetWorkspaceTarget());
 
     // ------------------------------------------------------------------------------------------ //

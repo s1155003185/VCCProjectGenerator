@@ -16,7 +16,7 @@ class VPGDirectorySyncService
     private:
         static bool _ShouldInclude(const std::wstring &path, const std::vector<std::wstring> &includeOnlyRegex);
         static bool _ShouldExclude(const std::wstring &path, const std::vector<std::wstring> &excludeRegex);
-        static void _SyncWorkspace(const LogProperty &logProperty, std::wstring sourceWorkspace, std::wstring targetWorkspace,
+        static void _SyncWorkspace(const LogProperty *logProperty, std::wstring sourceWorkspace, std::wstring targetWorkspace,
             const std::vector<std::wstring> &includeOnlyRegex, const std::vector<std::wstring> &excludeRegex);
 
     public:
@@ -24,9 +24,9 @@ class VPGDirectorySyncService
         ~VPGDirectorySyncService() {}
 
         // create project
-        static void CheckAndCreateDirectory(const LogProperty &logProperty, std::wstring workspace);
+        static void CheckAndCreateDirectory(const LogProperty *logProperty, std::wstring workspace);
 
         // file sync
-        static void SyncWorkspace(const LogProperty &logProperty, VPGProjectType projectType, std::wstring workspace,
+        static void SyncWorkspace(const LogProperty *logProperty, VPGProjectType projectType, std::wstring workspace,
             const std::vector<std::wstring> &includeOnlyRegex, const std::vector<std::wstring> &excludeRegex);
 };

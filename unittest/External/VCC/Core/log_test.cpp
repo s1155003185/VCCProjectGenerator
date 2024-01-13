@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <filesystem>
+#include <memory>
 #include <string>
 
 #include "file_helper.hpp"
@@ -11,35 +12,35 @@ using namespace vcc;
 
 TEST(LogServiceTest, LogTest) 
 {
-    PATH filePath = std::filesystem::current_path() / "bin/Debug/AppLogs/LogServiceTest.log";
-    remove(filePath);
+    std::wstring filePath = ConcatPath(std::filesystem::current_path().wstring(), L"bin/Debug/AppLogs/LogServiceTest.log");
+    RemoveFile(filePath);
     
-    LogProperty property;
-    property.SetUserID(L"user");
-    property.SetIsConsoleLog(false);
-    property.SetIsLogTerminal(true);
-    property.SetIsLogTerminalResult(true);
-    property.SetIsLogProcess(true);
-    property.SetIsLogProcessResult(true);
-    property.SetIsLogSQL(true);
-    property.SetIsLogSQLResult(true);
-    property.SetFilePath(filePath.wstring());
-    std::wstring logInfoStr = LogService::LogInfo(property, L"id", L"message");
-    std::wstring logWarningStr = LogService::LogWarning(property, L"id", L"message");
-    std::wstring logErrorStr = LogService::LogError(property, L"id", L"message");
-    std::wstring LogTerminalStr = LogService::LogTerminal(property, L"id", L"message");
-    std::wstring LogTerminalResultStr = LogService::LogTerminalResult(property, L"id", L"message");
-    std::wstring logProcessStr = LogService::LogProcess(property, L"id", L"message");
-    std::wstring logProcessResultStr = LogService::LogProcessResult(property, L"id", L"message");
-    std::wstring logSQLStr = LogService::LogSQL(property, L"id", L"message");
-    std::wstring logSQLResultStr = LogService::LogSQLResult(property, L"id", L"message");
-    EXPECT_EQ(logInfoStr, ReadFileOneLine(filePath.wstring(), 0));
-    EXPECT_EQ(logWarningStr, ReadFileOneLine(filePath.wstring(), 1));
-    EXPECT_EQ(logErrorStr, ReadFileOneLine(filePath.wstring(), 2));
-    EXPECT_EQ(LogTerminalStr, ReadFileOneLine(filePath.wstring(), 3));
-    EXPECT_EQ(LogTerminalResultStr, ReadFileOneLine(filePath.wstring(), 4));
-    EXPECT_EQ(logProcessStr, ReadFileOneLine(filePath.wstring(), 5));
-    EXPECT_EQ(logProcessResultStr, ReadFileOneLine(filePath.wstring(), 6));
-    EXPECT_EQ(logSQLStr, ReadFileOneLine(filePath.wstring(), 7));
-    EXPECT_EQ(logSQLResultStr, ReadFileOneLine(filePath.wstring(), 8));
+    shared_ptr<LogProperty> property = make_shared<LogProperty>(LogPropertyType::None);
+    property->SetUserID(L"user");
+    property->SetIsConsoleLog(false);
+    property->SetIsLogTerminal(true);
+    property->SetIsLogTerminalResult(true);
+    property->SetIsLogProcess(true);
+    property->SetIsLogProcessResult(true);
+    property->SetIsLogSQL(true);
+    property->SetIsLogSQLResult(true);
+    property->SetFilePath(filePath);
+    std::wstring logInfoStr = LogService::LogInfo(property.get(), L"id", L"message");
+    std::wstring logWarningStr = LogService::LogWarning(property.get(), L"id", L"message");
+    std::wstring logErrorStr = LogService::LogError(property.get(), L"id", L"message");
+    std::wstring LogTerminalStr = LogService::LogTerminal(property.get(), L"id", L"message");
+    std::wstring LogTerminalResultStr = LogService::LogTerminalResult(property.get(), L"id", L"message");
+    std::wstring logProcessStr = LogService::LogProcess(property.get(), L"id", L"message");
+    std::wstring logProcessResultStr = LogService::LogProcessResult(property.get(), L"id", L"message");
+    std::wstring logSQLStr = LogService::LogSQL(property.get(), L"id", L"message");
+    std::wstring logSQLResultStr = LogService::LogSQLResult(property.get(), L"id", L"message");
+    EXPECT_EQ(logInfoStr, ReadFileOneLine(filePath, 0));
+    EXPECT_EQ(logWarningStr, ReadFileOneLine(filePath, 1));
+    EXPECT_EQ(logErrorStr, ReadFileOneLine(filePath, 2));
+    EXPECT_EQ(LogTerminalStr, ReadFileOneLine(filePath, 3));
+    EXPECT_EQ(LogTerminalResultStr, ReadFileOneLine(filePath, 4));
+    EXPECT_EQ(logProcessStr, ReadFileOneLine(filePath, 5));
+    EXPECT_EQ(logProcessResultStr, ReadFileOneLine(filePath, 6));
+    EXPECT_EQ(logSQLStr, ReadFileOneLine(filePath, 7));
+    EXPECT_EQ(logSQLResultStr, ReadFileOneLine(filePath, 8));
 }

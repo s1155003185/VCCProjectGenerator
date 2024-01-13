@@ -16,7 +16,7 @@ namespace vcc
     #define GIT_CONFIG_USER_NAME L"user.name"
     #define GIT_CONFIG_USER_EMAIL L"user.email"
 
-    std::wstring GitService::Execute(const LogProperty &logProperty, const std::wstring &command)
+    std::wstring GitService::Execute(const LogProperty *logProperty, const std::wstring &command)
     {
         TRY_CATCH(
             return ProcessService::Execute(logProperty, GIT_LOG_ID, command);
@@ -24,7 +24,7 @@ namespace vcc
         return L"";
     }
     
-    std::wstring GitService::GetVersion(const LogProperty &logProperty)
+    std::wstring GitService::GetVersion(const LogProperty *logProperty)
     {
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git --version");
@@ -35,7 +35,7 @@ namespace vcc
         return L"";
     }
 
-    bool GitService::IsGitResponse(const LogProperty &logProperty, const std::wstring &workspace)
+    bool GitService::IsGitResponse(const LogProperty *logProperty, const std::wstring &workspace)
     {
         bool result = false;
         try {
@@ -48,7 +48,7 @@ namespace vcc
         return result;
     }
 
-    bool GitService::IsConfigExists(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key)
+    bool GitService::IsConfigExists(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key)
     {
         bool result = false;
         try {
@@ -60,7 +60,7 @@ namespace vcc
         return result;
     }
 
-    void GitService::GetConfig(const LogProperty &logProperty, const std::wstring &workspace, GitConfig &config)
+    void GitService::GetConfig(const LogProperty *logProperty, const std::wstring &workspace, GitConfig &config)
     {
         TRY_CATCH(
             GitService::GetLocalConfig(logProperty, workspace, config);
@@ -77,7 +77,7 @@ namespace vcc
         )
     }
 
-    std::wstring GitService::GetConfig(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key)
+    std::wstring GitService::GetConfig(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key)
     {
         std::wstring result = L"";
         TRY_CATCH(
@@ -92,7 +92,7 @@ namespace vcc
         return result;
     }
 
-    std::wstring GitService::GetUserName(const LogProperty &logProperty, const std::wstring &workspace)
+    std::wstring GitService::GetUserName(const LogProperty *logProperty, const std::wstring &workspace)
     {
         std::wstring result = L"";
         TRY_CATCH(
@@ -101,7 +101,7 @@ namespace vcc
         return result;        
     }
     
-    std::wstring GitService::GetUserEmail(const LogProperty &logProperty, const std::wstring &workspace)
+    std::wstring GitService::GetUserEmail(const LogProperty *logProperty, const std::wstring &workspace)
     {
         std::wstring result = L"";
         TRY_CATCH(
@@ -110,7 +110,7 @@ namespace vcc
         return result;
     }
 
-    bool GitService::IsGlobalConfigExists(const LogProperty &logProperty, const std::wstring &key)
+    bool GitService::IsGlobalConfigExists(const LogProperty *logProperty, const std::wstring &key)
     {
         bool result = false;
         try {
@@ -123,7 +123,7 @@ namespace vcc
         return result;        
     }
 
-    void GitService::GetGlobalConfig(const LogProperty &logProperty, GitConfig &config)
+    void GitService::GetGlobalConfig(const LogProperty *logProperty, GitConfig &config)
     {
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global --list");
@@ -144,7 +144,7 @@ namespace vcc
         )
     }
 
-    std::wstring GitService::GetGlobalConfig(const LogProperty &logProperty, const std::wstring &key)
+    std::wstring GitService::GetGlobalConfig(const LogProperty *logProperty, const std::wstring &key)
     {
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global " + key);
@@ -153,14 +153,14 @@ namespace vcc
         return L"";
     }
     
-    void GitService::SetGlobalConfig(const LogProperty &logProperty, const std::wstring &key, const std::wstring &value)
+    void GitService::SetGlobalConfig(const LogProperty *logProperty, const std::wstring &key, const std::wstring &value)
     {
         TRY_CATCH(
             ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global " + key + L" " + value);
         )
     }
 
-    std::wstring GitService::GetGlobalUserName(const LogProperty &logProperty)
+    std::wstring GitService::GetGlobalUserName(const LogProperty *logProperty)
     {
         TRY_CATCH(
             return GitService::GetGlobalConfig(logProperty, GIT_CONFIG_USER_NAME);
@@ -168,14 +168,14 @@ namespace vcc
         return L"";
     }
 
-    void GitService::SetGlobalUserName(const LogProperty &logProperty, const std::wstring &value)
+    void GitService::SetGlobalUserName(const LogProperty *logProperty, const std::wstring &value)
     {
         TRY_CATCH(
             GitService::SetGlobalConfig(logProperty, GIT_CONFIG_USER_NAME, value);
         )
     }
 
-    std::wstring GitService::GetGlobalUserEmail(const LogProperty &logProperty)
+    std::wstring GitService::GetGlobalUserEmail(const LogProperty *logProperty)
     {
         TRY_CATCH(
             return GitService::GetGlobalConfig(logProperty, GIT_CONFIG_USER_EMAIL);
@@ -183,14 +183,14 @@ namespace vcc
         return L"";
     }
 
-    void GitService::SetGlobalUserEmail(const LogProperty &logProperty, const std::wstring &value)
+    void GitService::SetGlobalUserEmail(const LogProperty *logProperty, const std::wstring &value)
     {
         TRY_CATCH(
             GitService::SetGlobalConfig(logProperty, GIT_CONFIG_USER_EMAIL, value);
         )
     }
 
-    bool GitService::IsLocalConfigExists(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key)
+    bool GitService::IsLocalConfigExists(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key)
     {
         bool result = false;
         try {
@@ -202,7 +202,7 @@ namespace vcc
         return result;       
     }
 
-    void GitService::GetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace, GitConfig &config)
+    void GitService::GetLocalConfig(const LogProperty *logProperty, const std::wstring &workspace, GitConfig &config)
     {
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local --list");
@@ -222,7 +222,7 @@ namespace vcc
         )
     }
 
-    std::wstring GitService::GetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key)
+    std::wstring GitService::GetLocalConfig(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key)
     {
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local " + key);
@@ -231,14 +231,14 @@ namespace vcc
         return L"";
     }
 
-    void GitService::SetLocalConfig(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &key, const std::wstring &value)
+    void GitService::SetLocalConfig(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key, const std::wstring &value)
     {
         TRY_CATCH(
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local " + key + L" " + value);
         )
     }
 
-    std::wstring GitService::GetLocalUserName(const LogProperty &logProperty, const std::wstring &workspace)
+    std::wstring GitService::GetLocalUserName(const LogProperty *logProperty, const std::wstring &workspace)
     {
         TRY_CATCH(
             return GitService::GetLocalConfig(logProperty, workspace, GIT_CONFIG_USER_NAME);
@@ -246,14 +246,14 @@ namespace vcc
         return L"";
     }
 
-    void GitService::SetLocalUserName(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &value)
+    void GitService::SetLocalUserName(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &value)
     {
         TRY_CATCH(
             GitService::SetLocalConfig(logProperty, workspace, GIT_CONFIG_USER_NAME, value);
         )
     }
 
-    std::wstring GitService::GetLocalUserEmail(const LogProperty &logProperty, const std::wstring &workspace)
+    std::wstring GitService::GetLocalUserEmail(const LogProperty *logProperty, const std::wstring &workspace)
     {
         TRY_CATCH(
             return GitService::GetLocalConfig(logProperty, workspace, GIT_CONFIG_USER_EMAIL);
@@ -261,7 +261,7 @@ namespace vcc
         return L"";
     }
 
-    void GitService::SetLocalUserEmail(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &value)
+    void GitService::SetLocalUserEmail(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &value)
     {
         TRY_CATCH(
             GitService::SetLocalConfig(logProperty, workspace, GIT_CONFIG_USER_EMAIL, value);
@@ -269,7 +269,7 @@ namespace vcc
     }
 
     // Initialization
-    std::wstring GitService::Initialize(const LogProperty &logProperty, const std::wstring &workspace)
+    std::wstring GitService::Initialize(const LogProperty *logProperty, const std::wstring &workspace)
     {
         TRY_CATCH(
             return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git init");
@@ -277,7 +277,7 @@ namespace vcc
         return L"";
     }
 
-    std::wstring GitService::Clone(const LogProperty &logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth)
+    std::wstring GitService::Clone(const LogProperty *logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth)
     {
         TRY_CATCH(
             return ProcessService::Execute(logProperty, GIT_LOG_ID, dist, 
@@ -286,7 +286,7 @@ namespace vcc
         return L"";
     }
 
-    std::wstring GitService::CheckOut(const LogProperty &logProperty, const std::wstring &workspace, const std::wstring &branch)
+    std::wstring GitService::CheckOut(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branch)
     {
         TRY_CATCH(
             return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout " + branch);
@@ -295,7 +295,7 @@ namespace vcc
     }
 
     // Action
-    std::wstring GitService::Pull(const LogProperty &logProperty, const std::wstring &workspace)
+    std::wstring GitService::Pull(const LogProperty *logProperty, const std::wstring &workspace)
     {
         TRY_CATCH(
             return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git pull");

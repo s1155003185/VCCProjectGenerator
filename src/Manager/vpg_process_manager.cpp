@@ -25,16 +25,16 @@ void VPGProcessManager::VerifyLocalResponse()
         std::wstring localResponseDirectory = VPGGlobal::GetVccProjectLocalResponseDirectory(this->GetVPGProjectType());
         std::wstring gitUrl = VPGGlobal::GetProjecURL(this->GetVPGProjectType());
 
-        LogService::LogInfo(*this->GetLogProperty(), L"", L"Check VCC Local response existance: " + localResponseDirectory);
+        LogService::LogInfo(this->GetLogProperty(), L"", L"Check VCC Local response existance: " + localResponseDirectory);
         if (IsDirectoryExists(localResponseDirectory)) {
-            LogService::LogInfo(*this->GetLogProperty(), L"", L"Done.");
-            LogService::LogInfo(*this->GetLogProperty(), L"", L"Check Version.");
+            LogService::LogInfo(this->GetLogProperty(), L"", L"Done.");
+            LogService::LogInfo(this->GetLogProperty(), L"", L"Check Version.");
 
         } else {
-            LogService::LogInfo(*this->GetLogProperty(), L"", L"Not Exists.");
-            LogService::LogInfo(*this->GetLogProperty(), L"", L"Clone from " + gitUrl);
-            GitService::Clone(*this->GetLogProperty(), gitUrl, this->GetBranch(), VPGGlobal::GetVccLocalResponseFolder(), this->GetLogDepth());
-            LogService::LogInfo(*this->GetLogProperty(), L"", L"Done.");
+            LogService::LogInfo(this->GetLogProperty(), L"", L"Not Exists.");
+            LogService::LogInfo(this->GetLogProperty(), L"", L"Clone from " + gitUrl);
+            GitService::Clone(this->GetLogProperty(), gitUrl, this->GetBranch(), VPGGlobal::GetVccLocalResponseFolder(), this->GetLogDepth());
+            LogService::LogInfo(this->GetLogProperty(), L"", L"Done.");
         }
 
         // return 
@@ -42,7 +42,7 @@ void VPGProcessManager::VerifyLocalResponse()
         
         // if (IsDirectoryExists(localResponseDirectory)) {
         // }
-        // VPGFileUpdateService::DownloadVCCResource(*this->GetLogProperty(), this->GetVPGProjectType(), this->GetBranch());
+        // VPGFileUpdateService::DownloadVCCResource(this->GetLogProperty(), this->GetVPGProjectType(), this->GetBranch());
 
     } catch (const std::exception &e) {
         THROW_EXCEPTION(e);

@@ -39,7 +39,7 @@ std::set<std::wstring> VPGFileGenerationService::GetClassMacroList(const std::ws
     return results;
 }
 
-void VPGFileGenerationService::GenerateObjectTypeFile(const LogProperty &logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::vector<std::wstring> &propertyTypeList)
+void VPGFileGenerationService::GenerateObjectTypeFile(const LogProperty *logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::vector<std::wstring> &propertyTypeList)
 {
     TRY_CATCH(
         LogService::LogInfo(logProperty, logId, L"Generate object type file: " + hppFilePath);
@@ -55,7 +55,7 @@ void VPGFileGenerationService::GenerateObjectTypeFile(const LogProperty &logProp
     )
 }
 
-void VPGFileGenerationService::GeneratePropertyClassFile(const LogProperty &logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::vector<VPGEnumClass> &enumClassList)
+void VPGFileGenerationService::GeneratePropertyClassFile(const LogProperty *logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::vector<VPGEnumClass> &enumClassList)
 {
     TRY_CATCH(
         LogService::LogInfo(logProperty, logId, L"Generate object class file: " + hppFilePath);
@@ -112,7 +112,7 @@ void VPGFileGenerationService::GeneratePropertyClassFile(const LogProperty &logP
     )
 }
 
-void VPGFileGenerationService::GeneratePropertyPropertyAccessorFile(const LogProperty &logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::wstring &cppFilePath, const std::vector<VPGEnumClass> &enumClassList)
+void VPGFileGenerationService::GeneratePropertyPropertyAccessorFile(const LogProperty *logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::wstring &cppFilePath, const std::vector<VPGEnumClass> &enumClassList)
 {
     TRY_CATCH(
         LogService::LogInfo(logProperty, logId, L"Generate property accessor file: " + hppFilePath);
@@ -127,7 +127,7 @@ void VPGFileGenerationService::GeneratePropertyPropertyAccessorFile(const LogPro
     )
 }
 
-void VPGFileGenerationService::GernerateProperty(const LogProperty &logProperty, const std::wstring &projPrefix, const std::wstring &projWorkspace, const std::wstring &typeWorkspace, 
+void VPGFileGenerationService::GernerateProperty(const LogProperty *logProperty, const std::wstring &projPrefix, const std::wstring &projWorkspace, const std::wstring &typeWorkspace, 
     const std::wstring &objTypeDirectoryHpp, const std::wstring &objDirectoryHpp, const std::wstring &propertyAccessorDirectoryHpp, const std::wstring &propertyAccessorDirectoryCpp)
 {
     TRY_CATCH(

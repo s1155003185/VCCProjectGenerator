@@ -71,8 +71,7 @@ namespace vcc
 				assert(false);
 				break;
 			}
-            LogProperty logProperty(LogPropertyType::None);
-            result = TerminalService::Execute(logProperty, L"", L"echo ~/" + folderName);
+            result = TerminalService::Execute(nullptr, L"", L"echo ~/" + folderName);
         } catch (const std::exception &e) {
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, str2wstr(e.what()));
         }
