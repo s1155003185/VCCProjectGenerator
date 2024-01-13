@@ -72,8 +72,8 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
     code += L"enum class VCCObjectProperty\r\n";
     code += L"{\r\n";
     code += L"    EnumA, // GET(EnumTypeA, EnumA, L\"Default\") CommandA\r\n";
-    code += L"    EnumB, // GETUPTR(EnumTypeB, EnumB)\r\n";
-    code += L"    EnumC, // GETUPTR(EnumTypeC, EnumC, ArgumentA, ArgumentB, ArgumentC)\r\n";
+    code += L"    EnumB, // GETSPTR(EnumTypeB, EnumB)\r\n";
+    code += L"    EnumC, // GETSPTR(EnumTypeC, EnumC, ArgumentA, ArgumentB, ArgumentC)\r\n";
     code += L"    EnumD, // Command D\r\n";
     code += L"    EnumE\r\n";
     code += L"};\r\n";
@@ -94,13 +94,13 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
     EXPECT_EQ(element.GetProperties()->at(0).GetDefaultValue(), L"L\"Default\"");
     EXPECT_EQ(element.GetProperties()->at(0).GetCommand(), L"CommandA");
     EXPECT_EQ(element.GetProperties()->at(1).GetEnum(), L"EnumB");
-    EXPECT_EQ(element.GetProperties()->at(1).GetMacro(), L"GETUPTR(EnumTypeB, EnumB)");
+    EXPECT_EQ(element.GetProperties()->at(1).GetMacro(), L"GETSPTR(EnumTypeB, EnumB)");
     EXPECT_EQ(element.GetProperties()->at(1).GetType(), L"EnumTypeB");
     EXPECT_EQ(element.GetProperties()->at(1).GetPropertyName(), L"EnumB");
     EXPECT_EQ(element.GetProperties()->at(1).GetDefaultValue(), L"");
     EXPECT_EQ(element.GetProperties()->at(1).GetCommand(), L"");
     EXPECT_EQ(element.GetProperties()->at(2).GetEnum(), L"EnumC");
-    EXPECT_EQ(element.GetProperties()->at(2).GetMacro(), L"GETUPTR(EnumTypeC, EnumC, ArgumentA, ArgumentB, ArgumentC)");
+    EXPECT_EQ(element.GetProperties()->at(2).GetMacro(), L"GETSPTR(EnumTypeC, EnumC, ArgumentA, ArgumentB, ArgumentC)");
     EXPECT_EQ(element.GetProperties()->at(2).GetType(), L"EnumTypeC");
     EXPECT_EQ(element.GetProperties()->at(2).GetPropertyName(), L"EnumC");
     EXPECT_EQ(element.GetProperties()->at(2).GetDefaultValue(), L"ArgumentA, ArgumentB, ArgumentC");

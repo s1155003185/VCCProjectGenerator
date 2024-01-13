@@ -29,19 +29,12 @@ namespace vcc
         static const type& Get##var() const { return def; }
 
     // object
-    
-    #define GETUPTR(type, var, ...) \
-    protected: \
-        mutable std::unique_ptr<type> _##var = std::make_unique<type>(__VA_ARGS__); \
-    public: \
-        const type* Get##var() const { return _##var.get(); } \
-        void Set##var(std::unique_ptr<type>&& ptr) { _##var = std::move(ptr); }
 
     #define GETSPTR(type, var, ...) \
     protected: \
         mutable std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
     public: \
-        const std::shared_ptr<type> const Get##var() { return _##var; }
+        std::shared_ptr<type> Get##var() { return _##var; }
 
     // std::vector
     
@@ -80,9 +73,8 @@ namespace vcc
     
     #define MANAGER(type, var, ...) \
     protected: \
-        std::unique_ptr<type> _##var = std::make_unique<type>(__VA_ARGS__); \
+        std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
     public: \
-        type* Get##var() { return _##var.get(); } \
-        void Set##var(std::unique_ptr<type>&& ptr) { _##var = std::move(ptr); }
+        type* Get##var() { return _##var.get(); }
         
 }
