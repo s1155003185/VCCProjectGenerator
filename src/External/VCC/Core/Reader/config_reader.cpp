@@ -1,6 +1,7 @@
 #include "config_reader.hpp"
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -9,7 +10,7 @@
 
 namespace vcc
 {
-    void ConfigReader::Parse(const std::wstring &str, ConfigElement &configElement)
+    void ConfigReader::Parse(const std::wstring &str, std::shared_ptr<ConfigElement> configElement)
     {
         TRY_CATCH(
             std::vector<std::wstring> lines = SplitStringByLine(str);
@@ -24,7 +25,7 @@ namespace vcc
                 std::wstring value = line.substr(pos + 1);
                 Trim(key);
                 Trim(value);
-                configElement._Configs.insert({key, value});
+                configElement->_Configs->insert({key, value});
             }
         )
     }

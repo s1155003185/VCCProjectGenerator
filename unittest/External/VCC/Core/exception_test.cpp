@@ -36,13 +36,6 @@ TEST(ExceptionTest, General)
 
 TEST(ExceptionTest, Full)
 {
-    PATH filePath = std::filesystem::current_path() / "bin/Debug/AppLogs/ExceptionTest.log";
-    remove(filePath);
-    
-    LogProperty logProperty;
-    logProperty.SetIsConsoleLog(false);
-    logProperty.SetFilePath(filePath.wstring());
-
     bool throwException = false;
     try
     {

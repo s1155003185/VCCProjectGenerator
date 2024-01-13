@@ -14,7 +14,7 @@ using namespace std;
 
 class VPGFileGenerationServiceTest : public testing::Test 
 {
-    GETUPTR(LogProperty, LogProperty, LogPropertyType::None);
+    GETSPTR(LogProperty, LogProperty, LogPropertyType::None);
     GET(wstring, Workspace, L"bin/Debug/FileGenerationServiceTest");
     GET(wstring, WorkspaceSource, L"bin/Debug/FileGenerationServiceTestSource");
     GET(wstring, WorkspaceTarget, L"bin/Debug/FileGenerationServiceTestTarget");
@@ -59,8 +59,8 @@ class VPGFileGenerationServiceTest : public testing::Test
             code += L"{\r\n";
             code += L"    EnumA, // GETSET(std::wstring, EnumA, L\"Default\") \r\n";
             code += L"    EnumB, // GET(int64_t, EnumB, 0) \r\n";
-            code += L"    EnumC, // GETUPTR(ClassA, EnumC) \r\n";
-            code += L"    EnumD, // GETUPTR(ClassB, EnumD, 1, 2, 3) \r\n";
+            code += L"    EnumC, // GETSPTR(ClassA, EnumC) \r\n";
+            code += L"    EnumD, // GETSPTR(ClassB, EnumD, 1, 2, 3) \r\n";
             code += L"    EnumE,  // GETSET(EnumClass, EnumE, EnumClass::OptionA)\r\n";
             code += L"    EnumF // Nothing\r\n";
             code += L"};";
@@ -84,10 +84,12 @@ TEST_F(VPGFileGenerationServiceTest, GetClassMacroList)
         L"GETSET",
         L"GET",
         L"STATICGET",
-        L"GETUPTR",
+        L"GETSPTR",
         L"GETSPTR",
         L"VECTOR",
+        L"VECTOR_SPTR",
         L"SET",
+        L"SET_SPTR",
         L"MAP",
         L"MANAGER"
     };
@@ -98,7 +100,7 @@ TEST_F(VPGFileGenerationServiceTest, GetClassMacroList)
 
 TEST_F(VPGFileGenerationServiceTest, GenerateProperty)
 {
-    VPGFileGenerationService::GernerateProperty(*this->GetLogProperty(), L"VCC", L"", this->GetWorkspaceSource(), 
+    VPGFileGenerationService::GernerateProperty(this->GetLogProperty().get(), L"VCC", L"", this->GetWorkspaceSource(), 
         this->GetWorkspaceTarget(), this->GetWorkspaceTarget(), this->GetWorkspaceTarget(), this->GetWorkspaceTarget());
 
     // ------------------------------------------------------------------------------------------ //
@@ -133,8 +135,8 @@ TEST_F(VPGFileGenerationServiceTest, GenerateProperty)
     expectedObjectClassFileContent += L"{\r\n";
     expectedObjectClassFileContent += INDENT + L"GETSET(std::wstring, EnumA, L\"Default\")\r\n";
     expectedObjectClassFileContent += INDENT + L"GET(int64_t, EnumB, 0)\r\n";
-    expectedObjectClassFileContent += INDENT + L"GETUPTR(ClassA, EnumC)\r\n";
-    expectedObjectClassFileContent += INDENT + L"GETUPTR(ClassB, EnumD, 1, 2, 3)\r\n";
+    expectedObjectClassFileContent += INDENT + L"GETSPTR(ClassA, EnumC)\r\n";
+    expectedObjectClassFileContent += INDENT + L"GETSPTR(ClassB, EnumD, 1, 2, 3)\r\n";
     expectedObjectClassFileContent += INDENT + L"GETSET(EnumClass, EnumE, EnumClass::OptionA)\r\n";
     expectedObjectClassFileContent += L"\r\n";
     expectedObjectClassFileContent += INDENT + L"public:\r\n";

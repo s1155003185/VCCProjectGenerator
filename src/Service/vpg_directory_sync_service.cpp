@@ -18,7 +18,7 @@
 using namespace std;
 using namespace vcc;
 
-void VPGDirectorySyncService::CheckAndCreateDirectory(const LogProperty &logProperty, std::wstring workspace)
+void VPGDirectorySyncService::CheckAndCreateDirectory(const LogProperty *logProperty, std::wstring workspace)
 {
     try {
         // All type has same project structure
@@ -88,7 +88,7 @@ bool VPGDirectorySyncService::_ShouldExclude(const std::wstring &path, const std
     return result;
 }
 
-void VPGDirectorySyncService::_SyncWorkspace(const LogProperty &logProperty, std::wstring sourceWorkspace, std::wstring targetWorkspace,
+void VPGDirectorySyncService::_SyncWorkspace(const LogProperty *logProperty, std::wstring sourceWorkspace, std::wstring targetWorkspace,
             const std::vector<std::wstring> &includeOnlyFileFilter, const std::vector<std::wstring> &excludeOnlyFileFilter)
 {
     try {
@@ -171,7 +171,7 @@ void VPGDirectorySyncService::_SyncWorkspace(const LogProperty &logProperty, std
     }
 }
 
-void VPGDirectorySyncService::SyncWorkspace(const LogProperty &logProperty, VPGProjectType projectType, std::wstring workspace,
+void VPGDirectorySyncService::SyncWorkspace(const LogProperty *logProperty, VPGProjectType projectType, std::wstring workspace,
     const std::vector<std::wstring> &includeOnlyFileFilter, const std::vector<std::wstring> &excludeOnlyFileFilter)
 {
     try {

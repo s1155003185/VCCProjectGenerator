@@ -29,50 +29,63 @@ namespace vcc
         static const type& Get##var() const { return def; }
 
     // object
-    
-    #define GETUPTR(type, var, ...) \
-    protected: \
-        mutable std::unique_ptr<type> _##var = std::make_unique<type>(__VA_ARGS__); \
-    public: \
-        const type* Get##var() const { return _##var.get(); } \
-        void Set##var(std::unique_ptr<type>&& ptr) { _##var = std::move(ptr); }
 
     #define GETSPTR(type, var, ...) \
     protected: \
         mutable std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
     public: \
-        const std::shared_ptr<type> const Get##var() { return _##var; }
+        std::shared_ptr<type> Get##var() { return _##var; }
 
     // std::vector
     
     #define VECTOR(type, var) \
     protected: \
-        mutable std::vector<type> _##var; \
+        mutable std::shared_ptr<std::vector<type>> _##var = std::make_shared<std::vector<type>>(); \
     public: \
-        const std::vector<type>* Get##var() const { return &_##var; } \
-        void Insert##var(type value) { this->_##var.push_back(value); } \
-        void Insert##var(size_t index, type value) { this->_##var.insert(this->_##var.begin() + index, value); } \
+        const std::shared_ptr<std::vector<type>> Get##var() const { return _##var; } \
+        void Insert##var(type value) { this->_##var->push_back(value); } \
+        void Insert##var(size_t index, type value) { this->_##var->insert(this->_##var->begin() + index, value); } \
         void Insert##var(std::vector<type> &value) { this-> Insert##var(0, value); } \
-        void Insert##var(size_t index, std::vector<type> &value) { this->_##var.insert(this->_##var.begin() + index, value.begin(), value.end()); } \
-        void Remove##var(size_t index) { this->_##var.erase(this->_##var.begin() + index); } \
-        void Clear##var() { this->_##var.clear(); }
+        void Insert##var(size_t index, std::vector<type> &value) { this->_##var->insert(this->_##var->begin() + index, value.begin(), value.end()); } \
+        void Remove##var(size_t index) { this->_##var->erase(this->_##var->begin() + index); } \
+        void Clear##var() { this->_##var->clear(); }
+
+    #define VECTOR_SPTR(type, var) \
+    protected: \
+        mutable std::shared_ptr<std::vector<std::shared_ptr<type>>> _##var = std::make_shared<std::vector<std::shared_ptr<type>>>(); \
+    public: \
+        const std::shared_ptr<std::vector<std::shared_ptr<type>>> Get##var() const { return _##var; } \
+        void Insert##var(std::shared_ptr<type> value) { this->_##var->push_back(value); } \
+        void Insert##var(size_t index, std::shared_ptr<type> value) { this->_##var->insert(this->_##var->begin() + index, value); } \
+        void Insert##var(std::vector<std::shared_ptr<type>> &value) { this-> Insert##var(0, value); } \
+        void Insert##var(size_t index, std::vector<std::shared_ptr<type>> &value) { this->_##var->insert(this->_##var->begin() + index, value.begin(), value.end()); } \
+        void Remove##var(size_t index) { this->_##var->erase(this->_##var->begin() + index); } \
+        void Clear##var() { this->_##var->clear(); }
+
 
     #define SET(type, var) \
     protected: \
-        mutable std::set<type> _##var; \
+        mutable std::shared_ptr<std::set<type>> _##var = std::make_shared<std::set<type>>(); \
     public: \
-        const std::set<type> *Get##var() const { return &_##var; } \
-        void Insert##var(type value) {  this->_##var.insert(value); } \
-        void Insert##var(std::set<type> value) { this->_##var.insert(value.begin(), value.end()); } \
-        void Remove##var(type value) { this->_##var.erase(value); } \
-        void Clear##var() { this->_##var.clear(); }
+        const std::shared_ptr<std::set<type>> Get##var() const { return _##var; } \
+        void Insert##var(type value) {  this->_##var->insert(value); } \
+        void Insert##var(std::set<type> value) { this->_##var->insert(value.begin(), value.end()); } \
+        void Remove##var(type value) { this->_##var->erase(value); } \
+        void Clear##var() { this->_##var->clear(); }
+    
+    #define SET_SPTR(type, var) \
+    protected: \
+        mutable std::shared_ptr<std::set<std::shared_ptr<type>>> _##var = std::make_shared<std::set<std::shared_ptr<type>>>(); \
+    public: \
+        const std::shared_ptr<std::set<std::shared_ptr<type>>> Get##var() const { return _##var; } \
+        void Clear##var() { this->_##var->clear(); }
 
     #define MAP(keyType, valueType, var) \
     protected: \
-        mutable std::map<keyType, valueType> _##var; \
+        mutable std::shared_ptr<std::map<keyType, valueType>> _##var = std::make_shared<std::map<keyType, valueType>>(); \
     public: \
-        const std::map<keyType, valueType>* Get##var() const { return &_##var; } \
-        void Insert##var(keyType key, valueType value) const { _##var.insert(std::make_pair(key, value)); }
+        const std::shared_ptr<std::map<keyType, valueType>> Get##var() const { return _##var; } \
+        void Insert##var(keyType key, valueType value) const { _##var->insert(std::make_pair(key, value)); }
 
     //------------------------------------------------------------------------------------------------------//
     //--------------------------------------------- VCC Object ---------------------------------------------//
@@ -80,9 +93,8 @@ namespace vcc
     
     #define MANAGER(type, var, ...) \
     protected: \
-        std::unique_ptr<type> _##var = std::make_unique<type>(__VA_ARGS__); \
+        std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
     public: \
-        type* Get##var() { return _##var.get(); } \
-        void Set##var(std::unique_ptr<type>&& ptr) { _##var = std::move(ptr); }
+        type* Get##var() { return _##var.get(); }
         
 }

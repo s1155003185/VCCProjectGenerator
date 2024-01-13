@@ -142,6 +142,24 @@ namespace vcc
         }
     }
 
+	void RemoveFile(const std::wstring &filePath)
+    {
+        if (filePath.empty())
+            return;
+        try
+        {
+            if (!IsFileExists(filePath))
+                return;
+                
+            PATH currentPath(filePath);
+            filesystem::remove(filePath);
+        }
+        catch(const std::exception& e)
+        {
+            THROW_EXCEPTION(e);
+        }
+    }
+
     std::wstring ReadFile(const std::wstring &filePath)
     {
         std::wstring result = L"";

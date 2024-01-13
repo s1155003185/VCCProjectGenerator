@@ -46,19 +46,19 @@ class VPGFileSyncService
     private:
         static bool _IsSyncTag(const std::wstring &tag);
 
-        static VPGFileContentSyncMode _GetSyncMode(const XMLElement &codeElemet);
+        static VPGFileContentSyncMode _GetSyncMode(const XMLElement *codeElemet);
         static VPGFileContentSyncTag _GetSyncTag(std::wstring tagValue);
-        static const XMLElement *_GetTagFromCode(const XMLElement &code, const std::wstring tagName);
-        static bool _IsTagReplace(const XMLElement &child);
-        static bool _IsTagReserve(const XMLElement &child);
+        static const XMLElement *_GetTagFromCode(const XMLElement *code, const std::wstring tagName);
+        static bool _IsTagReplace(const XMLElement *child);
+        static bool _IsTagReserve(const XMLElement *child);
 
-        static std::wstring _GenerateForceCode(const VPGFileContentSyncMode &srcMode, const VPGFileContentSyncMode &destMode, const XMLElement &src, const XMLElement &dest);
-        static std::wstring _GenerateFullCode(const VPGFileContentSyncMode &srcMode, const VPGFileContentSyncMode &destMode, const XMLElement &src, const XMLElement &dest);
-        static std::wstring _GenerateDemandCode(const VPGFileContentSyncMode &srcMode, const VPGFileContentSyncMode &destMode, const XMLElement &src, const XMLElement &dest);
+        static std::wstring _GenerateForceCode(const VPGFileContentSyncMode srcMode, const VPGFileContentSyncMode destMode, const XMLElement *src, const XMLElement *dest);
+        static std::wstring _GenerateFullCode(const VPGFileContentSyncMode srcMode, const VPGFileContentSyncMode destMode, const XMLElement *src, const XMLElement *dest);
+        static std::wstring _GenerateDemandCode(const VPGFileContentSyncMode srcMode, const VPGFileContentSyncMode destMode, const XMLElement *src, const XMLElement *dest);
         static std::wstring _GenerateSkipCode(const std::wstring &dest);
     public:
         VPGFileSyncService() = default;
         ~VPGFileSyncService() {}
-        static void CopyFile(const LogProperty &logProperty, const std::wstring &sourcePath, const std::wstring &destgetPath);
-        static std::wstring SyncFileContent(const std::wstring &src, const std::wstring &dest, const VPGFileContentSyncMode &defaultMode, const std::wstring &commandDelimiter);
+        static void CopyFile(const LogProperty *logProperty, const std::wstring &sourcePath, const std::wstring &destgetPath);
+        static std::wstring SyncFileContent(const std::wstring &src, const std::wstring &dest, const VPGFileContentSyncMode defaultMode, const std::wstring &commandDelimiter);
 };

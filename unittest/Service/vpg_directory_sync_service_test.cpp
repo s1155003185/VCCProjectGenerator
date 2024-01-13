@@ -14,7 +14,7 @@ using namespace vcc;
 
 class VPGDirectorySyncServiceTest : public testing::Test 
 {
-    GETUPTR(LogProperty, LogProperty);
+    GETSPTR(LogProperty, LogProperty);
     GET(wstring, Workspace, L"bin/Debug/DirectorySyncServiceTest/");
     GET(wstring, WorkspaceSource, L"bin/Debug/DirectorySyncServiceTestSource");
     GET(wstring, WorkspaceTarget, L"bin/Debug/DirectorySyncServiceTestTarget");
@@ -85,7 +85,7 @@ class VPGDirectorySyncServiceTest : public testing::Test
             std::vector<std::wstring> includeOnly;
             std::vector<std::wstring> excludes;
             excludes.push_back(L"*FilterOut/");
-            VPGDirectorySyncService::_SyncWorkspace(*this->GetLogProperty(), 
+            VPGDirectorySyncService::_SyncWorkspace(this->GetLogProperty().get(), 
                 this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
                 includeOnly, excludes);
         }
@@ -111,7 +111,7 @@ class VPGDirectorySyncServiceTest : public testing::Test
             std::vector<std::wstring> includeOnly;
             includeOnly.push_back(L"*IncludeOnly/");
             std::vector<std::wstring> excludes;
-            VPGDirectorySyncService::_SyncWorkspace(*this->GetLogProperty(), 
+            VPGDirectorySyncService::_SyncWorkspace(this->GetLogProperty().get(), 
                 this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
                 includeOnly, excludes);
         }
@@ -138,7 +138,7 @@ class VPGDirectorySyncServiceTest : public testing::Test
             std::vector<std::wstring> includeOnly;
             std::vector<std::wstring> excludes;
             excludes.push_back(L"*FilterOut");
-            VPGDirectorySyncService::_SyncWorkspace(*this->GetLogProperty(), 
+            VPGDirectorySyncService::_SyncWorkspace(this->GetLogProperty().get(), 
                 this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
                 includeOnly, excludes);
         }
@@ -164,7 +164,7 @@ class VPGDirectorySyncServiceTest : public testing::Test
             std::vector<std::wstring> includeOnly;
             includeOnly.push_back(L"*IncludeOnly");
             std::vector<std::wstring> excludes;
-            VPGDirectorySyncService::_SyncWorkspace(*this->GetLogProperty(), 
+            VPGDirectorySyncService::_SyncWorkspace(this->GetLogProperty().get(), 
                 this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
                 includeOnly, excludes);
         }
@@ -172,7 +172,7 @@ class VPGDirectorySyncServiceTest : public testing::Test
 
 TEST_F(VPGDirectorySyncServiceTest, CheckAndCreateDirectory)
 {
-    VPGDirectorySyncService::CheckAndCreateDirectory(*this->GetLogProperty(), this->GetWorkspace());
+    VPGDirectorySyncService::CheckAndCreateDirectory(this->GetLogProperty().get(), this->GetWorkspace());
     // bin
     EXPECT_TRUE(this->CheckFolderExists(L"bin"));
     EXPECT_TRUE(this->CheckFolderExists(L"bin/Debug"));

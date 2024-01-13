@@ -9,6 +9,7 @@
 #include "exception_type.hpp"
 #include "file_helper.hpp"
 #include "log_property.hpp"
+#include "memory_macro.hpp"
 #include "xml_reader.hpp"
 
 #include "vpg_code_reader.hpp"
@@ -20,15 +21,15 @@ bool VPGFileSyncService::_IsSyncTag(const std::wstring &tag)
     return tag == SYNC_TOKEN_LONG || tag == SYNC_TOKEN_SHORT;
 }
 
-VPGFileContentSyncMode VPGFileSyncService::_GetSyncMode(const XMLElement &codeElemet)
+VPGFileContentSyncMode VPGFileSyncService::_GetSyncMode(const XMLElement *codeElemet)
 {
     try
     {
-        for (const XMLElement &child : *codeElemet.GetChildren()) {
-            if (child.GetNamespace() == VCC_NAMESPACE && child.GetName() == VCC_NAME) {
-                for (const XMLAttribute &attr : *child.GetAttributes()) {
-                    if (_IsSyncTag(attr.GetName())) {
-                        std::wstring value = attr.GetValue();
+        for (shared_ptr<XMLElement> child : *codeElemet->GetChildren()) {
+            if (child->GetNamespace() == VCC_NAMESPACE && child->GetName() == VCC_NAME) {
+                for (shared_ptr<XMLAttribute> attr : *child->GetAttributes()) {
+                    if (_IsSyncTag(attr->GetName())) {
+                        std::wstring value = attr->GetValue();
                         ToUpper(value);
                         if (value == FORCE_MODE) {
                             return VPGFileContentSyncMode::Force;
@@ -70,13 +71,13 @@ VPGFileContentSyncTag VPGFileSyncService::_GetSyncTag(std::wstring tagValue)
     return VPGFileContentSyncTag::NA;
 }
 
-const XMLElement *VPGFileSyncService::_GetTagFromCode(const XMLElement &code, const std::wstring tagName)
+const XMLElement *VPGFileSyncService::_GetTagFromCode(const XMLElement *code, const std::wstring tagName)
 {
     try
     {
-        for (size_t i = 0; i < code.GetChildren()->size(); i++) {
-            if (code.GetChildren()->at(i).GetNamespace() == VCC_NAMESPACE && code.GetChildren()->at(i).GetName() == tagName)
-                return &(code.GetChildren()->at(i));
+        for (size_t i = 0; i < code->GetChildren()->size(); i++) {
+            if (code->GetChildren()->at(i)->GetNamespace() == VCC_NAMESPACE && code->GetChildren()->at(i)->GetName() == tagName)
+                return code->GetChildren()->at(i).get();
         }
     }
     catch(const std::exception& e)
@@ -86,13 +87,13 @@ const XMLElement *VPGFileSyncService::_GetTagFromCode(const XMLElement &code, co
     return nullptr;
 }
 
-bool VPGFileSyncService::_IsTagReplace(const XMLElement &child)
+bool VPGFileSyncService::_IsTagReplace(const XMLElement *child)
 {
     try
     {
-        for (const XMLAttribute &attr : *child.GetAttributes()){
-            if (_IsSyncTag(attr.GetName())) {
-                std::wstring value = attr.GetValue();
+        for (shared_ptr<XMLAttribute> attr : *child->GetAttributes()){
+            if (_IsSyncTag(attr->GetName())) {
+                std::wstring value = attr->GetValue();
                 ToUpper(value);
                 return value == REPLACE_TAG;
             }
@@ -105,13 +106,13 @@ bool VPGFileSyncService::_IsTagReplace(const XMLElement &child)
     return false;
 }
 
-bool VPGFileSyncService::_IsTagReserve(const XMLElement &child)
+bool VPGFileSyncService::_IsTagReserve(const XMLElement *child)
 {
     try
     {
-        for (const XMLAttribute &attr : *child.GetAttributes()){
-            if (_IsSyncTag(attr.GetName())) {
-                std::wstring value = attr.GetValue();
+        for (shared_ptr<XMLAttribute> attr : *child->GetAttributes()){
+            if (_IsSyncTag(attr->GetName())) {
+                std::wstring value = attr->GetValue();
                 ToUpper(value);
                 return value == RESERVE_TAG;
             }
@@ -124,7 +125,7 @@ bool VPGFileSyncService::_IsTagReserve(const XMLElement &child)
     return false;
 }
 
-void VPGFileSyncService::CopyFile(const LogProperty &logProperty, const std::wstring &sourcePath, const std::wstring &destgetPath)
+void VPGFileSyncService::CopyFile(const LogProperty *logProperty, const std::wstring &sourcePath, const std::wstring &destgetPath)
 {
     try
     {
@@ -147,84 +148,84 @@ void VPGFileSyncService::CopyFile(const LogProperty &logProperty, const std::wst
     }
 }
 
-std::wstring VPGFileSyncService::_GenerateForceCode(const VPGFileContentSyncMode &srcMode, const VPGFileContentSyncMode &destMode, const XMLElement &src, const XMLElement &dest)
+std::wstring VPGFileSyncService::_GenerateForceCode(const VPGFileContentSyncMode srcMode, const VPGFileContentSyncMode destMode, const XMLElement *src, const XMLElement *dest)
 {
     std::wstring result = L"";
     if (destMode == VPGFileContentSyncMode::NA) {
-        for (const XMLElement &child : *src.GetChildren())
-            result += child.GetFullText();
+        for (shared_ptr<XMLElement> child : *src->GetChildren())
+            result += child->GetFullText();
     } else {
-        for (const XMLElement &child : *dest.GetChildren()) {
-            result += child.GetFullText();
-            if (child.GetNamespace() == VCC_NAMESPACE && child.GetName() == VCC_NAME)
+        for (shared_ptr<XMLElement> child : *dest->GetChildren()) {
+            result += child->GetFullText();
+            if (child->GetNamespace() == VCC_NAMESPACE && child->GetName() == VCC_NAME)
                 break;
         }
         bool shouldSkip = srcMode != VPGFileContentSyncMode::NA;
-        for (const XMLElement &child : *src.GetChildren()) {
+        for (shared_ptr<XMLElement> child : *src->GetChildren()) {
             if (!shouldSkip)
-                result += child.GetFullText();
-            if (child.GetNamespace() == VCC_NAMESPACE && child.GetName() == VCC_NAME)
+                result += child->GetFullText();
+            if (child->GetNamespace() == VCC_NAMESPACE && child->GetName() == VCC_NAME)
                 shouldSkip = false;
         }
     }
     return result;
 }
 
-std::wstring VPGFileSyncService::_GenerateFullCode(const VPGFileContentSyncMode &srcMode, const VPGFileContentSyncMode &destMode, const XMLElement &src, const XMLElement &dest)
+std::wstring VPGFileSyncService::_GenerateFullCode(const VPGFileContentSyncMode srcMode, const VPGFileContentSyncMode destMode, const XMLElement *src, const XMLElement *dest)
 {
     std::wstring result = L"";
     // if dest has header then add header, skip source header
     if (destMode != VPGFileContentSyncMode::NA) {
-        for (const XMLElement &child : *dest.GetChildren()) {
-            result += child.GetFullText();
-            if (child.GetNamespace() == VCC_NAMESPACE && child.GetName() == VCC_NAME)
+        for (shared_ptr<XMLElement> child : *dest->GetChildren()) {
+            result += child->GetFullText();
+            if (child->GetNamespace() == VCC_NAMESPACE && child->GetName() == VCC_NAME)
                 break;
         }
     }
     bool shouldSkip = srcMode != VPGFileContentSyncMode::NA;
-    for (const XMLElement &child : *src.GetChildren()) {
+    for (shared_ptr<XMLElement> child : *src->GetChildren()) {
         if (!shouldSkip) {
             // if find tag then search tag in source, if reserve, then use source
-            if (child.GetNamespace() == VCC_NAMESPACE) {
-                const XMLElement *destTag = VPGFileSyncService::_GetTagFromCode(dest, child.GetName());
-                if (destTag != nullptr && VPGFileSyncService::_IsTagReserve(*destTag)) {
+            if (child->GetNamespace() == VCC_NAMESPACE) {
+                const XMLElement *destTag = VPGFileSyncService::_GetTagFromCode(dest, child->GetName());
+                if (destTag != nullptr && VPGFileSyncService::_IsTagReserve(destTag)) {
                     result += destTag->GetFullText();
                 } else
-                    result += child.GetFullText();
+                    result += child->GetFullText();
             } else
-                result += child.GetFullText();
+                result += child->GetFullText();
         }
-        if (child.GetNamespace() == VCC_NAMESPACE && child.GetName() == VCC_NAME)
+        if (child->GetNamespace() == VCC_NAMESPACE && child->GetName() == VCC_NAME)
             shouldSkip = false;
     }
     return result;
 }
 
-std::wstring VPGFileSyncService::_GenerateDemandCode(const VPGFileContentSyncMode &srcMode, const VPGFileContentSyncMode &destMode, const XMLElement &src, const XMLElement &dest)
+std::wstring VPGFileSyncService::_GenerateDemandCode(const VPGFileContentSyncMode srcMode, const VPGFileContentSyncMode destMode, const XMLElement *src, const XMLElement *dest)
 {
     std::wstring result = L"";
     // if dest has header then add header, skip source header
     if (destMode != VPGFileContentSyncMode::NA) {
-        for (const XMLElement &child : *dest.GetChildren()) {
-            result += child.GetFullText();
-            if (child.GetNamespace() == VCC_NAMESPACE && child.GetName() == VCC_NAME)
+        for (shared_ptr<XMLElement> child : *dest->GetChildren()) {
+            result += child->GetFullText();
+            if (child->GetNamespace() == VCC_NAMESPACE && child->GetName() == VCC_NAME)
                 break;
         }
     }
     bool shouldSkip = srcMode != VPGFileContentSyncMode::NA;
-    for (const XMLElement &child : *dest.GetChildren()) {
+    for (shared_ptr<XMLElement> child : *dest->GetChildren()) {
         if (!shouldSkip) {
             // if find tag then search tag in source, if reserve, then use source
-            if (child.GetNamespace() == VCC_NAMESPACE) {
-                const XMLElement *srcTag = VPGFileSyncService::_GetTagFromCode(src, child.GetName());
-                if (srcTag != nullptr && VPGFileSyncService::_IsTagReplace(child)) {
+            if (child->GetNamespace() == VCC_NAMESPACE) {
+                const XMLElement *srcTag = VPGFileSyncService::_GetTagFromCode(src, child->GetName());
+                if (srcTag != nullptr && VPGFileSyncService::_IsTagReplace(child.get())) {
                     result += srcTag->GetFullText();
                 } else
-                    result += child.GetFullText();
+                    result += child->GetFullText();
             } else
-                result += child.GetFullText();
+                result += child->GetFullText();
         }
-        if (child.GetNamespace() == VCC_NAMESPACE && child.GetName() == VCC_NAME)
+        if (child->GetNamespace() == VCC_NAMESPACE && child->GetName() == VCC_NAME)
             shouldSkip = false;
     }
     return result;
@@ -235,30 +236,30 @@ std::wstring VPGFileSyncService::_GenerateSkipCode(const std::wstring &dest)
     return std::wstring(dest);
 }
 
-std::wstring VPGFileSyncService::SyncFileContent(const std::wstring &src, const std::wstring &dest, const VPGFileContentSyncMode &defaultMode, const std::wstring &commandDelimiter)
+std::wstring VPGFileSyncService::SyncFileContent(const std::wstring &src, const std::wstring &dest, const VPGFileContentSyncMode defaultMode, const std::wstring &commandDelimiter)
 {
     std::wstring result = L"";
     try
     {
         std::unique_ptr<VPGCodeReader> reader = std::make_unique<VPGCodeReader>(commandDelimiter);
-        XMLElement srcElement;
-        XMLElement destElement;
+        DECLARE_SPTR(XMLElement, srcElement);
+        DECLARE_SPTR(XMLElement, destElement);
         reader->Parse(src, srcElement);
         reader->Parse(dest, destElement);
 
-        VPGFileContentSyncMode srcSyncMode = _GetSyncMode(srcElement);
-        VPGFileContentSyncMode destSyncMode = _GetSyncMode(destElement);
+        VPGFileContentSyncMode srcSyncMode = _GetSyncMode(srcElement.get());
+        VPGFileContentSyncMode destSyncMode = _GetSyncMode(destElement.get());
 
         // read first line to determine sync mode. Dest first, then src. If not exists, then default
         VPGFileContentSyncMode mode = destSyncMode != VPGFileContentSyncMode::NA ? destSyncMode : (srcSyncMode != VPGFileContentSyncMode::NA ? srcSyncMode : defaultMode);
         switch (mode)
         {
         case VPGFileContentSyncMode::Force:
-            return VPGFileSyncService::_GenerateForceCode(srcSyncMode, destSyncMode, srcElement, destElement);
+            return VPGFileSyncService::_GenerateForceCode(srcSyncMode, destSyncMode, srcElement.get(), destElement.get());
         case VPGFileContentSyncMode::Full:
-            return VPGFileSyncService::_GenerateFullCode(srcSyncMode, destSyncMode, srcElement, destElement);
+            return VPGFileSyncService::_GenerateFullCode(srcSyncMode, destSyncMode, srcElement.get(), destElement.get());
         case VPGFileContentSyncMode::Demand:
-            return VPGFileSyncService::_GenerateDemandCode(srcSyncMode, destSyncMode, srcElement, destElement);
+            return VPGFileSyncService::_GenerateDemandCode(srcSyncMode, destSyncMode, srcElement.get(), destElement.get());
         case VPGFileContentSyncMode::Skip:
             return VPGFileSyncService::_GenerateSkipCode(dest);
         default:

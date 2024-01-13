@@ -7,6 +7,7 @@
 #include "log_service.hpp"
 #include "string_helper.hpp"
 
+#include <memory>
 #include <mutex>
 #include <shared_mutex>
 
@@ -29,8 +30,8 @@ namespace vcc
             { 
                 std::wstring message = this->_GetRedoMessage();
                 if (!IsEmptyOrWhitespace(message)) {
-                    LogProperty defaultProperty;
-                    LogService::LogInfo(defaultProperty, L"", message); 
+                    std::shared_ptr<LogProperty> defaultProperty = std::make_shared<LogProperty>();
+                    LogService::LogInfo(defaultProperty.get(), L"", message); 
                 }
             }
             
@@ -38,8 +39,8 @@ namespace vcc
             { 
                 std::wstring message = this->_GetUndoMessage();
                 if (!IsEmptyOrWhitespace(message)) {
-                    LogProperty defaultProperty;
-                    LogService::LogInfo(defaultProperty, L"", message); 
+                    std::shared_ptr<LogProperty> defaultProperty = std::make_shared<LogProperty>();
+                    LogService::LogInfo(defaultProperty.get(), L"", message); 
                 }
             }
 

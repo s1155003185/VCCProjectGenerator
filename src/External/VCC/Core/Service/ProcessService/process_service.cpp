@@ -106,7 +106,7 @@ namespace vcc
             #endif
         }
 
-        std::wstring ProcessService::Execute(const LogProperty &logProperty, const std::wstring &id, const std::wstring &command)
+        std::wstring ProcessService::Execute(const LogProperty *logProperty, const std::wstring &id, const std::wstring &command)
         {
             LogService::LogProcess(logProperty, id, command);
 
@@ -121,7 +121,7 @@ namespace vcc
             return result;
         }
 
-        std::wstring ProcessService::Execute(const LogProperty &logProperty, const std::wstring &id, const std::wstring &workspace, const std::wstring &command)
+        std::wstring ProcessService::Execute(const LogProperty *logProperty, const std::wstring &id, const std::wstring &workspace, const std::wstring &command)
         {
             std::wstring currentDirectory = L"";
             std::wstring result = L"";

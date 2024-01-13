@@ -5,6 +5,7 @@
 #include <string>
 
 #include "config_reader.hpp"
+#include "memory_macro.hpp"
 
 using namespace vcc;
 
@@ -15,10 +16,10 @@ TEST(ConfigReaderTest, Full)
     str += L"# command\r\n";
     str += L"name1=value1\r\n";
     str += L"name2 = value2\r\n";
-    ConfigElement element;
+    DECLARE_SPTR(ConfigElement, element);
     reader->Parse(str, element);
-    EXPECT_EQ(element.GetConfigs()->size(), (size_t)2);
-    for (auto it = element.GetConfigs()->begin(); it != element.GetConfigs()->end(); it++) {
+    EXPECT_EQ(element->GetConfigs()->size(), (size_t)2);
+    for (auto it = element->GetConfigs()->begin(); it != element->GetConfigs()->end(); it++) {
         EXPECT_TRUE((it->first == L"name1" && it->second == L"value1") || (it->first == L"name2" && it->second == L"value2"));
     }
 }

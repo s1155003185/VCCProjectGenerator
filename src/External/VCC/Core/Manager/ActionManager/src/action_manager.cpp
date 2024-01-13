@@ -10,7 +10,7 @@ namespace vcc
     int64_t ActionManager::_GetFirstSeqNo(bool fromBeginning)
     {
         try {
-            return this->_Actions.empty() ? -1 : (fromBeginning ? this->_Actions.begin()->first : this->_Actions.rbegin()->first);
+            return this->_Actions->empty() ? -1 : (fromBeginning ? this->_Actions->begin()->first : this->_Actions->rbegin()->first);
         } catch (const std::exception &e) {
             THROW_EXCEPTION(e);
         }
@@ -18,11 +18,11 @@ namespace vcc
     }
 
     int64_t ActionManager::_Redo(int64_t noOfStep) 
-    {
+    { 
         for (int64_t i = 0; i < noOfStep; i++) {
             if (this->_CurrentSeqNo < this->_GetFirstSeqNo(false)) {
                 this->_CurrentSeqNo++;
-                this->_Actions[this->_CurrentSeqNo]->Redo();
+                this->_Actions->find(this->_CurrentSeqNo)->second->Redo();
             }
         }
         return this->_CurrentSeqNo;
@@ -32,7 +32,7 @@ namespace vcc
     {
         for (int64_t i = 0; i < noOfStep; i++) {
             if (this->_CurrentSeqNo > -1 && this->_CurrentSeqNo >= this->_GetFirstSeqNo(true)) {
-                this->_Actions[this->_CurrentSeqNo]->Undo();
+                this->_Actions->find(this->_CurrentSeqNo)->second->Undo();
                 this->_CurrentSeqNo--;
             }
         }
@@ -42,23 +42,23 @@ namespace vcc
     int64_t ActionManager::_RemoveAction(int64_t noOfAction, bool fromBeginning)
     {
         for (auto i = 0; i < noOfAction; i++) {
-            if (this->_Actions.size() > 0)
-                this->_Actions.erase(fromBeginning ? this->_Actions.begin()->first : this->_Actions.rbegin()->first);
+            if (this->_Actions->size() > 0)
+                this->_Actions->erase(fromBeginning ? this->_Actions->begin()->first : this->_Actions->rbegin()->first);
         }
 
-        this->_CurrentSeqNo = this->_Actions.size() > 0 ? min(this->_CurrentSeqNo, this->_GetFirstSeqNo(false)) : -1;
+        this->_CurrentSeqNo = this->_Actions->size() > 0 ? min(this->_CurrentSeqNo, this->_GetFirstSeqNo(false)) : -1;
         return this->_CurrentSeqNo;
     }
 
     int64_t ActionManager::_ChopActionListToSize(int64_t size, bool fromBeginning)
     {
-        int64_t needToRemove = max(static_cast<int64_t>(this->_Actions.size()) - size, static_cast<int64_t>(0));
+        int64_t needToRemove = max(static_cast<int64_t>(this->_Actions->size()) - size, static_cast<int64_t>(0));
         return this->_RemoveAction(needToRemove, fromBeginning);
     }
 
     int64_t ActionManager::_Clear()
     {
-        this->_Actions.clear();
+        this->_Actions->clear();
         this->_CurrentSeqNo = -1;
         return this->_CurrentSeqNo;
     }
@@ -90,11 +90,11 @@ namespace vcc
         // 3. Do Action
         // 4. Current Index + 1
         this->_RemoveAction(this->_GetFirstSeqNo(false) - this->_CurrentSeqNo, false);
-        if (this->_Actions.size() > 0)
+        if (this->_Actions->size() > 0)
             this->_MaxSeqNo = this->_GetFirstSeqNo(false);
         int64_t nextSeqNo = this->_MaxSeqNo + 1;
         action->SetSeqNo(nextSeqNo);
-        this->_Actions[nextSeqNo] = action;
+        this->_Actions->emplace(nextSeqNo, action);
         action->Redo();
         this->_MaxSeqNo = this->_CurrentSeqNo = this->_GetFirstSeqNo(false);
 

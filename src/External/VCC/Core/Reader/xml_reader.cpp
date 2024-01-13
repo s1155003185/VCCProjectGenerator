@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "exception_macro.hpp"
+#include "memory_macro.hpp"
 #include "string_helper.hpp"
 
 namespace vcc
@@ -123,7 +124,7 @@ namespace vcc
         }
     }
             
-    bool XMLReader::ParseXMLTagHeader(const std::wstring &xmlData, size_t &pos, XMLElement &element)
+    bool XMLReader::ParseXMLTagHeader(const std::wstring &xmlData, size_t &pos, std::shared_ptr<XMLElement> element)
     {
         try
         {
@@ -149,7 +150,7 @@ namespace vcc
                 THROW_EXCEPTION_MSG(ExceptionType::ReaderError, _GetErrorMessage(pos, xmlData[pos], L"> missing"));
 
             if (xmlData[pos] == L':') {
-                element._Namespace = tagName;
+                element->_Namespace = tagName;
                 pos++;
                 tagName = _GetTag(xmlData, pos);
                 if (tagName.empty())
@@ -158,16 +159,16 @@ namespace vcc
                 if (pos >= dataLength)
                     THROW_EXCEPTION_MSG(ExceptionType::ReaderError, _GetErrorMessage(pos, xmlData[pos], L"> missing"));
             }
-            element._Name = tagName;
+            element->_Name = tagName;
             while (!_IsNextCharTagEnd(xmlData, pos)) {
-                XMLAttribute attr;
-                attr._Name = _GetTag(xmlData, pos);
+                DECLARE_SPTR(XMLAttribute, attr);
+                attr->_Name = _GetTag(xmlData, pos);
                 pos++;
                 if (pos >= dataLength || xmlData[pos] != L'=')
                     THROW_EXCEPTION_MSG(ExceptionType::ReaderError, _GetErrorMessage(pos, xmlData[pos], L"= missing"));
                 pos++;
-                attr._Value = _GetString(xmlData, pos);
-                element._Attributes.push_back(attr);
+                attr->_Value = _GetString(xmlData, pos);
+                element->_Attributes->push_back(attr);
                 pos++;
             }
             // tag end with no ceontent
@@ -180,23 +181,23 @@ namespace vcc
         return false;
     }
 
-    void XMLReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, XMLElement &element)
+    void XMLReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, std::shared_ptr<XMLElement> element)
     {
         try
         {
             while (pos < xmlData.length())
             {
-                XMLElement child;
+                DECLARE_SPTR(XMLElement, child);
                 ParseXMLElement(xmlData, pos, child);
-                if (!child._Name.empty()) {
-                    element._Children.push_back(child);
+                if (!child->_Name.empty()) {
+                    element->_Children->push_back(child);
                     
-                    std::wstring endTag = L"</" + (!child._Namespace.empty() ? (child._Namespace + L":") : L"") + child._Name + L">";
-                    if (!child._FullText.ends_with(endTag))
+                    std::wstring endTag = L"</" + (!child->_Namespace.empty() ? (child->_Namespace + L":") : L"") + child->_Name + L">";
+                    if (!child->_FullText.ends_with(endTag))
                         THROW_EXCEPTION_MSG(ExceptionType::ReaderError, _GetErrorMessage(pos, xmlData[pos], L"end tab " + endTag + L" missing"));
                     }
                 else {
-                    element._Text = child._Text;
+                    element->_Text = child->_Text;
                     break;
                 }                   
                 pos++;
@@ -208,12 +209,12 @@ namespace vcc
         }
     }
     
-    void XMLReader::RemoveXMLTagTail(const std::wstring &xmlData, size_t &pos, XMLElement &element)
+    void XMLReader::RemoveXMLTagTail(const std::wstring &xmlData, size_t &pos, std::shared_ptr<XMLElement> element)
     {
         try
         {
             GetNextCharPos(xmlData, pos, true);
-            std::wstring endTag = L"</" + (!element._Namespace.empty() ? (element._Namespace + L":") : L"") + element._Name + L">";
+            std::wstring endTag = L"</" + (!element->_Namespace.empty() ? (element->_Namespace + L":") : L"") + element->_Name + L">";
             if (!xmlData.substr(pos).starts_with(endTag))
                 THROW_EXCEPTION_MSG(ExceptionType::ReaderError, _GetErrorMessage(pos, xmlData[pos], L"end tab " + endTag + L" missing"));
             pos += endTag.length() - 1;
@@ -224,7 +225,7 @@ namespace vcc
         } 
     }
     
-    void XMLReader::ParseXMLTag(const std::wstring &xmlData, size_t &pos, XMLElement &element)
+    void XMLReader::ParseXMLTag(const std::wstring &xmlData, size_t &pos, std::shared_ptr<XMLElement> element)
     {
         try
         {
@@ -252,7 +253,7 @@ namespace vcc
         }        
     }
 
-    void XMLReader::ParseXMLElement(const std::wstring &xmlData, size_t &pos, XMLElement &element)
+    void XMLReader::ParseXMLElement(const std::wstring &xmlData, size_t &pos, std::shared_ptr<XMLElement> element)
     {
         size_t dataLength = xmlData.length();
         try
@@ -278,14 +279,14 @@ namespace vcc
                         endPos++;
                     }
                     // if not space or tab, then it must be text
-                    element._Text = GetUnescapeString(EscapeStringType::XML, xmlData.substr(pos, endPos - pos + 1));
-                    Trim(element._Text);
+                    element->_Text = GetUnescapeString(EscapeStringType::XML, xmlData.substr(pos, endPos - pos + 1));
+                    Trim(element->_Text);
                     pos = endPos;
                     break;
                 }
                 GetNextCharPos(xmlData, pos, false);
             }
-            element._FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
+            element->_FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
         }
         catch(const std::exception& e)
         {
@@ -293,7 +294,7 @@ namespace vcc
         }
     }
 
-    void XMLReader::Parse(const std::wstring &xml, XMLElement &element)
+    void XMLReader::Parse(const std::wstring &xml, std::shared_ptr<XMLElement> element)
     {
         try
         {
@@ -306,7 +307,7 @@ namespace vcc
         }
     }
 
-    void XMLReader::Parse(const std::wstring &xml, size_t &pos, XMLElement &element)
+    void XMLReader::Parse(const std::wstring &xml, size_t &pos, std::shared_ptr<XMLElement> element)
     {
         try
         {

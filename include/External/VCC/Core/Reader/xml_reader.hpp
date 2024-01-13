@@ -32,8 +32,8 @@ namespace vcc
 
         GETSET(std::wstring, Namespace, L"");
         GETSET(std::wstring, Name, L"");
-        VECTOR(XMLAttribute, Attributes);
-        VECTOR(XMLElement, Children);
+        VECTOR_SPTR(XMLAttribute, Attributes);
+        VECTOR_SPTR(XMLElement, Children);
         GETSET(std::wstring, Text, L"");
         GETSET(std::wstring, FullText, L"");
 
@@ -61,15 +61,15 @@ namespace vcc
             virtual ~XMLReader() {}
 
             // tag
-            virtual bool ParseXMLTagHeader(const std::wstring &xmlData, size_t &pos, XMLElement &element); // ture if have tag end
-            virtual void ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, XMLElement &element);
-            virtual void RemoveXMLTagTail(const std::wstring &xmlData, size_t &pos, XMLElement &element);
+            virtual bool ParseXMLTagHeader(const std::wstring &xmlData, size_t &pos, std::shared_ptr<XMLElement> element); // ture if have tag end
+            virtual void ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, std::shared_ptr<XMLElement> element);
+            virtual void RemoveXMLTagTail(const std::wstring &xmlData, size_t &pos, std::shared_ptr<XMLElement> element);
 
             // content
-            virtual void ParseXMLTag(const std::wstring &xmlData, size_t &pos, XMLElement &element);
-            virtual void ParseXMLElement(const std::wstring &xmlData, size_t &pos, XMLElement &element);
+            virtual void ParseXMLTag(const std::wstring &xmlData, size_t &pos, std::shared_ptr<XMLElement> element);
+            virtual void ParseXMLElement(const std::wstring &xmlData, size_t &pos, std::shared_ptr<XMLElement> element);
 
-            virtual void Parse(const std::wstring &xml, XMLElement &element);
-            virtual void Parse(const std::wstring &xml, size_t &pos, XMLElement &element);
+            virtual void Parse(const std::wstring &xml, std::shared_ptr<XMLElement> element);
+            virtual void Parse(const std::wstring &xml, size_t &pos, std::shared_ptr<XMLElement> element);
     };
 }

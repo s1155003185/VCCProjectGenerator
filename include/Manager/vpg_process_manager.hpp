@@ -12,7 +12,7 @@ using namespace vcc;
 
 class VPGProcessManager
 {
-    GETUPTR(LogProperty, LogProperty, LogPropertyType::None);
+    GETSPTR(LogProperty, LogProperty, LogPropertyType::None);
 
     // project
     GETSET(std::wstring, Workspace, L"");
