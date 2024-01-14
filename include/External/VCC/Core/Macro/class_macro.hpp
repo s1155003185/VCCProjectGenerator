@@ -95,7 +95,8 @@ namespace vcc
         const std::shared_ptr<std::map<keyType, valueType>> Get##var() const { return _##var; } \
         void Insert##var(keyType key, valueType value) const { _##var->insert(std::make_pair(key, value)); } \
         void Insert##var(const std::map<keyType, valueType> &value) const { _##var->insert(value.begin(), value.end()); } \
-        void Clone##var(const std::map<keyType, valueType> &value) { this->_##var = std::make_shared<std::map<keyType, valueType>>(); this->Insert##var(value); }
+        void Clone##var(const std::map<keyType, valueType> &value) { this->_##var = std::make_shared<std::map<keyType, valueType>>(); this->Insert##var(value); } \
+        void Clear##var() { this->_##var->clear(); }
 
     //------------------------------------------------------------------------------------------------------//
     //--------------------------------------------- VCC Object ---------------------------------------------//
