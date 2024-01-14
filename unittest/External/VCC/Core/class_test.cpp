@@ -42,6 +42,8 @@ class ClassMacroTestClass : public BaseObject
             obj->CloneS(*this->GetS());
             obj->CloneSO(*this->GetSO());
             obj->CloneM(*this->GetM());
+
+            // TODO: Handle Map
             obj->CloneMO(*this->GetMO());
             return obj;
         };
