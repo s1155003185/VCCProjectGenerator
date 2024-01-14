@@ -18,7 +18,8 @@ namespace vcc
             virtual ~ConfigElement() {}
 
             virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<ConfigElement>(*this);
+                std::shared_ptr<IObject> obj = std::make_shared<ConfigElement>(*this);
+                return obj;
             }
     };
 

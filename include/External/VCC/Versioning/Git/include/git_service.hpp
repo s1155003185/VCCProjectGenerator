@@ -23,7 +23,19 @@ namespace vcc
             virtual ~GitConfig() {}
 
             virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitConfig>();
+                std::shared_ptr<GitConfig> obj = std::make_shared<GitConfig>(*this);
+                obj->CloneConfigs(*this->GetConfigs().get());
+                return obj;
+            }
+    };
+
+    class GitStatus : public BaseObject {
+        public:
+            GitStatus() : BaseObject() {}
+            virtual ~GitStatus() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitStatus>();
             }
     };
 
