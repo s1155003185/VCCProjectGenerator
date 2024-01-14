@@ -25,7 +25,7 @@ class ClassMacroTestClass : public BaseObject
 {
     GETSET(int, N, 0)
     VECTOR(int, V)
-    VECTOR(std::shared_ptr<ClassMacroTestClassElement>, VO)
+    VECTOR_SPTR(ClassMacroTestClassElement, VO)
     SET(int, S)
     SET(std::shared_ptr<ClassMacroTestClassElement>, SO)
     MAP(int, std::wstring, M)

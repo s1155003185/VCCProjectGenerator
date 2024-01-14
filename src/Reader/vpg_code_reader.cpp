@@ -3,6 +3,7 @@
 #include <string>
 
 #include "exception_macro.hpp"
+#include "memory_macro.hpp"
 #include "string_helper.hpp"
 
 using namespace vcc;
@@ -12,11 +13,11 @@ VPGCodeReader::VPGCodeReader(std::wstring commandDelimiter)
     this->_CommandDelimiter = commandDelimiter;
 }
 
-void VPGCodeReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, XMLElement &element)
+void VPGCodeReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, std::shared_ptr<XMLElement> element)
 {
     try
     {
-        std::wstring endTag = L"</" + (!element.GetNamespace().empty() ? (element.GetNamespace() + L":") : L"") + element.GetName() + L">";
+        std::wstring endTag = L"</" + (!element->GetNamespace().empty() ? (element->GetNamespace() + L":") : L"") + element->GetName() + L">";
         while (pos < xmlData.length())
         {
             if (xmlData.substr(pos).starts_with(endTag)) {
@@ -32,7 +33,7 @@ void VPGCodeReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos,
     }
 }
 
-void VPGCodeReader::ParseXMLElement(const std::wstring &xmlData, size_t &pos, XMLElement &element)
+void VPGCodeReader::ParseXMLElement(const std::wstring &xmlData, size_t &pos, std::shared_ptr<XMLElement> element)
 {
    size_t dataLength = xmlData.length();
     try
@@ -42,9 +43,9 @@ void VPGCodeReader::ParseXMLElement(const std::wstring &xmlData, size_t &pos, XM
             if (HasPrefix(xmlData, this->_CommandDelimiter, pos) && HasPrefixTrimSpace(xmlData, this->_CommandDelimiter + L"<vcc:", pos)) {
                 if (pos > 0) {
                     pos--;
-                    XMLElement previous;
-                    previous.SetFullText(pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos));
-                    element.InsertChildren(previous);
+                    DECLARE_SPTR(XMLElement, previous);
+                    previous->SetFullText(pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos));
+                    element->InsertChildren(previous);
 
                     pos++;
                     startPos = pos;
@@ -52,10 +53,10 @@ void VPGCodeReader::ParseXMLElement(const std::wstring &xmlData, size_t &pos, XM
 
                 pos = xmlData.find(L"<", pos);
 
-                XMLElement tmp;
+                DECLARE_SPTR(XMLElement, tmp);
                 ParseXMLTag(xmlData, pos, tmp);
-                tmp.SetFullText(pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos));
-                element.InsertChildren(tmp);
+                tmp->SetFullText(pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos));
+                element->InsertChildren(tmp);
 
                 pos++;
                 startPos = pos;
@@ -63,9 +64,9 @@ void VPGCodeReader::ParseXMLElement(const std::wstring &xmlData, size_t &pos, XM
                 pos++;
         }
         if (startPos < xmlData.length() - 1) {
-            XMLElement tmp;
-            tmp.SetFullText(pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos));
-            element.InsertChildren(tmp);
+            DECLARE_SPTR(XMLElement, tmp);
+            tmp->SetFullText(pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos));
+            element->InsertChildren(tmp);
         }
     }
     catch(const std::exception& e)

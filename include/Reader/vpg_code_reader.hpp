@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "class_macro.hpp"
@@ -15,7 +16,7 @@ class VPGCodeReader : public XMLReader
     public:
         VPGCodeReader(std::wstring commandDelimiter);
         
-        virtual void ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, XMLElement &element) override;
-        virtual void ParseXMLElement(const std::wstring &xmlData, size_t &pos, XMLElement &element) override;
+        virtual void ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, std::shared_ptr<XMLElement> element) override;
+        virtual void ParseXMLElement(const std::wstring &xmlData, size_t &pos, std::shared_ptr<XMLElement> element) override;
 
 };

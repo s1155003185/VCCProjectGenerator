@@ -40,15 +40,28 @@ namespace vcc
     
     #define VECTOR(type, var) \
     protected: \
-        mutable std::vector<type> _##var; \
+        mutable std::shared_ptr<std::vector<type>> _##var = std::make_shared<std::vector<type>>(); \
     public: \
-        const std::vector<type>* Get##var() const { return &_##var; } \
-        void Insert##var(type value) { this->_##var.push_back(value); } \
-        void Insert##var(size_t index, type value) { this->_##var.insert(this->_##var.begin() + index, value); } \
+        const std::shared_ptr<std::vector<type>> Get##var() const { return _##var; } \
+        void Insert##var(type value) { this->_##var->push_back(value); } \
+        void Insert##var(size_t index, type value) { this->_##var->insert(this->_##var->begin() + index, value); } \
         void Insert##var(std::vector<type> &value) { this-> Insert##var(0, value); } \
-        void Insert##var(size_t index, std::vector<type> &value) { this->_##var.insert(this->_##var.begin() + index, value.begin(), value.end()); } \
-        void Remove##var(size_t index) { this->_##var.erase(this->_##var.begin() + index); } \
-        void Clear##var() { this->_##var.clear(); }
+        void Insert##var(size_t index, std::vector<type> &value) { this->_##var->insert(this->_##var->begin() + index, value.begin(), value.end()); } \
+        void Remove##var(size_t index) { this->_##var->erase(this->_##var->begin() + index); } \
+        void Clear##var() { this->_##var->clear(); }
+
+    #define VECTOR_SPTR(type, var) \
+    protected: \
+        mutable std::shared_ptr<std::vector<std::shared_ptr<type>>> _##var = std::make_shared<std::vector<std::shared_ptr<type>>>(); \
+    public: \
+        const std::shared_ptr<std::vector<std::shared_ptr<type>>> Get##var() const { return _##var; } \
+        void Insert##var(std::shared_ptr<type> value) { this->_##var->push_back(value); } \
+        void Insert##var(size_t index, std::shared_ptr<type> value) { this->_##var->insert(this->_##var->begin() + index, value); } \
+        void Insert##var(std::vector<std::shared_ptr<type>> &value) { this-> Insert##var(0, value); } \
+        void Insert##var(size_t index, std::vector<std::shared_ptr<type>> &value) { this->_##var->insert(this->_##var->begin() + index, value.begin(), value.end()); } \
+        void Remove##var(size_t index) { this->_##var->erase(this->_##var->begin() + index); } \
+        void Clear##var() { this->_##var->clear(); }
+
 
     #define SET(type, var) \
     protected: \
