@@ -80,6 +80,9 @@ TEST_F(GitServiceTest, FullTest)
     // Create a new file
     WriteFile(ConcatPath(this->GetWorkspace(), L"test.txt"), L"hi", true);
  
+    GitService::AddToStage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
+    GitService::Commit(this->GetLogProperty().get(), this->GetWorkspace(), L"Test Commit");
+
     // push
     
     // 
