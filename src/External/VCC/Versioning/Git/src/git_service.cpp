@@ -271,37 +271,46 @@ namespace vcc
     }
 
     // Initialization
-    std::wstring GitService::Initialize(const LogProperty *logProperty, const std::wstring &workspace)
+    void GitService::Initialize(const LogProperty *logProperty, const std::wstring &workspace)
     {
         TRY_CATCH(
-            return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git init");
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git init");
         )
-        return L"";
     }
 
-    std::wstring GitService::Clone(const LogProperty *logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth)
+    void GitService::Clone(const LogProperty *logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth)
     {
         TRY_CATCH(
-            return ProcessService::Execute(logProperty, GIT_LOG_ID, dist, 
+            ProcessService::Execute(logProperty, GIT_LOG_ID, dist, 
                 L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"") + (depth > 0 ? (L" --depth " + std::to_wstring(depth)) : L""));
         )
-        return L"";
     }
 
-    std::wstring GitService::CheckOut(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branch)
+    void GitService::CheckOut(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branch)
     {
         TRY_CATCH(
-            return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout " + branch);
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout " + branch);
         )
-        return L"";
     }
 
-    // Action
-    std::wstring GitService::Pull(const LogProperty *logProperty, const std::wstring &workspace)
+    void GitService::Pull(const LogProperty *logProperty, const std::wstring &workspace)
     {
         TRY_CATCH(
-            return ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git pull");
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git pull");
         )
-        return L"";
+    }
+
+    void GitService::AddToStage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git add " + filePath);
+        )
+    }
+
+    void GitService::Commit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &command)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git commit -m \"" + GetEscapeString(EscapeStringType::DoubleQuote, command) + L"\"");
+        )
     }
 }

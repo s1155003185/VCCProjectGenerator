@@ -68,11 +68,16 @@ namespace vcc
         static void SetLocalUserEmail(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &value);
 
         // Initialization
-        static std::wstring Initialize(const LogProperty *logProperty, const std::wstring &workspace);
-        static std::wstring Clone(const LogProperty *logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth = -1);
-        static std::wstring CheckOut(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branch);
+        static void Initialize(const LogProperty *logProperty, const std::wstring &workspace);
+        static void Clone(const LogProperty *logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth = -1);
+        static void CheckOut(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branch);
 
-        // Action
-        static std::wstring Pull(const LogProperty *logProperty, const std::wstring &workspace);
+        // Refresh
+        static void Pull(const LogProperty *logProperty, const std::wstring &workspace);
+        
+        // Commit
+        static void AddToStage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
+        static void Commit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &command);
+
     };
 }

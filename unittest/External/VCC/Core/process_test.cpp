@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
 
+#include <string>
+#include <vector>
+
 #include "process_service.hpp"
 #include "log_property.hpp"
 #include "string_helper.hpp"
@@ -15,6 +18,38 @@ TEST(ProcessTest, Normal)
 TEST(ProcessTest, NormalWithWorkspace)
 {
     EXPECT_TRUE(ProcessService::Execute(nullptr, L"", L"..", L"git --version").starts_with(L"git version"));
+}
+
+TEST(ProcessTest, ParseCMDToken)
+{
+    std::vector<std::string> tokens = ProcessService::ParseCMDLinux("");
+    std::vector<std::string> expectedTokens;
+    EXPECT_EQ(tokens, expectedTokens);
+
+    tokens = ProcessService::ParseCMDLinux("a");
+    expectedTokens.clear();
+    expectedTokens.push_back("a");
+    EXPECT_EQ(tokens, expectedTokens);
+
+    tokens = ProcessService::ParseCMDLinux("a b");
+    expectedTokens.clear();
+    expectedTokens.push_back("a");
+    expectedTokens.push_back("b");
+    EXPECT_EQ(tokens, expectedTokens);
+
+    tokens = ProcessService::ParseCMDLinux("a \"a b c\"");
+    expectedTokens.clear();
+    expectedTokens.push_back("a");
+    expectedTokens.push_back("a b c");
+    EXPECT_EQ(tokens, expectedTokens);
+
+
+
+    tokens = ProcessService::ParseCMDLinux("a \"a \\\"b\\\" c\"");
+    expectedTokens.clear();
+    expectedTokens.push_back("a");
+    expectedTokens.push_back("a \"b\" c");
+    EXPECT_EQ(tokens, expectedTokens);
 }
 
 TEST(ProcessTest, Exception)

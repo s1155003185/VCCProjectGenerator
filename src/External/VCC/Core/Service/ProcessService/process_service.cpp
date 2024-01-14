@@ -33,11 +33,10 @@ namespace vcc
         {
             std::wstring result = L"";
             // convert to token
+            std::vector<std::string> cmdTokens = ProcessService::ParseCMDLinux(command);
             vector<char *> tokens;
-            char *token = strtok((char *)command.c_str(), " ");
-            while (token != nullptr) {
-                tokens.push_back(token);
-                token = strtok(nullptr, " ");
+            for (size_t i = 0; i < cmdTokens.size(); i++) {
+                tokens.push_back((char *)(cmdTokens[i].c_str()));
             }
             tokens.push_back(nullptr);
 
@@ -104,6 +103,45 @@ namespace vcc
             #else
             return ProcessService::_ExecuteLinux(wstr2str(command));
             #endif
+        }
+
+        std::vector<std::string> ProcessService::ParseCMDLinux(const std::string &cmd)
+        {
+            // need to remove double quote and escape "\"
+            std::vector<std::string> results;
+            std::string token = "";
+            bool inString = false;
+            bool isEscape = false;
+            for (char c : cmd) {
+                if (isEscape) {
+                    token += c;
+                    isEscape = false;
+                    continue;
+                }
+                if (!inString) {
+                    if (c == L' ') {
+                        if (!token.empty()) {
+                            results.push_back(token);
+                        }
+                        token = "";
+                    } else if (c == '"') {
+                        inString = true;
+                    } else {
+                        token += c;
+                    }
+                } else {
+                    if (c == '\\') {
+                        isEscape = true;
+                    } else if (c == '"') {
+                        inString = false;
+                    } else {
+                        token += c;
+                    }
+                }
+            }
+            if (!token.empty())
+                results.push_back(token);
+            return results;
         }
 
         std::wstring ProcessService::Execute(const LogProperty *logProperty, const std::wstring &id, const std::wstring &command)
