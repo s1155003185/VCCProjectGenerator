@@ -65,20 +65,27 @@ namespace vcc
 
     #define SET(type, var) \
     protected: \
-        mutable std::set<type> _##var; \
+        mutable std::shared_ptr<std::set<type>> _##var = std::make_shared<std::set<type>>(); \
     public: \
-        const std::set<type> *Get##var() const { return &_##var; } \
-        void Insert##var(type value) {  this->_##var.insert(value); } \
-        void Insert##var(std::set<type> value) { this->_##var.insert(value.begin(), value.end()); } \
-        void Remove##var(type value) { this->_##var.erase(value); } \
-        void Clear##var() { this->_##var.clear(); }
+        const std::shared_ptr<std::set<type>> Get##var() const { return _##var; } \
+        void Insert##var(type value) {  this->_##var->insert(value); } \
+        void Insert##var(std::set<type> value) { this->_##var->insert(value.begin(), value.end()); } \
+        void Remove##var(type value) { this->_##var->erase(value); } \
+        void Clear##var() { this->_##var->clear(); }
+    
+    #define SET_SPTR(type, var) \
+    protected: \
+        mutable std::shared_ptr<std::set<std::shared_ptr<type>>> _##var = std::make_shared<std::set<std::shared_ptr<type>>>(); \
+    public: \
+        const std::shared_ptr<std::set<std::shared_ptr<type>>> Get##var() const { return _##var; } \
+        void Clear##var() { this->_##var->clear(); }
 
     #define MAP(keyType, valueType, var) \
     protected: \
-        mutable std::map<keyType, valueType> _##var; \
+        mutable std::shared_ptr<std::map<keyType, valueType>> _##var = std::make_shared<std::map<keyType, valueType>>(); \
     public: \
-        const std::map<keyType, valueType>* Get##var() const { return &_##var; } \
-        void Insert##var(keyType key, valueType value) const { _##var.insert(std::make_pair(key, value)); }
+        const std::shared_ptr<std::map<keyType, valueType>> Get##var() const { return _##var; } \
+        void Insert##var(keyType key, valueType value) const { _##var->insert(std::make_pair(key, value)); }
 
     //------------------------------------------------------------------------------------------------------//
     //--------------------------------------------- VCC Object ---------------------------------------------//

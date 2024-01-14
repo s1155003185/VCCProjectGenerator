@@ -11,7 +11,7 @@ using namespace vcc;
 
 VPGEnumClassReader::VPGEnumClassReader(const std::set<std::wstring> &classMacroList) 
 {
-    this->_ClassMacroList = std::set(classMacroList.begin(), classMacroList.end());
+    this->_ClassMacroList->insert(classMacroList.begin(), classMacroList.end());
 }
 
 std::wstring VPGEnumClassReader::_GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg)
@@ -41,12 +41,12 @@ std::wstring VPGEnumClassReader::_GetMacro(const std::wstring &propertyCommand, 
 {
     std::wstring result = L"";
     TRY_CATCH(
-        if (this->_ClassMacroList.empty())
+        if (this->_ClassMacroList->empty())
             return result;
 
         GetNextCharPos(propertyCommand, pos, true);
         bool hasMacroPrefix = false;
-        for (auto str : this->_ClassMacroList) {
+        for (auto str : *this->_ClassMacroList) {
             if (HasPrefix(propertyCommand, str + L"(", pos)) {
                 hasMacroPrefix = true;
                 break;

@@ -1,8 +1,10 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "base_object.hpp"
+#include "memory_macro.hpp"
 
 namespace vcc
 {
@@ -26,6 +28,6 @@ namespace vcc
             ConfigReader() = default;
             virtual ~ConfigReader() {}
 
-            virtual void Parse(const std::wstring &str, ConfigElement &configElement);
+            virtual void Parse(const std::wstring &str, std::shared_ptr<ConfigElement> configElement);
     };
 }

@@ -9,6 +9,7 @@
 #include "file_helper.hpp"
 #include "git_service.hpp"
 #include "log_property.hpp"
+#include "memory_macro.hpp"
 
 using namespace std;
 using namespace vcc;
@@ -38,14 +39,14 @@ TEST_F(GitServiceTest, Version)
 
 TEST_F(GitServiceTest, Config)
 {
-    GitConfig config;
+    DECLARE_SPTR(GitConfig, config);
     GitService::GetGlobalConfig(this->GetLogProperty().get(), config);
     std::wstring userName = GitService::GetGlobalUserName(this->GetLogProperty().get());
     std::wstring userEmail = GitService::GetGlobalUserEmail(this->GetLogProperty().get());
-    EXPECT_TRUE(!config.GetUserName().empty());
-    EXPECT_TRUE(!config.GetUserEmail().empty());
-    EXPECT_EQ(config.GetUserName(), userName);
-    EXPECT_EQ(config.GetUserEmail(), userEmail);
+    EXPECT_TRUE(!config->GetUserName().empty());
+    EXPECT_TRUE(!config->GetUserEmail().empty());
+    EXPECT_EQ(config->GetUserName(), userName);
+    EXPECT_EQ(config->GetUserEmail(), userEmail);
 }
 
 TEST_F(GitServiceTest, FullTest)
@@ -62,10 +63,10 @@ TEST_F(GitServiceTest, FullTest)
     EXPECT_TRUE(GitService::IsGitResponse(this->GetLogProperty().get(), this->GetWorkspace()));
 
     // config
-    GitConfig config;
+    DECLARE_SPTR(GitConfig, config);
     GitService::GetLocalConfig(this->GetLogProperty().get(), this->GetWorkspace(), config);
-    EXPECT_TRUE(config.GetUserName().empty());
-    EXPECT_TRUE(config.GetUserEmail().empty());
+    EXPECT_TRUE(config->GetUserName().empty());
+    EXPECT_TRUE(config->GetUserEmail().empty());
     EXPECT_FALSE(GitService::IsLocalConfigExists(this->GetLogProperty().get(), this->GetWorkspace(), L"user.name"));
     
     GitService::SetLocalUserName(this->GetLogProperty().get(), this->GetWorkspace(), L"test");

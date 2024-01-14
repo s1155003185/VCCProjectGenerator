@@ -87,10 +87,11 @@ TEST_F(VPGFileGenerationServiceTest, GetClassMacroList)
         L"GETSPTR",
         L"GETSPTR",
         L"VECTOR",
+        L"VECTOR_SPTR",
         L"SET",
+        L"SET_SPTR",
         L"MAP",
-        L"MANAGER",
-        L"VECTOR_SPTR"
+        L"MANAGER"
     };
 
     std::set<std::wstring> results = VPGFileGenerationService::GetClassMacroList(L"");

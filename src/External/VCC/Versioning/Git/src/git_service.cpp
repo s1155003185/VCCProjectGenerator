@@ -8,6 +8,7 @@
 #include "config_reader.hpp"
 #include "exception_macro.hpp"
 #include "log_property.hpp"
+#include "memory_macro.hpp"
 #include "process_service.hpp"
 #include "string_helper.hpp"
 
@@ -60,19 +61,19 @@ namespace vcc
         return result;
     }
 
-    void GitService::GetConfig(const LogProperty *logProperty, const std::wstring &workspace, GitConfig &config)
+    void GitService::GetConfig(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitConfig> config)
     {
         TRY_CATCH(
             GitService::GetLocalConfig(logProperty, workspace, config);
-            GitConfig globalResult;
+            DECLARE_SPTR(GitConfig, globalResult);
             GitService::GetGlobalConfig(logProperty, globalResult);
-            if (config.GetUserName().empty())
-                config.SetUserName(globalResult.GetUserName());
-            if (config.GetUserEmail().empty())
-                config.SetUserEmail(globalResult.GetUserEmail());
-            for (auto tmpConfig : *globalResult.GetConfigs()) {
-                if (config.GetConfigs()->find(tmpConfig.first) != config.GetConfigs()->end())
-                    config.InsertConfigs(tmpConfig.first, tmpConfig.second);
+            if (config->GetUserName().empty())
+                config->SetUserName(globalResult->GetUserName());
+            if (config->GetUserEmail().empty())
+                config->SetUserEmail(globalResult->GetUserEmail());
+            for (auto tmpConfig : *globalResult->GetConfigs()) {
+                if (config->GetConfigs()->find(tmpConfig.first) != config->GetConfigs()->end())
+                    config->InsertConfigs(tmpConfig.first, tmpConfig.second);
             }
         )
     }
@@ -114,7 +115,7 @@ namespace vcc
     {
         bool result = false;
         try {
-            GitConfig config;
+            DECLARE_SPTR(GitConfig, config);
             GitService::GetConfig(logProperty, key, config);
             result = true;
         } catch (...) {
@@ -123,21 +124,21 @@ namespace vcc
         return result;        
     }
 
-    void GitService::GetGlobalConfig(const LogProperty *logProperty, GitConfig &config)
+    void GitService::GetGlobalConfig(const LogProperty *logProperty, std::shared_ptr<GitConfig> config)
     {
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global --list");
             if (!IsEmptyOrWhitespace(cmdResult)) {
-                ConfigElement element;
-                ConfigReader reader;
-                reader.Parse(cmdResult, element);
-                for (auto it : *element.GetConfigs()) {
+                DECLARE_SPTR(ConfigElement, element);
+                DECLARE_UPTR(ConfigReader, reader);
+                reader->Parse(cmdResult, element);
+                for (auto it : *element->GetConfigs()) {
                     if (it.first == GIT_CONFIG_USER_NAME) {
-                        config.SetUserName(it.second);
+                        config->SetUserName(it.second);
                     } else if (it.first == GIT_CONFIG_USER_EMAIL) {
-                        config.SetUserEmail(it.second);
+                        config->SetUserEmail(it.second);
                     }
-                    config.InsertConfigs(it.first, it.second);
+                    config->InsertConfigs(it.first, it.second);
                 }
 
             }
@@ -202,21 +203,22 @@ namespace vcc
         return result;       
     }
 
-    void GitService::GetLocalConfig(const LogProperty *logProperty, const std::wstring &workspace, GitConfig &config)
+    void GitService::GetLocalConfig(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitConfig> config)
     {
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local --list");
             if (!IsEmptyOrWhitespace(cmdResult)) {
-                ConfigElement element;
-                ConfigReader reader;
-                reader.Parse(cmdResult, element);
-                for (auto it : *element.GetConfigs()) {
+                DECLARE_SPTR(ConfigElement, element);
+                DECLARE_UPTR(ConfigReader, reader);
+
+                reader->Parse(cmdResult, element);
+                for (auto it : *element->GetConfigs()) {
                     if (it.first == GIT_CONFIG_USER_NAME) {
-                        config.SetUserName(it.second);
+                        config->SetUserName(it.second);
                     } else if (it.first == GIT_CONFIG_USER_EMAIL) {
-                        config.SetUserEmail(it.second);
+                        config->SetUserEmail(it.second);
                     }
-                    config.InsertConfigs(it.first, it.second);
+                    config->InsertConfigs(it.first, it.second);
                 }
             }
         )
