@@ -157,7 +157,7 @@ namespace vcc
     void GitService::SetGlobalConfig(const LogProperty *logProperty, const std::wstring &key, const std::wstring &value)
     {
         TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global " + key + L" " + value);
+            ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global " + key + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, value) + L"\"");
         )
     }
 
@@ -236,7 +236,7 @@ namespace vcc
     void GitService::SetLocalConfig(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key, const std::wstring &value)
     {
         TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local " + key + L" " + value);
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local " + key + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, value) + L"\"");
         )
     }
 
@@ -290,6 +290,13 @@ namespace vcc
     {
         TRY_CATCH(
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout " + branch);
+        )
+    }
+
+    void GitService::GetStatus(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitStatus> status)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git status");
         )
     }
 

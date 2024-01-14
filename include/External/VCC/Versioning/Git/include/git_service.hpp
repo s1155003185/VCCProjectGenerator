@@ -30,6 +30,8 @@ namespace vcc
     };
 
     class GitStatus : public BaseObject {
+        GETSET(std::wstring, Branch, L"");
+
         public:
             GitStatus() : BaseObject() {}
             virtual ~GitStatus() {}
@@ -85,6 +87,7 @@ namespace vcc
         static void CheckOut(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branch);
 
         // Refresh
+        static void GetStatus(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitStatus> status);
         static void Pull(const LogProperty *logProperty, const std::wstring &workspace);
         
         // Commit
