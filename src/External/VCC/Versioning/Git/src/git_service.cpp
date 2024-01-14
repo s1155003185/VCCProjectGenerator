@@ -49,6 +49,46 @@ namespace vcc
         return result;
     }
 
+    void GitService::GetStatus(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitStatus> status)
+    {
+        TRY_CATCH(
+            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git status -b -s"));
+            
+            std::wstring noCommitPrefix = L"## No commits yet on ";
+            size_t prefixLength = 2;
+            for (auto line : lines) {
+                std::wstring prefix = line.size() > prefixLength ? line.substr(0,2) : L"";
+                std::wstring lineWithoutPrefix = line.size() > prefixLength ? line.substr(prefixLength) : L"";
+                Trim(prefix);
+                Trim(lineWithoutPrefix);
+                std::wstring indexStatus = prefix.size() == (size_t)2 ? prefix.substr(0, 1) : L"";
+                std::wstring workingTreeStatus = prefix.size() == (size_t)2 ? prefix.substr(1, 1) : L"";
+                if (HasPrefix(line, noCommitPrefix)) {
+                    // Note: For non-remote git response, no commit return is L"## No commits yet on main"
+                    // Note: For remote git response, no commit return is L"## main...origin/main"
+                    std::wstring subLine = line.substr(noCommitPrefix.length());
+                    Trim(subLine);
+                    status->SetBranch(subLine);
+                    status->SetRemoteBranch(L"");
+                } else if (HasPrefix(line, L"##")) {
+                    std::vector<std::wstring> tokens = SplitString(lineWithoutPrefix, L"...");
+                    status->SetBranch(tokens.at(0));
+                    if (tokens.size() > 1)
+                        status->SetRemoteBranch(tokens.at(1));
+                } else if (prefix == L"??") {
+                    status->InsertUntrackedFiles(lineWithoutPrefix);
+                }
+            }
+        )
+    }
+
+    void GitService::Pull(const LogProperty *logProperty, const std::wstring &workspace)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git pull");
+        )
+    }
+
     bool GitService::IsConfigExists(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key)
     {
         bool result = false;
@@ -157,7 +197,7 @@ namespace vcc
     void GitService::SetGlobalConfig(const LogProperty *logProperty, const std::wstring &key, const std::wstring &value)
     {
         TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global " + key + L" " + value);
+            ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global " + key + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, value) + L"\"");
         )
     }
 
@@ -236,7 +276,7 @@ namespace vcc
     void GitService::SetLocalConfig(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key, const std::wstring &value)
     {
         TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local " + key + L" " + value);
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local " + key + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, value) + L"\"");
         )
     }
 
@@ -293,14 +333,7 @@ namespace vcc
         )
     }
 
-    void GitService::Pull(const LogProperty *logProperty, const std::wstring &workspace)
-    {
-        TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git pull");
-        )
-    }
-
-    void GitService::AddToStage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
+    void GitService::Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
     {
         TRY_CATCH(
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git add " + filePath);

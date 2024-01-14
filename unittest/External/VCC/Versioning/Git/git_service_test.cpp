@@ -77,17 +77,30 @@ TEST_F(GitServiceTest, FullTest)
     EXPECT_EQ(GitService::GetUserEmail(this->GetLogProperty().get(), this->GetWorkspace()), L"test@test.com");
     EXPECT_TRUE(GitService::IsLocalConfigExists(this->GetLogProperty().get(), this->GetWorkspace(), L"user.name"));
 
-    // Create a new file
+    // Case: Empty File
+    DECLARE_SPTR(GitStatus, statusEmpty);
+    GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), statusEmpty);
+    EXPECT_EQ(statusEmpty->GetBranch(), L"main");
+    EXPECT_EQ(statusEmpty->GetRemoteBranch(), L"");
+
+    // Case: New File
     WriteFile(ConcatPath(this->GetWorkspace(), L"test.txt"), L"hi", true);
+    DECLARE_SPTR(GitStatus, statusCreateFile);
+    GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), statusCreateFile);
+    EXPECT_EQ(statusCreateFile->GetBranch(), L"main");
+    EXPECT_EQ(statusCreateFile->GetRemoteBranch(), L"");
+    EXPECT_EQ(statusCreateFile->GetUntrackedFiles()->size(), (size_t) 1);
+    EXPECT_EQ(statusCreateFile->GetUntrackedFiles()->at(0), L"test.txt");
  
-    GitService::AddToStage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
+    // Case: Staged
+    GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
+
+    // Case: Committed
     GitService::Commit(this->GetLogProperty().get(), this->GetWorkspace(), L"Test Commit");
-
-    // push
     
-    // 
+    // Case: Modified
 
-    // pull
-    // cannot test for local response
-    //EXPECT_NO_THROW(GitService::Pull(this->GetLogProperty().get(), this->GetWorkspace()));
+    // Case: Renamed
+    
+    // Case: Deleted
 }
