@@ -43,12 +43,16 @@ TEST(ProcessTest, ParseCMDToken)
     expectedTokens.push_back("a b c");
     EXPECT_EQ(tokens, expectedTokens);
 
-
-
     tokens = ProcessService::ParseCMDLinux("a \"a \\\"b\\\" c\"");
     expectedTokens.clear();
     expectedTokens.push_back("a");
     expectedTokens.push_back("a \"b\" c");
+    EXPECT_EQ(tokens, expectedTokens);
+
+    tokens = ProcessService::ParseCMDLinux("a 'a \\\'b\\\' c'");
+    expectedTokens.clear();
+    expectedTokens.push_back("a");
+    expectedTokens.push_back("a 'b' c");
     EXPECT_EQ(tokens, expectedTokens);
 }
 

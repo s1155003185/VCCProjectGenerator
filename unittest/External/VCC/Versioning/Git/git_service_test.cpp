@@ -22,9 +22,7 @@ class GitServiceTest : public testing::Test
 
         void SetUp() override
         {
-            this->_LogProperty->SetIsConsoleLog(true);
-            this->_LogProperty->SetIsLogProcess(true);
-            this->_LogProperty->SetIsLogProcessResult(true);
+            this->_LogProperty->SetIsConsoleLog(false);
         }
 
         void TearDown() override

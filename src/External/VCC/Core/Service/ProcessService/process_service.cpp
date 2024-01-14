@@ -110,7 +110,7 @@ namespace vcc
             // need to remove double quote and escape "\"
             std::vector<std::string> results;
             std::string token = "";
-            bool inString = false;
+            char strStartToken = '\0';
             bool isEscape = false;
             for (char c : cmd) {
                 if (isEscape) {
@@ -118,22 +118,22 @@ namespace vcc
                     isEscape = false;
                     continue;
                 }
-                if (!inString) {
+                if (strStartToken == '\0') {
                     if (c == L' ') {
                         if (!token.empty()) {
                             results.push_back(token);
                         }
                         token = "";
-                    } else if (c == '"') {
-                        inString = true;
+                    } else if (c == '"' || c == '\'') {
+                        strStartToken = c;
                     } else {
                         token += c;
                     }
                 } else {
                     if (c == '\\') {
                         isEscape = true;
-                    } else if (c == '"') {
-                        inString = false;
+                    } else if (c == strStartToken) {
+                        strStartToken = '\0';
                     } else {
                         token += c;
                     }
