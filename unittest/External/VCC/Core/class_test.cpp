@@ -37,14 +37,14 @@ class ClassMacroTestClass : public BaseObject
         
         virtual std::shared_ptr<IObject> Clone() override {
             std::shared_ptr<ClassMacroTestClass> obj = make_shared<ClassMacroTestClass>(*this);
-            obj->CloneV(this->GetV().get());
-            obj->CloneVO(this->GetVO().get());
-            obj->CloneS(this->GetS().get());
-            obj->CloneSO(this->GetSO().get());
-            obj->CloneM(this->GetM().get());
+            obj->CloneV(*this->GetV());
+            obj->CloneVO(*this->GetVO());
+            obj->CloneS(*this->GetS());
+            obj->CloneSO(*this->GetSO());
+            obj->CloneM(*this->GetM());
 
             // TODO: Handle Map
-            obj->CloneMO(this->GetMO().get());
+            obj->CloneMO(*this->GetMO());
             return obj;
         };
 };
@@ -81,7 +81,7 @@ TEST(ClassMacroTest, Vector)
     EXPECT_EQ(testClass->GetV()->at(3), 3);
 
     vector<int> insertVector { 10, 11, 12 };
-    testClass->InsertV(0, &insertVector);
+    testClass->InsertV(0, insertVector);
     EXPECT_TRUE(testClass->GetV()->size() == 7);
     EXPECT_EQ(testClass->GetV()->at(0), 10);
     EXPECT_EQ(testClass->GetV()->at(1), 11);
@@ -117,7 +117,7 @@ TEST(ClassMacroTest, Vector)
     EXPECT_EQ(testClass->GetVO()->at(3)->GetIndex(), 3);
 
     vector<std::shared_ptr<ClassMacroTestClassElement>> insertVectorO { make_shared<ClassMacroTestClassElement>(10), make_shared<ClassMacroTestClassElement>(11), make_shared<ClassMacroTestClassElement>(12) };
-    testClass->InsertVO(0, &insertVectorO);
+    testClass->InsertVO(0, insertVectorO);
     EXPECT_TRUE(testClass->GetVO()->size() == 7);
     EXPECT_EQ(testClass->GetVO()->at(0)->GetIndex(), 10);
     EXPECT_EQ(testClass->GetVO()->at(1)->GetIndex(), 11);
@@ -149,7 +149,7 @@ TEST(ClassMacroTest, Set)
     EXPECT_TRUE(testClass->GetS()->size() == 3);
 
     set<int> insertSet { 1, 2, 4, 5 };
-    testClass->InsertS(&insertSet);
+    testClass->InsertS(insertSet);
     EXPECT_TRUE(testClass->GetS()->size() == 5);
 
     testClass->RemoveS(1);

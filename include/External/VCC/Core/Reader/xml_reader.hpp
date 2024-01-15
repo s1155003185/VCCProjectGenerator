@@ -43,8 +43,8 @@ namespace vcc
 
             virtual std::shared_ptr<IObject> Clone() override {
                 std::shared_ptr<XMLElement> obj = std::make_shared<XMLElement>(*this);
-                obj->CloneAttributes(this->GetAttributes().get());
-                obj->CloneChildren(this->GetChildren().get());
+                obj->CloneAttributes(*this->GetAttributes().get());
+                obj->CloneChildren(*this->GetChildren().get());
                 return obj;
             }
     };
