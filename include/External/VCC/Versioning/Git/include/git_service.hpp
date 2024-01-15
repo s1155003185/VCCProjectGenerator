@@ -52,6 +52,8 @@ namespace vcc
         // General
         static std::wstring GetVersion(const LogProperty *logProperty);
         static bool IsGitResponse(const LogProperty *logProperty, const std::wstring &workspace);
+        static void GetStatus(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitStatus> status);
+        static void Pull(const LogProperty *logProperty, const std::wstring &workspace);
 
         // Global Config
         static bool IsConfigExists(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key);
@@ -86,12 +88,8 @@ namespace vcc
         static void Clone(const LogProperty *logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth = -1);
         static void CheckOut(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branch);
 
-        // Refresh
-        static void GetStatus(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitStatus> status);
-        static void Pull(const LogProperty *logProperty, const std::wstring &workspace);
-        
         // Commit
-        static void AddToStage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
+        static void Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
         static void Commit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &command);
 
     };

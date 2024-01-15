@@ -49,6 +49,20 @@ namespace vcc
         return result;
     }
 
+    void GitService::GetStatus(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitStatus> status)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git status");
+        )
+    }
+
+    void GitService::Pull(const LogProperty *logProperty, const std::wstring &workspace)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git pull");
+        )
+    }
+
     bool GitService::IsConfigExists(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key)
     {
         bool result = false;
@@ -293,21 +307,7 @@ namespace vcc
         )
     }
 
-    void GitService::GetStatus(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitStatus> status)
-    {
-        TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git status");
-        )
-    }
-
-    void GitService::Pull(const LogProperty *logProperty, const std::wstring &workspace)
-    {
-        TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git pull");
-        )
-    }
-
-    void GitService::AddToStage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
+    void GitService::Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
     {
         TRY_CATCH(
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git add " + filePath);
