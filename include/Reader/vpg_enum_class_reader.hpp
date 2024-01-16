@@ -41,7 +41,7 @@ class VPGEnumClass : public BaseObject
 
         virtual std::shared_ptr<IObject> Clone() override {
             std::shared_ptr<VPGEnumClass> obj = std::make_shared<VPGEnumClass>(*this);
-            obj->CloneProperties(*this->GetProperties());
+            obj->CloneProperties(this->GetProperties());
             return obj;
         }
 };

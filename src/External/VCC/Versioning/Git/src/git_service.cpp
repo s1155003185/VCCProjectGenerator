@@ -111,8 +111,8 @@ namespace vcc
                 config->SetUserName(globalResult->GetUserName());
             if (config->GetUserEmail().empty())
                 config->SetUserEmail(globalResult->GetUserEmail());
-            for (auto tmpConfig : *globalResult->GetConfigs()) {
-                if (config->GetConfigs()->find(tmpConfig.first) != config->GetConfigs()->end())
+            for (auto tmpConfig : globalResult->GetConfigs()) {
+                if (config->GetConfigs().find(tmpConfig.first) != config->GetConfigs().end())
                     config->InsertConfigs(tmpConfig.first, tmpConfig.second);
             }
         )
@@ -172,7 +172,7 @@ namespace vcc
                 DECLARE_SPTR(ConfigElement, element);
                 DECLARE_UPTR(ConfigReader, reader);
                 reader->Parse(cmdResult, element);
-                for (auto it : *element->GetConfigs()) {
+                for (auto it : element->GetConfigs()) {
                     if (it.first == GIT_CONFIG_USER_NAME) {
                         config->SetUserName(it.second);
                     } else if (it.first == GIT_CONFIG_USER_EMAIL) {
@@ -252,7 +252,7 @@ namespace vcc
                 DECLARE_UPTR(ConfigReader, reader);
 
                 reader->Parse(cmdResult, element);
-                for (auto it : *element->GetConfigs()) {
+                for (auto it : element->GetConfigs()) {
                     if (it.first == GIT_CONFIG_USER_NAME) {
                         config->SetUserName(it.second);
                     } else if (it.first == GIT_CONFIG_USER_EMAIL) {

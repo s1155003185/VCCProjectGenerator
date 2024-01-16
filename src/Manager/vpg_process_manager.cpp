@@ -134,7 +134,7 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
                     } else if (cmd == L"-d") {
                         this->_LogDepth = std::stoi(cmd2);
                     } else if (cmd == L"-p") {
-                        this->_Plugins->push_back(cmd2);
+                        this->_Plugins.push_back(cmd2);
                     } else
                         THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknown argument " + cmd);
                 } else

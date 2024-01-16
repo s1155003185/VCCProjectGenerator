@@ -25,7 +25,7 @@ namespace vcc
                 std::wstring value = line.substr(pos + 1);
                 Trim(key);
                 Trim(value);
-                configElement->_Configs->insert({key, value});
+                configElement->_Configs.insert({key, value});
             }
         )
     }
