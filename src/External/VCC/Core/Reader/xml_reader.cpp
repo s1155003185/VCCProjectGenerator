@@ -168,7 +168,7 @@ namespace vcc
                     THROW_EXCEPTION_MSG(ExceptionType::ReaderError, _GetErrorMessage(pos, xmlData[pos], L"= missing"));
                 pos++;
                 attr->_Value = _GetString(xmlData, pos);
-                element->_Attributes->push_back(attr);
+                element->_Attributes.push_back(attr);
                 pos++;
             }
             // tag end with no ceontent
@@ -190,7 +190,7 @@ namespace vcc
                 DECLARE_SPTR(XMLElement, child);
                 ParseXMLElement(xmlData, pos, child);
                 if (!child->_Name.empty()) {
-                    element->_Children->push_back(child);
+                    element->_Children.push_back(child);
                     
                     std::wstring endTag = L"</" + (!child->_Namespace.empty() ? (child->_Namespace + L":") : L"") + child->_Name + L">";
                     if (!child->_FullText.ends_with(endTag))

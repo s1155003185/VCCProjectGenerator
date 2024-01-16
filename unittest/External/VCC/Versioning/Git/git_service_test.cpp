@@ -89,8 +89,8 @@ TEST_F(GitServiceTest, FullTest)
     GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), statusCreateFile);
     EXPECT_EQ(statusCreateFile->GetBranch(), L"main");
     EXPECT_EQ(statusCreateFile->GetRemoteBranch(), L"");
-    EXPECT_EQ(statusCreateFile->GetUntrackedFiles()->size(), (size_t) 1);
-    EXPECT_EQ(statusCreateFile->GetUntrackedFiles()->at(0), L"test.txt");
+    EXPECT_EQ(statusCreateFile->GetUntrackedFiles().size(), (size_t) 1);
+    EXPECT_EQ(statusCreateFile->GetUntrackedFiles().at(0), L"test.txt");
  
     // Case: Staged
     GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
@@ -101,6 +101,6 @@ TEST_F(GitServiceTest, FullTest)
     // Case: Modified
 
     // Case: Renamed
-    
+
     // Case: Deleted
 }

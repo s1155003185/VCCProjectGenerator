@@ -69,7 +69,7 @@ void VPGFileGenerationService::GeneratePropertyClassFile(const LogProperty *logP
         
         // generate external class
         for (const shared_ptr<VPGEnumClass>enumClass : enumClassList) {
-            for (shared_ptr<VPGEnumClassProperty> property : *enumClass->GetProperties()) {
+            for (shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
                 // handle enum without macro case
                 if (property->GetMacro().empty())
                     continue;
@@ -88,7 +88,7 @@ void VPGFileGenerationService::GeneratePropertyClassFile(const LogProperty *logP
             content += L"class " + className + L" : public BaseObject\r\n";
             content += L"{\r\n";
             // generate properties
-            for (shared_ptr<VPGEnumClassProperty> property : *enumClass->GetProperties()) {
+            for (shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
                 // handle enum without macro case
                 if (property->GetMacro().empty())
                     continue;
