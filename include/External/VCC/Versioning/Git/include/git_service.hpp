@@ -29,11 +29,26 @@ namespace vcc
             }
     };
 
+    enum class GitFileStatus {
+        NA,
+        Ignored,
+        Untracked,
+        Updated,
+        TypeChanged,
+        Added,
+        Deleted,
+        Renamed,
+        Copied
+    };
+
     class GitStatus : public BaseObject {
+        friend class GitService;
+
         GETSET(std::wstring, Branch, L"");
         GETSET(std::wstring, RemoteBranch, L"");
 
-        VECTOR(std::wstring, UntrackedFiles);
+        MAP(GitFileStatus, std::vector<std::wstring>, IndexFiles);
+        MAP(GitFileStatus, std::vector<std::wstring>, WorkingTreeFiles);
 
         public:
             GitStatus() : BaseObject() {}
@@ -46,6 +61,9 @@ namespace vcc
 
     class GitService : public BaseService
     {
+        private:
+            static GitFileStatus ParseGitFileStatus(const wchar_t &c);
+
         public:
             GitService() : BaseService() {}
             ~GitService() {}
@@ -55,7 +73,7 @@ namespace vcc
         // General
         static std::wstring GetVersion(const LogProperty *logProperty);
         static bool IsGitResponse(const LogProperty *logProperty, const std::wstring &workspace);
-        static void GetStatus(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitStatus> status);
+        static void GetStatus(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitStatus> status, bool isWithIgnoredFiles = false);
         static void Pull(const LogProperty *logProperty, const std::wstring &workspace);
 
         // Global Config

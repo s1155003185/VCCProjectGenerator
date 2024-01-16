@@ -87,16 +87,27 @@ TEST_F(GitServiceTest, FullTest)
     WriteFile(ConcatPath(this->GetWorkspace(), L"test.txt"), L"hi", true);
     DECLARE_SPTR(GitStatus, statusCreateFile);
     GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), statusCreateFile);
-    EXPECT_EQ(statusCreateFile->GetBranch(), L"main");
-    EXPECT_EQ(statusCreateFile->GetRemoteBranch(), L"");
-    EXPECT_EQ(statusCreateFile->GetUntrackedFiles().size(), (size_t) 1);
-    EXPECT_EQ(statusCreateFile->GetUntrackedFiles().at(0), L"test.txt");
+    EXPECT_EQ(statusCreateFile->GetIndexFiles().size(), (size_t)0);
+    EXPECT_EQ(statusCreateFile->GetWorkingTreeFiles().size(), (size_t)1);
+    EXPECT_EQ(statusCreateFile->GetWorkingTreeFiles()[GitFileStatus::Untracked].size(), (size_t)1);
+    EXPECT_EQ(statusCreateFile->GetWorkingTreeFiles()[GitFileStatus::Untracked].at(0), L"test.txt");
  
     // Case: Staged
     GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
+    DECLARE_SPTR(GitStatus, statusState);
+    GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), statusState);
+    EXPECT_EQ(statusState->GetIndexFiles().size(), (size_t)1);
+    EXPECT_EQ(statusState->GetIndexFiles()[GitFileStatus::Added].size(), (size_t)1);
+    EXPECT_EQ(statusState->GetIndexFiles()[GitFileStatus::Added].at(0), L"test.txt");
+    EXPECT_EQ(statusState->GetWorkingTreeFiles().size(), (size_t)0);
+ 
 
     // Case: Committed
     GitService::Commit(this->GetLogProperty().get(), this->GetWorkspace(), L"Test Commit");
+    DECLARE_SPTR(GitStatus, statusCommit);
+    GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), statusCommit);
+    EXPECT_EQ(statusCommit->GetIndexFiles().size(), (size_t)0);
+    EXPECT_EQ(statusCommit->GetWorkingTreeFiles().size(), (size_t)0);
     
     // Case: Modified
 
