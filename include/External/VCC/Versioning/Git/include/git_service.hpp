@@ -33,12 +33,13 @@ namespace vcc
         NA,
         Ignored,
         Untracked,
-        Updated,
+        Modified,
         TypeChanged,
         Added,
         Deleted,
         Renamed,
-        Copied
+        Copied,
+        UpdatedButUnmerged
     };
 
     class GitStatus : public BaseObject {

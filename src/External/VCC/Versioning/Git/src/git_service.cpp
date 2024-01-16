@@ -31,7 +31,7 @@ namespace vcc
                 case L'?':
                     return GitFileStatus::Untracked;
                 case L'M':
-                    return GitFileStatus::Updated;
+                    return GitFileStatus::Modified;
                 case L'T':
                     return GitFileStatus::TypeChanged;
                 case L'A':
@@ -41,12 +41,14 @@ namespace vcc
                 case L'R':
                     return GitFileStatus::Renamed;
                 case L'C':
-                    return GitFileStatus::Copied;                
+                    return GitFileStatus::Copied;
+                case L'U':
+                    return GitFileStatus::UpdatedButUnmerged;
                 default:
                     THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknown Git file status " + std::wstring(1, c));
             }
         )
-        return GitFileStatus::Ignored;
+        return GitFileStatus::NA;
     }
     
     std::wstring GitService::Execute(const LogProperty *logProperty, const std::wstring &command)
@@ -91,7 +93,6 @@ namespace vcc
             std::wstring remoteBranchPrefix = L"## ";
             size_t prefixLength = 2;
             for (auto line : lines) {
-                Trim(line);
                 if (line.length() <= 2)
                     continue;
 
