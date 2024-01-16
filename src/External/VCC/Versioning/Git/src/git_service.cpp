@@ -52,7 +52,33 @@ namespace vcc
     void GitService::GetStatus(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitStatus> status)
     {
         TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git status");
+            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git status -b -s"));
+            
+            std::wstring noCommitPrefix = L"## No commits yet on ";
+            size_t prefixLength = 2;
+            for (auto line : lines) {
+                std::wstring prefix = line.size() > prefixLength ? line.substr(0,2) : L"";
+                std::wstring lineWithoutPrefix = line.size() > prefixLength ? line.substr(prefixLength) : L"";
+                Trim(prefix);
+                Trim(lineWithoutPrefix);
+                std::wstring indexStatus = prefix.size() == (size_t)2 ? prefix.substr(0, 1) : L"";
+                std::wstring workingTreeStatus = prefix.size() == (size_t)2 ? prefix.substr(1, 1) : L"";
+                if (HasPrefix(line, noCommitPrefix)) {
+                    // Note: For non-remote git response, no commit return is L"## No commits yet on main"
+                    // Note: For remote git response, no commit return is L"## main...origin/main"
+                    std::wstring subLine = line.substr(noCommitPrefix.length());
+                    Trim(subLine);
+                    status->SetBranch(subLine);
+                    status->SetRemoteBranch(L"");
+                } else if (HasPrefix(line, L"##")) {
+                    std::vector<std::wstring> tokens = SplitString(lineWithoutPrefix, L"...");
+                    status->SetBranch(tokens.at(0));
+                    if (tokens.size() > 1)
+                        status->SetRemoteBranch(tokens.at(1));
+                } else if (prefix == L"??") {
+                    status->InsertUntrackedFiles(lineWithoutPrefix);
+                }
+            }
         )
     }
 

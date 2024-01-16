@@ -31,6 +31,9 @@ namespace vcc
 
     class GitStatus : public BaseObject {
         GETSET(std::wstring, Branch, L"");
+        GETSET(std::wstring, RemoteBranch, L"");
+
+        VECTOR(std::wstring, UntrackedFiles);
 
         public:
             GitStatus() : BaseObject() {}
