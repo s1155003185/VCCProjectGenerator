@@ -12,7 +12,7 @@ namespace vcc
     }
 
     // Concat
-    inline std::wstring ConcatVector(const std::vector<std::wstring> &v, std::wstring delimitor)
+    inline std::wstring Concat(const std::vector<std::wstring> &v, std::wstring delimitor)
     {
         std::wstring result = L"";
         if (IsEmpty(v))

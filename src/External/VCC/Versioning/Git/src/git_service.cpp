@@ -13,6 +13,7 @@
 #include "memory_macro.hpp"
 #include "process_service.hpp"
 #include "string_helper.hpp"
+#include "vector_helper.hpp"
 
 namespace vcc
 {   
@@ -130,17 +131,222 @@ namespace vcc
         )
     }
 
-    void GitService::GetDifference(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> diff)
-    {
-        TRY_CATCH(
-            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePathRelativeToWorkspace) + L"\""));
-        )
-    }
-
     void GitService::Pull(const LogProperty *logProperty, const std::wstring &workspace)
     {
         TRY_CATCH(
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git pull");
+        )
+    }
+
+    // Initialization
+    void GitService::Initialize(const LogProperty *logProperty, const std::wstring &workspace)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git init");
+        )
+    }
+
+    void GitService::Clone(const LogProperty *logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, dist, 
+                L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"") + (depth > 0 ? (L" --depth " + std::to_wstring(depth)) : L""));
+        )
+    }
+
+    void GitService::CheckOut(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branch)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout " + branch);
+        )
+    }
+
+    void GitService::GetDifferenceSummary(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, std::shared_ptr<GitDifferenceSummary> summary)
+    {
+        TRY_CATCH(
+            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + Concat(hashIDs, L" ") + L" --numstat"));
+            for (const std::wstring &line : lines) {
+                std::vector<std::wstring> tokens = SplitString(line, L"\t", { L"\"" }, { L"\"" }, { L"\\" });
+                if (tokens.size() < 3)
+                    continue;
+                summary->InsertFiles(tokens.at(2));
+                summary->InsertAddLineCounts((size_t)stoi(tokens.at(0)));
+                summary->InsertDeleteLineCounts((size_t)stoi(tokens.at(1)));
+            }
+        )
+    }
+
+    void GitService::ParseGitDiff(const std::wstring str, std::shared_ptr<GitDifference> difference)
+    {
+        TRY_CATCH(
+            std::wstring filePathOldPrefix = L"--- a/";
+            std::wstring filePathNewPrefix = L"+++ b/";
+            std::wstring lineCountPrefix = L"@@";
+            std::vector<std::wstring> lines = SplitStringByLine(str);
+            size_t rowCount = 0;
+            size_t currentItem = 0;
+            std::wstring currentText = L"";
+            for (const std::wstring &line : lines) {
+                if (rowCount > 0) {
+                    currentText += line + L"\n";
+                    if (rowCount == 1) {
+                        difference->InsertChangedLines(currentText);
+                        currentText = L"";
+                    }
+                    rowCount--;
+                } else {
+                    if (HasPrefix(line, filePathOldPrefix)) {
+                        std::wstring tmpStr = line.substr(filePathOldPrefix.length());
+                        Trim(tmpStr);
+                        difference->SetFilePathOld(tmpStr);
+                    } else if (HasPrefix(line, filePathNewPrefix)){
+                        std::wstring tmpStr = line.substr(filePathNewPrefix.length());
+                        Trim(tmpStr);
+                        difference->SetFilePathNew(tmpStr);
+                    } else if (HasPrefix(line, lineCountPrefix)) {
+                        // sample new: @@ -1 +1,2 @@
+                        // sample modify: @@ -116,10 +116,10 @@ xxxx
+                        // 1. Chop to remove all @@
+                        // 2. Get all numbers
+                        std::wstring tmpStr = line.substr(lineCountPrefix.length());
+                        tmpStr = tmpStr.substr(0, tmpStr.find(lineCountPrefix));
+                        Trim(tmpStr);
+                        std::vector<std::wstring> tokens = SplitString(tmpStr, L" ");
+                        if (tokens.size() != 2)
+                            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
+
+                        // old
+                        std::vector<std::wstring> lineCountOld = SplitString(tokens[0], L",");
+                        if (!(lineCountOld.size() == 1 || lineCountOld.size() == 2))
+                            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
+
+                        std::wstring lineNumberStr = lineCountOld[0];
+                        Trim(lineNumberStr);
+                        if (!(HasPrefix(lineNumberStr, L"-") && lineNumberStr.length() > 1))
+                            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
+
+                        difference->InsertLineNumberOld((size_t)stoi(lineNumberStr.substr(1)));
+                        if (lineCountOld.size() > 1) {
+                            std::wstring lineCountStr = lineCountOld[1];
+                            Trim(lineCountStr);
+                            difference->InsertLineCountOld((size_t)stoi(lineCountStr));
+                        } else
+                            difference->InsertLineCountOld((size_t)0);
+
+                        // new
+                        std::vector<std::wstring> lineCountNew = SplitString(tokens[1], L",");
+                        if (!(lineCountNew.size() == 1 || lineCountNew.size() == 2))
+                            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
+
+                        lineNumberStr = lineCountNew[0];
+                        Trim(lineNumberStr);
+                        if (!(HasPrefix(lineNumberStr, L"+") && lineNumberStr.length() > 1))
+                            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
+
+                        difference->InsertLineNumberNew((size_t)stoi(lineNumberStr.substr(1)));
+                        if (lineCountNew.size() > 1) {
+                            std::wstring lineCountStr = lineCountNew[1];
+                            Trim(lineCountStr);
+                            difference->InsertLineCountNew((size_t)stoi(lineCountStr));
+                        } else
+                            difference->InsertLineCountNew((size_t)0);
+
+                        currentItem = difference->GetLineCountNew().size() - 1;
+                        rowCount = std::max(difference->GetLineCountOld()[currentItem], difference->GetLineCountNew()[currentItem]);
+                    }
+                }
+            }
+        )
+    }
+
+    void GitService::GetDifferenceIndexFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
+    {
+        TRY_CATCH(
+            assert(!IsEmptyOrWhitespace(filePath));
+            std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
+            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff --cached " + lineStr + Concat(hashIDs, L" ")), diff);
+        )
+    }
+
+    void GitService::GetDifferenceWorkingFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
+    {
+        TRY_CATCH(
+            assert(!IsEmptyOrWhitespace(filePath));
+            std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
+            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + lineStr + Concat(hashIDs, L" ") + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
+        )
+    }
+
+    void GitService::GetDifferenceFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
+    {
+        TRY_CATCH(
+            assert(!IsEmptyOrWhitespace(filePath));
+            std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
+            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff HEAD " + lineStr + Concat(hashIDs, L" ") + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
+        )
+    }
+
+    void GitService::GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
+    {
+        TRY_CATCH(
+            assert(!IsEmptyOrWhitespace(filePath));
+            std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
+            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + lineStr + fromHashID + L"..." + toHashID + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
+        )
+    }
+
+    void GitService::Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git add \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
+        )
+    }
+    void GitService::StageAll(const LogProperty *logProperty, const std::wstring &workspace)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git add *");
+        )
+    }
+
+    void GitService::Unstage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git reset \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
+        )
+    }
+
+    void GitService::UnstageAll(const LogProperty *logProperty, const std::wstring &workspace)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git reset");
+        )
+    }
+
+    void GitService::Commit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &command)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git commit -m \"" + GetEscapeString(EscapeStringType::DoubleQuote, command) + L"\"");
+        )
+    }
+
+    void GitService::ResetFile(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
+        )
+    }
+
+    void GitService::ResetCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git reset " + hashID);
+        )
+    }
+
+    void GitService::ReverseCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git revert " + hashID);
         )
     }
 
@@ -364,83 +570,4 @@ namespace vcc
             GitService::SetLocalConfig(logProperty, workspace, GIT_CONFIG_USER_EMAIL, value);
         )
     }
-
-    // Initialization
-    void GitService::Initialize(const LogProperty *logProperty, const std::wstring &workspace)
-    {
-        TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git init");
-        )
-    }
-
-    void GitService::Clone(const LogProperty *logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth)
-    {
-        TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, dist, 
-                L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"") + (depth > 0 ? (L" --depth " + std::to_wstring(depth)) : L""));
-        )
-    }
-
-    void GitService::CheckOut(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branch)
-    {
-        TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout " + branch);
-        )
-    }
-
-    void GitService::Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
-    {
-        TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git add \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
-        )
-    }
-    void GitService::StageAll(const LogProperty *logProperty, const std::wstring &workspace)
-    {
-        TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git add *");
-        )
-    }
-
-    void GitService::Unstage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
-    {
-        TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git reset \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
-        )
-    }
-
-    void GitService::UnstageAll(const LogProperty *logProperty, const std::wstring &workspace)
-    {
-        TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git reset");
-        )
-    }
-
-    void GitService::Commit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &command)
-    {
-        TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git commit -m \"" + GetEscapeString(EscapeStringType::DoubleQuote, command) + L"\"");
-        )
-    }
-
-    void GitService::ResetFile(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
-    {
-        TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
-        )
-    }
-
-    void GitService::ResetCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID)
-    {
-        TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git reset " + hashID);
-        )
-    }
-
-    void GitService::ReverseCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID)
-    {
-        TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git revert " + hashID);
-        )
-    }
-
 }

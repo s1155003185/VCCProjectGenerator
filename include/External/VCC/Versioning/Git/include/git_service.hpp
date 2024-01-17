@@ -60,8 +60,32 @@ namespace vcc
             }
     };
 
+    class GitDifferenceSummary : public BaseObject {
+        friend class GitService;
+
+        VECTOR(std::wstring, Files);
+        VECTOR(size_t, AddLineCounts);
+        VECTOR(size_t, DeleteLineCounts);
+
+        public:
+            GitDifferenceSummary() : BaseObject() {}
+            virtual ~GitDifferenceSummary() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitDifferenceSummary>(*this);
+            }
+    };
+
     class GitDifference : public BaseObject {
         friend class GitService;
+
+        GETSET(std::wstring, FilePathOld, L"");
+        GETSET(std::wstring, FilePathNew, L"");
+        VECTOR(size_t, LineNumberOld);
+        VECTOR(size_t, LineCountOld);
+        VECTOR(size_t, LineNumberNew);
+        VECTOR(size_t, LineCountNew);
+        VECTOR(std::wstring, ChangedLines);
 
         public:
             GitDifference() : BaseObject() {}
@@ -87,16 +111,49 @@ namespace vcc
         static std::wstring GetVersion(const LogProperty *logProperty);
         static bool IsGitResponse(const LogProperty *logProperty, const std::wstring &workspace);
         static void GetStatus(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitStatus> status, bool isWithIgnoredFiles = false);
-        static void GetDifference(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> diff);
         static void Pull(const LogProperty *logProperty, const std::wstring &workspace);
+    
+        // Initialization
+        static void Initialize(const LogProperty *logProperty, const std::wstring &workspace);
+        static void Clone(const LogProperty *logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth = -1);
+        static void CheckOut(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branch);
 
-        // Global Config
+        // Difference
+        // Difference Summary only show different between commit and commit / commit and working files
+        // hashIDs.size() == 0, then different from latest commit to current working files
+        // hashIDs.size() == 1, then different from commit to current working files
+        // hashIDs.size() > 1, then different between commit
+        static void GetDifferenceSummary(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, std::shared_ptr<GitDifferenceSummary> summary);
+        // filePath must be filled
+        static void ParseGitDiff(const std::wstring str, std::shared_ptr<GitDifference> difference);
+        static void GetDifferenceIndexFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
+        static void GetDifferenceWorkingFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
+        static void GetDifferenceFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
+        static void GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
+
+        // Commit
+        static void Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
+        static void StageAll(const LogProperty *logProperty, const std::wstring &workspace);
+        static void Unstage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
+        static void UnstageAll(const LogProperty *logProperty, const std::wstring &workspace);
+        static void Commit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &command);
+
+        // Reset
+        static void ResetFile(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
+        static void ResetCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID);
+        static void ReverseCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID);
+        
+        /*----------------------------------*
+        * ----------- Config     -----------*
+        * ----------------------------------*/
+        // Overall Config
         static bool IsConfigExists(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key);
         static void GetConfig(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitConfig> config);
         static std::wstring GetConfig(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key);
         static std::wstring GetUserName(const LogProperty *logProperty, const std::wstring &workspace);
         static std::wstring GetUserEmail(const LogProperty *logProperty, const std::wstring &workspace);
         
+        // Global Config
         static bool IsGlobalConfigExists(const LogProperty *logProperty, const std::wstring &key);
         static void GetGlobalConfig(const LogProperty *logProperty, std::shared_ptr<GitConfig> config);
         static std::wstring GetGlobalConfig(const LogProperty *logProperty, const std::wstring &key);
@@ -117,22 +174,5 @@ namespace vcc
         static void SetLocalUserName(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &value);
         static std::wstring GetLocalUserEmail(const LogProperty *logProperty, const std::wstring &workspace);
         static void SetLocalUserEmail(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &value);
-
-        // Initialization
-        static void Initialize(const LogProperty *logProperty, const std::wstring &workspace);
-        static void Clone(const LogProperty *logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth = -1);
-        static void CheckOut(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branch);
-
-        // Commit
-        static void Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
-        static void StageAll(const LogProperty *logProperty, const std::wstring &workspace);
-        static void Unstage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
-        static void UnstageAll(const LogProperty *logProperty, const std::wstring &workspace);
-        static void Commit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &command);
-
-        // Reset
-        static void ResetFile(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
-        static void ResetCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID);
-        static void ReverseCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID);
     };
 }
