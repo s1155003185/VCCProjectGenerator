@@ -130,10 +130,10 @@ namespace vcc
         )
     }
 
-    void GitService::GetDifference(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> status)
+    void GitService::GetDifference(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> diff)
     {
         TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePathRelativeToWorkspace) + L"\"");
+            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePathRelativeToWorkspace) + L"\""));
         )
     }
 
@@ -421,4 +421,26 @@ namespace vcc
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git commit -m \"" + GetEscapeString(EscapeStringType::DoubleQuote, command) + L"\"");
         )
     }
+
+    void GitService::ResetFile(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
+        )
+    }
+
+    void GitService::ResetCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git reset " + hashID);
+        )
+    }
+
+    void GitService::ReverseCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git revert " + hashID);
+        )
+    }
+
 }

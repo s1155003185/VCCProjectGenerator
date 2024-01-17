@@ -130,5 +130,9 @@ namespace vcc
         static void UnstageAll(const LogProperty *logProperty, const std::wstring &workspace);
         static void Commit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &command);
 
+        // Reset
+        static void ResetFile(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
+        static void ResetCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID);
+        static void ReverseCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID);
     };
 }
