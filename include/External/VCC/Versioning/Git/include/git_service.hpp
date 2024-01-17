@@ -56,7 +56,19 @@ namespace vcc
             virtual ~GitStatus() {}
 
             virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitStatus>();
+                return std::make_shared<GitStatus>(*this);
+            }
+    };
+
+    class GitDifference : public BaseObject {
+        friend class GitService;
+
+        public:
+            GitDifference() : BaseObject() {}
+            virtual ~GitDifference() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitDifference>(*this);
             }
     };
 
@@ -75,6 +87,7 @@ namespace vcc
         static std::wstring GetVersion(const LogProperty *logProperty);
         static bool IsGitResponse(const LogProperty *logProperty, const std::wstring &workspace);
         static void GetStatus(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitStatus> status, bool isWithIgnoredFiles = false);
+        static void GetDifference(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> diff);
         static void Pull(const LogProperty *logProperty, const std::wstring &workspace);
 
         // Global Config
@@ -112,6 +125,9 @@ namespace vcc
 
         // Commit
         static void Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
+        static void StageAll(const LogProperty *logProperty, const std::wstring &workspace);
+        static void Unstage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
+        static void UnstageAll(const LogProperty *logProperty, const std::wstring &workspace);
         static void Commit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &command);
 
     };

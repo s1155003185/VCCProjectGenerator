@@ -100,6 +100,10 @@ TEST_F(GitServiceTest, FullTest)
     EXPECT_EQ(statusNewState->GetIndexFiles()[GitFileStatus::Added].size(), (size_t)1);
     EXPECT_EQ(statusNewState->GetIndexFiles()[GitFileStatus::Added].at(0), L"test.txt");
     EXPECT_EQ(statusNewState->GetWorkingTreeFiles().size(), (size_t)0);
+    GitService::Unstage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
+    GitService::StageAll(this->GetLogProperty().get(), this->GetWorkspace());
+    GitService::UnstageAll(this->GetLogProperty().get(), this->GetWorkspace());
+    GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
  
     // Case: Committed
     GitService::Commit(this->GetLogProperty().get(), this->GetWorkspace(), L"Test Commit");
@@ -145,7 +149,7 @@ TEST_F(GitServiceTest, FullTest)
     EXPECT_EQ(statusRename->GetWorkingTreeFiles()[GitFileStatus::Untracked].at(0), L"test2.txt");
     EXPECT_EQ(statusRename->GetWorkingTreeFiles()[GitFileStatus::Deleted].size(), (size_t)1);
     EXPECT_EQ(statusRename->GetWorkingTreeFiles()[GitFileStatus::Deleted].at(0), L"test.txt");
-    GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"*");
+    GitService::StageAll(this->GetLogProperty().get(), this->GetWorkspace());
     DECLARE_SPTR(GitStatus, statusRenameState);
     GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), statusRenameState);
     EXPECT_EQ(statusRenameState->GetIndexFiles().size(), (size_t)1);
