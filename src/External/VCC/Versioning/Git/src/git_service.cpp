@@ -160,7 +160,26 @@ namespace vcc
         )
     }
 
-    void GitService::GetDifference(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
+    void GitService::GetDifferenceSummary(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, std::shared_ptr<GitDifferenceSummary> summary)
+    {
+        TRY_CATCH(
+            if (!IsEmptyOrWhitespace(toHashID) && IsEmptyOrWhitespace(fromHashID))
+                THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"FromHashID missing");
+            std::wstring fromHashIDStr = !fromHashID.empty() ? (L" " + fromHashID) : L"";
+            std::wstring toHashIDStr = !toHashID.empty() ? (L" " + toHashID) : L"";
+            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff" + fromHashIDStr + toHashIDStr + L" --numstat"));
+            for (const std::wstring &line : lines) {
+                std::vector<std::wstring> tokens = SplitString(line, L"\t", { L"\"" }, { L"\"" }, { L"\\" });
+                if (tokens.size() < 3)
+                    continue;
+                summary->InsertFiles(tokens.at(2));
+                summary->InsertAddLineCounts((size_t)stoi(tokens.at(0)));
+                summary->InsertDeleteLineCounts((size_t)stoi(tokens.at(1)));
+            }
+        )
+    }
+
+    void GitService::GetDifference(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
     {
         TRY_CATCH(
             std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePathRelativeToWorkspace) + L"\""));

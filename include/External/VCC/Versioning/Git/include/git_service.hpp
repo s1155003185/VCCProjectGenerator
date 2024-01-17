@@ -60,6 +60,22 @@ namespace vcc
             }
     };
 
+    class GitDifferenceSummary : public BaseObject {
+        friend class GitService;
+
+        VECTOR(std::wstring, Files);
+        VECTOR(size_t, AddLineCounts);
+        VECTOR(size_t, DeleteLineCounts);
+
+        public:
+            GitDifferenceSummary() : BaseObject() {}
+            virtual ~GitDifferenceSummary() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitDifferenceSummary>(*this);
+            }
+    };
+
     class GitDifference : public BaseObject {
         friend class GitService;
 
@@ -95,7 +111,9 @@ namespace vcc
         static void CheckOut(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branch);
 
         // Difference
-        static void GetDifference(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
+        // Difference Summary only show different between commit and commit / commit and working files
+        static void GetDifferenceSummary(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, std::shared_ptr<GitDifferenceSummary> summary);
+        static void GetDifference(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
 
         // Commit
         static void Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);

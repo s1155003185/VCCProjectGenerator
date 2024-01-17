@@ -84,14 +84,14 @@ TEST_F(GitServiceTest, FullTest)
     EXPECT_EQ(statusEmpty->GetRemoteBranch(), L"");
 
     // Case: New File
-    WriteFile(ConcatPath(this->GetWorkspace(), L"test.txt"), L"hi", true);
+    WriteFile(ConcatPath(this->GetWorkspace(), L"test.txt"), L"hi\r\n", true);
     DECLARE_SPTR(GitStatus, statusCreateFile);
     GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), statusCreateFile);
     EXPECT_EQ(statusCreateFile->GetIndexFiles().size(), (size_t)0);
     EXPECT_EQ(statusCreateFile->GetWorkingTreeFiles().size(), (size_t)1);
     EXPECT_EQ(statusCreateFile->GetWorkingTreeFiles()[GitFileStatus::Untracked].size(), (size_t)1);
     EXPECT_EQ(statusCreateFile->GetWorkingTreeFiles()[GitFileStatus::Untracked].at(0), L"test.txt");
- 
+
     // Case: Staged
     GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
     DECLARE_SPTR(GitStatus, statusNewState);
@@ -120,6 +120,12 @@ TEST_F(GitServiceTest, FullTest)
     EXPECT_EQ(statusModify->GetWorkingTreeFiles().size(), (size_t)1);
     EXPECT_EQ(statusModify->GetWorkingTreeFiles()[GitFileStatus::Modified].size(), (size_t)1);
     EXPECT_EQ(statusModify->GetWorkingTreeFiles()[GitFileStatus::Modified].at(0), L"test.txt");
+    DECLARE_SPTR(GitDifferenceSummary, differentSummary);
+    GitService::GetDifferenceSummary(this->GetLogProperty().get(), this->GetWorkspace(), L"", L"", differentSummary);
+    EXPECT_EQ(differentSummary->GetFiles().size(), (size_t)1);
+    EXPECT_EQ(differentSummary->GetFiles().at(0), L"test.txt");
+    EXPECT_EQ(differentSummary->GetAddLineCounts().at(0), (size_t)1);
+    EXPECT_EQ(differentSummary->GetDeleteLineCounts().at(0), (size_t)0);
     GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
     DECLARE_SPTR(GitStatus, statusModifyState);
     GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), statusModifyState);
