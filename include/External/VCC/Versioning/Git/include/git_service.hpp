@@ -112,6 +112,9 @@ namespace vcc
 
         // Difference
         // Difference Summary only show different between commit and commit / commit and working files
+        // hashIDs.size() == 0, then different from latest commit to current working files
+        // hashIDs.size() == 1, then different from commit to current working files
+        // hashIDs.size() > 1, then different between commit
         static void GetDifferenceSummary(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, std::shared_ptr<GitDifferenceSummary> summary);
         // static void GetDifferenceIndexFile(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
         // static void GetDifferenceWorkingFile(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
