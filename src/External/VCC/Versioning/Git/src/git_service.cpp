@@ -13,6 +13,7 @@
 #include "memory_macro.hpp"
 #include "process_service.hpp"
 #include "string_helper.hpp"
+#include "vector_helper.hpp"
 
 namespace vcc
 {   
@@ -160,14 +161,10 @@ namespace vcc
         )
     }
 
-    void GitService::GetDifferenceSummary(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, std::shared_ptr<GitDifferenceSummary> summary)
+    void GitService::GetDifferenceSummary(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, std::shared_ptr<GitDifferenceSummary> summary)
     {
         TRY_CATCH(
-            if (!IsEmptyOrWhitespace(toHashID) && IsEmptyOrWhitespace(fromHashID))
-                THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"FromHashID missing");
-            std::wstring fromHashIDStr = !fromHashID.empty() ? (L" " + fromHashID) : L"";
-            std::wstring toHashIDStr = !toHashID.empty() ? (L" " + toHashID) : L"";
-            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff" + fromHashIDStr + toHashIDStr + L" --numstat"));
+            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + Concat(hashIDs, L" ") + L" --numstat"));
             for (const std::wstring &line : lines) {
                 std::vector<std::wstring> tokens = SplitString(line, L"\t", { L"\"" }, { L"\"" }, { L"\\" });
                 if (tokens.size() < 3)
