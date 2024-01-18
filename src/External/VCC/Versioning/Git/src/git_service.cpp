@@ -176,13 +176,13 @@ namespace vcc
         )
     }
 
-    void GitService::GetDifference(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
-    {
-        TRY_CATCH(
-            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePathRelativeToWorkspace) + L"\""));
+    // void GitService::GetDifference(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
+    // {
+    //     TRY_CATCH(
+    //         std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePathRelativeToWorkspace) + L"\""));
         
-        )
-    }
+    //     )
+    // }
 
     void GitService::Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
     {

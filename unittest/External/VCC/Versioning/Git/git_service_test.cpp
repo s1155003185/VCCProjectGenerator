@@ -121,7 +121,7 @@ TEST_F(GitServiceTest, FullTest)
     EXPECT_EQ(statusModify->GetWorkingTreeFiles()[GitFileStatus::Modified].size(), (size_t)1);
     EXPECT_EQ(statusModify->GetWorkingTreeFiles()[GitFileStatus::Modified].at(0), L"test.txt");
     DECLARE_SPTR(GitDifferenceSummary, differentSummary);
-    GitService::GetDifferenceSummary(this->GetLogProperty().get(), this->GetWorkspace(), L"", L"", differentSummary);
+    GitService::GetDifferenceSummary(this->GetLogProperty().get(), this->GetWorkspace(), {}, differentSummary);
     EXPECT_EQ(differentSummary->GetFiles().size(), (size_t)1);
     EXPECT_EQ(differentSummary->GetFiles().at(0), L"test.txt");
     EXPECT_EQ(differentSummary->GetAddLineCounts().at(0), (size_t)1);
