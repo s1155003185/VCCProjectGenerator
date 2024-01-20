@@ -49,6 +49,29 @@ TEST_F(GitServiceTest, Config)
     EXPECT_EQ(config->GetUserEmail(), userEmail);
 }
 
+TEST_F(GitServiceTest, ParseGitDiff)
+{
+    std::wstring str = L"diff --git a/test.txt b/test.txt\r\n";
+    str += L"index edf0eff..ab966a8 100644\r\n";
+    str += L"--- a/test.txt\r\n";
+    str += L"+++ b/test.txt\r\n";
+    str += L"@@ -1 +1,2 @@\r\n";
+    str += L" hi\r\n";
+    str += L"+HI\r\n";
+    std::wstring expectedChangedLine = L"";
+    expectedChangedLine += L" hi\r\n";
+    expectedChangedLine += L"+HI\r\n";
+    DECLARE_SPTR(GitDifference, diff);
+    GitService::ParseGitDiff(str, diff);
+    EXPECT_EQ(diff->GetFilePathOld(), L"test.txt");
+    EXPECT_EQ(diff->GetFilePathNew(), L"test.txt");
+    EXPECT_EQ(diff->GetLineNumberOld()[0], (size_t)1);
+    EXPECT_EQ(diff->GetLineCountOld()[0], (size_t)0);
+    EXPECT_EQ(diff->GetLineNumberNew()[0], (size_t)1);
+    EXPECT_EQ(diff->GetLineCountNew()[0], (size_t)2);
+    EXPECT_EQ(diff->GetChangedLines()[0], expectedChangedLine);
+}
+
 TEST_F(GitServiceTest, FullTest)
 {
     if (std::filesystem::exists(this->GetWorkspace()))
@@ -126,6 +149,9 @@ TEST_F(GitServiceTest, FullTest)
     EXPECT_EQ(differentSummary->GetFiles().at(0), L"test.txt");
     EXPECT_EQ(differentSummary->GetAddLineCounts().at(0), (size_t)1);
     EXPECT_EQ(differentSummary->GetDeleteLineCounts().at(0), (size_t)0);
+    DECLARE_SPTR(GitDifference, diff);
+    GitService::GetDifferenceWorkingFile(this->GetLogProperty().get(), this->GetWorkspace(), {}, L"test.txt", diff);
+
     GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
     DECLARE_SPTR(GitStatus, statusModifyState);
     GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), statusModifyState);

@@ -79,6 +79,14 @@ namespace vcc
     class GitDifference : public BaseObject {
         friend class GitService;
 
+        GETSET(std::wstring, FilePathOld, L"");
+        GETSET(std::wstring, FilePathNew, L"");
+        VECTOR(size_t, LineNumberOld);
+        VECTOR(size_t, LineCountOld);
+        VECTOR(size_t, LineNumberNew);
+        VECTOR(size_t, LineCountNew);
+        VECTOR(std::wstring, ChangedLines);
+
         public:
             GitDifference() : BaseObject() {}
             virtual ~GitDifference() {}
@@ -116,10 +124,12 @@ namespace vcc
         // hashIDs.size() == 1, then different from commit to current working files
         // hashIDs.size() > 1, then different between commit
         static void GetDifferenceSummary(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, std::shared_ptr<GitDifferenceSummary> summary);
-        // static void GetDifferenceIndexFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
-        // static void GetDifferenceWorkingFile(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
-        // static void GetDifferenceFile(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
-        // static void GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePathRelativeToWorkspace, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
+        
+        static void ParseGitDiff(const std::wstring str, std::shared_ptr<GitDifference> difference);
+        static void GetDifferenceIndexFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
+        static void GetDifferenceWorkingFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
+        static void GetDifferenceFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
+        static void GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
 
         // Commit
         static void Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
