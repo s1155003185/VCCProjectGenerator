@@ -262,28 +262,37 @@ namespace vcc
     void GitService::GetDifferenceIndexFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
     {
         TRY_CATCH(
-            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + Concat(hashIDs, L" ")));
-            for (const std::wstring &line : lines) {
-
-            }
+            assert(!IsEmptyOrWhitespace(filePath));
+            std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
+            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff --cached " + lineStr + Concat(hashIDs, L" ")), diff);
         )
     }
 
     void GitService::GetDifferenceWorkingFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
     {
         TRY_CATCH(
-            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + Concat(hashIDs, L" ") + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
+            assert(!IsEmptyOrWhitespace(filePath));
+            std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
+            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + lineStr + Concat(hashIDs, L" ") + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
         )
     }
 
     void GitService::GetDifferenceFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
     {
-
+        TRY_CATCH(
+            assert(!IsEmptyOrWhitespace(filePath));
+            std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
+            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff HEAD " + lineStr + Concat(hashIDs, L" ") + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
+        )
     }
 
-    void GitService::GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
+    void GitService::GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
     {
-
+        TRY_CATCH(
+            assert(!IsEmptyOrWhitespace(filePath));
+            std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
+            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + lineStr + fromHashID + L"..." + toHashID + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
+        )
     }
 
     void GitService::Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)

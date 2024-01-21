@@ -150,8 +150,13 @@ TEST_F(GitServiceTest, FullTest)
     EXPECT_EQ(differentSummary->GetAddLineCounts().at(0), (size_t)1);
     EXPECT_EQ(differentSummary->GetDeleteLineCounts().at(0), (size_t)0);
     DECLARE_SPTR(GitDifference, diff);
-    GitService::GetDifferenceWorkingFile(this->GetLogProperty().get(), this->GetWorkspace(), {}, L"test.txt", diff);
-
+    GitService::GetDifferenceWorkingFile(this->GetLogProperty().get(), this->GetWorkspace(), {}, L"test.txt", diff); // output in ParseGitDiff
+    EXPECT_EQ(diff->GetFilePathOld(), L"test.txt");
+    EXPECT_EQ(diff->GetFilePathNew(), L"test.txt");
+    EXPECT_EQ(diff->GetLineNumberOld()[0], (size_t)1);
+    EXPECT_EQ(diff->GetLineCountOld()[0], (size_t)0);
+    EXPECT_EQ(diff->GetLineNumberNew()[0], (size_t)1);
+    EXPECT_EQ(diff->GetLineCountNew()[0], (size_t)2);
     GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
     DECLARE_SPTR(GitStatus, statusModifyState);
     GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), statusModifyState);
@@ -168,6 +173,7 @@ TEST_F(GitServiceTest, FullTest)
     EXPECT_EQ(statusModifyState2->GetWorkingTreeFiles().size(), (size_t)1);
     EXPECT_EQ(statusModifyState2->GetWorkingTreeFiles()[GitFileStatus::Modified].size(), (size_t)1);
     EXPECT_EQ(statusModifyState2->GetWorkingTreeFiles()[GitFileStatus::Modified].at(0), L"test.txt");
+
     GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
     GitService::Commit(this->GetLogProperty().get(), this->GetWorkspace(), L"Test Modify");
 
