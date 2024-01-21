@@ -1,5 +1,6 @@
 #include "git_service.hpp"
 
+#include <assert.h>
 #include <filesystem>
 #include <map>
 #include <memory>
@@ -329,17 +330,51 @@ namespace vcc
         )
     }
 
-    void GitService::ResetFile(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
+    void GitService::DiscardFile(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
     {
         TRY_CATCH(
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
         )
     }
 
-    void GitService::ResetCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID)
+    void GitService::RestoreFileToParticularCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath, const std::wstring &hashID)
     {
         TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git reset " + hashID);
+            assert(!IsEmptyOrWhitespace(hashID));
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git restore --source=" + hashID + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
+        )        
+    }
+
+    void GitService::ResetCommit(const LogProperty *logProperty, const std::wstring &workspace,  const GitResetMode &resetMode, const std::wstring &hashID)
+    {
+        TRY_CATCH(
+            std::wstring modeStr = L"";
+            switch (resetMode)
+            {
+            case GitResetMode::NA:
+                break;
+            case GitResetMode::Soft:
+                modeStr = L"--soft";
+                break;
+            case GitResetMode::Mixed:
+                modeStr = L"--mixed";
+                break;
+            case GitResetMode::Hard:
+                modeStr = L"--hard";
+                break;
+            case GitResetMode::Merge:
+                modeStr = L"--merge";
+                break;
+            case GitResetMode::Keep:
+                modeStr = L"--keep";
+                break;        
+            default:
+                assert(false);
+                break;
+            }
+            Trim(modeStr);
+            modeStr += L" ";
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git reset " + modeStr + hashID);
         )
     }
 

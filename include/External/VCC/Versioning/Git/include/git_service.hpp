@@ -96,6 +96,15 @@ namespace vcc
             }
     };
 
+    enum class GitResetMode {
+        NA,
+        Soft,
+        Mixed,
+        Hard,
+        Merge,
+        Keep
+    };
+
     class GitService : public BaseService
     {
         private:
@@ -131,6 +140,8 @@ namespace vcc
         static void GetDifferenceFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
         static void GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
 
+        // Log
+
         // Commit
         static void Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
         static void StageAll(const LogProperty *logProperty, const std::wstring &workspace);
@@ -138,9 +149,10 @@ namespace vcc
         static void UnstageAll(const LogProperty *logProperty, const std::wstring &workspace);
         static void Commit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &command);
 
-        // Reset
-        static void ResetFile(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
-        static void ResetCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID);
+        // Reset / Restore
+        static void DiscardFile(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
+        static void RestoreFileToParticularCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath, const std::wstring &hashID);
+        static void ResetCommit(const LogProperty *logProperty, const std::wstring &workspace, const GitResetMode &resetMode, const std::wstring &hashID);
         static void ReverseCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID);
         
         /*----------------------------------*
