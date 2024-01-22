@@ -23,6 +23,10 @@ class GitServiceTest : public testing::Test
         void SetUp() override
         {
             this->_LogProperty->SetIsConsoleLog(false);
+
+            if (std::filesystem::exists(this->GetWorkspace()))
+                std::filesystem::remove_all(this->GetWorkspace());
+            std::filesystem::create_directory(this->GetWorkspace());
         }
 
         void TearDown() override
@@ -49,6 +53,145 @@ TEST_F(GitServiceTest, Config)
     EXPECT_EQ(config->GetUserEmail(), userEmail);
 }
 
+TEST_F(GitServiceTest, ParseGitLogGraph)
+{
+    std::wstring str = L"";
+    str += L"* (A1)(A1Short)(A2)(A2Short)(A3)(A3Short)\n"; // normal
+    str += L"*   (A3)(A3Short)(A4)(A4Short)(A5 A6)(A5Short A6Short)\n"; // merge
+    str += L"|\n";
+    str += L"| * (A6)(A6Short)(A7)(A7Short)(A8)(A8Short)\r\n"; // merge branch
+    str += L"* (B1)(B1Short)(B2)(B2Short)()()\r\n"; // node init
+
+    std::vector<std::shared_ptr<GitLog>> logs;
+    GitService::ParseGitLogGraph(str, logs);
+    EXPECT_EQ(logs.size(), (size_t)4);
+    EXPECT_EQ(logs.at(0)->GetColumnIndex(), (size_t)0);
+    EXPECT_EQ(logs.at(0)->GetHashID(), L"A1");
+    EXPECT_EQ(logs.at(0)->GetAbbreviatedHashID(), L"A1Short");
+    EXPECT_EQ(logs.at(0)->GetTreeHashID(), L"A2");
+    EXPECT_EQ(logs.at(0)->GetAbbreviatedTreeHashID(), L"A2Short");
+    EXPECT_EQ(logs.at(0)->GetParentHashIDs().size(), (size_t)1);
+    EXPECT_EQ(logs.at(0)->GetParentHashIDs().at(0), L"A3");
+    EXPECT_EQ(logs.at(0)->GetAbbreviatedParentHashIDs().size(), (size_t)1);
+    EXPECT_EQ(logs.at(0)->GetAbbreviatedParentHashIDs().at(0), L"A3Short");
+
+    EXPECT_EQ(logs.at(1)->GetColumnIndex(), (size_t)0);
+    EXPECT_EQ(logs.at(1)->GetHashID(), L"A3");
+    EXPECT_EQ(logs.at(1)->GetAbbreviatedHashID(), L"A3Short");
+    EXPECT_EQ(logs.at(1)->GetTreeHashID(), L"A4");
+    EXPECT_EQ(logs.at(1)->GetAbbreviatedTreeHashID(), L"A4Short");
+    EXPECT_EQ(logs.at(1)->GetParentHashIDs().size(), (size_t)2);
+    EXPECT_EQ(logs.at(1)->GetParentHashIDs().at(0), L"A5");
+    EXPECT_EQ(logs.at(1)->GetParentHashIDs().at(1), L"A6");
+    EXPECT_EQ(logs.at(1)->GetAbbreviatedParentHashIDs().size(), (size_t)2);
+    EXPECT_EQ(logs.at(1)->GetAbbreviatedParentHashIDs().at(0), L"A5Short");
+    EXPECT_EQ(logs.at(1)->GetAbbreviatedParentHashIDs().at(1), L"A6Short");
+
+    EXPECT_EQ(logs.at(2)->GetColumnIndex(), (size_t)1);
+    EXPECT_EQ(logs.at(2)->GetHashID(), L"A6");
+    EXPECT_EQ(logs.at(2)->GetAbbreviatedHashID(), L"A6Short");
+    EXPECT_EQ(logs.at(2)->GetTreeHashID(), L"A7");
+    EXPECT_EQ(logs.at(2)->GetAbbreviatedTreeHashID(), L"A7Short");
+    EXPECT_EQ(logs.at(2)->GetParentHashIDs().size(), (size_t)1);
+    EXPECT_EQ(logs.at(2)->GetParentHashIDs().at(0), L"A8");
+    EXPECT_EQ(logs.at(2)->GetAbbreviatedParentHashIDs().size(), (size_t)1);
+    EXPECT_EQ(logs.at(2)->GetAbbreviatedParentHashIDs().at(0), L"A8Short");
+
+    EXPECT_EQ(logs.at(3)->GetColumnIndex(), (size_t)0);
+    EXPECT_EQ(logs.at(3)->GetHashID(), L"B1");
+    EXPECT_EQ(logs.at(3)->GetAbbreviatedHashID(), L"B1Short");
+    EXPECT_EQ(logs.at(3)->GetTreeHashID(), L"B2");
+    EXPECT_EQ(logs.at(3)->GetAbbreviatedTreeHashID(), L"B2Short");
+    EXPECT_EQ(logs.at(3)->GetParentHashIDs().size(), (size_t)0);
+    EXPECT_EQ(logs.at(3)->GetAbbreviatedParentHashIDs().size(), (size_t)0);
+}
+
+TEST_F(GitServiceTest, ParseGitLog)
+{
+    std::wstring str = L"";
+    str += L"commit e6c413289f2c1fd6fc6377495926ec5e5644de98 (HEAD -> 20240114Git, origin/20240114Git)\n";
+    str += L"Author:     Test Tester <test@gmail.com>\n";
+    str += L"AuthorDate: Thu Jan 25 22:47:35 2024 +0800\n";
+    str += L"Commit:     Test Tester <test@gmail.com>\n";
+    str += L"CommitDate: Thu Jan 25 22:47:35 2024 +0800\n";
+    str += L"\n";
+    str += L"    [GIt] Parse Git Log Graph\n";
+    str += L"\n";
+
+    DECLARE_SPTR(GitLog, log1);
+    GitService::ParseGitLog(str, log1);
+    EXPECT_EQ(log1->GetHashID(), L"e6c413289f2c1fd6fc6377495926ec5e5644de98");
+    EXPECT_EQ(log1->GetIsHead(), true);
+    EXPECT_EQ(log1->GetTags().size(), (size_t)2);
+    EXPECT_EQ(log1->GetTags().at(0), L"20240114Git");
+    EXPECT_EQ(log1->GetTags().at(1), L"origin/20240114Git");
+    EXPECT_EQ(log1->GetAuthor(), L"Test Tester");
+    EXPECT_EQ(log1->GetAuthorEmail(), L"test@gmail.com");
+    EXPECT_EQ(log1->GetAuthorDate(), GitService::ParseGitLogDatetime(L"Thu Jan 25 22:47:35 2024 +0800"));
+    EXPECT_EQ(log1->GetAuthorDateStr(), L"Thu Jan 25 22:47:35 2024 +0800");
+    EXPECT_EQ(log1->GetCommitter(), L"Test Tester");
+    EXPECT_EQ(log1->GetCommitterEmail(), L"test@gmail.com");
+    EXPECT_EQ(log1->GetCommitDate(), GitService::ParseGitLogDatetime(L"Thu Jan 25 22:47:35 2024 +0800"));
+    EXPECT_EQ(log1->GetCommitDateStr(), L"Thu Jan 25 22:47:35 2024 +0800");
+    EXPECT_EQ(log1->GetTitle(), L"[GIt] Parse Git Log Graph");
+    EXPECT_EQ(log1->GetMessage(), L"");
+    EXPECT_EQ(log1->GetFullMessage(), str);
+    
+    str = L"commit 660e49f210903438ccc1c959912a995e0b06b3a8\n";
+    str += L"Author:     Test Tester <test@gmail.com>\n";
+    str += L"AuthorDate: Thu Jan 25 21:30:19 2024 +0800\n";
+    str += L"Commit:     Test Tester <test@gmail.com>\n";
+    str += L"CommitDate: Thu Jan 25 21:30:19 2024 +0800\n";
+    str += L"\n";
+    str += L"    [GIt] Git Log Search Criteria\n";
+    str += L"\n";
+    str += L"    CEF-related documentation and build improvements.\n";
+    str += L"\n";
+    str += L"    See #24230.\n";
+    str += L"\n";
+    DECLARE_SPTR(GitLog, log2);
+    GitService::ParseGitLog(str, log2);
+    EXPECT_EQ(log2->GetHashID(), L"660e49f210903438ccc1c959912a995e0b06b3a8");
+    EXPECT_EQ(log2->GetIsHead(), false);
+    EXPECT_EQ(log2->GetTags().size(), (size_t)0);
+    EXPECT_EQ(log2->GetAuthor(), L"Test Tester");
+    EXPECT_EQ(log2->GetAuthorEmail(), L"test@gmail.com");
+    EXPECT_EQ(log2->GetAuthorDate(), GitService::ParseGitLogDatetime(L"Thu Jan 25 21:30:19 2024 +0800"));
+    EXPECT_EQ(log2->GetAuthorDateStr(), L"Thu Jan 25 21:30:19 2024 +0800");
+    EXPECT_EQ(log2->GetCommitter(), L"Test Tester");
+    EXPECT_EQ(log2->GetCommitterEmail(), L"test@gmail.com");
+    EXPECT_EQ(log2->GetCommitDate(), GitService::ParseGitLogDatetime(L"Thu Jan 25 21:30:19 2024 +0800"));
+    EXPECT_EQ(log2->GetCommitDateStr(), L"Thu Jan 25 21:30:19 2024 +0800");
+    EXPECT_EQ(log2->GetTitle(), L"[GIt] Git Log Search Criteria");
+    EXPECT_EQ(log2->GetMessage(), L"CEF-related documentation and build improvements.\n\nSee #24230.\n");
+    EXPECT_EQ(log2->GetFullMessage(), str);
+
+    str = L"commit d34a8e0f04315ea9f3d906cd6e05fee8af63286c\n";
+    str += L"Author:     Test Tester <test@gmail.com>\n";
+    str += L"AuthorDate: Mon Jan 22 20:41:42 2024 +0800\n";
+    str += L"Commit:     Test Tester <test@gmail.com>\n";
+    str += L"CommitDate: Mon Jan 22 20:41:42 2024 +0800\n";
+    str += L"\n";
+    str += L"    [Git] Log and Branch\n";
+    str += L"\n";
+    DECLARE_SPTR(GitLog, log3);
+    GitService::ParseGitLog(str, log3);
+    EXPECT_EQ(log3->GetHashID(), L"d34a8e0f04315ea9f3d906cd6e05fee8af63286c");
+    EXPECT_EQ(log3->GetIsHead(), false);
+    EXPECT_EQ(log3->GetTags().size(), (size_t)0);
+    EXPECT_EQ(log3->GetAuthor(), L"Test Tester");
+    EXPECT_EQ(log3->GetAuthorEmail(), L"test@gmail.com");
+    EXPECT_EQ(log3->GetAuthorDate(), GitService::ParseGitLogDatetime(L"Mon Jan 22 20:41:42 2024 +0800"));
+    EXPECT_EQ(log3->GetAuthorDateStr(), L"Mon Jan 22 20:41:42 2024 +0800");
+    EXPECT_EQ(log3->GetCommitter(), L"Test Tester");
+    EXPECT_EQ(log3->GetCommitterEmail(), L"test@gmail.com");
+    EXPECT_EQ(log3->GetCommitDate(), GitService::ParseGitLogDatetime(L"Mon Jan 22 20:41:42 2024 +0800"));
+    EXPECT_EQ(log3->GetCommitDateStr(), L"Mon Jan 22 20:41:42 2024 +0800");
+    EXPECT_EQ(log3->GetTitle(), L"[Git] Log and Branch");
+    EXPECT_EQ(log3->GetMessage(), L"");
+    EXPECT_EQ(log3->GetFullMessage(), str);
+}
+
 TEST_F(GitServiceTest, ParseGitDiff)
 {
     std::wstring str = L"diff --git a/test.txt b/test.txt\r\n";
@@ -72,12 +215,8 @@ TEST_F(GitServiceTest, ParseGitDiff)
     EXPECT_EQ(diff->GetChangedLines()[0], expectedChangedLine);
 }
 
-TEST_F(GitServiceTest, FullTest)
+TEST_F(GitServiceTest, StageAndDifference)
 {
-    if (std::filesystem::exists(this->GetWorkspace()))
-        std::filesystem::remove_all(this->GetWorkspace());
-    std::filesystem::create_directory(this->GetWorkspace());
-
     // init
     GitService::Initialize(this->GetLogProperty().get(), this->GetWorkspace());
     EXPECT_TRUE(filesystem::exists(this->GetWorkspace() + L"/.git/HEAD"));
@@ -206,4 +345,13 @@ TEST_F(GitServiceTest, FullTest)
     EXPECT_EQ(statusDelete->GetWorkingTreeFiles()[GitFileStatus::Deleted].at(0), L"test2.txt");
     GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test2.txt");
     GitService::Commit(this->GetLogProperty().get(), this->GetWorkspace(), L"Test Delete");
+
+    // Summary Log
+    std::vector<std::shared_ptr<GitLog>> logs;
+    GitService::GetLogs(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, logs);
+    EXPECT_EQ(logs.size(), (size_t)4);
+    EXPECT_EQ(logs.at(0)->GetTitle(), L"Test Delete");
+    EXPECT_EQ(logs.at(1)->GetTitle(), L"Test Rename");
+    EXPECT_EQ(logs.at(2)->GetTitle(), L"Test Modify");
+    EXPECT_EQ(logs.at(3)->GetTitle(), L"Test Commit");
 }

@@ -30,7 +30,7 @@ namespace vcc
 
 	std::vector<std::wstring> SplitString(std::wstring str, const std::wstring &delimiter, 
 		const std::vector<std::wstring> &commandOpenList = {}, const std::vector<std::wstring> &commandCloseList = {}, const std::vector<std::wstring> &commandEscapeList = {});
-	std::vector<std::wstring> SplitStringByLine(std::wstring str);
+	std::vector<std::wstring> SplitStringByLine(const std::wstring &str);
 	std::vector<std::wstring> SplitStringByUpperCase(const std::wstring &str, bool splitDigit, bool splitSpecialChar);
 
 	// Padding

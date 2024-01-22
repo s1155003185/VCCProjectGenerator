@@ -162,7 +162,7 @@ namespace vcc
 		return results;
 	}
 
-	std::vector<std::wstring> SplitStringByLine(std::wstring str)
+	std::vector<std::wstring> SplitStringByLine(const std::wstring &str)
 	{
 		std::vector<std::wstring> results;
 		if (str.empty())
