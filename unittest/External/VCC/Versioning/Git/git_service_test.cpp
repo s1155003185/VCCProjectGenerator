@@ -72,7 +72,12 @@ TEST_F(GitServiceTest, ParseGitDiff)
     EXPECT_EQ(diff->GetChangedLines()[0], expectedChangedLine);
 }
 
-TEST_F(GitServiceTest, FullTest)
+TEST_F(GitServiceTest, LogAndBranch)
+{
+
+}
+
+TEST_F(GitServiceTest, StageAndDifference)
 {
     if (std::filesystem::exists(this->GetWorkspace()))
         std::filesystem::remove_all(this->GetWorkspace());
