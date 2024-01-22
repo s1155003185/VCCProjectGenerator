@@ -30,15 +30,15 @@ namespace vcc
 		}
 
 		logMessage += L" " + GetCurrentDatetimeString();
-		if (!IsEmptyOrWhitespace(id))
+		if (!IsBlank(id))
 			logMessage += L" [" + id + L"]";
-		if (!IsEmptyOrWhitespace(logProperty->GetUserID()))
+		if (!IsBlank(logProperty->GetUserID()))
 			logMessage += L" [" + logProperty->GetUserID() + L"] ";
 		logMessage += L" " + message;
 		if (logProperty->GetIsConsoleLog())
 			std::wcout << logMessage << std::endl;
 
-		if (!IsEmptyOrWhitespace(logProperty->GetFilePath())) {
+		if (!IsBlank(logProperty->GetFilePath())) {
 			AppendFileOneLine(logProperty->GetFilePath(), logMessage, true);
 		}
 		return logMessage;
