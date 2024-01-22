@@ -263,7 +263,7 @@ namespace vcc
     void GitService::GetDifferenceIndexFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
     {
         TRY_CATCH(
-            assert(!IsEmptyOrWhitespace(filePath));
+            assert(!IsBlank(filePath));
             std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
             ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff --cached " + lineStr + Concat(hashIDs, L" ")), diff);
         )
@@ -272,7 +272,7 @@ namespace vcc
     void GitService::GetDifferenceWorkingFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
     {
         TRY_CATCH(
-            assert(!IsEmptyOrWhitespace(filePath));
+            assert(!IsBlank(filePath));
             std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
             ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + lineStr + Concat(hashIDs, L" ") + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
         )
@@ -281,7 +281,7 @@ namespace vcc
     void GitService::GetDifferenceFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
     {
         TRY_CATCH(
-            assert(!IsEmptyOrWhitespace(filePath));
+            assert(!IsBlank(filePath));
             std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
             ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff HEAD " + lineStr + Concat(hashIDs, L" ") + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
         )
@@ -290,7 +290,7 @@ namespace vcc
     void GitService::GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
     {
         TRY_CATCH(
-            assert(!IsEmptyOrWhitespace(filePath));
+            assert(!IsBlank(filePath));
             std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
             ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + lineStr + fromHashID + L"..." + toHashID + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
         )
@@ -340,7 +340,7 @@ namespace vcc
     void GitService::RestoreFileToParticularCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath, const std::wstring &hashID)
     {
         TRY_CATCH(
-            assert(!IsEmptyOrWhitespace(hashID));
+            assert(!IsBlank(hashID));
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git restore --source=" + hashID + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
         )        
     }
@@ -464,7 +464,7 @@ namespace vcc
     {
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global --list");
-            if (!IsEmptyOrWhitespace(cmdResult)) {
+            if (!IsBlank(cmdResult)) {
                 DECLARE_SPTR(ConfigElement, element);
                 DECLARE_UPTR(ConfigReader, reader);
                 reader->Parse(cmdResult, element);
@@ -485,7 +485,7 @@ namespace vcc
     {
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global " + key);
-            return IsEmptyOrWhitespace(cmdResult) ? L"" : SplitStringByLine(cmdResult).at(0);
+            return IsBlank(cmdResult) ? L"" : SplitStringByLine(cmdResult).at(0);
         )
         return L"";
     }
@@ -543,7 +543,7 @@ namespace vcc
     {
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local --list");
-            if (!IsEmptyOrWhitespace(cmdResult)) {
+            if (!IsBlank(cmdResult)) {
                 DECLARE_SPTR(ConfigElement, element);
                 DECLARE_UPTR(ConfigReader, reader);
 
@@ -564,7 +564,7 @@ namespace vcc
     {
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local " + key);
-            return IsEmptyOrWhitespace(cmdResult) ? L"" : SplitStringByLine(cmdResult).at(0);
+            return IsBlank(cmdResult) ? L"" : SplitStringByLine(cmdResult).at(0);
         )
         return L"";
     }

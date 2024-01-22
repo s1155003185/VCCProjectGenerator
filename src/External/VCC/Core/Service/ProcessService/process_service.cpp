@@ -165,10 +165,10 @@ namespace vcc
             std::wstring result = L"";
             try {
                 currentDirectory = std::filesystem::current_path().wstring();
-                if (!IsEmptyOrWhitespace(workspace))
+                if (!IsBlank(workspace))
                     std::filesystem::current_path(workspace);
             } catch (exception &e) {
-                if (!IsEmptyOrWhitespace(workspace))
+                if (!IsBlank(workspace))
                     std::filesystem::current_path(currentDirectory);
                 THROW_EXCEPTION(e);
                 return result;
@@ -176,12 +176,12 @@ namespace vcc
             try {
                 result = ProcessService::Execute(logProperty, id, command);
             } catch (Exception &e) {
-                if (!IsEmptyOrWhitespace(workspace))
+                if (!IsBlank(workspace))
                     std::filesystem::current_path(currentDirectory);
                 THROW_EXCEPTION(e);
             }
             try {
-                if (!IsEmptyOrWhitespace(workspace))
+                if (!IsBlank(workspace))
                     std::filesystem::current_path(currentDirectory);
             } catch (exception &e) {
                 THROW_EXCEPTION(e);

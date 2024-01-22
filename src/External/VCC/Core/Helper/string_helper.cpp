@@ -46,7 +46,7 @@ namespace vcc
 		return str.empty();
 	}
 
-	bool IsEmptyOrWhitespace(const std::wstring &str)
+	bool IsBlank(const std::wstring &str)
 	{
 		for (const wchar_t &c : str) {
 			if (!std::iswspace(c))

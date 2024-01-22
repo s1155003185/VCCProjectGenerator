@@ -29,7 +29,7 @@ namespace vcc
             virtual void _LogRedo() 
             { 
                 std::wstring message = this->_GetRedoMessage();
-                if (!IsEmptyOrWhitespace(message)) {
+                if (!IsBlank(message)) {
                     std::shared_ptr<LogProperty> defaultProperty = std::make_shared<LogProperty>();
                     LogService::LogInfo(defaultProperty.get(), L"", message); 
                 }
@@ -38,7 +38,7 @@ namespace vcc
             virtual void _LogUndo() 
             { 
                 std::wstring message = this->_GetUndoMessage();
-                if (!IsEmptyOrWhitespace(message)) {
+                if (!IsBlank(message)) {
                     std::shared_ptr<LogProperty> defaultProperty = std::make_shared<LogProperty>();
                     LogService::LogInfo(defaultProperty.get(), L"", message); 
                 }

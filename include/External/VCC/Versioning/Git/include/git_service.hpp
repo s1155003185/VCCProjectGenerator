@@ -60,6 +60,40 @@ namespace vcc
             }
     };
 
+    class GitLogSearchOption : public BaseObject 
+    {
+        
+        public:
+            GitLogSearchOption() : BaseObject() {}
+            virtual ~GitLogSearchOption() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitLogSearchOption>(*this);
+            }
+    };
+
+    class GitLogInfo : public BaseObject {
+        GETSET(std::wstring, HashID, L"");
+        GETSET(std::wstring, ParentHashID, L"");
+        VECTOR(std::wstring, Tags); // Decorate
+        GETSET(std::wstring, Author, L"");
+        GETSET(std::wstring, AuthorEmail, L"");
+        GETSET(std::wstring, AuthorDate, L"");
+        GETSET(std::wstring, AuthorDateRelative, L"");
+        GETSET(std::wstring, Committer, L"");
+        GETSET(std::wstring, CommitterEmail, L"");
+        GETSET(std::wstring, CommitterDate, L"");
+        GETSET(std::wstring, CommitterDateRelative, L"");
+        GETSET(std::wstring, Subject, L"");
+        public:
+            GitLogInfo() : BaseObject() {}
+            virtual ~GitLogInfo() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitLogInfo>(*this);
+            }
+    };
+
     class GitDifferenceSummary : public BaseObject {
         friend class GitService;
 
@@ -141,6 +175,7 @@ namespace vcc
         static void GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
 
         // Log
+        //static void GetLog(const LogProperty *logProperty, const std::wstring &workspace, const GitLogSearchOption *searchOption, );
 
         // Commit
         static void Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);

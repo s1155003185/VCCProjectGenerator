@@ -127,7 +127,7 @@ namespace vcc
 
     void CreateDirectory(const std::wstring &path)
     {
-        if (IsEmptyOrWhitespace(path) || IsDirectoryExists(path))
+        if (IsBlank(path) || IsDirectoryExists(path))
             return;
 
         try
