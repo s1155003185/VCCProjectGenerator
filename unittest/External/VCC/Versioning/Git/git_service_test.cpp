@@ -23,6 +23,10 @@ class GitServiceTest : public testing::Test
         void SetUp() override
         {
             this->_LogProperty->SetIsConsoleLog(false);
+
+            if (std::filesystem::exists(this->GetWorkspace()))
+                std::filesystem::remove_all(this->GetWorkspace());
+            std::filesystem::create_directory(this->GetWorkspace());
         }
 
         void TearDown() override
@@ -79,10 +83,6 @@ TEST_F(GitServiceTest, LogAndBranch)
 
 TEST_F(GitServiceTest, StageAndDifference)
 {
-    if (std::filesystem::exists(this->GetWorkspace()))
-        std::filesystem::remove_all(this->GetWorkspace());
-    std::filesystem::create_directory(this->GetWorkspace());
-
     // init
     GitService::Initialize(this->GetLogProperty().get(), this->GetWorkspace());
     EXPECT_TRUE(filesystem::exists(this->GetWorkspace() + L"/.git/HEAD"));
