@@ -53,6 +53,16 @@ TEST_F(GitServiceTest, Config)
     EXPECT_EQ(config->GetUserEmail(), userEmail);
 }
 
+TEST_F(GitServiceTest, ParseGitLog)
+{
+
+}
+
+TEST_F(GitServiceTest, LogAndBranch)
+{
+
+}
+
 TEST_F(GitServiceTest, ParseGitDiff)
 {
     std::wstring str = L"diff --git a/test.txt b/test.txt\r\n";
@@ -74,11 +84,6 @@ TEST_F(GitServiceTest, ParseGitDiff)
     EXPECT_EQ(diff->GetLineNumberNew()[0], (size_t)1);
     EXPECT_EQ(diff->GetLineCountNew()[0], (size_t)2);
     EXPECT_EQ(diff->GetChangedLines()[0], expectedChangedLine);
-}
-
-TEST_F(GitServiceTest, LogAndBranch)
-{
-
 }
 
 TEST_F(GitServiceTest, StageAndDifference)

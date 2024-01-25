@@ -43,8 +43,6 @@ namespace vcc
     };
 
     class GitStatus : public BaseObject {
-        friend class GitService;
-
         GETSET(std::wstring, Branch, L"");
         GETSET(std::wstring, RemoteBranch, L"");
 
@@ -60,21 +58,75 @@ namespace vcc
             }
     };
 
-    class GitLogSearchOption : public BaseObject 
+    enum class GitLogOrderBy {
+        NA,
+        Date,
+        AuthorDate,
+        Topo,
+        Reverse
+    };
+
+    class GitLogSearchCriteria : public BaseObject 
     {
-        
+        // Commit Limiting
+        GETSET(int64_t, LogCount, -1);
+        GETSET(int64_t, Skip, -1);
+        GETSET(std::wstring, DateAfter, L"");
+        GETSET(std::wstring, DateBefore, L"");
+        GETSET(std::wstring, Author, L"");
+        GETSET(std::wstring, Committer, L"");
+        GETSET(std::wstring, Grep, L"");
+        GETSET(bool, IsGrepAllMatch, false);
+        GETSET(bool, IsGrepInvertGrep, false);
+        GETSET(bool, IsPatternRegexpIgnoreCase, false);
+        GETSET(bool, IsPatternExtendedRegexp, false);
+        GETSET(bool, IsPatternFixedStrings, false);
+        GETSET(bool, IsMerges, false);
+        GETSET(bool, IsNoMerges, false);
+        GETSET(int64_t, MinParents, -1);
+        GETSET(int64_t, MaxParents, -1);
+        GETSET(bool, IsFirstParent, false);
+        GETSET(bool, IsAll, false);
+        GETSET(bool, IsAllBranches, false);
+        GETSET(std::wstring, Branches, L"");
+        GETSET(bool, IsAllTags, false);
+        GETSET(std::wstring, Tags, L"");
+        GETSET(bool, IsAllRemotes, false);
+        GETSET(std::wstring, Remotes, L"");
+        GETSET(bool, IsAllGlob, false);
+        GETSET(std::wstring, Glob, L"");
+        GETSET(std::wstring, ExcludeGlob, L"");
+
+        // History Simplication
+        GETSET(bool, IsSimplifyByDecoration, false);
+        GETSET(bool, IsShowPulls, false);
+        GETSET(bool, IsFullHistory, false);
+        GETSET(bool, IsSparse, false);
+        GETSET(bool, IsSimplifyMerges, false);
+        GETSET(std::wstring, AncestryPath, L"");
+
+        // Order By
+        GETSET(GitLogOrderBy, OrderBy, GitLogOrderBy::NA);
+
+        // Revision Range
+        GETSET(std::wstring, RevisionFrom, L"");
+        GETSET(std::wstring, RevisionTo, L"");
+
+        // Paths
+        VECTOR(std::wstring, Paths);
+
         public:
-            GitLogSearchOption() : BaseObject() {}
-            virtual ~GitLogSearchOption() {}
+            GitLogSearchCriteria() : BaseObject() {}
+            virtual ~GitLogSearchCriteria() {}
 
             virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitLogSearchOption>(*this);
+                return std::make_shared<GitLogSearchCriteria>(*this);
             }
     };
 
-    class GitLogInfo : public BaseObject {
+    class GitLog : public BaseObject {
         GETSET(std::wstring, HashID, L"");
-        GETSET(std::wstring, ParentHashID, L"");
+        VECTOR(std::wstring, ParentHashID);
         VECTOR(std::wstring, Tags); // Decorate
         GETSET(std::wstring, Author, L"");
         GETSET(std::wstring, AuthorEmail, L"");
@@ -86,11 +138,11 @@ namespace vcc
         GETSET(std::wstring, CommitterDateRelative, L"");
         GETSET(std::wstring, Subject, L"");
         public:
-            GitLogInfo() : BaseObject() {}
-            virtual ~GitLogInfo() {}
+            GitLog() : BaseObject() {}
+            virtual ~GitLog() {}
 
             virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitLogInfo>(*this);
+                return std::make_shared<GitLog>(*this);
             }
     };
 
@@ -168,14 +220,19 @@ namespace vcc
         // hashIDs.size() > 1, then different between commit
         static void GetDifferenceSummary(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, std::shared_ptr<GitDifferenceSummary> summary);
         // filePath must be filled
-        static void ParseGitDiff(const std::wstring str, std::shared_ptr<GitDifference> difference);
+        static void ParseGitDiff(const std::wstring &str, std::shared_ptr<GitDifference> difference);
         static void GetDifferenceIndexFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
         static void GetDifferenceWorkingFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
         static void GetDifferenceFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
         static void GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
 
         // Log
-        //static void GetLog(const LogProperty *logProperty, const std::wstring &workspace, const GitLogSearchOption *searchOption, );
+        static std::wstring GetGitLogSearchCriteriaString(const GitLogSearchCriteria *searchCriteria);
+        static void ParseGitLog(const std::wstring &str, std::vector<std::shared_ptr<GitLog>> &logs);
+        // To draw graph, link nodes if having same ParentHashID and HashID
+        static void GetLogs(const LogProperty *logProperty, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria, std::vector<std::shared_ptr<GitLog>> &logs);
+        // Get log by GetLogs first, then put the share pointer to GetLogDetail
+        static void GetLogDetail(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitLog> log);
 
         // Commit
         static void Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);

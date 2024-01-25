@@ -177,7 +177,7 @@ namespace vcc
         )
     }
 
-    void GitService::ParseGitDiff(const std::wstring str, std::shared_ptr<GitDifference> difference)
+    void GitService::ParseGitDiff(const std::wstring &str, std::shared_ptr<GitDifference> difference)
     {
         TRY_CATCH(
             std::wstring filePathOldPrefix = L"--- a/";
@@ -294,6 +294,172 @@ namespace vcc
             std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
             ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + lineStr + fromHashID + L"..." + toHashID + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
         )
+    }
+
+    std::wstring GitService::GetGitLogSearchCriteriaString(const GitLogSearchCriteria *searchCriteria)
+    {
+        std::wstring optionStr = L"";
+        TRY_CATCH(
+            if (searchCriteria == nullptr)
+                return optionStr;
+                
+            // Commit Limiting
+            if (searchCriteria->GetLogCount() > 0)
+                optionStr += L" -" + std::to_wstring(searchCriteria->GetLogCount());
+            
+            if (searchCriteria->GetSkip() > 0)
+                optionStr += L" --skip=" + std::to_wstring(searchCriteria->GetSkip());
+
+            if (!IsBlank(searchCriteria->GetDateAfter()))
+                optionStr += L" --after=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetDateAfter()) + L"\"";
+
+            if (!IsBlank(searchCriteria->GetDateBefore()))
+                optionStr += L" --before=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetDateBefore()) + L"\"";
+            
+            if (!IsBlank(searchCriteria->GetAuthor()))
+                optionStr += L" --author=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetAuthor()) + L"\"";
+
+            if (!IsBlank(searchCriteria->GetCommitter()))
+                optionStr += L" --committer=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetCommitter()) + L"\"";
+
+            if (!IsBlank(searchCriteria->GetGrep()))
+                optionStr += L" --grep=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetGrep()) + L"\"";
+            
+            if (searchCriteria->GetIsGrepAllMatch())
+                optionStr += L" --all-match";
+            
+            if (searchCriteria->GetIsGrepInvertGrep())
+                optionStr += L" --invert-grep";
+            
+            if (searchCriteria->GetIsPatternRegexpIgnoreCase())
+                optionStr += L" --regexp-ignore-case";
+
+            if (searchCriteria->GetIsPatternExtendedRegexp())
+                optionStr += L" --extended-regexp";
+
+            if (searchCriteria->GetIsPatternFixedStrings())
+                optionStr += L" --fixed-strings";
+
+            if (searchCriteria->GetIsMerges())
+                optionStr += L" --merges";
+
+            if (searchCriteria->GetIsNoMerges())
+                optionStr += L" --no-merges";
+
+            if (searchCriteria->GetMinParents() >= 0)
+                optionStr += L" --min-parents=" + std::to_wstring(searchCriteria->GetMinParents());
+            
+            if (searchCriteria->GetMaxParents() >= 0)
+                optionStr += L" --max-parents=" + std::to_wstring(searchCriteria->GetMaxParents());
+            
+            if (searchCriteria->GetIsFirstParent())
+                optionStr += L" --first-parent";
+
+            if (searchCriteria->GetIsAll())
+                optionStr += L" --all";
+
+            if (searchCriteria->GetIsAllBranches())
+                optionStr += L" --branches";
+            else if (!IsBlank(searchCriteria->GetBranches()))
+                optionStr += L" --branches=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetBranches()) + L"\"";
+            
+            if (searchCriteria->GetIsAllTags())
+                optionStr += L" --tags";
+            else if (!IsBlank(searchCriteria->GetTags()))
+                optionStr += L" --tags=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetTags()) + L"\"";
+            
+            if (searchCriteria->GetIsAllRemotes())
+                optionStr += L" --remotes";
+            else if (!IsBlank(searchCriteria->GetRemotes()))
+                optionStr += L" --remotes=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetRemotes()) + L"\"";
+            
+            if (searchCriteria->GetIsAllGlob())
+                optionStr += L" --glob";
+            else if (!IsBlank(searchCriteria->GetGlob()))
+                optionStr += L" --glob=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetGlob()) + L"\"";
+            
+            if (!IsBlank(searchCriteria->GetExcludeGlob()))
+                optionStr += L" --exclude=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetExcludeGlob()) + L"\"";
+            
+            // History Simplification
+            if (searchCriteria->GetIsSimplifyByDecoration())
+                optionStr += L" --simplify-by-decoration";
+
+            if (searchCriteria->GetIsShowPulls())
+                optionStr += L" --show-pulls";
+
+            if (searchCriteria->GetIsFullHistory())
+                optionStr += L" --full-history";
+            
+            if (searchCriteria->GetIsSparse())
+                optionStr += L" --sparse";
+
+            if (searchCriteria->GetIsSimplifyMerges())
+                optionStr += L" --simplify-merges";
+
+            if (!IsBlank(searchCriteria->GetAncestryPath()))
+                optionStr += L" --ancestry-path=" + searchCriteria->GetAncestryPath();
+            
+            switch (searchCriteria->GetOrderBy())
+            {
+            case GitLogOrderBy::NA:
+                break;
+            case GitLogOrderBy::Date:
+                optionStr += L" --date-order";
+                break;
+            case GitLogOrderBy::AuthorDate:
+                optionStr += L" --author-date-order";
+                break;
+            case GitLogOrderBy::Topo:
+                optionStr += L" --topo-order";
+                break;
+            case GitLogOrderBy::Reverse:
+                optionStr += L" --reverse";
+                break;            
+            default:
+                assert(false);
+                break;
+            }
+
+            // Revision Range
+            if (!IsBlank(searchCriteria->GetRevisionFrom()) || !IsBlank(searchCriteria->GetRevisionTo())) {
+                std::wstring revisionStr = L"";
+                if (!IsBlank(searchCriteria->GetRevisionFrom()))
+                    revisionStr += searchCriteria->GetRevisionFrom();
+                revisionStr += L"..";
+                if (!IsBlank(searchCriteria->GetRevisionTo()))
+                    revisionStr += searchCriteria->GetRevisionTo();
+                optionStr += L" " + revisionStr;
+            }
+
+            // path must be at the end            
+            if (!searchCriteria->GetPaths().empty()) {
+                optionStr += L" --";
+                for (const std::wstring &path : searchCriteria->GetPaths()) {
+                    optionStr += L" " + path;
+                }
+            }
+        )
+        return optionStr;
+    }
+
+    void GitService::ParseGitLog(const std::wstring &str, std::vector<std::shared_ptr<GitLog>> &logs)
+    {
+
+    }
+    
+    void GitService::GetLogs(const LogProperty *logProperty, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria, std::vector<std::shared_ptr<GitLog>> &logs)
+    {
+        //TRY_CATCH(
+            std::wstring optionStr = GetGitLogSearchCriteriaString(searchCriteria);
+
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git log --decorate=full " + optionStr);
+        //)
+    }
+
+    void GitService::GetLogDetail(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitLog> log)
+    {
+
     }
 
     void GitService::Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
