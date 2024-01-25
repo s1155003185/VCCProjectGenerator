@@ -125,18 +125,26 @@ namespace vcc
     };
 
     class GitLog : public BaseObject {
+        GETSET(size_t, ColumnIndex, (size_t)0);
         GETSET(std::wstring, HashID, L"");
-        VECTOR(std::wstring, ParentHashID);
-        VECTOR(std::wstring, Tags); // Decorate
+        GETSET(std::wstring, AbbreviatedHashID, L"");
+        GETSET(std::wstring, TreeHashID, L"");
+        GETSET(std::wstring, AbbreviatedTreeHashID, L"");
+        VECTOR(std::wstring, ParentHashIDs);
+        VECTOR(std::wstring, AbbreviatedParentHashIDs);
+        GETSET(bool, IsHead, false);
+        VECTOR(std::wstring, Tags);
         GETSET(std::wstring, Author, L"");
         GETSET(std::wstring, AuthorEmail, L"");
-        GETSET(std::wstring, AuthorDate, L"");
-        GETSET(std::wstring, AuthorDateRelative, L"");
+        GETSET(time_t, AuthorDate, -1);
+        GETSET(std::wstring, AuthorDateStr, L"");
         GETSET(std::wstring, Committer, L"");
         GETSET(std::wstring, CommitterEmail, L"");
-        GETSET(std::wstring, CommitterDate, L"");
-        GETSET(std::wstring, CommitterDateRelative, L"");
-        GETSET(std::wstring, Subject, L"");
+        GETSET(time_t, CommitterDate, -1);
+        GETSET(std::wstring, CommitterDateStr, L"");
+        GETSET(std::wstring, Title, L"");
+        GETSET(std::wstring, Message, L"");
+
         public:
             GitLog() : BaseObject() {}
             virtual ~GitLog() {}
@@ -228,8 +236,10 @@ namespace vcc
 
         // Log
         static std::wstring GetGitLogSearchCriteriaString(const GitLogSearchCriteria *searchCriteria);
-        static void ParseGitLog(const std::wstring &str, std::vector<std::shared_ptr<GitLog>> &logs);
-        // To draw graph, link nodes if having same ParentHashID and HashID
+        // only parse git log --graph --oneline --pretty=format:"(%H)(%h)(%T)(%t)(%P)(%p)"
+        static void ParseGitLogGraph(const std::wstring &str, std::vector<std::shared_ptr<GitLog>> &logs);
+        static void ParseGitLog(const std::wstring &str, std::shared_ptr<GitLog> &log);
+        // To draw graph, mark the point by column index first, then link nodes if having same ParentHashID and HashID
         static void GetLogs(const LogProperty *logProperty, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria, std::vector<std::shared_ptr<GitLog>> &logs);
         // Get log by GetLogs first, then put the share pointer to GetLogDetail
         static void GetLogDetail(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitLog> log);

@@ -53,6 +53,59 @@ TEST_F(GitServiceTest, Config)
     EXPECT_EQ(config->GetUserEmail(), userEmail);
 }
 
+TEST_F(GitServiceTest, ParseGitLogGraph)
+{
+    std::wstring str = L"";
+    str += L"* (A1)(A1Short)(A2)(A2Short)(A3)(A3Short)\n"; // normal
+    str += L"*   (A3)(A3Short)(A4)(A4Short)(A5 A6)(A5Short A6Short)\n"; // merge
+    str += L"|\n";
+    str += L"| * (A6)(A6Short)(A7)(A7Short)(A8)(A8Short)\r\n"; // merge branch
+    str += L"* (B1)(B1Short)(B2)(B2Short)()()\r\n"; // node init
+
+    std::vector<std::shared_ptr<GitLog>> logs;
+    GitService::ParseGitLogGraph(str, logs);
+    EXPECT_EQ(logs.size(), (size_t)4);
+    EXPECT_EQ(logs.at(0)->GetColumnIndex(), (size_t)0);
+    EXPECT_EQ(logs.at(0)->GetHashID(), L"A1");
+    EXPECT_EQ(logs.at(0)->GetAbbreviatedHashID(), L"A1Short");
+    EXPECT_EQ(logs.at(0)->GetTreeHashID(), L"A2");
+    EXPECT_EQ(logs.at(0)->GetAbbreviatedTreeHashID(), L"A2Short");
+    EXPECT_EQ(logs.at(0)->GetParentHashIDs().size(), (size_t)1);
+    EXPECT_EQ(logs.at(0)->GetParentHashIDs().at(0), L"A3");
+    EXPECT_EQ(logs.at(0)->GetAbbreviatedParentHashIDs().size(), (size_t)1);
+    EXPECT_EQ(logs.at(0)->GetAbbreviatedParentHashIDs().at(0), L"A3Short");
+
+    EXPECT_EQ(logs.at(1)->GetColumnIndex(), (size_t)0);
+    EXPECT_EQ(logs.at(1)->GetHashID(), L"A3");
+    EXPECT_EQ(logs.at(1)->GetAbbreviatedHashID(), L"A3Short");
+    EXPECT_EQ(logs.at(1)->GetTreeHashID(), L"A4");
+    EXPECT_EQ(logs.at(1)->GetAbbreviatedTreeHashID(), L"A4Short");
+    EXPECT_EQ(logs.at(1)->GetParentHashIDs().size(), (size_t)2);
+    EXPECT_EQ(logs.at(1)->GetParentHashIDs().at(0), L"A5");
+    EXPECT_EQ(logs.at(1)->GetParentHashIDs().at(1), L"A6");
+    EXPECT_EQ(logs.at(1)->GetAbbreviatedParentHashIDs().size(), (size_t)2);
+    EXPECT_EQ(logs.at(1)->GetAbbreviatedParentHashIDs().at(0), L"A5Short");
+    EXPECT_EQ(logs.at(1)->GetAbbreviatedParentHashIDs().at(1), L"A6Short");
+
+    EXPECT_EQ(logs.at(2)->GetColumnIndex(), (size_t)1);
+    EXPECT_EQ(logs.at(2)->GetHashID(), L"A6");
+    EXPECT_EQ(logs.at(2)->GetAbbreviatedHashID(), L"A6Short");
+    EXPECT_EQ(logs.at(2)->GetTreeHashID(), L"A7");
+    EXPECT_EQ(logs.at(2)->GetAbbreviatedTreeHashID(), L"A7Short");
+    EXPECT_EQ(logs.at(2)->GetParentHashIDs().size(), (size_t)1);
+    EXPECT_EQ(logs.at(2)->GetParentHashIDs().at(0), L"A8");
+    EXPECT_EQ(logs.at(2)->GetAbbreviatedParentHashIDs().size(), (size_t)1);
+    EXPECT_EQ(logs.at(2)->GetAbbreviatedParentHashIDs().at(0), L"A8Short");
+
+    EXPECT_EQ(logs.at(3)->GetColumnIndex(), (size_t)0);
+    EXPECT_EQ(logs.at(3)->GetHashID(), L"B1");
+    EXPECT_EQ(logs.at(3)->GetAbbreviatedHashID(), L"B1Short");
+    EXPECT_EQ(logs.at(3)->GetTreeHashID(), L"B2");
+    EXPECT_EQ(logs.at(3)->GetAbbreviatedTreeHashID(), L"B2Short");
+    EXPECT_EQ(logs.at(3)->GetParentHashIDs().size(), (size_t)0);
+    EXPECT_EQ(logs.at(3)->GetAbbreviatedParentHashIDs().size(), (size_t)0);
+}
+
 TEST_F(GitServiceTest, ParseGitLog)
 {
 

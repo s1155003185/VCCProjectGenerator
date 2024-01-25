@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <filesystem>
 #include <map>
+#include <math.h>
 #include <memory>
 #include <regex>
 #include <string>
@@ -443,7 +444,72 @@ namespace vcc
         return optionStr;
     }
 
-    void GitService::ParseGitLog(const std::wstring &str, std::vector<std::shared_ptr<GitLog>> &logs)
+    void GitService::ParseGitLogGraph(const std::wstring &str, std::vector<std::shared_ptr<GitLog>> &logs)
+    {
+        TRY_CATCH(
+            std::vector<std::wstring> lines = SplitStringByLine(str);
+            for (const std::wstring &line : lines) {
+                size_t pos = line.find(L"*");
+                if (pos == std::wstring::npos)
+                    continue;
+                DECLARE_SPTR(GitLog, log);
+                if (pos > 0) {
+                    log->SetColumnIndex((size_t)std::floor(pos/2));
+                } else
+                    log->SetColumnIndex(0);
+                std::wregex pattern(L"\\(([^)]+)\\)");
+                std::wsmatch match;
+                std::wstring::const_iterator searchStart(line.cbegin());
+                size_t cnt = 0;
+                while (std::regex_search(searchStart, line.cend(), match, pattern)) {
+                    switch (cnt)
+                    {
+                    case 0:
+                        log->SetHashID(match[1]);
+                        break;
+                    case 1:
+                        log->SetAbbreviatedHashID(match[1]);
+                        break;
+                    case 2:
+                        log->SetTreeHashID(match[1]);
+                        break;
+                    case 3:
+                        log->SetAbbreviatedTreeHashID(match[1]);
+                        break;
+                    case 4: {
+                        std::wstring parentID = match[1];
+                        std::vector<std::wstring> tokens = SplitString(parentID, L" ");
+                        for (std::wstring token : tokens) {
+                            if (IsBlank(token))
+                                continue;
+                            Trim(token);
+                            log->InsertParentHashIDs(token);
+                        }
+                        break;
+                    }
+                    case 5: {
+                        std::wstring parentID = match[1];
+                        std::vector<std::wstring> tokens = SplitString(parentID, L" ");
+                        for (std::wstring token : tokens) {
+                            if (IsBlank(token))
+                                continue;
+                            Trim(token);
+                            log->InsertAbbreviatedParentHashIDs(token);
+                        }
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                    cnt++;
+                    searchStart = match.suffix().first;
+                }
+                logs.push_back(log);
+            }
+        )
+    }
+
+    void GitService::ParseGitLog(const std::wstring &str, std::shared_ptr<GitLog> &log)
     {
 
     }
