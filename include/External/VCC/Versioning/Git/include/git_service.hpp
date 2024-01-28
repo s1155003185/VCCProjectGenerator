@@ -140,10 +140,11 @@ namespace vcc
         GETSET(std::wstring, AuthorDateStr, L"");
         GETSET(std::wstring, Committer, L"");
         GETSET(std::wstring, CommitterEmail, L"");
-        GETSET(time_t, CommitterDate, -1);
-        GETSET(std::wstring, CommitterDateStr, L"");
+        GETSET(time_t, CommitDate, -1);
+        GETSET(std::wstring, CommitDateStr, L"");
         GETSET(std::wstring, Title, L"");
         GETSET(std::wstring, Message, L"");
+        GETSET(std::wstring, FullMessage, L"");
 
         public:
             GitLog() : BaseObject() {}
@@ -238,7 +239,9 @@ namespace vcc
         static std::wstring GetGitLogSearchCriteriaString(const GitLogSearchCriteria *searchCriteria);
         // only parse git log --graph --oneline --pretty=format:"(%H)(%h)(%T)(%t)(%P)(%p)"
         static void ParseGitLogGraph(const std::wstring &str, std::vector<std::shared_ptr<GitLog>> &logs);
-        static void ParseGitLog(const std::wstring &str, std::shared_ptr<GitLog> &log);
+        // only parse pattern L"Thu Jan 25 22:47:35 2024 +0800"
+        static std::time_t ParseGitLogDatetime(const std::wstring &datimeStr);
+        static void ParseGitLog(const std::wstring &str, std::shared_ptr<GitLog> log);
         // To draw graph, mark the point by column index first, then link nodes if having same ParentHashID and HashID
         static void GetLogs(const LogProperty *logProperty, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria, std::vector<std::shared_ptr<GitLog>> &logs);
         // Get log by GetLogs first, then put the share pointer to GetLogDetail

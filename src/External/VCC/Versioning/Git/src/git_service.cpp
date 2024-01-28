@@ -509,17 +509,157 @@ namespace vcc
         )
     }
 
-    void GitService::ParseGitLog(const std::wstring &str, std::shared_ptr<GitLog> &log)
+    std::time_t GitService::ParseGitLogDatetime(const std::wstring &datimeStr)
     {
+        std::time_t time = -1;
+        TRY_CATCH(
+            struct tm tm;
+            strptime(wstr2str(datimeStr).c_str(), "%a %b %d %H:%M:%S %Y %z", &tm);
+            time = mktime(&tm);
+        )
+        return time;
+    }
 
+    void GitService::ParseGitLog(const std::wstring &str, std::shared_ptr<GitLog> log)
+    {
+        TRY_CATCH(
+            if (!HasPrefix(str, L"commit "))
+                THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"str not has prefix \"commit \"");
+
+            std::wstring hashIDPrffix = L"commit ";
+            std::wstring authorPrefix = L"Author:";
+            std::wstring authorDatePrefix = L"AuthorDate:";
+            std::wstring commitPrefix = L"Commit:";
+            std::wstring commitDatePrefix = L"CommitDate:";
+            std::wstring headerPrefix  =L"HEAD -> ";
+
+            std::vector<std::wstring> lines = SplitStringByLine(str);
+            for (const std::wstring &line : lines) {
+                if (IsBlank(line)) {
+                    // first line is title
+                    // second line is full message
+                    // handle in seccod loop
+                    break;
+                } else if (HasPrefix(line, hashIDPrffix)) {
+                    std::wstring tmpLine = line.substr(hashIDPrffix.length());
+                    Trim(tmpLine);
+                    std::vector<std::wstring> tokens = SplitString(tmpLine, L" ");
+                    if (tokens.empty())
+                        THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"HashID missing: " + str);
+                    if (!IsBlank(log->GetHashID()) && log->GetHashID() != tokens.at(0))
+                        THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"HashID " + log->GetHashID() + L" + not match: " + str);
+                    log->SetHashID(tokens.at(0));
+                    if (tmpLine.find(L"(") != std::wstring::npos) {
+                        std::wregex pattern(L"\\((.*?)\\)");
+                        std::wsmatch matches;
+                        if (std::regex_search(tmpLine, matches, pattern)) {
+                            std::wstring tagsStr = matches[1].str();
+                            Trim(tagsStr);
+                            if (HasPrefix(tagsStr, headerPrefix)) {
+                                log->SetIsHead(true);
+                                tagsStr = tagsStr.substr(headerPrefix.length());
+                                Trim(tagsStr);
+                            } else
+                                log->SetIsHead(false);
+                            std::vector<std::wstring> tagTokens = SplitString(tagsStr, L",");
+                            for (std::wstring tag : tagTokens) {
+                                Trim(tag);
+                                log->InsertTags(tag);
+                            }
+                        }
+                    }
+                } else if (HasPrefix(line, authorPrefix)) {
+                    std::wstring tmpLine = line.substr(authorPrefix.length());
+                    Trim(tmpLine);
+                    // name
+                    std::wstring name = tmpLine.substr(0, tmpLine.find(L"<") - 1);
+                    Trim(name);
+                    log->SetAuthor(name);
+                    //email
+                    std::wregex pattern(L"<(.+?)>");
+                    std::wsmatch matches;
+                    if (std::regex_search(tmpLine, matches, pattern)) {
+                        std::wstring email = matches[1].str();
+                        Trim(email);
+                        log->SetAuthorEmail(email);
+                    }
+                } else if (HasPrefix(line, authorDatePrefix)) {
+                    std::wstring tmpLine = line.substr(authorDatePrefix.length());
+                    Trim(tmpLine);
+                    log->SetAuthorDate(GitService::ParseGitLogDatetime(tmpLine));
+                    log->SetAuthorDateStr(tmpLine);
+                } else if (HasPrefix(line, commitPrefix)) {
+                    std::wstring tmpLine = line.substr(commitPrefix.length());
+                    Trim(tmpLine);
+                    // name
+                    std::wstring name = tmpLine.substr(0, tmpLine.find(L"<") - 1);
+                    Trim(name);
+                    log->SetCommitter(name);
+                    //email
+                    std::wregex pattern(L"<(.+?)>");
+                    std::wsmatch matches;
+                    if (std::regex_search(tmpLine, matches, pattern)) {
+                        std::wstring email = matches[1].str();
+                        Trim(email);
+                        log->SetCommitterEmail(email);
+                    }
+                } else if (HasPrefix(line, commitDatePrefix)) {
+                    std::wstring tmpLine = line.substr(commitDatePrefix.length());
+                    Trim(tmpLine);
+                    log->SetCommitDate(GitService::ParseGitLogDatetime(tmpLine));
+                    log->SetCommitDateStr(tmpLine);
+                }
+            }
+
+            // Title and Message
+            bool isTitle = false;
+            bool isMessage = false;
+            std::wstring title = L"";
+            std::wstring message = L"";
+            std::wstring messagePrefix = L"    ";
+            for (const std::wstring &line : lines) {
+                if (isTitle) {
+                    if (!line.empty()) {
+                        std::wstring tmpStr = line;
+                        if (tmpStr.length() >= messagePrefix.length())
+                            tmpStr = tmpStr.substr(messagePrefix.length());
+                        if (!title.empty())
+                            title += L"\n";
+                        title += tmpStr;
+                    } else {
+                        isTitle = false;
+                        isMessage = true;
+                    }
+                } else if (isMessage) {
+                    std::wstring tmpStr = line;
+                        if (tmpStr.length() >= messagePrefix.length())
+                            tmpStr = tmpStr.substr(messagePrefix.length());
+                    if (!message.empty())
+                        message += L"\n";
+                    message += tmpStr;
+                } else {
+                    if (line.empty()) {
+                        if (title.empty())
+                            isTitle = true;
+                    }
+                }
+            }
+            log->SetTitle(title);
+            log->SetMessage(message);
+            log->SetFullMessage(str);
+        )
     }
     
     void GitService::GetLogs(const LogProperty *logProperty, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria, std::vector<std::shared_ptr<GitLog>> &logs)
     {
         //TRY_CATCH(
-            std::wstring optionStr = GetGitLogSearchCriteriaString(searchCriteria);
-
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git log --decorate=full " + optionStr);
+            ParseGitLogGraph(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git log --graph --oneline --pretty=format:\"(%H)(%h)(%T)(%t)(%P)(%p)\" " + GetGitLogSearchCriteriaString(searchCriteria)),
+                logs);
+            std::map<std::wstring, std::shared_ptr<GitLog>> logMap;
+            for (auto log : logs) {
+                logMap.insert({log->GetHashID(), log});
+            }
+            std::wstring result = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git log --pretty=fuller" + GetGitLogSearchCriteriaString(searchCriteria));
         //)
     }
 
