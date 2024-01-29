@@ -170,139 +170,6 @@ namespace vcc
         )
     }
 
-    void GitService::GetDifferenceSummary(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, std::shared_ptr<GitDifferenceSummary> summary)
-    {
-        TRY_CATCH(
-            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + Concat(hashIDs, L" ") + L" --numstat"));
-            for (const std::wstring &line : lines) {
-                std::vector<std::wstring> tokens = SplitString(line, L"\t", { L"\"" }, { L"\"" }, { L"\\" });
-                if (tokens.size() < 3)
-                    continue;
-                summary->InsertFiles(tokens.at(2));
-                summary->InsertAddLineCounts((size_t)stoi(tokens.at(0)));
-                summary->InsertDeleteLineCounts((size_t)stoi(tokens.at(1)));
-            }
-        )
-    }
-
-    void GitService::ParseGitDiff(const std::wstring &str, std::shared_ptr<GitDifference> difference)
-    {
-        TRY_CATCH(
-            std::wstring filePathOldPrefix = L"--- a/";
-            std::wstring filePathNewPrefix = L"+++ b/";
-            std::wstring lineCountPrefix = L"@@";
-            std::vector<std::wstring> lines = SplitStringByLine(str);
-            size_t rowCount = 0;
-            size_t currentItem = 0;
-            std::wstring currentText = L"";
-            for (const std::wstring &line : lines) {
-                if (rowCount > 0) {
-                    currentText += line + L"\n";
-                    if (rowCount == 1) {
-                        difference->InsertChangedLines(currentText);
-                        currentText = L"";
-                    }
-                    rowCount--;
-                } else {
-                    if (HasPrefix(line, filePathOldPrefix)) {
-                        std::wstring tmpStr = line.substr(filePathOldPrefix.length());
-                        Trim(tmpStr);
-                        difference->SetFilePathOld(tmpStr);
-                    } else if (HasPrefix(line, filePathNewPrefix)){
-                        std::wstring tmpStr = line.substr(filePathNewPrefix.length());
-                        Trim(tmpStr);
-                        difference->SetFilePathNew(tmpStr);
-                    } else if (HasPrefix(line, lineCountPrefix)) {
-                        // sample new: @@ -1 +1,2 @@
-                        // sample modify: @@ -116,10 +116,10 @@ xxxx
-                        // 1. Chop to remove all @@
-                        // 2. Get all numbers
-                        std::wstring tmpStr = line.substr(lineCountPrefix.length());
-                        tmpStr = tmpStr.substr(0, tmpStr.find(lineCountPrefix));
-                        Trim(tmpStr);
-                        std::vector<std::wstring> tokens = SplitString(tmpStr, L" ");
-                        if (tokens.size() != 2)
-                            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
-
-                        // old
-                        std::vector<std::wstring> lineCountOld = SplitString(tokens[0], L",");
-                        if (!(lineCountOld.size() == 1 || lineCountOld.size() == 2))
-                            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
-
-                        std::wstring lineNumberStr = lineCountOld[0];
-                        Trim(lineNumberStr);
-                        if (!(HasPrefix(lineNumberStr, L"-") && lineNumberStr.length() > 1))
-                            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
-
-                        difference->InsertLineNumberOld((size_t)stoi(lineNumberStr.substr(1)));
-                        if (lineCountOld.size() > 1) {
-                            std::wstring lineCountStr = lineCountOld[1];
-                            Trim(lineCountStr);
-                            difference->InsertLineCountOld((size_t)stoi(lineCountStr));
-                        } else
-                            difference->InsertLineCountOld((size_t)0);
-
-                        // new
-                        std::vector<std::wstring> lineCountNew = SplitString(tokens[1], L",");
-                        if (!(lineCountNew.size() == 1 || lineCountNew.size() == 2))
-                            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
-
-                        lineNumberStr = lineCountNew[0];
-                        Trim(lineNumberStr);
-                        if (!(HasPrefix(lineNumberStr, L"+") && lineNumberStr.length() > 1))
-                            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
-
-                        difference->InsertLineNumberNew((size_t)stoi(lineNumberStr.substr(1)));
-                        if (lineCountNew.size() > 1) {
-                            std::wstring lineCountStr = lineCountNew[1];
-                            Trim(lineCountStr);
-                            difference->InsertLineCountNew((size_t)stoi(lineCountStr));
-                        } else
-                            difference->InsertLineCountNew((size_t)0);
-
-                        currentItem = difference->GetLineCountNew().size() - 1;
-                        rowCount = std::max(difference->GetLineCountOld()[currentItem], difference->GetLineCountNew()[currentItem]);
-                    }
-                }
-            }
-        )
-    }
-
-    void GitService::GetDifferenceIndexFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
-    {
-        TRY_CATCH(
-            assert(!IsBlank(filePath));
-            std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
-            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff --cached " + lineStr + Concat(hashIDs, L" ")), diff);
-        )
-    }
-
-    void GitService::GetDifferenceWorkingFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
-    {
-        TRY_CATCH(
-            assert(!IsBlank(filePath));
-            std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
-            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + lineStr + Concat(hashIDs, L" ") + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
-        )
-    }
-
-    void GitService::GetDifferenceFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
-    {
-        TRY_CATCH(
-            assert(!IsBlank(filePath));
-            std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
-            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff HEAD " + lineStr + Concat(hashIDs, L" ") + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
-        )
-    }
-
-    void GitService::GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
-    {
-        TRY_CATCH(
-            assert(!IsBlank(filePath));
-            std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
-            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + lineStr + fromHashID + L"..." + toHashID + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
-        )
-    }
 
     std::wstring GitService::GetGitLogSearchCriteriaString(const GitLogSearchCriteria *searchCriteria)
     {
@@ -689,6 +556,140 @@ namespace vcc
         TRY_CATCH(
             assert(!IsBlank(hashID));
             GitService::ParseGitLog(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git log --pretty=fuller -n 1 " + hashID), log);
+        )
+    }
+
+    void GitService::GetDifferenceSummary(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, std::shared_ptr<GitDifferenceSummary> summary)
+    {
+        TRY_CATCH(
+            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + Concat(hashIDs, L" ") + L" --numstat"));
+            for (const std::wstring &line : lines) {
+                std::vector<std::wstring> tokens = SplitString(line, L"\t", { L"\"" }, { L"\"" }, { L"\\" });
+                if (tokens.size() < 3)
+                    continue;
+                summary->InsertFiles(tokens.at(2));
+                summary->InsertAddLineCounts((size_t)stoi(tokens.at(0)));
+                summary->InsertDeleteLineCounts((size_t)stoi(tokens.at(1)));
+            }
+        )
+    }
+
+    void GitService::ParseGitDiff(const std::wstring &str, std::shared_ptr<GitDifference> difference)
+    {
+        TRY_CATCH(
+            std::wstring filePathOldPrefix = L"--- a/";
+            std::wstring filePathNewPrefix = L"+++ b/";
+            std::wstring lineCountPrefix = L"@@";
+            std::vector<std::wstring> lines = SplitStringByLine(str);
+            size_t rowCount = 0;
+            size_t currentItem = 0;
+            std::wstring currentText = L"";
+            for (const std::wstring &line : lines) {
+                if (rowCount > 0) {
+                    currentText += line + L"\n";
+                    if (rowCount == 1) {
+                        difference->InsertChangedLines(currentText);
+                        currentText = L"";
+                    }
+                    rowCount--;
+                } else {
+                    if (HasPrefix(line, filePathOldPrefix)) {
+                        std::wstring tmpStr = line.substr(filePathOldPrefix.length());
+                        Trim(tmpStr);
+                        difference->SetFilePathOld(tmpStr);
+                    } else if (HasPrefix(line, filePathNewPrefix)){
+                        std::wstring tmpStr = line.substr(filePathNewPrefix.length());
+                        Trim(tmpStr);
+                        difference->SetFilePathNew(tmpStr);
+                    } else if (HasPrefix(line, lineCountPrefix)) {
+                        // sample new: @@ -1 +1,2 @@
+                        // sample modify: @@ -116,10 +116,10 @@ xxxx
+                        // 1. Chop to remove all @@
+                        // 2. Get all numbers
+                        std::wstring tmpStr = line.substr(lineCountPrefix.length());
+                        tmpStr = tmpStr.substr(0, tmpStr.find(lineCountPrefix));
+                        Trim(tmpStr);
+                        std::vector<std::wstring> tokens = SplitString(tmpStr, L" ");
+                        if (tokens.size() != 2)
+                            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
+
+                        // old
+                        std::vector<std::wstring> lineCountOld = SplitString(tokens[0], L",");
+                        if (!(lineCountOld.size() == 1 || lineCountOld.size() == 2))
+                            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
+
+                        std::wstring lineNumberStr = lineCountOld[0];
+                        Trim(lineNumberStr);
+                        if (!(HasPrefix(lineNumberStr, L"-") && lineNumberStr.length() > 1))
+                            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
+
+                        difference->InsertLineNumberOld((size_t)stoi(lineNumberStr.substr(1)));
+                        if (lineCountOld.size() > 1) {
+                            std::wstring lineCountStr = lineCountOld[1];
+                            Trim(lineCountStr);
+                            difference->InsertLineCountOld((size_t)stoi(lineCountStr));
+                        } else
+                            difference->InsertLineCountOld((size_t)0);
+
+                        // new
+                        std::vector<std::wstring> lineCountNew = SplitString(tokens[1], L",");
+                        if (!(lineCountNew.size() == 1 || lineCountNew.size() == 2))
+                            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
+
+                        lineNumberStr = lineCountNew[0];
+                        Trim(lineNumberStr);
+                        if (!(HasPrefix(lineNumberStr, L"+") && lineNumberStr.length() > 1))
+                            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
+
+                        difference->InsertLineNumberNew((size_t)stoi(lineNumberStr.substr(1)));
+                        if (lineCountNew.size() > 1) {
+                            std::wstring lineCountStr = lineCountNew[1];
+                            Trim(lineCountStr);
+                            difference->InsertLineCountNew((size_t)stoi(lineCountStr));
+                        } else
+                            difference->InsertLineCountNew((size_t)0);
+
+                        currentItem = difference->GetLineCountNew().size() - 1;
+                        rowCount = std::max(difference->GetLineCountOld()[currentItem], difference->GetLineCountNew()[currentItem]);
+                    }
+                }
+            }
+        )
+    }
+
+    void GitService::GetDifferenceIndexFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
+    {
+        TRY_CATCH(
+            assert(!IsBlank(filePath));
+            std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
+            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff --cached " + lineStr + Concat(hashIDs, L" ")), diff);
+        )
+    }
+
+    void GitService::GetDifferenceWorkingFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
+    {
+        TRY_CATCH(
+            assert(!IsBlank(filePath));
+            std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
+            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + lineStr + Concat(hashIDs, L" ") + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
+        )
+    }
+
+    void GitService::GetDifferenceFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
+    {
+        TRY_CATCH(
+            assert(!IsBlank(filePath));
+            std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
+            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff HEAD " + lineStr + Concat(hashIDs, L" ") + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
+        )
+    }
+
+    void GitService::GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine)
+    {
+        TRY_CATCH(
+            assert(!IsBlank(filePath));
+            std::wstring lineStr = noOfLine > -1 ? (L"--unified=" + to_wstring(noOfLine) + L" ") : L"";
+            ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + lineStr + fromHashID + L"..." + toHashID + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
         )
     }
 

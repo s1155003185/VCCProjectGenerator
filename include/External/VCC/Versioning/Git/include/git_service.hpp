@@ -222,6 +222,18 @@ namespace vcc
         static void Clone(const LogProperty *logProperty, const std::wstring &url, const std::wstring &branch, const std::wstring &dist, const int64_t &depth = -1);
         static void CheckOut(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branch);
 
+        // Log
+        static std::wstring GetGitLogSearchCriteriaString(const GitLogSearchCriteria *searchCriteria);
+        // only parse git log --graph --oneline --pretty=format:"(%H)(%h)(%T)(%t)(%P)(%p)"
+        static void ParseGitLogGraph(const std::wstring &str, std::vector<std::shared_ptr<GitLog>> &logs);
+        // only parse pattern L"Thu Jan 25 22:47:35 2024 +0800"
+        static std::time_t ParseGitLogDatetime(const std::wstring &datimeStr);
+        static void ParseGitLog(const std::wstring &str, std::shared_ptr<GitLog> log);
+        // To draw graph, mark the point by column index first, then link nodes if having same ParentHashID and HashID
+        static void GetLogs(const LogProperty *logProperty, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria, std::vector<std::shared_ptr<GitLog>> &logs);
+        // Get log by GetLogs first, then put the share pointer to GetLogDetail
+        static void GetLog(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID, std::shared_ptr<GitLog> log);
+
         // Difference
         // Difference Summary only show different between commit and commit / commit and working files
         // hashIDs.size() == 0, then different from latest commit to current working files
@@ -234,18 +246,6 @@ namespace vcc
         static void GetDifferenceWorkingFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
         static void GetDifferenceFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
         static void GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
-
-        // Log
-        static std::wstring GetGitLogSearchCriteriaString(const GitLogSearchCriteria *searchCriteria);
-        // only parse git log --graph --oneline --pretty=format:"(%H)(%h)(%T)(%t)(%P)(%p)"
-        static void ParseGitLogGraph(const std::wstring &str, std::vector<std::shared_ptr<GitLog>> &logs);
-        // only parse pattern L"Thu Jan 25 22:47:35 2024 +0800"
-        static std::time_t ParseGitLogDatetime(const std::wstring &datimeStr);
-        static void ParseGitLog(const std::wstring &str, std::shared_ptr<GitLog> log);
-        // To draw graph, mark the point by column index first, then link nodes if having same ParentHashID and HashID
-        static void GetLogs(const LogProperty *logProperty, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria, std::vector<std::shared_ptr<GitLog>> &logs);
-        // Get log by GetLogs first, then put the share pointer to GetLogDetail
-        static void GetLog(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID, std::shared_ptr<GitLog> log);
 
         // Commit
         static void Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
