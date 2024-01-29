@@ -22,6 +22,13 @@ namespace vcc
     #define GIT_CONFIG_USER_NAME L"user.name"
     #define GIT_CONFIG_USER_EMAIL L"user.email"
 
+    const std::wstring hashIDPrefix = L"commit ";
+    const std::wstring authorPrefix = L"Author:";
+    const std::wstring authorDatePrefix = L"AuthorDate:";
+    const std::wstring commitPrefix = L"Commit:";
+    const std::wstring commitDatePrefix = L"CommitDate:";
+    const std::wstring headerPrefix  = L"HEAD -> ";
+
     GitFileStatus GitService::ParseGitFileStatus(const wchar_t &c)
     {
         TRY_CATCH(
@@ -526,13 +533,6 @@ namespace vcc
             if (!HasPrefix(str, L"commit "))
                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"str not has prefix \"commit \"");
 
-            std::wstring hashIDPrffix = L"commit ";
-            std::wstring authorPrefix = L"Author:";
-            std::wstring authorDatePrefix = L"AuthorDate:";
-            std::wstring commitPrefix = L"Commit:";
-            std::wstring commitDatePrefix = L"CommitDate:";
-            std::wstring headerPrefix  =L"HEAD -> ";
-
             std::vector<std::wstring> lines = SplitStringByLine(str);
             for (const std::wstring &line : lines) {
                 if (IsBlank(line)) {
@@ -540,8 +540,8 @@ namespace vcc
                     // second line is full message
                     // handle in seccod loop
                     break;
-                } else if (HasPrefix(line, hashIDPrffix)) {
-                    std::wstring tmpLine = line.substr(hashIDPrffix.length());
+                } else if (HasPrefix(line, hashIDPrefix)) {
+                    std::wstring tmpLine = line.substr(hashIDPrefix.length());
                     Trim(tmpLine);
                     std::vector<std::wstring> tokens = SplitString(tmpLine, L" ");
                     if (tokens.empty())
@@ -652,20 +652,44 @@ namespace vcc
     
     void GitService::GetLogs(const LogProperty *logProperty, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria, std::vector<std::shared_ptr<GitLog>> &logs)
     {
-        //TRY_CATCH(
+        TRY_CATCH(
             ParseGitLogGraph(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git log --graph --oneline --pretty=format:\"(%H)(%h)(%T)(%t)(%P)(%p)\" " + GetGitLogSearchCriteriaString(searchCriteria)),
                 logs);
             std::map<std::wstring, std::shared_ptr<GitLog>> logMap;
             for (auto log : logs) {
                 logMap.insert({log->GetHashID(), log});
             }
-            std::wstring result = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git log --pretty=fuller" + GetGitLogSearchCriteriaString(searchCriteria));
-        //)
+            std::wstring logDetail = L"";
+            std::wstring currentHashID = L"";
+            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git log --pretty=fuller" + GetGitLogSearchCriteriaString(searchCriteria)));
+            for (const std::wstring &line : lines) {
+                if (HasPrefix(line, hashIDPrefix)) {
+                    if (!logDetail.empty()) {
+                        ParseGitLog(logDetail, logMap.at(currentHashID));
+                    }
+                    logDetail = line;
+                    currentHashID = line.substr(hashIDPrefix.size());
+                    Trim(currentHashID);
+                    currentHashID = SplitString(currentHashID, L" ").at(0);
+                    Trim(currentHashID);
+                } else {
+                    if (!logDetail.empty())
+                        logDetail += L"\n";
+                    logDetail += line;
+                }
+            }
+            if (!logDetail.empty()) {
+                ParseGitLog(logDetail, logMap.at(currentHashID));
+            }
+        )
     }
 
-    void GitService::GetLogDetail(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitLog> log)
+    void GitService::GetLog(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID, std::shared_ptr<GitLog> log)
     {
-
+        TRY_CATCH(
+            assert(!IsBlank(hashID));
+            GitService::ParseGitLog(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git log --pretty=fuller -n 1 " + hashID), log);
+        )
     }
 
     void GitService::Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)

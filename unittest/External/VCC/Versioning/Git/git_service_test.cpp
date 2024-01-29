@@ -110,9 +110,9 @@ TEST_F(GitServiceTest, ParseGitLog)
 {
     std::wstring str = L"";
     str += L"commit e6c413289f2c1fd6fc6377495926ec5e5644de98 (HEAD -> 20240114Git, origin/20240114Git)\n";
-    str += L"Author:     David <s1155003185@gmail.com>\n";
+    str += L"Author:     Test Tester <test@gmail.com>\n";
     str += L"AuthorDate: Thu Jan 25 22:47:35 2024 +0800\n";
-    str += L"Commit:     David <s1155003185@gmail.com>\n";
+    str += L"Commit:     Test Tester <test@gmail.com>\n";
     str += L"CommitDate: Thu Jan 25 22:47:35 2024 +0800\n";
     str += L"\n";
     str += L"    [GIt] Parse Git Log Graph\n";
@@ -125,12 +125,12 @@ TEST_F(GitServiceTest, ParseGitLog)
     EXPECT_EQ(log1->GetTags().size(), (size_t)2);
     EXPECT_EQ(log1->GetTags().at(0), L"20240114Git");
     EXPECT_EQ(log1->GetTags().at(1), L"origin/20240114Git");
-    EXPECT_EQ(log1->GetAuthor(), L"David");
-    EXPECT_EQ(log1->GetAuthorEmail(), L"s1155003185@gmail.com");
+    EXPECT_EQ(log1->GetAuthor(), L"Test Tester");
+    EXPECT_EQ(log1->GetAuthorEmail(), L"test@gmail.com");
     EXPECT_EQ(log1->GetAuthorDate(), GitService::ParseGitLogDatetime(L"Thu Jan 25 22:47:35 2024 +0800"));
     EXPECT_EQ(log1->GetAuthorDateStr(), L"Thu Jan 25 22:47:35 2024 +0800");
-    EXPECT_EQ(log1->GetCommitter(), L"David");
-    EXPECT_EQ(log1->GetCommitterEmail(), L"s1155003185@gmail.com");
+    EXPECT_EQ(log1->GetCommitter(), L"Test Tester");
+    EXPECT_EQ(log1->GetCommitterEmail(), L"test@gmail.com");
     EXPECT_EQ(log1->GetCommitDate(), GitService::ParseGitLogDatetime(L"Thu Jan 25 22:47:35 2024 +0800"));
     EXPECT_EQ(log1->GetCommitDateStr(), L"Thu Jan 25 22:47:35 2024 +0800");
     EXPECT_EQ(log1->GetTitle(), L"[GIt] Parse Git Log Graph");
@@ -138,9 +138,9 @@ TEST_F(GitServiceTest, ParseGitLog)
     EXPECT_EQ(log1->GetFullMessage(), str);
     
     str = L"commit 660e49f210903438ccc1c959912a995e0b06b3a8\n";
-    str += L"Author:     David <s1155003185@gmail.com>\n";
+    str += L"Author:     Test Tester <test@gmail.com>\n";
     str += L"AuthorDate: Thu Jan 25 21:30:19 2024 +0800\n";
-    str += L"Commit:     David <s1155003185@gmail.com>\n";
+    str += L"Commit:     Test Tester <test@gmail.com>\n";
     str += L"CommitDate: Thu Jan 25 21:30:19 2024 +0800\n";
     str += L"\n";
     str += L"    [GIt] Git Log Search Criteria\n";
@@ -154,12 +154,12 @@ TEST_F(GitServiceTest, ParseGitLog)
     EXPECT_EQ(log2->GetHashID(), L"660e49f210903438ccc1c959912a995e0b06b3a8");
     EXPECT_EQ(log2->GetIsHead(), false);
     EXPECT_EQ(log2->GetTags().size(), (size_t)0);
-    EXPECT_EQ(log2->GetAuthor(), L"David");
-    EXPECT_EQ(log2->GetAuthorEmail(), L"s1155003185@gmail.com");
+    EXPECT_EQ(log2->GetAuthor(), L"Test Tester");
+    EXPECT_EQ(log2->GetAuthorEmail(), L"test@gmail.com");
     EXPECT_EQ(log2->GetAuthorDate(), GitService::ParseGitLogDatetime(L"Thu Jan 25 21:30:19 2024 +0800"));
     EXPECT_EQ(log2->GetAuthorDateStr(), L"Thu Jan 25 21:30:19 2024 +0800");
-    EXPECT_EQ(log2->GetCommitter(), L"David");
-    EXPECT_EQ(log2->GetCommitterEmail(), L"s1155003185@gmail.com");
+    EXPECT_EQ(log2->GetCommitter(), L"Test Tester");
+    EXPECT_EQ(log2->GetCommitterEmail(), L"test@gmail.com");
     EXPECT_EQ(log2->GetCommitDate(), GitService::ParseGitLogDatetime(L"Thu Jan 25 21:30:19 2024 +0800"));
     EXPECT_EQ(log2->GetCommitDateStr(), L"Thu Jan 25 21:30:19 2024 +0800");
     EXPECT_EQ(log2->GetTitle(), L"[GIt] Git Log Search Criteria");
@@ -167,9 +167,9 @@ TEST_F(GitServiceTest, ParseGitLog)
     EXPECT_EQ(log2->GetFullMessage(), str);
 
     str = L"commit d34a8e0f04315ea9f3d906cd6e05fee8af63286c\n";
-    str += L"Author:     David <s1155003185@gmail.com>\n";
+    str += L"Author:     Test Tester <test@gmail.com>\n";
     str += L"AuthorDate: Mon Jan 22 20:41:42 2024 +0800\n";
-    str += L"Commit:     David <s1155003185@gmail.com>\n";
+    str += L"Commit:     Test Tester <test@gmail.com>\n";
     str += L"CommitDate: Mon Jan 22 20:41:42 2024 +0800\n";
     str += L"\n";
     str += L"    [Git] Log and Branch\n";
@@ -179,22 +179,17 @@ TEST_F(GitServiceTest, ParseGitLog)
     EXPECT_EQ(log3->GetHashID(), L"d34a8e0f04315ea9f3d906cd6e05fee8af63286c");
     EXPECT_EQ(log3->GetIsHead(), false);
     EXPECT_EQ(log3->GetTags().size(), (size_t)0);
-    EXPECT_EQ(log3->GetAuthor(), L"David");
-    EXPECT_EQ(log3->GetAuthorEmail(), L"s1155003185@gmail.com");
+    EXPECT_EQ(log3->GetAuthor(), L"Test Tester");
+    EXPECT_EQ(log3->GetAuthorEmail(), L"test@gmail.com");
     EXPECT_EQ(log3->GetAuthorDate(), GitService::ParseGitLogDatetime(L"Mon Jan 22 20:41:42 2024 +0800"));
     EXPECT_EQ(log3->GetAuthorDateStr(), L"Mon Jan 22 20:41:42 2024 +0800");
-    EXPECT_EQ(log3->GetCommitter(), L"David");
-    EXPECT_EQ(log3->GetCommitterEmail(), L"s1155003185@gmail.com");
+    EXPECT_EQ(log3->GetCommitter(), L"Test Tester");
+    EXPECT_EQ(log3->GetCommitterEmail(), L"test@gmail.com");
     EXPECT_EQ(log3->GetCommitDate(), GitService::ParseGitLogDatetime(L"Mon Jan 22 20:41:42 2024 +0800"));
     EXPECT_EQ(log3->GetCommitDateStr(), L"Mon Jan 22 20:41:42 2024 +0800");
     EXPECT_EQ(log3->GetTitle(), L"[Git] Log and Branch");
     EXPECT_EQ(log3->GetMessage(), L"");
     EXPECT_EQ(log3->GetFullMessage(), str);
-}
-
-TEST_F(GitServiceTest, LogAndBranch)
-{
-
 }
 
 TEST_F(GitServiceTest, ParseGitDiff)
@@ -350,4 +345,13 @@ TEST_F(GitServiceTest, StageAndDifference)
     EXPECT_EQ(statusDelete->GetWorkingTreeFiles()[GitFileStatus::Deleted].at(0), L"test2.txt");
     GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test2.txt");
     GitService::Commit(this->GetLogProperty().get(), this->GetWorkspace(), L"Test Delete");
+
+    // Summary Log
+    std::vector<std::shared_ptr<GitLog>> logs;
+    GitService::GetLogs(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, logs);
+    EXPECT_EQ(logs.size(), (size_t)4);
+    EXPECT_EQ(logs.at(0)->GetTitle(), L"Test Delete");
+    EXPECT_EQ(logs.at(1)->GetTitle(), L"Test Rename");
+    EXPECT_EQ(logs.at(2)->GetTitle(), L"Test Modify");
+    EXPECT_EQ(logs.at(3)->GetTitle(), L"Test Commit");
 }
