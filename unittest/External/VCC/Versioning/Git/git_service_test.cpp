@@ -41,16 +41,17 @@ TEST_F(GitServiceTest, Version)
     EXPECT_TRUE(regex_match(version, wregex(L"[0-9]+.[0-9]+.[0-9]+")));
 }
 
-TEST_F(GitServiceTest, Config)
+TEST_F(GitServiceTest, Remote)
 {
-    DECLARE_SPTR(GitConfig, config);
-    GitService::GetGlobalConfig(this->GetLogProperty().get(), config);
-    std::wstring userName = GitService::GetGlobalUserName(this->GetLogProperty().get());
-    std::wstring userEmail = GitService::GetGlobalUserEmail(this->GetLogProperty().get());
-    EXPECT_TRUE(!config->GetUserName().empty());
-    EXPECT_TRUE(!config->GetUserEmail().empty());
-    EXPECT_EQ(config->GetUserName(), userName);
-    EXPECT_EQ(config->GetUserEmail(), userEmail);
+    std::vector<std::shared_ptr<GitRemote>> remotes;
+    GitService::GetRemote(this->GetLogProperty().get(), L"", remotes);
+    EXPECT_EQ(remotes.size(), (size_t)2);
+    EXPECT_EQ(remotes.at(0)->GetName(), L"origin");
+    EXPECT_EQ(remotes.at(0)->GetURL(), L"https://github.com/s1155003185/VCCProjectGenerator.git");
+    EXPECT_EQ(remotes.at(0)->GetMirror(), GitRemoteMirror::Fetch);
+    EXPECT_EQ(remotes.at(1)->GetName(), L"origin");
+    EXPECT_EQ(remotes.at(1)->GetURL(), L"https://github.com/s1155003185/VCCProjectGenerator.git");
+    EXPECT_EQ(remotes.at(1)->GetMirror(), GitRemoteMirror::Push);
 }
 
 TEST_F(GitServiceTest, ParseGitLogGraph)
@@ -354,4 +355,16 @@ TEST_F(GitServiceTest, StageAndDifference)
     EXPECT_EQ(logs.at(1)->GetTitle(), L"Test Rename");
     EXPECT_EQ(logs.at(2)->GetTitle(), L"Test Modify");
     EXPECT_EQ(logs.at(3)->GetTitle(), L"Test Commit");
+}
+
+TEST_F(GitServiceTest, Config)
+{
+    DECLARE_SPTR(GitConfig, config);
+    GitService::GetGlobalConfig(this->GetLogProperty().get(), config);
+    std::wstring userName = GitService::GetGlobalUserName(this->GetLogProperty().get());
+    std::wstring userEmail = GitService::GetGlobalUserEmail(this->GetLogProperty().get());
+    EXPECT_TRUE(!config->GetUserName().empty());
+    EXPECT_TRUE(!config->GetUserEmail().empty());
+    EXPECT_EQ(config->GetUserName(), userName);
+    EXPECT_EQ(config->GetUserEmail(), userEmail);
 }

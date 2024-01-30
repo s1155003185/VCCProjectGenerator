@@ -100,7 +100,7 @@ namespace vcc
 		return str.ends_with(suffix);
 	}
 
-	std::vector<std::wstring> SplitString(std::wstring str, const std::wstring &delimiter, 
+	std::vector<std::wstring> SplitString(std::wstring str, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &commandOpenList, const std::vector<std::wstring> &commandCloseList, const std::vector<std::wstring> &commandEscapeList)
 	{
 		std::vector<std::wstring> results;
@@ -135,10 +135,18 @@ namespace vcc
 						pos++;
 					}
 				} else {
-					if (HasPrefix(str, delimiter, pos)) {
+					std::wstring currentDelimiter = L"";
+					for (const std::wstring &delimiter : delimiters) {
+						if (HasPrefix(str, delimiter, pos)) {
+							currentDelimiter = delimiter;
+							break;
+						}
+					}
+
+					if (!currentDelimiter.empty()) {
 						results.push_back(currentStr);
 						currentStr = L"";
-						pos += delimiter.length();
+						pos += currentDelimiter.length();
 					} else {
 						for (size_t i = 0; i < commandOpenList.size(); i++) {
 							if (HasPrefix(str, commandOpenList[i], pos)) {
