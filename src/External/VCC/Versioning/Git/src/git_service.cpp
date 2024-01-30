@@ -197,7 +197,48 @@ namespace vcc
             }
         )
     }
+    
+    void GitService::AddRemote(const LogProperty *logProperty, const std::wstring &workspace, const GitRemoteAddOption *addOption)
+    {
+        TRY_CATCH(
+            assert(addOption != nullptr);
+            std::wstring optionStr = L"";
+            switch (addOption->GetMirror())
+            {
+            case GitRemoteMirror::NA:
+                break;
+            case GitRemoteMirror::Fetch:
+                optionStr += L" --mirror=fetch";
+                break;
+            case GitRemoteMirror::Push:
+                optionStr += L" --mirror=push";
+                break;            
+            default:
+                assert(false);
+                break;
+            }
 
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git remote " + optionStr + L" " + addOption->GetName() + L" " + addOption->GetURL());
+        )
+    }
+
+    void GitService::RenameRemote(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldName, const std::wstring &newName)
+    {
+        TRY_CATCH(
+            assert(!IsBlank(oldName));
+            assert(!IsBlank(newName));
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git rename " + oldName + L" " + newName);
+        )
+    }
+    
+    void GitService::RemoveRemote(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &name)
+    {
+        TRY_CATCH(
+            assert(!IsBlank(name));
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git remove " + name);
+        )
+    }
+    
     std::wstring GitService::GetGitLogSearchCriteriaString(const GitLogSearchCriteria *searchCriteria)
     {
         std::wstring optionStr = L"";

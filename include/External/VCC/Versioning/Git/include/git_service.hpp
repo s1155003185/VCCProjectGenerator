@@ -63,8 +63,23 @@ namespace vcc
 
     enum class GitRemoteMirror
     {
+        NA,
         Fetch,
         Push
+    };
+
+    class GitRemoteAddOption : public BaseObject
+    {
+        GETSET(std::wstring, Name, L"");
+        GETSET(std::wstring, URL, L"");
+        GETSET(GitRemoteMirror, Mirror, GitRemoteMirror::NA);
+        public:
+            GitRemoteAddOption() : BaseObject() {}
+            virtual ~GitRemoteAddOption() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitRemoteAddOption>(*this);
+            }
     };
 
     class GitRemote : public BaseObject
@@ -254,8 +269,11 @@ namespace vcc
         /*----------------------------------*
         * ----------- Remote     -----------*
         * ----------------------------------*/
-       static void GetRemote(const LogProperty *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitRemote>> &remotes);
-        
+        static void GetRemote(const LogProperty *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitRemote>> &remotes);
+        static void AddRemote(const LogProperty *logProperty, const std::wstring &workspace, const GitRemoteAddOption *addOption);
+        static void RenameRemote(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldName, const std::wstring &newName);
+        static void RemoveRemote(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &name);
+
         /*----------------------------------*
         * -----------   Log      -----------*
         * ----------------------------------*/
