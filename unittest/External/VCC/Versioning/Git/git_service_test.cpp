@@ -355,6 +355,11 @@ TEST_F(GitServiceTest, StageAndDifference)
     EXPECT_EQ(logs.at(1)->GetTitle(), L"Test Rename");
     EXPECT_EQ(logs.at(2)->GetTitle(), L"Test Modify");
     EXPECT_EQ(logs.at(3)->GetTitle(), L"Test Commit");
+
+    // Test normal operation
+    GitService::FetchAll(this->GetLogProperty().get(), this->GetWorkspace());
+    // Note: cannot pull as it is local response
+    //GitService::Pull(this->GetLogProperty().get(), this->GetWorkspace(), nullptr);
 }
 
 TEST_F(GitServiceTest, Config)

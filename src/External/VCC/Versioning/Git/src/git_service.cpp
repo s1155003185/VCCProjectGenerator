@@ -197,13 +197,13 @@ namespace vcc
             }
         )
     }
-    
-    void GitService::AddRemote(const LogProperty *logProperty, const std::wstring &workspace, const GitRemoteAddOption *addOption)
+
+    void GitService::AddRemote(const LogProperty *logProperty, const std::wstring &workspace, const GitRemoteAddOption *option)
     {
         TRY_CATCH(
-            assert(addOption != nullptr);
+            assert(option != nullptr);
             std::wstring optionStr = L"";
-            switch (addOption->GetMirror())
+            switch (option->GetMirror())
             {
             case GitRemoteMirror::NA:
                 break;
@@ -218,7 +218,7 @@ namespace vcc
                 break;
             }
 
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git remote " + optionStr + L" " + addOption->GetName() + L" " + addOption->GetURL());
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git remote " + optionStr + L" " + option->GetName() + L" " + option->GetURL());
         )
     }
 
@@ -236,6 +236,46 @@ namespace vcc
         TRY_CATCH(
             assert(!IsBlank(name));
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git remove " + name);
+        )
+    }
+
+    void GitService::FetchAll(const LogProperty *logProperty, const std::wstring &workspace)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git fetch --all");
+        )
+    }
+
+    void GitService::Pull(const LogProperty *logProperty, const std::wstring &workspace, const GitPullOption *option)
+    {
+        TRY_CATCH(
+            std::wstring optionStr = L"";
+            if (option != nullptr) {
+                if (option->GetIsQuite())
+                    optionStr += L" --quiet";
+
+                switch (option->GetRecurseSubmodules())
+                {
+                case GitPullOptionRecurseSubmodulesMode::Default:
+                    break;
+                case GitPullOptionRecurseSubmodulesMode::Yes:
+                    optionStr += L" --recurse-submodules=yes";
+                    break;
+                case GitPullOptionRecurseSubmodulesMode::OnDemand:
+                    optionStr += L" --recurse-submodules=on-demand";
+                    break;
+                case GitPullOptionRecurseSubmodulesMode::No:
+                    optionStr += L" --recurse-submodules=no";
+                    break;                
+                default:
+                    assert(false);
+                    break;
+                }
+                for (const std::wstring &str : option->GetRepositories()) {
+                    optionStr += L" " + str;
+                }
+            }
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git pull " + optionStr);
         )
     }
     

@@ -97,6 +97,30 @@ namespace vcc
             }
     };
 
+    enum class GitPullOptionRecurseSubmodulesMode
+    {
+        Default,
+        Yes,
+        OnDemand,
+        No
+    };
+
+    class GitPullOption : public BaseObject
+    {
+        GETSET(bool, IsQuite, false);
+        GETSET(GitPullOptionRecurseSubmodulesMode, RecurseSubmodules, GitPullOptionRecurseSubmodulesMode::Default);
+
+        VECTOR(std::wstring, Repositories);
+
+        public:
+            GitPullOption() : BaseObject() {}
+            virtual ~GitPullOption() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitPullOption>(*this);
+            }
+    };
+
     enum class GitLogOrderBy
     {
         NA,
@@ -269,10 +293,16 @@ namespace vcc
         /*----------------------------------*
         * ----------- Remote     -----------*
         * ----------------------------------*/
+        // remote
         static void GetRemote(const LogProperty *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitRemote>> &remotes);
-        static void AddRemote(const LogProperty *logProperty, const std::wstring &workspace, const GitRemoteAddOption *addOption);
+        static void AddRemote(const LogProperty *logProperty, const std::wstring &workspace, const GitRemoteAddOption *option);
         static void RenameRemote(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldName, const std::wstring &newName);
         static void RemoveRemote(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &name);
+        // fetch
+        static void FetchAll(const LogProperty *logProperty, const std::wstring &workspace);
+        // pull
+        static void Pull(const LogProperty *logProperty, const std::wstring &workspace, const GitPullOption *option);
+        // push
 
         /*----------------------------------*
         * -----------   Log      -----------*
