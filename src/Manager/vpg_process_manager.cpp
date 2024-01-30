@@ -33,7 +33,7 @@ void VPGProcessManager::VerifyLocalResponse()
         } else {
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Not Exists.");
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Clone from " + gitUrl);
-            GitService::Clone(this->GetLogProperty().get(), gitUrl, this->GetBranch(), VPGGlobal::GetVccLocalResponseFolder(), this->GetLogDepth());
+            GitService::Clone(this->GetLogProperty().get(),  VPGGlobal::GetVccLocalResponseFolder(), gitUrl, this->GetBranch(), this->GetLogDepth());
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
         }
 
