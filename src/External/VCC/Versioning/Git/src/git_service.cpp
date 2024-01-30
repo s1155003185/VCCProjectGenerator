@@ -278,7 +278,26 @@ namespace vcc
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git pull " + optionStr);
         )
     }
-    
+
+    void GitService::Push(const LogProperty *logProperty, const std::wstring &workspace, const GitPushOption *option)
+    {
+        TRY_CATCH(
+            std::wstring optionStr = L"";
+            if (option != nullptr) {
+                if (option->GetIsForce())
+                    optionStr += L" --force";
+
+                if (option->GetIsQuite())
+                    optionStr += L" --quiet";
+
+                for (const std::wstring &str : option->GetRepositories()) {
+                    optionStr += L" " + str;
+                }
+            }
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git push " + optionStr);
+        )
+    }
+
     std::wstring GitService::GetGitLogSearchCriteriaString(const GitLogSearchCriteria *searchCriteria)
     {
         std::wstring optionStr = L"";

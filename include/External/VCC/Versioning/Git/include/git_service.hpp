@@ -121,6 +121,22 @@ namespace vcc
             }
     };
 
+    class GitPushOption : public BaseObject
+    {
+        GETSET(bool, IsForce, false);
+        GETSET(bool, IsQuite, false);
+
+        VECTOR(std::wstring, Repositories);
+
+        public:
+            GitPushOption() : BaseObject() {}
+            virtual ~GitPushOption() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitPushOption>(*this);
+            }
+    };
+
     enum class GitLogOrderBy
     {
         NA,
@@ -303,6 +319,7 @@ namespace vcc
         // pull
         static void Pull(const LogProperty *logProperty, const std::wstring &workspace, const GitPullOption *option);
         // push
+        static void Push(const LogProperty *logProperty, const std::wstring &workspace, const GitPushOption *option);
 
         /*----------------------------------*
         * -----------   Log      -----------*
@@ -362,6 +379,11 @@ namespace vcc
         static void ResetCommit(const LogProperty *logProperty, const std::wstring &workspace, const GitResetMode &resetMode, const std::wstring &hashID);
         static void ReverseCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID);
         
+
+        /*----------------------------------*
+        * ----------  Submodule   ----------*
+        * ----------------------------------*/
+
         /*----------------------------------*
         * ----------- Config     -----------*
         * ----------------------------------*/
