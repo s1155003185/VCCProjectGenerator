@@ -193,6 +193,65 @@ TEST_F(GitServiceTest, ParseGitLog)
     EXPECT_EQ(log3->GetFullMessage(), str);
 }
 
+TEST_F(GitServiceTest, ParseGitBranch)
+{
+    std::wstring str = L"* master hashID Title 1";
+    DECLARE_SPTR(GitBranch, checkoutBranch1);
+    GitService::ParseGitBranch(str, checkoutBranch1);
+    EXPECT_EQ(checkoutBranch1->GetName(), L"master");
+    EXPECT_EQ(checkoutBranch1->GetIsCheckOut(), true);
+    EXPECT_EQ(checkoutBranch1->GetHashID(), L"hashID");
+    EXPECT_EQ(checkoutBranch1->GetTitle(), L"Title 1");
+
+    str = L" master hashID Title 1";
+    DECLARE_SPTR(GitBranch, checkoutBranch2);
+    GitService::ParseGitBranch(str, checkoutBranch2);
+    EXPECT_EQ(checkoutBranch2->GetName(), L"master");
+    EXPECT_EQ(checkoutBranch2->GetIsCheckOut(), false);
+    EXPECT_EQ(checkoutBranch2->GetHashID(), L"hashID");
+    EXPECT_EQ(checkoutBranch2->GetTitle(), L"Title 1");
+
+    str = L" master -> origin/Head";
+    DECLARE_SPTR(GitBranch, checkoutBranch3);
+    GitService::ParseGitBranch(str, checkoutBranch3);
+    EXPECT_EQ(checkoutBranch3->GetName(), L"master");
+    EXPECT_EQ(checkoutBranch3->GetIsCheckOut(), false);
+    EXPECT_EQ(checkoutBranch3->GetHashID(), L"");
+    EXPECT_EQ(checkoutBranch3->GetTitle(), L"");
+    EXPECT_EQ(checkoutBranch3->GetPointToBranch(), L"origin/Head");
+}
+
+TEST_F(GitServiceTest, GetCurrentBranch)
+{
+    DECLARE_SPTR(GitBranch, currentbranch);
+    GitService::GetCurrentBranch(this->GetLogProperty().get(), this->GetWorkspace(), currentbranch);
+    EXPECT_TRUE(!currentbranch->GetName().empty());
+    EXPECT_EQ(currentbranch->GetIsCheckOut(), true);
+    EXPECT_TRUE(!currentbranch->GetHashID().empty());
+    EXPECT_TRUE(!currentbranch->GetTitle().empty());
+    EXPECT_EQ(currentbranch->GetPointToBranch(), L"");
+}
+
+TEST_F(GitServiceTest, GetBranch)
+{
+    std::vector<std::shared_ptr<GitBranch>> branches;
+    GitService::GetBranches(this->GetLogProperty().get(), this->GetWorkspace(), branches);
+    EXPECT_TRUE(!branches.empty());
+}
+
+TEST_F(GitServiceTest, Branch)
+{
+    // init
+    GitService::Initialize(this->GetLogProperty().get(), this->GetWorkspace());
+\
+    WriteFile(ConcatPath(this->GetWorkspace(), L"test.txt"), L"hi\r\n", true);
+    GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
+    GitService::Commit(this->GetLogProperty().get(), this->GetWorkspace(), L"Test Commit");
+   
+    GitService::CreateBranch(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, L"branch");
+    GitService::DeleteBranch(this->GetLogProperty().get(), this->GetWorkspace(), L"branch");    
+}
+
 TEST_F(GitServiceTest, ParseGitDiff)
 {
     std::wstring str = L"diff --git a/test.txt b/test.txt\r\n";

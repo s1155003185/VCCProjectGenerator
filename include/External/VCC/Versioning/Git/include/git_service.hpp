@@ -236,6 +236,57 @@ namespace vcc
             }
     };
 
+    class GitBranch : public BaseObject
+    {
+        GETSET(std::wstring, Name, L"");
+        GETSET(bool, IsCheckOut, false);
+        GETSET(std::wstring, HashID, L"");
+        GETSET(std::wstring, Title, L"");
+        GETSET(std::wstring, PointToBranch, L"");
+
+        public:
+            GitBranch() : BaseObject() {}
+            virtual ~GitBranch() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitBranch>(*this);
+            }
+    };
+
+    enum class GitBranchCreateBranchOptionTrackMode {
+        Default,
+        No,
+        Direct,
+        Inherit
+    };
+
+    class GitBranchCreateBranchOption : public BaseObject
+    {
+        GETSET(bool, IsForce, false);
+        GETSET(GitBranchCreateBranchOptionTrackMode, Track, GitBranchCreateBranchOptionTrackMode::Default);
+        GETSET(bool, IsRecurseSubmodules, false);
+
+        public:
+            GitBranchCreateBranchOption() : BaseObject() {}
+            virtual ~GitBranchCreateBranchOption() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitBranchCreateBranchOption>(*this);
+            }
+    };
+
+    class GitBranchSwitchBranchOption : public BaseObject
+    {
+        GETSET(bool, IsDiscardChanges, false);
+        public:
+            GitBranchSwitchBranchOption() : BaseObject() {}
+            virtual ~GitBranchSwitchBranchOption() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitBranchSwitchBranchOption>(*this);
+            }
+    };
+
     class GitDifferentSearchCriteria : public BaseObject
     {
         GETSET(int64_t, NoOfLines, -1);
@@ -358,10 +409,29 @@ namespace vcc
         /*-----------------------------------*
          * -----------  Branch    -----------*
          * ----------------------------------*/
-        static void CreateBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName);
-        static void SwitchBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName);
-        static void DeleteBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName, bool isForce);
-       
+        // only for 
+        // 1. L"* master hashID Title"
+        // 2. L"  master hashID Title"
+        // 3. L"  head -> orgin/master"
+        static void ParseGitBranch(const std::wstring &str, std::shared_ptr<GitBranch> branch);
+        static void GetCurrentBranch(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitBranch> branch);
+        static void GetBranches(const LogProperty *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitBranch>> &branches);
+        static void CreateBranch(const LogProperty *logProperty, const std::wstring &workspace, const GitBranchCreateBranchOption *option, const std::wstring &branchName);
+        static void SwitchBranch(const LogProperty *logProperty, const std::wstring &workspace, const GitBranchSwitchBranchOption *option, const std::wstring &branchName);
+        static void RenameBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce = false);
+        static void CopyBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce = false);
+        static void DeleteBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName, bool isForce = false);
+        
+        /*-----------------------------------*
+         * ----------- Merge      -----------*
+         * ----------------------------------*/
+        // TODO
+
+        /*-----------------------------------*
+         * -----------Cherry Pick -----------*
+         * ----------------------------------*/
+        // TODO
+
         /*-----------------------------------*
          * ----------- Difference -----------*
          * ----------------------------------*/
@@ -376,6 +446,11 @@ namespace vcc
         static void GetDifferenceWorkingFile(const LogProperty *logProperty, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &filePath, std::shared_ptr<GitDifference> diff);
         static void GetDifferenceFile(const LogProperty *logProperty, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &filePath, std::shared_ptr<GitDifference> diff);
         static void GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff);
+
+        /*-----------------------------------*
+         * ----------    Blame    -----------*
+         * ----------------------------------*/
+        // TODO
 
         /*-----------------------------------*
          * ----------- Stash      -----------*
@@ -401,7 +476,6 @@ namespace vcc
         static void ResetCommit(const LogProperty *logProperty, const std::wstring &workspace, const GitResetMode &resetMode, const std::wstring &hashID);
         static void ReverseCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID);
         
-
         /*-----------------------------------*
          * ----------  Submodule   ----------*
          * ----------------------------------*/

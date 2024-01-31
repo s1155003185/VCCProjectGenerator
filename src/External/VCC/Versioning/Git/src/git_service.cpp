@@ -686,28 +686,137 @@ namespace vcc
         )
     }
 
-    void GitService::CreateBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName)
+    void GitService::ParseGitBranch(const std::wstring &str, std::shared_ptr<GitBranch> branch)
     {
         TRY_CATCH(
-            assert(!IsBlank(branchName));
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git switch -C " + branchName);
+            std::wstring tmpStr = str;
+            std::wstring checkoutPrefix = L"*";
+            if (HasPrefix(tmpStr, checkoutPrefix)) {
+                branch->SetIsCheckOut(true);
+                tmpStr = tmpStr.substr(checkoutPrefix.size());
+            }
+            Trim(tmpStr);
+            std::vector<std::wstring> tokens = SplitString(tmpStr, { L" ", L"\t"});
+            if (tokens.size() < 3)
+                THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected git branch pattern: " + str);
+            branch->SetName(tokens[0]);
+            std::wstring hashID = tokens[1];
+            bool isPointTo = hashID == L"->";
+            std::wstring title = str.substr(str.find(hashID) + hashID.size());
+            Trim(title);
+            if (isPointTo) {
+                branch->SetPointToBranch(title);
+            } else {
+                branch->SetHashID(hashID);
+                branch->SetTitle(title);
+            }
         )
     }
 
-    void GitService::SwitchBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName)
+    void GitService::GetCurrentBranch(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitBranch> branch)
     {
         TRY_CATCH(
-            assert(!IsBlank(branchName));
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git switch " + branchName);
+            std::wstring str = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git branch -v");
+            if (str.empty())
+                return;
+            std::vector<std::wstring> lines = SplitStringByLine(str);
+            if (!lines.empty()) {
+                ParseGitBranch(lines[0], branch);
+            }
         )
     }
 
+    void GitService::GetBranches(const LogProperty *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitBranch>> &branches)
+    {
+        TRY_CATCH(
+            std::wstring str = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git branch -v --all");
+            if (str.empty())
+                return;
+            std::vector<std::wstring> lines = SplitStringByLine(str);
+            for (const std::wstring &line : lines) {
+                if (SplitString(str, { L" ", L"\t" }).size() > 2) {
+                    DECLARE_SPTR(GitBranch, branch);
+                    ParseGitBranch(line, branch);
+                    branches.push_back(branch);
+                }
+            }
+        )
+    }
+
+    void GitService::CreateBranch(const LogProperty *logProperty, const std::wstring &workspace, const GitBranchCreateBranchOption *option, const std::wstring &branchName)
+    {
+        TRY_CATCH(
+            assert(!IsBlank(branchName));
+            std::wstring optionStr = L"";
+            if (option != nullptr) {
+                if (option->GetIsForce())
+                    optionStr += L" -f";
+
+                switch (option->GetTrack())
+                {
+                case GitBranchCreateBranchOptionTrackMode::Default:
+                    break;
+                case GitBranchCreateBranchOptionTrackMode::No:
+                    optionStr += L" --no-track";
+                    break;
+                case GitBranchCreateBranchOptionTrackMode::Direct:
+                    optionStr += L" --track=direct";
+                    break;
+                case GitBranchCreateBranchOptionTrackMode::Inherit:
+                    optionStr += L" --track=inherit";
+                    break;
+                default:
+                    assert(false);
+                    break;
+                }
+
+                if (option->GetIsRecurseSubmodules())
+                    optionStr += L" --recurse-submodules";
+            }
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git branch" + optionStr + L" " + branchName);
+        )
+    }
+
+    void GitService::SwitchBranch(const LogProperty *logProperty, const std::wstring &workspace, const GitBranchSwitchBranchOption *option, const std::wstring &branchName)
+    {
+        TRY_CATCH(
+            assert(!IsBlank(branchName));
+            std::wstring optionStr = L"";
+            if (option != nullptr) {
+                if (option->GetIsDiscardChanges()) {
+                    optionStr += L" --discard-changes";
+                }
+            }
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git switch" + optionStr + L" "+ branchName);
+        )
+    }
+
+    void GitService::RenameBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce)
+    {
+        TRY_CATCH(
+            assert(!IsBlank(oldBranchName));
+            assert(!IsBlank(newBranchName));
+            std::wstring optionStr = isForce ? L" -M" : L" -m";
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git branch" + optionStr + L" " + oldBranchName + L" " + newBranchName);
+        )
+    }
+
+    void GitService::CopyBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce)
+    {
+        TRY_CATCH(
+            assert(!IsBlank(oldBranchName));
+            assert(!IsBlank(newBranchName));
+            std::wstring optionStr = isForce ? L" -C" : L" -c";
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git branch" + optionStr + L" " + oldBranchName + L" " + newBranchName);
+        )        
+    }        
+        
     void GitService::DeleteBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName, bool isForce)
     {
         TRY_CATCH(
             assert(!IsBlank(branchName));
-            std::wstring optionStr = isForce ? L"-D" : L"-d";
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git branch " + optionStr + L" " + branchName);
+            std::wstring optionStr = isForce ? L" -D" : L" -d";
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git branch" + optionStr + L" " + branchName);
         )
     }
 
