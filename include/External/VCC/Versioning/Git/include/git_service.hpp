@@ -236,10 +236,22 @@ namespace vcc
             }
     };
 
+    class GitDifferentSearchCriteria : public BaseObject
+    {
+        GETSET(int64_t, NoOfLines, -1);
+        VECTOR(std::wstring, HashIDs);
+
+        public:
+            GitDifferentSearchCriteria() : BaseObject() {}
+            virtual ~GitDifferentSearchCriteria() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitDifferentSearchCriteria>(*this);
+            }
+    };
+
     class GitDifferenceSummary : public BaseObject
     {
-        friend class GitService;
-
         VECTOR(std::wstring, Files);
         VECTOR(size_t, AddLineCounts);
         VECTOR(size_t, DeleteLineCounts);
@@ -255,8 +267,6 @@ namespace vcc
 
     class GitDifference : public BaseObject
     {
-        friend class GitService;
-
         GETSET(std::wstring, FilePathOld, L"");
         GETSET(std::wstring, FilePathNew, L"");
         VECTOR(size_t, LineNumberOld);
@@ -322,6 +332,11 @@ namespace vcc
         static void Push(const LogProperty *logProperty, const std::wstring &workspace, const GitPushOption *option);
 
         /*-----------------------------------*
+         * -----------  WorkTree  -----------*
+         * ----------------------------------*/
+        // TODO
+
+        /*-----------------------------------*
          * -----------   Log      -----------*
          * ----------------------------------*/
         static std::wstring GetGitLogSearchCriteriaString(const GitLogSearchCriteria *searchCriteria);
@@ -343,8 +358,10 @@ namespace vcc
         /*-----------------------------------*
          * -----------  Branch    -----------*
          * ----------------------------------*/
+        static void CreateBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName);
+        static void SwitchBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName);
+        static void DeleteBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName, bool isForce);
        
-
         /*-----------------------------------*
          * ----------- Difference -----------*
          * ----------------------------------*/
@@ -355,11 +372,15 @@ namespace vcc
         static void GetDifferenceSummary(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, std::shared_ptr<GitDifferenceSummary> summary);
         // filePath must be filled
         static void ParseGitDiff(const std::wstring &str, std::shared_ptr<GitDifference> difference);
-        static void GetDifferenceIndexFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
-        static void GetDifferenceWorkingFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
-        static void GetDifferenceFile(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
-        static void GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
+        static void GetDifferenceIndexFile(const LogProperty *logProperty, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &filePath,  std::shared_ptr<GitDifference> diff);
+        static void GetDifferenceWorkingFile(const LogProperty *logProperty, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &filePath, std::shared_ptr<GitDifference> diff);
+        static void GetDifferenceFile(const LogProperty *logProperty, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &filePath, std::shared_ptr<GitDifference> diff);
+        static void GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff);
 
+        /*-----------------------------------*
+         * ----------- Stash      -----------*
+         * ----------------------------------*/
+        // TODO
 
         /*-----------------------------------*
          * ----------- Commit     -----------*
