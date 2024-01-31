@@ -743,19 +743,51 @@ namespace vcc
         )
     }
 
-    void GitService::CreateBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName)
+    void GitService::CreateBranch(const LogProperty *logProperty, const std::wstring &workspace, const GitBranchCreateBranchOption *option, const std::wstring &branchName)
     {
         TRY_CATCH(
             assert(!IsBlank(branchName));
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git switch -C " + branchName);
+            std::wstring optionStr = L"";
+            if (option != nullptr) {
+                if (option->GetIsForce())
+                    optionStr += L" -f";
+
+                switch (option->GetTrack())
+                {
+                case GitBranchCreateBranchOptionTrackMode::Default:
+                    break;
+                case GitBranchCreateBranchOptionTrackMode::No:
+                    optionStr += L" --no-track";
+                    break;
+                case GitBranchCreateBranchOptionTrackMode::Direct:
+                    optionStr += L" --track=direct";
+                    break;
+                case GitBranchCreateBranchOptionTrackMode::Inherit:
+                    optionStr += L" --track=inherit";
+                    break;
+                default:
+                    assert(false);
+                    break;
+                }
+
+                if (option->GetIsRecurseSubmodules())
+                    optionStr += L" --recurse-submodules";
+            }
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git branch" + optionStr + L" " + branchName);
         )
     }
 
-    void GitService::SwitchBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName)
+    void GitService::SwitchBranch(const LogProperty *logProperty, const std::wstring &workspace, const GitBranchSwitchBranchOption *option, const std::wstring &branchName)
     {
         TRY_CATCH(
             assert(!IsBlank(branchName));
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git switch " + branchName);
+            std::wstring optionStr = L"";
+            if (option != nullptr) {
+                if (option->GetIsDiscardChanges()) {
+                    optionStr += L" --discard-changes";
+                }
+            }
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git switch" + optionStr + L" "+ branchName);
         )
     }
 
@@ -783,7 +815,7 @@ namespace vcc
     {
         TRY_CATCH(
             assert(!IsBlank(branchName));
-            std::wstring optionStr = isForce ? L"-D" : L"-d";
+            std::wstring optionStr = isForce ? L" -D" : L" -d";
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git branch" + optionStr + L" " + branchName);
         )
     }

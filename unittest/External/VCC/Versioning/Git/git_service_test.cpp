@@ -239,6 +239,19 @@ TEST_F(GitServiceTest, GetBranch)
     EXPECT_TRUE(!branches.empty());
 }
 
+TEST_F(GitServiceTest, Branch)
+{
+    // init
+    GitService::Initialize(this->GetLogProperty().get(), this->GetWorkspace());
+\
+    WriteFile(ConcatPath(this->GetWorkspace(), L"test.txt"), L"hi\r\n", true);
+    GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
+    GitService::Commit(this->GetLogProperty().get(), this->GetWorkspace(), L"Test Commit");
+   
+    GitService::CreateBranch(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, L"branch");
+    GitService::DeleteBranch(this->GetLogProperty().get(), this->GetWorkspace(), L"branch");    
+}
+
 TEST_F(GitServiceTest, ParseGitDiff)
 {
     std::wstring str = L"diff --git a/test.txt b/test.txt\r\n";

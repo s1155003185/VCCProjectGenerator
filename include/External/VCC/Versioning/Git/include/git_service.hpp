@@ -253,6 +253,40 @@ namespace vcc
             }
     };
 
+    enum class GitBranchCreateBranchOptionTrackMode {
+        Default,
+        No,
+        Direct,
+        Inherit
+    };
+
+    class GitBranchCreateBranchOption : public BaseObject
+    {
+        GETSET(bool, IsForce, false);
+        GETSET(GitBranchCreateBranchOptionTrackMode, Track, GitBranchCreateBranchOptionTrackMode::Default);
+        GETSET(bool, IsRecurseSubmodules, false);
+
+        public:
+            GitBranchCreateBranchOption() : BaseObject() {}
+            virtual ~GitBranchCreateBranchOption() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitBranchCreateBranchOption>(*this);
+            }
+    };
+
+    class GitBranchSwitchBranchOption : public BaseObject
+    {
+        GETSET(bool, IsDiscardChanges, false);
+        public:
+            GitBranchSwitchBranchOption() : BaseObject() {}
+            virtual ~GitBranchSwitchBranchOption() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitBranchSwitchBranchOption>(*this);
+            }
+    };
+
     class GitDifferentSearchCriteria : public BaseObject
     {
         GETSET(int64_t, NoOfLines, -1);
@@ -382,11 +416,11 @@ namespace vcc
         static void ParseGitBranch(const std::wstring &str, std::shared_ptr<GitBranch> branch);
         static void GetCurrentBranch(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitBranch> branch);
         static void GetBranches(const LogProperty *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitBranch>> &branches);
-        static void CreateBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName);
-        static void SwitchBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName);
-        static void RenameBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce);
-        static void CopyBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce);
-        static void DeleteBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName, bool isForce);
+        static void CreateBranch(const LogProperty *logProperty, const std::wstring &workspace, const GitBranchCreateBranchOption *option, const std::wstring &branchName);
+        static void SwitchBranch(const LogProperty *logProperty, const std::wstring &workspace, const GitBranchSwitchBranchOption *option, const std::wstring &branchName);
+        static void RenameBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce = false);
+        static void CopyBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce = false);
+        static void DeleteBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName, bool isForce = false);
         // TODO: Cherry Pick
 
         /*-----------------------------------*
@@ -406,6 +440,12 @@ namespace vcc
 
         /*-----------------------------------*
          * ----------- Stash      -----------*
+         * ----------------------------------*/
+        // TODO
+
+
+        /*-----------------------------------*
+         * ----------- Merge      -----------*
          * ----------------------------------*/
         // TODO
 
