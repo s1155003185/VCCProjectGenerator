@@ -306,9 +306,9 @@ namespace vcc
         static void Clone(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &url, const std::wstring &branch, const int64_t &depth = -1);
         static void CheckOut(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branch);
 
-        /*----------------------------------*
-        * ----------- Remote     -----------*
-        * ----------------------------------*/
+        /*-----------------------------------*
+         * ----------- Remote     -----------*
+         * ----------------------------------*/
         // remote
         static void GetRemote(const LogProperty *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitRemote>> &remotes);
         static void AddRemote(const LogProperty *logProperty, const std::wstring &workspace, const GitRemoteAddOption *option);
@@ -321,9 +321,9 @@ namespace vcc
         // push
         static void Push(const LogProperty *logProperty, const std::wstring &workspace, const GitPushOption *option);
 
-        /*----------------------------------*
-        * -----------   Log      -----------*
-        * ----------------------------------*/
+        /*-----------------------------------*
+         * -----------   Log      -----------*
+         * ----------------------------------*/
         static std::wstring GetGitLogSearchCriteriaString(const GitLogSearchCriteria *searchCriteria);
         // only parse git log --graph --oneline --pretty=format:"(%H)(%h)(%T)(%t)(%P)(%p)"
         static void ParseGitLogGraph(const std::wstring &str, std::vector<std::shared_ptr<GitLog>> &logs);
@@ -335,18 +335,19 @@ namespace vcc
         // Get log by GetLogs first, then put the share pointer to GetLogDetail
         static void GetLog(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID, std::shared_ptr<GitLog> log);
 
-        /*----------------------------------*
-        * -----------    Tag     -----------*
-        * ----------------------------------*/
+        /*-----------------------------------*
+         * -----------    Tag     -----------*
+         * ----------------------------------*/
+        // TODO
 
+        /*-----------------------------------*
+         * -----------  Branch    -----------*
+         * ----------------------------------*/
+       
 
-        /*----------------------------------*
-        * -----------  Branch    -----------*
-        * ----------------------------------*/
-
-        /*----------------------------------*
-        * ----------- Difference -----------*
-        * ----------------------------------*/
+        /*-----------------------------------*
+         * ----------- Difference -----------*
+         * ----------------------------------*/
         // Difference Summary only show different between commit and commit / commit and working files
         // hashIDs.size() == 0, then different from latest commit to current working files
         // hashIDs.size() == 1, then different from commit to current working files
@@ -360,9 +361,9 @@ namespace vcc
         static void GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff, int64_t noOfLine = -1);
 
 
-        /*----------------------------------*
-        * ----------- Commit     -----------*
-        * ----------------------------------*/
+        /*-----------------------------------*
+         * ----------- Commit     -----------*
+         * ----------------------------------*/
         static void Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
         static void StageAll(const LogProperty *logProperty, const std::wstring &workspace);
         static void Unstage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
@@ -371,22 +372,23 @@ namespace vcc
         static void Amend(const LogProperty *logProperty, const std::wstring &workspace);
 
 
-        /*----------------------------------*
-        * ----------Reset/Restore-----------*
-        * ----------------------------------*/
+        /*-----------------------------------*
+         * ----------Reset/Restore-----------*
+         * ----------------------------------*/
         static void DiscardFile(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath);
         static void RestoreFileToParticularCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath, const std::wstring &hashID);
         static void ResetCommit(const LogProperty *logProperty, const std::wstring &workspace, const GitResetMode &resetMode, const std::wstring &hashID);
         static void ReverseCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID);
         
 
-        /*----------------------------------*
-        * ----------  Submodule   ----------*
-        * ----------------------------------*/
+        /*-----------------------------------*
+         * ----------  Submodule   ----------*
+         * ----------------------------------*/
+        // TODO
 
-        /*----------------------------------*
-        * ----------- Config     -----------*
-        * ----------------------------------*/
+        /*-----------------------------------*
+         * ----------- Config     -----------*
+         * ----------------------------------*/
         // Overall Config
         static bool IsConfigExists(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key);
         static void GetConfig(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitConfig> config);
