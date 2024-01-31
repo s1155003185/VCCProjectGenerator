@@ -236,6 +236,23 @@ namespace vcc
             }
     };
 
+    class GitBranch : public BaseObject
+    {
+        GETSET(std::wstring, Name, L"");
+        GETSET(bool, IsCheckOut, false);
+        GETSET(std::wstring, HashID, L"");
+        GETSET(std::wstring, Title, L"");
+        GETSET(std::wstring, PointToBranch, L"");
+
+        public:
+            GitBranch() : BaseObject() {}
+            virtual ~GitBranch() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitBranch>(*this);
+            }
+    };
+
     class GitDifferentSearchCriteria : public BaseObject
     {
         GETSET(int64_t, NoOfLines, -1);
@@ -358,10 +375,18 @@ namespace vcc
         /*-----------------------------------*
          * -----------  Branch    -----------*
          * ----------------------------------*/
+        // only for 
+        // 1. L"* master hashID"
+        static void ParseGitBranch(const std::wstring &str, std::shared_ptr<GitBranch> branch);
+        static void GetCurrentBranch(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitBranch> branch);
+        static void GetBranches(const LogProperty *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitBranch>> &branches);
         static void CreateBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName);
         static void SwitchBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName);
+        static void RenameBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce);
+        static void CopyBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce);
         static void DeleteBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName, bool isForce);
-       
+        // TODO: Cherry Pick
+
         /*-----------------------------------*
          * ----------- Difference -----------*
          * ----------------------------------*/
