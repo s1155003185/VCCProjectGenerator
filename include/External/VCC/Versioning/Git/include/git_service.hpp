@@ -376,7 +376,9 @@ namespace vcc
          * -----------  Branch    -----------*
          * ----------------------------------*/
         // only for 
-        // 1. L"* master hashID"
+        // 1. L"* master hashID Title"
+        // 2. L"  master hashID Title"
+        // 3. L"  head -> orgin/master"
         static void ParseGitBranch(const std::wstring &str, std::shared_ptr<GitBranch> branch);
         static void GetCurrentBranch(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitBranch> branch);
         static void GetBranches(const LogProperty *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitBranch>> &branches);
