@@ -421,7 +421,16 @@ namespace vcc
         static void RenameBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce = false);
         static void CopyBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce = false);
         static void DeleteBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName, bool isForce = false);
-        // TODO: Cherry Pick
+        
+        /*-----------------------------------*
+         * ----------- Merge      -----------*
+         * ----------------------------------*/
+        // TODO
+
+        /*-----------------------------------*
+         * -----------Cherry Pick -----------*
+         * ----------------------------------*/
+        // TODO
 
         /*-----------------------------------*
          * ----------- Difference -----------*
@@ -439,13 +448,12 @@ namespace vcc
         static void GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff);
 
         /*-----------------------------------*
-         * ----------- Stash      -----------*
+         * ----------    Blame    -----------*
          * ----------------------------------*/
         // TODO
 
-
         /*-----------------------------------*
-         * ----------- Merge      -----------*
+         * ----------- Stash      -----------*
          * ----------------------------------*/
         // TODO
 
@@ -468,7 +476,6 @@ namespace vcc
         static void ResetCommit(const LogProperty *logProperty, const std::wstring &workspace, const GitResetMode &resetMode, const std::wstring &hashID);
         static void ReverseCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID);
         
-
         /*-----------------------------------*
          * ----------  Submodule   ----------*
          * ----------------------------------*/
