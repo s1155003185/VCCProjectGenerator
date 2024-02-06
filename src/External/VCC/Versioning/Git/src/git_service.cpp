@@ -28,6 +28,7 @@ namespace vcc
     const std::wstring commitPrefix = L"Commit:";
     const std::wstring commitDatePrefix = L"CommitDate:";
     const std::wstring headerPrefix  = L"HEAD -> ";
+    const std::wstring tagPrefix = L"tag:";
 
     const std::wstring remoteMirrorFetch = L"(fetch)";
     const std::wstring remoteMirrorPush = L"(push)";
@@ -96,11 +97,16 @@ namespace vcc
         return result;
     }
 
-    void GitService::GetStatus(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitStatus> status, bool isWithIgnoredFiles)
+    void GitService::GetStatus(const LogProperty *logProperty, const std::wstring &workspace, const GitStatusSearchCriteria *searchCriteria, std::shared_ptr<GitStatus> status)
     {
         TRY_CATCH(
-            std::wstring withIgnoredFilesOption = isWithIgnoredFiles ? L" --ignored" : L"";
-            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git status -b -s" + withIgnoredFilesOption));
+            std::wstring optionStr = L"";
+            if (searchCriteria != nullptr) {
+                if (searchCriteria->GetIsWithIgnoreFiles())
+                    optionStr += L" --ignored";
+            }
+
+            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git status -b -s" + optionStr));
             
             std::wstring localBrachPrefix = L"## No commits yet on ";
             std::wstring remoteBranchPrefix = L"## ";
@@ -163,13 +169,6 @@ namespace vcc
         TRY_CATCH(
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, 
                 L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"") + (depth > 0 ? (L" --depth " + std::to_wstring(depth)) : L""));
-        )
-    }
-
-    void GitService::CheckOut(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branch)
-    {
-        TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout " + branch);
         )
     }
 
@@ -555,10 +554,17 @@ namespace vcc
                                 Trim(tagsStr);
                             } else
                                 log->SetIsHead(false);
-                            std::vector<std::wstring> tagTokens = SplitString(tagsStr, { L"," });
-                            for (std::wstring tag : tagTokens) {
-                                Trim(tag);
-                                log->InsertTags(tag);
+
+                            std::vector<std::wstring> tokens = SplitString(tagsStr, { L"," });
+                            for (std::wstring token : tokens) {
+                                Trim(token);
+                                if (HasPrefix(token, tagPrefix)) {
+                                    token = token.substr(tagPrefix.length());
+                                    Trim(token);
+                                    log->InsertTags(token);
+                                } else {
+                                    log->InsertBranches(token);
+                                }
                             }
                         }
                     }
@@ -686,13 +692,111 @@ namespace vcc
         )
     }
 
+    void GitService::GetTags(const LogProperty *logProperty, const std::wstring &workspace, const GitTagSearchCriteria *searchCriteria, std::vector<std::wstring> &tags)
+    {
+        TRY_CATCH(
+            std::wstring optionStr = L"";
+            if (searchCriteria != nullptr) {
+                if (!IsBlank(searchCriteria->GetContains()))
+                    optionStr += L" --contains " + searchCriteria->GetContains();
+
+                if (!IsBlank(searchCriteria->GetNoContains()))
+                    optionStr += L" --no-contains " + searchCriteria->GetNoContains();
+
+                if (!IsBlank(searchCriteria->GetOrderBy()))
+                    optionStr += L" --sort=" + searchCriteria->GetOrderBy();
+            }
+            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git tag -l"));
+            tags.insert(tags.end(), lines.begin(), lines.end());
+        )
+    }
+
+    void GitService::GetTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, shared_ptr<GitLog> log)
+    {
+        TRY_CATCH(
+            assert(!IsBlank(tagName));
+             std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git show --format=fuller " + tagName));
+            bool isAfterFirstHeader = false;
+            std::wstring str = L"";
+            for (const std::wstring &line : lines) {
+                if (isAfterFirstHeader) {
+                    if (line.length() > 0 && std::iswalnum(line.at(0)))
+                        break;
+                    str += line + L"\n";
+                } else {
+                    str += line + L"\n";
+                    if (IsBlank(line))
+                        isAfterFirstHeader = true;
+                }
+            }
+            GitService::ParseGitLog(str, log);
+        )
+    }
+
+    void GitService::CreateTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, const GitTagCreateTagOption *option)
+    {
+        TRY_CATCH(
+            assert(!IsBlank(tagName));
+            std::wstring optionStr = L"";
+            std::wstring suffixOptionStr = L"";
+            if (option != nullptr) {
+                switch (option->GetSign())
+                {
+                case GitTagCreateTagOptionSignMode::Default:
+                    optionStr += L" -a";
+                    break;
+                case GitTagCreateTagOptionSignMode::NoSign:
+                    optionStr += L" --no-sign";
+                    break;
+                case GitTagCreateTagOptionSignMode::Sign:
+                    optionStr += L" -s";
+                    break;
+                case GitTagCreateTagOptionSignMode::LocalUser:
+                    assert(!IsBlank(option->GetSignLocalUserKeyID()));
+                    optionStr += L" -local-user=" + option->GetSignLocalUserKeyID();
+                    break;
+                default:
+                    assert(false);
+                    break;
+                }
+
+                if (option->GetIsForce())
+                    optionStr += L" -f";
+                
+                if (!IsBlank(option->GetMessage()))
+                    optionStr += L" -m \"" + GetEscapeString(EscapeStringType::DoubleQuote, option->GetMessage()) + L"\"";
+
+                if (!IsBlank(option->GetHashID()))
+                    suffixOptionStr += L" " + option->GetHashID();
+            }
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git tag" + optionStr + L" " + tagName + L" " + suffixOptionStr);
+        )
+    }
+
+    void GitService::SwitchTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, bool isForce)
+    {
+        TRY_CATCH(
+            assert(!IsBlank(tagName));
+            std::wstring optionStr = isForce ? L" -f" : L"";
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout " + optionStr + L" " + tagName);
+        )
+    }
+
+    void GitService::DeleteTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName)
+    {
+        TRY_CATCH(
+            assert(!IsBlank(tagName));
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git tag -d " + tagName);
+        )
+    }
+
     void GitService::ParseGitBranch(const std::wstring &str, std::shared_ptr<GitBranch> branch)
     {
         TRY_CATCH(
             std::wstring tmpStr = str;
             std::wstring checkoutPrefix = L"*";
             if (HasPrefix(tmpStr, checkoutPrefix)) {
-                branch->SetIsCheckOut(true);
+                branch->SetIsActive(true);
                 tmpStr = tmpStr.substr(checkoutPrefix.size());
             }
             Trim(tmpStr);
@@ -743,7 +847,7 @@ namespace vcc
         )
     }
 
-    void GitService::CreateBranch(const LogProperty *logProperty, const std::wstring &workspace, const GitBranchCreateBranchOption *option, const std::wstring &branchName)
+    void GitService::CreateBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName, const GitBranchCreateBranchOption *option)
     {
         TRY_CATCH(
             assert(!IsBlank(branchName));
@@ -777,7 +881,7 @@ namespace vcc
         )
     }
 
-    void GitService::SwitchBranch(const LogProperty *logProperty, const std::wstring &workspace, const GitBranchSwitchBranchOption *option, const std::wstring &branchName)
+    void GitService::SwitchBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName, const GitBranchSwitchBranchOption *option)
     {
         TRY_CATCH(
             assert(!IsBlank(branchName));

@@ -11,22 +11,15 @@ namespace vcc
 {
     constexpr auto GIT_LOG_ID = L"GIT";
 
-    // CheckSum
-
-    class GitConfig : public BaseObject
+    class GitStatusSearchCriteria : public BaseObject
     {
-        GETSET(std::wstring, UserName, L"");
-        GETSET(std::wstring, UserEmail, L"");
-        MAP(std::wstring, std::wstring, Configs);
-
+        GETSET(bool, IsWithIgnoreFiles, false);
         public:
-            GitConfig() : BaseObject() {}
-            virtual ~GitConfig() {}
+            GitStatusSearchCriteria() : BaseObject() {}
+            virtual ~GitStatusSearchCriteria() {}
 
             virtual std::shared_ptr<IObject> Clone() override {
-                std::shared_ptr<GitConfig> obj = std::make_shared<GitConfig>(*this);
-                obj->CloneConfigs(this->GetConfigs());
-                return obj;
+                return std::make_shared<GitStatusSearchCriteria>(*this);
             }
     };
 
@@ -214,6 +207,7 @@ namespace vcc
         VECTOR(std::wstring, ParentHashIDs);
         VECTOR(std::wstring, AbbreviatedParentHashIDs);
         GETSET(bool, IsHead, false);
+        VECTOR(std::wstring, Branches);
         VECTOR(std::wstring, Tags);
         GETSET(std::wstring, Author, L"");
         GETSET(std::wstring, AuthorEmail, L"");
@@ -236,10 +230,52 @@ namespace vcc
             }
     };
 
+    class GitTagSearchCriteria : public BaseObject
+    {
+        GETSET(std::wstring, Contains, L"");
+        GETSET(std::wstring, NoContains, L"");
+
+        GETSET(std::wstring, OrderBy, L"");
+
+        public:
+            GitTagSearchCriteria() : BaseObject() {}
+            virtual ~GitTagSearchCriteria() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitTagSearchCriteria>(*this);
+            }
+    };
+
+    enum class GitTagCreateTagOptionSignMode 
+    {
+        Default,
+        NoSign,
+        Sign,
+        LocalUser
+    };
+
+    class GitTagCreateTagOption : public BaseObject
+    {
+        GETSET(GitTagCreateTagOptionSignMode, Sign, GitTagCreateTagOptionSignMode::Default);
+        GETSET(std::wstring, SignLocalUserKeyID, L"");
+        GETSET(bool, IsForce, false;);
+        GETSET(std::wstring, Message, L"");
+
+        GETSET(std::wstring, HashID, L"");
+
+        public:
+            GitTagCreateTagOption() : BaseObject() {}
+            virtual ~GitTagCreateTagOption() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                return std::make_shared<GitTagCreateTagOption>(*this);
+            }
+    };
+
     class GitBranch : public BaseObject
     {
         GETSET(std::wstring, Name, L"");
-        GETSET(bool, IsCheckOut, false);
+        GETSET(bool, IsActive, false);
         GETSET(std::wstring, HashID, L"");
         GETSET(std::wstring, Title, L"");
         GETSET(std::wstring, PointToBranch, L"");
@@ -345,6 +381,23 @@ namespace vcc
         Keep
     };
 
+    class GitConfig : public BaseObject
+    {
+        GETSET(std::wstring, UserName, L"");
+        GETSET(std::wstring, UserEmail, L"");
+        MAP(std::wstring, std::wstring, Configs);
+
+        public:
+            GitConfig() : BaseObject() {}
+            virtual ~GitConfig() {}
+
+            virtual std::shared_ptr<IObject> Clone() override {
+                std::shared_ptr<GitConfig> obj = std::make_shared<GitConfig>(*this);
+                obj->CloneConfigs(this->GetConfigs());
+                return obj;
+            }
+    };
+
     class GitService : public BaseService
     {
         private:
@@ -359,28 +412,27 @@ namespace vcc
         // General
         static std::wstring GetVersion(const LogProperty *logProperty);
         static bool IsGitResponse(const LogProperty *logProperty, const std::wstring &workspace);
-        static void GetStatus(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitStatus> status, bool isWithIgnoredFiles = false);
+        static void GetStatus(const LogProperty *logProperty, const std::wstring &workspace, const GitStatusSearchCriteria *searchCriteria, std::shared_ptr<GitStatus> status);
         static void Pull(const LogProperty *logProperty, const std::wstring &workspace);
     
         // Initialization
         static void Initialize(const LogProperty *logProperty, const std::wstring &workspace);
         static void Clone(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &url, const std::wstring &branch, const int64_t &depth = -1);
-        static void CheckOut(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branch);
 
         /*-----------------------------------*
          * ----------- Remote     -----------*
          * ----------------------------------*/
         // remote
         static void GetRemote(const LogProperty *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitRemote>> &remotes);
-        static void AddRemote(const LogProperty *logProperty, const std::wstring &workspace, const GitRemoteAddOption *option);
+        static void AddRemote(const LogProperty *logProperty, const std::wstring &workspace, const GitRemoteAddOption *option = nullptr);
         static void RenameRemote(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldName, const std::wstring &newName);
         static void RemoveRemote(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &name);
         // fetch
         static void FetchAll(const LogProperty *logProperty, const std::wstring &workspace);
         // pull
-        static void Pull(const LogProperty *logProperty, const std::wstring &workspace, const GitPullOption *option);
+        static void Pull(const LogProperty *logProperty, const std::wstring &workspace, const GitPullOption *option = nullptr);
         // push
-        static void Push(const LogProperty *logProperty, const std::wstring &workspace, const GitPushOption *option);
+        static void Push(const LogProperty *logProperty, const std::wstring &workspace, const GitPushOption *option = nullptr);
 
         /*-----------------------------------*
          * -----------  WorkTree  -----------*
@@ -404,7 +456,12 @@ namespace vcc
         /*-----------------------------------*
          * -----------    Tag     -----------*
          * ----------------------------------*/
-        // TODO
+        static void GetTags(const LogProperty *logProperty, const std::wstring &workspace, const GitTagSearchCriteria *searchCriteria, std::vector<std::wstring> &tags);
+        // Note: There is bug for Git, if using process, return string does not have branch and tags " (HEAD -> main, tag: v0.0.1)" after commit Hash ID. But it is normal if using terminal
+        static void GetTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, std::shared_ptr<GitLog> log);
+        static void CreateTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, const GitTagCreateTagOption *option = nullptr);
+        static void SwitchTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, bool isForce = false);
+        static void DeleteTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName);
 
         /*-----------------------------------*
          * -----------  Branch    -----------*
@@ -416,8 +473,8 @@ namespace vcc
         static void ParseGitBranch(const std::wstring &str, std::shared_ptr<GitBranch> branch);
         static void GetCurrentBranch(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitBranch> branch);
         static void GetBranches(const LogProperty *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitBranch>> &branches);
-        static void CreateBranch(const LogProperty *logProperty, const std::wstring &workspace, const GitBranchCreateBranchOption *option, const std::wstring &branchName);
-        static void SwitchBranch(const LogProperty *logProperty, const std::wstring &workspace, const GitBranchSwitchBranchOption *option, const std::wstring &branchName);
+        static void CreateBranch(const LogProperty *logProperty, const std::wstring &workspace,  const std::wstring &branchName, const GitBranchCreateBranchOption *option = nullptr);
+        static void SwitchBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName, const GitBranchSwitchBranchOption *option = nullptr);
         static void RenameBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce = false);
         static void CopyBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce = false);
         static void DeleteBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName, bool isForce = false);

@@ -29,7 +29,7 @@ void VPGProcessManager::VerifyLocalResponse()
         if (IsDirectoryExists(localResponseDirectory)) {
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Check Version.");
-
+            // get tab version       
         } else {
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Not Exists.");
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Clone from " + gitUrl);
