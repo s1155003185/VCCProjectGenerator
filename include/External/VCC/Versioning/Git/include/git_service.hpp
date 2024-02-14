@@ -11,16 +11,12 @@ namespace vcc
 {
     constexpr auto GIT_LOG_ID = L"GIT";
 
-    class GitStatusSearchCriteria : public BaseObject
+    class GitStatusSearchCriteria : public BaseObject<GitStatusSearchCriteria>
     {
         GETSET(bool, IsWithIgnoreFiles, false);
         public:
             GitStatusSearchCriteria() : BaseObject() {}
             virtual ~GitStatusSearchCriteria() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitStatusSearchCriteria>(*this);
-            }
     };
 
     enum class GitFileStatus
@@ -37,7 +33,7 @@ namespace vcc
         UpdatedButUnmerged
     };
 
-    class GitStatus : public BaseObject
+    class GitStatus : public BaseObject<GitStatus>
     {
         GETSET(std::wstring, Branch, L"");
         GETSET(std::wstring, RemoteBranch, L"");
@@ -48,10 +44,6 @@ namespace vcc
         public:
             GitStatus() : BaseObject() {}
             virtual ~GitStatus() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitStatus>(*this);
-            }
     };
 
     enum class GitRemoteMirror
@@ -61,7 +53,7 @@ namespace vcc
         Push
     };
 
-    class GitRemoteAddOption : public BaseObject
+    class GitRemoteAddOption : public BaseObject<GitRemoteAddOption>
     {
         GETSET(std::wstring, Name, L"");
         GETSET(std::wstring, URL, L"");
@@ -69,13 +61,9 @@ namespace vcc
         public:
             GitRemoteAddOption() : BaseObject() {}
             virtual ~GitRemoteAddOption() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitRemoteAddOption>(*this);
-            }
     };
 
-    class GitRemote : public BaseObject
+    class GitRemote : public BaseObject<GitRemote>
     {
         GETSET(std::wstring, Name, L"");
         GETSET(std::wstring, URL, L"");
@@ -84,10 +72,6 @@ namespace vcc
         public:
             GitRemote() : BaseObject() {}
             virtual ~GitRemote() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitRemote>(*this);
-            }
     };
 
     enum class GitPullOptionRecurseSubmodulesMode
@@ -98,7 +82,7 @@ namespace vcc
         No
     };
 
-    class GitPullOption : public BaseObject
+    class GitPullOption : public BaseObject<GitPullOption>
     {
         GETSET(bool, IsQuite, false);
         GETSET(GitPullOptionRecurseSubmodulesMode, RecurseSubmodules, GitPullOptionRecurseSubmodulesMode::Default);
@@ -108,13 +92,9 @@ namespace vcc
         public:
             GitPullOption() : BaseObject() {}
             virtual ~GitPullOption() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitPullOption>(*this);
-            }
     };
 
-    class GitPushOption : public BaseObject
+    class GitPushOption : public BaseObject<GitPushOption>
     {
         GETSET(bool, IsForce, false);
         GETSET(bool, IsQuite, false);
@@ -124,10 +104,6 @@ namespace vcc
         public:
             GitPushOption() : BaseObject() {}
             virtual ~GitPushOption() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitPushOption>(*this);
-            }
     };
 
     enum class GitLogOrderBy
@@ -139,7 +115,7 @@ namespace vcc
         Reverse
     };
 
-    class GitLogSearchCriteria : public BaseObject 
+    class GitLogSearchCriteria : public BaseObject<GitLogSearchCriteria>
     {
         // Commit Limiting
         GETSET(int64_t, LogCount, -1);
@@ -191,13 +167,9 @@ namespace vcc
         public:
             GitLogSearchCriteria() : BaseObject() {}
             virtual ~GitLogSearchCriteria() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitLogSearchCriteria>(*this);
-            }
     };
 
-    class GitLog : public BaseObject
+    class GitLog : public BaseObject<GitLog>
     {
         GETSET(size_t, ColumnIndex, (size_t)0);
         GETSET(std::wstring, HashID, L"");
@@ -224,13 +196,9 @@ namespace vcc
         public:
             GitLog() : BaseObject() {}
             virtual ~GitLog() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitLog>(*this);
-            }
     };
 
-    class GitTagSearchCriteria : public BaseObject
+    class GitTagSearchCriteria : public BaseObject<GitTagSearchCriteria>
     {
         GETSET(std::wstring, Contains, L"");
         GETSET(std::wstring, NoContains, L"");
@@ -240,10 +208,6 @@ namespace vcc
         public:
             GitTagSearchCriteria() : BaseObject() {}
             virtual ~GitTagSearchCriteria() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitTagSearchCriteria>(*this);
-            }
     };
 
     enum class GitTagCreateTagOptionSignMode 
@@ -254,7 +218,7 @@ namespace vcc
         LocalUser
     };
 
-    class GitTagCreateTagOption : public BaseObject
+    class GitTagCreateTagOption : public BaseObject<GitTagCreateTagOption>
     {
         GETSET(GitTagCreateTagOptionSignMode, Sign, GitTagCreateTagOptionSignMode::Default);
         GETSET(std::wstring, SignLocalUserKeyID, L"");
@@ -266,13 +230,9 @@ namespace vcc
         public:
             GitTagCreateTagOption() : BaseObject() {}
             virtual ~GitTagCreateTagOption() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitTagCreateTagOption>(*this);
-            }
     };
 
-    class GitBranch : public BaseObject
+    class GitBranch : public BaseObject<GitBranch>
     {
         GETSET(std::wstring, Name, L"");
         GETSET(bool, IsActive, false);
@@ -283,10 +243,6 @@ namespace vcc
         public:
             GitBranch() : BaseObject() {}
             virtual ~GitBranch() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitBranch>(*this);
-            }
     };
 
     enum class GitBranchCreateBranchOptionTrackMode {
@@ -296,7 +252,7 @@ namespace vcc
         Inherit
     };
 
-    class GitBranchCreateBranchOption : public BaseObject
+    class GitBranchCreateBranchOption : public BaseObject<GitBranchCreateBranchOption>
     {
         GETSET(bool, IsForce, false);
         GETSET(GitBranchCreateBranchOptionTrackMode, Track, GitBranchCreateBranchOptionTrackMode::Default);
@@ -305,25 +261,17 @@ namespace vcc
         public:
             GitBranchCreateBranchOption() : BaseObject() {}
             virtual ~GitBranchCreateBranchOption() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitBranchCreateBranchOption>(*this);
-            }
     };
 
-    class GitBranchSwitchBranchOption : public BaseObject
+    class GitBranchSwitchBranchOption : public BaseObject<GitBranchSwitchBranchOption>
     {
         GETSET(bool, IsDiscardChanges, false);
         public:
             GitBranchSwitchBranchOption() : BaseObject() {}
             virtual ~GitBranchSwitchBranchOption() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitBranchSwitchBranchOption>(*this);
-            }
     };
 
-    class GitDifferentSearchCriteria : public BaseObject
+    class GitDifferentSearchCriteria : public BaseObject<GitDifferentSearchCriteria>
     {
         GETSET(int64_t, NoOfLines, -1);
         VECTOR(std::wstring, HashIDs);
@@ -331,13 +279,9 @@ namespace vcc
         public:
             GitDifferentSearchCriteria() : BaseObject() {}
             virtual ~GitDifferentSearchCriteria() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitDifferentSearchCriteria>(*this);
-            }
     };
 
-    class GitDifferenceSummary : public BaseObject
+    class GitDifferenceSummary : public BaseObject<GitDifferenceSummary>
     {
         VECTOR(std::wstring, Files);
         VECTOR(size_t, AddLineCounts);
@@ -346,13 +290,9 @@ namespace vcc
         public:
             GitDifferenceSummary() : BaseObject() {}
             virtual ~GitDifferenceSummary() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitDifferenceSummary>(*this);
-            }
     };
 
-    class GitDifference : public BaseObject
+    class GitDifference : public BaseObject<GitDifference>
     {
         GETSET(std::wstring, FilePathOld, L"");
         GETSET(std::wstring, FilePathNew, L"");
@@ -365,10 +305,6 @@ namespace vcc
         public:
             GitDifference() : BaseObject() {}
             virtual ~GitDifference() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<GitDifference>(*this);
-            }
     };
 
     enum class GitResetMode
@@ -381,7 +317,7 @@ namespace vcc
         Keep
     };
 
-    class GitConfig : public BaseObject
+    class GitConfig : public BaseObject<GitConfig>
     {
         GETSET(std::wstring, UserName, L"");
         GETSET(std::wstring, UserEmail, L"");
@@ -391,7 +327,7 @@ namespace vcc
             GitConfig() : BaseObject() {}
             virtual ~GitConfig() {}
 
-            virtual std::shared_ptr<IObject> Clone() override {
+            virtual std::shared_ptr<GitConfig> Clone() override {
                 std::shared_ptr<GitConfig> obj = std::make_shared<GitConfig>(*this);
                 obj->CloneConfigs(this->GetConfigs());
                 return obj;
@@ -450,6 +386,7 @@ namespace vcc
         static void ParseGitLog(const std::wstring &str, std::shared_ptr<GitLog> log);
         // To draw graph, mark the point by column index first, then link nodes if having same ParentHashID and HashID
         static void GetLogs(const LogProperty *logProperty, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria, std::vector<std::shared_ptr<GitLog>> &logs);
+        static void GetCurrentLog(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitLog> log);
         // Get log by GetLogs first, then put the share pointer to GetLogDetail
         static void GetLog(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID, std::shared_ptr<GitLog> log);
 

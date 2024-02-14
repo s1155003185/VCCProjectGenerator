@@ -9,7 +9,7 @@
 
 using namespace vcc;
 
-class VPGEnumClassProperty : public BaseObject
+class VPGEnumClassProperty : public BaseObject<VPGEnumClassProperty>
 {
     friend class VPGEnumClassReader;
     GETSET(std::wstring, Enum, L"");
@@ -22,13 +22,9 @@ class VPGEnumClassProperty : public BaseObject
     public:
         VPGEnumClassProperty() : BaseObject() {}
         virtual ~VPGEnumClassProperty() {}
-
-        virtual std::shared_ptr<IObject> Clone() override {
-            return std::make_shared<VPGEnumClassProperty>(*this);
-        }
 };
 
-class VPGEnumClass : public BaseObject
+class VPGEnumClass : public BaseObject<VPGEnumClass>
 {
     friend class VPGEnumClassReader;
     GETSET(std::wstring, Name, L"");
@@ -39,7 +35,7 @@ class VPGEnumClass : public BaseObject
         VPGEnumClass() : BaseObject() {}
         virtual ~VPGEnumClass() {}
 
-        virtual std::shared_ptr<IObject> Clone() override {
+        virtual std::shared_ptr<VPGEnumClass> Clone() override {
             std::shared_ptr<VPGEnumClass> obj = std::make_shared<VPGEnumClass>(*this);
             obj->CloneProperties(this->GetProperties());
             return obj;

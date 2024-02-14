@@ -6,6 +6,7 @@
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
 #include "git_service.hpp"
+#include "memory_macro.hpp"
 #include "string_helper.hpp"
 #include "vpg_global.hpp"
 #include "vpg_project_type.hpp"
@@ -29,7 +30,9 @@ void VPGProcessManager::VerifyLocalResponse()
         if (IsDirectoryExists(localResponseDirectory)) {
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Check Version.");
-            // get tab version       
+            // get tab version
+            DECLARE_SPTR(GitLog, currentLog);
+            GitService::GetCurrentLog(this->GetLogProperty().get(),  VPGGlobal::GetVccLocalResponseFolder(), currentLog);
         } else {
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Not Exists.");
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Clone from " + gitUrl);

@@ -8,7 +8,7 @@
 
 namespace vcc
 {
-    class ConfigElement : public BaseObject
+    class ConfigElement : public BaseObject<ConfigElement>
     {
         friend class ConfigReader;
         MAP(std::wstring, std::wstring, Configs)
@@ -17,7 +17,7 @@ namespace vcc
             ConfigElement() : BaseObject() {}
             virtual ~ConfigElement() {}
 
-            virtual std::shared_ptr<IObject> Clone() override {
+            virtual std::shared_ptr<ConfigElement> Clone() override {
                 std::shared_ptr<ConfigElement> obj = std::make_shared<ConfigElement>(*this);
                 obj->CloneConfigs(this->GetConfigs());
                 return obj;

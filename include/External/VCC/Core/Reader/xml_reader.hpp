@@ -11,7 +11,7 @@
 namespace vcc
 {
     // TODO: Not Complete
-    class XMLAttribute : public BaseObject
+    class XMLAttribute : public BaseObject<XMLAttribute>
     {
         friend class XMLReader;
         GETSET(std::wstring, Name, L"");
@@ -20,13 +20,9 @@ namespace vcc
         public:
             XMLAttribute() : BaseObject() {}
             virtual ~XMLAttribute() {}
-
-            virtual std::shared_ptr<IObject> Clone() override {
-                return std::make_shared<XMLAttribute>(*this);
-            }
     };
 
-    class XMLElement : public BaseObject 
+    class XMLElement : public BaseObject<XMLElement>
     {
         friend class XMLReader;
 
@@ -41,7 +37,7 @@ namespace vcc
             XMLElement() : BaseObject() {}
             virtual ~XMLElement() {}
 
-            virtual std::shared_ptr<IObject> Clone() override {
+            virtual std::shared_ptr<XMLElement> Clone() override {
                 std::shared_ptr<XMLElement> obj = std::make_shared<XMLElement>(*this);
                 obj->CloneAttributes(this->GetAttributes());
                 obj->CloneChildren(this->GetChildren());

@@ -684,6 +684,19 @@ namespace vcc
         )
     }
 
+    void GitService::GetCurrentLog(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitLog> log)
+    {
+        //TRY_CATCH(
+            DECLARE_SPTR(GitLogSearchCriteria, searchCriteria);
+            searchCriteria->SetLogCount(1);
+            std::vector<std::shared_ptr<GitLog>> logs;
+            GitService::GetLogs(logProperty, workspace, searchCriteria.get(), logs);
+            if (!logs.empty()) {
+                log = logs.at(0)->Clone();
+            }
+        //)        
+    }
+
     void GitService::GetLog(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID, std::shared_ptr<GitLog> log)
     {
         TRY_CATCH(

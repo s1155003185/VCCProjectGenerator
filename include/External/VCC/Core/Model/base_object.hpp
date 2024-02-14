@@ -6,7 +6,8 @@
 
 namespace vcc
 {
-    class BaseObject : public IObject
+    template <typename Derived>
+    class BaseObject : public IObject<Derived>
     {
         GET(ObjectType, Type, ObjectType::NA)
 
@@ -14,5 +15,11 @@ namespace vcc
             BaseObject() {}
             BaseObject(ObjectType type) : BaseObject() { this->_Type = type; }
             ~BaseObject() {}
+
+        public:
+            virtual std::shared_ptr<Derived> Clone() override
+            {
+                return std::make_shared<Derived>(static_cast<const Derived&>(*this));
+            }
     };
 }

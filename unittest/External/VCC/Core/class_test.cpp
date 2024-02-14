@@ -11,17 +11,15 @@
 using namespace std;
 using namespace vcc;
 
-class ClassMacroTestClassElement : public BaseObject
+class ClassMacroTestClassElement : public BaseObject<ClassMacroTestClassElement>
 {
     GETSET(int, Index, 0);
     public:
         ClassMacroTestClassElement(int i) : BaseObject(ObjectType::NA) { this->_Index = i; }
         virtual ~ClassMacroTestClassElement() {}
-        
-        virtual std::shared_ptr<IObject> Clone() override { return make_shared<ClassMacroTestClassElement>(*this); };
 };
 
-class ClassMacroTestClass : public BaseObject
+class ClassMacroTestClass : public BaseObject<ClassMacroTestClass>
 {
     GETSET(int, N, 0)
     VECTOR(int, V)
@@ -35,7 +33,7 @@ class ClassMacroTestClass : public BaseObject
         ClassMacroTestClass() : BaseObject(ObjectType::NA) {}
         virtual ~ClassMacroTestClass() {}
         
-        virtual std::shared_ptr<IObject> Clone() override {
+        virtual std::shared_ptr<ClassMacroTestClass> Clone() override {
             std::shared_ptr<ClassMacroTestClass> obj = make_shared<ClassMacroTestClass>(*this);
             obj->CloneV(this->GetV());
             obj->CloneVO(this->GetVO());
@@ -49,12 +47,20 @@ class ClassMacroTestClass : public BaseObject
         };
 };
 
-TEST(ClassMacroTest, CLONE) 
+TEST(ClassMacroTest, CloneSingle)
+{
+    int i = 10;
+    unique_ptr<ClassMacroTestClassElement> testClass = make_unique<ClassMacroTestClassElement>(i);
+    shared_ptr<ClassMacroTestClassElement> cloneClass = testClass->Clone();
+    EXPECT_EQ(cloneClass->GetIndex(), i);
+}
+
+TEST(ClassMacroTest, Clone) 
 {
     unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
     testClass->SetN(1);
 
-    shared_ptr<ClassMacroTestClass> cloneClass = std::dynamic_pointer_cast<ClassMacroTestClass>(testClass->Clone());
+    shared_ptr<ClassMacroTestClass> cloneClass = testClass->Clone();
     EXPECT_EQ(testClass->GetN(), cloneClass->GetN());
 }
 
