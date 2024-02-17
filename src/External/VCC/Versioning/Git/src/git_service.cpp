@@ -149,13 +149,6 @@ namespace vcc
         )
     }
 
-    void GitService::Pull(const LogProperty *logProperty, const std::wstring &workspace)
-    {
-        TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git pull");
-        )
-    }
-
     // Initialization
     void GitService::Initialize(const LogProperty *logProperty, const std::wstring &workspace)
     {

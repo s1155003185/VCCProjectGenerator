@@ -11,6 +11,12 @@ namespace vcc
         return v.empty();
     }
 
+    template<typename T>
+    inline bool Contains(const std::vector<T> &v, const T &element) 
+    {
+        return !IsEmpty(v) && std::find(v.begin(), v.end(), element) != v.end();
+    }
+
     // Concat
     inline std::wstring Concat(const std::vector<std::wstring> &v, std::wstring delimitor)
     {

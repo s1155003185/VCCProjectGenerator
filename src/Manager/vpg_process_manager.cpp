@@ -8,6 +8,7 @@
 #include "git_service.hpp"
 #include "memory_macro.hpp"
 #include "string_helper.hpp"
+#include "vector_helper.hpp"
 #include "vpg_global.hpp"
 #include "vpg_project_type.hpp"
 
@@ -30,23 +31,31 @@ void VPGProcessManager::VerifyLocalResponse()
         if (IsDirectoryExists(localResponseDirectory)) {
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Check Version.");
-            // get tab version
+            // check tag version
+            // if same as current version of generator, no action
+            // if not same, then check verison of genertor exists, if not exists, then master, else switch to correct branch
             DECLARE_SPTR(GitLog, currentLog);
-            GitService::GetCurrentLog(this->GetLogProperty().get(),  VPGGlobal::GetVccLocalResponseFolder(), currentLog);
+            GitService::GetCurrentLog(this->GetLogProperty().get(), VPGGlobal::GetVccLocalResponseFolder(), currentLog);
+            if (!Contains(currentLog->GetTags(), VPGGlobal::GetVersion())) {
+                try
+                {
+                    GitService::SwitchTag(this->GetLogProperty().get(), VPGGlobal::GetVccLocalResponseFolder(), VPGGlobal::GetVersion());
+                    LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
+                }
+                catch(const std::exception& e)
+                {
+                    LogService::LogError(this->GetLogProperty().get(), L"", L"VCC Project Generator version Not Exists. Switch to main.");
+                    GitService::SwitchTag(this->GetLogProperty().get(), VPGGlobal::GetVccLocalResponseFolder(), L"main");
+                    GitService::Pull(this->GetLogProperty().get(), VPGGlobal::GetVccLocalResponseFolder());
+                    LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
+                }
+            }
         } else {
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Not Exists.");
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Clone from " + gitUrl);
-            GitService::Clone(this->GetLogProperty().get(),  VPGGlobal::GetVccLocalResponseFolder(), gitUrl, this->GetBranch(), this->GetLogDepth());
+            GitService::Clone(this->GetLogProperty().get(),  VPGGlobal::GetVccLocalResponseFolder(), gitUrl, this->GetTag(), this->GetLogDepth());
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
         }
-
-        // return 
-        // return GitService::Pull(logProperty, VPGGlobal::GetVccProjectDefaultDirectory(projectType));
-        
-        // if (IsDirectoryExists(localResponseDirectory)) {
-        // }
-        // VPGFileUpdateService::DownloadVCCResource(this->GetLogProperty().get(), this->GetVPGProjectType(), this->GetBranch());
-
     } catch (const std::exception &e) {
         THROW_EXCEPTION(e);
     }
@@ -133,7 +142,7 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
                                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknown argument " + cmd2);
                         }
                     } else if (cmd == L"-v") {
-                        this->_Branch = cmd2;
+                        this->_Tag = cmd2;
                     } else if (cmd == L"-d") {
                         this->_LogDepth = std::stoi(cmd2);
                     } else if (cmd == L"-p") {

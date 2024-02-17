@@ -349,8 +349,7 @@ namespace vcc
         static std::wstring GetVersion(const LogProperty *logProperty);
         static bool IsGitResponse(const LogProperty *logProperty, const std::wstring &workspace);
         static void GetStatus(const LogProperty *logProperty, const std::wstring &workspace, const GitStatusSearchCriteria *searchCriteria, std::shared_ptr<GitStatus> status);
-        static void Pull(const LogProperty *logProperty, const std::wstring &workspace);
-    
+
         // Initialization
         static void Initialize(const LogProperty *logProperty, const std::wstring &workspace);
         static void Clone(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &url, const std::wstring &branch, const int64_t &depth = -1);
