@@ -717,26 +717,50 @@ namespace vcc
         )
     }
 
-    void GitService::GetTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, shared_ptr<GitLog> log)
+    // void GitService::GetTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, shared_ptr<GitLog> log)
+    // {
+    //     TRY_CATCH(
+    //         assert(!IsBlank(tagName));
+    //          std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git show --format=fuller " + tagName));
+    //         bool isAfterFirstHeader = false;
+    //         std::wstring str = L"";
+    //         for (const std::wstring &line : lines) {
+    //             if (isAfterFirstHeader) {
+    //                 if (line.length() > 0 && std::iswalnum(line.at(0)))
+    //                     break;
+    //                 str += line + L"\n";
+    //             } else {
+    //                 str += line + L"\n";
+    //                 if (IsBlank(line))
+    //                     isAfterFirstHeader = true;
+    //             }
+    //         }
+    //         GitService::ParseGitLog(str, log);
+    //     )
+    // }
+
+    GitTagCurrentTag GitService::GetCurrentTag(const LogProperty *logProperty, const std::wstring &workspace)
     {
+        GitTagCurrentTag currentTag;
         TRY_CATCH(
-            assert(!IsBlank(tagName));
-             std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git show --format=fuller " + tagName));
-            bool isAfterFirstHeader = false;
-            std::wstring str = L"";
-            for (const std::wstring &line : lines) {
-                if (isAfterFirstHeader) {
-                    if (line.length() > 0 && std::iswalnum(line.at(0)))
-                        break;
-                    str += line + L"\n";
-                } else {
-                    str += line + L"\n";
-                    if (IsBlank(line))
-                        isAfterFirstHeader = true;
+            std::wstring tagStr = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git describe --tags"))[0];
+            std::vector<std::wstring> tokens = SplitString(tagStr, { L"-" });
+            if (tokens.size() >= 3) {
+                try
+                {
+                    currentTag.SetTagName(Concat(std::vector(tokens.begin(), tokens.end() - 2), L"-"));
+                    currentTag.SetNoOfCommit(std::stoi(tokens[tokens.size() - 2]));
+                    currentTag.SetHashID(tokens[tokens.size() - 1]);
                 }
+                catch(...)
+                {
+                    currentTag.SetTagName(tagStr);
+                }
+            } else {
+                currentTag.SetTagName(tagStr);
             }
-            GitService::ParseGitLog(str, log);
         )
+        return currentTag;
     }
 
     void GitService::CreateTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, const GitTagCreateTagOption *option)
@@ -823,17 +847,25 @@ namespace vcc
         )
     }
 
-    void GitService::GetCurrentBranch(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitBranch> branch)
+    // void GitService::GetCurrentBranch(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitBranch> branch)
+    // {
+    //     TRY_CATCH(
+    //         std::wstring str = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git branch -v");
+    //         if (str.empty())
+    //             return;
+    //         std::vector<std::wstring> lines = SplitStringByLine(str);
+    //         if (!lines.empty()) {
+    //             ParseGitBranch(lines[0], branch);
+    //         }
+    //     )
+    //}
+
+    std::wstring GitService::GetCurrentBranchName(const LogProperty *logProperty, const std::wstring &workspace)
     {
         TRY_CATCH(
-            std::wstring str = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git branch -v");
-            if (str.empty())
-                return;
-            std::vector<std::wstring> lines = SplitStringByLine(str);
-            if (!lines.empty()) {
-                ParseGitBranch(lines[0], branch);
-            }
+            return SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git branch --show-current"))[0];
         )
+        return L"";
     }
 
     void GitService::GetBranches(const LogProperty *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitBranch>> &branches)

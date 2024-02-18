@@ -210,6 +210,17 @@ namespace vcc
             virtual ~GitTagSearchCriteria() {}
     };
 
+    class GitTagCurrentTag : public BaseObject<GitTagCurrentTag>
+    {
+        GETSET(std::wstring, TagName, L"");
+        GETSET(size_t, NoOfCommit, 0);
+        GETSET(std::wstring, HashID, L"");
+
+        public:
+            GitTagCurrentTag() : BaseObject() {}
+            virtual ~GitTagCurrentTag() {}
+    };
+
     enum class GitTagCreateTagOptionSignMode 
     {
         Default,
@@ -394,7 +405,8 @@ namespace vcc
          * ----------------------------------*/
         static void GetTags(const LogProperty *logProperty, const std::wstring &workspace, const GitTagSearchCriteria *searchCriteria, std::vector<std::wstring> &tags);
         // Note: There is bug for Git, if using process, return string does not have branch and tags " (HEAD -> main, tag: v0.0.1)" after commit Hash ID. But it is normal if using terminal
-        static void GetTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, std::shared_ptr<GitLog> log);
+        //static void GetTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, std::shared_ptr<GitLog> log);
+        static GitTagCurrentTag GetCurrentTag(const LogProperty *logProperty, const std::wstring &workspace);
         static void CreateTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, const GitTagCreateTagOption *option = nullptr);
         static void SwitchTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, bool isForce = false);
         static void DeleteTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName);
@@ -407,7 +419,8 @@ namespace vcc
         // 2. L"  master hashID Title"
         // 3. L"  head -> orgin/master"
         static void ParseGitBranch(const std::wstring &str, std::shared_ptr<GitBranch> branch);
-        static void GetCurrentBranch(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitBranch> branch);
+        // static void GetCurrentBranch(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitBranch> branch);
+        static std::wstring GetCurrentBranchName(const LogProperty *logProperty, const std::wstring &workspace);
         static void GetBranches(const LogProperty *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitBranch>> &branches);
         static void CreateBranch(const LogProperty *logProperty, const std::wstring &workspace,  const std::wstring &branchName, const GitBranchCreateBranchOption *option = nullptr);
         static void SwitchBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName, const GitBranchSwitchBranchOption *option = nullptr);

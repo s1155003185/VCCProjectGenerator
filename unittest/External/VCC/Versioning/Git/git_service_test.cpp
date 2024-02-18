@@ -320,12 +320,25 @@ TEST_F(GitServiceTest, Tag)
     WriteFile(ConcatPath(this->GetWorkspace(), L"test.txt"), L"hi\r\n", true);
     GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
     GitService::Commit(this->GetLogProperty().get(), this->GetWorkspace(), L"Test Commit");
-
+    try
+    {
+        GitTagCurrentTag noTag = GitService::GetCurrentTag(this->GetLogProperty().get(), this->GetWorkspace());
+        // show throw exception
+        EXPECT_TRUE(false);
+    }
+    catch(...)
+    {
+        EXPECT_TRUE(true);
+    }
+    
     GitService::CreateTag(this->GetLogProperty().get(), this->GetWorkspace(), L"v0.0.1", nullptr);
     std::vector<std::wstring> tags;
     GitService::GetTags(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, tags);
     EXPECT_EQ(tags.size(), (size_t)1);
     EXPECT_EQ(tags[0], L"v0.0.1");
+    GitTagCurrentTag currentTag = GitService::GetCurrentTag(this->GetLogProperty().get(), this->GetWorkspace());
+    EXPECT_EQ(currentTag.GetTagName(), L"v0.0.1");
+    EXPECT_EQ(currentTag.GetNoOfCommit(), (size_t)0);
 
     GitService::SwitchTag(this->GetLogProperty().get(), this->GetWorkspace(), L"v0.0.1");
 
@@ -348,25 +361,27 @@ TEST_F(GitServiceTest, Branch)
    
     // Create Branch
     GitService::CreateBranch(this->GetLogProperty().get(), this->GetWorkspace(), L"branch", nullptr);
+    EXPECT_EQ(GitService::GetCurrentBranchName(this->GetLogProperty().get(), this->GetWorkspace()), L"main");
 
     // Current Branch
-    DECLARE_SPTR(GitBranch, currentbranch);
-    GitService::GetCurrentBranch(this->GetLogProperty().get(), this->GetWorkspace(), currentbranch);
-    EXPECT_EQ(currentbranch->GetName(), L"branch");
-    EXPECT_EQ(currentbranch->GetIsActive(), false);
-    EXPECT_TRUE(!currentbranch->GetHashID().empty());
-    EXPECT_TRUE(!currentbranch->GetTitle().empty());
-    EXPECT_EQ(currentbranch->GetPointToBranch(), L""); 
+    // DECLARE_SPTR(GitBranch, currentbranch);
+    // GitService::GetCurrentBranch(this->GetLogProperty().get(), this->GetWorkspace(), currentbranch);
+    // EXPECT_EQ(currentbranch->GetName(), L"branch");
+    // EXPECT_EQ(currentbranch->GetIsActive(), false);
+    // EXPECT_TRUE(!currentbranch->GetHashID().empty());
+    // EXPECT_TRUE(!currentbranch->GetTitle().empty());
+    // EXPECT_EQ(currentbranch->GetPointToBranch(), L""); 
 
     // Switch Branch
     GitService::SwitchBranch(this->GetLogProperty().get(), this->GetWorkspace(), L"branch");
-    DECLARE_SPTR(GitBranch, switchBranch);
-    GitService::GetCurrentBranch(this->GetLogProperty().get(), this->GetWorkspace(), switchBranch);
-    EXPECT_EQ(switchBranch->GetName(), L"branch");
-    EXPECT_EQ(switchBranch->GetIsActive(), true);
-    EXPECT_TRUE(!switchBranch->GetHashID().empty());
-    EXPECT_TRUE(!switchBranch->GetTitle().empty());
-    EXPECT_EQ(switchBranch->GetPointToBranch(), L""); 
+    // DECLARE_SPTR(GitBranch, switchBranch);
+    // GitService::GetCurrentBranch(this->GetLogProperty().get(), this->GetWorkspace(), switchBranch);
+    // EXPECT_EQ(switchBranch->GetName(), L"branch");
+    // EXPECT_EQ(switchBranch->GetIsActive(), true);
+    // EXPECT_TRUE(!switchBranch->GetHashID().empty());
+    // EXPECT_TRUE(!switchBranch->GetTitle().empty());
+    // EXPECT_EQ(switchBranch->GetPointToBranch(), L""); 
+    EXPECT_EQ(GitService::GetCurrentBranchName(this->GetLogProperty().get(), this->GetWorkspace()), L"branch");
 
     // Get Branches
     std::vector<std::shared_ptr<GitBranch>> branches;
