@@ -34,6 +34,7 @@ namespace vcc
 	std::wstring GetSystemFolderPath(SystemFolderType fileType);
 
     // helper
+	std::wstring GetFileName(const std::wstring &filePath);
 	std::wstring ConcatPath(std::wstring directory, std::wstring addition);
 	void GetFileDifferenceBetweenWorkspaces(std::wstring sourceWorkspace, std::wstring targetWorkspace,
 		std::vector<std::wstring> &needToAdd, std::vector<std::wstring> &needToModify, std::vector<std::wstring> &needToDelete);
@@ -48,6 +49,7 @@ namespace vcc
 
 	// action
 	void CreateDirectory(const std::wstring &path);
+	void CopyFile(const std::wstring &srcFilePath, const std::wstring &destFilePath);
 	void RemoveFile(const std::wstring &filePath);
 
 	// Read File

@@ -5,7 +5,12 @@
 
 namespace vcc
 {
+	#ifdef __WIN32
+    const auto NL = L"\n";
+	#else
     const auto NL = L"\r\n";
+	#endif
+
 	const std::wstring INDENT = L"    ";
 
 	enum class EscapeStringType

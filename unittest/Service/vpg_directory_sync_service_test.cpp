@@ -14,7 +14,7 @@ using namespace vcc;
 
 class VPGDirectorySyncServiceTest : public testing::Test 
 {
-    GETSPTR(LogProperty, LogProperty);
+    GET_SPTR(LogProperty, LogProperty);
     GET(wstring, Workspace, L"bin/Debug/DirectorySyncServiceTest/");
     GET(wstring, WorkspaceSource, L"bin/Debug/DirectorySyncServiceTestSource");
     GET(wstring, WorkspaceTarget, L"bin/Debug/DirectorySyncServiceTestTarget");

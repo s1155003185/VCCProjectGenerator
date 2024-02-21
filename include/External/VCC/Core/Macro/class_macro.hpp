@@ -30,11 +30,19 @@ namespace vcc
 
     // object
 
-    #define GETSPTR(type, var, ...) \
+    #define GET_SPTR(type, var, ...) \
     protected: \
         mutable std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
     public: \
         std::shared_ptr<type> Get##var() { return _##var; }
+
+
+    #define GETSET_SPTR(type, var, ...) \
+    protected: \
+        mutable std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
+    public: \
+        std::shared_ptr<type> Get##var() { return _##var; } \
+        void Set##var(std::shared_ptr<type> value) { _##var = value; }
 
     // std::vector
     

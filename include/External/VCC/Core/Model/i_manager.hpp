@@ -4,7 +4,7 @@ namespace vcc
 {
     class IManager
     {
-        protected:
+        public:
             IManager() {}
             ~IManager() {}
     };

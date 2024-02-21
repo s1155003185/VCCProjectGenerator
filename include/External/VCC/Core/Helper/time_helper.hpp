@@ -2,6 +2,14 @@
 #include <chrono>
 #include <mutex>
 
+#ifdef _WIN32
+#include <ctime>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#endif
+
+#include "exception_macro.hpp"
 #include "string_helper.hpp"
 
 namespace vcc
@@ -53,5 +61,24 @@ namespace vcc
         auto nowMs = std::chrono::duration_cast<std::chrono::milliseconds>(ts.time_since_epoch()) % 1000;
         auto nowMsStr = std::to_string(nowMs.count());
         return dateTimeStr + str2wstr("." + PadLeft(nowMsStr, 3, '0'));
+    }
+
+    inline std::time_t ParseDatetime(const std::wstring &timeStr, const std::wstring &format)
+    {
+        std::time_t time = -1;
+        TRY_CATCH(
+            #ifdef _WIN32
+                std::tm timeStruct = {};
+                std::wistringstream dateStream(timeStr);
+                dateStream.imbue(std::locale(setlocale(LC_ALL, nullptr)));
+                dateStream >> std::get_time(&timeStruct, format.c_str());
+                time = mktime(&timeStruct);
+            #else
+                struct tm tm;
+                strptime(wstr2str(timeStr).c_str(), wstr2str(format).c_str(), &tm);
+                time = mktime(&tm);
+            #endif
+        )
+        return time;
     }
 }

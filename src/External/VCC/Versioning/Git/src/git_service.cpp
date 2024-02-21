@@ -9,7 +9,12 @@
 #include <string>
 #include <vector>
 
+#ifdef _WIN32
+#include <ctime>
+#endif
+
 #include "config_reader.hpp"
+#include "time_helper.hpp"
 #include "exception_macro.hpp"
 #include "log_property.hpp"
 #include "memory_macro.hpp"
@@ -506,9 +511,7 @@ namespace vcc
     {
         std::time_t time = -1;
         TRY_CATCH(
-            struct tm tm;
-            strptime(wstr2str(datimeStr).c_str(), "%a %b %d %H:%M:%S %Y %z", &tm);
-            time = mktime(&tm);
+            time = ParseDatetime(datimeStr, L"%a %b %d %H:%M:%S %Y %z");
         )
         return time;
     }
@@ -748,9 +751,11 @@ namespace vcc
             if (tokens.size() >= 3) {
                 try
                 {
-                    currentTag.SetTagName(Concat(std::vector(tokens.begin(), tokens.end() - 2), L"-"));
                     currentTag.SetNoOfCommit(std::stoi(tokens[tokens.size() - 2]));
                     currentTag.SetHashID(tokens[tokens.size() - 1]);
+                    tokens.pop_back();
+                    tokens.pop_back();
+                    currentTag.SetTagName(Concat(tokens, L"-"));
                 }
                 catch(...)
                 {
@@ -809,6 +814,13 @@ namespace vcc
             assert(!IsBlank(tagName));
             std::wstring optionStr = isForce ? L" -f" : L"";
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout " + optionStr + L" " + tagName);
+        )
+    }
+
+    void GitService::SwitchTagReverse(const LogProperty *logProperty, const std::wstring &workspace)
+    {
+        TRY_CATCH(
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git switch -");
         )
     }
 
@@ -925,6 +937,9 @@ namespace vcc
             assert(!IsBlank(branchName));
             std::wstring optionStr = L"";
             if (option != nullptr) {
+                if (option->GetIsQuite()) {
+                    optionStr += L" -q";
+                }
                 if (option->GetIsDiscardChanges()) {
                     optionStr += L" --discard-changes";
                 }

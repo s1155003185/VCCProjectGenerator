@@ -14,7 +14,7 @@ using namespace std;
 
 class VPGFileGenerationServiceTest : public testing::Test 
 {
-    GETSPTR(LogProperty, LogProperty, LogPropertyType::None);
+    GET_SPTR(LogProperty, LogProperty, LogPropertyType::None);
     GET(wstring, Workspace, L"bin/Debug/FileGenerationServiceTest");
     GET(wstring, WorkspaceSource, L"bin/Debug/FileGenerationServiceTestSource");
     GET(wstring, WorkspaceTarget, L"bin/Debug/FileGenerationServiceTestTarget");
@@ -59,8 +59,8 @@ class VPGFileGenerationServiceTest : public testing::Test
             code += L"{\r\n";
             code += L"    EnumA, // GETSET(std::wstring, EnumA, L\"Default\") \r\n";
             code += L"    EnumB, // GET(int64_t, EnumB, 0) \r\n";
-            code += L"    EnumC, // GETSPTR(ClassA, EnumC) \r\n";
-            code += L"    EnumD, // GETSPTR(ClassB, EnumD, 1, 2, 3) \r\n";
+            code += L"    EnumC, // GET_SPTR(ClassA, EnumC) \r\n";
+            code += L"    EnumD, // GET_SPTR(ClassB, EnumD, 1, 2, 3) \r\n";
             code += L"    EnumE,  // GETSET(EnumClass, EnumE, EnumClass::OptionA)\r\n";
             code += L"    EnumF // Nothing\r\n";
             code += L"};";
@@ -84,8 +84,8 @@ TEST_F(VPGFileGenerationServiceTest, GetClassMacroList)
         L"GETSET",
         L"GET",
         L"STATICGET",
-        L"GETSPTR",
-        L"GETSPTR",
+        L"GET_SPTR",
+        L"GETSET_SPTR",
         L"VECTOR",
         L"VECTOR_SPTR",
         L"SET",
@@ -135,8 +135,8 @@ TEST_F(VPGFileGenerationServiceTest, GenerateProperty)
     expectedObjectClassFileContent += L"{\r\n";
     expectedObjectClassFileContent += INDENT + L"GETSET(std::wstring, EnumA, L\"Default\")\r\n";
     expectedObjectClassFileContent += INDENT + L"GET(int64_t, EnumB, 0)\r\n";
-    expectedObjectClassFileContent += INDENT + L"GETSPTR(ClassA, EnumC)\r\n";
-    expectedObjectClassFileContent += INDENT + L"GETSPTR(ClassB, EnumD, 1, 2, 3)\r\n";
+    expectedObjectClassFileContent += INDENT + L"GET_SPTR(ClassA, EnumC)\r\n";
+    expectedObjectClassFileContent += INDENT + L"GET_SPTR(ClassB, EnumD, 1, 2, 3)\r\n";
     expectedObjectClassFileContent += INDENT + L"GETSET(EnumClass, EnumE, EnumClass::OptionA)\r\n";
     expectedObjectClassFileContent += L"\r\n";
     expectedObjectClassFileContent += INDENT + L"public:\r\n";

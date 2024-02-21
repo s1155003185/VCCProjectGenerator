@@ -1,9 +1,13 @@
 #pragma once
-#include "base_service.hpp"
 
 #include <memory>
 
+#ifdef _WIN32
+#include <ctime>
+#endif
+
 #include "base_object.hpp"
+#include "base_service.hpp"
 #include "class_macro.hpp"
 #include "log_property.hpp"
 
@@ -276,6 +280,7 @@ namespace vcc
 
     class GitBranchSwitchBranchOption : public BaseObject<GitBranchSwitchBranchOption>
     {
+        GETSET(bool, IsQuite, false);
         GETSET(bool, IsDiscardChanges, false);
         public:
             GitBranchSwitchBranchOption() : BaseObject() {}
@@ -408,7 +413,11 @@ namespace vcc
         //static void GetTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, std::shared_ptr<GitLog> log);
         static GitTagCurrentTag GetCurrentTag(const LogProperty *logProperty, const std::wstring &workspace);
         static void CreateTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, const GitTagCreateTagOption *option = nullptr);
+        // Window behavior and Linux Behavior different, Window throw exception (tag will detach branch) while Linux will not
+        // Can use GitService::SwitchTagReverse to switch back
         static void SwitchTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, bool isForce = false);
+        // Undo SwitchTag
+        static void SwitchTagReverse(const LogProperty *logProperty, const std::wstring &workspace);
         static void DeleteTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName);
 
         /*-----------------------------------*

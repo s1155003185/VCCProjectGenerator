@@ -30,6 +30,15 @@ namespace vcc
         #endif
     }
 
+    std::wstring GetFileName(const std::wstring &filePath)
+    {
+        std::wstring fileName = L"";
+        TRY_CATCH(
+            fileName = PATH(filePath).filename().wstring();
+        )
+        return fileName;
+    }
+
     std::wstring ConcatPath(std::wstring directory, std::wstring addition)
     {
         if (addition.starts_with(L"/") || addition.starts_with(L"\\"))
@@ -123,6 +132,14 @@ namespace vcc
             THROW_EXCEPTION_MSG(ExceptionType::FileIsBlocked, str2wstr(e.what()));
         }
         return false;
+    }
+
+    void CopyFile(const std::wstring &srcFilePath, const std::wstring &destFilePath)
+    {
+        TRY_CATCH(
+            ValidateFile(srcFilePath);
+            filesystem::copy(PATH(srcFilePath), PATH(destFilePath));
+        )
     }
 
     void CreateDirectory(const std::wstring &path)

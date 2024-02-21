@@ -12,7 +12,7 @@ using namespace vcc;
 
 class FileTest : public testing::Test 
 {
-    GETSPTR(LogProperty, LogProperty);
+    GET_SPTR(LogProperty, LogProperty);
     GET(wstring, Workspace, L"bin/Debug/FileTest/");
     GET(wstring, WorkspaceSource, L"bin/Debug/FileTest/WorkspaceSource");
     GET(wstring, WorkspaceTarget, L"bin/Debug/FileTest/WorkspaceTarget");

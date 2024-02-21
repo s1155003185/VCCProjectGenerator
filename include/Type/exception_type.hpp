@@ -4,6 +4,12 @@
 enum class ExceptionType
 {
 	NoError = 0,
+	// Coding error
+	NotSupport,
+	NotImplement,
+
+
+	SystemError = 50000,
 	// <vcc:exceptionType action:"ALERT">
 	// Directory
 	DirectoryNotFound,
@@ -15,5 +21,6 @@ enum class ExceptionType
 	// parser
 	ReaderError,
 	// </vcc:exceptionType>
-    CustomError = 9999,
+
+    CustomError = 99999
 };

@@ -12,7 +12,7 @@ using namespace vcc;
 
 class VPGProcessManager
 {
-    GETSPTR(LogProperty, LogProperty, LogPropertyType::None);
+    GET_SPTR(LogProperty, LogProperty, LogPropertyType::None);
 
     // project
     GETSET(std::wstring, Workspace, L"");
@@ -33,6 +33,8 @@ class VPGProcessManager
         // Ensure VPG Generator have same version as Versioning Commond Codebase Response
         void VerifyLocalResponse();
 
+        bool IsUpdateAvaliable();
+        
         void Add();
         void Update();
         void Generate();

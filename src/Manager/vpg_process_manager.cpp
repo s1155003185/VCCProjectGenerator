@@ -61,6 +61,20 @@ void VPGProcessManager::VerifyLocalResponse()
     }
 }
 
+bool VPGProcessManager::IsUpdateAvaliable()
+{
+    switch (this->GetVPGProjectType())
+    {
+    case VPGProjectType::VccComplex:
+    case VPGProjectType::VccDll:
+    case VPGProjectType::VccExe:
+        return true;
+    default:
+        break;
+    }
+    return false;
+}
+
 void VPGProcessManager::Add()
 {
     try {
@@ -77,7 +91,10 @@ void VPGProcessManager::Add()
 void VPGProcessManager::Update()
 {
     try {
+        if (!IsUpdateAvaliable())
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Only VCC Module can be updated.");
         this->VerifyLocalResponse();
+
         // Compare the files with dist, sync files
 
     } catch (const std::exception &e) {
@@ -88,6 +105,10 @@ void VPGProcessManager::Update()
 void VPGProcessManager::Generate()
 {
     try {
+        if (!IsUpdateAvaliable())
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Only VCC Module can be updated.");
+        this->VerifyLocalResponse();
+
     } catch (const std::exception &e) {
         THROW_EXCEPTION(e);
     }
