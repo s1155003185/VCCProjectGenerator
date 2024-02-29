@@ -15,9 +15,9 @@ using namespace vcc;
 class VPGDirectorySyncServiceTest : public testing::Test 
 {
     GET_SPTR(LogProperty, LogProperty);
-    GET(wstring, Workspace, L"bin/Debug/DirectorySyncServiceTest/");
-    GET(wstring, WorkspaceSource, L"bin/Debug/DirectorySyncServiceTestSource");
-    GET(wstring, WorkspaceTarget, L"bin/Debug/DirectorySyncServiceTestTarget");
+    GET(wstring, Workspace, L"bin/Debug/VPGDirectorySyncServiceTest/");
+    GET(wstring, WorkspaceSource, L"");
+    GET(wstring, WorkspaceTarget, L"");
 
     private:
         void CreateFolderInSourceWorkspace(std::wstring folder)
@@ -49,6 +49,9 @@ class VPGDirectorySyncServiceTest : public testing::Test
         void SetUp() override
         {
             this->_LogProperty->SetIsConsoleLog(false);
+            this->_WorkspaceSource = this->_Workspace + L"Source";
+            this->_WorkspaceTarget = this->_Workspace + L"Target";
+
             filesystem::remove_all(PATH(this->GetWorkspace()));
             filesystem::remove_all(PATH(this->GetWorkspaceSource()));
             filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
@@ -56,7 +59,7 @@ class VPGDirectorySyncServiceTest : public testing::Test
 
         void TearDown() override
         {
-
+            filesystem::remove_all(PATH(this->GetWorkspace()));
         }
 
         bool CheckFolderExists(std::wstring path)
@@ -169,24 +172,6 @@ class VPGDirectorySyncServiceTest : public testing::Test
                 includeOnly, excludes);
         }
 };
-
-TEST_F(VPGDirectorySyncServiceTest, CheckAndCreateDirectory)
-{
-    VPGDirectorySyncService::CheckAndCreateDirectory(this->GetLogProperty().get(), this->GetWorkspace());
-    // bin
-    EXPECT_TRUE(this->CheckFolderExists(L"bin"));
-    EXPECT_TRUE(this->CheckFolderExists(L"bin/Debug"));
-    EXPECT_TRUE(this->CheckFolderExists(L"bin/Release"));
-
-    // include
-    EXPECT_TRUE(this->CheckFolderExists(L"include"));
-
-    // src
-    EXPECT_TRUE(this->CheckFolderExists(L"src"));
-
-    // unittest
-    EXPECT_TRUE(this->CheckFolderExists(L"unittest"));
-}
 
 TEST_F(VPGDirectorySyncServiceTest, SyncWorkspaceFolderWithExclude)
 {

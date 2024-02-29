@@ -16,10 +16,14 @@ const std::wstring MakeFileName = L"Makefile";
 
 class VPGGenerationOption : public BaseObject<VPGGenerationOption>
 {
+    GETSET(VPGProjectType, ProjectType, VPGProjectType::NA);
+    GETSET(std::wstring, WorkspaceSource, L"");
+    GETSET(std::wstring, WorkspaceDestination, L"");
+
     GETSET(std::wstring, ProjectName, L"");
-    GETSET(std::wstring, DllProjectName, L"");
-    GETSET(std::wstring, ExeProjectName, L"");
-    GETSET(std::wstring, GtestProjName, L"");
+    GETSET(std::wstring, ProjectNameDLL, L"");
+    GETSET(std::wstring, ProjectNameEXE, L"");
+    GETSET(std::wstring, ProjectNameGtest, L"");
 
     VECTOR(std::wstring, Plugins);
 
@@ -30,16 +34,21 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>
 
 class VPGBaseGenerationManager : public BaseManager
 {
-    GETSET(VPGProjectType, ProjectType, VPGProjectType::NA);
     GET_SPTR(LogProperty, LogProperty);
+    GET_SPTR(VPGGenerationOption, Option);
     
+    protected:
+        virtual void ValidateOption();
+
     public:
-        VPGBaseGenerationManager(std::shared_ptr<LogProperty> logProperty, VPGProjectType projectType);
+        VPGBaseGenerationManager(std::shared_ptr<LogProperty> logProperty, std::shared_ptr<VPGGenerationOption> option);
         virtual ~VPGBaseGenerationManager() {}
 
-        virtual std::wstring AdjustMakefile(const std::wstring &fileContent, const VPGGenerationOption *option);
+        virtual void CreateWorkspaceDirectory();
+        virtual void CreateBasicProject();
+        virtual std::wstring AdjustMakefile(const std::wstring &fileContent);
 
-        virtual void Add(const std::wstring &srcWorkspace, const std::wstring &destWorkspace, const VPGGenerationOption *option);
-        virtual void Update(const std::wstring &srcWorkspace, const std::wstring &destWorkspace, const VPGGenerationOption *option);
-        virtual void Generate(const std::wstring &srcWorkspace, const std::wstring &destWorkspace, const VPGGenerationOption *option);
+        virtual void Add();
+        virtual void Update();
+        virtual void Generate();
 };

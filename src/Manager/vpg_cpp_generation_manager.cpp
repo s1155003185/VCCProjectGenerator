@@ -11,22 +11,13 @@
 
 using namespace vcc;
 
-void VPGCppGenerationManager::Add(const std::wstring &srcWorkspace, const std::wstring &destWorkspace, const VPGGenerationOption *option)
+#define CLASS_ID L"VPGCppGenerationManager"
+
+void VPGCppGenerationManager::Add()
 {
     TRY_CATCH(
-        assert(!srcWorkspace.empty());
-        assert(!destWorkspace.empty());
-
-        VPGDirectorySyncService::CheckAndCreateDirectory(this->GetLogProperty().get(), destWorkspace);
-        if (IsFileExists(ConcatPath(srcWorkspace, MakeFileName))) {
-            std::wstring destFilePath = ConcatPath(destWorkspace, MakeFileName);
-
-            LogService::LogInfo(this->GetLogProperty().get(), L"CPPGenerator", L"Copy Makefile to " + destWorkspace);
-            CopyFile(ConcatPath(srcWorkspace, MakeFileName), destFilePath);
-            LogService::LogInfo(this->GetLogProperty().get(), L"CPPGenerator", L"Done.");
-
-            std::wstring fileContent = ReadFile(destFilePath);
-            WriteFile(destFilePath, this->AdjustMakefile(fileContent, option), true);
-        }
+        LogService::LogInfo(this->GetLogProperty().get(), CLASS_ID, L"Copy Project to " + this->GetOption()->GetWorkspaceDestination());
+        this->CreateBasicProject();
+        LogService::LogInfo(this->GetLogProperty().get(), CLASS_ID, L"Done.");
     )
 }

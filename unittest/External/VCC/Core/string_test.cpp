@@ -160,14 +160,3 @@ TEST(StringTest, EscapeString)
     EXPECT_EQ(GetEscapeString(EscapeStringType::XML, originalStr), expectedStr);
     EXPECT_EQ(GetUnescapeString(EscapeStringType::XML, expectedStr), originalStr);
 }
-
-/* ---------------------------------------------------------------------------------------------------- */
-/*                                                 Regex                                                */
-/* ---------------------------------------------------------------------------------------------------- */
-TEST(StringTest, GetRegexFromFileFilter)
-{
-    EXPECT_EQ(GetRegexFromFileFilter(L"*.txt"), L".*\\.txt");
-    EXPECT_EQ(GetRegexFromFileFilter(L"*abc*.txt"), L".*abc.*\\.txt");
-
-    EXPECT_TRUE(std::regex_match(L"abcdef.txt", std::wregex(GetRegexFromFileFilter(L"*def*"))));
-}

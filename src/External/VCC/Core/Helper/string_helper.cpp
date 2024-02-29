@@ -453,16 +453,4 @@ namespace vcc
         }
         return result;
 	}
-
-    std::wstring GetRegexFromFileFilter(const std::wstring &fileFilter)
-    {
-        std::wstring patten = GetEscapeString(EscapeStringType::Regex, fileFilter);
-
-        // Excape *
-        ReplaceAll(patten, L"\\*", L".*");
-
-        // Excape ?
-        ReplaceAll(patten, L"\\?", L".");
-        return patten;
-    }
 }

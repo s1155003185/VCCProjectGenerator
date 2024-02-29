@@ -23,9 +23,6 @@ class VPGDirectorySyncService
         VPGDirectorySyncService() = default;
         ~VPGDirectorySyncService() {}
 
-        // create project
-        static void CheckAndCreateDirectory(const LogProperty *logProperty, std::wstring workspace);
-
         // file sync
         static void SyncWorkspace(const LogProperty *logProperty, VPGProjectType projectType, std::wstring workspace,
             const std::vector<std::wstring> &includeOnlyRegex, const std::vector<std::wstring> &excludeRegex);

@@ -18,22 +18,26 @@ using namespace vcc;
 class VPGBaseGenerationManagerTest : public testing::Test 
 {
     GET_SPTR(LogProperty, LogProperty);
-    MANAGER(VPGBaseGenerationManager, Manager, _LogProperty, VPGProjectType::NA);
+    GET_SPTR(VPGGenerationOption, Option)
+    MANAGER(VPGBaseGenerationManager, Manager, _LogProperty, _Option);
     
     GETSET(std::wstring, FileContent, L"");
     
     public:
         void SetUp() override
         {
+            _Option->SetWorkspaceSource(L"A");
+            _Option->SetWorkspaceDestination(L"B");
+
             std::wstring makeFileStr = L"hi\r\n";
             makeFileStr += L"# <vcc:name sync=\"ALERT\">\r\n";
             makeFileStr += L"#----------------------------------#\r\n";
             makeFileStr += L"#---------- Project Name ----------#\r\n";
             makeFileStr += L"#----------------------------------#\r\n";
-            makeFileStr += L"PROJECT_NAME := VCCProjGenerator\r\n";
-            makeFileStr += L"DLL_PROJ_NAME := libvpg\r\n";
-            makeFileStr += L"EXE_PROJ_NAME := vpg\r\n";
-            makeFileStr += L"GTEST_PROJ_NAME := unittest\r\n";
+            makeFileStr += L"PROJ_NAME := VCCProjGenerator\r\n";
+            makeFileStr += L"PROJ_NAME_DLL := libvpg\r\n";
+            makeFileStr += L"PROJ_NAME_EXE := vpg\r\n";
+            makeFileStr += L"PROJ_NAME_GTEST := unittest\r\n";
             makeFileStr += L"# </vcc:name>\r\n";
             makeFileStr += L"HI";
             this->_FileContent = makeFileStr;
@@ -44,20 +48,20 @@ class VPGBaseGenerationManagerTest : public testing::Test
 
         }
 
-        std::wstring GetResultStr(const VPGGenerationOption *option) {
-            std::wstring projName = !IsBlank(option->GetProjectName()) ? (L" " + option->GetProjectName()) : L"";
-            std::wstring dllName = !IsBlank(option->GetProjectName()) ? (L" " + option->GetProjectName()) : L"";
-            std::wstring exeName = !IsBlank(option->GetProjectName()) ? (L" " + option->GetProjectName()) : L"";
-            std::wstring gtestName = !IsBlank(option->GetProjectName()) ? (L" " + option->GetProjectName()) : L"";
+        std::wstring GetResultStr(const VPGGenerationOption *_Option) {
+            std::wstring projName = !IsBlank(_Option->GetProjectName()) ? (L" " + _Option->GetProjectName()) : L"";
+            std::wstring dllName = !IsBlank(_Option->GetProjectNameDLL()) ? (L" " + _Option->GetProjectNameDLL()) : L"";
+            std::wstring exeName = !IsBlank(_Option->GetProjectNameEXE()) ? (L" " + _Option->GetProjectNameEXE()) : L"";
+            std::wstring gtestName = !IsBlank(_Option->GetProjectNameGtest()) ? (L" " + _Option->GetProjectNameGtest()) : L"";
             std::wstring makeFileStr = L"hi\r\n";
             makeFileStr += L"# <vcc:name sync=\"ALERT\">\r\n";
             makeFileStr += L"#----------------------------------#\r\n";
             makeFileStr += L"#---------- Project Name ----------#\r\n";
             makeFileStr += L"#----------------------------------#\r\n";
-            makeFileStr += L"PROJECT_NAME :=" + projName + L"\r\n";
-            makeFileStr += L"DLL_PROJ_NAME :=" + dllName + L"\r\n";
-            makeFileStr += L"EXE_PROJ_NAME :=" + exeName + L"\r\n";
-            makeFileStr += L"GTEST_PROJ_NAME :=" + gtestName + L"\r\n";
+            makeFileStr += L"PROJ_NAME :=" + projName + L"\r\n";
+            makeFileStr += L"PROJ_NAME_DLL :=" + dllName + L"\r\n";
+            makeFileStr += L"PROJ_NAME_EXE :=" + exeName + L"\r\n";
+            makeFileStr += L"PROJ_NAME_GTEST :=" + gtestName + L"\r\n";
             makeFileStr += L"# </vcc:name>\r\n";
             makeFileStr += L"HI";
             return makeFileStr;
@@ -66,44 +70,40 @@ class VPGBaseGenerationManagerTest : public testing::Test
 
 TEST_F(VPGBaseGenerationManagerTest, Complex)
 {
-    DECLARE_SPTR(VPGGenerationOption, option);
-    option->SetProjectName(L"ProjectName");
-    option->SetDllProjectName(L"DllName");
-    option->SetExeProjectName(L"ExeName");
-    option->SetGtestProjName(L"GTestName");
-    std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent(), option.get());
-    EXPECT_EQ(result, GetResultStr(option.get()));
+    _Option->SetProjectName(L"ProjectName");
+    _Option->SetProjectNameDLL(L"DllName");
+    _Option->SetProjectNameEXE(L"ExeName");
+    _Option->SetProjectNameGtest(L"GTestName");
+    std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
+    EXPECT_EQ(result, GetResultStr(_Option.get()));
 }
 
 TEST_F(VPGBaseGenerationManagerTest, DLLOnly)
 {
-    DECLARE_SPTR(VPGGenerationOption, option);
-    option->SetProjectName(L"ProjectName");
-    option->SetDllProjectName(L"DllName");
-    option->SetExeProjectName(L"");
-    option->SetGtestProjName(L"GTestName");
-    std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent(), option.get());
-    EXPECT_EQ(result, GetResultStr(option.get()));
+    _Option->SetProjectName(L"ProjectName");
+    _Option->SetProjectNameDLL(L"DllName");
+    _Option->SetProjectNameEXE(L"");
+    _Option->SetProjectNameGtest(L"GTestName");
+    std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
+    EXPECT_EQ(result, GetResultStr(_Option.get()));
 }
 
 TEST_F(VPGBaseGenerationManagerTest, EXEOnly)
 {
-    DECLARE_SPTR(VPGGenerationOption, option);
-    option->SetProjectName(L"ProjectName");
-    option->SetDllProjectName(L"");
-    option->SetExeProjectName(L"ExeName");
-    option->SetGtestProjName(L"GTestName");
-    std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent(), option.get());
-    EXPECT_EQ(result, GetResultStr(option.get()));
+    _Option->SetProjectName(L"ProjectName");
+    _Option->SetProjectNameDLL(L"");
+    _Option->SetProjectNameEXE(L"ExeName");
+    _Option->SetProjectNameGtest(L"GTestName");
+    std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
+    EXPECT_EQ(result, GetResultStr(_Option.get()));
 }
 
 TEST_F(VPGBaseGenerationManagerTest, NoGtest)
 {
-    DECLARE_SPTR(VPGGenerationOption, option);
-    option->SetProjectName(L"ProjectName");
-    option->SetDllProjectName(L"DllName");
-    option->SetExeProjectName(L"ExeName");
-    option->SetGtestProjName(L"");
-    std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent(), option.get());
-    EXPECT_EQ(result, GetResultStr(option.get()));
+    _Option->SetProjectName(L"ProjectName");
+    _Option->SetProjectNameDLL(L"DllName");
+    _Option->SetProjectNameEXE(L"ExeName");
+    _Option->SetProjectNameGtest(L"");
+    std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
+    EXPECT_EQ(result, GetResultStr(_Option.get()));
 }

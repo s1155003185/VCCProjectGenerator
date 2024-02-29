@@ -18,37 +18,6 @@
 using namespace std;
 using namespace vcc;
 
-void VPGDirectorySyncService::CheckAndCreateDirectory(const LogProperty *logProperty, std::wstring workspace)
-{
-    try {
-        // All type has same project structure
-        vector<wstring> checkList;
-        // bin
-        checkList.push_back(L"bin");
-        checkList.push_back(L"bin/Debug");
-        checkList.push_back(L"bin/Release");
-
-        // include
-        checkList.push_back(L"include");
-
-        // src
-        checkList.push_back(L"src");
-
-        // unittest
-        checkList.push_back(L"unittest");
-        
-        for (auto path : checkList) {
-            std::wstring absPath = ConcatPath(workspace, path);
-            if (!IsDirectoryExists(absPath)) {
-                CreateDirectory(absPath);
-                LogService::LogInfo(logProperty, L"", L"Create Directory: " + path);
-            }        
-        }
-    } catch (const std::exception &e) {
-        THROW_EXCEPTION(e);
-    }
-}
-
 bool VPGDirectorySyncService::_ShouldInclude(const std::wstring &path, const std::vector<std::wstring> &includeOnlyFileFilter)
 {
     if (includeOnlyFileFilter.empty())

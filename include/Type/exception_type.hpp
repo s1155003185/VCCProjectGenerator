@@ -8,19 +8,19 @@ enum class ExceptionType
 	NotSupport,
 	NotImplement,
 
-
-	SystemError = 50000,
-	// <vcc:exceptionType action:"ALERT">
 	// Directory
 	DirectoryNotFound,
 	DirectoryCannotCreate,
     // File
 	FileNotFound,
-	FileIsBlocked,
+	FileBlocked,
+	FileAlreadyExist,
 	FileCannotOpen,
 	// parser
 	ReaderError,
-	// </vcc:exceptionType>
 
+	SystemError = 50000,
+	// <vcc:exceptionType action:"RESERVE">
+	// </vcc:exceptionType>
     CustomError = 99999
 };

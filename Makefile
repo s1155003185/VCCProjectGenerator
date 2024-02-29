@@ -15,7 +15,7 @@
 # Note: files in .vscode is used for F5 only. if need to build Release vesrion, please use "make release"
 
 # Field to change:
-# PROJECT_NAME, DLL_PROJ_NAME, EXE_PROJ_NAME: project name
+# PROJ_NAME, PROJ_NAME_DLL, PROJ_NAME_EXE: project name
 # DEBUG_FLAGS, RELEASE_FLAGS, DEBUG_COMPILE_OPTIONS, RELEASE_COMPILE_OPTIONS, GTEST_COMPILE_OPTIONS: flag for debug and release
 # LFLAGS: library that not in the project, need to be handled in if case, as different platform has different paths 
 # EXCLUDE_FOLDER: igore that folder when compile
@@ -31,10 +31,10 @@
 #----------------------------------#
 #---------- Project Name ----------#
 #----------------------------------#
-PROJECT_NAME := VCCProjGenerator
-DLL_PROJ_NAME := libvpg
-EXE_PROJ_NAME := vpg
-GTEST_PROJ_NAME := unittest
+PROJ_NAME := VCCProjGenerator
+PROJ_NAME_DLL := libvpg
+PROJ_NAME_EXE := vpg
+PROJ_NAME_GTEST := unittest
 # </vcc:name>
 # <vcc:property sync="ALERT">
 #----------------------------------#
@@ -131,9 +131,9 @@ ifeq ($(OS),Windows_NT)
 #----------------------------------#
 #----------- Win Version-----------#
 #----------------------------------#
-MAIN_EXE := $(EXE_PROJ_NAME).exe
-MAIN_DLL := $(DLL_PROJ_NAME).dll
-GTESTMAIN := $(GTEST_PROJ_NAME).exe
+MAIN_EXE := $(PROJ_NAME_EXE).exe
+MAIN_DLL := $(PROJ_NAME_DLL).dll
+GTESTMAIN := $(PROJ_NAME_GTEST).exe
 
 # All Sub Directory - Source need *.cpp instead of directory
 # g++ param
@@ -175,9 +175,9 @@ else
 #----------------------------------#
 #---------- Linus Version----------#
 #----------------------------------#
-MAIN_EXE := $(EXE_PROJ_NAME)
-MAIN_DLL := $(DLL_PROJ_NAME).so
-GTESTMAIN := $(GTEST_PROJ_NAME)
+MAIN_EXE := $(PROJ_NAME_EXE)
+MAIN_DLL := $(PROJ_NAME_DLL).so
+GTESTMAIN := $(PROJ_NAME_GTEST)
 
 # All Sub Directory - Source need *.cpp instead of directory
 # g++ param
@@ -242,13 +242,13 @@ all: debug
 debug:
 	$(MAKE) create_debug_folder
 	$(MAKE) copy_debug_lib
-ifneq ($(DLL_PROJ_NAME),)
+ifneq ($(PROJ_NAME_DLL),)
 	$(MAKE) debug_dll
 endif
-ifneq ($(EXE_PROJ_NAME),)
+ifneq ($(PROJ_NAME_EXE),)
 	$(MAKE) debug_exe
 endif
-ifneq ($(GTEST_PROJ_NAME),)
+ifneq ($(PROJ_NAME_GTEST),)
 	$(MAKE) gtest
 endif
 	@echo Build Debug Complete!
@@ -257,10 +257,10 @@ release:
 	$(MAKE) create_release_folder
 	$(MAKE) clean_release
 	$(MAKE) copy_release_lib
-ifneq ($(DLL_PROJ_NAME),)
+ifneq ($(PROJ_NAME_DLL),)
 	$(MAKE) release_dll
 endif
-ifneq ($(EXE_PROJ_NAME),)
+ifneq ($(PROJ_NAME_EXE),)
 	$(MAKE) release_exe
 endif
 	@echo Build Release Complete!
