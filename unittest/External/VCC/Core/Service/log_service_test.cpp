@@ -12,7 +12,7 @@ using namespace vcc;
 
 TEST(LogServiceTest, LogTest) 
 {
-    std::wstring filePath = ConcatPath(std::filesystem::current_path().wstring(), L"bin/Debug/AppLogs/LogServiceTest.log");
+    std::wstring filePath = ConcatPaths({std::filesystem::current_path().wstring(), L"bin/Debug/AppLogs/LogServiceTest.log"});
     RemoveFile(filePath);
     
     shared_ptr<LogProperty> property = make_shared<LogProperty>(LogPropertyType::None);

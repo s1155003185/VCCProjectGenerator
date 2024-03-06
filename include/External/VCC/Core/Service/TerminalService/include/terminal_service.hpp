@@ -14,5 +14,6 @@ namespace vcc
             ~TerminalService() {}
 
             static std::wstring Execute(const LogProperty *logProperty, std::wstring id, std::wstring cmd);
+            static std::wstring Execute(const LogProperty *logProperty, const std::wstring &id, const std::wstring &workspace, const std::wstring &cmd);
     };
 }

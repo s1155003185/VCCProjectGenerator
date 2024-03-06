@@ -7,7 +7,7 @@
 using namespace std;
 using namespace vcc;
 
-TEST(TerminalTest, Normal)
+TEST(TerminalServiceTest, Normal)
 {
     EXPECT_TRUE(TerminalService::Execute(nullptr, L"", L"git --version").starts_with(L"git version"));
 }

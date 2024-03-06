@@ -5,9 +5,7 @@
 
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
-
 #include "vpg_code_reader.hpp"
-#include "vpg_directory_sync_service.hpp"
 
 using namespace vcc;
 

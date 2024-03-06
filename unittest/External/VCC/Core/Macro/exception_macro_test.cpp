@@ -14,7 +14,7 @@
 using namespace std;
 using namespace vcc;
 
-TEST(ExceptionTest, General)
+TEST(ExceptionMacroTest, General)
 {
     bool throwException = false;
     try 
@@ -34,7 +34,7 @@ TEST(ExceptionTest, General)
     EXPECT_TRUE(throwException);
 }
 
-TEST(ExceptionTest, Full)
+TEST(ExceptionMacroTest, Full)
 {
     bool throwException = false;
     try

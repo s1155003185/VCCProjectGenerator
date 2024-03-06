@@ -10,17 +10,17 @@
 using namespace std;
 using namespace vcc;
 
-TEST(ProcessTest, Normal)
+TEST(ProcessServiceTest, Normal)
 {
     EXPECT_TRUE(ProcessService::Execute(nullptr, L"", L"git --version").starts_with(L"git version"));
 }
 
-TEST(ProcessTest, NormalWithWorkspace)
+TEST(ProcessServiceTest, NormalWithWorkspace)
 {
     EXPECT_TRUE(ProcessService::Execute(nullptr, L"", L"..", L"git --version").starts_with(L"git version"));
 }
 
-TEST(ProcessTest, ParseCMDToken)
+TEST(ProcessServiceTest, ParseCMDToken)
 {
     std::vector<std::string> tokens = ProcessService::ParseCMDLinux("");
     std::vector<std::string> expectedTokens;
@@ -56,7 +56,7 @@ TEST(ProcessTest, ParseCMDToken)
     EXPECT_EQ(tokens, expectedTokens);
 }
 
-TEST(ProcessTest, Exception)
+TEST(ProcessServiceTest, Exception)
 {
     bool isError = false;
     try {

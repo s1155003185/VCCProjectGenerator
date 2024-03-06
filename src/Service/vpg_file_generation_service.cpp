@@ -24,7 +24,7 @@ std::set<std::wstring> VPGFileGenerationService::GetClassMacroList(const std::ws
 {
     std::set<std::wstring> results;
     TRY_CATCH(
-        std::wstring filePath = ConcatPath(projWorkspace, classMacroFilePath);
+        std::wstring filePath = ConcatPaths({projWorkspace, classMacroFilePath});
         std::wstring prefix = L"#define ";
         size_t prefixLen = wcslen(prefix.c_str());
         ReadFilePerLine(filePath, [prefix, prefixLen, &results](std::wstring line) {
@@ -192,10 +192,10 @@ void VPGFileGenerationService::GernerateProperty(const LogProperty *logProperty,
 
                     std::wstring propertyAccessorFileName = objectFileName + L"_" + propertyAccessorFileSuffixWithoutExtention;
 
-                    VPGFileGenerationService::GeneratePropertyClassFile(logProperty, projPrefix, ConcatPath(objDirectoryHpp, objectFileName + L".hpp"), enumClassList);
+                    VPGFileGenerationService::GeneratePropertyClassFile(logProperty, projPrefix, ConcatPaths({objDirectoryHpp, objectFileName + L".hpp"}), enumClassList);
                     VPGFileGenerationService::GeneratePropertyPropertyAccessorFile(logProperty, projPrefix, 
-                        ConcatPath(propertyAccessorDirectoryHpp, propertyAccessorFileName + L".hpp"), 
-                        ConcatPath(propertyAccessorDirectoryCpp, propertyAccessorFileName + L".cpp"), enumClassList);
+                        ConcatPaths({propertyAccessorDirectoryHpp, propertyAccessorFileName + L".hpp"}), 
+                        ConcatPaths({propertyAccessorDirectoryCpp, propertyAccessorFileName + L".cpp"}), enumClassList);
                 }
                 LogService::LogInfo(logProperty, logId, L"Parse file completed: " + path);
                 // ------------------------------------------------------------------------------------------ //
@@ -208,7 +208,7 @@ void VPGFileGenerationService::GernerateProperty(const LogProperty *logProperty,
         // ------------------------------------------------------------------------------------------ //
         //                               Generate Object Type File                                    //
         // ------------------------------------------------------------------------------------------ //
-        VPGFileGenerationService::GenerateObjectTypeFile(logProperty, projPrefix, ConcatPath(objTypeDirectoryHpp, (!filePrefix.empty() ? (filePrefix + L"_") : L"") + objectTypeHppFileName), objectTypeList);
+        VPGFileGenerationService::GenerateObjectTypeFile(logProperty, projPrefix, ConcatPaths({objTypeDirectoryHpp, (!filePrefix.empty() ? (filePrefix + L"_") : L"") + objectTypeHppFileName}), objectTypeList);
 
         LogService::LogInfo(logProperty, logId, L"Generate Property Finished.");
     )

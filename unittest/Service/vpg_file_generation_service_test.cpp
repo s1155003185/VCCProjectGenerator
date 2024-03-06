@@ -27,7 +27,7 @@
 //             if (folder.empty())
 //                 CreateDirectory(this->GetWorkspaceSource());
 //             else
-//                 CreateDirectory(ConcatPath(this->GetWorkspaceSource(), folder));
+//                 CreateDirectory(ConcatPaths({this->GetWorkspaceSource(), folder));
 //         }
 
 //         void CreateFolderInTargetWorkspace(std::wstring folder)
@@ -35,16 +35,16 @@
 //             if (folder.empty())
 //                 CreateDirectory(this->GetWorkspaceTarget());
 //             else
-//                 CreateDirectory(ConcatPath(this->GetWorkspaceTarget(), folder));
+//                 CreateDirectory(ConcatPaths({this->GetWorkspaceTarget(), folder));
 //         }
 
 //         void CreateFileInSourceWorkspace(std::wstring fileName, std::wstring content)
 //         {
-//             AppendFileOneLine(ConcatPath(this->GetWorkspaceSource(), fileName), content, true);
+//             AppendFileOneLine(ConcatPaths({this->GetWorkspaceSource(), fileName), content, true);
 //         }
 //         void CreateFileInTargetWorkspace(std::wstring fileName, std::wstring content)
 //         {
-//             AppendFileOneLine(ConcatPath(this->GetWorkspaceTarget(), fileName), content, true);
+//             AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), fileName), content, true);
 //         }
 //     public:
 
@@ -74,7 +74,7 @@
 
 //         bool CheckFolderExists(std::wstring path)
 //         {
-//             return IsDirectoryExists(ConcatPath(this->GetWorkspace(), path));
+//             return IsDirectoryExists(ConcatPaths({this->GetWorkspace(), path));
 //         }
 // };
 
@@ -106,7 +106,7 @@
 //     // ------------------------------------------------------------------------------------------ //
 //     //                                      Object Type File                                      //
 //     // ------------------------------------------------------------------------------------------ //
-//     std::wstring objectTypeFileContent = ReadFile(ConcatPath(this->GetWorkspaceTarget(), L"vcc_object_type.hpp"));
+//     std::wstring objectTypeFileContent = ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"vcc_object_type.hpp"));
 //     std::wstring expectedObjectTypeFileContent = L"";
 //     expectedObjectTypeFileContent += L"#pragma once\r\n";
 //     expectedObjectTypeFileContent += L"\r\n";
@@ -119,7 +119,7 @@
 //     //                                      Class File                                            //
 //     // ------------------------------------------------------------------------------------------ //
 
-//     std::wstring objectClassFileContent = ReadFile(ConcatPath(this->GetWorkspaceTarget(), L"vcc_a.hpp"));
+//     std::wstring objectClassFileContent = ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a.hpp"));
 //     std::wstring expectedObjectClassFileContent = L"";
 //     expectedObjectClassFileContent += L"#pragma once\r\n";
 //     expectedObjectClassFileContent += L"\r\n";
@@ -153,8 +153,8 @@
 //     // ------------------------------------------------------------------------------------------ //
 //     //                                      Property Accessor File                                //
 //     // ------------------------------------------------------------------------------------------ //
-//     // std::wstring objectPropertyAccessorFileContentHpp = ReadFile(ConcatPath(this->GetWorkspaceTarget(), L"vcc_a_property_accessor.hpp"));
-//     // std::wstring objectPropertyAccessorFileContentCpp = ReadFile(ConcatPath(this->GetWorkspaceTarget(), L"vcc_a_property_accessor.cpp"));
+//     // std::wstring objectPropertyAccessorFileContentHpp = ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a_property_accessor.hpp"));
+//     // std::wstring objectPropertyAccessorFileContentCpp = ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a_property_accessor.cpp"));
 //     // std::wstring expectedOBjectPropertyAccessorFileContentHpp = L"";
 //     // std::wstring expectedOBjectPropertyAccessorFileContentCpp = L"";
 //     // EXPECT_EQ(objectPropertyAccessorFileContentHpp, expectedOBjectPropertyAccessorFileContentHpp);

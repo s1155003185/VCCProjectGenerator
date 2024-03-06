@@ -137,10 +137,11 @@ void VPGFileSyncService::CopyFile(const LogProperty *logProperty, const std::wst
             std::filesystem::remove(PATH(destgetPath));
         std::filesystem::copy_file(PATH(sourcePath), PATH(destgetPath), std::filesystem::copy_options::overwrite_existing);
 
-        if (!isModified)
+        if (isModified) {
+           LogService::LogInfo(logProperty, L"", L"Updated File: " + destgetPath);
+            // TODO handle tag
+        } else
             LogService::LogInfo(logProperty, L"", L"Added File: " + destgetPath);
-        else
-            LogService::LogInfo(logProperty, L"", L"Updated File: " + destgetPath);
     }
     catch(const std::exception& e)
     {

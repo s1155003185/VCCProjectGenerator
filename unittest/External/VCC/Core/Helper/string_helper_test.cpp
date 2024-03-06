@@ -12,13 +12,13 @@ using namespace vcc;
 /* ---------------------------------------------------------------------------------------------------- */
 /*                                      Has Prefix                                                      */
 /* ---------------------------------------------------------------------------------------------------- */
-TEST(StringTest, HasPrefixTrimSpace_NoSpace)
+TEST(StringHelperTest, HasPrefixTrimSpace_NoSpace)
 {
     std::wstring prefix = L"//<vcc:abc";
     EXPECT_TRUE(HasPrefixTrimSpace(prefix, prefix));
 }
 
-TEST(StringTest, HasPrefixTrimSpace_Space)
+TEST(StringHelperTest, HasPrefixTrimSpace_Space)
 {
     std::wstring prefix = L"//<vcc:abc";
     std::wstring text = L"// <vcc:abc";
@@ -27,35 +27,35 @@ TEST(StringTest, HasPrefixTrimSpace_Space)
 /* ---------------------------------------------------------------------------------------------------- */
 /*                                      Split String                                                    */
 /* ---------------------------------------------------------------------------------------------------- */
-TEST(StringTest, SplitString_HeadAndTail)
+TEST(StringHelperTest, SplitString_HeadAndTail)
 {
     std::wstring str = L";Ab;Cd;\"CommandA;CommandB;\";;Last;";
     std::vector<std::wstring> expectedResult = { L"", L"Ab", L"Cd", L"\"CommandA", L"CommandB", L"\"", L"", L"Last", L"" };
     EXPECT_EQ(expectedResult, SplitString(str, { L";" }));
 }
 
-TEST(StringTest, SplitString_SplitDelimiterInString)
+TEST(StringHelperTest, SplitString_SplitDelimiterInString)
 {
     std::wstring str = L"Ab;Cd;\"CommandA;CommandB;\";;Last";
     std::vector<std::wstring> expectedResult = { L"Ab", L"Cd", L"\"CommandA", L"CommandB", L"\"", L"", L"Last" };
     EXPECT_EQ(expectedResult, SplitString(str, { L";" }));
 }
 
-TEST(StringTest, SplitString_NotSplitDelimiterInString_NoEscape)
+TEST(StringHelperTest, SplitString_NotSplitDelimiterInString_NoEscape)
 {
     std::wstring str = L"Ab;Cd;\"CommandA\\\";\\\"CommandB;\";Last";
     std::vector<std::wstring> expectedResult = { L"Ab", L"Cd", L"\"CommandA\\\"", L"\\\"CommandB;\"", L"Last" };
     EXPECT_EQ(expectedResult, SplitString(str, { L";" },  { L"\"" }, { L"\"" }, { L"" }));
 }
 
-TEST(StringTest, SplitString_NotSplitDelimiterInString)
+TEST(StringHelperTest, SplitString_NotSplitDelimiterInString)
 {
     std::wstring str = L"Ab;Cd;\"CommandA\\\";\\\"CommandB;\";Last";
     std::vector<std::wstring> expectedResult = { L"Ab", L"Cd", L"\"CommandA\\\";\\\"CommandB;\"", L"Last" };
     EXPECT_EQ(expectedResult, SplitString(str, { L";" },  { L"\"" }, { L"\"" }, { L"\\" }));
 }
 
-TEST(StringTest, SplitString_MultiDelimiter)
+TEST(StringHelperTest, SplitString_MultiDelimiter)
 {
     std::wstring str = L"Ab;Cd;\"CommandA;CommandB;\";Last";
     std::vector<std::wstring> expectedResult = { L"Ab;Cd;\"", L"mmandA;", L"mmandB;\";Last" };
@@ -64,7 +64,7 @@ TEST(StringTest, SplitString_MultiDelimiter)
 /* ---------------------------------------------------------------------------------------------------- */
 /*                                      Split String By Line                                            */
 /* ---------------------------------------------------------------------------------------------------- */
-TEST(StringTest, SplitStringByLine)
+TEST(StringHelperTest, SplitStringByLine)
 {
     std::wstring str = L"Ab\r\nCd\r\n\"Command\\r\\nCommand\"\r\nLast Line\r\n";
     std::vector<std::wstring> expectedResult = { L"Ab\r", L"Cd\r", L"\"Command\\r\\nCommand\"\r", L"Last Line\r"};
@@ -74,35 +74,35 @@ TEST(StringTest, SplitStringByLine)
 /* ---------------------------------------------------------------------------------------------------- */
 /*                                      Split String By Upper Case                                      */
 /* ---------------------------------------------------------------------------------------------------- */
-TEST(StringTest, SplitStringByUpperCase_Normal)
+TEST(StringHelperTest, SplitStringByUpperCase_Normal)
 {
     std::wstring str = L"AbCd";
     std::vector<std::wstring> expectedResult = { L"Ab", L"Cd"};
     EXPECT_EQ(expectedResult, SplitStringByUpperCase(str, false, false));
 }
 
-TEST(StringTest, SplitStringByUpperCase_Space)
+TEST(StringHelperTest, SplitStringByUpperCase_Space)
 {
     std::wstring str = L"Ab cd";
     std::vector<std::wstring> expectedResult = { L"Ab", L"cd"};
     EXPECT_EQ(expectedResult, SplitStringByUpperCase(str, false, false));
 }
 
-TEST(StringTest, SplitStringByUpperCase_AllLowerCase)
+TEST(StringHelperTest, SplitStringByUpperCase_AllLowerCase)
 {
     std::wstring str = L"abcd";
     std::vector<std::wstring> expectedResult = { str };
     EXPECT_EQ(expectedResult, SplitStringByUpperCase(str, false, false));
 }
 
-TEST(StringTest, SplitStringByUpperCase_AllUpperCase)
+TEST(StringHelperTest, SplitStringByUpperCase_AllUpperCase)
 {
     std::wstring str = L"ABCD";
     std::vector<std::wstring> expectedResult = { L"A", L"B", L"C", L"D" };
     EXPECT_EQ(expectedResult, SplitStringByUpperCase(str, false, false));
 }
 
-TEST(StringTest, SplitStringByUpperCase_WithDigit)
+TEST(StringHelperTest, SplitStringByUpperCase_WithDigit)
 {
     std::wstring str = L"A1B1C1D1";
     std::vector<std::wstring> expectedResult = { L"A1", L"B1", L"C1", L"D1" };
@@ -112,7 +112,7 @@ TEST(StringTest, SplitStringByUpperCase_WithDigit)
     EXPECT_EQ(expectedResult, SplitStringByUpperCase(str, true, false));
 }
 
-TEST(StringTest, SplitStringByUpperCase_WithSpecialChar)
+TEST(StringHelperTest, SplitStringByUpperCase_WithSpecialChar)
 {
     std::wstring str = L"Ab,cd,ef";
     std::vector<std::wstring> expectedResult = { str };
@@ -125,7 +125,7 @@ TEST(StringTest, SplitStringByUpperCase_WithSpecialChar)
 /* ---------------------------------------------------------------------------------------------------- */
 /*                                             EscapeString                                             */
 /* ---------------------------------------------------------------------------------------------------- */
-TEST(StringTest, EscapeString)
+TEST(StringHelperTest, EscapeString)
 {
     // Double Quote
     std::vector<wchar_t> specialChars = GetSpecialCharacters(EscapeStringType::DoubleQuote);

@@ -40,25 +40,30 @@ namespace vcc
         return fileName;
     }
 
-    std::wstring ConcatPath(std::wstring directory, std::wstring addition)
+    std::wstring ConcatPaths(const std::vector<std::wstring>& paths)
     {
-        if (addition.starts_with(L"/") || addition.starts_with(L"\\"))
-            addition.erase(0, 1);
+        if (paths.empty())
+            return L"";
 
-        PATH dir(directory);
-        PATH add(addition);
-        dir /= add;
-        return dir.wstring();
+        PATH result(L"");
+        for (auto const &path : paths) {
+            if (result.wstring().empty())
+                result = PATH(path);
+            else {
+                result /= PATH(path);
+            }
+        }
+        return result.wstring();
     }
 
     std::wstring GetRelativePath(const std::wstring &absolutePath, const std::wstring &basePath)
     {
-        if (IsBlank(basePath))
-            return absolutePath;
-        if (!HasPrefix(absolutePath, basePath))
-            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Absolute Path " + absolutePath + L" is not start with " + basePath);
-        std::wstring path = absolutePath.substr(basePath.length());
-        return path.starts_with(L"/") || path.starts_with(L"\\") ? path.substr(1) : path;
+        TRY_CATCH(
+            if (IsBlank(basePath))
+                return absolutePath;
+            return PATH(absolutePath).lexically_relative(PATH(basePath)).wstring();
+        )
+        return L"";
     }
 
     void GetFileDifferenceBetweenWorkspaces(std::wstring sourceWorkspace, std::wstring targetWorkspace, 
@@ -66,9 +71,9 @@ namespace vcc
     {
         std::vector<std::wstring> srcFileList, tarFileList;
         for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(sourceWorkspace)))
-            srcFileList.push_back(std::wstring(filePath.path().wstring().substr(sourceWorkspace.length())));
+            srcFileList.push_back(GetRelativePath(filePath.path().wstring(), sourceWorkspace));
         for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(targetWorkspace)))
-            tarFileList.push_back(std::wstring(filePath.path().wstring().substr(targetWorkspace.length())));
+            tarFileList.push_back(GetRelativePath(filePath.path().wstring(),targetWorkspace));
 
         std::sort(srcFileList.begin(), srcFileList.end());
         std::sort(tarFileList.begin(), tarFileList.end());
@@ -83,13 +88,35 @@ namespace vcc
         needToDelete.assign(tarFileList.begin(), tarFileList.end());
 
         for (auto &str : equalFiles) {
-            std::wstring srcFile = ConcatPath(sourceWorkspace, str);
-            std::wstring tarFile = ConcatPath(targetWorkspace, str);
+            std::wstring srcFile = ConcatPaths({sourceWorkspace, str});
+            std::wstring tarFile = ConcatPaths({targetWorkspace, str});
             if (IsFile(srcFile) && IsFile(tarFile)) {
                 if (!IsFileEqual(srcFile, tarFile))
                     needToModify.push_back(std::wstring(str));
             }
         }
+    }
+
+    std::wstring GetWindowPath(std::wstring path)
+    {
+        ReplaceAll(path, L"/", L"\\");
+        return path;
+    }
+
+    std::wstring GetLinuxPath(std::wstring path)
+    {
+        ReplaceAll(path, L"\\", L"/");
+        return path;
+    }
+
+    std::wstring GetCurrentPlatformPath(std::wstring path)
+    {
+        #ifdef __WIN32
+        GetWindowPath(path);
+        #else
+        GetLinuxPath(path);
+        #endif
+        return path;
     }
 
     std::wstring GetRegexFromFileFilter(const std::wstring &fileFilter)
@@ -106,18 +133,24 @@ namespace vcc
 
 	bool IsPathMatchFileFilter(const std::wstring &filePath, const std::wstring &fileFilter)
     {
-        return std::regex_match(filePath, std::wregex(GetRegexFromFileFilter(fileFilter)));
+        TRY_CATCH(
+            return std::regex_match(GetLinuxPath(filePath), std::wregex(GetRegexFromFileFilter(GetLinuxPath(fileFilter))));
+        )
+        return false;
     }
 
     bool IsPathMatchFileFilters(const std::wstring &filePath, const std::vector<std::wstring> &fileFilters)
     {
-        std::wstring regexFilter = L"";
-        for (auto const &filter : fileFilters) {
-            if (!regexFilter.empty())
-                regexFilter += L"|";
-            regexFilter += GetRegexFromFileFilter(filter);
-        }
-        return std::regex_match(filePath, std::wregex(regexFilter));
+        if (fileFilters.empty())
+            return false;
+        TRY_CATCH(
+            std::vector<std::wstring> regexFilters;
+            for (auto const &str: fileFilters) {
+                regexFilters.push_back(GetRegexFromFileFilter(GetLinuxPath(str)));
+            }
+            return std::regex_match(GetLinuxPath(filePath), std::wregex(Concat(regexFilters, L"|")));
+        )
+        return false;
     }
 
     bool IsDirectoryExists(const std::wstring &path)
@@ -186,6 +219,8 @@ namespace vcc
     {
         TRY_CATCH(
             ValidateFile(srcFilePath);
+            if (isForce)
+                CreateDirectory(PATH(destFilePath).parent_path().wstring());
             if (isForce && IsFileExists(destFilePath))
                 filesystem::remove(destFilePath);
             filesystem::copy(PATH(srcFilePath), PATH(destFilePath));
@@ -205,8 +240,11 @@ namespace vcc
                         continue;
                 }
                 std::wstring relativePath =  GetRelativePath(filePath.path().wstring(), srcDirectory);
-                std::wstring destAbsolutePath = ConcatPath(destDirectory, relativePath);
-
+                if (filePath.is_directory() && !(relativePath.ends_with(L"/") || relativePath.ends_with(L"\\")))
+                    relativePath += L"/";
+                std::wstring destAbsolutePath = ConcatPaths({destDirectory, relativePath});
+                if (filePath.is_directory() && !(destAbsolutePath.ends_with(L"/") || destAbsolutePath.ends_with(L"\\")))
+                    destAbsolutePath += L"/";
                 if (option != nullptr) {
                     if (!option->GetIncludeFileFilters().empty() && !IsPathMatchFileFilters(relativePath, option->GetIncludeFileFilters()))
                         continue;

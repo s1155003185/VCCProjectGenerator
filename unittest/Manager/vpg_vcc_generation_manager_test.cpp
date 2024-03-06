@@ -6,9 +6,7 @@
 #include "class_macro.hpp"
 #include "file_helper.hpp"
 #include "log_property.hpp"
-
 #include "vpg_vcc_generation_manager.hpp"
-#include "vpg_directory_sync_service.hpp"
 
 using namespace std;
 using namespace vcc;
@@ -20,6 +18,9 @@ class VPGVccGenerationManagerTest : public testing::Test
     GET(wstring, Workspace, L"bin/Debug/VPGVccGenerationManagerTest/");
     GET(wstring, WorkspaceSource, L"");
     GET(wstring, WorkspaceTarget, L"");
+    
+    GET(wstring, TestFolder, L"../VPGVccGenerationManagerTest_VCCTestProject");
+    GET(bool, IsCopyDepolyFolderToTestFolder, false);
 
     MANAGER(VPGVccGenerationManager, Manager, _LogProperty, _Option);
 
@@ -31,8 +32,6 @@ class VPGVccGenerationManagerTest : public testing::Test
 
             this->_LogProperty->SetIsConsoleLog(false);
             filesystem::remove_all(PATH(this->GetWorkspace()));
-            filesystem::remove_all(PATH(this->GetWorkspaceSource()));
-            filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
 
             CreateDirectory(this->GetWorkspace());
             CreateDirectory(this->GetWorkspaceSource());
@@ -58,6 +57,7 @@ class VPGVccGenerationManagerTest : public testing::Test
             dirOption.SetIsForce(true);
             dirOption.InsertIncludeFileFilters(L".vscode/*");
             dirOption.InsertIncludeFileFilters(L"include/External/VCC/*");
+            dirOption.InsertIncludeFileFilters(L"include/Type/*_type.hpp");
             dirOption.InsertIncludeFileFilters(L"src/External/VCC/*");
             dirOption.InsertIncludeFileFilters(L"unittest/External/VCC/*");
             dirOption.InsertIncludeFileFilters(L"unittest/dllTest/*");
@@ -69,9 +69,16 @@ class VPGVccGenerationManagerTest : public testing::Test
 
             CopyDirectory(L".", this->GetWorkspaceSource(), &dirOption);
 
+            // replace main so that the project can be compile
+            std::wstring mainFilePath = ConcatPaths({this->GetWorkspaceSource(), L"main.cpp"});
+            std::wstring mainFileContent = L"int main() {}";
+            filesystem::remove(PATH(mainFilePath));
+            AppendFileOneLine(mainFilePath, mainFileContent);
+            
             // option for testing
             this->_Option->SetWorkspaceSource(this->GetWorkspaceSource());
             this->_Option->SetWorkspaceDestination(this->GetWorkspaceTarget());
+            this->_Option->SetIsGit(true);
             this->_Option->SetProjectNameEXE(L"VCCProject");
             this->_Option->SetProjectNameDLL(L"VCCDllProject");
             this->_Option->SetProjectName(L"ProjectName");
@@ -92,15 +99,19 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetProjectNameDLL(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetProjectNameGtest(L"VCCUnitTest");
+    this->_Option->SetIsExcludeVCCUnitTest(false);
     this->GetManager()->Add();
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"Makefile")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"DllEntryPoint.cpp")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"DllFunctions.cpp")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"DllFunctions.h")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"main.cpp")));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"VCCUnitTest")));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"include/External/VCC/Core")));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git")));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest/External/VCC/Core"})));
+    if (this->GetIsCopyDepolyFolderToTestFolder())
+        CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"VCCComplex"}));
 
     // EXE only
     filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
@@ -108,15 +119,18 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetProjectNameDLL(L"");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetProjectNameGtest(L"VCCUnitTest");
+    this->_Option->SetIsExcludeVCCUnitTest(false);
     this->GetManager()->Add();
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"Makefile")));
-    EXPECT_FALSE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"DllEntryPoint.cpp")));
-    EXPECT_FALSE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"DllFunctions.cpp")));
-    EXPECT_FALSE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"DllFunctions.h")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"main.cpp")));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"VCCUnitTest")));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"include/External/VCC/Core")));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git")));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
+    if (this->GetIsCopyDepolyFolderToTestFolder())
+        CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"VCCEXE"}));
 
     // DLL only
     filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
@@ -124,15 +138,19 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetProjectNameDLL(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetProjectNameGtest(L"VCCUnitTest");
+    this->_Option->SetIsExcludeVCCUnitTest(false);
     this->GetManager()->Add();
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"Makefile")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"DllEntryPoint.cpp")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"DllFunctions.cpp")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"DllFunctions.h")));
-    EXPECT_FALSE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"main.cpp")));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"VCCUnitTest")));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"include/External/VCC/Core")));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git")));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest/External/VCC/Core"})));
+    if (this->GetIsCopyDepolyFolderToTestFolder())
+        CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"VCCDLL"}));
 
     // No unittest
     filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
@@ -140,15 +158,39 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetProjectNameDLL(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetProjectNameGtest(L"");
+    this->_Option->SetIsExcludeVCCUnitTest(false);
     this->GetManager()->Add();
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"Makefile")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"DllEntryPoint.cpp")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"DllFunctions.cpp")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"DllFunctions.h")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"main.cpp")));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"VCCUnitTest")));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"include/External/VCC/Core")));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git")));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest/External/VCC/Core"})));
+    if (this->GetIsCopyDepolyFolderToTestFolder())
+        CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"NoUnittest"}));
+
+    // Exclude VCC Unittest
+    filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
+    this->_Option->SetProjectNameEXE(L"VCCProject");
+    this->_Option->SetProjectNameDLL(L"VCCDllProject");
+    this->_Option->SetProjectName(L"ProjectName");
+    this->_Option->SetProjectNameGtest(L"VCCUnitTest");
+    this->_Option->SetIsExcludeVCCUnitTest(true);
+    this->GetManager()->Add();
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest/External/VCC/Core"})));
+    if (this->GetIsCopyDepolyFolderToTestFolder())
+        CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"NoVCCUnittest"}));
 
     // Plugins
     filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
@@ -156,22 +198,51 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetProjectNameDLL(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetProjectNameGtest(L"VCCUnitTest");
-    this->_Option->InsertPlugins(L"VCC/Version/Git");
-    //this->_Option
+    this->_Option->InsertPlugins(L"VCC/Versioning/Git");
+    this->_Option->SetIsExcludeVCCUnitTest(false);
     this->GetManager()->Add();
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"Makefile")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"DllEntryPoint.cpp")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"DllFunctions.cpp")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"DllFunctions.h")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"main.cpp")));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"VCCUnitTest")));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"include/External/VCC/Core")));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPath(this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git")));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Versioning/Git"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest/External/VCC/Core"})));
+    if (this->GetIsCopyDepolyFolderToTestFolder())
+        CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"WithPlugins"}));
 }
 
 TEST_F(VPGVccGenerationManagerTest, Update)
 {
+    // cannot test really update case as cannot modify original project git resposne
+
+    // no plugin to have plugin
+    this->_Option->SetProjectNameEXE(L"VCCProject");
+    this->_Option->SetProjectNameDLL(L"VCCDllProject");
+    this->_Option->SetProjectName(L"ProjectName");
+    this->_Option->SetProjectNameGtest(L"VCCUnitTest");
+    this->GetManager()->Add();
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
+
+    this->_Option->InsertPlugins(L"VCC/Versioning/Git");
     this->GetManager()->Update();
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Versioning/Git"})));
 }
 
 TEST_F(VPGVccGenerationManagerTest, Generate)

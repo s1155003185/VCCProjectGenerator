@@ -33,10 +33,10 @@ class FileHelperTest : public testing::Test
             
             this->_WorkspaceSource = this->_Workspace + L"Source";
             this->_WorkspaceTarget = this->_Workspace + L"Target";
-            this->_FilePathSourceA = ConcatPath(this->_WorkspaceSource, L"FileA.txt");
-            this->_FilePathTargetB = ConcatPath(this->_WorkspaceTarget, L"FileB.txt");
-            this->_FilePathSourceC = ConcatPath(this->_WorkspaceSource, L"FileC.txt");
-            this->_FilePathTargetC = ConcatPath(this->_WorkspaceTarget, L"FileC.txt");
+            this->_FilePathSourceA = ConcatPaths({this->_WorkspaceSource, L"FileA.txt"});
+            this->_FilePathTargetB = ConcatPaths({this->_WorkspaceTarget, L"FileB.txt"});
+            this->_FilePathSourceC = ConcatPaths({this->_WorkspaceSource, L"FileC.txt"});
+            this->_FilePathTargetC = ConcatPaths({this->_WorkspaceTarget, L"FileC.txt"});
             
             filesystem::remove_all(PATH(this->GetWorkspace()));
             CreateDirectory(this->GetWorkspace());
@@ -60,7 +60,7 @@ class FileHelperTest : public testing::Test
 
         bool CheckFolderExists(std::wstring path)
         {
-            return IsDirectoryExists(ConcatPath(this->GetWorkspace(), path));
+            return IsDirectoryExists(ConcatPaths({this->GetWorkspace(), path}));
         }
 };
 
@@ -102,39 +102,39 @@ TEST_F(FileHelperTest, CopyDirectoryWithoutFilter)
 {
     filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
     CreateDirectory(this->GetWorkspaceTarget());
-    AppendFileOneLine(ConcatPath(ConcatPath(this->GetWorkspaceSource(), L"FolderA"), L"FileA.txt"), L"File A", true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceSource(), L"FolderA", L"FileA.txt"}), L"File A", true);
     CopyDirectoryOption option;
     option.SetIsRecursive(true);
     CopyDirectory(this->GetWorkspaceSource(), this->GetWorkspaceTarget(), &option);
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileA.txt")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileC.txt")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(ConcatPath(this->GetWorkspaceTarget(), L"FolderA"), L"FileA.txt")));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileA.txt"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileC.txt"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FolderA", L"FileA.txt"})));
 }
 
 TEST_F(FileHelperTest, CopyDirectoryWithIncludeFilter)
 {
     filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
     CreateDirectory(this->GetWorkspaceTarget());
-    AppendFileOneLine(ConcatPath(ConcatPath(this->GetWorkspaceSource(), L"FolderA"), L"FileA.txt"), L"File A", true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceSource(), L"FolderA", L"FileA.txt"}), L"File A", true);
     CopyDirectoryOption option;
     option.SetIsRecursive(true);
     option.InsertIncludeFileFilters(L"*FileA*");
     CopyDirectory(this->GetWorkspaceSource(), this->GetWorkspaceTarget(), &option);
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileA.txt")));
-    EXPECT_FALSE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileC.txt")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(ConcatPath(this->GetWorkspaceTarget(), L"FolderA"), L"FileA.txt")));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileA.txt"})));
+    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileC.txt"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FolderA", L"FileA.txt"})));
 }
 
 TEST_F(FileHelperTest, CopyDirectoryWithExcludeFilter)
 {
     filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
     CreateDirectory(this->GetWorkspaceTarget());
-    AppendFileOneLine(ConcatPath(ConcatPath(this->GetWorkspaceSource(), L"FolderA"), L"FileA.txt"), L"File A", true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceSource(), L"FolderA", L"FileA.txt"}), L"File A", true);
     CopyDirectoryOption option;
     option.SetIsRecursive(true);
     option.InsertExcludeFileFilters(L"*FileA*");
     CopyDirectory(this->GetWorkspaceSource(), this->GetWorkspaceTarget(), &option);
-    EXPECT_FALSE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileA.txt")));
-    EXPECT_TRUE(IsFileExists(ConcatPath(this->GetWorkspaceTarget(), L"FileC.txt")));
-    EXPECT_FALSE(IsFileExists(ConcatPath(ConcatPath(this->GetWorkspaceTarget(), L"FolderA"), L"FileA.txt")));
+    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileA.txt"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileC.txt"})));
+    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FolderA", L"FileA.txt"})));
 }

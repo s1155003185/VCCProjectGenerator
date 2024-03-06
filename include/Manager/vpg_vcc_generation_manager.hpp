@@ -14,6 +14,9 @@ class VPGVccGenerationManager : public VPGBaseGenerationManager
         VPGVccGenerationManager(std::shared_ptr<LogProperty> logProperty, std::shared_ptr<VPGGenerationOption> option) : VPGBaseGenerationManager(logProperty, option) {}
         virtual ~VPGVccGenerationManager() {}
 
+        std::vector<std::wstring> GetUpdateList();
+        std::vector<std::wstring> GetUpdateUnitTestList();
+
         virtual void Add() override;
         virtual void Update() override;
         virtual void Generate() override;

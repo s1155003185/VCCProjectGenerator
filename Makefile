@@ -41,10 +41,18 @@ PROJ_NAME_GTEST := unittest
 #---------- Project Info ----------#
 #----------------------------------#
 # gtest
-GTEST_FOLDER := unittest
+GTEST_FOLDER := $(PROJ_NAME_GTEST)
+ifneq ($(PROJ_NAME_EXE),)
 EXE_MAIN_CPP_FILES := main.cpp
+else
+endif
+ifneq ($(PROJ_NAME_DLL),)
 DLL_MAIN_HPP_FILES := DllFunctions.h 
 DLL_MAIN_CPP_FILES := DllEntryPoint.cpp DllFunctions.cpp
+else
+DLL_MAIN_HPP_FILES :=
+DLL_MAIN_CPP_FILES :=
+endif
 #----------------------------------#
 #---------- Compile Info ----------#
 #----------------------------------#

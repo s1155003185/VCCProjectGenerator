@@ -49,13 +49,17 @@ namespace vcc
 	std::wstring GetSystemFolderPath(SystemFolderType fileType);
 
     // helper
-	std::wstring GetFileName(const std::wstring &filePath);
-	std::wstring ConcatPath(std::wstring directory, std::wstring addition);
+    std::wstring ConcatPaths(const std::vector<std::wstring>& paths);
 	std::wstring GetRelativePath(const std::wstring &absolutePath, const std::wstring &basePath);
 	void GetFileDifferenceBetweenWorkspaces(std::wstring sourceWorkspace, std::wstring targetWorkspace,
 		std::vector<std::wstring> &needToAdd, std::vector<std::wstring> &needToModify, std::vector<std::wstring> &needToDelete);
 
+	// converter
+	std::wstring GetCurrentPlatformPath(std::wstring path);
+
 	// Regex
+	std::wstring GetWindowPath(std::wstring path);
+	std::wstring GetLinuxPath(std::wstring path);
 	std::wstring GetRegexFromFileFilter(const std::wstring &fileFilter);
 	bool IsPathMatchFileFilter(const std::wstring &filePath, const std::wstring &fileFilter);
 	bool IsPathMatchFileFilters(const std::wstring &filePath, const std::vector<std::wstring> &fileFilters);

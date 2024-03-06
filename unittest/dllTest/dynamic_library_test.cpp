@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #ifdef _WIN32
-#include <windows.h> 
+#include <windows.h>
 #else
 #include <dlfcn.h>
 #endif
@@ -13,20 +13,20 @@ struct DllHandle
     HINSTANCE Get() const { return h; }
 
     private:
-    HINSTANCE h;
+        HINSTANCE h;
 
     public:
-    static FARPROC GetProc(HINSTANCE h, const char* procName) { return GetProcAddress(h, procName); };
+        static FARPROC GetProc(HINSTANCE h, const char* procName) { return GetProcAddress(h, procName); };
     #else
     DllHandle(const char * const filename) : h(dlopen(filename, RTLD_LAZY)) {}
     ~DllHandle() { if (h) dlclose(h); }
     void* Get() const { return h; }
 
     private:
-    void* h;
+        void* h;
 
     public:
-    static void *GetProc(void *h, const char* procName) { return dlsym(h, procName); };
+        static void *GetProc(void *h, const char* procName) { return dlsym(h, procName); };
     #endif
 };
 
