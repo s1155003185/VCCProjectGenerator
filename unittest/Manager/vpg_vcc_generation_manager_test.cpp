@@ -20,7 +20,7 @@ class VPGVccGenerationManagerTest : public testing::Test
     GET(wstring, WorkspaceTarget, L"");
     
     GET(wstring, TestFolder, L"../VPGVccGenerationManagerTest_VCCTestProject");
-    GET(bool, IsCopyDepolyFolderToTestFolder, false);
+    GET(bool, IsCopyDebugFolderToTestFolder, false);
 
     MANAGER(VPGVccGenerationManager, Manager, _LogProperty, _Option);
 
@@ -110,7 +110,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest/External/VCC/Core"})));
-    if (this->GetIsCopyDepolyFolderToTestFolder())
+    if (this->GetIsCopyDebugFolderToTestFolder())
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"VCCComplex"}));
 
     // EXE only
@@ -129,7 +129,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
-    if (this->GetIsCopyDepolyFolderToTestFolder())
+    if (this->GetIsCopyDebugFolderToTestFolder())
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"VCCEXE"}));
 
     // DLL only
@@ -149,7 +149,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest/External/VCC/Core"})));
-    if (this->GetIsCopyDepolyFolderToTestFolder())
+    if (this->GetIsCopyDebugFolderToTestFolder())
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"VCCDLL"}));
 
     // No unittest
@@ -169,7 +169,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest/External/VCC/Core"})));
-    if (this->GetIsCopyDepolyFolderToTestFolder())
+    if (this->GetIsCopyDebugFolderToTestFolder())
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"NoUnittest"}));
 
     // Exclude VCC Unittest
@@ -189,7 +189,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest/External/VCC/Core"})));
-    if (this->GetIsCopyDepolyFolderToTestFolder())
+    if (this->GetIsCopyDebugFolderToTestFolder())
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"NoVCCUnittest"}));
 
     // Plugins
@@ -210,7 +210,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Versioning/Git"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest/External/VCC/Core"})));
-    if (this->GetIsCopyDepolyFolderToTestFolder())
+    if (this->GetIsCopyDebugFolderToTestFolder())
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"WithPlugins"}));
 }
 
@@ -246,6 +246,34 @@ TEST_F(VPGVccGenerationManagerTest, Update)
 }
 
 TEST_F(VPGVccGenerationManagerTest, Generate)
-{
+{            
+    // Create file for generation
+    std::wstring code =  L"";
+    code += L"#pragma once\r\n";
+    code += L"\r\n";
+    code += L"enum class VCCObjectProperty // Class Command\r\n";
+    code += L"{\r\n";
+    code += L"    EnumA, // Nothing\r\n";
+    code += L"    EnumB, // GETSET(std::wstring, EnumB, L\"Default\") \r\n";
+    code += L"    EnumC, // GET(int64_t, EnumC, 0) \r\n";
+    code += L"    EnumD, // GETSET(EnumClass, EnumD, EnumClass::OptionA)\r\n";
+    code += L"    EnumE  // VECTOR(EnumClass, EnumE) \r\n";
+    code += L"};\r\n";
+    code += L"\r\n";
+    code += L"enum class VCCObjectPtrProperty // Class Command\r\n";
+    code += L"{\r\n";
+    code += L"    EnumA, // GET_SPTR(ClassA, EnumA) \r\n";
+    code += L"    EnumB, // GET_SPTR(ClassB, EnumB, 1, 2, 3) \r\n";
+    code += L"    EnumC, // VECTOR_SPTR(ClassA, EnumC) \r\n";
+    code += L"    EnumD, // SET_SPTR(ClassA, EnumD) \r\n";
+    code += L"};";
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceSource(), L"include/Type/ClassA", L"vcc_a_property.hpp"}), code, true);
+    
+    // Only use Source Directory
+    this->_Option->SetWorkspaceSource(this->GetWorkspaceSource());
+    this->_Option->SetWorkspaceDestination(this->GetWorkspaceSource());
+    this->_Option->SetProjectPrefix(L"VCC");
     this->GetManager()->Generate();
+    if (this->GetIsCopyDebugFolderToTestFolder())
+       CopyDirectory(this->GetWorkspaceSource(), ConcatPaths({this->GetTestFolder(), L"Generate"}));
 }

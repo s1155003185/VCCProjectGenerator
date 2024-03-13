@@ -67,25 +67,28 @@ void VPGFileGenerationService::GeneratePropertyClassFile(const LogProperty *logP
         content += L"using namespace vcc;\r\n";
         content += L"\r\n";
         
+        std::set<std::wstring> classList;
         // generate external class
-        for (const shared_ptr<VPGEnumClass>enumClass : enumClassList) {
+        for (const shared_ptr<VPGEnumClass> &enumClass : enumClassList) {
             for (shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
                 // handle enum without macro case
                 if (property->GetMacro().empty())
                     continue;
                 // TODO: parse all class to get class list (include .hpp file?)
-                // TODO: need to get type list to handle enum class
                 if (std::iswupper(property->GetType()[0])) {
-                    content += L"class " + property->GetType() + L";\r\n";
+                    if (property->GetMacro().substr(0, property->GetMacro().find(L"(")).find(L"SPTR") != std::wstring::npos)
+                        classList.insert(L"class " + property->GetType() + L";\r\n");
+                    else
+                        classList.insert(L"enum class " + property->GetType() + L";\r\n");
                 }
             }
         }
+        for (auto const &str : classList)
+            content += str;
         // generate class
-        for (const shared_ptr<VPGEnumClass>enumClass : enumClassList) {
-            std::wstring className = enumClass->GetName().substr(!classPrefix.empty() ? classPrefix.length() : 0);
-            className = className.substr(0, className.length() - proeprtyClassNameSuffix.length());
-
-            content += L"class " + className + L" : public BaseObject\r\n";
+        for (const shared_ptr<VPGEnumClass> &enumClass : enumClassList) {
+            std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - proeprtyClassNameSuffix.length());
+            content += L"class " + className + L" : public BaseObject<" + className + L">\r\n";
             content += L"{\r\n";
             // generate properties
             for (shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
@@ -96,17 +99,45 @@ void VPGFileGenerationService::GeneratePropertyClassFile(const LogProperty *logP
             }
             content += L"\r\n";
             content += INDENT + L"public:\r\n";
-            content += INDENT + INDENT + className + L"() : BaseObject(ObjectType::" + className + L") {}\r\n";
-            content += INDENT + INDENT + L"~" + className + L"() {}\r\n";
-            content += L"\r\n";
-            content += INDENT + INDENT +  L"virtual std::wstring GetKey() override { return L\"\"; }\r\n"; // TODO: not handle yet
-            content += INDENT + INDENT +  L"virtual std::wstring ToString() override { return L\"\"; }\r\n"; // TODO: not handle yet
-            content += INDENT + INDENT +  L"virtual std::shared_ptr<IObject> Clone() override { return make_shared<" + className + L">(*this); }\r\n"; // TODO: not handle yet
+            content += INDENT + INDENT + className + L"() : BaseObject(ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L") {}\r\n";
+            content += INDENT + INDENT + L"virtual ~" + className + L"() {}\r\n";
+
+            bool isPtrExists = false;
+            for (auto const &property : enumClass->GetProperties()) {
+                // handle enum without macro case
+                if (property->GetMacro().empty())
+                    continue;
+                if (std::iswupper(property->GetType()[0])) {
+                    if (property->GetMacro().substr(0, property->GetMacro().find(L"(")).find(L"SPTR") != std::wstring::npos) {
+                        isPtrExists = true;
+                        break;
+                    }
+                }
+            }
+            if (isPtrExists) {
+                content += L"\r\n";                
+                content += INDENT + INDENT + L"virtual std::shared_ptr<" + className + L"> Clone() override {\r\n";
+                content += INDENT + INDENT + INDENT + L"std::shared_ptr<" + className + L"> obj = std::make_shared<" + className + L">(*this);\r\n";
+                for (auto const &property : enumClass->GetProperties()) {
+                    // handle enum without macro case
+                    if (property->GetMacro().empty())
+                        continue;
+                    if (std::iswupper(property->GetType()[0])) {
+                        if (property->GetMacro().find(L"SPTR")) {
+                            if (property->GetMacro().starts_with(L"GET")) {
+                                content += INDENT + INDENT + INDENT + L"obj->_" + property->GetPropertyName() + L" = this->_" + property->GetPropertyName() + L"->Clone();\r\n";
+                            } else {
+                                content += INDENT + INDENT + INDENT + L"obj->Clone" + property->GetPropertyName() + L"(this->_" + property->GetPropertyName() + L");\r\n";
+                            }
+                        }
+                    }
+                }
+                content += INDENT + INDENT + INDENT + L"return obj;\r\n";
+                content += INDENT + INDENT + L"}\r\n";
+            }
             content += L"};\r\n";
             content += L"\r\n";
         }
-
-
         WriteFile(hppFilePath, content, true);
         LogService::LogInfo(logProperty, logId, L"Generate object class file completed.");
     )
@@ -114,17 +145,17 @@ void VPGFileGenerationService::GeneratePropertyClassFile(const LogProperty *logP
 
 void VPGFileGenerationService::GeneratePropertyPropertyAccessorFile(const LogProperty *logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::wstring &cppFilePath, const std::vector<shared_ptr<VPGEnumClass>> &enumClassList)
 {
-    TRY_CATCH(
-        LogService::LogInfo(logProperty, logId, L"Generate property accessor file: " + hppFilePath);
-        std::wstring content = L"";
-        WriteFile(hppFilePath, content, true);
-        LogService::LogInfo(logProperty, logId, L"Generate property accessor file completed.");
+    // TRY_CATCH(
+    //     LogService::LogInfo(logProperty, logId, L"Generate property accessor file: " + hppFilePath);
+    //     std::wstring content = L"";
+    //     WriteFile(hppFilePath, content, true);
+    //     LogService::LogInfo(logProperty, logId, L"Generate property accessor file completed.");
         
-        LogService::LogInfo(logProperty, logId, L"Generate property accessor file: " + cppFilePath);
-        content = L"";
-        WriteFile(cppFilePath, content, true);
-        LogService::LogInfo(logProperty, logId, L"Generate property accessor file completed.");
-    )
+    //     LogService::LogInfo(logProperty, logId, L"Generate property accessor file: " + cppFilePath);
+    //     content = L"";
+    //     WriteFile(cppFilePath, content, true);
+    //     LogService::LogInfo(logProperty, logId, L"Generate property accessor file completed.");
+    // )
 }
 
 void VPGFileGenerationService::GernerateProperty(const LogProperty *logProperty, const std::wstring &projPrefix, const std::wstring &projWorkspace, const std::wstring &typeWorkspace, 
@@ -146,7 +177,7 @@ void VPGFileGenerationService::GernerateProperty(const LogProperty *logProperty,
 
         LogService::LogInfo(logProperty, logId, L"Generate property start.");
         std::vector<std::wstring> objectTypeList;
-        for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(typeWorkspace))) {
+        for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(ConcatPaths({projWorkspace, typeWorkspace})))) {
             std::wstring path = filePath.path().wstring();
             ToLower(path);
             if (path.ends_with(propertyFileSuffix)) {
@@ -182,20 +213,20 @@ void VPGFileGenerationService::GernerateProperty(const LogProperty *logProperty,
                     std::wstring classNameWithoutPrefix = enumClass->GetName().substr(!projPrefix.empty() ? projPrefix.size() : 0);
                     classNameWithoutPrefix = classNameWithoutPrefix.substr(0, classNameWithoutPrefix.size() - classSuffix.size());
                     objectTypeList.push_back(classNameWithoutPrefix);
-                    
+                
                     // ------------------------------------------------------------------------------------------ //
-                    //                               Generate Object Type File                                    //
-                    // ------------------------------------------------------------------------------------------ //                    
+                    //                               Generate Object Class File                                   //
+                    // ------------------------------------------------------------------------------------------ //
                     std::wstring objectFileName = fileName.substr(0, fileName.size() - propertyFileSuffix.size());
                     if (objectFileName.ends_with(L"_"))
                         objectFileName.pop_back();
 
                     std::wstring propertyAccessorFileName = objectFileName + L"_" + propertyAccessorFileSuffixWithoutExtention;
 
-                    VPGFileGenerationService::GeneratePropertyClassFile(logProperty, projPrefix, ConcatPaths({objDirectoryHpp, objectFileName + L".hpp"}), enumClassList);
+                    VPGFileGenerationService::GeneratePropertyClassFile(logProperty, projPrefix, ConcatPaths({projWorkspace, objDirectoryHpp, objectFileName + L".hpp"}), enumClassList);
                     VPGFileGenerationService::GeneratePropertyPropertyAccessorFile(logProperty, projPrefix, 
-                        ConcatPaths({propertyAccessorDirectoryHpp, propertyAccessorFileName + L".hpp"}), 
-                        ConcatPaths({propertyAccessorDirectoryCpp, propertyAccessorFileName + L".cpp"}), enumClassList);
+                        ConcatPaths({projWorkspace, propertyAccessorDirectoryHpp, propertyAccessorFileName + L".hpp"}), 
+                        ConcatPaths({projWorkspace, propertyAccessorDirectoryCpp, propertyAccessorFileName + L".cpp"}), enumClassList);
                 }
                 LogService::LogInfo(logProperty, logId, L"Parse file completed: " + path);
                 // ------------------------------------------------------------------------------------------ //
@@ -208,7 +239,7 @@ void VPGFileGenerationService::GernerateProperty(const LogProperty *logProperty,
         // ------------------------------------------------------------------------------------------ //
         //                               Generate Object Type File                                    //
         // ------------------------------------------------------------------------------------------ //
-        VPGFileGenerationService::GenerateObjectTypeFile(logProperty, projPrefix, ConcatPaths({objTypeDirectoryHpp, (!filePrefix.empty() ? (filePrefix + L"_") : L"") + objectTypeHppFileName}), objectTypeList);
+        VPGFileGenerationService::GenerateObjectTypeFile(logProperty, projPrefix, ConcatPaths({projWorkspace, objTypeDirectoryHpp, (!filePrefix.empty() ? (filePrefix + L"_") : L"") + objectTypeHppFileName}), objectTypeList);
 
         LogService::LogInfo(logProperty, logId, L"Generate Property Finished.");
     )

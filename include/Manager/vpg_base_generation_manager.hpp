@@ -23,6 +23,8 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>
     GETSET(bool, IsGit, false);
     
     // Project
+    GETSET(std::wstring, ProjectPrefix, L"");
+
     GETSET(std::wstring, ProjectName, L"");
     GETSET(std::wstring, ProjectNameDLL, L"");
     GETSET(std::wstring, ProjectNameEXE, L"");
@@ -37,6 +39,12 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>
     GETSET(std::wstring, ExceptionTypeDirectory, L"include/Type");
     GETSET(std::wstring, ManagerTypeDirectory, L"include/Type");
     GETSET(std::wstring, ObjectTypeDirectory, L"include/Type");
+
+    GETSET(std::wstring, TypeWorkspace, L"include/Type");
+    GETSET(std::wstring, ObjectHppDirectory, L"include/Module");
+    GETSET(std::wstring, ObjectTypeHppDirectory, L"include/Type");
+    GETSET(std::wstring, PropertyAccessorHppDirectory, L"include/PropertyAccessor");
+    GETSET(std::wstring, PropertyAccessorCppDirectory, L"src/PropertyAccessor");
 
     public:;
         VPGGenerationOption() = default;

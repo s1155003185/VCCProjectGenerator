@@ -6,6 +6,7 @@
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
 #include "vpg_code_reader.hpp"
+#include "vpg_file_generation_service.hpp"
 
 using namespace vcc;
 
@@ -101,6 +102,8 @@ void VPGVccGenerationManager::Generate()
 {
     TRY_CATCH(
         LogService::LogInfo(this->GetLogProperty().get(), CLASS_ID, L"Generate Project ...");
-        LogService::LogInfo(this->GetLogProperty().get(), CLASS_ID, L"Done");        
+        VPGFileGenerationService::GernerateProperty(_LogProperty.get(), _Option->GetProjectPrefix(), _Option->GetWorkspaceDestination(), _Option->GetTypeWorkspace(),
+            _Option->GetObjectTypeHppDirectory(), _Option->GetObjectHppDirectory(), _Option->GetPropertyAccessorHppDirectory(), _Option->GetPropertyAccessorCppDirectory());
+        LogService::LogInfo(this->GetLogProperty().get(), CLASS_ID, L"Done");
     )
 }

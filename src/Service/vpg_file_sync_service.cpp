@@ -13,6 +13,7 @@
 #include "xml_reader.hpp"
 
 #include "vpg_code_reader.hpp"
+#include "vpg_file_sync_service.hpp"
 
 using namespace vcc;
 
@@ -125,23 +126,22 @@ bool VPGFileSyncService::_IsTagReserve(const XMLElement *child)
     return false;
 }
 
-void VPGFileSyncService::CopyFile(const LogProperty *logProperty, const std::wstring &sourcePath, const std::wstring &destgetPath)
+void VPGFileSyncService::CopyFile(const LogProperty *logProperty, const std::wstring &sourcePath, const std::wstring &destPath)
 {
     try
     {
         if (!IsFileExists(sourcePath))
             THROW_EXCEPTION_MSG(ExceptionType::FileNotFound, sourcePath + L": File not found.");
-
-        bool isModified = IsFileExists(destgetPath);
-        if (isModified)
-            std::filesystem::remove(PATH(destgetPath));
-        std::filesystem::copy_file(PATH(sourcePath), PATH(destgetPath), std::filesystem::copy_options::overwrite_existing);
-
-        if (isModified) {
-           LogService::LogInfo(logProperty, L"", L"Updated File: " + destgetPath);
-            // TODO handle tag
-        } else
-            LogService::LogInfo(logProperty, L"", L"Added File: " + destgetPath);
+\
+        if (IsFileExists(destPath)) {
+            std::wstring commandDelimiter = GetFileName(sourcePath) == L"Makefile" ? L"#" : L"//";
+            std::wstring fileContent = VPGFileSyncService::SyncFileContent(ReadFile(sourcePath), ReadFile(destPath), VPGFileContentSyncMode::Demand, commandDelimiter);
+            WriteFile(destPath, fileContent, true);
+            LogService::LogInfo(logProperty, L"", L"Updated File: " + destPath);
+        } else {
+            std::filesystem::copy_file(PATH(sourcePath), PATH(destPath), std::filesystem::copy_options::overwrite_existing);
+            LogService::LogInfo(logProperty, L"", L"Added File: " + destPath);
+        }
     }
     catch(const std::exception& e)
     {

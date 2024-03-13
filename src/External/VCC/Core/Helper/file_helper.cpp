@@ -409,7 +409,11 @@ namespace vcc
                     THROW_EXCEPTION_MSG(ExceptionType::DirectoryCannotCreate, dir.wstring() + L"Directory not found.");
             }
             std::wofstream fileStream(_filePath, ios_base::app);
-            fileStream << line << NL;
+            #ifdef __WIN32
+            fileStream << line + L"\n";
+            #else
+            fileStream << line + L"\r\n";
+            #endif
             fileStream.close();
         } catch (const std::exception &e) {
             THROW_EXCEPTION(e);

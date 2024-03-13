@@ -22,7 +22,7 @@ class VPGCppGenerationManagerTest : public testing::Test
     GET(wstring, WorkspaceTarget, L"");
 
     GET(wstring, TestFolder, L"../VPGVccGenerationManagerTest_CPPTestProject");
-    GET(bool, IsCopyDepolyFolderToTestFolder, false);
+    GET(bool, IsCopyDebugFolderToTestFolder, false);
 
     MANAGER(VPGCppGenerationManager, Manager, _LogProperty, _Option);
 
@@ -97,7 +97,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     //     || IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPDllProject.so")));
     // EXPECT_TRUE(IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPUnitTest.exe"))
     //     || IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPUnitTest")));
-    if (this->GetIsCopyDepolyFolderToTestFolder())
+    if (this->GetIsCopyDebugFolderToTestFolder())
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"CPPComplex"}));
 
     // EXE only
@@ -120,7 +120,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     //     || IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPDllProject.so")));
     // EXPECT_TRUE(IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPUnitTest.exe"))
     //     || IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPUnitTest")));
-    if (this->GetIsCopyDepolyFolderToTestFolder())
+    if (this->GetIsCopyDebugFolderToTestFolder())
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"CPPEXE"}));
         
     // DLL only
@@ -143,7 +143,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     //     || IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPDllProject.so")));
     // EXPECT_TRUE(IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPUnitTest.exe"))
     //     || IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPUnitTest")));
-    if (this->GetIsCopyDepolyFolderToTestFolder())
+    if (this->GetIsCopyDebugFolderToTestFolder())
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"CPPDLL"}));
 
     // No unittest
@@ -166,6 +166,6 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     //     || IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPDllProject.so")));
     // EXPECT_FALSE(IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPUnitTest.exe"))
     //     || IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPUnitTest")));
-    if (this->GetIsCopyDepolyFolderToTestFolder())
+    if (this->GetIsCopyDebugFolderToTestFolder())
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"NoUnittest"}));
 }

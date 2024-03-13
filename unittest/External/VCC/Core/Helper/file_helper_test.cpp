@@ -68,11 +68,11 @@ TEST_F(FileHelperTest, GetRelativePath)
 {
     std::wstring absoluttePath = L"/abc/def/ghi.text";
     std::wstring basePath = L"/abc";
-    EXPECT_EQ(GetRelativePath(absoluttePath, basePath), L"def/ghi.text");
+    EXPECT_EQ(GetLinuxPath(GetRelativePath(absoluttePath, basePath)), L"def/ghi.text");
 
     absoluttePath = L"/abc/def/ghi.text";
     basePath = L"/abc/";
-    EXPECT_EQ(GetRelativePath(absoluttePath, basePath), L"def/ghi.text");
+    EXPECT_EQ(GetLinuxPath(GetRelativePath(absoluttePath, basePath)), L"def/ghi.text");
 }
 
 TEST_F(FileHelperTest, GetFileDifferenceBetweenWorkspacesTest)
