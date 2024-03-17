@@ -125,7 +125,8 @@
     "shared_mutex": "cpp",
     "queue": "cpp",
     "__verbose_abort": "cpp",
-    "codecvt": "cpp"
+    "codecvt": "cpp",
+    "execution": "cpp"
   },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "clang",
