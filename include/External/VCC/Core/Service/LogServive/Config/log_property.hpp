@@ -14,7 +14,7 @@ namespace vcc
         All
     };
 
-    class LogProperty : public BaseProperty
+    class LogProperty : public BaseProperty<LogProperty>
     {
         // General
         GETSET(std::wstring, UserID, L"");
@@ -35,9 +35,9 @@ namespace vcc
         LogProperty(LogPropertyType logPropertyType, std::wstring filePath = L"") {
             Init(logPropertyType, filePath);
         }
-        ~LogProperty() {}
+        virtual ~LogProperty() {}
 
-        void Init(LogPropertyType logPropertyType, std::wstring filePath = L"") {
+        void Init(LogPropertyType logPropertyType, std::wstring filePath = L"") const {
             switch (logPropertyType)
             {
             case LogPropertyType::None:

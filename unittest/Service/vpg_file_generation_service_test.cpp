@@ -96,11 +96,14 @@ TEST_F(VPGFileGenerationServiceTest, GetClassMacroList)
         L"STATICGET",
         L"GET_SPTR",
         L"GETSET_SPTR",
+        L"GET_SPTR_NULL",
+        L"GETSET_SPTR_NULL",
         L"VECTOR",
         L"VECTOR_SPTR",
         L"SET",
         L"SET_SPTR",
         L"MAP",
+        L"MAP_SPTR_R",
         L"MANAGER"
     };
 
@@ -165,10 +168,10 @@ TEST_F(VPGFileGenerationServiceTest, GenerateProperty)
     expectedObjectClassFileContent += INDENT + INDENT + L"VCCObjectPtr() : BaseObject(ObjectType::ObjectPtr) {}\r\n";
     expectedObjectClassFileContent += INDENT + INDENT + L"virtual ~VCCObjectPtr() {}\r\n";
     expectedObjectClassFileContent += L"\r\n";
-    expectedObjectClassFileContent += INDENT + INDENT + L"virtual std::shared_ptr<VCCObjectPtr> Clone() override {\r\n";
+    expectedObjectClassFileContent += INDENT + INDENT + L"virtual std::shared_ptr<IObject> Clone() const override {\r\n";
     expectedObjectClassFileContent += INDENT + INDENT + INDENT + L"std::shared_ptr<VCCObjectPtr> obj = std::make_shared<VCCObjectPtr>(*this);\r\n";
-    expectedObjectClassFileContent += INDENT + INDENT + INDENT + L"obj->_EnumA = this->_EnumA->Clone();\r\n";
-    expectedObjectClassFileContent += INDENT + INDENT + INDENT + L"obj->_EnumB = this->_EnumB->Clone();\r\n";
+    expectedObjectClassFileContent += INDENT + INDENT + INDENT + L"obj->CloneEnumA(this->_EnumA);\r\n";
+    expectedObjectClassFileContent += INDENT + INDENT + INDENT + L"obj->CloneEnumB(this->_EnumB);\r\n";
     expectedObjectClassFileContent += INDENT + INDENT + INDENT + L"obj->CloneEnumC(this->_EnumC);\r\n";
     expectedObjectClassFileContent += INDENT + INDENT + INDENT + L"obj->CloneEnumD(this->_EnumD);\r\n";
     expectedObjectClassFileContent += INDENT + INDENT + INDENT + L"return obj;\r\n";

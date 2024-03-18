@@ -343,7 +343,7 @@ namespace vcc
             GitConfig() : BaseObject() {}
             virtual ~GitConfig() {}
 
-            virtual std::shared_ptr<GitConfig> Clone() override {
+            virtual std::shared_ptr<IObject> Clone() const override {
                 std::shared_ptr<GitConfig> obj = std::make_shared<GitConfig>(*this);
                 obj->CloneConfigs(this->GetConfigs());
                 return obj;

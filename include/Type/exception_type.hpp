@@ -17,7 +17,7 @@ enum class ExceptionType
 	FileAlreadyExist,
 	FileCannotOpen,
 	// parser
-	ReaderError,
+	ParserError,
 
 	SystemError = 50000,
 	// <vcc:exceptionType action:"RESERVE">

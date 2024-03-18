@@ -51,7 +51,7 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>
         virtual ~VPGGenerationOption() {}
 };
 
-class VPGBaseGenerationManager : public BaseManager
+class VPGBaseGenerationManager : public BaseManager<VPGBaseGenerationManager>
 {
     GET_SPTR(LogProperty, LogProperty);
     GET_SPTR(VPGGenerationOption, Option);

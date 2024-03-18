@@ -289,6 +289,55 @@ namespace vcc
 			pos++;
 		}
 	}
+
+	std::wstring GetNextString(const std::wstring &str, size_t &pos,
+		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
+	{
+		if (str.empty())
+			return str;
+		GetNextCharPos(str, pos, true);
+		std::wstring result = L"";
+		try
+		{
+			if (!(quoteOpenList.size() == quoteCloseList.size() && (quoteEscapeList.empty() || quoteCloseList.size() == quoteEscapeList.size())))
+				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Quote Open, Close, Escape List having different size.");
+
+			size_t startPos = pos;
+			std::wstring currentStr = L"";
+			std::wstring quoteClose = L"";
+			std::wstring quoteEscape = L"";
+			for (size_t i = 0; i < quoteOpenList.size(); i++) {
+				if (HasPrefix(str, quoteOpenList[i], pos)) {
+					currentStr += quoteOpenList[i];					
+					quoteClose = quoteCloseList[i];
+					quoteEscape = quoteEscapeList[i];
+					pos += quoteOpenList[i].size();
+					break;
+				}
+			}
+			while (pos < str.length()) {
+				if (!quoteClose.empty() && !quoteEscape.empty() && HasPrefix(str, quoteEscape, pos)) {
+					pos += quoteEscape.length();
+					pos++; // for escaped char
+				} else if (!quoteClose.empty() && HasPrefix(str, quoteClose, pos)) {
+					pos += quoteClose.length();
+					break;
+				} else if (quoteClose.empty() && std::iswspace(str[pos])) {
+					break;
+				} else
+					pos++;
+			}
+			if (startPos != pos) {
+				result = str.substr(startPos, pos - startPos);
+				pos--;
+			}
+        }
+        catch(const std::exception& e)
+        {
+            THROW_EXCEPTION(e);
+        }
+		return result;		
+	}
 	
 	size_t CountSubstr(const std::wstring &str, const std::wstring subStr)
 	{
@@ -329,6 +378,8 @@ namespace vcc
 				return { L'\\', L'"' }; 
             case EscapeStringType::Regex:
                 return { L'\\', L'^', L'$', L'.', L'|', L'?', L'*', L'+', L'(', L')', L'[', L']', L'{', L'}' };
+			case EscapeStringType::SingleQuote:
+				return { L'\\', L'\'' }; 
 			case EscapeStringType::XML:
 				return { L'<', L'>', L'"', L'`', L'&' };
             default:
@@ -368,8 +419,8 @@ namespace vcc
 			switch (type)
 			{
 				case EscapeStringType::DoubleQuote:
-					return L"\\" + std::wstring(1, c);
 				case EscapeStringType::Regex:
+				case EscapeStringType::SingleQuote:
 					return L"\\" + std::wstring(1, c);
 				case EscapeStringType::XML:
 					return GetEscapeStringMap(type)[c];
@@ -418,11 +469,8 @@ namespace vcc
 				switch (type)
 				{
 					case EscapeStringType::DoubleQuote:
-						if (str[i] == L'\\')
-							i++;
-						result += str[i];
-						break;
 					case EscapeStringType::Regex:
+					case EscapeStringType::SingleQuote:
 						if (str[i] == L'\\')
 							i++;
 						result += str[i];
@@ -452,5 +500,30 @@ namespace vcc
             THROW_EXCEPTION(e);
         }
         return result;
+	}
+	
+	std::wstring GetUnescapeStringWithQuote(const EscapeStringType &type, const std::wstring &str)
+	{		
+		switch (type)
+		{
+		case EscapeStringType::DoubleQuote: {
+			bool isNeedRemoveHeadAndTail = str.starts_with(L"\"") && str.ends_with(L"\"") && str.length() >= 2;
+			assert(isNeedRemoveHeadAndTail);
+			if (!isNeedRemoveHeadAndTail)
+				THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"String does not start with \"");
+			break;
+		}
+		case EscapeStringType::SingleQuote: {
+			bool isNeedRemoveHeadAndTail = str.starts_with(L"\'") && str.ends_with(L"\'") && str.length() >= 2;
+			assert(isNeedRemoveHeadAndTail);
+			if (!isNeedRemoveHeadAndTail)
+				THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"String does not start with \'");
+			break;
+		}
+		default:
+			assert(false);
+			break;
+		}
+		return GetUnescapeString(type, str.substr(1, str.length() - 2));
 	}
 }

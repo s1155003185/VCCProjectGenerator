@@ -1,9 +1,10 @@
 #pragma once
 #include <string>
+#include "i_object.hpp"
 
 namespace vcc
 {
-    class IAction
+    class IAction : public IObject
     {
     protected:
         IAction() {}

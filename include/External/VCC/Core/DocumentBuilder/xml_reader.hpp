@@ -37,7 +37,7 @@ namespace vcc
             XMLElement() : BaseObject() {}
             virtual ~XMLElement() {}
 
-            virtual std::shared_ptr<XMLElement> Clone() override {
+            virtual std::shared_ptr<IObject> Clone() const override {
                 std::shared_ptr<XMLElement> obj = std::make_shared<XMLElement>(*this);
                 obj->CloneAttributes(this->GetAttributes());
                 obj->CloneChildren(this->GetChildren());

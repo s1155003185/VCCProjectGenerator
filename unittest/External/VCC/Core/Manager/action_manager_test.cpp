@@ -10,7 +10,7 @@
 using namespace std;
 using namespace vcc;
 
-class ActionManagerTestClass final : public BaseAction
+class ActionManagerTestClass final : public BaseAction<ActionManagerTestClass>
 {
     private:
         int uuid = 0;

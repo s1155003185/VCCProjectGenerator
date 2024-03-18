@@ -71,19 +71,19 @@ namespace vcc
 
     int64_t ActionManager::GetFirstSeqNo()
     {
-        std::unique_lock lock(this->_mutex);
+        //std::unique_lock lock(this->_mutex);
         return this->_GetFirstSeqNo(true);
     }
 
     int64_t ActionManager::GetLastSeqNo()
     {
-        std::unique_lock lock(this->_mutex);
+        //std::unique_lock lock(this->_mutex);
         return this->_GetFirstSeqNo(false);
     }
 
     int64_t ActionManager::DoAction(std::shared_ptr<IAction> action)
     {
-        std::unique_lock lock(this->_mutex);
+        //std::unique_lock lock(this->_mutex);
         // 1. Remove the action after index
         // 2. Refresh maxSeqNo to last no
         // 2. Append action
@@ -103,7 +103,7 @@ namespace vcc
 
     int64_t ActionManager::Redo(int64_t noOfStep)
     {
-        std::unique_lock lock(this->_mutex);
+        //std::unique_lock lock(this->_mutex);
         return this->_Redo(noOfStep);
     }
 
@@ -114,7 +114,7 @@ namespace vcc
 
     int64_t ActionManager::Undo(int64_t noOfStep)
     {
-        std::unique_lock lock(this->_mutex);
+        //std::unique_lock lock(this->_mutex);
         return this->_Undo(noOfStep);
     }
 
@@ -125,19 +125,19 @@ namespace vcc
 
     int64_t ActionManager::ChopActionListToSize(int64_t size)
     {
-        std::unique_lock lock(this->_mutex);
+        //std::unique_lock lock(this->_mutex);
         return this->_ChopActionListToSize(size, true);
     }
 
     int64_t ActionManager::Clear()
     {
-        std::unique_lock lock(this->_mutex);
+        //std::unique_lock lock(this->_mutex);
         return this->_Clear();
     }
 
     int64_t ActionManager::Truncate()
     {
-        std::unique_lock lock(this->_mutex);
+        //std::unique_lock lock(this->_mutex);
         return this->_Truncate();
     }
 }

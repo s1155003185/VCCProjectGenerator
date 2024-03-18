@@ -4,7 +4,6 @@
 
 namespace vcc
 {
-    template <typename Derived>
     class IObject
     {
         protected:
@@ -12,6 +11,6 @@ namespace vcc
             ~IObject() {}
 
         public:
-            virtual std::shared_ptr<Derived> Clone() = 0;
+            virtual std::shared_ptr<IObject> Clone() const = 0;
     };
 }

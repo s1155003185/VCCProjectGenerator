@@ -1,13 +1,13 @@
 #pragma once
 
-#include <memonry>
+#include <memory>
 
 #include "base_manager.hpp"
 
 using namespace vcc;
 
 class VPGGenerationOption;
-class VPGProjectConfigManager : public BaseManager
+class VPGProjectConfigManager : public BaseManager<VPGProjectConfigManager>
 {
     public:
         VPGProjectConfigManager() = default;

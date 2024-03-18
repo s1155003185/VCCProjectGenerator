@@ -17,7 +17,7 @@ namespace vcc
             ConfigElement() : BaseObject() {}
             virtual ~ConfigElement() {}
 
-            virtual std::shared_ptr<ConfigElement> Clone() override {
+            virtual std::shared_ptr<IObject> Clone() const override {
                 std::shared_ptr<ConfigElement> obj = std::make_shared<ConfigElement>(*this);
                 obj->CloneConfigs(this->GetConfigs());
                 return obj;
