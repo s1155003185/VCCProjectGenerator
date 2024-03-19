@@ -1,18 +1,19 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 namespace vcc
 {
-
-    class IDocument
+    class IDocument;
+    class IDocumentBuilder
     {
     protected:
-        IDocument() {}
-        ~IDocument() {}
+        IDocumentBuilder() {}
+        ~IDocumentBuilder() {}
 
     public:
-        virtual std::shared_ptr<IDocument> Serialize() = 0;
-        virtual Deserialize() = 0
+        virtual void Serialize(const std::wstring &str, std::shared_ptr<IDocument> doc) = 0;
+        virtual std::wstring Deserialize(const IDocument *doc) = 0;
     };
 }
