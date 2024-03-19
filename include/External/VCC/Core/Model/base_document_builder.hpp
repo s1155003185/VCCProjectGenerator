@@ -1,8 +1,9 @@
 #include "i_document_builder.hpp"
 
 namespace vcc
-{
-    class BaseDocumentBuilder : public IDocumentBuilder
+{    
+    template<typename Document>
+    class BaseDocumentBuilder : public IDocumentBuilder<Document>
     {
         protected:
             BaseDocumentBuilder() = default;

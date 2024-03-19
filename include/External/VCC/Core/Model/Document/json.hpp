@@ -23,8 +23,8 @@ namespace vcc
         GETSET(std::wstring, Name, L"");
         GETSET(std::wstring, Value, L"");
         GETSET(size_t, DecimalPlaces, 0);
-        VECTOR_STR(JsonObject, Array);
-        GETSET_STR(JsonObject, Object);
+        VECTOR_SPTR(JsonObject, Array);
+        GETSET_SPTR(JsonObject, Object);
 
         public:
             JsonObject() : BaseObject() {}
@@ -33,10 +33,15 @@ namespace vcc
             virtual std::shared_ptr<JsonObject> Clone() override {
                 std::shared_ptr<JsonObject> obj = std::make_shared<JsonObject>(*this);
                 obj->CloneArray(this->GetArray());
-                obj->CloneObject(this->GetObject());
+                obj->_Object = this->_Object->Clone();
                 return obj;
             }
-    }
+    };
 
-    class Json : 
+    class Json : public BaseObject<Json>
+    {
+        public:
+            Json() : BaseObject() {}
+            virtual ~Json() {}
+    };
 }
