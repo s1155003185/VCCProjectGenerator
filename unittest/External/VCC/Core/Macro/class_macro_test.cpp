@@ -28,6 +28,7 @@ class ClassMacroTestClass : public BaseObject<ClassMacroTestClass>
     SET_SPTR(ClassMacroTestClassElement, SO)
     MAP(int, std::wstring, M)
     MAP(string, vector<std::shared_ptr<ClassMacroTestClassElement>>, MO)
+    //MAP_SPTR_R(wstring, ClassMacroTestClassElement, MS)
 
     public:
         ClassMacroTestClass() : BaseObject(ObjectType::NA) {}
@@ -40,8 +41,7 @@ class ClassMacroTestClass : public BaseObject<ClassMacroTestClass>
             obj->CloneS(this->GetS());
             obj->CloneSO(this->GetSO());
             obj->CloneM(this->GetM());
-
-            // TODO: Handle Map
+            //obj->CloneMS(this->GetMS());
             obj->CloneMO(this->GetMO());
             return obj;
         };
@@ -165,7 +165,16 @@ TEST(ClassMacroTest, Set)
     EXPECT_TRUE(testClass->GetS().size() == 0);
 }
 
-// TEST(ClassMacroTest, Map) 
-// {
-//     unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
-// }
+TEST(ClassMacroTest, Map) 
+{
+    unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
+    testClass->InsertM(1, L"abc");
+    testClass->InsertM(2, L"abcd");
+    EXPECT_EQ(testClass->GetM()[1], L"abc");
+    EXPECT_EQ(testClass->GetM()[2], L"abcd");
+}
+
+TEST(ClassMacroTest, MapSPTR_R)
+{
+    unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
+}
