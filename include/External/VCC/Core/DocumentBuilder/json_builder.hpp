@@ -11,7 +11,7 @@ namespace vcc
             JsonBuilder() = default;
             virtual ~JsonBuilder() {}
 
-            virtual void Serialize(const std::wstring &str, std::shared_ptr<Json> doc) override;
-            virtual std::wstring Deserialize(const Json *doc) override;
+            virtual std::wstring Serialize(const Json *doc) override;
+            virtual void Deserialize(const std::wstring &str, std::shared_ptr<Json> doc) override;
     };
 }

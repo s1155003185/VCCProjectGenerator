@@ -15,7 +15,7 @@ namespace vcc
         ~IDocumentBuilder() {}
 
     public:
-        virtual void Serialize(const std::wstring &str, std::shared_ptr<Document> doc) = 0;
-        virtual std::wstring Deserialize(const Document *doc) = 0;
+        virtual std::wstring Serialize(const Document *doc) = 0;
+        virtual void Deserialize(const std::wstring &str, std::shared_ptr<Document> doc) = 0;
     };
 }

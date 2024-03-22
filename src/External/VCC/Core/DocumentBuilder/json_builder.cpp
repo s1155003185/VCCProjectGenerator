@@ -6,13 +6,13 @@
 
 namespace vcc
 {
-    void JsonBuilder::Serialize(const std::wstring &str, std::shared_ptr<Json> doc)
-    {
-
-    }
-
-    std::wstring JsonBuilder::Deserialize(const Json *doc)
+    std::wstring JsonBuilder::Serialize(const Json *doc)
     {
         return L"";
+    }
+
+    void JsonBuilder::Deserialize(const std::wstring &str, std::shared_ptr<Json> doc)
+    {
+
     }
 }
