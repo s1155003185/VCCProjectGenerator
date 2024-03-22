@@ -4,13 +4,14 @@
 #include <memory>
 #include <vector>
 
+#include "base_manager.hpp"
 #include "class_macro.hpp"
 #include "log_property.hpp"
 #include "vpg_project_type.hpp"
 
 using namespace vcc;
 
-class VPGProcessManager
+class VPGProcessManager : public BaseManager<VPGProcessManager>
 {
     GET_SPTR(LogProperty, LogProperty, LogPropertyType::None);
 

@@ -14,7 +14,7 @@ namespace vcc
         All
     };
 
-    class LogProperty : public BaseProperty
+    class LogProperty : public BaseProperty<LogProperty>
     {
         // General
         GETSET(std::wstring, UserID, L"");
