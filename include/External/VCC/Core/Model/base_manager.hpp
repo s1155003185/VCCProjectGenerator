@@ -15,6 +15,6 @@ namespace vcc
     protected:
         BaseManager() {}
         BaseManager(ManagerType type) : BaseManager() { this->_Type = type; }
-        ~BaseManager() {}
+        virtual ~BaseManager() {}
     };
 }

@@ -1,5 +1,7 @@
 #pragma once
 #include "base_manager.hpp"
+
+#include "class_macro.hpp"
 #include "i_action.hpp"
 
 #include <memory>
@@ -9,7 +11,7 @@
 
 namespace vcc
 {
-    class ActionManager : public BaseManager
+    class ActionManager : public BaseManager<ActionManager>
     {
         GETSET(int64_t, MaxActionListSize, 100)
         MAP(int64_t, std::shared_ptr<IAction>, Actions)
@@ -17,7 +19,7 @@ namespace vcc
         GET(int64_t, MaxSeqNo, -1)
 
     private:
-        mutable std::shared_mutex _mutex;
+        //mutable std::shared_mutex _mutex;
 
         int64_t _GetFirstSeqNo(bool fromBeginning);
         int64_t _Redo(int64_t noOfStep);
@@ -28,7 +30,7 @@ namespace vcc
         int64_t _Truncate();
     public:
         ActionManager() : BaseManager(ManagerType::Action) {}
-        ~ActionManager() {}
+        virtual ~ActionManager() {}
 
         int64_t GetFirstSeqNo();
         int64_t GetLastSeqNo();

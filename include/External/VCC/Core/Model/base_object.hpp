@@ -17,7 +17,7 @@ namespace vcc
             ~BaseObject() {}
 
         public:
-            virtual std::shared_ptr<Derived> Clone() override
+            virtual std::shared_ptr<Derived> Clone() const override
             {
                 return std::make_shared<Derived>(static_cast<const Derived&>(*this));
             }

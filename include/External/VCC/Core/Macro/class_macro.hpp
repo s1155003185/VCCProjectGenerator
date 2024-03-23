@@ -34,18 +34,18 @@ namespace vcc
     protected: \
         mutable std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
     public: \
-        std::shared_ptr<type> Get##var() { return _##var; } \
-        void Clone##var(const type *value) { this->_##var = value->Clone(); } \
-        void Clone##var(std::shared_ptr<type> value) { this->_##var = value->Clone(); }
+        std::shared_ptr<type> Get##var() const { return _##var; } \
+        void Clone##var(const type *value) const { this->_##var = value->Clone(); } \
+        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value->Clone(); }
 
     #define GETSET_SPTR(type, var, ...) \
     protected: \
         mutable std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
     public: \
-        std::shared_ptr<type> Get##var() { return _##var; } \
-        void Set##var(std::shared_ptr<type> value) { _##var = value; } \
-        void Clone##var(const type *value) { this->_##var = value->Clone(); } \
-        void Clone##var(std::shared_ptr<type> value) { this->_##var = value->Clone(); }
+        std::shared_ptr<type> Get##var() const { return _##var; } \
+        void Set##var(std::shared_ptr<type> value) const { _##var = value; } \
+        void Clone##var(const type *value) const { this->_##var = value->Clone(); } \
+        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value->Clone(); }
         
     // std::vector
     
@@ -54,21 +54,21 @@ namespace vcc
         mutable std::vector<type> _##var; \
     public: \
         std::vector<type> &Get##var() const { return _##var; } \
-        void Insert##var(type value) { this->_##var.push_back(value); } \
-        void Insert##var(size_t index, type value) { this->_##var.insert(this->_##var.begin() + index, value); } \
-        void Insert##var(const std::vector<type> &value) { this->_##var.insert(this->_##var.end(), value.begin(), value.end()); } \
-        void Insert##var(size_t index, std::vector<type> &value) { this->_##var.insert(this->_##var.begin() + index, value.begin(), value.end()); } \
-        void Remove##var(size_t index) { this->_##var.erase(this->_##var.begin() + index); } \
-        void Clone##var(const std::vector<type> &value) { this->_##var.clear(); this->Insert##var(value); }\
-        void Clear##var() { this->_##var.clear(); }
+        void Insert##var(type value) const { this->_##var.push_back(value); } \
+        void Insert##var(size_t index, type value) const { this->_##var.insert(this->_##var.begin() + index, value); } \
+        void Insert##var(const std::vector<type> &value) const { this->_##var.insert(this->_##var.end(), value.begin(), value.end()); } \
+        void Insert##var(size_t index, std::vector<type> &value) const { this->_##var.insert(this->_##var.begin() + index, value.begin(), value.end()); } \
+        void Remove##var(size_t index) const { this->_##var.erase(this->_##var.begin() + index); } \
+        void Clone##var(const std::vector<type> &value) const { this->_##var.clear(); this->Insert##var(value); }\
+        void Clear##var() const { this->_##var.clear(); }
 
     #define VECTOR_SPTR(type, var) \
     protected: \
         mutable std::vector<std::shared_ptr<type>> _##var; \
     public: \
         std::vector<std::shared_ptr<type>> &Get##var() const { return _##var; } \
-        void Insert##var(std::shared_ptr<type> value) { this->_##var.push_back(value); } \
-        void Insert##var(size_t index, std::shared_ptr<type> value) { this->_##var.insert(this->_##var.begin() + index, value); } \
+        void Insert##var(std::shared_ptr<type> value) const { this->_##var.push_back(value); } \
+        void Insert##var(size_t index, std::shared_ptr<type> value) const { this->_##var.insert(this->_##var.begin() + index, value); } \
         void Insert##var(std::vector<std::shared_ptr<type>> &value) { this->_##var.insert(this->_##var.end(), value.begin(), value.end()); } \
         void Insert##var(size_t index, std::vector<std::shared_ptr<type>> &value) { this->_##var.insert(this->_##var.begin() + index, value.begin(), value.end()); } \
         void Remove##var(size_t index) { this->_##var.erase(this->_##var.begin() + index); } \
@@ -93,9 +93,9 @@ namespace vcc
         mutable std::set<std::shared_ptr<type>> _##var; \
     public: \
         std::set<std::shared_ptr<type>> &Get##var() const { return _##var; } \
-        void Insert##var(std::shared_ptr<type> value) {  this->_##var.insert(value); } \
-        void Clone##var(const std::set<std::shared_ptr<type>> &value) { this->_##var.clear(); for (std::shared_ptr<type> element : value) { this->Insert##var(dynamic_pointer_cast<type>(element->Clone())); } }\
-        void Clear##var() { this->_##var.clear(); }
+        void Insert##var(std::shared_ptr<type> value) const {  this->_##var.insert(value); } \
+        void Clone##var(const std::set<std::shared_ptr<type>> &value) const { this->_##var.clear(); for (std::shared_ptr<type> element : value) { this->Insert##var(dynamic_pointer_cast<type>(element->Clone())); } }\
+        void Clear##var() const { this->_##var.clear(); }
 
     // map
 
@@ -106,8 +106,8 @@ namespace vcc
         std::map<keyType, valueType> &Get##var() const { return _##var; } \
         void Insert##var(keyType key, valueType value) const { _##var.insert(std::make_pair(key, value)); } \
         void Insert##var(const std::map<keyType, valueType> &value) const { _##var.insert(value.begin(), value.end()); } \
-        void Clone##var(const std::map<keyType, valueType> &value) { this->_##var.clear(); this->Insert##var(value); } \
-        void Clear##var() { this->_##var.clear(); }
+        void Clone##var(const std::map<keyType, valueType> &value) const { this->_##var.clear(); this->Insert##var(value); } \
+        void Clear##var() const { this->_##var.clear(); }
 
     #define MAP_SPTR_R(keyType, valueType, var) \
     protected: \
@@ -116,8 +116,8 @@ namespace vcc
         std::map<keyType, valueType> &Get##var() const { return _##var; } \
         void Insert##var(keyType key, valueType value) const { _##var.insert(std::make_pair(key, value)); } \
         void Insert##var(const std::map<keyType, valueType> &value) const { _##var.insert(value.begin(), value.end()); } \
-        void Clone##var(const std::map<keyType, valueType> &value) { this->_##var.clear(); this->Insert##var(value); } \
-        void Clear##var() { this->_##var.clear(); }
+        void Clone##var(const std::map<keyType, valueType> &value) const { this->_##var.clear(); this->Insert##var(value); } \
+        void Clear##var() const { this->_##var.clear(); }
     //------------------------------------------------------------------------------------------------------//
     //--------------------------------------------- VCC Object ---------------------------------------------//
     //------------------------------------------------------------------------------------------------------//
@@ -126,6 +126,6 @@ namespace vcc
     protected: \
         std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
     public: \
-        type* Get##var() { return _##var.get(); }
+        type* Get##var() const { return _##var.get(); }
         
 }

@@ -12,6 +12,6 @@ namespace vcc
             ~IObject() {}
 
         public:
-            virtual std::shared_ptr<Derived> Clone() = 0;
+            virtual std::shared_ptr<Derived> Clone() const = 0;
     };
 }

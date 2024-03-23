@@ -101,6 +101,7 @@ TEST_F(VPGFileGenerationServiceTest, GetClassMacroList)
         L"SET",
         L"SET_SPTR",
         L"MAP",
+        L"MAP_SPTR_R",
         L"MANAGER"
     };
 
@@ -165,7 +166,7 @@ TEST_F(VPGFileGenerationServiceTest, GenerateProperty)
     expectedObjectClassFileContent += INDENT + INDENT + L"VCCObjectPtr() : BaseObject(ObjectType::ObjectPtr) {}\r\n";
     expectedObjectClassFileContent += INDENT + INDENT + L"virtual ~VCCObjectPtr() {}\r\n";
     expectedObjectClassFileContent += L"\r\n";
-    expectedObjectClassFileContent += INDENT + INDENT + L"virtual std::shared_ptr<VCCObjectPtr> Clone() override {\r\n";
+    expectedObjectClassFileContent += INDENT + INDENT + L"virtual std::shared_ptr<VCCObjectPtr> Clone() const override {\r\n";
     expectedObjectClassFileContent += INDENT + INDENT + INDENT + L"std::shared_ptr<VCCObjectPtr> obj = std::make_shared<VCCObjectPtr>(*this);\r\n";
     expectedObjectClassFileContent += INDENT + INDENT + INDENT + L"obj->_EnumA = this->_EnumA->Clone();\r\n";
     expectedObjectClassFileContent += INDENT + INDENT + INDENT + L"obj->_EnumB = this->_EnumB->Clone();\r\n";
