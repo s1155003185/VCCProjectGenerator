@@ -28,7 +28,7 @@ class ClassMacroTestClass : public BaseObject<ClassMacroTestClass>
     SET_SPTR(ClassMacroTestClassElement, SetSPTR)
     MAP(int, std::wstring, Map)
     MAP(string, vector<std::shared_ptr<ClassMacroTestClassElement>>, MapVector)
-    //MAP_SPTR_R(wstring, ClassMacroTestClassElement, MS)
+    MAP_SPTR_R(std::wstring, ClassMacroTestClassElement, MapSPTR)
 
     public:
         ClassMacroTestClass() : BaseObject(ObjectType::NA) {}
@@ -41,8 +41,8 @@ class ClassMacroTestClass : public BaseObject<ClassMacroTestClass>
             obj->CloneSet(this->GetSet());
             obj->CloneSetSPTR(this->GetSetSPTR());
             obj->CloneMap(this->GetMap());
-            //obj->CloneMS(this->GetMS());
             obj->CloneMapVector(this->GetMapVector());
+            obj->CloneMapSPTR(this->GetMapSPTR());
             return obj;
         };
 };
@@ -175,6 +175,8 @@ TEST(ClassMacroTest, Map)
 }
 
 TEST(ClassMacroTest, MapSPTR_R)
-{
+{   
     unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
+    testClass->InsertMapSPTR(L"1", make_shared<ClassMacroTestClassElement>(1));
+    EXPECT_EQ(testClass->GetMapSPTR()[L"1"]->GetIndex(), 1);
 }
