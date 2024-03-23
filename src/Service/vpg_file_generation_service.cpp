@@ -124,11 +124,7 @@ void VPGFileGenerationService::GeneratePropertyClassFile(const LogProperty *logP
                         continue;
                     if (std::iswupper(property->GetType()[0])) {
                         if (property->GetMacro().find(L"SPTR")) {
-                            if (property->GetMacro().starts_with(L"GET")) {
-                                content += INDENT + INDENT + INDENT + L"obj->_" + property->GetPropertyName() + L" = this->_" + property->GetPropertyName() + L"->Clone();\r\n";
-                            } else {
-                                content += INDENT + INDENT + INDENT + L"obj->Clone" + property->GetPropertyName() + L"(this->_" + property->GetPropertyName() + L");\r\n";
-                            }
+                            content += INDENT + INDENT + INDENT + L"obj->Clone" + property->GetPropertyName() + L"(this->_" + property->GetPropertyName() + L");\r\n";
                         }
                     }
                 }
