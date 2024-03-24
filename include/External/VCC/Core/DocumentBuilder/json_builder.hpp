@@ -7,6 +7,10 @@ namespace vcc
 {
     class JsonBuilder : public BaseDocumentBuilder<Json>
     {
+        protected:
+            std::wstring GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg);
+            void ParseJsonObject(std::wstring &str, size_t pos, std::shared_ptr<Json> doc):
+            
         public:
             JsonBuilder() = default;
             virtual ~JsonBuilder() {}

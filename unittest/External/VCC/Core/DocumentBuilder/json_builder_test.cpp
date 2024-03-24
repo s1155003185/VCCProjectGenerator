@@ -15,7 +15,7 @@ TEST(JsonBuilderTest, String)
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
     DECLARE_SPTR(Json, json);
     builder->Deserialize(str, json);
-    //EXPECT_EQ(json->GetName(), L"name");
+    //EXPECT_EQ(json->Get, L"name");
 }
 
 TEST(JsonBuilderTest, Number)

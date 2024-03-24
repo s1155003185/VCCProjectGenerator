@@ -20,7 +20,6 @@ namespace vcc
     class JsonObject : public BaseObject<JsonObject>
     {
         GETSET(JsonType, Type, JsonType::Null);
-        GETSET(std::wstring, Name, L"");
         GETSET(std::wstring, Value, L"");
         GETSET(size_t, DecimalPlaces, 0);
         VECTOR_SPTR(JsonObject, Array);
@@ -40,6 +39,7 @@ namespace vcc
 
     class Json : public BaseObject<Json>
     {
+        MAP_SPTR_R(wstring, JsonObject, Objects)
         public:
             Json() : BaseObject() {}
             virtual ~Json() {}
