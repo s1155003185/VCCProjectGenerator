@@ -14,15 +14,15 @@ namespace vcc
         return L"";
     }
 
-    std::wstring XMLReader::GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg)
+    std::wstring JsonBuilder::GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg)
     {
         return L"Error at position " + std::to_wstring(pos + 1) + L" with char '" + wstring(1, c) + L"': " + msg;
     }
 
-    void JsonBuilder::ParseJsonObject(std::wstring &str, size_t pos, std::shared_ptr<Json> doc)
+    void JsonBuilder::ParseJsonObject(const std::wstring &str, size_t &pos, std::shared_ptr<Json> doc)
     {
         //TRY_CATCH(
-            pos = GetNextCharPos(str, pos, false);
+            GetNextCharPos(str, pos, false);
             if (str[pos] != L'{')
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(pos, str[pos], L"Json Object not start with {"));
             while (pos < str.length())
@@ -36,7 +36,7 @@ namespace vcc
     {
         TRY_CATCH(
             size_t pos = 0;
-            Parse(str, pos, doc);
+            ParseJsonObject(str, pos, doc);
         )
     }
 }

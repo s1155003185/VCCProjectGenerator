@@ -39,7 +39,7 @@ namespace vcc
 
     class Json : public BaseObject<Json>
     {
-        MAP_SPTR_R(wstring, JsonObject, Objects)
+        MAP_SPTR_R(std::wstring, JsonObject, Objects)
         public:
             Json() : BaseObject() {}
             virtual ~Json() {}
