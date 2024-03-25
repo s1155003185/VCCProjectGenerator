@@ -22,8 +22,8 @@ namespace vcc
         GETSET(JsonType, Type, JsonType::Null);
         GETSET(std::wstring, Value, L"");
         GETSET(size_t, DecimalPlaces, 0);
-        VECTOR_SPTR(JsonObject, Array);
-        GETSET_SPTR(JsonObject, Object);
+        VECTOR_SPTR(Json, Array);
+        GETSET_SPTR(Json, Object);
 
         public:
             JsonObject() : BaseObject() {}

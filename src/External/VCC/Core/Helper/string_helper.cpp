@@ -377,6 +377,8 @@ namespace vcc
 				return { L'\\', L'"' }; 
             case EscapeStringType::Regex:
                 return { L'\\', L'^', L'$', L'.', L'|', L'?', L'*', L'+', L'(', L')', L'[', L']', L'{', L'}' };
+			case EscapeStringType::SingleQuote:
+				return { L'\\', L'\'' }; 
 			case EscapeStringType::XML:
 				return { L'<', L'>', L'"', L'`', L'&' };
             default:
@@ -416,8 +418,8 @@ namespace vcc
 			switch (type)
 			{
 				case EscapeStringType::DoubleQuote:
-					return L"\\" + std::wstring(1, c);
 				case EscapeStringType::Regex:
+				case EscapeStringType::SingleQuote:
 					return L"\\" + std::wstring(1, c);
 				case EscapeStringType::XML:
 					return GetEscapeStringMap(type)[c];
@@ -466,11 +468,8 @@ namespace vcc
 				switch (type)
 				{
 					case EscapeStringType::DoubleQuote:
-						if (str[i] == L'\\')
-							i++;
-						result += str[i];
-						break;
 					case EscapeStringType::Regex:
+					case EscapeStringType::SingleQuote:
 						if (str[i] == L'\\')
 							i++;
 						result += str[i];
@@ -500,5 +499,28 @@ namespace vcc
             THROW_EXCEPTION(e);
         }
         return result;
+	}
+	
+	std::wstring GetUnescapeStringWithQuote(const EscapeStringType &type, const std::wstring &str)
+	{		
+		switch (type)
+		{
+		case EscapeStringType::DoubleQuote:
+			bool isNeedRemoveHeadAndTail = str.starts_with(L"\"") && str.ends_with(L"\"") && str.length() >= 2;
+			assert(isNeedRemoveHeadAndTail);
+			if (!isNeedRemoveHeadAndTail)
+				THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"String does not start with \"");
+			break;
+		case EscapeStringType::SingleQuote:
+			bool isNeedRemoveHeadAndTail = str.starts_with(L"\'") && str.ends_with(L"\'") && str.length() >= 2;
+			assert(isNeedRemoveHeadAndTail);
+			if (!isNeedRemoveHeadAndTail)
+				THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"String does not start with \'");
+			break;
+		default:
+			assert(false);
+			break;
+		}
+		return GetUnescapeString(type, str.substr(1, str.length() - 2));
 	}
 }
