@@ -289,6 +289,54 @@ namespace vcc
 			pos++;
 		}
 	}
+
+	std::wstring GetNextString(const std::wstring &str, size_t &pos,
+		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
+	{
+		if (str.empty())
+			return str;
+		GetNextCharPos(str, pos, true);
+		std::wstring result = L"";
+		try
+		{
+			if (!(quoteOpenList.size() == quoteCloseList.size() && (quoteEscapeList.empty() || quoteCloseList.size() == quoteEscapeList.size())))
+				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Quote Open, Close, Escape List having different size.");
+
+			size_t startPos = pos;
+			std::wstring currentStr = L"";
+			std::wstring quoteClose = L"";
+			std::wstring quoteEscape = L"";
+			for (size_t i = 0; i < quoteOpenList.size(); i++) {
+				if (HasPrefix(str, quoteOpenList[i], pos)) {
+					currentStr += quoteOpenList[i];					
+					quoteClose = quoteCloseList[i];
+					quoteEscape = quoteEscapeList[i];
+					pos += quoteOpenList[i].size();
+					break;
+				}
+			}
+			while (pos < str.length()) {
+				if (!quoteClose.empty() && !quoteEscape.empty() && HasPrefix(str, quoteEscape, pos)) {
+					pos += quoteEscape.length();
+					pos++; // for escaped char
+				} else if (!quoteClose.empty() && HasPrefix(str, quoteClose, pos)) {
+					pos += quoteClose.length();
+					break;
+				} else if (quoteClose.empty() && std::iswspace(str[pos])) {
+					break;
+				} else
+					pos++;
+			}
+			if (startPos != pos) {
+				result = str.substr(startPos, pos - startPos);
+			}
+        }
+        catch(const std::exception& e)
+        {
+            THROW_EXCEPTION(e);
+        }
+		return result;		
+	}
 	
 	size_t CountSubstr(const std::wstring &str, const std::wstring subStr)
 	{

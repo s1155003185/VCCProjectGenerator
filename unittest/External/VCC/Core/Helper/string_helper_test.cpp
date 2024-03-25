@@ -160,3 +160,33 @@ TEST(StringHelperTest, EscapeString)
     EXPECT_EQ(GetEscapeString(EscapeStringType::XML, originalStr), expectedStr);
     EXPECT_EQ(GetUnescapeString(EscapeStringType::XML, expectedStr), originalStr);
 }
+
+/* ---------------------------------------------------------------------------------------------------- */
+/*                                      Search                                                          */
+/* ---------------------------------------------------------------------------------------------------- */
+TEST(StringHelperTest, GetNextString)
+{
+    std::wstring str = L"abc def ghi";
+    std::wstring str1 = L"\"abc def\" ghi";
+    std::wstring str2 = L"\"abc\\\" def\" ghi";
+    
+    size_t pos = 0;
+    EXPECT_EQ(GetNextString(str, pos), L"abc");
+    EXPECT_EQ(pos, (size_t)3);
+    pos = 0;
+    EXPECT_EQ(GetNextString(str1, pos), L"\"abc");
+    EXPECT_EQ(pos, (size_t)4);
+    pos = 0;
+    EXPECT_EQ(GetNextString(str2, pos), L"\"abc\\\"");
+    EXPECT_EQ(pos, (size_t)6);
+
+    pos = 0;
+    EXPECT_EQ(GetNextString(str, pos, {L"\""}, {L"\""}, {L"\\"}), L"abc");
+    EXPECT_EQ(pos, (size_t)3);
+    pos = 0;
+    EXPECT_EQ(GetNextString(str1, pos, {L"\""}, {L"\""}, {L"\\"}), L"\"abc def\"");
+    EXPECT_EQ(pos, (size_t)9);
+    pos = 0;
+    EXPECT_EQ(GetNextString(str2, pos, {L"\""}, {L"\""}, {L"\\"}), L"\"abc\\\" def\"");
+    EXPECT_EQ(pos, (size_t)11);
+}

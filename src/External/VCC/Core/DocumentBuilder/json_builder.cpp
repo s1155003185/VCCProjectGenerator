@@ -22,7 +22,7 @@ namespace vcc
     void JsonBuilder::ParseJsonObject(const std::wstring &str, size_t &pos, std::shared_ptr<Json> doc)
     {
         //TRY_CATCH(
-            GetNextCharPos(str, pos, false);
+            GetNextCharPos(str, pos, true);
             if (str[pos] != L'{')
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(pos, str[pos], L"Json Object not start with {"));
             while (pos < str.length())

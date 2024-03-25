@@ -52,6 +52,9 @@ namespace vcc
 
 	// search
 	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos = false);
+	// pos Point to end char after execution
+	std::wstring GetNextString(const std::wstring &str, size_t &pos,
+		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
 	size_t CountSubstr(const std::wstring &str, const std::wstring subStr);
 
 	// process
