@@ -39,12 +39,12 @@ namespace vcc
             JsonObject() : BaseObject() {}
             virtual ~JsonObject() {}
             
-            // virtual std::shared_ptr<JsonObject> Clone() const override {
-            //     std::shared_ptr<JsonObject> obj = std::make_shared<JsonObject>(*this);
-            //     //obj->CloneJsonNameValuePairs(this->GetJsonNameValuePairs());
-            //     obj->CloneArray(this->GetArray());
-            //     obj->CloneObject(this->GetObject());
-            //     return obj;
-            // }
+            virtual std::shared_ptr<JsonObject> Clone() const override {
+                std::shared_ptr<JsonObject> obj = std::make_shared<JsonObject>(*this);
+                obj->CloneJsonNameValuePairs(this->GetJsonNameValuePairs());
+                obj->CloneArray(this->GetArray());
+                obj->CloneObject(this->GetObject());
+                return obj;
+            }
     };
 }
