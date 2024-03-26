@@ -96,6 +96,8 @@ TEST_F(VPGFileGenerationServiceTest, GetClassMacroList)
         L"STATICGET",
         L"GET_SPTR",
         L"GETSET_SPTR",
+        L"GET_SPTR_NULL",
+        L"GETSET_SPTR_NULL",
         L"VECTOR",
         L"VECTOR_SPTR",
         L"SET",

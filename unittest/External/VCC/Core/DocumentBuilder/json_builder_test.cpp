@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <iostream>
 #include <memory>
 #include <string>
 
@@ -13,8 +14,7 @@ TEST(JsonBuilderTest, String)
 {
     std::wstring str = L"{\"name\":\"John\"}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    //DECLARE_SPTR(JsonObject, json);
-    std::shared_ptr<JsonObject> json = std::make_shared<JsonObject>();
+    DECLARE_SPTR(JsonObject, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetType(), JsonType::Json);
     EXPECT_EQ(json->GetJsonNameValuePairs()[L"name"]->GetType(), JsonType::String);
