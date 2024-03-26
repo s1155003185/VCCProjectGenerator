@@ -5,7 +5,7 @@
 
 namespace vcc
 {
-    class JsonBuilder : public BaseDocumentBuilder<Json>
+    class JsonBuilder : public BaseDocumentBuilder<JsonObject>
     {
         protected:
             std::wstring GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg);
@@ -15,7 +15,7 @@ namespace vcc
             JsonBuilder() = default;
             virtual ~JsonBuilder() {}
 
-            virtual std::wstring Serialize(const Json *doc) override;
-            virtual void Deserialize(const std::wstring &str, std::shared_ptr<Json> doc) override;
+            virtual std::wstring Serialize(const JsonObject *doc) override;
+            virtual void Deserialize(const std::wstring &str, std::shared_ptr<JsonObject> doc) override;
     };
 }

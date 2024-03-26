@@ -13,9 +13,12 @@ TEST(JsonBuilderTest, String)
 {
     std::wstring str = L"{\"name\":\"John\"}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    DECLARE_SPTR(Json, json);
+    //DECLARE_SPTR(JsonObject, json);
+    std::shared_ptr<JsonObject> json = std::make_shared<JsonObject>();
     builder->Deserialize(str, json);
-    //EXPECT_EQ(json->Get, L"name");
+    EXPECT_EQ(json->GetType(), JsonType::Json);
+    EXPECT_EQ(json->GetJsonNameValuePairs()[L"name"]->GetType(), JsonType::String);
+    EXPECT_EQ(json->GetJsonNameValuePairs()[L"name"]->GetValue(), L"John");
 }
 
 TEST(JsonBuilderTest, Number)

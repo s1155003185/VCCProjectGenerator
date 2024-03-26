@@ -505,18 +505,20 @@ namespace vcc
 	{		
 		switch (type)
 		{
-		case EscapeStringType::DoubleQuote:
+		case EscapeStringType::DoubleQuote: {
 			bool isNeedRemoveHeadAndTail = str.starts_with(L"\"") && str.ends_with(L"\"") && str.length() >= 2;
 			assert(isNeedRemoveHeadAndTail);
 			if (!isNeedRemoveHeadAndTail)
 				THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"String does not start with \"");
 			break;
-		case EscapeStringType::SingleQuote:
+		}
+		case EscapeStringType::SingleQuote: {
 			bool isNeedRemoveHeadAndTail = str.starts_with(L"\'") && str.ends_with(L"\'") && str.length() >= 2;
 			assert(isNeedRemoveHeadAndTail);
 			if (!isNeedRemoveHeadAndTail)
 				THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"String does not start with \'");
 			break;
+		}
 		default:
 			assert(false);
 			break;

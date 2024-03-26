@@ -10,7 +10,7 @@
 
 namespace vcc
 {
-    std::wstring JsonBuilder::Serialize(const Json *doc)
+    std::wstring JsonBuilder::Serialize(const JsonObject *doc)
     {
         return L"";
     }
@@ -33,7 +33,7 @@ namespace vcc
             doc->SetType(JsonType::String);
             doc->SetValue(value);
         } else if (str.starts_with(L"{")) {
-            DECLARE_SPTR(Json, jsonObj);
+            DECLARE_SPTR(JsonObject, jsonObj);
             Deserialize(str, jsonObj);
             doc->SetType(JsonType::Object);
             doc->SetObject(jsonObj);
@@ -53,7 +53,7 @@ namespace vcc
         }
     }
 
-    void JsonBuilder::Deserialize(const std::wstring &str, std::shared_ptr<Json> doc)
+    void JsonBuilder::Deserialize(const std::wstring &str, std::shared_ptr<JsonObject> doc)
     {
         //TRY_CATCH(
             size_t pos = 0;
@@ -88,7 +88,7 @@ namespace vcc
                     while (arrayPos < value.length()) {
                         std::wstring objStr = GetNextString(value, arrayPos, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
                         
-                        DECLARE_SPTR(Json, obj);
+                        DECLARE_SPTR(JsonObject, obj);
                         Deserialize(str, obj);
                         arrayObj->InsertArray(obj);
                         GetNextCharPos(value, arrayPos, false);
@@ -99,7 +99,8 @@ namespace vcc
                 } else {
                     DECLARE_SPTR(JsonObject, obj);
                     ParseJsonObject(value, obj);
-                    doc->InsertObjects(name, obj);
+                    doc->SetType(JsonType::Json);
+                    doc->InsertJsonNameValuePairs(name, obj);
                 }
 
                 GetNextCharPos(str, pos, false);
