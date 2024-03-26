@@ -14,7 +14,6 @@ namespace vcc
     class ActionManager : public BaseManager<ActionManager>
     {
         GETSET(int64_t, MaxActionListSize, 100)
-        //MAP(int64_t, std::shared_ptr<IAction>, Actions)
         MAP_SPTR_R(int64_t, IAction, Actions)
         GET(int64_t, CurrentSeqNo, -1)
         GET(int64_t, MaxSeqNo, -1)

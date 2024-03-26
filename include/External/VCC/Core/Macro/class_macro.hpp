@@ -36,8 +36,8 @@ namespace vcc
         mutable std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
     public: \
         std::shared_ptr<type> Get##var() const { return _##var; } \
-        void Clone##var(const type *value) const { this->_##var = value->Clone(); } \
-        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value->Clone(); }
+        void Clone##var(const type *value) const { this->_##var = value != nullptr ? value->Clone() : nullptr; } \
+        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value != nullptr ? value->Clone() : nullptr; }
 
     // Cannot set type as current class, will throw Segmentation fault
     #define GETSET_SPTR(type, var, ...) \
@@ -46,16 +46,16 @@ namespace vcc
     public: \
         std::shared_ptr<type> Get##var() const { return _##var; } \
         void Set##var(std::shared_ptr<type> value) const { _##var = value; } \
-        void Clone##var(const type *value) const { this->_##var = value->Clone(); } \
-        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value->Clone(); }
+        void Clone##var(const type *value) const { this->_##var = value != nullptr ? value->Clone() : nullptr; } \
+        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value != nullptr ? value->Clone() : nullptr; }
         
     #define GET_SPTR_NULL(type, var) \
     protected: \
         mutable std::shared_ptr<type> _##var = nullptr; \
     public: \
         std::shared_ptr<type> Get##var() const { return _##var; } \
-        void Clone##var(const type *value) const { this->_##var = value->Clone(); } \
-        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value->Clone(); }
+        void Clone##var(const type *value) const { this->_##var = value != nullptr ? value->Clone() : nullptr; } \
+        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value != nullptr ? value->Clone() : nullptr; }
 
     #define GETSET_SPTR_NULL(type, var) \
     protected: \
@@ -63,8 +63,8 @@ namespace vcc
     public: \
         std::shared_ptr<type> Get##var() const { return _##var; } \
         void Set##var(std::shared_ptr<type> value) const { _##var = value; } \
-        void Clone##var(const type *value) const { this->_##var = value->Clone(); } \
-        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value->Clone(); }
+        void Clone##var(const type *value) const { this->_##var = value != nullptr ? value->Clone() : nullptr; } \
+        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value != nullptr ? value->Clone() : nullptr; }
         
     // std::vector
     
@@ -91,7 +91,7 @@ namespace vcc
         void Insert##var(std::vector<std::shared_ptr<type>> &value) { this->_##var.insert(this->_##var.end(), value.begin(), value.end()); } \
         void Insert##var(size_t index, std::vector<std::shared_ptr<type>> &value) { this->_##var.insert(this->_##var.begin() + index, value.begin(), value.end()); } \
         void Remove##var(size_t index) { this->_##var.erase(this->_##var.begin() + index); } \
-        void Clone##var(const std::vector<std::shared_ptr<type>> &value) { this->_##var.clear(); for (std::shared_ptr<type> element : value) { this->Insert##var(dynamic_pointer_cast<type>(element->Clone())); } }\
+        void Clone##var(const std::vector<std::shared_ptr<type>> &value) { this->_##var.clear(); for (std::shared_ptr<type> element : value) { this->Insert##var(element != nullptr ? dynamic_pointer_cast<type>(element->Clone()) : nullptr); } }\
         void Clear##var() { this->_##var.clear(); }
 
     // set
@@ -113,7 +113,7 @@ namespace vcc
     public: \
         std::set<std::shared_ptr<type>> &Get##var() const { return _##var; } \
         void Insert##var(std::shared_ptr<type> value) const {  this->_##var.insert(value); } \
-        void Clone##var(const std::set<std::shared_ptr<type>> &value) const { this->_##var.clear(); for (std::shared_ptr<type> element : value) { this->Insert##var(dynamic_pointer_cast<type>(element->Clone())); } }\
+        void Clone##var(const std::set<std::shared_ptr<type>> &value) const { this->_##var.clear(); for (std::shared_ptr<type> element : value) { this->Insert##var(element != nullptr ? dynamic_pointer_cast<type>(element->Clone()) : nullptr); } }\
         void Clear##var() const { this->_##var.clear(); }
 
     // map
@@ -135,7 +135,7 @@ namespace vcc
         std::map<keyType, std::shared_ptr<valueType>> &Get##var() const { return _##var; } \
         void Insert##var(keyType key, std::shared_ptr<valueType> value) const { _##var.insert(std::make_pair(key, value)); } \
         void Insert##var(const std::map<keyType, std::shared_ptr<valueType>> &value) const { _##var.insert(value.begin(), value.end()); } \
-        void Clone##var(const std::map<keyType, std::shared_ptr<valueType>> &value) const { this->_##var.clear(); this->Insert##var(value); } \
+        void Clone##var(const std::map<keyType, std::shared_ptr<valueType>> &value) const { this->_##var.clear(); for (auto const& element : value) { this->Insert##var(element.first, element.second != nullptr ? dynamic_pointer_cast<valueType>(element.second->Clone()) : nullptr); } }\
         void Clear##var() const { this->_##var.clear(); }
     //------------------------------------------------------------------------------------------------------//
     //--------------------------------------------- VCC Object ---------------------------------------------//

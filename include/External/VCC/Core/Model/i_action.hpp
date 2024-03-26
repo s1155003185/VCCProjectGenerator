@@ -1,9 +1,11 @@
 #pragma once
 #include <string>
+#include "i_object.hpp"
 
 namespace vcc
 {
-    class IAction
+    template <typename Derived>
+    class IAction : public IObject<Derived>
     {
     protected:
         IAction() {}
