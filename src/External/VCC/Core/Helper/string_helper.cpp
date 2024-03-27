@@ -329,6 +329,7 @@ namespace vcc
 			}
 			if (startPos != pos) {
 				result = str.substr(startPos, pos - startPos);
+				pos--;
 			}
         }
         catch(const std::exception& e)

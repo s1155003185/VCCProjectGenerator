@@ -60,6 +60,7 @@ namespace vcc
             GetNextCharPos(str, pos, true);
             if (str[pos] != L'{')
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(pos, str[pos], L"Json Object not start with {"));
+            GetNextCharPos(str, pos, false);
             while (pos < str.length())
             {
                 std::wstring name = GetNextString(str, pos, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
