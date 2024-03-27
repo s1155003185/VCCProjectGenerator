@@ -12,13 +12,25 @@ using namespace vcc;
 
 TEST(JsonBuilderTest, String)
 {
-    std::wstring str = L"{ \"name\": \"John\" }";
+    std::wstring str = L"{\"name\":\"John\"}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
     DECLARE_SPTR(JsonObject, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetType(), JsonType::Json);
     EXPECT_EQ(json->GetNameValuePairs()[L"name"]->GetType(), JsonType::String);
     EXPECT_EQ(json->GetNameValuePairs()[L"name"]->GetValue(), L"John");
+    EXPECT_EQ(builder->Serialize(json.get()), str);
+}
+
+TEST(JsonBuilderTest, Boolean)
+{
+    std::wstring str = L"{\"answer\":true}";
+    std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
+    DECLARE_SPTR(JsonObject, json);
+    builder->Deserialize(str, json);
+    EXPECT_EQ(json->GetType(), JsonType::Json);
+    EXPECT_EQ(json->GetNameValuePairs()[L"answer"]->GetType(), JsonType::Boolean);
+    EXPECT_EQ(json->GetNameValuePairs()[L"answer"]->GetValue(), L"true");
     EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 
@@ -36,7 +48,7 @@ TEST(JsonBuilderTest, Number)
 
 TEST(JsonBuilderTest, Object)
 {
-    std::wstring str = L"{\"Name\":{ \"firstName\":\"A\", \"lastName\":\"B\" }}";
+    std::wstring str = L"{\"Name\":{\"firstName\":\"A\",\"lastName\":\"B\"}}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
     DECLARE_SPTR(JsonObject, json);
     builder->Deserialize(str, json);
@@ -50,7 +62,7 @@ TEST(JsonBuilderTest, Object)
 
 TEST(JsonBuilderTest, Array)
 {
-    std::wstring str = L"{\"employees\":[{ \"firstName\":\"A\", \"lastName\":\"B\" }, { \"firstName\":\"C\", \"lastName\":\"D\" }]}";
+    std::wstring str = L"{\"employees\":[{\"firstName\":\"A\",\"lastName\":\"B\"},{\"firstName\":\"C\",\"lastName\":\"D\"}]}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
     DECLARE_SPTR(JsonObject, json);
     builder->Deserialize(str, json);
@@ -77,7 +89,7 @@ TEST(JsonBuilderTest, Null)
 
 TEST(JsonBuilderTest, Full)
 {
-    std::wstring str = L"{\"name\":\"John\", \"age\":11, \"tel\":null, \"FullName\":{ \"firstName\":\"A\", \"lastName\":\"B\" }, \"employees\":[{ \"firstName\":\"A\", \"lastName\":\"B\" }, { \"firstName\":\"C\", \"lastName\":\"D\" }] }}";
+    std::wstring str = L"{\"name\":\"John\",\"age\":11,\"tel\":null,\"FullName\":{\"firstName\":\"A\",\"lastName\":\"B\"},\"employees\":[{\"firstName\":\"A\",\"lastName\":\"B\"},{\"firstName\":\"C\",\"lastName\":\"D\"}]}}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
     DECLARE_SPTR(JsonObject, json);
     builder->Deserialize(str, json);

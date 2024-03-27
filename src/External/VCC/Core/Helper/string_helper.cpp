@@ -290,11 +290,24 @@ namespace vcc
 		}
 	}
 
-	std::wstring GetNextString(const std::wstring &str, size_t &pos,
+	std::wstring GetNextStringSeperateBySpace(const std::wstring &str, size_t &pos,
+		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
+	{
+		return GetNextString(str, pos, {L' ', L'\n', L'\r', L'\t'}, quoteOpenList, quoteCloseList, quoteEscapeList);
+	}
+
+	std::wstring GetNextString(const std::wstring &str, size_t &pos, const std::vector<wchar_t> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
 	{
 		if (str.empty())
 			return str;
+		if (pos >= str.length())
+			return L"";
+		if (delimiters.empty()) {
+			std::wstring result = str.substr(pos);
+			pos = str.length() - 1;
+			return result;
+		}
 		GetNextCharPos(str, pos, true);
 		std::wstring result = L"";
 		try
@@ -322,7 +335,7 @@ namespace vcc
 				} else if (!quoteClose.empty() && HasPrefix(str, quoteClose, pos)) {
 					pos += quoteClose.length();
 					break;
-				} else if (quoteClose.empty() && std::iswspace(str[pos])) {
+				} else if (quoteClose.empty() && std::find(delimiters.begin(), delimiters.end(), str[pos]) != delimiters.end()) {
 					break;
 				} else
 					pos++;
@@ -449,6 +462,34 @@ namespace vcc
         }
         return result;
     }
+
+	std::wstring GetEscapeStringWithQuote(const EscapeStringType &type, const std::wstring &str)
+	{
+        std::wstring result = L"";
+        try 
+        {
+			std::wstring openQuote = L"";
+			std::wstring closeQuote = L"";
+			switch (type)
+			{
+			case EscapeStringType::DoubleQuote:
+				closeQuote = openQuote = L"\"";
+				break;
+			case EscapeStringType::SingleQuote:
+				closeQuote = openQuote = L"'";
+				break;
+			default:
+				assert(false);
+				break;
+			}
+			result = openQuote + GetEscapeString(type, str) + closeQuote;
+        }
+        catch(const std::exception& e)
+        {
+            THROW_EXCEPTION(e);
+        }
+        return result;
+	}
 
 	std::wstring GetUnescapeString(const EscapeStringType &type, const std::wstring &str)
 	{

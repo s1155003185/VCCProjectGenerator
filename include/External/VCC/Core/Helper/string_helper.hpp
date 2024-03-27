@@ -54,7 +54,9 @@ namespace vcc
 	// search
 	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos = false);
 	// pos Point to end char after execution
-	std::wstring GetNextString(const std::wstring &str, size_t &pos,
+	std::wstring GetNextStringSeperateBySpace(const std::wstring &str, size_t &pos,
+		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
+	std::wstring GetNextString(const std::wstring &str, size_t &pos, const std::vector<wchar_t> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
 	size_t CountSubstr(const std::wstring &str, const std::wstring subStr);
 
@@ -67,6 +69,7 @@ namespace vcc
 	std::map<wchar_t, std::wstring> GetEscapeStringMap(const EscapeStringType &type);
 	std::wstring ConvertSpecialCharacterToEscapeString(const EscapeStringType &type, const wchar_t &c);
 	std::wstring GetEscapeString(const EscapeStringType &type, const std::wstring &str);
+	std::wstring GetEscapeStringWithQuote(const EscapeStringType &type, const std::wstring &str);
 	std::wstring GetUnescapeString(const EscapeStringType &type, const std::wstring &str);
 	std::wstring GetUnescapeStringWithQuote(const EscapeStringType &type, const std::wstring &str);
 
