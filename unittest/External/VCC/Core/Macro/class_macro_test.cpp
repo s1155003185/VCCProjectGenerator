@@ -29,6 +29,9 @@ class ClassMacroTestClass : public BaseObject<ClassMacroTestClass>
     MAP(int, std::wstring, Map)
     MAP(string, vector<std::shared_ptr<ClassMacroTestClassElement>>, MapVector)
     MAP_SPTR_R(std::wstring, ClassMacroTestClassElement, MapSPTR)
+    ORDERED_MAP(int, std::wstring, OrderedMap)
+    ORDERED_MAP_SPTR_R(std::wstring, ClassMacroTestClassElement, OrderedMapSPTR)
+
 
     public:
         ClassMacroTestClass() : BaseObject(ObjectType::NA) {}
@@ -43,6 +46,8 @@ class ClassMacroTestClass : public BaseObject<ClassMacroTestClass>
             obj->CloneMap(this->GetMap());
             obj->CloneMapVector(this->GetMapVector());
             obj->CloneMapSPTR(this->GetMapSPTR());
+            obj->CloneOrderedMap(this->GetOrderedMap());
+            obj->CloneOrderedMapSPTR(this->GetOrderedMapSPTR());
             return obj;
         };
 };
@@ -179,4 +184,22 @@ TEST(ClassMacroTest, MapSPTR_R)
     unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
     testClass->InsertMapSPTR(L"1", make_shared<ClassMacroTestClassElement>(1));
     EXPECT_EQ(testClass->GetMapSPTR()[L"1"]->GetIndex(), 1);
+}
+
+TEST(ClassMacroTest, OrderedMap) 
+{
+    unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
+    testClass->InsertOrderedMap(1, L"abc");
+    testClass->InsertOrderedMap(2, L"abcd");
+    EXPECT_EQ(testClass->GetOrderedMap()[0].first, 1);
+    EXPECT_EQ(testClass->GetOrderedMap()[0].second, L"abc");
+    EXPECT_EQ(testClass->GetOrderedMap()[1].first, 2);
+    EXPECT_EQ(testClass->GetOrderedMap()[1].second, L"abcd");
+}
+
+TEST(ClassMacroTest, OrderedMapSPTR_R)
+{   
+    unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
+    testClass->InsertOrderedMapSPTR(L"1", make_shared<ClassMacroTestClassElement>(1));
+    EXPECT_EQ(testClass->GetOrderedMapSPTR().at(0).second->GetIndex(), 1);
 }

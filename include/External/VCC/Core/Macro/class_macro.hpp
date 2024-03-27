@@ -2,7 +2,10 @@
 #include <map>
 #include <memory>
 #include <set>
+#include <utility>
 #include <vector>
+
+#include "exception.hpp"
 
 namespace vcc
 {
@@ -137,6 +140,29 @@ namespace vcc
         void Insert##var(const std::map<keyType, std::shared_ptr<valueType>> &value) const { _##var.insert(value.begin(), value.end()); } \
         void Clone##var(const std::map<keyType, std::shared_ptr<valueType>> &value) const { this->_##var.clear(); for (auto const& element : value) { this->Insert##var(element.first, element.second != nullptr ? dynamic_pointer_cast<valueType>(element.second->Clone()) : nullptr); } }\
         void Clear##var() const { this->_##var.clear(); }
+
+    #define ORDERED_MAP(keyType, valueType, var) \
+    protected: \
+        mutable std::vector<std::pair<keyType, valueType>> _##var; \
+    public: \
+        std::vector<std::pair<keyType, valueType>> &Get##var() const { return _##var; } \
+        valueType Get##var(keyType key) const { for (auto const &pair : _##var) {  if (pair.first == key) return pair.second; } throw Exception(ExceptionType::CustomError, L"key not found");  } \
+        void Insert##var(keyType key, valueType value) const { _##var.push_back(std::make_pair(key, value)); } \
+        void Insert##var(const std::vector<std::pair<keyType, valueType>> &value) const { _##var.insert(_##var.end(), value.begin(), value.end()); } \
+        void Clone##var(const std::vector<std::pair<keyType, valueType>> &value) const { this->_##var.clear(); this->Insert##var(value); } \
+        void Clear##var() const { this->_##var.clear(); }
+
+    #define ORDERED_MAP_SPTR_R(keyType, valueType, var) \
+    protected: \
+        mutable std::vector<std::pair<keyType, std::shared_ptr<valueType>>> _##var; \
+    public: \
+        std::vector<std::pair<keyType, std::shared_ptr<valueType>>> &Get##var() const { return _##var; } \
+        std::shared_ptr<valueType> Get##var(keyType key) const { for (auto const &pair : _##var) { if (pair.first == key) return pair.second; } throw Exception(ExceptionType::CustomError, L"key not found"); return nullptr; } \
+        void Insert##var(keyType key, std::shared_ptr<valueType> value) const { this->_##var.push_back(std::make_pair(key, value)); } \
+        void Insert##var(const std::vector<std::pair<keyType, std::shared_ptr<valueType>>> &value) const { _##var.insert(_##var.end(),value.begin(), value.end()); } \
+        void Clone##var(const std::vector<std::pair<keyType, std::shared_ptr<valueType>>> &value) const { this->_##var.clear(); for (auto const& element : value) { this->Insert##var(element.first, element.second != nullptr ? dynamic_pointer_cast<valueType>(element.second->Clone()) : nullptr); } }\
+        void Clear##var() const { this->_##var.clear(); }
+
     //------------------------------------------------------------------------------------------------------//
     //--------------------------------------------- VCC Object ---------------------------------------------//
     //------------------------------------------------------------------------------------------------------//

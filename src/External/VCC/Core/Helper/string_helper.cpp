@@ -59,6 +59,18 @@ namespace vcc
 	{
 		return str.find(prefix, pos) == pos;
 	}
+	
+	bool HasPrefix(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &pos)
+	{
+		bool result = false;
+		for (auto const &prefix : prefixes) {
+			if (HasPrefix(str, prefix, pos)) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
 
 	bool HasPrefixTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &pos)
 	{
@@ -101,7 +113,7 @@ namespace vcc
 	}
 
 	std::vector<std::wstring> SplitString(std::wstring str, const std::vector<std::wstring> &delimiters,
-		const std::vector<std::wstring> &commandOpenList, const std::vector<std::wstring> &commandCloseList, const std::vector<std::wstring> &commandEscapeList)
+		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
 	{
 		std::vector<std::wstring> results;
 		if (str.empty())
@@ -109,51 +121,61 @@ namespace vcc
 
 		try
 		{
-			if (!(commandOpenList.size() == commandCloseList.size() && (commandEscapeList.empty() || commandCloseList.size() == commandEscapeList.size())))
+			if (!(quoteOpenList.size() == quoteCloseList.size() && (quoteEscapeList.empty() || quoteCloseList.size() == quoteEscapeList.size())))
 				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Command Open, Close, Escape List having different size.");
 
+			std::vector<size_t> quotes;
 			size_t pos = 0;
 			std::wstring currentStr = L"";
-			int64_t commandIndex = -1;
 			while (pos < str.length()) {
-				if (commandIndex >= 0) {
-					if (HasPrefix(str, commandCloseList[commandIndex], pos)) {
-						currentStr += commandCloseList[commandIndex];
-						pos += commandCloseList[commandIndex].length();
-						commandIndex = -1;
-					} else if (!commandEscapeList.empty() && !commandEscapeList[commandIndex].empty() && HasPrefix(str, commandEscapeList[commandIndex], pos)) {
-						currentStr += commandEscapeList[commandIndex];
-						pos += commandEscapeList[commandIndex].length();
-						for (size_t i = 0; i < commandCloseList[commandIndex].size(); i++) {
-							if (pos < str.length()) {
-								currentStr += str[pos];
-								pos++;
-							}
-						}
-					} else {
-						currentStr += std::wstring(1, str[pos]);
-						pos++;
-					}
-				} else {
+				if (quotes.empty() && HasPrefix(str, delimiters, pos)) {
+					results.push_back(currentStr);
+					currentStr = L"";
+
 					std::wstring currentDelimiter = L"";
-					for (const std::wstring &delimiter : delimiters) {
+					for (auto const &delimiter : delimiters) {
 						if (HasPrefix(str, delimiter, pos)) {
 							currentDelimiter = delimiter;
 							break;
 						}
 					}
-
-					if (!currentDelimiter.empty()) {
-						results.push_back(currentStr);
-						currentStr = L"";
-						pos += currentDelimiter.length();
-					} else {
-						for (size_t i = 0; i < commandOpenList.size(); i++) {
-							if (HasPrefix(str, commandOpenList[i], pos)) {
-								commandIndex = i;
-								break;
+					pos += currentDelimiter.length();
+				} else {
+					// 1. if have quotes, check if it is escape chars
+					// 2. if have quotes, check if it is close quote
+					// 3. check if it is open quotes, if yes, then add to quote
+					// Last. None of above, then pos++
+					if (!quotes.empty()) {
+						if (!quoteEscapeList.empty()) {
+							std::wstring escapeChar = quoteEscapeList[quotes[quotes.size() - 1]];
+							if (!escapeChar.empty() && HasPrefix(str, escapeChar, pos)) {
+								pos += escapeChar.length();
+								currentStr += escapeChar + str[pos];
+								pos++; // for escaped char
+								continue;
 							}
 						}
+						std::wstring closeQuote = quoteCloseList[quotes[quotes.size() - 1]];
+						if (!closeQuote.empty() && HasPrefix(str, closeQuote, pos)) {
+							pos += closeQuote.length();
+							currentStr += closeQuote;
+							quotes.pop_back();
+							continue;
+						}
+					}
+					std::wstring currentQuoteOpen = L"";
+					for (size_t i = 0; i < quoteOpenList.size(); i++) {
+						std::wstring quoteOpen = quoteOpenList[i];
+						if (HasPrefix(str, quoteOpen, pos)) {
+							currentQuoteOpen = quoteOpen;
+							quotes.push_back(i);
+							break;
+						}
+					}
+					if (!currentQuoteOpen.empty()) {
+						pos += currentQuoteOpen.length();
+						currentStr += currentQuoteOpen;
+					} else {
 						currentStr += std::wstring(1, str[pos]);
 						pos++;
 					}
@@ -161,7 +183,6 @@ namespace vcc
 			}
 			if (!currentStr.empty() || !results.empty())
 				results.push_back(currentStr);
-
         }
         catch(const std::exception& e)
         {
@@ -290,11 +311,25 @@ namespace vcc
 		}
 	}
 
-	std::wstring GetNextString(const std::wstring &str, size_t &pos,
+	std::wstring GetNextStringSplitBySpace(const std::wstring &str, size_t &pos,
+		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
+	{
+		// \r\n must before \n and \r
+		return GetNextString(str, pos, {L" ", L"\r\n", L"\n", L"\r", L"\t"}, quoteOpenList, quoteCloseList, quoteEscapeList);
+	}
+	
+	std::wstring GetNextString(const std::wstring &str, size_t &pos, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
 	{
 		if (str.empty())
 			return str;
+		if (pos >= str.length())
+			return L"";
+		if (delimiters.empty()) {
+			std::wstring result = str.substr(pos);
+			pos = str.length() - 1;
+			return result;
+		}
 		GetNextCharPos(str, pos, true);
 		std::wstring result = L"";
 		try
@@ -303,29 +338,45 @@ namespace vcc
 				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Quote Open, Close, Escape List having different size.");
 
 			size_t startPos = pos;
-			std::wstring currentStr = L"";
-			std::wstring quoteClose = L"";
-			std::wstring quoteEscape = L"";
-			for (size_t i = 0; i < quoteOpenList.size(); i++) {
-				if (HasPrefix(str, quoteOpenList[i], pos)) {
-					currentStr += quoteOpenList[i];					
-					quoteClose = quoteCloseList[i];
-					quoteEscape = quoteEscapeList[i];
-					pos += quoteOpenList[i].size();
-					break;
-				}
-			}
+			std::vector<size_t> quotes;
 			while (pos < str.length()) {
-				if (!quoteClose.empty() && !quoteEscape.empty() && HasPrefix(str, quoteEscape, pos)) {
-					pos += quoteEscape.length();
-					pos++; // for escaped char
-				} else if (!quoteClose.empty() && HasPrefix(str, quoteClose, pos)) {
-					pos += quoteClose.length();
+				if (quotes.empty() && HasPrefix(str, delimiters, pos)) {
 					break;
-				} else if (quoteClose.empty() && std::iswspace(str[pos])) {
-					break;
-				} else
-					pos++;
+				} else {
+					// 1. if have quotes, check if it is escape chars
+					// 2. if have quotes, check if it is close quote
+					// 3. check if it is open quotes, if yes, then add to quote
+					// Last. None of above, then pos++
+					if (!quotes.empty()) {
+						if (!quoteEscapeList.empty()) {
+							std::wstring escapeChar = quoteEscapeList[quotes[quotes.size() - 1]];
+							if (!escapeChar.empty() && HasPrefix(str, escapeChar, pos)) {
+								pos += escapeChar.length();
+								pos++; // for escaped char
+								continue;
+							}
+						}
+						std::wstring closeQuote = quoteCloseList[quotes[quotes.size() - 1]];
+						if (!closeQuote.empty() && HasPrefix(str, closeQuote, pos)) {
+							pos += closeQuote.length();
+							quotes.pop_back();
+							continue;
+						}
+					}
+					std::wstring currentQuoteOpen = L"";
+					for (size_t i = 0; i < quoteOpenList.size(); i++) {
+						std::wstring quoteOpen = quoteOpenList[i];
+						if (HasPrefix(str, quoteOpen, pos)) {
+							currentQuoteOpen = quoteOpen;
+							quotes.push_back(i);
+							break;
+						}
+					}
+					if (!currentQuoteOpen.empty()) {
+						pos += currentQuoteOpen.length();
+					} else
+						pos++;
+				}
 			}
 			if (startPos != pos) {
 				result = str.substr(startPos, pos - startPos);
@@ -336,7 +387,83 @@ namespace vcc
         {
             THROW_EXCEPTION(e);
         }
-		return result;		
+		return result;
+	}
+
+	std::wstring GetNextQuotedString(const std::wstring& str, size_t &pos, const std::vector<std::wstring> &delimiters,
+		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
+	{
+		if (str.empty())
+			return str;
+		if (pos >= str.length())
+			return L"";
+		GetNextCharPos(str, pos, true);
+		std::wstring result = L"";
+		try
+		{
+			if (!(quoteOpenList.size() == quoteCloseList.size() && (quoteEscapeList.empty() || quoteCloseList.size() == quoteEscapeList.size())))
+				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Quote Open, Close, Escape List having different size.");
+
+			size_t startPos = pos;
+			if (HasPrefix(str, quoteOpenList, pos)) {
+				std::vector<size_t> quotes;
+				while (pos < str.length()) {
+					// first pos must be open quote
+					// if quotes become empty, that mean all quote closed, then return
+					// 1. if have quotes, check if it is escape chars
+					// 2. if have quotes, check if it is close quote
+					// 3. check if it is open quotes, if yes, then add to quote
+					// Last. None of above, then pos++
+					if (!quotes.empty()) {
+						if (!quoteEscapeList.empty()) {
+							std::wstring escapeChar = quoteEscapeList[quotes[quotes.size() - 1]];
+							if (!escapeChar.empty() && HasPrefix(str, escapeChar, pos)) {
+								pos += escapeChar.length();
+								pos++; // for escaped char
+								continue;
+							}
+						}
+						std::wstring closeQuote = quoteCloseList[quotes[quotes.size() - 1]];
+						if (!closeQuote.empty() && HasPrefix(str, closeQuote, pos)) {
+							pos += closeQuote.length();
+							quotes.pop_back();
+							continue;
+						}
+					}
+					std::wstring currentQuoteOpen = L"";
+					for (size_t i = 0; i < quoteOpenList.size(); i++) {
+						std::wstring quoteOpen = quoteOpenList[i];
+						if (HasPrefix(str, quoteOpen, pos)) {
+							currentQuoteOpen = quoteOpen;
+							quotes.push_back(i);
+							break;
+						}
+					}
+					if (!currentQuoteOpen.empty())
+						pos += currentQuoteOpen.length();
+					else if (quotes.empty())
+						break;
+					else
+						pos++;
+				}
+			} else {
+				// check if string is quoted. If not, return string end with special char
+				while (pos < str.length()) {
+					if (HasPrefix(str, delimiters, pos))
+						break;
+					pos++;
+				}
+			}
+			if (startPos != pos) {
+				result = str.substr(startPos, pos - startPos);
+				pos--;
+			}
+        }
+        catch(const std::exception& e)
+        {
+            THROW_EXCEPTION(e);
+        }
+		return result;
 	}
 	
 	size_t CountSubstr(const std::wstring &str, const std::wstring subStr)
@@ -449,6 +576,34 @@ namespace vcc
         }
         return result;
     }
+
+	std::wstring GetEscapeStringWithQuote(const EscapeStringType &type, const std::wstring &str)
+	{
+        std::wstring result = L"";
+        try 
+        {
+			std::wstring openQuote = L"";
+			std::wstring closeQuote = L"";
+			switch (type)
+			{
+			case EscapeStringType::DoubleQuote:
+				closeQuote = openQuote = L"\"";
+				break;
+			case EscapeStringType::SingleQuote:
+				closeQuote = openQuote = L"'";
+				break;
+			default:
+				assert(false);
+				break;
+			}
+			result = openQuote + GetEscapeString(type, str) + closeQuote;
+        }
+        catch(const std::exception& e)
+        {
+            THROW_EXCEPTION(e);
+        }
+        return result;
+	}
 
 	std::wstring GetUnescapeString(const EscapeStringType &type, const std::wstring &str)
 	{

@@ -61,6 +61,13 @@ TEST(StringHelperTest, SplitString_MultiDelimiter)
     std::vector<std::wstring> expectedResult = { L"Ab;Cd;\"", L"mmandA;", L"mmandB;\";Last" };
     EXPECT_EQ(expectedResult, SplitString(str, { L"Co" }));
 }
+
+TEST(StringHelperTest, SplitString_Nested)
+{
+    std::wstring str = L"Ab;Cd;[a; [ab; cd]; ef];Last";
+    std::vector<std::wstring> expectedResult = { L"Ab", L"Cd", L"[a; [ab; cd]; ef]", L"Last" };
+    EXPECT_EQ(expectedResult, SplitString(str, { L";" }, { L"[" }, { L"]" }));
+}
 /* ---------------------------------------------------------------------------------------------------- */
 /*                                      Split String By Line                                            */
 /* ---------------------------------------------------------------------------------------------------- */
@@ -164,52 +171,67 @@ TEST(StringHelperTest, EscapeString)
 /* ---------------------------------------------------------------------------------------------------- */
 /*                                      Search                                                          */
 /* ---------------------------------------------------------------------------------------------------- */
-TEST(StringHelperTest, GetNextString)
+TEST(StringHelperTest, GetNextString_Basic)
 {
     std::wstring str = L"abc def ghi";
     std::wstring str1 = L"\"abc def\" ghi";
     std::wstring str2 = L"\"abc\\\" def\" ghi";
     
     size_t pos = 0;
-    EXPECT_EQ(GetNextString(str, pos), L"abc");
+    EXPECT_EQ(GetNextStringSplitBySpace(str, pos), L"abc");
     EXPECT_EQ(pos, (size_t)2);
     pos = 0;
-    EXPECT_EQ(GetNextString(str1, pos), L"\"abc");
+    EXPECT_EQ(GetNextStringSplitBySpace(str1, pos), L"\"abc");
     EXPECT_EQ(pos, (size_t)3);
     pos = 0;
-    EXPECT_EQ(GetNextString(str2, pos), L"\"abc\\\"");
+    EXPECT_EQ(GetNextStringSplitBySpace(str2, pos), L"\"abc\\\"");
     EXPECT_EQ(pos, (size_t)5);
 
     pos = 0;
-    EXPECT_EQ(GetNextString(str, pos, {L"\""}, {L"\""}, {L"\\"}), L"abc");
+    EXPECT_EQ(GetNextStringSplitBySpace(str, pos, {L"\""}, {L"\""}, {L"\\"}), L"abc");
     EXPECT_EQ(pos, (size_t)2);
     pos = 0;
-    EXPECT_EQ(GetNextString(str1, pos, {L"\""}, {L"\""}, {L"\\"}), L"\"abc def\"");
+    EXPECT_EQ(GetNextStringSplitBySpace(str1, pos, {L"\""}, {L"\""}, {L"\\"}), L"\"abc def\"");
     EXPECT_EQ(pos, (size_t)8);
     pos = 0;
-    EXPECT_EQ(GetNextString(str2, pos, {L"\""}, {L"\""}, {L"\\"}), L"\"abc\\\" def\"");
+    EXPECT_EQ(GetNextStringSplitBySpace(str2, pos, {L"\""}, {L"\""}, {L"\\"}), L"\"abc\\\" def\"");
     EXPECT_EQ(pos, (size_t)10);
     
+}
+
+TEST(StringHelperTest, GetNextQuotedString_Nested)
+{
+    std::wstring fullStr = L"[[1, 2], 2] [1,2]";
+    size_t pos = 0;
+    EXPECT_EQ(GetNextQuotedString(fullStr, pos, { L" " }, {L"["}, {L"]"}, {L""}), L"[[1, 2], 2]");
+    EXPECT_EQ(pos, (size_t)10);
+    pos++;
+    EXPECT_EQ(GetNextQuotedString(fullStr, pos, { L" " }, {L"["}, {L"]"}, {L""}), L"[1,2]");
+    EXPECT_EQ(pos, (size_t)16);
+}
+
+TEST(StringHelperTest, GetNextQuotedString_Full)
+{
     std::wstring fullStr = L"{\"name\":\"John\"}";
-    pos = 0;
-    EXPECT_EQ(GetNextString(fullStr, pos, {L"\""}, {L"\""}, {L"\\"}), L"{\"name\":\"John\"}");
+    size_t pos = 0;
+    EXPECT_EQ(GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"{\"name\":\"John\"}");
     EXPECT_EQ(pos, (size_t)14);
     pos = 1;
-    EXPECT_EQ(GetNextString(fullStr, pos, {L"\""}, {L"\""}, {L"\\"}), L"\"name\"");
+    EXPECT_EQ(GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"\"name\"");
     EXPECT_EQ(pos, (size_t)6);
     GetNextCharPos(fullStr, pos);
     EXPECT_EQ(pos, (size_t)7);
-    EXPECT_EQ(GetNextString(fullStr, pos, {L"\""}, {L"\""}, {L"\\"}), L":\"John\"}");
-    EXPECT_EQ(pos, (size_t)14);
+    EXPECT_EQ(GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"");
+    EXPECT_EQ(pos, (size_t)7);
     pos = 8;
-    EXPECT_EQ(GetNextString(fullStr, pos, {L"\""}, {L"\""}, {L"\\"}), L"\"John\"");
+    EXPECT_EQ(GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"\"John\"");
     EXPECT_EQ(pos, (size_t)13);
     GetNextCharPos(fullStr, pos);
     EXPECT_EQ(pos, (size_t)14);
-    EXPECT_EQ(GetNextString(fullStr, pos, {L"\""}, {L"\""}, {L"\\"}), L"}");
+    EXPECT_EQ(GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"}");
     EXPECT_EQ(pos, (size_t)14);
     GetNextCharPos(fullStr, pos);
     EXPECT_EQ(pos, (size_t)15);
-    EXPECT_EQ(GetNextString(fullStr, pos, {L"\""}, {L"\""}, {L"\\"}), L"");
+    EXPECT_EQ(GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"");
     EXPECT_EQ(pos, (size_t)15);    
 }

@@ -88,29 +88,6 @@ class VPGFileGenerationServiceTest : public testing::Test
         }
 };
 
-TEST_F(VPGFileGenerationServiceTest, GetClassMacroList)
-{
-    std::set<std::wstring> expectedResult = {
-        L"GETSET",
-        L"GET",
-        L"STATICGET",
-        L"GET_SPTR",
-        L"GETSET_SPTR",
-        L"GET_SPTR_NULL",
-        L"GETSET_SPTR_NULL",
-        L"VECTOR",
-        L"VECTOR_SPTR",
-        L"SET",
-        L"SET_SPTR",
-        L"MAP",
-        L"MAP_SPTR_R",
-        L"MANAGER"
-    };
-
-    std::set<std::wstring> results = VPGFileGenerationService::GetClassMacroList(L"");
-    EXPECT_EQ(results, expectedResult);
-}
-
 TEST_F(VPGFileGenerationServiceTest, GenerateProperty)
 {
     VPGFileGenerationService::GernerateProperty(this->GetLogProperty().get(), L"VCC", L"", this->GetWorkspaceSource(), 

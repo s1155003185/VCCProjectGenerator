@@ -1,9 +1,10 @@
 #include "i_document_builder.hpp"
 
+#include "exception_macro.hpp"
+
 namespace vcc
-{    
-    template<typename Document>
-    class BaseDocumentBuilder : public IDocumentBuilder<Document>
+{
+    class BaseDocumentBuilder : public IDocumentBuilder
     {
         protected:
             BaseDocumentBuilder() = default;

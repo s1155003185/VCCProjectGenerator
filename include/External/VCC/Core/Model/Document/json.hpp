@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "base_object.hpp"
+#include "base_document.hpp"
 #include "class_macro.hpp"
 
 namespace vcc
@@ -18,17 +18,11 @@ namespace vcc
         String
     };
 
-    class ClassA : public BaseObject<ClassA> {
-        public:
-            ClassA() {}
-            virtual ~ClassA() {}
-    };
-
-    class JsonObject : public BaseObject<JsonObject>
+    class JsonObject : public BaseDocument<JsonObject>
     {
         GETSET(JsonType, Type, JsonType::Null);
         // Json
-        MAP_SPTR_R(std::wstring, JsonObject, NameValuePairs);
+        ORDERED_MAP_SPTR_R(std::wstring, JsonObject, NameValuePairs);
         // Json Object
         GETSET(std::wstring, Value, L"");
         GETSET(size_t, DecimalPlaces, 0);
@@ -36,7 +30,7 @@ namespace vcc
         GETSET_SPTR_NULL(JsonObject, Object);
 
         public:
-            JsonObject() : BaseObject() {}
+            JsonObject() : BaseDocument() {}
             virtual ~JsonObject() {}
             
             virtual std::shared_ptr<IObject> Clone() const override {
