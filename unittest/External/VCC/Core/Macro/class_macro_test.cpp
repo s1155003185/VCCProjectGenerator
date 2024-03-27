@@ -34,7 +34,7 @@ class ClassMacroTestClass : public BaseObject<ClassMacroTestClass>
         ClassMacroTestClass() : BaseObject(ObjectType::NA) {}
         virtual ~ClassMacroTestClass() {}
         
-        virtual std::shared_ptr<ClassMacroTestClass> Clone() const override {
+        virtual std::shared_ptr<IObject> Clone() const override {
             std::shared_ptr<ClassMacroTestClass> obj = make_shared<ClassMacroTestClass>(*this);
             obj->CloneVector(this->GetVector());
             obj->CloneVectorSPTR(this->GetVectorSPTR());
@@ -51,7 +51,7 @@ TEST(ClassMacroTest, CloneSingle)
 {
     int i = 10;
     unique_ptr<ClassMacroTestClassElement> testClass = make_unique<ClassMacroTestClassElement>(i);
-    shared_ptr<ClassMacroTestClassElement> cloneClass = testClass->Clone();
+    shared_ptr<ClassMacroTestClassElement> cloneClass = dynamic_pointer_cast<ClassMacroTestClassElement>(testClass->Clone());
     EXPECT_EQ(cloneClass->GetIndex(), i);
 }
 
@@ -60,7 +60,7 @@ TEST(ClassMacroTest, Clone)
     unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
     testClass->SetNumber(1);
 
-    shared_ptr<ClassMacroTestClass> cloneClass = testClass->Clone();
+    shared_ptr<ClassMacroTestClass> cloneClass = dynamic_pointer_cast<ClassMacroTestClass>(testClass->Clone());
     EXPECT_EQ(testClass->GetNumber(), cloneClass->GetNumber());
 }
 

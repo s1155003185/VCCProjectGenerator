@@ -36,8 +36,8 @@ namespace vcc
         mutable std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
     public: \
         std::shared_ptr<type> Get##var() const { return _##var; } \
-        void Clone##var(const type *value) const { this->_##var = value != nullptr ? value->Clone() : nullptr; } \
-        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value != nullptr ? value->Clone() : nullptr; }
+        void Clone##var(const type *value) const { this->_##var = value != nullptr ? dynamic_pointer_cast<type>(value->Clone()) : nullptr; } \
+        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value != nullptr ? dynamic_pointer_cast<type>(value->Clone()) : nullptr; }
 
     // Cannot set type as current class, will throw Segmentation fault
     #define GETSET_SPTR(type, var, ...) \
@@ -46,16 +46,16 @@ namespace vcc
     public: \
         std::shared_ptr<type> Get##var() const { return _##var; } \
         void Set##var(std::shared_ptr<type> value) const { _##var = value; } \
-        void Clone##var(const type *value) const { this->_##var = value != nullptr ? value->Clone() : nullptr; } \
-        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value != nullptr ? value->Clone() : nullptr; }
+        void Clone##var(const type *value) const { this->_##var = value != nullptr ? dynamic_pointer_cast<type>(value->Clone()) : nullptr; } \
+        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value != nullptr ? dynamic_pointer_cast<type>(value->Clone()) : nullptr; }
         
     #define GET_SPTR_NULL(type, var) \
     protected: \
         mutable std::shared_ptr<type> _##var = nullptr; \
     public: \
         std::shared_ptr<type> Get##var() const { return _##var; } \
-        void Clone##var(const type *value) const { this->_##var = value != nullptr ? value->Clone() : nullptr; } \
-        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value != nullptr ? value->Clone() : nullptr; }
+        void Clone##var(const type *value) const { this->_##var = value != nullptr ? dynamic_pointer_cast<type>(value->Clone()) : nullptr; } \
+        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value != nullptr ? dynamic_pointer_cast<type>(value->Clone()) : nullptr; }
 
     #define GETSET_SPTR_NULL(type, var) \
     protected: \
@@ -63,8 +63,8 @@ namespace vcc
     public: \
         std::shared_ptr<type> Get##var() const { return _##var; } \
         void Set##var(std::shared_ptr<type> value) const { _##var = value; } \
-        void Clone##var(const type *value) const { this->_##var = value != nullptr ? value->Clone() : nullptr; } \
-        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value != nullptr ? value->Clone() : nullptr; }
+        void Clone##var(const type *value) const { this->_##var = value != nullptr ? dynamic_pointer_cast<type>(value->Clone()) : nullptr; } \
+        void Clone##var(std::shared_ptr<type> value) const { this->_##var = value != nullptr ? dynamic_pointer_cast<type>(value->Clone()) : nullptr; }
         
     // std::vector
     

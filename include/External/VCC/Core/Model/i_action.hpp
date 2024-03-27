@@ -4,8 +4,7 @@
 
 namespace vcc
 {
-    template <typename Derived>
-    class IAction : public IObject<Derived>
+    class IAction : public IObject
     {
     protected:
         IAction() {}

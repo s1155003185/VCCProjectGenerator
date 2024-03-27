@@ -116,7 +116,7 @@ void VPGFileGenerationService::GeneratePropertyClassFile(const LogProperty *logP
             }
             if (isPtrExists) {
                 content += L"\r\n";                
-                content += INDENT + INDENT + L"virtual std::shared_ptr<" + className + L"> Clone() const override {\r\n";
+                content += INDENT + INDENT + L"virtual std::shared_ptr<IObject> Clone() const override {\r\n";
                 content += INDENT + INDENT + INDENT + L"std::shared_ptr<" + className + L"> obj = std::make_shared<" + className + L">(*this);\r\n";
                 for (auto const &property : enumClass->GetProperties()) {
                     // handle enum without macro case

@@ -168,7 +168,7 @@ TEST_F(VPGFileGenerationServiceTest, GenerateProperty)
     expectedObjectClassFileContent += INDENT + INDENT + L"VCCObjectPtr() : BaseObject(ObjectType::ObjectPtr) {}\r\n";
     expectedObjectClassFileContent += INDENT + INDENT + L"virtual ~VCCObjectPtr() {}\r\n";
     expectedObjectClassFileContent += L"\r\n";
-    expectedObjectClassFileContent += INDENT + INDENT + L"virtual std::shared_ptr<VCCObjectPtr> Clone() const override {\r\n";
+    expectedObjectClassFileContent += INDENT + INDENT + L"virtual std::shared_ptr<IObject> Clone() const override {\r\n";
     expectedObjectClassFileContent += INDENT + INDENT + INDENT + L"std::shared_ptr<VCCObjectPtr> obj = std::make_shared<VCCObjectPtr>(*this);\r\n";
     expectedObjectClassFileContent += INDENT + INDENT + INDENT + L"obj->CloneEnumA(this->_EnumA);\r\n";
     expectedObjectClassFileContent += INDENT + INDENT + INDENT + L"obj->CloneEnumB(this->_EnumB);\r\n";

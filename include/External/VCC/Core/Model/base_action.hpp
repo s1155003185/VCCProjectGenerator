@@ -13,12 +13,13 @@
 
 namespace vcc
 {
+    template <typename Derived>
     class BaseAction : public IAction
     {
         GET(ActionType, Type, ActionType::NA)
 
         private:
-            mutable std::shared_mutex _mutex;
+            //mutable std::shared_mutex _mutex;
 
             size_t _SeqNo = 0;
             BaseAction() {}
@@ -47,18 +48,18 @@ namespace vcc
         public:   
             virtual size_t GetSeqNo() override 
             { 
-                std::shared_lock lock(this->_mutex); 
+                //std::shared_lock lock(this->_mutex); 
                 return this->_SeqNo;
             }
             virtual void SetSeqNo(size_t seqNo) override 
             { 
-                std::unique_lock lock(this->_mutex); 
+                //std::unique_lock lock(this->_mutex); 
                 this->_SeqNo = seqNo; 
             }
 
             virtual void Redo() override 
             {
-                std::unique_lock lock(this->_mutex);
+                //std::unique_lock lock(this->_mutex);
 
                 this->_DoRedo();
                 this->_LogRedo();
@@ -66,10 +67,15 @@ namespace vcc
 
             virtual void Undo() override
             {
-                std::unique_lock lock(this->_mutex);
+                //std::unique_lock lock(this->_mutex);
 
                 this->_DoUndo();
                 this->_LogUndo();
+            }
+            
+            virtual std::shared_ptr<IObject> Clone() const override
+            {
+                return std::make_shared<Derived>(static_cast<const Derived&>(*this));
             }
     };
 }
