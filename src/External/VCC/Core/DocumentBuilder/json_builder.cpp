@@ -74,12 +74,12 @@ namespace vcc
                     THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(pos, str[pos], L"Json Object name " + name + L" not followed by :"));
                 GetNextCharPos(str, pos, false);
                 std::wstring value = GetNextString(str, pos, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
-                if (value.ends_with(L",")) {
+                if (value.ends_with(L",") || (!value.starts_with(L"{") && value.ends_with(L"}"))) {
                     value.pop_back();
                     pos--;
                 }
                 
-                // handle array for special handle
+                // special handling for array
                 if (value.starts_with(L"[")) {
                     Trim(value);
                     value = value.substr(1, value.length() - 2);
@@ -90,18 +90,20 @@ namespace vcc
                         std::wstring objStr = GetNextString(value, arrayPos, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
                         
                         DECLARE_SPTR(JsonObject, obj);
-                        Deserialize(str, obj);
+                        Deserialize(objStr, obj);
                         arrayObj->InsertArray(obj);
                         GetNextCharPos(value, arrayPos, false);
                         if (value[arrayPos] != L',')
                             break;
                         GetNextCharPos(value, arrayPos, false);
                     }
+                    doc->SetType(JsonType::Json);
+                    doc->InsertNameValuePairs(name, arrayObj);
                 } else {
                     DECLARE_SPTR(JsonObject, obj);
                     ParseJsonObject(value, obj);
                     doc->SetType(JsonType::Json);
-                    doc->InsertJsonNameValuePairs(name, obj);
+                    doc->InsertNameValuePairs(name, obj);
                 }
 
                 GetNextCharPos(str, pos, false);

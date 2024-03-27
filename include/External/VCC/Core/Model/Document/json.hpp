@@ -28,7 +28,7 @@ namespace vcc
     {
         GETSET(JsonType, Type, JsonType::Null);
         // Json
-        MAP_SPTR_R(std::wstring, JsonObject, JsonNameValuePairs);
+        MAP_SPTR_R(std::wstring, JsonObject, NameValuePairs);
         // Json Object
         GETSET(std::wstring, Value, L"");
         GETSET(size_t, DecimalPlaces, 0);
@@ -41,7 +41,7 @@ namespace vcc
             
             virtual std::shared_ptr<IObject> Clone() const override {
                 std::shared_ptr<JsonObject> obj = std::make_shared<JsonObject>(*this);
-                obj->CloneJsonNameValuePairs(this->GetJsonNameValuePairs());
+                obj->CloneNameValuePairs(this->GetNameValuePairs());
                 obj->CloneArray(this->GetArray());
                 obj->CloneObject(this->GetObject());
                 return obj;
