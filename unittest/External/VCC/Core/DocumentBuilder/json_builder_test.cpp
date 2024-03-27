@@ -12,13 +12,14 @@ using namespace vcc;
 
 TEST(JsonBuilderTest, String)
 {
-    std::wstring str = L"{\"name\":\"John\"}";
+    std::wstring str = L"{ \"name\": \"John\" }";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
     DECLARE_SPTR(JsonObject, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetType(), JsonType::Json);
     EXPECT_EQ(json->GetNameValuePairs()[L"name"]->GetType(), JsonType::String);
     EXPECT_EQ(json->GetNameValuePairs()[L"name"]->GetValue(), L"John");
+    EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 
 TEST(JsonBuilderTest, Number)
@@ -30,6 +31,7 @@ TEST(JsonBuilderTest, Number)
     EXPECT_EQ(json->GetType(), JsonType::Json);
     EXPECT_EQ(json->GetNameValuePairs()[L"age"]->GetType(), JsonType::Number);
     EXPECT_EQ(json->GetNameValuePairs()[L"age"]->GetValue(), L"11");
+    EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 
 TEST(JsonBuilderTest, Object)
@@ -43,6 +45,7 @@ TEST(JsonBuilderTest, Object)
     EXPECT_EQ(json->GetNameValuePairs()[L"Name"]->GetObject()->GetType(), JsonType::Json);
     EXPECT_EQ(json->GetNameValuePairs()[L"Name"]->GetObject()->GetNameValuePairs()[L"firstName"]->GetValue(), L"A");
     EXPECT_EQ(json->GetNameValuePairs()[L"Name"]->GetObject()->GetNameValuePairs()[L"lastName"]->GetValue(), L"B");
+    EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 
 TEST(JsonBuilderTest, Array)
@@ -58,6 +61,7 @@ TEST(JsonBuilderTest, Array)
     EXPECT_EQ(json->GetNameValuePairs()[L"employees"]->GetArray().at(0)->GetNameValuePairs()[L"lastName"]->GetValue(), L"B");
     EXPECT_EQ(json->GetNameValuePairs()[L"employees"]->GetArray().at(1)->GetNameValuePairs()[L"firstName"]->GetValue(), L"C");
     EXPECT_EQ(json->GetNameValuePairs()[L"employees"]->GetArray().at(1)->GetNameValuePairs()[L"lastName"]->GetValue(), L"D");
+    EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 
 TEST(JsonBuilderTest, Null)
@@ -68,6 +72,7 @@ TEST(JsonBuilderTest, Null)
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetType(), JsonType::Json);
     EXPECT_EQ(json->GetNameValuePairs()[L"Name"]->GetType(), JsonType::Null);
+    EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 
 TEST(JsonBuilderTest, Full)
@@ -84,4 +89,5 @@ TEST(JsonBuilderTest, Full)
     EXPECT_EQ(json->GetNameValuePairs()[L"tel"]->GetType(), JsonType::Null);
     EXPECT_EQ(json->GetNameValuePairs()[L"FullName"]->GetType(), JsonType::Object);
     EXPECT_EQ(json->GetNameValuePairs()[L"employees"]->GetType(), JsonType::Array);
+    EXPECT_EQ(builder->Serialize(json.get()), str);
 }
