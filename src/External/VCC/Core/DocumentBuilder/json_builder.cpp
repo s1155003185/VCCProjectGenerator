@@ -131,9 +131,13 @@ namespace vcc
                     arrayObj->SetType(JsonType::Array);
                     while (arrayPos < value.length()) {
                         std::wstring objStr = GetNextString(value, arrayPos, { L',' }, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
-                        
+                        Trim(objStr);
                         DECLARE_SPTR(JsonObject, obj);
-                        Deserialize(objStr, obj);
+                        if (objStr.starts_with(L"{")) {
+                            Deserialize(objStr, obj);
+                        } else {
+                            ParseJsonObject(objStr, obj);
+                        }
                         arrayObj->InsertArray(obj);
                         GetNextCharPos(value, arrayPos, false);
                         if (value[arrayPos] != L',')
