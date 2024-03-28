@@ -57,7 +57,7 @@ namespace vcc
 
     void JsonBuilder::ParseJsonObject(const std::wstring &str, std::shared_ptr<JsonObject> doc)
     {
-        TRY_CATCH(
+        //TRY_CATCH(
             if (str == L"null") {
                 doc->SetType(JsonType::Null);
             } else if (str == L"true" || str == L"false") {
@@ -76,6 +76,23 @@ namespace vcc
                 Deserialize(str, jsonObj);
                 doc->SetType(JsonType::Object);
                 doc->SetObject(jsonObj);
+            } else if (str.starts_with(L"[")) {
+                doc->SetType(JsonType::Array);
+
+                std::wstring content = str.substr(1, str.length() - 2);
+                Trim(content);
+                size_t arrayPos = 0;
+                while (arrayPos < content.length()) {
+                    std::wstring objStr = GetNextString(content, arrayPos, { L"," }, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
+                    Trim(objStr);
+                    DECLARE_SPTR(JsonObject, obj);
+                    ParseJsonObject(objStr, obj);
+                    doc->InsertArray(obj);
+                    GetNextCharPos(content, arrayPos, false);
+                    if (content[arrayPos] != L',')
+                        break;
+                    GetNextCharPos(content, arrayPos, false);
+                }
             } else {
                 std::wstring numStr = str;
                 Trim(numStr);
@@ -90,7 +107,7 @@ namespace vcc
                 doc->SetType(JsonType::Number);
                 doc->SetValue(numStr);
             }
-        )
+        //)
     }
 
     void JsonBuilder::Deserialize(const std::wstring &str, std::shared_ptr<JsonObject> doc)
@@ -103,7 +120,8 @@ namespace vcc
             GetNextCharPos(str, pos, false);
             while (pos < str.length())
             {
-                std::wstring name = GetNextString(str, pos, {L':'}, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
+                // name
+                std::wstring name = GetNextString(str, pos, {L":"}, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
                 Trim(name);
                 if (name.starts_with(L"\"")) {
                     name = GetUnescapeStringWithQuote(EscapeStringType::DoubleQuote, name);
@@ -114,44 +132,19 @@ namespace vcc
                 if (str[pos] != L':')
                     THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(pos, str[pos], L"Json Object name " + name + L" not followed by :"));
                 GetNextCharPos(str, pos, false);
-                std::wstring value = GetNextString(str, pos, { L',', L'}' }, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
+
+                // value
+                std::wstring value = GetNextString(str, pos, { L",", L"}" }, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
                 Trim(value);
                 if (value.ends_with(L",") || (!value.starts_with(L"{") && value.ends_with(L"}"))) {
                     value.pop_back();
                     pos--;
                 }
-                Trim(value);
-                
-                // special handling for array
-                if (value.starts_with(L"[")) {
-                    Trim(value);
-                    value = value.substr(1, value.length() - 2);
-                    size_t arrayPos = 0;
-                    DECLARE_SPTR(JsonObject, arrayObj);
-                    arrayObj->SetType(JsonType::Array);
-                    while (arrayPos < value.length()) {
-                        std::wstring objStr = GetNextString(value, arrayPos, { L',' }, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
-                        Trim(objStr);
-                        DECLARE_SPTR(JsonObject, obj);
-                        if (objStr.starts_with(L"{")) {
-                            Deserialize(objStr, obj);
-                        } else {
-                            ParseJsonObject(objStr, obj);
-                        }
-                        arrayObj->InsertArray(obj);
-                        GetNextCharPos(value, arrayPos, false);
-                        if (value[arrayPos] != L',')
-                            break;
-                        GetNextCharPos(value, arrayPos, false);
-                    }
-                    doc->SetType(JsonType::Json);
-                    doc->InsertNameValuePairs(name, arrayObj);
-                } else {
-                    DECLARE_SPTR(JsonObject, obj);
-                    ParseJsonObject(value, obj);
-                    doc->SetType(JsonType::Json);
-                    doc->InsertNameValuePairs(name, obj);
-                }
+                Trim(value);                
+                DECLARE_SPTR(JsonObject, obj);
+                ParseJsonObject(value, obj);
+                doc->SetType(JsonType::Json);
+                doc->InsertNameValuePairs(name, obj);
 
                 GetNextCharPos(str, pos, false);
                 if (str[pos] != L',')

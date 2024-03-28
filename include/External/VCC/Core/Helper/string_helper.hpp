@@ -27,6 +27,7 @@ namespace vcc
 	bool IsBlank(const std::wstring &str);
 
 	bool HasPrefix(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
+	bool HasPrefix(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &pos = 0);
 	bool HasPrefixTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
 	bool HasSuffix(const std::wstring &str, const std::wstring &suffix);
 
@@ -54,9 +55,9 @@ namespace vcc
 	// search
 	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos = false);
 	// pos Point to end char after execution
-	std::wstring GetNextStringSeperateBySpace(const std::wstring &str, size_t &pos,
+	std::wstring GetNextStringSplitBySpace(const std::wstring &str, size_t &pos,
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
-	std::wstring GetNextString(const std::wstring &str, size_t &pos, const std::vector<wchar_t> &delimiters,
+	std::wstring GetNextString(const std::wstring &str, size_t &pos, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
 	size_t CountSubstr(const std::wstring &str, const std::wstring subStr);
 
