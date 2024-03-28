@@ -59,6 +59,10 @@ namespace vcc
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
 	std::wstring GetNextString(const std::wstring &str, size_t &pos, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
+	std::wstring GetNextQuotedString(const std::wstring& str, size_t &pos, const std::vector<std::wstring> &delimiters,
+		const std::vector<std::wstring> &quoteOpenList = { L"\"", L"'", L"{", L"[" },
+		const std::vector<std::wstring> &quoteCloseList = { L"\"", L"'", L"}", L"]" },
+		const std::vector<std::wstring> &quoteEscapeList = { L"\\", L"\\", L"", L"" });
 	size_t CountSubstr(const std::wstring &str, const std::wstring subStr);
 
 	// process

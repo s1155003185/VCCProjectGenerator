@@ -376,7 +376,81 @@ namespace vcc
         {
             THROW_EXCEPTION(e);
         }
-		return result;		
+		return result;
+	}
+
+	std::wstring GetNextQuotedString(const std::wstring& str, size_t &pos, const std::vector<std::wstring> &delimiters,
+		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
+	{
+		if (str.empty())
+			return str;
+		if (pos >= str.length())
+			return L"";
+		GetNextCharPos(str, pos, true);
+		std::wstring result = L"";
+		try
+		{
+			if (!(quoteOpenList.size() == quoteCloseList.size() && (quoteEscapeList.empty() || quoteCloseList.size() == quoteEscapeList.size())))
+				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Quote Open, Close, Escape List having different size.");
+
+			size_t startPos = pos;
+			if (HasPrefix(str, quoteOpenList, pos)) {
+				std::vector<size_t> quotes;
+				while (pos < str.length()) {
+					// first pos must be open quote
+					// if quotes become empty, that mean all quote closed, then return
+					// 1. if have quotes, check if it is escape chars
+					// 2. if have quotes, check if it is close quote
+					// 3. check if it is open quotes, if yes, then add to quote
+					// Last. None of above, then pos++
+					if (!quotes.empty()) {
+						std::wstring escapeChar = quoteEscapeList[quotes[quotes.size() - 1]];
+						if (!escapeChar.empty() && HasPrefix(str, escapeChar, pos)) {
+							pos += escapeChar.length();
+							pos++; // for escaped char
+							continue;
+						}
+						std::wstring closeQuote = quoteCloseList[quotes[quotes.size() - 1]];
+						if (!closeQuote.empty() && HasPrefix(str, closeQuote, pos)) {
+							pos += closeQuote.length();
+							quotes.pop_back();
+							continue;
+						}
+					}
+					std::wstring currentQuoteOpen = L"";
+					for (size_t i = 0; i < quoteOpenList.size(); i++) {
+						std::wstring quoteOpen = quoteOpenList[i];
+						if (HasPrefix(str, quoteOpen, pos)) {
+							currentQuoteOpen = quoteOpen;
+							quotes.push_back(i);
+							break;
+						}
+					}
+					if (!currentQuoteOpen.empty())
+						pos += currentQuoteOpen.length();
+					else if (quotes.empty())
+						break;
+					else
+						pos++;
+				}
+			} else {
+				// check if string is quoted. If not, return string end with special char
+				while (pos < str.length()) {
+					if (HasPrefix(str, delimiters, pos))
+						break;
+					pos++;
+				}
+			}
+			if (startPos != pos) {
+				result = str.substr(startPos, pos - startPos);
+				pos--;
+			}
+        }
+        catch(const std::exception& e)
+        {
+            THROW_EXCEPTION(e);
+        }
+		return result;
 	}
 	
 	size_t CountSubstr(const std::wstring &str, const std::wstring subStr)
