@@ -32,7 +32,7 @@ namespace vcc
 	bool HasSuffix(const std::wstring &str, const std::wstring &suffix);
 
 	std::vector<std::wstring> SplitString(std::wstring str, const std::vector<std::wstring> &delimiters,
-		const std::vector<std::wstring> &commandOpenList = {}, const std::vector<std::wstring> &commandCloseList = {}, const std::vector<std::wstring> &commandEscapeList = {});
+		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
 	std::vector<std::wstring> SplitStringByLine(const std::wstring &str);
 	std::vector<std::wstring> SplitStringByUpperCase(const std::wstring &str, bool splitDigit, bool splitSpecialChar);
 

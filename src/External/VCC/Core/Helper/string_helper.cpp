@@ -113,7 +113,7 @@ namespace vcc
 	}
 
 	std::vector<std::wstring> SplitString(std::wstring str, const std::vector<std::wstring> &delimiters,
-		const std::vector<std::wstring> &commandOpenList, const std::vector<std::wstring> &commandCloseList, const std::vector<std::wstring> &commandEscapeList)
+		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
 	{
 		std::vector<std::wstring> results;
 		if (str.empty())
@@ -121,59 +121,66 @@ namespace vcc
 
 		try
 		{
-			if (!(commandOpenList.size() == commandCloseList.size() && (commandEscapeList.empty() || commandCloseList.size() == commandEscapeList.size())))
+			if (!(quoteOpenList.size() == quoteCloseList.size() && (quoteEscapeList.empty() || quoteCloseList.size() == quoteEscapeList.size())))
 				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Command Open, Close, Escape List having different size.");
 
+			std::vector<size_t> quotes;
 			size_t pos = 0;
 			std::wstring currentStr = L"";
-			int64_t commandIndex = -1;
 			while (pos < str.length()) {
-				if (commandIndex >= 0) {
-					if (HasPrefix(str, commandCloseList[commandIndex], pos)) {
-						currentStr += commandCloseList[commandIndex];
-						pos += commandCloseList[commandIndex].length();
-						commandIndex = -1;
-					} else if (!commandEscapeList.empty() && !commandEscapeList[commandIndex].empty() && HasPrefix(str, commandEscapeList[commandIndex], pos)) {
-						currentStr += commandEscapeList[commandIndex];
-						pos += commandEscapeList[commandIndex].length();
-						for (size_t i = 0; i < commandCloseList[commandIndex].size(); i++) {
-							if (pos < str.length()) {
-								currentStr += str[pos];
-								pos++;
-							}
-						}
-					} else {
-						currentStr += std::wstring(1, str[pos]);
-						pos++;
-					}
-				} else {
+				if (quotes.empty() && HasPrefix(str, delimiters, pos)) {
+					results.push_back(currentStr);
+					currentStr = L"";
+
 					std::wstring currentDelimiter = L"";
-					for (const std::wstring &delimiter : delimiters) {
+					for (auto const &delimiter : delimiters) {
 						if (HasPrefix(str, delimiter, pos)) {
 							currentDelimiter = delimiter;
 							break;
 						}
 					}
-
-					if (!currentDelimiter.empty()) {
-						results.push_back(currentStr);
-						currentStr = L"";
-						pos += currentDelimiter.length();
-					} else {
-						for (size_t i = 0; i < commandOpenList.size(); i++) {
-							if (HasPrefix(str, commandOpenList[i], pos)) {
-								commandIndex = i;
-								break;
-							}
+					pos += currentDelimiter.length();
+				} else {
+					// 1. if have quotes, check if it is escape chars
+					// 2. if have quotes, check if it is close quote
+					// 3. check if it is open quotes, if yes, then add to quote
+					// Last. None of above, then pos++
+					if (!quotes.empty()) {
+						std::wstring escapeChar = quoteEscapeList[quotes[quotes.size() - 1]];
+						if (!escapeChar.empty() && HasPrefix(str, escapeChar, pos)) {
+							pos += escapeChar.length();
+							currentStr += escapeChar + str[pos];
+							pos++; // for escaped char
+							continue;
 						}
-						currentStr += std::wstring(1, str[pos]);
+						std::wstring closeQuote = quoteCloseList[quotes[quotes.size() - 1]];
+						if (!closeQuote.empty() && HasPrefix(str, closeQuote, pos)) {
+							pos += closeQuote.length();
+							currentStr += escapeChar;
+							quotes.pop_back();
+							continue;
+						}
+					}
+					std::wstring currentQuoteOpen = L"";
+					for (size_t i = 0; i < quoteOpenList.size(); i++) {
+						std::wstring quoteOpen = quoteOpenList[i];
+						if (HasPrefix(str, quoteOpen, pos)) {
+							currentQuoteOpen = quoteOpen;
+							quotes.push_back(i);
+							break;
+						}
+					}
+					if (!currentQuoteOpen.empty()) {
+						pos += currentQuoteOpen.length();
+						currentStr += currentQuoteOpen;
+					} else {
+						currentQuoteOpen += std::wstring(1, str[pos]);
 						pos++;
 					}
 				}
 			}
 			if (!currentStr.empty() || !results.empty())
 				results.push_back(currentStr);
-
         }
         catch(const std::exception& e)
         {
