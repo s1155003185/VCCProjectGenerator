@@ -4,7 +4,6 @@
 #include "log_property.hpp"
 #include "string_helper.hpp"
 
-using namespace std;
 using namespace vcc;
 
 TEST(TerminalServiceTest, Normal)

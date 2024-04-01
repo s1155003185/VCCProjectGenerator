@@ -7,7 +7,6 @@
 #include "file_helper.hpp"
 #include "log_service.hpp"
 
-using namespace std;
 using namespace vcc;
 
 TEST(LogServiceTest, LogTest) 
@@ -15,7 +14,7 @@ TEST(LogServiceTest, LogTest)
     std::wstring filePath = ConcatPaths({std::filesystem::current_path().wstring(), L"bin/Debug/AppLogs/LogServiceTest.log"});
     RemoveFile(filePath);
     
-    shared_ptr<LogProperty> property = make_shared<LogProperty>(LogPropertyType::None);
+    std::shared_ptr<LogProperty> property = std::make_shared<LogProperty>(LogPropertyType::None);
     property->SetUserID(L"user");
     property->SetIsConsoleLog(false);
     property->SetIsLogTerminal(true);

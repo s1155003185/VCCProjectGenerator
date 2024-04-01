@@ -8,18 +8,17 @@
 #include "log_property.hpp"
 #include "vpg_vcc_generation_manager.hpp"
 
-using namespace std;
 using namespace vcc;
 
 class VPGVccGenerationManagerTest : public testing::Test 
 {
     GET_SPTR(LogProperty, LogProperty);
     GET_SPTR(VPGGenerationOption, Option);
-    GET(wstring, Workspace, L"bin/Debug/VPGVccGenerationManagerTest/");
-    GET(wstring, WorkspaceSource, L"");
-    GET(wstring, WorkspaceTarget, L"");
+    GET(std::wstring, Workspace, L"bin/Debug/VPGVccGenerationManagerTest/");
+    GET(std::wstring, WorkspaceSource, L"");
+    GET(std::wstring, WorkspaceTarget, L"");
     
-    GET(wstring, TestFolder, L"../VPGVccGenerationManagerTest_VCCTestProject");
+    GET(std::wstring, TestFolder, L"../VPGVccGenerationManagerTest_VCCTestProject");
     GET(bool, IsCopyDebugFolderToTestFolder, false);
 
     MANAGER(VPGVccGenerationManager, Manager, _LogProperty, _Option);
@@ -31,7 +30,7 @@ class VPGVccGenerationManagerTest : public testing::Test
             this->_WorkspaceTarget = this->_Workspace + L"Target";
 
             this->_LogProperty->SetIsConsoleLog(false);
-            filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
             CreateDirectory(this->GetWorkspace());
             CreateDirectory(this->GetWorkspaceSource());
@@ -72,7 +71,7 @@ class VPGVccGenerationManagerTest : public testing::Test
             // replace main so that the project can be compile
             std::wstring mainFilePath = ConcatPaths({this->GetWorkspaceSource(), L"main.cpp"});
             std::wstring mainFileContent = L"int main() {}";
-            filesystem::remove(PATH(mainFilePath));
+            std::filesystem::remove(PATH(mainFilePath));
             AppendFileOneLine(mainFilePath, mainFileContent);
             
             // option for testing
@@ -88,7 +87,7 @@ class VPGVccGenerationManagerTest : public testing::Test
         void TearDown() override
         {
             // ensure compile main project will not compile this project
-            filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->GetWorkspace()));
         }
 };
 
@@ -114,7 +113,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"VCCComplex"}));
 
     // EXE only
-    filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
+    std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
     this->_Option->SetProjectNameEXE(L"VCCProject");
     this->_Option->SetProjectNameDLL(L"");
     this->_Option->SetProjectName(L"ProjectName");
@@ -133,7 +132,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"VCCEXE"}));
 
     // DLL only
-    filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
+    std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
     this->_Option->SetProjectNameEXE(L"");
     this->_Option->SetProjectNameDLL(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
@@ -153,7 +152,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"VCCDLL"}));
 
     // No unittest
-    filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
+    std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
     this->_Option->SetProjectNameEXE(L"VCCProject");
     this->_Option->SetProjectNameDLL(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
@@ -173,7 +172,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"NoUnittest"}));
 
     // Exclude VCC Unittest
-    filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
+    std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
     this->_Option->SetProjectNameEXE(L"VCCProject");
     this->_Option->SetProjectNameDLL(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
@@ -193,7 +192,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"NoVCCUnittest"}));
 
     // Plugins
-    filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
+    std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
     this->_Option->SetProjectNameEXE(L"VCCProject");
     this->_Option->SetProjectNameDLL(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");

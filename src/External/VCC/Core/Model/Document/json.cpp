@@ -9,16 +9,16 @@
 
 namespace vcc
 {
-    std::shared_ptr<IObject> JsonObject::Clone() const
+    std::shared_ptr<IObject> Json::Clone() const
     {
-        std::shared_ptr<JsonObject> obj = std::make_shared<JsonObject>(*this);
+        std::shared_ptr<Json> obj = std::make_shared<Json>(*this);
         obj->CloneNameValuePairs(this->GetNameValuePairs());
         obj->CloneArray(this->GetArray());
         obj->CloneObject(this->GetObject());
         return obj;
     }
 
-    JsonType JsonObject::GetJsonType(const std::wstring &key)
+    JsonType Json::GetJsonType(const std::wstring &key)
     {
         JsonType result = JsonType::Null;
         TRY_CATCH(
@@ -27,7 +27,7 @@ namespace vcc
         return result;
     }
 
-    std::vector<std::wstring> JsonObject::GetKeys(/*bool isRecursive*/)
+    std::vector<std::wstring> Json::GetKeys(/*bool isRecursive*/)
     {
         std::vector<std::wstring> result;
         TRY_CATCH(
@@ -48,7 +48,7 @@ namespace vcc
         return result;
     }
 
-    bool JsonObject::IsContainKey(const std::wstring &key/*, bool isRecursive*/)
+    bool Json::IsContainKey(const std::wstring &key/*, bool isRecursive*/)
     {
         TRY_CATCH(
             auto keys = GetKeys();//GetKeys(isRecursive);
@@ -57,7 +57,7 @@ namespace vcc
         return false;
     }
 
-    bool JsonObject::IsNull(const std::wstring &key)
+    bool Json::IsNull(const std::wstring &key)
     {
         TRY_CATCH(
             return GetNameValuePairs(key)->GetType() == JsonType::Null;
@@ -65,7 +65,7 @@ namespace vcc
         return false;        
     }
 
-    bool JsonObject::GetBool(const std::wstring &key)
+    bool Json::GetBool(const std::wstring &key)
     {
         TRY_CATCH(
             return GetNameValuePairs(key)->GetValue() == L"true";
@@ -73,7 +73,7 @@ namespace vcc
         return false;
     }
 
-    double JsonObject::GetDouble(const std::wstring &key)
+    double Json::GetDouble(const std::wstring &key)
     {
         TRY_CATCH(
             return std::stod(GetNameValuePairs(key)->GetValue());
@@ -81,7 +81,7 @@ namespace vcc
         return 0.0;        
     }
 
-    size_t JsonObject::GetDecimalPlaces(const wstring &key)
+    size_t Json::GetDecimalPlaces(const std::wstring &key)
     {
         size_t decPt = 0;
         TRY_CATCH(
@@ -93,7 +93,7 @@ namespace vcc
         return decPt;
     }
 
-    int JsonObject::GetInt32(const std::wstring &key)
+    int Json::GetInt32(const std::wstring &key)
     {
         TRY_CATCH(
             return std::stoi(GetNameValuePairs(key)->GetValue());
@@ -101,7 +101,7 @@ namespace vcc
         return 0;
     }
 
-    int64_t JsonObject::GetInt64(const std::wstring &key)
+    int64_t Json::GetInt64(const std::wstring &key)
     {
         TRY_CATCH(
             return std::stoll(GetNameValuePairs(key)->GetValue());
@@ -109,7 +109,7 @@ namespace vcc
         return 0;
     }
 
-    std::wstring JsonObject::GetString(const std::wstring &key)
+    std::wstring Json::GetString(const std::wstring &key)
     {
         TRY_CATCH(
             return GetNameValuePairs(key)->GetValue();
@@ -117,17 +117,17 @@ namespace vcc
         return L"";
     }
 
-    std::vector<std::shared_ptr<JsonObject>> &JsonObject::GetArray(const std::wstring &key)
+    std::vector<std::shared_ptr<Json>> &Json::GetArray(const std::wstring &key)
     {
         TRY_CATCH(
             return GetNameValuePairs(key)->GetArray();
         )
-        static std::vector<std::shared_ptr<JsonObject>> emptyVector;
+        static std::vector<std::shared_ptr<Json>> emptyVector;
         emptyVector.clear();
         return emptyVector;
     }
 
-    std::shared_ptr<JsonObject> JsonObject::GetObject(const std::wstring &key)
+    std::shared_ptr<Json> Json::GetObject(const std::wstring &key)
     {
         TRY_CATCH(
             return GetNameValuePairs(key)->GetObject();

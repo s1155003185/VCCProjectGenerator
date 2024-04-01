@@ -34,7 +34,7 @@ namespace vcc
             std::wstring result = L"";
             // convert to token
             std::vector<std::string> cmdTokens = ProcessService::ParseCMDLinux(command);
-            vector<char *> tokens;
+            std::vector<char *> tokens;
             for (size_t i = 0; i < cmdTokens.size(); i++) {
                 tokens.push_back((char *)(cmdTokens[i].c_str()));
             }
@@ -91,7 +91,7 @@ namespace vcc
             }
             wait(&status);
             if (status != 0)
-                throw runtime_error(error);
+                throw std::runtime_error(error);
             return result;
         }
         #endif
@@ -151,7 +151,7 @@ namespace vcc
             std::wstring result = L"";
             try {
                 result = ProcessService::_Execute(command);
-            } catch (exception &e) {
+            } catch (std::exception &e) {
                 THROW_EXCEPTION(e);
             }
             LogService::LogProcessResult(logProperty, id, result);
@@ -167,7 +167,7 @@ namespace vcc
                 currentDirectory = std::filesystem::current_path().wstring();
                 if (!IsBlank(workspace))
                     std::filesystem::current_path(workspace);
-            } catch (exception &e) {
+            } catch (std::exception &e) {
                 if (!IsBlank(workspace))
                     std::filesystem::current_path(currentDirectory);
                 THROW_EXCEPTION(e);
@@ -175,7 +175,7 @@ namespace vcc
             }
             try {
                 result = ProcessService::Execute(logProperty, id, command);
-            } catch (Exception &e) {
+            } catch (std::exception &e) {
                 if (!IsBlank(workspace))
                     std::filesystem::current_path(currentDirectory);
                 THROW_EXCEPTION(e);
@@ -183,7 +183,7 @@ namespace vcc
             try {
                 if (!IsBlank(workspace))
                     std::filesystem::current_path(currentDirectory);
-            } catch (exception &e) {
+            } catch (std::exception &e) {
                 THROW_EXCEPTION(e);
                 return result;
             }            

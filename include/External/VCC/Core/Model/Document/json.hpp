@@ -18,19 +18,19 @@ namespace vcc
         String
     };
 
-    class JsonObject : public BaseDocument<JsonObject>
+    class Json : public BaseDocument<Json>
     {
         GETSET(JsonType, Type, JsonType::Null);
         // Json
-        ORDERED_MAP_SPTR_R(std::wstring, JsonObject, NameValuePairs);
+        ORDERED_MAP_SPTR_R(std::wstring, Json, NameValuePairs);
         // Json Object
         GETSET(std::wstring, Value, L"");
-        VECTOR_SPTR(JsonObject, Array);
-        GETSET_SPTR_NULL(JsonObject, Object);
+        VECTOR_SPTR(Json, Array);
+        GETSET_SPTR_NULL(Json, Object);
 
         public:
-            JsonObject() : BaseDocument() {}
-            virtual ~JsonObject() {}
+            Json() : BaseDocument() {}
+            virtual ~Json() {}
             
             virtual std::shared_ptr<IObject> Clone() const override;
 
@@ -41,12 +41,12 @@ namespace vcc
             bool IsNull(const std::wstring &key);
             bool GetBool(const std::wstring &key);
             double GetDouble(const std::wstring &key);
-            size_t GetDecimalPlaces(const wstring &key);
+            size_t GetDecimalPlaces(const std::wstring &key);
             int GetInt32(const std::wstring &key);
             int64_t GetInt64(const std::wstring &key);
             std::wstring GetString(const std::wstring &key);
 
-            std::vector<std::shared_ptr<JsonObject>> &GetArray(const std::wstring &key);
-            std::shared_ptr<JsonObject> GetObject(const std::wstring &key);
+            std::vector<std::shared_ptr<Json>> &GetArray(const std::wstring &key);
+            std::shared_ptr<Json> GetObject(const std::wstring &key);
     };
 }

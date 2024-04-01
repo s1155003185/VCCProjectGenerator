@@ -6,7 +6,6 @@
 
 #include "string_helper.hpp"
 
-using namespace std;
 using namespace vcc;
 
 /* ---------------------------------------------------------------------------------------------------- */

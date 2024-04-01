@@ -7,7 +7,6 @@
 #include "base_action.hpp"
 #include "action_manager.hpp"
 
-using namespace std;
 using namespace vcc;
 
 class ActionManagerTestClass final : public BaseAction<ActionManagerTestClass>
@@ -44,7 +43,7 @@ class ActionManagerTest : public testing::Test
     
         std::shared_ptr<IAction> CreateAction(int index)
         {
-            return make_shared<ActionManagerTestClass>(index);
+            return std::make_shared<ActionManagerTestClass>(index);
         }
 
         void ResetWithFiveActions()

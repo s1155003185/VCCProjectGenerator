@@ -10,18 +10,17 @@
 
 #include "vpg_cpp_generation_manager.hpp"
 
-using namespace std;
 using namespace vcc;
 
 class VPGCppGenerationManagerTest : public testing::Test 
 {
     GET_SPTR(LogProperty, LogProperty);
     GET_SPTR(VPGGenerationOption, Option);
-    GET(wstring, Workspace, L"bin/Debug/VPGCppGenerationManagerTest/");
-    GET(wstring, WorkspaceSource, L"");
-    GET(wstring, WorkspaceTarget, L"");
+    GET(std::wstring, Workspace, L"bin/Debug/VPGCppGenerationManagerTest/");
+    GET(std::wstring, WorkspaceSource, L"");
+    GET(std::wstring, WorkspaceTarget, L"");
 
-    GET(wstring, TestFolder, L"../VPGVccGenerationManagerTest_CPPTestProject");
+    GET(std::wstring, TestFolder, L"../VPGVccGenerationManagerTest_CPPTestProject");
     GET(bool, IsCopyDebugFolderToTestFolder, false);
 
     MANAGER(VPGCppGenerationManager, Manager, _LogProperty, _Option);
@@ -33,9 +32,9 @@ class VPGCppGenerationManagerTest : public testing::Test
             this->_WorkspaceTarget = this->_Workspace + L"Target";
 
             this->_LogProperty->SetIsConsoleLog(false);
-            filesystem::remove_all(PATH(this->GetWorkspace()));
-            filesystem::remove_all(PATH(this->GetWorkspaceSource()));
-            filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
+            std::filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->GetWorkspaceSource()));
+            std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
 
             CreateDirectory(this->GetWorkspace());
             CreateDirectory(this->GetWorkspaceSource());
@@ -53,7 +52,7 @@ class VPGCppGenerationManagerTest : public testing::Test
             // replace main so that the project can be compile
             std::wstring mainFilePath = ConcatPaths({this->GetWorkspaceSource(), L"main.cpp"});
             std::wstring mainFileContent = L"int main() {}";
-            filesystem::remove(PATH(mainFilePath));
+            std::filesystem::remove(PATH(mainFilePath));
             AppendFileOneLine(mainFilePath, mainFileContent);
 
             // option for testing
@@ -67,7 +66,7 @@ class VPGCppGenerationManagerTest : public testing::Test
 
         void TearDown() override
         {
-            filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->GetWorkspace()));
         }
 };
 
@@ -77,7 +76,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     // Command make process as Window version will hang
     
     // Complex
-    filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
+    std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
     this->_Option->SetProjectNameEXE(L"CPPProject");
     this->_Option->SetProjectNameDLL(L"CPPDllProject");
     this->_Option->SetProjectName(L"ProjectName");
@@ -101,7 +100,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"CPPComplex"}));
 
     // EXE only
-    filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
+    std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
     this->_Option->SetProjectNameEXE(L"CPPProject");
     this->_Option->SetProjectNameDLL(L"");
     this->_Option->SetProjectName(L"ProjectName");
@@ -124,7 +123,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"CPPEXE"}));
         
     // DLL only
-    filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
+    std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
     this->_Option->SetProjectNameEXE(L"");
     this->_Option->SetProjectNameDLL(L"CPPDllProject");
     this->_Option->SetProjectName(L"ProjectName");
@@ -147,7 +146,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
         CopyDirectory(this->GetWorkspaceTarget(), ConcatPaths({this->GetTestFolder(), L"CPPDLL"}));
 
     // No unittest
-    filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
+    std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
     this->_Option->SetProjectNameEXE(L"CPPProject");
     this->_Option->SetProjectNameDLL(L"CPPDllProject");
     this->_Option->SetProjectName(L"ProjectName");

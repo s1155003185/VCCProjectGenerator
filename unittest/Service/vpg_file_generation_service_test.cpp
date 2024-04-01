@@ -10,14 +10,12 @@
 #include "vpg_file_generation_service.hpp"
 #include "string_helper.hpp"
 
-using namespace std;
-
 class VPGFileGenerationServiceTest : public testing::Test 
 {
     GET_SPTR(LogProperty, LogProperty, LogPropertyType::None);
-    GET(wstring, Workspace, L"bin/Debug/FileGenerationServiceTest");
-    GET(wstring, WorkspaceSource, L"");
-    GET(wstring, WorkspaceTarget, L"");
+    GET(std::wstring, Workspace, L"bin/Debug/FileGenerationServiceTest");
+    GET(std::wstring, WorkspaceSource, L"");
+    GET(std::wstring, WorkspaceTarget, L"");
     
     private:
         void CreateFolderInSourceWorkspace(std::wstring folder)
@@ -53,7 +51,7 @@ class VPGFileGenerationServiceTest : public testing::Test
             this->_WorkspaceSource = ConcatPaths({this->_Workspace, L"Source"});
             this->_WorkspaceTarget = ConcatPaths({this->_Workspace, L"Target"});
 
-            filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
             std::wstring code =  L"";
             code += L"#pragma once\r\n";
@@ -79,7 +77,7 @@ class VPGFileGenerationServiceTest : public testing::Test
 
         void TearDown() override
         {
-            filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->GetWorkspace()));
         }
 
         bool CheckFolderExists(std::wstring path)

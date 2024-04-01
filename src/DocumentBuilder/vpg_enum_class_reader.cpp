@@ -16,7 +16,7 @@ VPGEnumClassReader::VPGEnumClassReader(const std::set<std::wstring> &classMacroL
 
 std::wstring VPGEnumClassReader::_GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg)
 {
-    return L"Error at position " + std::to_wstring(pos + 1) + L" with char '" + wstring(1, c) + L"': " + msg;
+    return L"Error at position " + std::to_wstring(pos + 1) + L" with char '" + std::wstring(1, c) + L"': " + msg;
 }
 
 std::wstring VPGEnumClassReader::_GetEnum(const std::wstring &propertyStr, size_t &pos)
@@ -162,7 +162,7 @@ std::wstring VPGEnumClassReader::_GetCommand(const std::wstring &cppCode, size_t
             pos++;
             pos++;
             size_t endPos = cppCode.find_first_of(L"\n", pos);
-            if (endPos == string::npos)
+            if (endPos == std::wstring::npos)
                 endPos = cppCode.length() - 1;
             result = cppCode.substr(pos, endPos - pos - 1);
             pos = endPos;
@@ -170,7 +170,7 @@ std::wstring VPGEnumClassReader::_GetCommand(const std::wstring &cppCode, size_t
             pos++;
             pos++;
             size_t endPos = cppCode.find_first_of(L"*/", pos);
-            if (endPos == string::npos)
+            if (endPos == std::wstring::npos)
                 endPos = cppCode.length() - 1;
             result = cppCode.substr(pos, endPos - pos);
             pos = endPos + 1;

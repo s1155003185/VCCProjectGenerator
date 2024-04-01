@@ -5,7 +5,10 @@
 
 #include "base_manager.hpp"
 #include "base_object.hpp"
+#include "base_json_object.hpp"
 #include "class_macro.hpp"
+#include "i_document.hpp"
+#include "i_document_builder.hpp"
 #include "log_property.hpp"
 
 #include "vpg_project_type.hpp"
@@ -14,12 +17,16 @@ using namespace vcc;
 
 const std::wstring MakeFileName = L"Makefile";
 
-class VPGGenerationOption : public BaseObject<VPGGenerationOption>
+class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJsonObject
 {
+    // Generation Use
     GETSET(VPGProjectType, ProjectType, VPGProjectType::NA);
     GETSET(std::wstring, WorkspaceSource, L"");
     GETSET(std::wstring, WorkspaceDestination, L"");
 
+    // --------------------------------------------------
+    // Config
+    // --------------------------------------------------
     GETSET(std::wstring, Version, L"0.0.1");
     GETSET(bool, IsGit, false);
     
@@ -50,6 +57,9 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>
     public:;
         VPGGenerationOption() = default;
         virtual ~VPGGenerationOption() {}
+
+        virtual std::wstring SerializeJson(const IDocumentBuilder *builder) override;
+        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
 };
 
 class VPGBaseGenerationManager : public BaseManager<VPGBaseGenerationManager>

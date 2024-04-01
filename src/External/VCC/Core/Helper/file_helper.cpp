@@ -18,8 +18,6 @@
 #include "file_helper_linux.hpp"
 #endif
 
-using namespace std;
-
 namespace vcc
 {
 	std::wstring GetSystemFolderPath(SystemFolderType fileType)
@@ -222,8 +220,8 @@ namespace vcc
             if (isForce)
                 CreateDirectory(PATH(destFilePath).parent_path().wstring());
             if (isForce && IsFileExists(destFilePath))
-                filesystem::remove(destFilePath);
-            filesystem::copy(PATH(srcFilePath), PATH(destFilePath));
+                std::filesystem::remove(destFilePath);
+            std::filesystem::copy(PATH(srcFilePath), PATH(destFilePath));
         )
     }
 
@@ -257,7 +255,7 @@ namespace vcc
                 } else {
                     if (IsFileExists(destAbsolutePath)) {
                         if (isForce)
-                            filesystem::remove(destAbsolutePath);
+                            std::filesystem::remove(destAbsolutePath);
                         else
                             THROW_EXCEPTION_MSG(ExceptionType::FileAlreadyExist, L"File " + destAbsolutePath + L" already exists.");
                     }
@@ -279,7 +277,7 @@ namespace vcc
         {
             PATH currentPath(path);
             CreateDirectory(currentPath.parent_path().wstring());
-            filesystem::create_directories(path);
+            std::filesystem::create_directories(path);
         }
         catch(const std::exception& e)
         {
@@ -297,7 +295,7 @@ namespace vcc
                 return;
                 
             PATH currentPath(filePath);
-            filesystem::remove(filePath);
+            std::filesystem::remove(filePath);
         }
         catch(const std::exception& e)
         {
@@ -311,7 +309,7 @@ namespace vcc
         try {
             ValidateFile(filePath);
 
-            std::wifstream fileStream(filePath.c_str(), ios_base::binary);
+            std::wifstream fileStream(filePath.c_str(), std::ios_base::binary);
             if (!fileStream)
                 THROW_EXCEPTION_MSG(ExceptionType::FileCannotOpen, L"Cannot Open File " + filePath);
             
@@ -330,7 +328,7 @@ namespace vcc
         try {
             ValidateFile(filePath);
 
-            std::wifstream fileStream(filePath.c_str(), ios_base::in);
+            std::wifstream fileStream(filePath.c_str(), std::ios_base::in);
             std::wstring line;
             while (std::getline(fileStream, line)) {
                 action(line);
@@ -346,7 +344,7 @@ namespace vcc
         try {
             ValidateFile(filePath);
 
-            std::wifstream fileStream(filePath.c_str(), ios_base::in);
+            std::wifstream fileStream(filePath.c_str(), std::ios_base::in);
             std::wstring line, result;
             int cnt = 0;
             while (std::getline(fileStream, line))
@@ -408,7 +406,7 @@ namespace vcc
                 else if (!std::filesystem::create_directories(dir))
                     THROW_EXCEPTION_MSG(ExceptionType::DirectoryCannotCreate, dir.wstring() + L"Directory not found.");
             }
-            std::wofstream fileStream(_filePath, ios_base::app);
+            std::wofstream fileStream(_filePath, std::ios_base::app);
             #ifdef __WIN32
             fileStream << line + L"\n";
             #else

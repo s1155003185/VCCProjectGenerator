@@ -14,7 +14,7 @@ TEST(JsonBuilderTest, String)
 {
     std::wstring str = L"{\"name\":\"John\"}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    DECLARE_SPTR(JsonObject, json);
+    DECLARE_SPTR(Json, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetType(), JsonType::Json);
     EXPECT_EQ(json->GetNameValuePairs(L"name")->GetType(), JsonType::String);
@@ -26,7 +26,7 @@ TEST(JsonBuilderTest, Boolean)
 {
     std::wstring str = L"{\"answer\":true}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    DECLARE_SPTR(JsonObject, json);
+    DECLARE_SPTR(Json, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetType(), JsonType::Json);
     EXPECT_EQ(json->GetNameValuePairs(L"answer")->GetType(), JsonType::Boolean);
@@ -38,7 +38,7 @@ TEST(JsonBuilderTest, Number)
 {
     std::wstring str = L"{\"age\":11}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    DECLARE_SPTR(JsonObject, json);
+    DECLARE_SPTR(Json, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetType(), JsonType::Json);
     EXPECT_EQ(json->GetNameValuePairs(L"age")->GetType(), JsonType::Number);
@@ -50,7 +50,7 @@ TEST(JsonBuilderTest, Object)
 {
     std::wstring str = L"{\"Name\":{\"firstName\":\"A\",\"lastName\":\"B\"}}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    DECLARE_SPTR(JsonObject, json);
+    DECLARE_SPTR(Json, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetType(), JsonType::Json);
     EXPECT_EQ(json->GetNameValuePairs(L"Name")->GetType(), JsonType::Object);
@@ -64,7 +64,7 @@ TEST(JsonBuilderTest, Array)
 {
     std::wstring str = L"{\"employees\":[1,true,null,\"Str\\\"ing\",[1,2],{\"firstName\":\"A\",\"lastName\":\"B\"}]}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    DECLARE_SPTR(JsonObject, json);
+    DECLARE_SPTR(Json, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetType(), JsonType::Json);
     EXPECT_EQ(json->GetNameValuePairs(L"employees")->GetType(), JsonType::Array);
@@ -87,7 +87,7 @@ TEST(JsonBuilderTest, Null)
 {
     std::wstring str = L"{\"Name\":null}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    DECLARE_SPTR(JsonObject, json);
+    DECLARE_SPTR(Json, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetType(), JsonType::Json);
     EXPECT_EQ(json->GetNameValuePairs(L"Name")->GetType(), JsonType::Null);
@@ -98,7 +98,7 @@ TEST(JsonBuilderTest, Full)
 {
     std::wstring str = L"{\"name\":\"John\",\"age\":11,\"tel\":null,\"FullName\":{\"firstName\":\"A\",\"lastName\":\"B\"},\"employees\":[{\"firstName\":\"A\",\"lastName\":\"B\"},{\"firstName\":\"C\",\"lastName\":\"D\"}]}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    DECLARE_SPTR(JsonObject, json);
+    DECLARE_SPTR(Json, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetType(), JsonType::Json);
     EXPECT_EQ(json->GetNameValuePairs(L"name")->GetType(), JsonType::String);

@@ -539,7 +539,7 @@ namespace vcc
 	{
         try 
         {
-			vector<wchar_t> specialChars = GetSpecialCharacters(type);
+			std::vector<wchar_t> specialChars = GetSpecialCharacters(type);
 			if (!std::count(specialChars.begin(), specialChars.end(), c))
 				return std::wstring(1, c);
 	

@@ -28,7 +28,7 @@ namespace vcc
             currentDirectory = std::filesystem::current_path().wstring();
             if (!IsBlank(workspace))
                 std::filesystem::current_path(workspace);
-        } catch (exception &e) {
+        } catch (std::exception &e) {
             if (!IsBlank(workspace))
                 std::filesystem::current_path(currentDirectory);
             THROW_EXCEPTION(e);
@@ -57,7 +57,7 @@ namespace vcc
             catch(const std::exception& e) {
                 pclose(p);
             }
-        } catch (exception &e) {
+        } catch (std::exception &e) {
             if (!IsBlank(workspace))
                 std::filesystem::current_path(currentDirectory);
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, str2wstr(e.what()));
@@ -66,7 +66,7 @@ namespace vcc
         try {
             if (!IsBlank(workspace))
                 std::filesystem::current_path(currentDirectory);
-        } catch (exception &e) {
+        } catch (std::exception &e) {
             THROW_EXCEPTION(e);
             return result;
         }

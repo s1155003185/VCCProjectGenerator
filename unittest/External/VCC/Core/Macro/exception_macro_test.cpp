@@ -11,7 +11,6 @@
 #include "log_property.hpp"
 #include "string_helper.hpp"
 
-using namespace std;
 using namespace vcc;
 
 TEST(ExceptionMacroTest, General)
@@ -21,14 +20,14 @@ TEST(ExceptionMacroTest, General)
     {
         throw Exception(ExceptionType::FileNotFound, L"FILE_NOT_FOUND");
     } 
-    catch (exception &ex) 
+    catch (std::exception &ex) 
     {
         throwException = true;
 
         IException *iex = dynamic_cast<IException *>(&ex);
         EXPECT_TRUE(iex != nullptr);
         EXPECT_EQ(iex->GetErrorMessage(), L"FILE_NOT_FOUND");
-        string whatStr(iex->what());
+        std::string whatStr(iex->what());
         EXPECT_EQ(whatStr, "FILE_NOT_FOUND");
     }
     EXPECT_TRUE(throwException);
@@ -41,7 +40,7 @@ TEST(ExceptionMacroTest, Full)
     {
         THROW_EXCEPTION_MSG(ExceptionType::FileNotFound, L"FILE_NOT_FOUND");
     }
-    catch(exception &ex)
+    catch(std::exception &ex)
     {
         throwException = true;
     }

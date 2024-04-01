@@ -12,15 +12,14 @@
 #include "vpg_project_type.hpp"
 #include "vpg_cpp_generation_manager.hpp"
 
-using namespace std;
 using namespace vcc;
 
 class VPGBaseGenerationManagerTest : public testing::Test 
 {
     GET_SPTR(LogProperty, LogProperty);
-    GET(wstring, Workspace, L"bin/Debug/VPGBaseGenerationManagerTest/");
-    GET(wstring, WorkspaceSource, L"");
-    GET(wstring, WorkspaceTarget, L"");
+    GET(std::wstring, Workspace, L"bin/Debug/VPGBaseGenerationManagerTest/");
+    GET(std::wstring, WorkspaceSource, L"");
+    GET(std::wstring, WorkspaceTarget, L"");
     
     GET_SPTR(VPGGenerationOption, Option)
     MANAGER(VPGBaseGenerationManager, Manager, _LogProperty, _Option);
@@ -59,7 +58,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
             this->_LogProperty->SetIsConsoleLog(false);
             this->_WorkspaceSource = this->_Workspace + L"Source";
             this->_WorkspaceTarget = this->_Workspace + L"Target";
-            filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
             _Option->SetWorkspaceSource(L"A");
             _Option->SetWorkspaceDestination(L"B");
@@ -80,7 +79,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
 
         void TearDown() override
         {
-            filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->GetWorkspace()));
         }
 
         std::wstring GetResultStr(const VPGGenerationOption *_Option) {

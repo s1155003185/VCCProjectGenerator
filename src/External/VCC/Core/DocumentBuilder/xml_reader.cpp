@@ -14,7 +14,7 @@ namespace vcc
     
     std::wstring XMLReader::_GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg)
     {
-        return L"Error at position " + std::to_wstring(pos + 1) + L" with char '" + wstring(1, c) + L"': " + msg;
+        return L"Error at position " + std::to_wstring(pos + 1) + L" with char '" + std::wstring(1, c) + L"': " + msg;
     }
 
     std::wstring XMLReader::_GetString(const std::wstring &xmlData, size_t &pos)

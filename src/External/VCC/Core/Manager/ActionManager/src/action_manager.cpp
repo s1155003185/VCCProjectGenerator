@@ -46,13 +46,13 @@ namespace vcc
                 this->_Actions.erase(fromBeginning ? this->_Actions.begin()->first : this->_Actions.rbegin()->first);
         }
 
-        this->_CurrentSeqNo = this->_Actions.size() > 0 ? min(this->_CurrentSeqNo, this->_GetFirstSeqNo(false)) : -1;
+        this->_CurrentSeqNo = this->_Actions.size() > 0 ? std::min(this->_CurrentSeqNo, this->_GetFirstSeqNo(false)) : -1;
         return this->_CurrentSeqNo;
     }
 
     int64_t ActionManager::_ChopActionListToSize(int64_t size, bool fromBeginning)
     {
-        int64_t needToRemove = max(static_cast<int64_t>(this->_Actions.size()) - size, static_cast<int64_t>(0));
+        int64_t needToRemove = std::max(static_cast<int64_t>(this->_Actions.size()) - size, static_cast<int64_t>(0));
         return this->_RemoveAction(needToRemove, fromBeginning);
     }
 

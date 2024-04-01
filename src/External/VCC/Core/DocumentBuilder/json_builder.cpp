@@ -19,7 +19,7 @@ namespace vcc
     {
         std::wstring result = L"";
         TRY_CATCH(
-            JsonObject *jsonObj = dynamic_cast<JsonObject *>(const_cast<IDocument *>(doc));
+            Json *jsonObj = dynamic_cast<Json *>(const_cast<IDocument *>(doc));
             assert(jsonObj != nullptr);
             switch (jsonObj->GetType())
             {
@@ -68,10 +68,10 @@ namespace vcc
 
     std::wstring JsonBuilder::GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg)
     {
-        return L"Error at position " + std::to_wstring(pos + 1) + L" with char '" + wstring(1, c) + L"': " + msg;
+        return L"Error at position " + std::to_wstring(pos + 1) + L" with char '" + std::wstring(1, c) + L"': " + msg;
     }
 
-    void JsonBuilder::ParseJsonObject(const std::wstring &str, size_t &pos, std::shared_ptr<JsonObject> doc)
+    void JsonBuilder::ParseJsonObject(const std::wstring &str, size_t &pos, std::shared_ptr<Json> doc)
     {
         TRY_CATCH(
             GetNextCharPos(str, pos, true);
@@ -97,7 +97,7 @@ namespace vcc
                 doc->SetType(JsonType::String);
                 doc->SetValue(value);
             } else if (str[pos] == L'{') {
-                DECLARE_SPTR(JsonObject, jsonObj);
+                DECLARE_SPTR(Json, jsonObj);
                 Deserialize(str, pos, jsonObj);
                 doc->SetType(JsonType::Object);
                 doc->SetObject(jsonObj);
@@ -105,7 +105,7 @@ namespace vcc
                 doc->SetType(JsonType::Array);
                 GetNextCharPos(str, pos, false);
                 while (pos < str.length()) {
-                    DECLARE_SPTR(JsonObject, obj);
+                    DECLARE_SPTR(Json, obj);
                     ParseJsonObject(str, pos, obj);
                     doc->InsertArray(obj);
                     GetNextCharPos(str, pos, false);
@@ -137,7 +137,7 @@ namespace vcc
     void JsonBuilder::Deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc)
     {
         TRY_CATCH(
-            std::shared_ptr<JsonObject> jsonObj = dynamic_pointer_cast<JsonObject>(doc);
+            std::shared_ptr<Json> jsonObj = dynamic_pointer_cast<Json>(doc);
             assert(jsonObj != nullptr);
             GetNextCharPos(str, pos, true);
             if (str[pos] != L'{')
@@ -159,7 +159,7 @@ namespace vcc
                 GetNextCharPos(str, pos, false);
 
                 // value
-                DECLARE_SPTR(JsonObject, obj);
+                DECLARE_SPTR(Json, obj);
                 ParseJsonObject(str, pos, obj);
                 jsonObj->SetType(JsonType::Json);
                 jsonObj->InsertNameValuePairs(name, obj);

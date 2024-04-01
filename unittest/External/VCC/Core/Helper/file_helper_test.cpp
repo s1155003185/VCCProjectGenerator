@@ -9,20 +9,19 @@
 #include "file_helper.hpp"
 #include "log_property.hpp"
 
-using namespace std;
 using namespace vcc;
 
 class FileHelperTest : public testing::Test 
 {
     GET_SPTR(LogProperty, LogProperty);
-    GET(wstring, Workspace, L"bin/Debug/FileHelperTest/");
-    GET(wstring, WorkspaceSource, L"");
-    GET(wstring, WorkspaceTarget, L"");
+    GET(std::wstring, Workspace, L"bin/Debug/FileHelperTest/");
+    GET(std::wstring, WorkspaceSource, L"");
+    GET(std::wstring, WorkspaceTarget, L"");
 
-    GET(wstring, FilePathSourceA, L"");
-    GET(wstring, FilePathTargetB, L"");
-    GET(wstring, FilePathSourceC, L"");
-    GET(wstring, FilePathTargetC, L"");
+    GET(std::wstring, FilePathSourceA, L"");
+    GET(std::wstring, FilePathTargetB, L"");
+    GET(std::wstring, FilePathSourceC, L"");
+    GET(std::wstring, FilePathTargetC, L"");
 
 
     public:
@@ -38,7 +37,7 @@ class FileHelperTest : public testing::Test
             this->_FilePathSourceC = ConcatPaths({this->_WorkspaceSource, L"FileC.txt"});
             this->_FilePathTargetC = ConcatPaths({this->_WorkspaceTarget, L"FileC.txt"});
             
-            filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->GetWorkspace()));
             CreateDirectory(this->GetWorkspace());
             CreateDirectory(this->GetWorkspaceSource());
             CreateDirectory(this->GetWorkspaceTarget());
@@ -55,7 +54,7 @@ class FileHelperTest : public testing::Test
 
         void TearDown() override
         {
-            filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->GetWorkspace()));
         }
 
         bool CheckFolderExists(std::wstring path)
@@ -100,7 +99,7 @@ TEST_F(FileHelperTest, GetRegexFromFileFilter)
 
 TEST_F(FileHelperTest, CopyDirectoryWithoutFilter)
 {
-    filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
+    std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
     CreateDirectory(this->GetWorkspaceTarget());
     AppendFileOneLine(ConcatPaths({this->GetWorkspaceSource(), L"FolderA", L"FileA.txt"}), L"File A", true);
     CopyDirectoryOption option;
@@ -113,7 +112,7 @@ TEST_F(FileHelperTest, CopyDirectoryWithoutFilter)
 
 TEST_F(FileHelperTest, CopyDirectoryWithIncludeFilter)
 {
-    filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
+    std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
     CreateDirectory(this->GetWorkspaceTarget());
     AppendFileOneLine(ConcatPaths({this->GetWorkspaceSource(), L"FolderA", L"FileA.txt"}), L"File A", true);
     CopyDirectoryOption option;
@@ -127,7 +126,7 @@ TEST_F(FileHelperTest, CopyDirectoryWithIncludeFilter)
 
 TEST_F(FileHelperTest, CopyDirectoryWithExcludeFilter)
 {
-    filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
+    std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
     CreateDirectory(this->GetWorkspaceTarget());
     AppendFileOneLine(ConcatPaths({this->GetWorkspaceSource(), L"FolderA", L"FileA.txt"}), L"File A", true);
     CopyDirectoryOption option;

@@ -8,7 +8,6 @@
 #include "class_macro.hpp"
 #include "object_type.hpp"
 
-using namespace std;
 using namespace vcc;
 
 class ClassMacroTestClassElement : public BaseObject<ClassMacroTestClassElement>
@@ -27,7 +26,7 @@ class ClassMacroTestClass : public BaseObject<ClassMacroTestClass>
     SET(int, Set)
     SET_SPTR(ClassMacroTestClassElement, SetSPTR)
     MAP(int, std::wstring, Map)
-    MAP(string, vector<std::shared_ptr<ClassMacroTestClassElement>>, MapVector)
+    MAP(std::string, std::vector<std::shared_ptr<ClassMacroTestClassElement>>, MapVector)
     MAP_SPTR_R(std::wstring, ClassMacroTestClassElement, MapSPTR)
     ORDERED_MAP(int, std::wstring, OrderedMap)
     ORDERED_MAP_SPTR_R(std::wstring, ClassMacroTestClassElement, OrderedMapSPTR)
@@ -38,7 +37,7 @@ class ClassMacroTestClass : public BaseObject<ClassMacroTestClass>
         virtual ~ClassMacroTestClass() {}
         
         virtual std::shared_ptr<IObject> Clone() const override {
-            std::shared_ptr<ClassMacroTestClass> obj = make_shared<ClassMacroTestClass>(*this);
+            std::shared_ptr<ClassMacroTestClass> obj = std::make_shared<ClassMacroTestClass>(*this);
             obj->CloneVector(this->GetVector());
             obj->CloneVectorSPTR(this->GetVectorSPTR());
             obj->CloneSet(this->GetSet());
@@ -55,30 +54,30 @@ class ClassMacroTestClass : public BaseObject<ClassMacroTestClass>
 TEST(ClassMacroTest, CloneSingle)
 {
     int i = 10;
-    unique_ptr<ClassMacroTestClassElement> testClass = make_unique<ClassMacroTestClassElement>(i);
-    shared_ptr<ClassMacroTestClassElement> cloneClass = dynamic_pointer_cast<ClassMacroTestClassElement>(testClass->Clone());
+    std::unique_ptr<ClassMacroTestClassElement> testClass = std::make_unique<ClassMacroTestClassElement>(i);
+    std::shared_ptr<ClassMacroTestClassElement> cloneClass = dynamic_pointer_cast<ClassMacroTestClassElement>(testClass->Clone());
     EXPECT_EQ(cloneClass->GetIndex(), i);
 }
 
 TEST(ClassMacroTest, Clone) 
 {
-    unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
+    std::unique_ptr<ClassMacroTestClass> testClass = std::make_unique<ClassMacroTestClass>();
     testClass->SetNumber(1);
 
-    shared_ptr<ClassMacroTestClass> cloneClass = dynamic_pointer_cast<ClassMacroTestClass>(testClass->Clone());
+    std::shared_ptr<ClassMacroTestClass> cloneClass = dynamic_pointer_cast<ClassMacroTestClass>(testClass->Clone());
     EXPECT_EQ(testClass->GetNumber(), cloneClass->GetNumber());
 }
 
 TEST(ClassMacroTest, GETSET) 
 {
-    unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
+    std::unique_ptr<ClassMacroTestClass> testClass = std::make_unique<ClassMacroTestClass>();
     testClass->SetNumber(1);
     EXPECT_EQ(testClass->GetNumber(), 1);
 }
 
 TEST(ClassMacroTest, Vector) 
 {
-    unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
+    std::unique_ptr<ClassMacroTestClass> testClass = std::make_unique<ClassMacroTestClass>();
     testClass->InsertVector(1);
     testClass->InsertVector(2);
     testClass->InsertVector(3);
@@ -91,7 +90,7 @@ TEST(ClassMacroTest, Vector)
     EXPECT_EQ(testClass->GetVector().at(2), 4);
     EXPECT_EQ(testClass->GetVector().at(3), 3);
 
-    vector<int> insertVector { 10, 11, 12 };
+    std::vector<int> insertVector { 10, 11, 12 };
     testClass->InsertVector(0, insertVector);
     EXPECT_TRUE(testClass->GetVector().size() == 7);
     EXPECT_EQ(testClass->GetVector().at(0), 10);
@@ -115,19 +114,19 @@ TEST(ClassMacroTest, Vector)
     EXPECT_TRUE(testClass->GetVector().size() == 0);
 
     // Object
-    testClass->InsertVectorSPTR(make_shared<ClassMacroTestClassElement>(1));
-    testClass->InsertVectorSPTR(make_shared<ClassMacroTestClassElement>(2));
-    testClass->InsertVectorSPTR(make_shared<ClassMacroTestClassElement>(3));
+    testClass->InsertVectorSPTR(std::make_shared<ClassMacroTestClassElement>(1));
+    testClass->InsertVectorSPTR(std::make_shared<ClassMacroTestClassElement>(2));
+    testClass->InsertVectorSPTR(std::make_shared<ClassMacroTestClassElement>(3));
     EXPECT_TRUE(testClass->GetVectorSPTR().size() == 3);
 
-    testClass->InsertVectorSPTR(2, make_shared<ClassMacroTestClassElement>(4));
+    testClass->InsertVectorSPTR(2, std::make_shared<ClassMacroTestClassElement>(4));
     EXPECT_TRUE(testClass->GetVectorSPTR().size() == 4);
     EXPECT_EQ(testClass->GetVectorSPTR().at(0)->GetIndex(), 1);
     EXPECT_EQ(testClass->GetVectorSPTR().at(1)->GetIndex(), 2);
     EXPECT_EQ(testClass->GetVectorSPTR().at(2)->GetIndex(), 4);
     EXPECT_EQ(testClass->GetVectorSPTR().at(3)->GetIndex(), 3);
 
-    vector<std::shared_ptr<ClassMacroTestClassElement>> insertVectorO { make_shared<ClassMacroTestClassElement>(10), make_shared<ClassMacroTestClassElement>(11), make_shared<ClassMacroTestClassElement>(12) };
+    std::vector<std::shared_ptr<ClassMacroTestClassElement>> insertVectorO { std::make_shared<ClassMacroTestClassElement>(10), std::make_shared<ClassMacroTestClassElement>(11), std::make_shared<ClassMacroTestClassElement>(12) };
     testClass->InsertVectorSPTR(0, insertVectorO);
     EXPECT_TRUE(testClass->GetVectorSPTR().size() == 7);
     EXPECT_EQ(testClass->GetVectorSPTR().at(0)->GetIndex(), 10);
@@ -153,13 +152,13 @@ TEST(ClassMacroTest, Vector)
 
 TEST(ClassMacroTest, Set) 
 {
-    unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
+    std::unique_ptr<ClassMacroTestClass> testClass = std::make_unique<ClassMacroTestClass>();
     testClass->InsertSet(1);
     testClass->InsertSet(2);
     testClass->InsertSet(3);
     EXPECT_TRUE(testClass->GetSet().size() == 3);
 
-    set<int> insertSet { 1, 2, 4, 5 };
+    std::set<int> insertSet { 1, 2, 4, 5 };
     testClass->InsertSet(insertSet);
     EXPECT_TRUE(testClass->GetSet().size() == 5);
 
@@ -172,7 +171,7 @@ TEST(ClassMacroTest, Set)
 
 TEST(ClassMacroTest, Map) 
 {
-    unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
+    std::unique_ptr<ClassMacroTestClass> testClass = std::make_unique<ClassMacroTestClass>();
     testClass->InsertMap(1, L"abc");
     testClass->InsertMap(2, L"abcd");
     EXPECT_EQ(testClass->GetMap()[1], L"abc");
@@ -181,14 +180,14 @@ TEST(ClassMacroTest, Map)
 
 TEST(ClassMacroTest, MapSPTR_R)
 {   
-    unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
-    testClass->InsertMapSPTR(L"1", make_shared<ClassMacroTestClassElement>(1));
+    std::unique_ptr<ClassMacroTestClass> testClass = std::make_unique<ClassMacroTestClass>();
+    testClass->InsertMapSPTR(L"1", std::make_shared<ClassMacroTestClassElement>(1));
     EXPECT_EQ(testClass->GetMapSPTR()[L"1"]->GetIndex(), 1);
 }
 
 TEST(ClassMacroTest, OrderedMap) 
 {
-    unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
+    std::unique_ptr<ClassMacroTestClass> testClass = std::make_unique<ClassMacroTestClass>();
     testClass->InsertOrderedMap(1, L"abc");
     testClass->InsertOrderedMap(2, L"abcd");
     EXPECT_EQ(testClass->GetOrderedMap()[0].first, 1);
@@ -199,7 +198,7 @@ TEST(ClassMacroTest, OrderedMap)
 
 TEST(ClassMacroTest, OrderedMapSPTR_R)
 {   
-    unique_ptr<ClassMacroTestClass> testClass = make_unique<ClassMacroTestClass>();
-    testClass->InsertOrderedMapSPTR(L"1", make_shared<ClassMacroTestClassElement>(1));
+    std::unique_ptr<ClassMacroTestClass> testClass = std::make_unique<ClassMacroTestClass>();
+    testClass->InsertOrderedMapSPTR(L"1", std::make_shared<ClassMacroTestClassElement>(1));
     EXPECT_EQ(testClass->GetOrderedMapSPTR().at(0).second->GetIndex(), 1);
 }

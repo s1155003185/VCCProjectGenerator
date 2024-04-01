@@ -14,13 +14,12 @@
 #include "memory_macro.hpp"
 #include "terminal_service.hpp"
 
-using namespace std;
 using namespace vcc;
 
 class GitServiceTest : public testing::Test 
 {
     GET_SPTR(LogProperty, LogProperty);
-    GET(wstring, Workspace, L"bin/Debug/Git/");
+    GET(std::wstring, Workspace, L"bin/Debug/Git/");
     public:
 
         void SetUp() override
@@ -48,7 +47,7 @@ class GitServiceTest : public testing::Test
 TEST_F(GitServiceTest, Version)
 {
     std::wstring version = GitService::GetVersion(this->GetLogProperty().get());
-    EXPECT_TRUE(regex_match(version, wregex(L"[0-9]+.[0-9]+.[0-9]+")));
+    EXPECT_TRUE(regex_match(version, std::wregex(L"[0-9]+.[0-9]+.[0-9]+")));
 }
 
 // Note: Only execute command project Unit test
@@ -446,7 +445,7 @@ TEST_F(GitServiceTest, StageAndDifference)
 {
     // init
     GitService::Initialize(this->GetLogProperty().get(), this->GetWorkspace());
-    EXPECT_TRUE(filesystem::exists(this->GetWorkspace() + L"/.git/HEAD"));
+    EXPECT_TRUE(std::filesystem::exists(this->GetWorkspace() + L"/.git/HEAD"));
     
     // check existance
     EXPECT_TRUE(GitService::IsGitResponse(this->GetLogProperty().get(), this->GetWorkspace()));

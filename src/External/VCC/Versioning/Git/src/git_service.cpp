@@ -720,7 +720,7 @@ namespace vcc
         )
     }
 
-    // void GitService::GetTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, shared_ptr<GitLog> log)
+    // void GitService::GetTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, std::shared_ptr<GitLog> log)
     // {
     //     TRY_CATCH(
     //         assert(!IsBlank(tagName));
@@ -1082,7 +1082,7 @@ namespace vcc
             std::wstring optionStr = L"";
             if (searchCriteria != nullptr) {
                 if (searchCriteria->GetNoOfLines() > -1)
-                    optionStr += L" --unified=" + to_wstring(searchCriteria->GetNoOfLines());
+                    optionStr += L" --unified=" + std::to_wstring(searchCriteria->GetNoOfLines());
                 
                 if (!searchCriteria->GetHashIDs().empty())
                     optionStr += L" " + Concat(searchCriteria->GetHashIDs(), L" ");
@@ -1098,7 +1098,7 @@ namespace vcc
             std::wstring optionStr = L"";
             if (searchCriteria != nullptr) {
                 if (searchCriteria->GetNoOfLines() > -1)
-                    optionStr += L" --unified=" + to_wstring(searchCriteria->GetNoOfLines());
+                    optionStr += L" --unified=" + std::to_wstring(searchCriteria->GetNoOfLines());
                 
                 if (!searchCriteria->GetHashIDs().empty())
                     optionStr += L" " + Concat(searchCriteria->GetHashIDs(), L" ");
@@ -1114,7 +1114,7 @@ namespace vcc
             std::wstring optionStr = L"";
             if (searchCriteria != nullptr) {
                 if (searchCriteria->GetNoOfLines() > -1)
-                    optionStr += L" --unified=" + to_wstring(searchCriteria->GetNoOfLines());
+                    optionStr += L" --unified=" + std::to_wstring(searchCriteria->GetNoOfLines());
                 
                 if (!searchCriteria->GetHashIDs().empty())
                     optionStr += L" " + Concat(searchCriteria->GetHashIDs(), L" ");
@@ -1130,7 +1130,7 @@ namespace vcc
             std::wstring optionStr = L"";
             if (searchCriteria != nullptr) {
                 if (searchCriteria->GetNoOfLines() > -1)
-                    optionStr += L" --unified=" + to_wstring(searchCriteria->GetNoOfLines());
+                    optionStr += L" --unified=" + std::to_wstring(searchCriteria->GetNoOfLines());
             }
             ParseGitDiff(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff" + optionStr + L" " + fromHashID + L"..." + toHashID + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""), diff);
         )

@@ -7,7 +7,6 @@
 #include "log_property.hpp"
 #include "string_helper.hpp"
 
-using namespace std;
 using namespace vcc;
 
 TEST(ProcessServiceTest, Normal)
@@ -61,9 +60,9 @@ TEST(ProcessServiceTest, Exception)
     bool isError = false;
     try {
         ProcessService::Execute(nullptr, L"", L"git -version");
-    } catch (exception &e) {
-        string exceptStr(e.what());
-        EXPECT_TRUE(exceptStr.find("unknown option") != string::npos);
+    } catch (std::exception &e) {
+        std::string exceptStr(e.what());
+        EXPECT_TRUE(exceptStr.find("unknown option") != std::string::npos);
         isError = true;
     }
     EXPECT_TRUE(isError);

@@ -7,8 +7,6 @@
 #include "class_macro.hpp"
 #include "exception_type.hpp"
 
-using namespace std;
-
 namespace vcc
 {
 	// General Exception
