@@ -20,6 +20,7 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>
     GETSET(std::wstring, WorkspaceSource, L"");
     GETSET(std::wstring, WorkspaceDestination, L"");
 
+    GETSET(std::wstring, Version, L"0.0.1");
     GETSET(bool, IsGit, false);
     
     // Project

@@ -126,6 +126,7 @@ namespace vcc
         mutable std::map<keyType, valueType> _##var; \
     public: \
         std::map<keyType, valueType> &Get##var() const { return _##var; } \
+        valueType Get##var(keyType key) const { return _##var[key]; } \
         void Insert##var(keyType key, valueType value) const { _##var.insert(std::make_pair(key, value)); } \
         void Insert##var(const std::map<keyType, valueType> &value) const { _##var.insert(value.begin(), value.end()); } \
         void Clone##var(const std::map<keyType, valueType> &value) const { this->_##var.clear(); this->Insert##var(value); } \
@@ -136,6 +137,7 @@ namespace vcc
         mutable std::map<keyType, std::shared_ptr<valueType>> _##var; \
     public: \
         std::map<keyType, std::shared_ptr<valueType>> &Get##var() const { return _##var; } \
+        std::shared_ptr<valueType> Get##var(keyType key) const { return _##var[key]; } \
         void Insert##var(keyType key, std::shared_ptr<valueType> value) const { _##var.insert(std::make_pair(key, value)); } \
         void Insert##var(const std::map<keyType, std::shared_ptr<valueType>> &value) const { _##var.insert(value.begin(), value.end()); } \
         void Clone##var(const std::map<keyType, std::shared_ptr<valueType>> &value) const { this->_##var.clear(); for (auto const& element : value) { this->Insert##var(element.first, element.second != nullptr ? dynamic_pointer_cast<valueType>(element.second->Clone()) : nullptr); } }\

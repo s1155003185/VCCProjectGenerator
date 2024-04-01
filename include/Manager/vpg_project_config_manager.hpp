@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include "base_manager.hpp"
 
@@ -13,6 +14,6 @@ class VPGProjectConfigManager : public BaseManager<VPGProjectConfigManager>
         VPGProjectConfigManager() = default;
         virtual ~VPGProjectConfigManager() {}
 
-        void serialize(const VPGGenerationOption *option);
-        void unserialize(VPGGenerationOption *option);
+        void Serialize(const std::wstring workspace, const VPGGenerationOption *option);
+        void Deserialize(const std::wstring workspace, shared_ptr<VPGGenerationOption> option);
 };
