@@ -14,11 +14,42 @@ const std::wstring trueStr = L"true";
 const std::wstring falseStr = L"false";
 
 namespace vcc
-{
+{    
+    std::wstring JsonBuilder::GetCurrentIndent() const
+    {
+        if (!_IsBeautify)
+            return L"";
+        std::wstring result = L"";
+        for (size_t i = 0; i < _Level; i++) {
+            result += _Indent;
+        }
+        return result;
+    }
+
+    std::wstring JsonBuilder::GetErrorMessage(const std::wstring &str, const size_t &pos, const std::wstring &msg) const
+    {
+        size_t row = 0, column = 0;
+        GetCharacterRowAndColumn(str, pos, row, column);
+        
+        size_t lengthOfPos = std::min(pos, _NumberOfCharactersBeforePosForErrorMessage);
+        size_t lengthOfSub = std::min(str.length() - pos, _NumberOfCharactersAfterPosForErrorMessage);
+
+        std::wstring preString = str.substr(pos - lengthOfPos, lengthOfPos);
+        std::wstring subString = str.substr(pos + 1, lengthOfSub);
+        return L"Error at position " + std::to_wstring(pos + 1) 
+            + L", row " + std::to_wstring(row) 
+            + L", column " + std::to_wstring(column) + L": " + preString + L"<<" + std::wstring(1, str[pos]) + L">>" + subString + L"\r\n "
+            + L" error message: " + msg;
+    }
+
     std::wstring JsonBuilder::Serialize(const IDocument *doc) const
     {
         std::wstring result = L"";
-        TRY_CATCH(
+        //TRY_CATCH(
+            std::wstring currentNewLineCharacter = _IsBeautify ? _NewLineCharacter : L"";
+            std::wstring currentNameColonSpace = _IsBeautify ? _NameColonSpace : L"";
+            std::wstring currentColonValueSpace = _IsBeautify ? _ColonValueSpace : L"";
+
             Json *jsonObj = dynamic_cast<Json *>(const_cast<IDocument *>(doc));
             assert(jsonObj != nullptr);
             switch (jsonObj->GetType())
@@ -36,45 +67,44 @@ namespace vcc
                 break;
             // Object
             case JsonType::Array: {
+                _Level++;
                 for (auto const &element : jsonObj->GetArray()) {
                     if (!result.empty())
-                        result += L",";
-                    result += Serialize(element.get());
+                        result += L"," + currentNewLineCharacter;
+                    result += GetCurrentIndent() + Serialize(element.get());
                 }
-                result = L"[" + result + L"]";
+                _Level--;
+                result = L"[" + currentNewLineCharacter + result + currentNewLineCharacter + GetCurrentIndent() + L"]";
                 break;
             }
             case JsonType::Object:
                 result = Serialize(jsonObj->GetArray().at(0).get());
                 break;
             case JsonType::Json: {
+                _Level++;
                 for (auto const &pair : jsonObj->GetNameValuePairs()) {
                     if (!result.empty())
-                        result += L",";
-                    result += GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, pair.first);
-                    result += L":";
+                        result += L"," + currentNewLineCharacter;
+                    result += GetCurrentIndent() + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, pair.first);
+                    result += currentNameColonSpace + L":" + currentColonValueSpace;
                     result += Serialize(pair.second.get());
                 }
-                result = L"{" + result + L"}";
+                _Level--;
+                result = L"{" + currentNewLineCharacter + result + currentNewLineCharacter + GetCurrentIndent() + L"}";
                 break;
             }
             default:
                 assert(false);
                 break;
             }
-        )
+        //)
         return result;
-    }
-
-    std::wstring JsonBuilder::GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg) const
-    {
-        return L"Error at position " + std::to_wstring(pos + 1) + L" with char '" + std::wstring(1, c) + L"': " + msg;
     }
 
     void JsonBuilder::ParseJsonObject(const std::wstring &str, size_t &pos, std::shared_ptr<Json> doc) const
     {
         TRY_CATCH(
-            GetNextCharPos(str, pos, true);
+            GetNextCharacterPos(str, pos, true);
             if (HasPrefix(str, nullStr, pos)) {
                 doc->SetType(JsonType::Null);
                 pos += nullStr.length() - 1;
@@ -103,18 +133,18 @@ namespace vcc
                 doc->InsertArray(jsonObj);
             } else if (str[pos] == L'['){
                 doc->SetType(JsonType::Array);
-                GetNextCharPos(str, pos, false);
+                GetNextCharacterPos(str, pos, false);
                 while (pos < str.length()) {
                     DECLARE_SPTR(Json, obj);
                     ParseJsonObject(str, pos, obj);
                     doc->InsertArray(obj);
-                    GetNextCharPos(str, pos, false);
+                    GetNextCharacterPos(str, pos, false);
                     if (str[pos] == L']')
                         break;
                     else if (str[pos] == L',')
-                        GetNextCharPos(str, pos, false);
+                        GetNextCharacterPos(str, pos, false);
                     else
-                        THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(pos, str[pos], L"Array elements not end with , or ]"));
+                        THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(str, pos, L"Array elements not end with , or ]"));
                 }
             } else {
                 size_t startPos = pos;
@@ -126,7 +156,7 @@ namespace vcc
                 }
                 catch(const std::exception& e)
                 {
-                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(startPos, str[pos], L"Unknown json value format: " + numStr));
+                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(str, startPos, L"Unknown json value format: " + numStr));
                 }
                 doc->SetType(JsonType::Number);
                 doc->SetValue(numStr);
@@ -139,10 +169,10 @@ namespace vcc
         TRY_CATCH(
             std::shared_ptr<Json> jsonObj = dynamic_pointer_cast<Json>(doc);
             assert(jsonObj != nullptr);
-            GetNextCharPos(str, pos, true);
+            GetNextCharacterPos(str, pos, true);
             if (str[pos] != L'{')
-                THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(pos, str[pos], L"Json Object not start with {"));
-            GetNextCharPos(str, pos, false);
+                THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(str, pos, L"Json Object not start with {"));
+            GetNextCharacterPos(str, pos, false);
             while (pos < str.length())
             {
                 // name
@@ -153,10 +183,10 @@ namespace vcc
                 } else if (name.starts_with(L"\'")) {
                     name = GetUnescapeStringWithQuote(EscapeStringType::SingleQuote, name);
                 }
-                GetNextCharPos(str, pos, false);
+                GetNextCharacterPos(str, pos, false);
                 if (str[pos] != L':')
-                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(pos, str[pos], L"Json Object name " + name + L" not followed by :"));
-                GetNextCharPos(str, pos, false);
+                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(str, pos, L"Json Object name " + name + L" not followed by :"));
+                GetNextCharacterPos(str, pos, false);
 
                 // value
                 DECLARE_SPTR(Json, obj);
@@ -164,10 +194,10 @@ namespace vcc
                 jsonObj->SetType(JsonType::Json);
                 jsonObj->InsertNameValuePairs(name, obj);
 
-                GetNextCharPos(str, pos, false);
+                GetNextCharacterPos(str, pos, false);
                 if (str[pos] != L',')
                     break;
-                GetNextCharPos(str, pos, false);
+                GetNextCharacterPos(str, pos, false);
             }
         )
     }

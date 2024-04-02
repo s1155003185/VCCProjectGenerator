@@ -110,3 +110,39 @@ TEST(JsonBuilderTest, Full)
     EXPECT_EQ(json->GetNameValuePairs(L"employees")->GetType(), JsonType::Array);
     EXPECT_EQ(builder->Serialize(json.get()), str);
 }
+
+TEST(JsonBuilderTest, Beautify)
+{
+    std::wstring str = L"{\"name\":\"John\",\"age\":11,\"tel\":null,\"FullName\":{\"firstName\":\"A\",\"lastName\":\"B\"},\"employees\":[{\"firstName\":\"A\",\"lastName\":\"B\"},{\"firstName\":\"C\",\"lastName\":\"D\"}]}";
+    std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
+    DECLARE_SPTR(Json, json);
+    builder->Deserialize(str, json);
+
+    std::wstring indent = L"\t";
+    builder->SetIsBeautify(true);
+    builder->SetIndent(indent);
+    builder->SetNameColonSpace(L" ");
+    builder->SetColonValueSpace(L" ");
+    std::wstring result = L"";
+    result += L"{\r\n"; 
+    result += indent + L"\"name\" : \"John\",\r\n";
+    result += indent + L"\"age\" : 11,\r\n";
+    result += indent + L"\"tel\" : null,\r\n";
+    result += indent + L"\"FullName\" : {\r\n";
+    result += indent + indent + L"\"firstName\" : \"A\",\r\n";
+    result += indent + indent + L"\"lastName\" : \"B\"\r\n";
+    result += indent + L"},\r\n";
+    result += indent + L"\"employees\" : [\r\n";
+    result += indent + indent + L"{\r\n";
+    result += indent + indent + indent + L"\"firstName\" : \"A\",\r\n";
+    result += indent + indent + indent + L"\"lastName\" : \"B\"\r\n";
+    result += indent + indent + L"},\r\n";
+    result += indent + indent + L"{\r\n";
+    result += indent + indent + indent + L"\"firstName\" : \"C\",\r\n";
+    result += indent + indent + indent + L"\"lastName\" : \"D\"\r\n";
+    result += indent + indent + L"}\r\n";
+    result += indent + L"]\r\n";
+    result += L"}";
+
+    EXPECT_EQ(builder->Serialize(json.get()), result);
+}

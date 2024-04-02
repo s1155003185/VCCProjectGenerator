@@ -311,7 +311,20 @@ namespace vcc
 		RTrim(str);
 	}
 
-	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos)
+	void GetCharacterRowAndColumn(const std::wstring &str, size_t pos, size_t &row, size_t &column)
+	{
+		row = 1;
+		column = 1;
+		for (std::wstring::size_type i = 0; i < pos; ++i) {
+			if (str[i] == L'\n') {
+				row++;
+				column = 1;
+			} else
+				column++;
+		}
+	}
+
+	void GetNextCharacterPos(const std::wstring &str, size_t &pos, bool fromCurrentPos)
 	{
 		if (!fromCurrentPos)
 			pos++;
@@ -342,7 +355,7 @@ namespace vcc
 			pos = str.length() - 1;
 			return result;
 		}
-		GetNextCharPos(str, pos, true);
+		GetNextCharacterPos(str, pos, true);
 		std::wstring result = L"";
 		try
 		{
@@ -409,7 +422,7 @@ namespace vcc
 			return str;
 		if (pos >= str.length())
 			return L"";
-		GetNextCharPos(str, pos, true);
+		GetNextCharacterPos(str, pos, true);
 		std::wstring result = L"";
 		try
 		{
@@ -478,7 +491,7 @@ namespace vcc
 		return result;
 	}
 	
-	size_t CountSubstr(const std::wstring &str, const std::wstring subStr)
+	size_t CountSubstring(const std::wstring &str, const std::wstring subStr)
 	{
 		size_t count = 0;
 		size_t pos = 0;

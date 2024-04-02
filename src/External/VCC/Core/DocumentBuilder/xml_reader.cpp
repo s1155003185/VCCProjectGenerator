@@ -87,7 +87,7 @@ namespace vcc
             } else if (xmlData[pos] == L'>') {
                 return true;
             }else if (std::iswspace(xmlData[pos])) {
-                GetNextCharPos(xmlData, pos, false);
+                GetNextCharacterPos(xmlData, pos, false);
                 return _IsNextCharTagEnd(xmlData, pos);
             }
         }
@@ -213,7 +213,7 @@ namespace vcc
     {
         try
         {
-            GetNextCharPos(xmlData, pos, true);
+            GetNextCharacterPos(xmlData, pos, true);
             std::wstring endTag = L"</" + (!element->_Namespace.empty() ? (element->_Namespace + L":") : L"") + element->_Name + L">";
             if (!xmlData.substr(pos).starts_with(endTag))
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, _GetErrorMessage(pos, xmlData[pos], L"end tab " + endTag + L" missing"));
@@ -237,7 +237,7 @@ namespace vcc
             // remove xml header
             while (_IsXMLHeader(xmlData, pos)) {
                 _ParseXMLHeader(xmlData, pos);
-                GetNextCharPos(xmlData, pos, false);
+                GetNextCharacterPos(xmlData, pos, false);
             }
             // content
             if (!ParseXMLTagHeader(xmlData, pos, element))
@@ -284,7 +284,7 @@ namespace vcc
                     pos = endPos;
                     break;
                 }
-                GetNextCharPos(xmlData, pos, false);
+                GetNextCharacterPos(xmlData, pos, false);
             }
             element->_FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
         }

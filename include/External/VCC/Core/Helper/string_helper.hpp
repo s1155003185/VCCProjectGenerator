@@ -55,7 +55,8 @@ namespace vcc
 	void Trim(std::wstring &str);
 
 	// search
-	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos = false);
+	void GetCharacterRowAndColumn(const std::wstring &str, size_t pos, size_t &row, size_t &column);
+	void GetNextCharacterPos(const std::wstring &str, size_t &pos, bool fromCurrentPos = false);
 	// pos Point to end char after execution
 	std::wstring GetNextStringSplitBySpace(const std::wstring &str, size_t &pos,
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
@@ -65,7 +66,7 @@ namespace vcc
 		const std::vector<std::wstring> &quoteOpenList = { L"\"", L"'", L"{", L"[" },
 		const std::vector<std::wstring> &quoteCloseList = { L"\"", L"'", L"}", L"]" },
 		const std::vector<std::wstring> &quoteEscapeList = { L"\\", L"\\", L"", L"" });
-	size_t CountSubstr(const std::wstring &str, const std::wstring subStr);
+	size_t CountSubstring(const std::wstring &str, const std::wstring subStr);
 
 	// process
 	void Replace(std::wstring &str, const std::wstring& from, const std::wstring &to);
