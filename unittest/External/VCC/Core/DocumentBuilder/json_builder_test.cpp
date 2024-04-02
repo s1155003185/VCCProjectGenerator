@@ -54,9 +54,9 @@ TEST(JsonBuilderTest, Object)
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetType(), JsonType::Json);
     EXPECT_EQ(json->GetNameValuePairs(L"Name")->GetType(), JsonType::Object);
-    EXPECT_EQ(json->GetNameValuePairs(L"Name")->GetObject()->GetType(), JsonType::Json);
-    EXPECT_EQ(json->GetNameValuePairs(L"Name")->GetObject()->GetNameValuePairs(L"firstName")->GetValue(), L"A");
-    EXPECT_EQ(json->GetNameValuePairs(L"Name")->GetObject()->GetNameValuePairs(L"lastName")->GetValue(), L"B");
+    EXPECT_EQ(json->GetNameValuePairs(L"Name")->GetArray()[0]->GetType(), JsonType::Json);
+    EXPECT_EQ(json->GetNameValuePairs(L"Name")->GetArray()[0]->GetNameValuePairs(L"firstName")->GetValue(), L"A");
+    EXPECT_EQ(json->GetNameValuePairs(L"Name")->GetArray()[0]->GetNameValuePairs(L"lastName")->GetValue(), L"B");
     EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 
@@ -78,8 +78,8 @@ TEST(JsonBuilderTest, Array)
     EXPECT_EQ(json->GetNameValuePairs(L"employees")->GetArray().at(3)->GetValue(), L"Str\"ing");
     EXPECT_EQ(json->GetNameValuePairs(L"employees")->GetArray().at(4)->GetType(), JsonType:: Array);
     EXPECT_EQ(json->GetNameValuePairs(L"employees")->GetArray().at(4)->GetArray().size(), (size_t)2);
-    EXPECT_EQ(json->GetNameValuePairs(L"employees")->GetArray().at(5)->GetObject()->GetNameValuePairs(L"firstName")->GetValue(), L"A");
-    EXPECT_EQ(json->GetNameValuePairs(L"employees")->GetArray().at(5)->GetObject()->GetNameValuePairs(L"lastName")->GetValue(), L"B");
+    EXPECT_EQ(json->GetNameValuePairs(L"employees")->GetArray().at(5)->GetArray()[0]->GetNameValuePairs(L"firstName")->GetValue(), L"A");
+    EXPECT_EQ(json->GetNameValuePairs(L"employees")->GetArray().at(5)->GetArray()[0]->GetNameValuePairs(L"lastName")->GetValue(), L"B");
     EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 

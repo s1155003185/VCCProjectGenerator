@@ -15,7 +15,7 @@ const std::wstring falseStr = L"false";
 
 namespace vcc
 {
-    std::wstring JsonBuilder::Serialize(const IDocument *doc)
+    std::wstring JsonBuilder::Serialize(const IDocument *doc) const
     {
         std::wstring result = L"";
         TRY_CATCH(
@@ -45,7 +45,7 @@ namespace vcc
                 break;
             }
             case JsonType::Object:
-                result = Serialize(jsonObj->GetObject().get());
+                result = Serialize(jsonObj->GetArray().at(0).get());
                 break;
             case JsonType::Json: {
                 for (auto const &pair : jsonObj->GetNameValuePairs()) {
@@ -66,12 +66,12 @@ namespace vcc
         return result;
     }
 
-    std::wstring JsonBuilder::GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg)
+    std::wstring JsonBuilder::GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg) const
     {
         return L"Error at position " + std::to_wstring(pos + 1) + L" with char '" + std::wstring(1, c) + L"': " + msg;
     }
 
-    void JsonBuilder::ParseJsonObject(const std::wstring &str, size_t &pos, std::shared_ptr<Json> doc)
+    void JsonBuilder::ParseJsonObject(const std::wstring &str, size_t &pos, std::shared_ptr<Json> doc) const
     {
         TRY_CATCH(
             GetNextCharPos(str, pos, true);
@@ -100,7 +100,7 @@ namespace vcc
                 DECLARE_SPTR(Json, jsonObj);
                 Deserialize(str, pos, jsonObj);
                 doc->SetType(JsonType::Object);
-                doc->SetObject(jsonObj);
+                doc->InsertArray(jsonObj);
             } else if (str[pos] == L'['){
                 doc->SetType(JsonType::Array);
                 GetNextCharPos(str, pos, false);
@@ -134,7 +134,7 @@ namespace vcc
         )
     }
 
-    void JsonBuilder::Deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc)
+    void JsonBuilder::Deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc) const
     {
         TRY_CATCH(
             std::shared_ptr<Json> jsonObj = dynamic_pointer_cast<Json>(doc);
@@ -172,7 +172,7 @@ namespace vcc
         )
     }
 
-    void JsonBuilder::Deserialize(const std::wstring &str, std::shared_ptr<IDocument> doc)
+    void JsonBuilder::Deserialize(const std::wstring &str, std::shared_ptr<IDocument> doc) const
     {
         TRY_CATCH(
             size_t pos = 0;

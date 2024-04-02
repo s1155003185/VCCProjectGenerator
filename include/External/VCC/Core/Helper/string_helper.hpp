@@ -23,6 +23,8 @@ namespace vcc
 	void ToLower(std::wstring &str);
 	void ToUpper(std::wstring &str);
 
+	std::wstring ToString(double value, size_t decimalPlaces);
+
 	bool IsEmpty(const std::wstring &str);
 	bool IsBlank(const std::wstring &str);
 

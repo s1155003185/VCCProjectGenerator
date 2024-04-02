@@ -4,6 +4,8 @@
 #include <map>
 #include <math.h>
 #include <memory>
+#include <iostream>
+#include <iomanip>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -39,6 +41,16 @@ namespace vcc
 	void ToUpper(std::wstring &str)
 	{
 		std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+	}
+
+	std::wstring ToString(double value, size_t decimalPlaces)
+	{
+		TRY_CATCH(
+			std::wstringstream ss;
+			ss << std::fixed << std::setprecision(decimalPlaces) << value;
+			return ss.str();
+		)
+		return L"";
 	}
 
 	bool IsEmpty(const std::wstring &str)

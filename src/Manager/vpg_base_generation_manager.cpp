@@ -20,9 +20,40 @@ using namespace vcc;
 
 std::wstring VPGGenerationOption::SerializeJson(const IDocumentBuilder *builder)
 {
-    //TRY_CATCH(
+    TRY_CATCH(
+        DECLARE_UPTR(Json, json);
+        json->AddString(L"Version", _Version);
+        json->AddBool(L"IsGit", _IsGit);
 
-    //)
+        json->AddString(L"ProjectPrefix", _ProjectPrefix);
+
+        json->AddString(L"ProjectName", _ProjectName);
+        json->AddString(L"ProjectNameDLL", _ProjectNameDLL);
+        json->AddString(L"ProjectNameEXE", _ProjectNameEXE);
+        json->AddString(L"ProjectNameGtest", _ProjectNameGtest);
+
+        json->AddBool(L"IsExcludeVCCUnitTest", _IsExcludeVCCUnitTest);
+
+        json->AddString(L"ActionTypeDirectory", _ActionTypeDirectory);
+        json->AddString(L"ExceptionTypeDirectory", _ExceptionTypeDirectory);
+        json->AddString(L"ManagerTypeDirectory", _ManagerTypeDirectory);
+        json->AddString(L"ObjectTypeDirectory", _ObjectTypeDirectory);
+
+
+        json->AddString(L"TypeWorkspace", _TypeWorkspace);
+        json->AddString(L"ObjectHppDirectory", _ObjectHppDirectory);
+        json->AddString(L"ObjectTypeHppDirectory", _ObjectTypeHppDirectory);
+        json->AddString(L"PropertyAccessorHppDirectory", _PropertyAccessorHppDirectory);
+        json->AddString(L"PropertyAccessorCppDirectory", _PropertyAccessorCppDirectory);
+
+        DECLARE_SPTR(Json, plugins);
+        json->AddArray(L"Plugins", plugins);
+        for (auto const &plugin : _Plugins) {
+            plugins->AddArrayString(plugin);
+        }
+        
+        return builder->Serialize(json.get());
+    )
     return L"";
 }
 
@@ -52,14 +83,6 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document)
         if (json->IsContainKey(L"IsExcludeVCCUnitTest"))
             this->SetIsExcludeVCCUnitTest(json->GetBool(L"IsExcludeVCCUnitTest"));
 
-
-        if (json->IsContainKey(L"Plugins")) {
-            auto plugins = json->GetArray(L"Plugins");
-            for (auto const &plugin : plugins) {
-                this->InsertPlugins(plugin->GetValue());
-            }
-        }
-
         if (json->IsContainKey(L"ActionTypeDirectory"))
             this->SetActionTypeDirectory(json->GetString(L"ActionTypeDirectory"));
         if (json->IsContainKey(L"ExceptionTypeDirectory"))
@@ -79,6 +102,13 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document)
             this->SetPropertyAccessorHppDirectory(json->GetString(L"PropertyAccessorHppDirectory"));
         if (json->IsContainKey(L"PropertyAccessorCppDirectory"))
             this->SetPropertyAccessorCppDirectory(json->GetString(L"PropertyAccessorCppDirectory"));
+
+        if (json->IsContainKey(L"Plugins")) {
+            auto plugins = json->GetArray(L"Plugins");
+            for (auto const &plugin : plugins) {
+                this->InsertPlugins(plugin->GetValue());
+            }
+        }
     )
 }
 

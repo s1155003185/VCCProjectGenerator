@@ -8,15 +8,29 @@ using namespace vcc;
 
 TEST(JsonTest, Full) 
 {
-    std::wstring str = L"{\"name\":\"John\",\"age\":11,\"tel\":null,\"price\":1.1,\"FullName\":{\"firstName\":\"A\",\"lastName\":\"B\"},\"employees\":[[1,[2,{\"InArray\":true}]],{\"firstName\":\"C\",\"lastName\":\"D\"}]}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
+
     DECLARE_SPTR(Json, json);
-    builder->Deserialize(str, json);
-    EXPECT_EQ(json->GetString(L"name"), L"John");
-    EXPECT_EQ(json->GetInt32(L"age"), 11);
-    EXPECT_EQ(json->IsNull(L"tel"), true);
-    EXPECT_EQ(json->GetDouble(L"price"), 1.1);
-    EXPECT_EQ(json->GetDecimalPlaces(L"price"), (size_t)1);
-    EXPECT_TRUE(json->GetObject(L"FullName") != nullptr);
-    EXPECT_EQ(json->GetArray(L"employees").size(), (size_t)2);
+    json->AddString(L"Version", L"0.0.1");
+    json->AddBool(L"IsGit", true);
+    json->AddDouble(L"Price", 2.33, 2);
+    json->AddInt(L"State", 1);
+    json->AddNull(L"Action");
+    
+    DECLARE_SPTR(Json, plugins);
+    json->AddArray(L"Plugins", plugins);
+    plugins->AddArrayString(L"/path/of/Git");
+    
+    std::wstring jsonStr = builder->Serialize(json.get());
+
+    DECLARE_SPTR(Json, resultJson);
+    builder->Deserialize(jsonStr, resultJson);
+
+    EXPECT_EQ(json->GetString(L"Version"), resultJson->GetString(L"Version"));
+    EXPECT_EQ(json->GetBool(L"IsGit"), resultJson->GetBool(L"IsGit"));
+    EXPECT_EQ(json->GetDouble(L"Price"), resultJson->GetDouble(L"Price"));
+    EXPECT_EQ(json->GetInt64(L"State"), resultJson->GetInt64(L"State"));
+    EXPECT_EQ(json->IsNull(L"Action"), resultJson->IsNull(L"Action"));
+    EXPECT_EQ(json->GetArray(L"Plugins").size(), resultJson->GetArray(L"Plugins").size());
+    EXPECT_EQ(json->GetArray(L"Plugins").at(0)->GetValue(), resultJson->GetArray(L"Plugins").at(0)->GetValue());
 }
