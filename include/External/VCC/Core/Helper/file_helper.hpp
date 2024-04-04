@@ -74,10 +74,11 @@ namespace vcc
 	bool IsFileEqual(const std::wstring &pathA, const std::wstring &pathB);
 
 	// action
-	void CreateDirectory(const std::wstring &path);
 	void CopyFile(const std::wstring &srcFilePath, const std::wstring &destFilePath, bool isForce = false);
-	void CopyDirectory(const std::wstring &srcDirectory, const std::wstring &destDirectory, const CopyDirectoryOption *option = nullptr);
 	void RemoveFile(const std::wstring &filePath);
+	void CreateDirectory(const std::wstring &path);
+	void CopyDirectory(const std::wstring &srcDirectory, const std::wstring &destDirectory, const CopyDirectoryOption *option = nullptr);
+	void RemoveDirectory(const std::wstring &directory);
 
 	// Read File
 	std::wstring ReadFile(const std::wstring &filePath);

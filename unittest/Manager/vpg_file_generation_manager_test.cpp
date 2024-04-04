@@ -1,22 +1,27 @@
 #include <gtest/gtest.h>
 
 #include <filesystem>
+#include <map>
 #include <set>
 #include <string>
 
 #include "class_macro.hpp"
 #include "file_helper.hpp"
 #include "log_service.hpp"
-#include "vpg_file_generation_service.hpp"
+#include "memory_macro.hpp"
+#include "vpg_enum_class_reader.hpp"
+#include "vpg_file_generation_manager.hpp"
 #include "string_helper.hpp"
 
-class VPGFileGenerationServiceTest : public testing::Test 
+class VPGFileGenerationManagerTest : public testing::Test 
 {
     GET_SPTR(LogProperty, LogProperty, LogPropertyType::None);
+    MANAGER(VPGFileGenerationManager, Manager, _LogProperty);
+
     GET(std::wstring, Workspace, L"bin/Debug/FileGenerationServiceTest");
     GET(std::wstring, WorkspaceSource, L"");
     GET(std::wstring, WorkspaceTarget, L"");
-    
+
     private:
         void CreateFolderInSourceWorkspace(std::wstring folder)
         {
@@ -43,8 +48,10 @@ class VPGFileGenerationServiceTest : public testing::Test
             AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), fileName}), content, true);
         }
     public:
-        VPGFileGenerationServiceTest() {}
-        virtual ~VPGFileGenerationServiceTest() {}
+        std::unique_ptr<VPGEnumClassReader> _Reader = nullptr;
+
+        VPGFileGenerationManagerTest() {}
+        virtual ~VPGFileGenerationManagerTest() {}
 
         void SetUp() override
         {
@@ -52,6 +59,9 @@ class VPGFileGenerationServiceTest : public testing::Test
             this->_WorkspaceTarget = ConcatPaths({this->_Workspace, L"Target"});
 
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
+            this->GetManager()->GetClassMacroList(L"");
+
+            this->_Reader = std::make_unique<VPGEnumClassReader>(this->GetManager()->GetClassMacros());
 
             std::wstring code =  L"";
             code += L"#pragma once\r\n";
@@ -86,19 +96,41 @@ class VPGFileGenerationServiceTest : public testing::Test
         }
 };
 
-TEST_F(VPGFileGenerationServiceTest, GenerateProperty)
+TEST_F(VPGFileGenerationManagerTest, GetClassNameFromEnumClassName)
 {
-    VPGFileGenerationService::GernerateProperty(this->GetLogProperty().get(), L"VCC", L"", this->GetWorkspaceSource(), 
+    EXPECT_EQ(this->GetManager()->GetClassNameFromEnumClassName(L"VCCObjectProperty"), L"VCCObject");
+}
+
+TEST_F(VPGFileGenerationManagerTest, GetFileList)
+{
+    std::map<std::wstring, std::wstring> classList, enumList;
+    this->GetManager()->GetFileList(this->_Reader.get(), this->GetWorkspaceSource(), L"");
+
+    std::map<std::wstring, std::wstring> classResult;
+    classResult.insert(std::make_pair(L"VCCObject", L"vcc_a.hpp"));
+    classResult.insert(std::make_pair(L"VCCObjectPtr", L"vcc_a.hpp"));
+    EXPECT_EQ(classResult, this->GetManager()->GetClassFiles());
+    
+    std::map<std::wstring, std::wstring> enumResult;
+    enumResult.insert(std::make_pair(L"VCCObjectProperty", L"vcc_a_property.hpp"));
+    enumResult.insert(std::make_pair(L"VCCObjectPtrProperty", L"vcc_a_property.hpp"));
+    EXPECT_EQ(enumResult, this->GetManager()->GetEnumClassFiles());
+}
+
+TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
+{
+    this->GetManager()->GernerateProperty(this->GetLogProperty().get(), L"VCC", L"", this->GetWorkspaceSource(), 
         this->GetWorkspaceTarget(), this->GetWorkspaceTarget(), this->GetWorkspaceTarget(), this->GetWorkspaceTarget());
 
     // ------------------------------------------------------------------------------------------ //
     //                                      Object Type File                                      //
     // ------------------------------------------------------------------------------------------ //
-    std::wstring objectTypeFileContent = ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"vcc_object_type.hpp"}));
+    std::wstring objectTypeFileContent = ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"object_type.hpp"}));
     std::wstring expectedObjectTypeFileContent = L"";
     expectedObjectTypeFileContent += L"#pragma once\r\n";
     expectedObjectTypeFileContent += L"\r\n";
-    expectedObjectTypeFileContent += L"enum class VCCObjectType {\r\n";
+    expectedObjectTypeFileContent += L"enum class ObjectType {\r\n";
+    expectedObjectTypeFileContent += L"    NA,\r\n";
     expectedObjectTypeFileContent += L"    Object,\r\n";
     expectedObjectTypeFileContent += L"    ObjectPtr\r\n";
     expectedObjectTypeFileContent += L"};\r\n";
@@ -112,8 +144,11 @@ TEST_F(VPGFileGenerationServiceTest, GenerateProperty)
     std::wstring expectedObjectClassFileContent = L"";
     expectedObjectClassFileContent += L"#pragma once\r\n";
     expectedObjectClassFileContent += L"\r\n";
+    expectedObjectClassFileContent += L"#include <string>\r\n";
+    expectedObjectClassFileContent += L"\r\n";
     expectedObjectClassFileContent += L"#include \"base_object.hpp\"\r\n";
-    expectedObjectClassFileContent += L"#include \"class_marco.hpp\"\r\n";
+    expectedObjectClassFileContent += L"#include \"class_macro.hpp\"\r\n";
+    expectedObjectClassFileContent += L"#include \"object_type.hpp\"\r\n";
     expectedObjectClassFileContent += L"\r\n";
     expectedObjectClassFileContent += L"using namespace vcc;\r\n";
     expectedObjectClassFileContent += L"\r\n";

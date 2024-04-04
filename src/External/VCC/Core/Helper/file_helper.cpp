@@ -225,6 +225,41 @@ namespace vcc
         )
     }
 
+	void RemoveFile(const std::wstring &filePath)
+    {
+        if (filePath.empty())
+            return;
+        try
+        {
+            if (!IsFileExists(filePath))
+                return;
+                
+            PATH currentPath(filePath);
+            std::filesystem::remove(filePath);
+        }
+        catch(const std::exception& e)
+        {
+            THROW_EXCEPTION(e);
+        }
+    }
+
+    void CreateDirectory(const std::wstring &path)
+    {
+        if (IsBlank(path) || IsDirectoryExists(path))
+            return;
+
+        try
+        {
+            PATH currentPath(path);
+            CreateDirectory(currentPath.parent_path().wstring());
+            std::filesystem::create_directories(path);
+        }
+        catch(const std::exception& e)
+        {
+            THROW_EXCEPTION(e);
+        }
+    }
+
     void CopyDirectory(const std::wstring &srcDirectory, const std::wstring &destDirectory, const CopyDirectoryOption *option)
     {
         assert(!IsBlank(srcDirectory));
@@ -268,39 +303,12 @@ namespace vcc
         )
     }
 
-    void CreateDirectory(const std::wstring &path)
+	void RemoveDirectory(const std::wstring &directory)
     {
-        if (IsBlank(path) || IsDirectoryExists(path))
-            return;
-
-        try
-        {
-            PATH currentPath(path);
-            CreateDirectory(currentPath.parent_path().wstring());
-            std::filesystem::create_directories(path);
-        }
-        catch(const std::exception& e)
-        {
-            THROW_EXCEPTION(e);
-        }
-    }
-
-	void RemoveFile(const std::wstring &filePath)
-    {
-        if (filePath.empty())
-            return;
-        try
-        {
-            if (!IsFileExists(filePath))
-                return;
-                
-            PATH currentPath(filePath);
-            std::filesystem::remove(filePath);
-        }
-        catch(const std::exception& e)
-        {
-            THROW_EXCEPTION(e);
-        }
+        assert(!IsBlank(directory));
+        TRY_CATCH(
+            std::filesystem::remove_all(PATH(directory));
+        )
     }
 
     std::wstring ReadFile(const std::wstring &filePath)

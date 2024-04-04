@@ -6,6 +6,7 @@
 #include "i_action.hpp"
 #include "base_action.hpp"
 #include "action_manager.hpp"
+#include "memory_macro.hpp"
 
 using namespace vcc;
 
@@ -33,14 +34,9 @@ class ActionManagerTestClass final : public BaseAction<ActionManagerTestClass>
 class ActionManagerTest : public testing::Test 
 {
     private:
-        ActionManager _Manager;
+        MANAGER(ActionManager, Manager, nullptr);
 
     public:
-        ActionManager * GetManager()
-        {
-            return &this->_Manager;
-        }
-    
         std::shared_ptr<IAction> CreateAction(int index)
         {
             return std::make_shared<ActionManagerTestClass>(index);
@@ -48,17 +44,17 @@ class ActionManagerTest : public testing::Test
 
         void ResetWithFiveActions()
         {
-            this->_Manager.Truncate();
-            this->_Manager.DoAction(this->CreateAction(0));
-            this->_Manager.DoAction(this->CreateAction(1));
-            this->_Manager.DoAction(this->CreateAction(2));
-            this->_Manager.DoAction(this->CreateAction(3));
-            this->_Manager.DoAction(this->CreateAction(4));
+            this->_Manager->Truncate();
+            this->_Manager->DoAction(this->CreateAction(0));
+            this->_Manager->DoAction(this->CreateAction(1));
+            this->_Manager->DoAction(this->CreateAction(2));
+            this->_Manager->DoAction(this->CreateAction(3));
+            this->_Manager->DoAction(this->CreateAction(4));
         }
 
         void SetUp() override
         {
-            this->_Manager.SetMaxActionListSize(10);
+            this->_Manager->SetMaxActionListSize(10);
         }
 
         void TearDown() override

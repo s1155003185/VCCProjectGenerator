@@ -8,16 +8,17 @@
 
 using namespace vcc;
 
-class VPGVccGenerationManager : public VPGBaseGenerationManager
+class VPGVccGenerationManager : public VPGBaseGenerationManager<VPGVccGenerationManager>
 {
     public:
+        VPGVccGenerationManager() : VPGVccGenerationManager(nullptr, nullptr) {}
         VPGVccGenerationManager(std::shared_ptr<LogProperty> logProperty, std::shared_ptr<VPGGenerationOption> option) : VPGBaseGenerationManager(logProperty, option) {}
         virtual ~VPGVccGenerationManager() {}
 
-        std::vector<std::wstring> GetUpdateList();
-        std::vector<std::wstring> GetUpdateUnitTestList();
+        std::vector<std::wstring> GetUpdateList() const;
+        std::vector<std::wstring> GetUpdateUnitTestList() const;
 
-        virtual void Add() override;
-        virtual void Update() override;
-        virtual void Generate() override;
+        virtual void Add() const override;
+        virtual void Update() const override;
+        virtual void Generate() const override;
 };

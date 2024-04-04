@@ -46,22 +46,22 @@ class VPGEnumClassReader
 {
     SET(std::wstring, ClassMacroList);
     private:
-        std::wstring _GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg);
+        std::wstring _GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg) const;
 
-        std::wstring _GetEnum(const std::wstring &propertyStr, size_t &pos);
-        std::wstring _GetMacro(const std::wstring &propertyCommand, size_t &pos);
-        std::wstring _GetType(const std::wstring &macroStr, size_t &pos);
-        std::wstring _GetPropertyName(const std::wstring &macroStr, size_t &pos);
-        std::wstring _GetDefaultValue(const std::wstring &macroStr, size_t &pos);
-        void _AssignEnumClassProperty(const std::wstring &propertyCommand, std::shared_ptr<VPGEnumClassProperty> property);
+        std::wstring _GetEnum(const std::wstring &propertyStr, size_t &pos) const;
+        std::wstring _GetMacro(const std::wstring &propertyCommand, size_t &pos) const;
+        std::wstring _GetType(const std::wstring &macroStr, size_t &pos) const;
+        std::wstring _GetPropertyName(const std::wstring &macroStr, size_t &pos) const;
+        std::wstring _GetDefaultValue(const std::wstring &macroStr, size_t &pos) const;
+        void _AssignEnumClassProperty(const std::wstring &propertyCommand, std::shared_ptr<VPGEnumClassProperty> property) const;
 
-        std::wstring _GetCommand(const std::wstring &cppCode, size_t &pos);
+        std::wstring _GetCommand(const std::wstring &cppCode, size_t &pos) const;
 
-        void _ParseProperties(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass);
-        void _ParseClass(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass);
+        void _ParseProperties(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass) const;
+        void _ParseClass(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass) const;
     public:
         VPGEnumClassReader(const std::set<std::wstring> &classMacroList);
         ~VPGEnumClassReader() {}
 
-        void Parse(const std::wstring &cppCode, std::vector<std::shared_ptr<VPGEnumClass>> &results);
+        void Parse(const std::wstring &cppCode, std::vector<std::shared_ptr<VPGEnumClass>> &results) const;
 };

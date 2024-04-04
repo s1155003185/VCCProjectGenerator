@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+#include "log_property.hpp"
+#include "memory_macro.hpp"
 #include "vpg_process_manager.hpp"
 #include "string_helper.hpp"
 
@@ -20,7 +22,10 @@ int main(int argc, char **argv)
 			argList.push_back(arg);
 		}
 
-		VPGProcessManager process;
+		DECLARE_SPTR(LogProperty, logProperty);
+		logProperty->Init(LogPropertyType::None);
+		logProperty->SetIsConsoleLog(true);
+		VPGProcessManager process(logProperty);
 		process.Execute(argList);
 	} catch (std::exception &ex) {
 		std::cerr << ex.what() << std::endl;

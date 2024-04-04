@@ -10,7 +10,7 @@ using namespace vcc;
 
 class VPGProcessManagerTest : public testing::Test 
 {
-    MANAGER(VPGProcessManager, Manager);
+    MANAGER(VPGProcessManager, Manager, nullptr);
 
     public:
 

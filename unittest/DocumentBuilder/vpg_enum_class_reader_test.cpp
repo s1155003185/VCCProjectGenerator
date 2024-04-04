@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 
+#include "memory_macro.hpp"
 #include "vpg_enum_class_reader.hpp"
-#include "vpg_file_generation_service.hpp"
+#include "vpg_file_generation_manager.hpp"
 
 TEST(VPGEnumClassReaderTest, Normal)
 {
@@ -78,7 +79,9 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
     code += L"    EnumE\r\n";
     code += L"};\r\n";
 
-    VPGEnumClassReader reader(VPGFileGenerationService::GetClassMacroList(L""));
+    DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr);
+    manager->GetClassMacroList(L"");
+    VPGEnumClassReader reader(manager->GetClassMacros());
     std::vector<std::shared_ptr<VPGEnumClass>> results;
     reader.Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);

@@ -13,8 +13,6 @@ using namespace vcc;
 
 class VPGProcessManager : public BaseManager<VPGProcessManager>
 {
-    GET_SPTR(LogProperty, LogProperty, LogPropertyType::None);
-
     // project
     GETSET(std::wstring, Workspace, L"");
     GETSET(VPGProjectType, VPGProjectType, VPGProjectType::NA);
@@ -27,7 +25,7 @@ class VPGProcessManager : public BaseManager<VPGProcessManager>
     GETSET(bool, IsExcludeExternalUnitTest, false);
 
     public:
-        VPGProcessManager() = default;
+        VPGProcessManager(std::shared_ptr<LogProperty> logProperty) : BaseManager(logProperty) {};
         ~VPGProcessManager() {};
 
         void InitLogProperty();

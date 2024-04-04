@@ -5,14 +5,15 @@
 
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
+#include "memory_macro.hpp"
 #include "vpg_code_reader.hpp"
-#include "vpg_file_generation_service.hpp"
+#include "vpg_file_generation_manager.hpp"
 
 using namespace vcc;
 
 #define CLASS_ID L"VPGVccGenerationManager"
 
-std::vector<std::wstring> VPGVccGenerationManager::GetUpdateList()
+std::vector<std::wstring> VPGVccGenerationManager::GetUpdateList() const
 {
     std::vector<std::wstring> result;
     // basic file
@@ -34,7 +35,7 @@ std::vector<std::wstring> VPGVccGenerationManager::GetUpdateList()
     return result;
 }
 
-std::vector<std::wstring> VPGVccGenerationManager::GetUpdateUnitTestList()
+std::vector<std::wstring> VPGVccGenerationManager::GetUpdateUnitTestList() const
 {
     std::vector<std::wstring> result;
     if (!_Option->GetIsExcludeVCCUnitTest())
@@ -49,13 +50,13 @@ std::vector<std::wstring> VPGVccGenerationManager::GetUpdateUnitTestList()
     return result;    
 }
 
-void VPGVccGenerationManager::Add()
+void VPGVccGenerationManager::Add() const
 {
     TRY_CATCH(
-        this->CreateBasicProject();
+        VPGBaseGenerationManager::CreateBasicProject();
         std::wstring src = _Option->GetWorkspaceSource();
         std::wstring dest = _Option->GetWorkspaceDestination();
-        LogService::LogInfo(this->GetLogProperty().get(), CLASS_ID, L"Copy Project to " + dest + L" ...");
+        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Copy Project to " + dest + L" ...");
         CopyDirectoryOption copyDirectoryOption;
         copyDirectoryOption.SetIsForce(true);
         copyDirectoryOption.SetIsRecursive(true);
@@ -73,37 +74,38 @@ void VPGVccGenerationManager::Add()
                 CopyDirectory(ConcatPaths({src, L"unittest"}), ConcatPaths({dest, _Option->GetProjectNameGtest()}), &copyDirectoryOption);
         }
 
-        LogService::LogInfo(this->GetLogProperty().get(), CLASS_ID, L"Done");
+        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Done");
     )
 }
 
-void VPGVccGenerationManager::Update()
+void VPGVccGenerationManager::Update() const
 {
     TRY_CATCH(
         std::wstring src = _Option->GetWorkspaceSource();
         std::wstring dest = _Option->GetWorkspaceDestination();
         
-        LogService::LogInfo(this->GetLogProperty().get(), CLASS_ID, L"Sync Project ...");
-        LogService::LogInfo(this->GetLogProperty().get(), CLASS_ID, L"From " + src);
-        LogService::LogInfo(this->GetLogProperty().get(), CLASS_ID, L"To " + dest);
+        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Sync Project ...");
+        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"From " + src);
+        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"To " + dest);
 
-        SyncWorkspace(this->GetLogProperty().get(), src, dest, GetUpdateList(), {});
+        SyncWorkspace(this->_LogProperty.get(), src, dest, GetUpdateList(), {});
         
         if (!IsBlank(_Option->GetProjectNameGtest())) {
             auto list = GetUpdateUnitTestList();
             if (!list.empty())
-                SyncWorkspace(this->GetLogProperty().get(), ConcatPaths({src, L"unittest"}), ConcatPaths({dest, _Option->GetProjectNameGtest()}), list, {});
+                SyncWorkspace(this->_LogProperty.get(), ConcatPaths({src, L"unittest"}), ConcatPaths({dest, _Option->GetProjectNameGtest()}), list, {});
         }
-        LogService::LogInfo(this->GetLogProperty().get(), CLASS_ID, L"Done");        
+        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Done");        
     )
 }
 
-void VPGVccGenerationManager::Generate()
+void VPGVccGenerationManager::Generate() const
 {
     TRY_CATCH(
-        LogService::LogInfo(this->GetLogProperty().get(), CLASS_ID, L"Generate Project ...");
-        VPGFileGenerationService::GernerateProperty(_LogProperty.get(), _Option->GetProjectPrefix(), _Option->GetWorkspaceDestination(), _Option->GetTypeWorkspace(),
+        DECLARE_UPTR(VPGFileGenerationManager, manager, this->_LogProperty);
+        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Generate Project ...");
+        manager->GernerateProperty(_LogProperty.get(), _Option->GetProjectPrefix(), _Option->GetWorkspaceDestination(), _Option->GetTypeWorkspace(),
             _Option->GetObjectTypeHppDirectory(), _Option->GetObjectHppDirectory(), _Option->GetPropertyAccessorHppDirectory(), _Option->GetPropertyAccessorCppDirectory());
-        LogService::LogInfo(this->GetLogProperty().get(), CLASS_ID, L"Done");
+        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Done");
     )
 }

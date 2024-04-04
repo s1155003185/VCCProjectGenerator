@@ -8,11 +8,11 @@
 
 using namespace vcc;
 
-class VPGCppGenerationManager : public VPGBaseGenerationManager
+class VPGCppGenerationManager : public VPGBaseGenerationManager<VPGCppGenerationManager>
 {
     public:
         VPGCppGenerationManager(std::shared_ptr<LogProperty> logProperty, std::shared_ptr<VPGGenerationOption> option) : VPGBaseGenerationManager(logProperty, option) {}
         virtual ~VPGCppGenerationManager() {}
 
-        virtual void Add() override;
+        virtual void Add() const override;
 };
