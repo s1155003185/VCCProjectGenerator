@@ -70,7 +70,9 @@ namespace vcc
 
 	// process
 	void Replace(std::wstring &str, const std::wstring& from, const std::wstring &to);
+	void ReplaceRegex(std::wstring &str, const std::wstring &regex, const std::wstring &replacement);
 	void ReplaceAll(std::wstring &str, const std::wstring& from, const std::wstring &to);
+	void ReplaceRegexAll(std::wstring &str, const std::wstring &regex, const std::wstring &replacement);
 
 	// regex
 	std::vector<wchar_t> GetSpecialCharacters(const EscapeStringType &type);

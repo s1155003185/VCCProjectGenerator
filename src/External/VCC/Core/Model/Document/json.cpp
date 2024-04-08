@@ -18,7 +18,7 @@ namespace vcc
         return obj;
     }
 
-    JsonType Json::GetJsonType(const std::wstring &key)
+    JsonType Json::GetJsonType(const std::wstring &key) const
     {
         JsonType result = JsonType::Null;
         TRY_CATCH(
@@ -27,7 +27,7 @@ namespace vcc
         return result;
     }
 
-    std::vector<std::wstring> Json::GetKeys(/*bool isRecursive*/)
+    std::vector<std::wstring> Json::GetKeys(/*bool isRecursive*/) const
     {
         std::vector<std::wstring> result;
         TRY_CATCH(
@@ -48,7 +48,7 @@ namespace vcc
         return result;
     }
 
-    bool Json::IsContainKey(const std::wstring &key/*, bool isRecursive*/)
+    bool Json::IsContainKey(const std::wstring &key/*, bool isRecursive*/) const
     {
         TRY_CATCH(
             auto keys = GetKeys();//GetKeys(isRecursive);
@@ -57,7 +57,7 @@ namespace vcc
         return false;
     }
 
-    bool Json::IsNull(const std::wstring &key)
+    bool Json::IsNull(const std::wstring &key) const
     {
         TRY_CATCH(
             return GetNameValuePairs(key)->GetType() == JsonType::Null;
@@ -65,7 +65,7 @@ namespace vcc
         return false;        
     }
     
-    void Json::AddNull(const std::wstring &key)
+    void Json::AddNull(const std::wstring &key) const
     {
         TRY_CATCH(
             DECLARE_SPTR(Json, json);
@@ -74,7 +74,7 @@ namespace vcc
         )
     }
 
-    bool Json::GetBool(const std::wstring &key)
+    bool Json::GetBool(const std::wstring &key) const
     {
         TRY_CATCH(
             return GetNameValuePairs(key)->GetValue() == L"true";
@@ -82,7 +82,7 @@ namespace vcc
         return false;
     }
 
-    void Json::AddBool(const std::wstring &key, bool value)
+    void Json::AddBool(const std::wstring &key, bool value) const
     {
         TRY_CATCH(
             DECLARE_SPTR(Json, json);
@@ -92,7 +92,7 @@ namespace vcc
         )
     }
 
-    double Json::GetDouble(const std::wstring &key)
+    double Json::GetDouble(const std::wstring &key) const
     {
         TRY_CATCH(
             return std::stod(GetNameValuePairs(key)->GetValue());
@@ -100,7 +100,7 @@ namespace vcc
         return 0.0;        
     }
 
-    size_t Json::GetDecimalPlaces(const std::wstring &key)
+    size_t Json::GetDecimalPlaces(const std::wstring &key) const
     {
         size_t decPt = 0;
         TRY_CATCH(
@@ -112,7 +112,7 @@ namespace vcc
         return decPt;
     }
 
-    void Json::AddDouble(const std::wstring &key, double value, size_t decimalPlaces)
+    void Json::AddDouble(const std::wstring &key, double value, size_t decimalPlaces) const
     {
         TRY_CATCH(
             DECLARE_SPTR(Json, json);
@@ -122,7 +122,7 @@ namespace vcc
         )
     }
 
-    int Json::GetInt32(const std::wstring &key)
+    int Json::GetInt32(const std::wstring &key) const
     {
         TRY_CATCH(
             return std::stoi(GetNameValuePairs(key)->GetValue());
@@ -130,7 +130,7 @@ namespace vcc
         return 0;
     }
 
-    int64_t Json::GetInt64(const std::wstring &key)
+    int64_t Json::GetInt64(const std::wstring &key) const
     {
         TRY_CATCH(
             return std::stoll(GetNameValuePairs(key)->GetValue());
@@ -138,7 +138,7 @@ namespace vcc
         return 0;
     }
 
-    void Json::AddInt(const std::wstring &key, int value)
+    void Json::AddInt(const std::wstring &key, int value) const
     {
         TRY_CATCH(
             DECLARE_SPTR(Json, json);
@@ -148,7 +148,7 @@ namespace vcc
         )
     }
 
-    std::wstring Json::GetString(const std::wstring &key)
+    std::wstring Json::GetString(const std::wstring &key) const
     {
         TRY_CATCH(
             return GetNameValuePairs(key)->GetValue();
@@ -156,7 +156,7 @@ namespace vcc
         return L"";
     }
 
-    void Json::AddString(const std::wstring &key, const std::wstring &value)
+    void Json::AddString(const std::wstring &key, const std::wstring &value) const
     {
         TRY_CATCH(
             DECLARE_SPTR(Json, json);
@@ -166,7 +166,7 @@ namespace vcc
         )
     }
 
-    std::shared_ptr<Json> Json::GetObject(const std::wstring &key)
+    std::shared_ptr<Json> Json::GetObject(const std::wstring &key) const
     {
         TRY_CATCH(
             if (GetNameValuePairs(key)->GetArray().size() > 0)
@@ -175,7 +175,7 @@ namespace vcc
         return nullptr;
     }
 
-    void Json::AddObject(const std::wstring &key, std::shared_ptr<Json> object)
+    void Json::AddObject(const std::wstring &key, std::shared_ptr<Json> object) const
     {
         TRY_CATCH(
             object->SetType(JsonType::Json);
@@ -187,7 +187,7 @@ namespace vcc
         )
     }
 
-    std::vector<std::shared_ptr<Json>> &Json::GetArray(const std::wstring &key)
+    std::vector<std::shared_ptr<Json>> &Json::GetArray(const std::wstring &key) const
     {
         TRY_CATCH(
             return GetNameValuePairs(key)->GetArray();
@@ -197,7 +197,7 @@ namespace vcc
         return emptyVector;
     }
 
-    void Json::AddArray(const std::wstring &key, std::shared_ptr<Json> array)
+    void Json::AddArray(const std::wstring &key, std::shared_ptr<Json> array) const
     {
         TRY_CATCH(
             array->SetType(JsonType::Array);
@@ -205,7 +205,7 @@ namespace vcc
         )
     }
 
-    void Json::AddArrayNull()
+    void Json::AddArrayNull() const
     {
         TRY_CATCH(
             DECLARE_SPTR(Json, json);
@@ -214,7 +214,7 @@ namespace vcc
         )
     }
 
-    void Json::AddArrayBool(bool value)
+    void Json::AddArrayBool(bool value) const
     {
         TRY_CATCH(
             DECLARE_SPTR(Json, json);
@@ -224,7 +224,7 @@ namespace vcc
         )
     }
 
-    void Json::AddArrayDouble(double value, size_t decimalPlaces)
+    void Json::AddArrayDouble(double value, size_t decimalPlaces) const
     {
         TRY_CATCH(
             DECLARE_SPTR(Json, json);
@@ -234,7 +234,7 @@ namespace vcc
         )
     }
 
-    void Json::AddArrayInt(int value)
+    void Json::AddArrayInt(int value) const
     {
         TRY_CATCH(
             DECLARE_SPTR(Json, json);
@@ -244,7 +244,7 @@ namespace vcc
         )
     }
 
-    void Json::AddArrayString(const std::wstring &value)
+    void Json::AddArrayString(const std::wstring &value) const
     {
         TRY_CATCH(
             DECLARE_SPTR(Json, json);
@@ -254,7 +254,7 @@ namespace vcc
         )
     }
 
-    void Json::AddArrayObject(std::shared_ptr<Json> object)
+    void Json::AddArrayObject(std::shared_ptr<Json> object) const
     {
         TRY_CATCH(
             object->SetType(JsonType::Json);
@@ -266,7 +266,7 @@ namespace vcc
         )
     }
 
-    void Json::AddArrayArray(std::shared_ptr<Json> array)
+    void Json::AddArrayArray(std::shared_ptr<Json> array) const
     {
         TRY_CATCH(
             array->SetType(JsonType::Array);

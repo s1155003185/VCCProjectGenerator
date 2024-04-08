@@ -234,3 +234,33 @@ TEST(StringHelperTest, GetNextQuotedString_Full)
     EXPECT_EQ(GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"");
     EXPECT_EQ(pos, (size_t)15);    
 }
+
+/* ---------------------------------------------------------------------------------------------------- */
+/*                                      Process                                                         */
+/* ---------------------------------------------------------------------------------------------------- */
+
+TEST(StringHelperTest, ReplaceRegex)
+{
+    std::wstring str = L"#define DLL_NAME \"xxx\"#define DLL_NAME \"xxx\"#define DLL_NAME \"xxx\"";
+    std::wstring replacement = L"#define DLL_NAME \"yyy\"";
+    ReplaceRegex(str, L"#define DLL_NAME \"([^\"]*)\"", replacement);
+    EXPECT_EQ(str, L"#define DLL_NAME \"yyy\"#define DLL_NAME \"xxx\"#define DLL_NAME \"xxx\"");
+
+    str = L"xxxxxxxxxxxxxxxxxxxx";
+    replacement = L"xxx";
+    ReplaceRegex(str, L"xxxx", replacement);
+    EXPECT_EQ(str, L"xxxxxxxxxxxxxxxxxxx");
+}
+
+TEST(StringHelperTest, ReplaceRegexAll)
+{
+    std::wstring str = L"#define DLL_NAME \"xxx\"#define DLL_NAME \"xxx\"#define DLL_NAME \"xxx\"";
+    std::wstring replacement = L"#define DLL_NAME \"yyy\"";
+    ReplaceRegexAll(str, L"#define DLL_NAME \"([^\"]*)\"", replacement);
+    EXPECT_EQ(str, L"#define DLL_NAME \"yyy\"#define DLL_NAME \"yyy\"#define DLL_NAME \"yyy\"");
+
+    str = L"xxxxxxxxxxxxxxxxxxxx";
+    replacement = L"xxx";
+    ReplaceRegexAll(str, L"xxxx", replacement);
+    EXPECT_EQ(str, L"xxxxxxxxxxxxxxx");
+}

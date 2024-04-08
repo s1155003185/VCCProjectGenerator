@@ -4,6 +4,9 @@
 #else
 #include <dlfcn.h>
 #endif
+#include <string>
+
+#define DLL_NAME "libvpg"
 
 struct DllHandle
 {
@@ -31,10 +34,13 @@ struct DllHandle
 };
 
 TEST(DllTest, LoadDll) {
+    std::string dllName = DLL_NAME;
     #ifdef _WIN32
-    const DllHandle h("libvpg.dll");
+    dllName += ".dll";
+    const DllHandle h(dllName.c_str());
     #else
-    const DllHandle h("bin/Debug/libvpg.so");
+    dllName = "bin/Debug/" + dllName + ".so";
+    const DllHandle h(dllName.c_str());
     if (h.Get() == nullptr) {
         fprintf(stderr, "%s\n", dlerror());
     }

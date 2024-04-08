@@ -220,8 +220,9 @@ TEST_F(VPGBaseGenerationManagerTest, DllTestFileContent)
     _Option->SetProjectNameDLL(L"libvpg");
     _Option->SetProjectNameEXE(L"libvpg");
     _Option->SetProjectNameGtest(L"libvpg");
-    std::wstring result = this->GetManager()->GetDLLTestFileContent();
     std::wstring originalText  = ReadFile(L"unittest/dllTest/dynamic_library_test.cpp");
+    std::wstring result = originalText;
+    this->GetManager()->GetDLLTestFileContent(result);
     ReplaceAll(originalText, L"\r\n", L"\n");
     ReplaceAll(result, L"\r\n", L"\n");
     EXPECT_EQ(originalText, result);

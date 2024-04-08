@@ -511,6 +511,13 @@ namespace vcc
     {
         str.replace(str.find(from), from.length(), to);
     }
+	
+	void ReplaceRegex(std::wstring &str, const std::wstring &regex, const std::wstring &replacement)
+	{
+		TRY_CATCH(
+			str = std::regex_replace(str, std::wregex(regex), replacement, std::regex_constants::format_first_only);
+		)
+	}
 
 	void ReplaceAll(std::wstring &str, const std::wstring& from, const std::wstring &to)
     {
@@ -521,6 +528,13 @@ namespace vcc
             startPos = foundPos + to.length();
         }
     }
+	
+	void ReplaceRegexAll(std::wstring &str, const std::wstring &regex, const std::wstring &replacement)
+	{
+		TRY_CATCH(
+			str = std::regex_replace(str, std::wregex(regex), replacement, std::regex_constants::match_any);
+		)
+	}
 
     std::vector<wchar_t> GetSpecialCharacters(const EscapeStringType &type)
     {

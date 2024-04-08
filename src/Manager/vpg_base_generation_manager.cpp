@@ -23,14 +23,21 @@ std::wstring VPGGenerationOption::SerializeJson(const IDocumentBuilder *builder)
     TRY_CATCH(
         DECLARE_UPTR(Json, json);
         json->AddString(L"Version", _Version);
-        json->AddBool(L"IsGit", _IsGit);
+        
+        json->AddString(L"ProjectType", L"VCCModule");
+        json->AddString(L"WorkspaceSource", _WorkspaceSource);
+        json->AddString(L"WorkspaceDestination", _WorkspaceDestination);
 
+        // --------------------------------------------------
+        // Config
+        // --------------------------------------------------
         json->AddString(L"ProjectPrefix", _ProjectPrefix);
 
         json->AddString(L"ProjectName", _ProjectName);
         json->AddString(L"ProjectNameDLL", _ProjectNameDLL);
         json->AddString(L"ProjectNameEXE", _ProjectNameEXE);
         json->AddString(L"ProjectNameGtest", _ProjectNameGtest);
+        json->AddBool(L"IsGit", _IsGit);
 
         json->AddBool(L"IsExcludeVCCUnitTest", _IsExcludeVCCUnitTest);
 
@@ -38,7 +45,6 @@ std::wstring VPGGenerationOption::SerializeJson(const IDocumentBuilder *builder)
         json->AddString(L"ExceptionTypeDirectory", _ExceptionTypeDirectory);
         json->AddString(L"ManagerTypeDirectory", _ManagerTypeDirectory);
         json->AddString(L"ObjectTypeDirectory", _ObjectTypeDirectory);
-
 
         json->AddString(L"TypeWorkspace", _TypeWorkspace);
         json->AddString(L"ObjectHppDirectory", _ObjectHppDirectory);

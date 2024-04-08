@@ -23,6 +23,7 @@ const std::wstring MakeFileName = L"Makefile";
 
 class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJsonObject
 {
+    GETSET(std::wstring, Version, L"0.0.1");
     // Generation Use
     GETSET(VPGProjectType, ProjectType, VPGProjectType::NA);
     GETSET(std::wstring, WorkspaceSource, L"");
@@ -31,9 +32,6 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJ
     // --------------------------------------------------
     // Config
     // --------------------------------------------------
-    GETSET(std::wstring, Version, L"0.0.1");
-    GETSET(bool, IsGit, false);
-    
     // Project
     GETSET(std::wstring, ProjectPrefix, L"");
 
@@ -41,6 +39,7 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJ
     GETSET(std::wstring, ProjectNameDLL, L"");
     GETSET(std::wstring, ProjectNameEXE, L"");
     GETSET(std::wstring, ProjectNameGtest, L"");
+    GETSET(bool, IsGit, false);
 
     GETSET(bool, IsExcludeVCCUnitTest, false);
 
@@ -84,7 +83,7 @@ class VPGBaseGenerationManager : public BaseManager<Derived>
 
         virtual ~VPGBaseGenerationManager() {}
 
-        std::wstring GetDLLTestFileContent() const;
+        void GetDLLTestFileContent(std::wstring &fileContent) const;
         
         void CreateWorkspaceDirectory() const;
         void CreateBasicProject() const;
@@ -119,59 +118,9 @@ void VPGBaseGenerationManager<Derived>::ValidateOption() const
 }
 
 template <typename Derived>
-std::wstring VPGBaseGenerationManager<Derived>::GetDLLTestFileContent() const
+void VPGBaseGenerationManager<Derived>::GetDLLTestFileContent(std::wstring &fileContent) const
 {
-    std::wstring result = L"";
-    result += L"#include <gtest/gtest.h>\r\n";
-    result += L"#ifdef _WIN32\r\n";
-    result += L"#include <windows.h>\r\n"; 
-    result += L"#else\r\n";
-    result += L"#include <dlfcn.h>\r\n";
-    result += L"#endif\r\n";
-    result += L"\r\n";
-    result += L"struct DllHandle\r\n";
-    result += L"{\r\n";
-    result += L"    #ifdef _WIN32\r\n";
-    result += L"    DllHandle(const char * const filename) : h(LoadLibrary(filename)) {}\r\n";
-    result += L"    ~DllHandle() { if (h) FreeLibrary(h); }\r\n";
-    result += L"    HINSTANCE Get() const { return h; }\r\n";
-    result += L"\r\n";
-    result += L"    private:\r\n";
-    result += L"        HINSTANCE h;\r\n";
-    result += L"\r\n";
-    result += L"    public:\r\n";
-    result += L"        static FARPROC GetProc(HINSTANCE h, const char* procName) { return GetProcAddress(h, procName); };\r\n";
-    result += L"    #else\r\n";
-    result += L"    DllHandle(const char * const filename) : h(dlopen(filename, RTLD_LAZY)) {}\r\n";
-    result += L"    ~DllHandle() { if (h) dlclose(h); }\r\n";
-    result += L"    void* Get() const { return h; }\r\n";
-    result += L"\r\n";
-    result += L"    private:\r\n";
-    result += L"        void* h;\r\n";
-    result += L"\r\n";
-    result += L"    public:\r\n";
-    result += L"        static void *GetProc(void *h, const char* procName) { return dlsym(h, procName); };\r\n";
-    result += L"    #endif\r\n";
-    result += L"};\r\n";
-    result += L"\r\n";
-    result += L"TEST(DllTest, LoadDll) {\r\n";
-    result += L"    #ifdef _WIN32\r\n";
-    result += L"    const DllHandle h(\"" + _Option->GetProjectNameDLL() + L".dll\");\r\n";
-    result += L"    #else\r\n";
-    result += L"    const DllHandle h(\"bin/Debug/" + _Option->GetProjectNameDLL() + L".so\");\r\n";
-    result += L"    if (h.Get() == nullptr) {\r\n";
-    result += L"        fprintf(stderr, \"%s\\n\", dlerror());\r\n";
-    result += L"    }\r\n";
-    result += L"    #endif\r\n";
-    result += L"    EXPECT_TRUE(h.Get());\r\n";
-    result += L"    \r\n";
-    result += L"    typedef long long int (*GetVersionFunction)();\r\n";
-    result += L"    const GetVersionFunction GetVersion = reinterpret_cast<GetVersionFunction>(DllHandle::GetProc(h.Get(), \"GetVersion\"));\r\n";
-    result += L"    EXPECT_TRUE(GetVersion != nullptr);\r\n";
-    result += L"    EXPECT_EQ(GetVersion(), 1);\r\n";
-    result += L"}\r\n";
-
-    return result;
+    ReplaceRegex(fileContent, L"#define DLL_NAME \"([^\"]*)\"", L"#define DLL_NAME \"" + _Option->GetProjectNameDLL() + L"\"");
 }
 
 template <typename Derived>
@@ -236,7 +185,9 @@ void VPGBaseGenerationManager<Derived>::CreateBasicProject() const
             CopyFile(ConcatPaths({src, L"unittest", L"gtest_main.cpp"}), ConcatPaths({dest, _Option->GetProjectNameGtest(), L"gtest_main.cpp"}), true);
 
             if (!IsBlank(_Option->GetProjectNameDLL())) {
-                AppendFileOneLine(ConcatPaths({dest, _Option->GetProjectNameGtest(), L"dllTest/dynamic_library_test.cpp"}), GetDLLTestFileContent(), true);
+                std::wstring dllUnitTestContent = ReadFile(ConcatPaths({src, L"unittest/dllTest/dynamic_library_test.cpp"}));
+                GetDLLTestFileContent(dllUnitTestContent);
+                AppendFileOneLine(ConcatPaths({dest, _Option->GetProjectNameGtest(), L"dllTest/dynamic_library_test.cpp"}), dllUnitTestContent, true);
             }
         }
         // Cannot Copy
