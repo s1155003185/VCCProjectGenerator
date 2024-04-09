@@ -7,6 +7,8 @@ enum class ExceptionType
 	// Coding error
 	NotSupport,
 	NotImplement,
+	// System
+	DllError,
 
 	// Directory
 	DirectoryNotFound,
