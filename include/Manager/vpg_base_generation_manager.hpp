@@ -185,9 +185,9 @@ void VPGBaseGenerationManager<Derived>::CreateBasicProject() const
             CopyFile(ConcatPaths({src, L"unittest", L"gtest_main.cpp"}), ConcatPaths({dest, _Option->GetProjectNameGtest(), L"gtest_main.cpp"}), true);
 
             if (!IsBlank(_Option->GetProjectNameDLL())) {
-                std::wstring dllUnitTestContent = ReadFile(ConcatPaths({src, L"unittest/Dll/dynamic_library_test.cpp"}));
+                std::wstring dllUnitTestContent = ReadFile(ConcatPaths({src, L"unittest/Dll/dll_test.cpp"}));
                 GetDLLTestFileContent(dllUnitTestContent);
-                AppendFileOneLine(ConcatPaths({dest, _Option->GetProjectNameGtest(), L"Dll/dynamic_library_test.cpp"}), dllUnitTestContent, true);
+                AppendFileOneLine(ConcatPaths({dest, _Option->GetProjectNameGtest(), L"Dll/dll_test.cpp"}), dllUnitTestContent, true);
             }
         }
         // Cannot Copy

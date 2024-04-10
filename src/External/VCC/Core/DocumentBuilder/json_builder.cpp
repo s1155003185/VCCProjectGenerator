@@ -45,7 +45,7 @@ namespace vcc
     std::wstring JsonBuilder::Serialize(const IDocument *doc) const
     {
         std::wstring result = L"";
-        //TRY_CATCH(
+        TRY_CATCH(
             std::wstring currentNewLineCharacter = _IsBeautify ? _NewLineCharacter : L"";
             std::wstring currentNameColonSpace = _IsBeautify ? _NameColonSpace : L"";
             std::wstring currentColonValueSpace = _IsBeautify ? _ColonValueSpace : L"";
@@ -97,7 +97,7 @@ namespace vcc
                 assert(false);
                 break;
             }
-        //)
+        )
         return result;
     }
 

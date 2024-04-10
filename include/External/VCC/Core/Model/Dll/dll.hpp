@@ -42,7 +42,7 @@ namespace vcc
                     #ifdef _WIN32
                     THROW_EXCEPTION_MSG(ExceptionType::DllError, str2wstr(std::to_string(GetLastError())));
                     #else
-                    THROW_EXCEPTION_MSG(ExceptionType::DllError, str2wstr(std::to_string(dlerror())));
+                    THROW_EXCEPTION_MSG(ExceptionType::DllError, str2wstr(std::string(dlerror())));
                     #endif
                     return nullptr;
                 }

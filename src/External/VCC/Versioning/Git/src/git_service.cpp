@@ -13,7 +13,8 @@
 #include <ctime>
 #endif
 
-#include "config_reader.hpp"
+#include "config.hpp"
+#include "config_builder.hpp"
 #include "time_helper.hpp"
 #include "exception_macro.hpp"
 #include "log_property.hpp"
@@ -1312,10 +1313,13 @@ namespace vcc
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global --list");
             if (!IsBlank(cmdResult)) {
-                DECLARE_SPTR(ConfigElement, element);
-                DECLARE_UPTR(ConfigReader, reader);
-                reader->Parse(cmdResult, element);
+                DECLARE_SPTR(Config, element);
+                DECLARE_UPTR(ConfigBuilder, reader);
+                reader->Deserialize(cmdResult, element);
                 for (auto it : element->GetConfigs()) {
+                    if (!element->IsValue(it.first))
+                        continue;
+
                     if (it.first == GIT_CONFIG_USER_NAME) {
                         config->SetUserName(it.second);
                     } else if (it.first == GIT_CONFIG_USER_EMAIL) {
@@ -1391,11 +1395,13 @@ namespace vcc
         TRY_CATCH(
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local --list");
             if (!IsBlank(cmdResult)) {
-                DECLARE_SPTR(ConfigElement, element);
-                DECLARE_UPTR(ConfigReader, reader);
+                DECLARE_SPTR(Config, element);
+                DECLARE_UPTR(ConfigBuilder, reader);
 
-                reader->Parse(cmdResult, element);
+                reader->Deserialize(cmdResult, element);
                 for (auto it : element->GetConfigs()) {
+                    if (!element->IsValue(it.first))
+                        continue;
                     if (it.first == GIT_CONFIG_USER_NAME) {
                         config->SetUserName(it.second);
                     } else if (it.first == GIT_CONFIG_USER_EMAIL) {
