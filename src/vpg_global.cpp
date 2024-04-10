@@ -66,3 +66,8 @@ std::wstring VPGGlobal::GetProjecURL(VPGProjectType projectType)
 {
     return URL + VPGGlobal::GetProjectName(projectType) + URL_GIT;
 }
+
+std::wstring VPGGlobal::GetVccJsonFileName()
+{
+    return L"vcc.json";
+}

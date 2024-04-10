@@ -10,6 +10,7 @@
 #include "file_helper.hpp"
 #include "i_document.hpp"
 #include "i_document_builder.hpp"
+#include "i_vpg_generation_manager.hpp"
 #include "json.hpp"
 #include "memory_macro.hpp"
 #include "vpg_code_reader.hpp"
@@ -26,6 +27,7 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJ
     GETSET(std::wstring, Version, L"0.0.1");
     // Generation Use
     GETSET(VPGProjectType, ProjectType, VPGProjectType::NA);
+    GETSET(std::wstring, WorkspaceSourceGitUrl, L"");
     GETSET(std::wstring, WorkspaceSource, L"");
     GETSET(std::wstring, WorkspaceDestination, L"");
 
@@ -38,7 +40,7 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJ
     GETSET(std::wstring, ProjectName, L"");
     GETSET(std::wstring, ProjectNameDLL, L"");
     GETSET(std::wstring, ProjectNameEXE, L"");
-    GETSET(std::wstring, ProjectNameGtest, L"");
+    GETSET(std::wstring, ProjectNameGtest, L"unittest");
     GETSET(bool, IsGit, false);
 
     GETSET(bool, IsExcludeVCCUnitTest, false);
@@ -67,7 +69,7 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJ
 };
 
 template <typename Derived>
-class VPGBaseGenerationManager : public BaseManager<Derived>
+class VPGBaseGenerationManager : public BaseManager<Derived>, public IVPGGenerationManager
 {
     GET_SPTR(LogProperty, LogProperty);
     GET_SPTR(VPGGenerationOption, Option);
@@ -91,18 +93,15 @@ class VPGBaseGenerationManager : public BaseManager<Derived>
 
         void SyncWorkspace(const LogProperty *logProperty, const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
             const std::vector<std::wstring> &includeFileFilters, const std::vector<std::wstring> &excludeFileFilters) const;
-            
-        virtual void Add() const
-        {
-            THROW_EXCEPTION_MSG(ExceptionType::NotSupport, L"Please implement Add Mode.");
-        }
+        
+        virtual void Add() const override = 0;
 
-        virtual void Update() const
+        virtual void Update() const override
         {
             THROW_EXCEPTION_MSG(ExceptionType::NotSupport, L"Update mode only support VCCModule.");
         }
 
-        virtual void Generate() const
+        virtual void Generate() const override
         {
             THROW_EXCEPTION_MSG(ExceptionType::NotSupport, L"Generate mode only support VCCModule.");
         }

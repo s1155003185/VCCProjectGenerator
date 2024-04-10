@@ -6,7 +6,9 @@
 
 #include "base_manager.hpp"
 #include "class_macro.hpp"
+#include "i_vpg_generation_manager.hpp"
 #include "log_property.hpp"
+#include "vpg_base_generation_manager.hpp"
 #include "vpg_project_type.hpp"
 
 using namespace vcc;
@@ -14,15 +16,10 @@ using namespace vcc;
 class VPGProcessManager : public BaseManager<VPGProcessManager>
 {
     // project
-    GETSET(std::wstring, Workspace, L"");
-    GETSET(VPGProjectType, VPGProjectType, VPGProjectType::NA);
-    GETSET(std::wstring, Tag, L"");
-    GETSET(int64_t, LogDepth, -1);
-    VECTOR(std::wstring, Plugins);
-    
-    // option
-    GETSET(bool, IsExcludeUnitTest, false);
-    GETSET(bool, IsExcludeExternalUnitTest, false);
+    GETSET_SPTR(VPGGenerationOption, Option);
+
+    private:
+        std::shared_ptr<IVPGGenerationManager> GetGenerationManager();
 
     public:
         VPGProcessManager(std::shared_ptr<LogProperty> logProperty) : BaseManager(logProperty) {};

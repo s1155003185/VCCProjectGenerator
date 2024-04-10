@@ -6,11 +6,15 @@
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
 #include "git_service.hpp"
+#include "i_vpg_generation_manager.hpp"
 #include "memory_macro.hpp"
 #include "string_helper.hpp"
 #include "vector_helper.hpp"
 #include "vpg_global.hpp"
+#include "vpg_base_generation_manager.hpp"
+#include "vpg_cpp_generation_manager.hpp"
 #include "vpg_project_type.hpp"
+#include "vpg_vcc_generation_manager.hpp"
 
 using namespace vcc;
 
@@ -24,8 +28,8 @@ void VPGProcessManager::VerifyLocalResponse()
     try {
         // 1. Check if source file exists, if not exist then clone
         // 2. Check if version != branch, then checkout
-        std::wstring localResponseDirectory = VPGGlobal::GetVccProjectLocalResponseDirectory(this->GetVPGProjectType());
-        std::wstring gitUrl = VPGGlobal::GetProjecURL(this->GetVPGProjectType());
+        std::wstring localResponseDirectory = _Option->GetWorkspaceSource();
+        std::wstring gitUrl = _Option->GetWorkspaceSourceGitUrl();
 
         LogService::LogInfo(this->GetLogProperty().get(), L"", L"Check VCC Local response existance: " + localResponseDirectory);
         if (IsDirectoryExists(localResponseDirectory)) {
@@ -53,7 +57,7 @@ void VPGProcessManager::VerifyLocalResponse()
         } else {
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Not Exists.");
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Clone from " + gitUrl);
-            GitService::Clone(this->GetLogProperty().get(),  VPGGlobal::GetVccLocalResponseFolder(), gitUrl, this->GetTag(), this->GetLogDepth());
+            GitService::Clone(this->GetLogProperty().get(),  VPGGlobal::GetVccLocalResponseFolder(), gitUrl, _Option->GetVersion());
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
         }
     } catch (const std::exception &e) {
@@ -63,7 +67,7 @@ void VPGProcessManager::VerifyLocalResponse()
 
 bool VPGProcessManager::IsUpdateAvaliable()
 {
-    switch (this->GetVPGProjectType())
+    switch (_Option->GetProjectType())
     {
     case VPGProjectType::VccComplex:
     case VPGProjectType::VccDll:
@@ -75,43 +79,51 @@ bool VPGProcessManager::IsUpdateAvaliable()
     return false;
 }
 
+std::shared_ptr<IVPGGenerationManager> VPGProcessManager::GetGenerationManager()
+{
+    switch (_Option->GetProjectType())
+    {
+    case VPGProjectType::VccComplex:
+    case VPGProjectType::VccDll:
+    case VPGProjectType::VccExe:
+        return std::make_shared<VPGVccGenerationManager>(this->GetLogProperty(), _Option);
+    case VPGProjectType::CppComplex:
+    case VPGProjectType::CppDll:
+    case VPGProjectType::CppExe:
+        return std::make_shared<VPGCppGenerationManager>(this->GetLogProperty(), _Option);
+    default:
+        assert(false);
+        break;
+    }
+    return nullptr;
+}
+
 void VPGProcessManager::Add()
 {
-    try {
+    TRY_CATCH(
         this->VerifyLocalResponse();
-
-        // Copy all nessary files to dest
-
-
-    } catch (const std::exception &e) {
-        THROW_EXCEPTION(e);
-    }
+        GetGenerationManager()->Add();
+    )
 }
 
 void VPGProcessManager::Update()
 {
-    try {
+    TRY_CATCH(
         if (!IsUpdateAvaliable())
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Only VCC Module can be updated.");
         this->VerifyLocalResponse();
-
-        // Compare the files with dist, sync files
-
-    } catch (const std::exception &e) {
-        THROW_EXCEPTION(e);
-    }
+        GetGenerationManager()->Update();
+    )
 }
 
 void VPGProcessManager::Generate()
 {
-    try {
+    TRY_CATCH(
         if (!IsUpdateAvaliable())
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Only VCC Module can be updated.");
         this->VerifyLocalResponse();
-
-    } catch (const std::exception &e) {
-        THROW_EXCEPTION(e);
-    }
+        GetGenerationManager()->Generate();
+    )
 }
 
 void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
@@ -124,7 +136,7 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
     try {
         std::wstring mode = cmds[1];
         if (mode == L"-V") {
-            std::wcout << L"VCCProjectGenerator version " << VPGGlobal::GetVersion() << std::endl;
+            std::wcout << VPGGlobal::GetVersion() << std::endl;
             return;        
         }
 
@@ -140,34 +152,32 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
                     i++;
                     std::wstring cmd2 = cmds[i];
                     if (cmd == L"-w") {
-                        this->_Workspace = cmd2;
+                        _Option->SetWorkspaceDestination(cmd2);
                     } else if (cmd == L"-i") {
                         ToUpper(cmd2);
                         if (HasPrefix(cmd2, L"CPP")) {
                             if (HasSuffix(cmd2, L"DLL"))
-                                this->_VPGProjectType = VPGProjectType::CppDll;
+                                _Option->SetProjectType(VPGProjectType::CppDll);
                             else if (HasSuffix(cmd2, L"EXE"))
-                                this->_VPGProjectType = VPGProjectType::CppExe;
+                                _Option->SetProjectType(VPGProjectType::CppExe);
                             else if (HasSuffix(cmd2, L"COMPLEX"))
-                                this->_VPGProjectType = VPGProjectType::CppComplex;
+                                _Option->SetProjectType(VPGProjectType::CppComplex);
                             else
                                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknown argument " + cmd2);
                         } else if (HasPrefix(cmd2, L"VCC")) {
                             if (HasSuffix(cmd2, L"DLL"))
-                                this->_VPGProjectType = VPGProjectType::VccDll;
+                                _Option->SetProjectType(VPGProjectType::VccDll);
                             else if (HasSuffix(cmd2, L"EXE"))
-                                this->_VPGProjectType = VPGProjectType::VccExe;
+                                _Option->SetProjectType(VPGProjectType::VccExe);
                             else if (HasSuffix(cmd2, L"COMPLEX"))
-                                this->_VPGProjectType = VPGProjectType::VccComplex;
+                                _Option->SetProjectType(VPGProjectType::VccComplex);
                             else
                                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknown argument " + cmd2);
                         }
                     } else if (cmd == L"-v") {
-                        this->_Tag = cmd2;
-                    } else if (cmd == L"-d") {
-                        this->_LogDepth = std::stoi(cmd2);
+                        _Option->SetVersion(cmd2);
                     } else if (cmd == L"-p") {
-                        this->_Plugins.push_back(cmd2);
+                        _Option->InsertPlugins(cmd2);
                     } else
                         THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknown argument " + cmd);
                 } else
@@ -175,18 +185,21 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
             } else {
                 // double tag, no second argument
                 if (cmd == L"--ExcludeUnitTest")
-                    this->_IsExcludeUnitTest = true;
+                    _Option->SetProjectNameGtest(L"");
                 else if (cmd == L"--ExcludeExternalUnitTest")
-                    this->_IsExcludeExternalUnitTest = true;
+                    _Option->SetIsExcludeVCCUnitTest(true);
                 else
                     THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknown argument " + cmd);
             }
         }
 
         // validation
-        if (this->_VPGProjectType == VPGProjectType::NA)
+        if (this->_Option->GetProjectType() == VPGProjectType::NA)
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Interface Type missing");
         
+        _Option->SetWorkspaceSource(VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType()));
+        _Option->SetWorkspaceSourceGitUrl(VPGGlobal::GetProjecURL(_Option->GetProjectType()));
+
         // process
         if (mode == L"-A")
             this->Add();
@@ -197,7 +210,7 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
         else
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknow Mode " + mode);
         
-        std::wcout << L"Process Complete Successfully!" << std::endl;
+        LogService::LogInfo(this->_LogProperty.get(), L"VPGProcessManager", L"Process Complete Successfully!");
     } catch (const std::exception &e) {
         THROW_EXCEPTION(e);
     }

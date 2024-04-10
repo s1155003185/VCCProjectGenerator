@@ -25,6 +25,7 @@ std::wstring VPGGenerationOption::SerializeJson(const IDocumentBuilder *builder)
         json->AddString(L"Version", _Version);
         
         json->AddString(L"ProjectType", L"VCCModule");
+        json->AddString(L"WorkspaceSourceGitUrl", _WorkspaceSourceGitUrl);
         json->AddString(L"WorkspaceSource", _WorkspaceSource);
         json->AddString(L"WorkspaceDestination", _WorkspaceDestination);
 

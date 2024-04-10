@@ -5,9 +5,12 @@
 
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
+#include "json.hpp"
+#include "json_builder.hpp"
 #include "memory_macro.hpp"
 #include "vpg_code_reader.hpp"
 #include "vpg_file_generation_manager.hpp"
+#include "vpg_global.hpp"
 
 using namespace vcc;
 
@@ -50,6 +53,26 @@ std::vector<std::wstring> VPGVccGenerationManager::GetUpdateUnitTestList() const
     return result;    
 }
 
+void VPGVccGenerationManager::CreateVccJson() const
+{
+    TRY_CATCH(
+        DECLARE_UPTR(JsonBuilder, jsonBuilder);
+        jsonBuilder->SetIsBeautify(true);
+        WriteFile(ConcatPaths({_Option->GetWorkspaceDestination(), VPGGlobal::GetVccJsonFileName()}), _Option->SerializeJson(jsonBuilder.get()), true);
+    )
+}
+
+void VPGVccGenerationManager::ReadVccJson() const
+{
+    TRY_CATCH(
+        std::wstring fileContent = ReadFile(ConcatPaths({_Option->GetWorkspaceDestination(), VPGGlobal::GetVccJsonFileName()}));
+        DECLARE_UPTR(JsonBuilder, jsonBuilder);
+        DECLARE_SPTR(Json, json);
+        jsonBuilder->Deserialize(fileContent, json);
+        _Option->DeserializeJson(json);
+    )
+}
+
 void VPGVccGenerationManager::Add() const
 {
     TRY_CATCH(
@@ -74,6 +97,8 @@ void VPGVccGenerationManager::Add() const
                 CopyDirectory(ConcatPaths({src, L"unittest"}), ConcatPaths({dest, _Option->GetProjectNameGtest()}), &copyDirectoryOption);
         }
 
+        // Create Json file at the end to force override
+        CreateVccJson();
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Done");
     )
 }
@@ -81,6 +106,8 @@ void VPGVccGenerationManager::Add() const
 void VPGVccGenerationManager::Update() const
 {
     TRY_CATCH(
+        ReadVccJson();
+
         std::wstring src = _Option->GetWorkspaceSource();
         std::wstring dest = _Option->GetWorkspaceDestination();
         
@@ -95,6 +122,9 @@ void VPGVccGenerationManager::Update() const
             if (!list.empty())
                 SyncWorkspace(this->_LogProperty.get(), ConcatPaths({src, L"unittest"}), ConcatPaths({dest, _Option->GetProjectNameGtest()}), list, {});
         }
+        
+        // Create Json file at the end to force override
+        CreateVccJson();
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Done");        
     )
 }
@@ -102,6 +132,8 @@ void VPGVccGenerationManager::Update() const
 void VPGVccGenerationManager::Generate() const
 {
     TRY_CATCH(
+        ReadVccJson();
+
         DECLARE_UPTR(VPGFileGenerationManager, manager, this->_LogProperty);
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Generate Project ...");
         manager->GernerateProperty(_LogProperty.get(), _Option->GetProjectPrefix(), _Option->GetWorkspaceDestination(), _Option->GetTypeWorkspace(),

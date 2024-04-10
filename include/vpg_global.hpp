@@ -11,4 +11,5 @@ class VPGGlobal
         static std::wstring GetVccProjectLocalResponseDirectory(VPGProjectType projectType);
         static std::wstring GetProjectName(VPGProjectType projectType);
         static std::wstring GetProjecURL(VPGProjectType projectType);
+        static std::wstring GetVccJsonFileName();
 };
