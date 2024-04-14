@@ -20,6 +20,11 @@
 
 namespace vcc
 {
+    std::wstring GetCurrentFolderPath()
+    {
+        return std::filesystem::current_path().wstring();
+    }
+
 	std::wstring GetSystemFolderPath(SystemFolderType fileType)
     {
         #ifdef __WIN32
@@ -67,32 +72,38 @@ namespace vcc
     void GetFileDifferenceBetweenWorkspaces(std::wstring sourceWorkspace, std::wstring targetWorkspace, 
         std::vector<std::wstring> &needToAdd, std::vector<std::wstring> &needToModify, std::vector<std::wstring> &needToDelete)
     {
-        std::vector<std::wstring> srcFileList, tarFileList;
-        for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(sourceWorkspace)))
-            srcFileList.push_back(GetRelativePath(filePath.path().wstring(), sourceWorkspace));
-        for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(targetWorkspace)))
-            tarFileList.push_back(GetRelativePath(filePath.path().wstring(),targetWorkspace));
+        TRY_CATCH(
+            std::vector<std::wstring> srcFileList, tarFileList;
+            TRY_CATCH(
+                for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(!sourceWorkspace.empty() ? sourceWorkspace : L".")))
+                    srcFileList.push_back(GetRelativePath(filePath.path().wstring(), sourceWorkspace));
+            )
+            TRY_CATCH(
+                for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(!targetWorkspace.empty() ? targetWorkspace : L".")))
+                    tarFileList.push_back(GetRelativePath(filePath.path().wstring(),targetWorkspace));
+            )
 
-        std::sort(srcFileList.begin(), srcFileList.end());
-        std::sort(tarFileList.begin(), tarFileList.end());
+            std::sort(srcFileList.begin(), srcFileList.end());
+            std::sort(tarFileList.begin(), tarFileList.end());
 
-        std::vector<std::wstring> equalFiles;
-        std::set_intersection(srcFileList.begin(),srcFileList.end(), tarFileList.begin(), tarFileList.end(), back_inserter(equalFiles));
+            std::vector<std::wstring> equalFiles;
+            std::set_intersection(srcFileList.begin(),srcFileList.end(), tarFileList.begin(), tarFileList.end(), back_inserter(equalFiles));
 
-        RemoveVectorIfContainElements(srcFileList, equalFiles);
-        RemoveVectorIfContainElements(tarFileList, equalFiles);
+            RemoveVectorIfContainElements(srcFileList, equalFiles);
+            RemoveVectorIfContainElements(tarFileList, equalFiles);
 
-        needToAdd.assign(srcFileList.begin(), srcFileList.end());
-        needToDelete.assign(tarFileList.begin(), tarFileList.end());
+            needToAdd.assign(srcFileList.begin(), srcFileList.end());
+            needToDelete.assign(tarFileList.begin(), tarFileList.end());
 
-        for (auto &str : equalFiles) {
-            std::wstring srcFile = ConcatPaths({sourceWorkspace, str});
-            std::wstring tarFile = ConcatPaths({targetWorkspace, str});
-            if (IsFile(srcFile) && IsFile(tarFile)) {
-                if (!IsFileEqual(srcFile, tarFile))
-                    needToModify.push_back(std::wstring(str));
+            for (auto &str : equalFiles) {
+                std::wstring srcFile = ConcatPaths({sourceWorkspace, str});
+                std::wstring tarFile = ConcatPaths({targetWorkspace, str});
+                if (IsFile(srcFile) && IsFile(tarFile)) {
+                    if (!IsFileEqual(srcFile, tarFile))
+                        needToModify.push_back(std::wstring(str));
+                }
             }
-        }
+        )
     }
 
     std::wstring GetWindowPath(std::wstring path)
@@ -375,10 +386,10 @@ namespace vcc
 
 	void WriteFile(const std::wstring &filePath, const std::wstring &content, bool isForce)
     {
-        try {
+        TRY_CATCH(
             PATH _filePath(filePath);		
-            PATH dir = PATH(_filePath).parent_path();
-            if (!IsDirectoryExists(dir.wstring()))
+            PATH dir = _filePath.parent_path();
+            if (!dir.wstring().empty() && !IsDirectoryExists(dir.wstring()))
             {
                 if (!isForce)
                     THROW_EXCEPTION_MSG(ExceptionType::DirectoryNotFound, dir.wstring() + L"Directory not found.");
@@ -393,9 +404,7 @@ namespace vcc
             } else {
                 THROW_EXCEPTION_MSG(ExceptionType::FileBlocked, L"Cannot open file: " + filePath);
             }
-        } catch (const std::exception &e) {
-            THROW_EXCEPTION(e);
-        }
+        )
     }
 
     void AppendFileOneLine(const std::wstring &filePath, const std::wstring &line, bool isForce) 

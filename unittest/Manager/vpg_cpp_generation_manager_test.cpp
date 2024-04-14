@@ -45,8 +45,8 @@ class VPGCppGenerationManagerTest : public testing::Test
             this->_Option->SetWorkspaceSource(L".");
             this->_Option->SetWorkspaceDestination(this->GetWorkspaceSource());
             this->_Option->SetProjectName(L"VCCProjGenerator");
-            this->_Option->SetProjectNameDLL(L"libvpg");
-            this->_Option->SetProjectNameEXE(L"vpg");
+            this->_Option->SetProjectNameDll(L"libvpg");
+            this->_Option->SetProjectNameExe(L"vpg");
             this->_Option->SetProjectNameGtest(L"unittest"); // must be hardcode unittest
             this->_Manager->CreateBasicProject();
             // replace main so that the project can be compile
@@ -58,8 +58,8 @@ class VPGCppGenerationManagerTest : public testing::Test
             // option for testing
             this->_Option->SetWorkspaceSource(this->GetWorkspaceSource());
             this->_Option->SetWorkspaceDestination(this->GetWorkspaceTarget());
-            this->_Option->SetProjectNameEXE(L"CPPProject");
-            this->_Option->SetProjectNameDLL(L"CPPDllProject");
+            this->_Option->SetProjectNameExe(L"CPPProject");
+            this->_Option->SetProjectNameDll(L"CPPDllProject");
             this->_Option->SetProjectName(L"ProjectName");
             this->_Option->SetProjectNameGtest(L"CPPUnitTest");
         }
@@ -77,12 +77,14 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     
     // Complex
     std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
-    this->_Option->SetProjectNameEXE(L"CPPProject");
-    this->_Option->SetProjectNameDLL(L"CPPDllProject");
+    this->_Option->SetProjectNameExe(L"CPPProject");
+    this->_Option->SetProjectNameDll(L"CPPDllProject");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetProjectNameGtest(L"CPPUnitTest");
     this->_Option->SetProjectType(VPGProjectType::CppComplex);
     this->GetManager()->Add();
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L".vscode/launch.json"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L".vscode/tasks.json"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
@@ -104,11 +106,13 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     
     // EXE only
     std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
-    this->_Option->SetProjectNameEXE(L"CPPProject");
-    this->_Option->SetProjectNameDLL(L"");
+    this->_Option->SetProjectNameExe(L"CPPProject");
+    this->_Option->SetProjectNameDll(L"");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetProjectNameGtest(L"CPPUnitTest");
     this->GetManager()->Add();
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L".vscode/launch.json"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L".vscode/tasks.json"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
     EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
     EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
@@ -131,11 +135,13 @@ TEST_F(VPGCppGenerationManagerTest, Add)
 
     // DLL only
     std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
-    this->_Option->SetProjectNameEXE(L"");
-    this->_Option->SetProjectNameDLL(L"CPPDllProject");
+    this->_Option->SetProjectNameExe(L"");
+    this->_Option->SetProjectNameDll(L"CPPDllProject");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetProjectNameGtest(L"CPPUnitTest");
     this->GetManager()->Add();
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L".vscode/launch.json"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L".vscode/tasks.json"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
@@ -158,11 +164,13 @@ TEST_F(VPGCppGenerationManagerTest, Add)
 
     // No unittest
     std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
-    this->_Option->SetProjectNameEXE(L"CPPProject");
-    this->_Option->SetProjectNameDLL(L"CPPDllProject");
+    this->_Option->SetProjectNameExe(L"CPPProject");
+    this->_Option->SetProjectNameDll(L"CPPDllProject");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetProjectNameGtest(L"");
     this->GetManager()->Add();
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L".vscode/launch.json"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L".vscode/tasks.json"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));

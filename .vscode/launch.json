@@ -28,14 +28,6 @@
           "ignoreFailures": true
         }
       ]
-    },
-    {
-      "name": "C/C++ Runner: Debug Session",
-      "type": "lldb",
-      "request": "launch",
-      "args": [],
-      "cwd": "/Users/david/Desktop/VSCode/VCCProjectGenerator",
-      "program": "/Users/david/Desktop/VSCode/VCCProjectGenerator/build/Debug/outDebug"
     }
   ]
 }

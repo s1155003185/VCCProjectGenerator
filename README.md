@@ -1,8 +1,24 @@
-# Versioning Common Codebase Project / Versioning Coding Cooperation Project
 # VCCProjectGenerator
+## Versioning Common Codebase Project / Versioning Coding Cooperation Project
 
-## Objective
-Auto handle project update if using VCCModule. 
+## Versioning Common Codebase Project Introduction
+When starting a new project, it is time consuming to create basic structure. In fact, all projects having similar structure and lots of similar functions. This project is to extract common factor to enhance development efficience.
+
+Versioning Common Codebase Project contains following members:
+Versionin Common Codebase Project - Project Generator (https://github.com/s1155003185/VCCProjectGenerator)
+Versionin Common Codebase Project - Project Generator VSCode Extension (https://github.com/s1155003185/VCCProjectGeneratorVSCodeExtension)
+Versionin Common Codebase Project - Simple C++ Template (https://github.com/s1155003185/VCCSimpleTemplateCPP)
+Versionin Common Codebase Project - VCCModule (https://github.com/s1155003185/VCCModule)
+
+## Versionin Common Codebase Project - Project Generator Feature
+1. Auto Create C++ Project
+2. Auto Create, Update, Generate VCCModule (Any Interface + C++ DLL Moduel)
+
+## Versionin Common Codebase Project - Simple C++ Template Feature
+
+
+## Versionin Common Codebase Project - VCCModule Feature
+1. 
 
 ## Compile
 1. Pull VCCProjectGenerator

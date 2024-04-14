@@ -263,8 +263,11 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
         LogService::LogInfo(logProperty, logId, L"Generate property start.");
         std::vector<std::wstring> objectTypeList;
         for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(typeWorkspaceFullPath))) {
-            std::wstring path = filePath.path().wstring();
+            std::wstring path = GetLinuxPath(filePath.path().wstring());
             std::wstring fileName = filePath.path().filename().wstring();
+            std::wstring middlePath = GetRelativePath(GetLinuxPath(filePath.path().parent_path().wstring()), GetLinuxPath(typeWorkspaceFullPath));
+            if (middlePath == L".")
+                middlePath = L"";
             // ------------------------------------------------------------------------------------------ //
             //                                      Validation                                            //
             // ------------------------------------------------------------------------------------------ //
@@ -304,7 +307,11 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
 
                 std::wstring propertyAccessorFileName = objectFileName + L"_" + propertyAccessorFileSuffixWithoutExtention;
 
-                GeneratePropertyClassFile(logProperty, projPrefix, ConcatPaths({projWorkspace, objDirectoryHpp, objectFileName + L".hpp"}), enumClassList);
+                std::vector<std::wstring> objectFilePaths = { projWorkspace, objDirectoryHpp };
+                if (!middlePath.empty())
+                    objectFilePaths.push_back(middlePath);
+                objectFilePaths.push_back(objectFileName + L".hpp");
+                GeneratePropertyClassFile(logProperty, projPrefix, ConcatPaths(objectFilePaths), enumClassList);
                 // GeneratePropertyPropertyAccessorFile(logProperty, projPrefix, 
                 //     ConcatPaths({projWorkspace, propertyAccessorDirectoryHpp, propertyAccessorFileName + L".hpp"}), 
                 //     ConcatPaths({projWorkspace, propertyAccessorDirectoryCpp, propertyAccessorFileName + L".cpp"}), enumClassList);

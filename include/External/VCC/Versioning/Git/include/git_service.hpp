@@ -368,7 +368,7 @@ namespace vcc
 
         // Initialization
         static void Initialize(const LogProperty *logProperty, const std::wstring &workspace);
-        static void Clone(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &url, const std::wstring &branch, const int64_t &depth = -1);
+        static void Clone(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &url, const std::wstring &branch = L"", const int64_t &depth = -1);
 
         /*-----------------------------------*
          * ----------- Remote     -----------*

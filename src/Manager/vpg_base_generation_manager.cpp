@@ -35,8 +35,8 @@ std::wstring VPGGenerationOption::SerializeJson(const IDocumentBuilder *builder)
         json->AddString(L"ProjectPrefix", _ProjectPrefix);
 
         json->AddString(L"ProjectName", _ProjectName);
-        json->AddString(L"ProjectNameDLL", _ProjectNameDLL);
-        json->AddString(L"ProjectNameEXE", _ProjectNameEXE);
+        json->AddString(L"ProjectNameDll", _ProjectNameDll);
+        json->AddString(L"ProjectNameExe", _ProjectNameExe);
         json->AddString(L"ProjectNameGtest", _ProjectNameGtest);
         json->AddBool(L"IsGit", _IsGit);
 
@@ -80,10 +80,10 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document)
 
         if (json->IsContainKey(L"ProjectName"))
             this->SetProjectName(json->GetString(L"ProjectName"));
-        if (json->IsContainKey(L"ProjectNameDLL"))
-            this->SetProjectNameDLL(json->GetString(L"ProjectNameDLL"));
-        if (json->IsContainKey(L"ProjectNameEXE"))
-            this->SetProjectNameEXE(json->GetString(L"ProjectNameEXE"));
+        if (json->IsContainKey(L"ProjectNameDll"))
+            this->SetProjectNameDll(json->GetString(L"ProjectNameDll"));
+        if (json->IsContainKey(L"ProjectNameExe"))
+            this->SetProjectNameExe(json->GetString(L"ProjectNameExe"));
         if (json->IsContainKey(L"ProjectNameGtest"))
             this->SetProjectNameGtest(json->GetString(L"ProjectNameGtest"));
 
@@ -113,7 +113,7 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document)
         if (json->IsContainKey(L"Plugins")) {
             auto plugins = json->GetArray(L"Plugins");
             for (auto const &plugin : plugins) {
-                this->InsertPlugins(plugin->GetValue());
+                this->InsertPlugins(plugin->GetJsonInternalValue());
             }
         }
     )

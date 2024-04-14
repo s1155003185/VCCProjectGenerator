@@ -62,17 +62,6 @@ void VPGVccGenerationManager::CreateVccJson() const
     )
 }
 
-void VPGVccGenerationManager::ReadVccJson() const
-{
-    TRY_CATCH(
-        std::wstring fileContent = ReadFile(ConcatPaths({_Option->GetWorkspaceDestination(), VPGGlobal::GetVccJsonFileName()}));
-        DECLARE_UPTR(JsonBuilder, jsonBuilder);
-        DECLARE_SPTR(Json, json);
-        jsonBuilder->Deserialize(fileContent, json);
-        _Option->DeserializeJson(json);
-    )
-}
-
 void VPGVccGenerationManager::Add() const
 {
     TRY_CATCH(
@@ -106,8 +95,6 @@ void VPGVccGenerationManager::Add() const
 void VPGVccGenerationManager::Update() const
 {
     TRY_CATCH(
-        ReadVccJson();
-
         std::wstring src = _Option->GetWorkspaceSource();
         std::wstring dest = _Option->GetWorkspaceDestination();
         
@@ -132,8 +119,6 @@ void VPGVccGenerationManager::Update() const
 void VPGVccGenerationManager::Generate() const
 {
     TRY_CATCH(
-        ReadVccJson();
-
         DECLARE_UPTR(VPGFileGenerationManager, manager, this->_LogProperty);
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Generate Project ...");
         manager->GernerateProperty(_LogProperty.get(), _Option->GetProjectPrefix(), _Option->GetWorkspaceDestination(), _Option->GetTypeWorkspace(),

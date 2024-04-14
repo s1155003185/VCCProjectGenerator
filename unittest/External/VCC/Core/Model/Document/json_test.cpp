@@ -32,5 +32,20 @@ TEST(JsonTest, Full)
     EXPECT_EQ(json->GetInt64(L"State"), resultJson->GetInt64(L"State"));
     EXPECT_EQ(json->IsNull(L"Action"), resultJson->IsNull(L"Action"));
     EXPECT_EQ(json->GetArray(L"Plugins").size(), resultJson->GetArray(L"Plugins").size());
-    EXPECT_EQ(json->GetArray(L"Plugins").at(0)->GetValue(), resultJson->GetArray(L"Plugins").at(0)->GetValue());
+    EXPECT_EQ(json->GetArray(L"Plugins").at(0)->GetJsonInternalValue(), resultJson->GetArray(L"Plugins").at(0)->GetJsonInternalValue());
+
+    // Set
+    json->SetString(L"Version", L"v0.0.1");
+    json->SetBool(L"IsGit", false);
+    json->SetDouble(L"Price", 1.23456, 2);
+    json->SetInt(L"State", 12);
+    json->SetNull(L"Action");
+    EXPECT_EQ(json->GetString(L"Version"), L"v0.0.1");
+    EXPECT_EQ(json->GetBool(L"IsGit"), false);
+    EXPECT_EQ(json->GetDouble(L"Price"), 1.23);
+    EXPECT_EQ(json->GetInt64(L"State"), 12);
+    EXPECT_EQ(json->IsNull(L"Action"), true);
+    // EXPECT_EQ(json->GetArray(L"Plugins").size(), resultJson->GetArray(L"Plugins").size());
+    // EXPECT_EQ(json->GetArray(L"Plugins").at(0)->GetJsonInternalValue(), resultJson->GetArray(L"Plugins").at(0)->GetJsonInternalValue());
+
 }

@@ -85,8 +85,8 @@ class VPGBaseGenerationManagerTest : public testing::Test
 
         std::wstring GetResultStr(const VPGGenerationOption *_Option) {
             std::wstring projName = !IsBlank(_Option->GetProjectName()) ? (L" " + _Option->GetProjectName()) : L"";
-            std::wstring dllName = !IsBlank(_Option->GetProjectNameDLL()) ? (L" " + _Option->GetProjectNameDLL()) : L"";
-            std::wstring exeName = !IsBlank(_Option->GetProjectNameEXE()) ? (L" " + _Option->GetProjectNameEXE()) : L"";
+            std::wstring dllName = !IsBlank(_Option->GetProjectNameDll()) ? (L" " + _Option->GetProjectNameDll()) : L"";
+            std::wstring exeName = !IsBlank(_Option->GetProjectNameExe()) ? (L" " + _Option->GetProjectNameExe()) : L"";
             std::wstring gtestName = !IsBlank(_Option->GetProjectNameGtest()) ? (L" " + _Option->GetProjectNameGtest()) : L"";
             std::wstring makeFileStr = L"hi\r\n";
             makeFileStr += L"# <vcc:name sync=\"ALERT\">\r\n";
@@ -217,8 +217,8 @@ class VPGBaseGenerationManagerTest : public testing::Test
 TEST_F(VPGBaseGenerationManagerTest, DllTestFileContent)
 {
     _Option->SetProjectName(L"libvpg");
-    _Option->SetProjectNameDLL(L"libvpg");
-    _Option->SetProjectNameEXE(L"libvpg");
+    _Option->SetProjectNameDll(L"libvpg");
+    _Option->SetProjectNameExe(L"libvpg");
     _Option->SetProjectNameGtest(L"libvpg");
     std::wstring originalText  = ReadFile(L"unittest/Dll/dll_test.cpp");
     std::wstring result = originalText;
@@ -228,47 +228,47 @@ TEST_F(VPGBaseGenerationManagerTest, DllTestFileContent)
     EXPECT_EQ(originalText, result);
 }
 
-TEST_F(VPGBaseGenerationManagerTest, Complex)
+TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_Complex)
 {
     _Option->SetProjectName(L"ProjectName");
-    _Option->SetProjectNameDLL(L"DllName");
-    _Option->SetProjectNameEXE(L"ExeName");
+    _Option->SetProjectNameDll(L"DllName");
+    _Option->SetProjectNameExe(L"ExeName");
     _Option->SetProjectNameGtest(L"GTestName");
     std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
     EXPECT_EQ(result, GetResultStr(_Option.get()));
 }
 
-TEST_F(VPGBaseGenerationManagerTest, DLLOnly)
+TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_DLLOnly)
 {
     _Option->SetProjectName(L"ProjectName");
-    _Option->SetProjectNameDLL(L"DllName");
-    _Option->SetProjectNameEXE(L"");
+    _Option->SetProjectNameDll(L"DllName");
+    _Option->SetProjectNameExe(L"");
     _Option->SetProjectNameGtest(L"GTestName");
     std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
     EXPECT_EQ(result, GetResultStr(_Option.get()));
 }
 
-TEST_F(VPGBaseGenerationManagerTest, EXEOnly)
+TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_EXEOnly)
 {
     _Option->SetProjectName(L"ProjectName");
-    _Option->SetProjectNameDLL(L"");
-    _Option->SetProjectNameEXE(L"ExeName");
+    _Option->SetProjectNameDll(L"");
+    _Option->SetProjectNameExe(L"ExeName");
     _Option->SetProjectNameGtest(L"GTestName");
     std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
     EXPECT_EQ(result, GetResultStr(_Option.get()));
 }
 
-TEST_F(VPGBaseGenerationManagerTest, NoGtest)
+TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_NoGtest)
 {
     _Option->SetProjectName(L"ProjectName");
-    _Option->SetProjectNameDLL(L"DllName");
-    _Option->SetProjectNameEXE(L"ExeName");
+    _Option->SetProjectNameDll(L"DllName");
+    _Option->SetProjectNameExe(L"ExeName");
     _Option->SetProjectNameGtest(L"");
     std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
     EXPECT_EQ(result, GetResultStr(_Option.get()));
 }
 
-TEST_F(VPGBaseGenerationManagerTest, SyncWorkspaceFolderWithExclude)
+TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_SyncWorkspaceFolderWithExclude)
 {
     this->CreateSyncWorkspaceFolderWithExcludeTestCase();
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"FolderAdd"})));
@@ -279,7 +279,7 @@ TEST_F(VPGBaseGenerationManagerTest, SyncWorkspaceFolderWithExclude)
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"FolderDeleteFilterOut"})));
 }
 
-TEST_F(VPGBaseGenerationManagerTest, SyncWorkspaceFolderIncludeOnly)
+TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_SyncWorkspaceFolderIncludeOnly)
 {
     this->CreateSyncWorkspaceFolderIncludeOnlyTestCase();
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"FolderAdd"})));
@@ -290,7 +290,7 @@ TEST_F(VPGBaseGenerationManagerTest, SyncWorkspaceFolderIncludeOnly)
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"FolderDeleteIncludeOnly"})));
 }
 
-TEST_F(VPGBaseGenerationManagerTest, SyncWorkspaceFileWithExclude)
+TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_SyncWorkspaceFileWithExclude)
 {
     this->CreateSyncWorkspaceFileWithExcludeTestCase();
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileAdd"})));
@@ -301,7 +301,7 @@ TEST_F(VPGBaseGenerationManagerTest, SyncWorkspaceFileWithExclude)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileDeleteFilterOut"})));
 }
 
-TEST_F(VPGBaseGenerationManagerTest, SyncWorkspaceFileIncludeOnly)
+TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_SyncWorkspaceFileIncludeOnly)
 {
     this->CreateSyncWorkspaceFileIncludeOnlyTestCase();
     EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileAdd"})));

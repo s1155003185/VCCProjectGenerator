@@ -251,34 +251,101 @@ debug:
 	$(MAKE) create_debug_folder
 	$(MAKE) copy_debug_lib
 ifneq ($(PROJ_NAME_DLL),)
-	$(MAKE) debug_dll
+	$(MAKE) compile_debug_dll
 endif
 ifneq ($(PROJ_NAME_EXE),)
-	$(MAKE) debug_exe
+	$(MAKE) compile_debug_exe
 endif
 ifneq ($(PROJ_NAME_GTEST),)
 	$(MAKE) gtest
 endif
 	@echo Build Debug Complete!
 
+debug_no_unittest:
+	$(MAKE) create_debug_folder
+	$(MAKE) copy_debug_lib
+ifneq ($(PROJ_NAME_DLL),)
+	$(MAKE) compile_debug_dll
+endif
+ifneq ($(PROJ_NAME_EXE),)
+	$(MAKE) compile_debug_exe
+endif
+	@echo Build Debug Complete!
+
+debug_dll:
+	$(MAKE) create_debug_folder
+	$(MAKE) copy_debug_lib
+ifneq ($(PROJ_NAME_DLL),)
+	$(MAKE) compile_debug_dll
+endif
+ifneq ($(PROJ_NAME_GTEST),)
+	$(MAKE) gtest
+endif
+	@echo Build Debug DLL Complete!
+
+debug_dll_no_unittest:
+	$(MAKE) create_debug_folder
+	$(MAKE) copy_debug_lib
+ifneq ($(PROJ_NAME_DLL),)
+	$(MAKE) compile_debug_dll
+endif
+	@echo Build Debug DLL Complete!
+
+debug_exe:
+	$(MAKE) create_debug_folder
+	$(MAKE) copy_debug_lib
+ifneq ($(PROJ_NAME_EXE),)
+	$(MAKE) compile_debug_exe
+endif
+ifneq ($(PROJ_NAME_GTEST),)
+	$(MAKE) gtest
+endif
+	@echo Build Debug EXE Complete!
+
+debug_exe_no_unittest:
+	$(MAKE) create_debug_folder
+	$(MAKE) copy_debug_lib
+ifneq ($(PROJ_NAME_EXE),)
+	$(MAKE) compile_debug_exe
+endif
+	@echo Build Debug EXE Complete!
+
 release:
 	$(MAKE) create_release_folder
 	$(MAKE) clean_release
 	$(MAKE) copy_release_lib
 ifneq ($(PROJ_NAME_DLL),)
-	$(MAKE) release_dll
+	$(MAKE) compile_release_dll
 endif
 ifneq ($(PROJ_NAME_EXE),)
-	$(MAKE) release_exe
+	$(MAKE) compile_release_exe
 endif
 	@echo Build Release Complete!
+
+release_dll:
+	$(MAKE) create_release_folder
+	$(MAKE) clean_release
+	$(MAKE) copy_release_lib
+ifneq ($(PROJ_NAME_DLL),)
+	$(MAKE) compile_release_dll
+endif
+	@echo Build Release DLL Complete!
+
+release_exe:
+	$(MAKE) create_release_folder
+	$(MAKE) clean_release
+	$(MAKE) copy_release_lib
+ifneq ($(PROJ_NAME_EXE),)
+	$(MAKE) compile_release_exe
+endif
+	@echo Build Release EXE Complete!
 
 #----------------------------------#
 #-------------- DEBUG--------------#
 #----------------------------------#
 
 # need to seperate gtest process to get o file again
-debug_dll: $(ALL_PROJECT_FILES_DLL) $(MAIN_DLL)
+compile_debug_dll: $(ALL_PROJECT_FILES_DLL) $(MAIN_DLL)
 
 $(MAIN_DLL): $(ALL_PROJECT_CPP_FILES_DLL) $(ALL_PROJECT_O_FILES_DLL)
 	@echo Build Debug Start
@@ -290,7 +357,7 @@ $(MAIN_DLL): $(ALL_PROJECT_CPP_FILES_DLL) $(ALL_PROJECT_O_FILES_DLL)
 	-o $(DEBUG_FOLDER)/$(MAIN_DLL)
 	@echo Build DEBUG DLL Complete
 
-debug_exe: $(ALL_PROJECT_FILES_DLL) $(MAIN_EXE)
+compile_debug_exe: $(ALL_PROJECT_FILES_DLL) $(MAIN_EXE)
 
 $(MAIN_EXE): $(ALL_PROJECT_CPP_FILES_EXE) $(ALL_PROJECT_O_FILES_EXE)
 	@echo Build Debug Start
@@ -322,7 +389,7 @@ $(GTESTMAIN): $(GTEST_CPP_FILES) $(GTEST_O_FILES)
 #------------- RELEASE-------------#
 #----------------------------------#
 
-release_dll:
+compile_release_dll:
 	$(CXX) $(CXXFLAGS_RELEASE_DLL) \
 	$(ALL_PROJECT_CPP_FOLDERS) \
 	$(INCDIRS) \
@@ -331,7 +398,7 @@ release_dll:
 	-o $(RELEASE_FOLDER)/$(MAIN_DLL)
 	@echo Build RELEASE DLL Complete
 
-release_exe:
+compile_release_exe:
 	$(CXX) $(CXXFLAGS_RELEASE_EXE) \
 	$(ALL_PROJECT_CPP_FOLDERS) \
 	$(INCDIRS) \

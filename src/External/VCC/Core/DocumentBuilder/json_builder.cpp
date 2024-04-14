@@ -39,7 +39,7 @@ namespace vcc
         return L"Error at position " + std::to_wstring(pos + 1) 
             + L", row " + std::to_wstring(row) 
             + L", column " + std::to_wstring(column) + L": " + preString + L"<<" + std::wstring(1, str[pos]) + L">>" + subString + L"\r\n "
-            + L" error message: " + msg;
+            + L" Error message: " + msg;
     }
 
     std::wstring JsonBuilder::Serialize(const IDocument *doc) const
@@ -52,23 +52,23 @@ namespace vcc
 
             Json *jsonObj = dynamic_cast<Json *>(const_cast<IDocument *>(doc));
             assert(jsonObj != nullptr);
-            switch (jsonObj->GetType())
+            switch (jsonObj->GetJsonInternalType())
             {
             // Value
-            case JsonType::Boolean:
-            case JsonType::Number:
-                result = jsonObj->GetValue();
+            case JsonInternalType::Boolean:
+            case JsonInternalType::Number:
+                result = jsonObj->GetJsonInternalValue();
                 break;
-            case JsonType::Null:
+            case JsonInternalType::Null:
                 result = L"null";
                 break;
-            case JsonType::String:
-                result = GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, jsonObj->GetValue());
+            case JsonInternalType::String:
+                result = GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, jsonObj->GetJsonInternalValue());
                 break;
             // Object
-            case JsonType::Array: {
+            case JsonInternalType::Array: {
                 _Level++;
-                for (auto const &element : jsonObj->GetArray()) {
+                for (auto const &element : jsonObj->GetJsonInternalArray()) {
                     if (!result.empty())
                         result += L"," + currentNewLineCharacter;
                     result += GetCurrentIndent() + Serialize(element.get());
@@ -77,12 +77,12 @@ namespace vcc
                 result = L"[" + currentNewLineCharacter + result + currentNewLineCharacter + GetCurrentIndent() + L"]";
                 break;
             }
-            case JsonType::Object:
-                result = Serialize(jsonObj->GetArray().at(0).get());
+            case JsonInternalType::Object:
+                result = Serialize(jsonObj->GetJsonInternalArray().at(0).get());
                 break;
-            case JsonType::Json: {
+            case JsonInternalType::Json: {
                 _Level++;
-                for (auto const &pair : jsonObj->GetNameValuePairs()) {
+                for (auto const &pair : jsonObj->GetJsonInternalNameValuePairs()) {
                     if (!result.empty())
                         result += L"," + currentNewLineCharacter;
                     result += GetCurrentIndent() + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, pair.first);
@@ -103,51 +103,53 @@ namespace vcc
 
     void JsonBuilder::ParseJsonObject(const std::wstring &str, size_t &pos, std::shared_ptr<Json> doc) const
     {
-        TRY_CATCH(
+        size_t startPos = pos;
+        try {
             GetNextCharacterPos(str, pos, true);
             if (HasPrefix(str, nullStr, pos)) {
-                doc->SetType(JsonType::Null);
+                doc->SetJsonInternalType(JsonInternalType::Null);
                 pos += nullStr.length() - 1;
             } else if (HasPrefix(str, trueStr, pos)) {
-                doc->SetType(JsonType::Boolean);
-                doc->SetValue(trueStr);
+                doc->SetJsonInternalType(JsonInternalType::Boolean);
+                doc->SetJsonInternalValue(trueStr);
                 pos += trueStr.length() - 1;
             } else if (HasPrefix(str, falseStr, pos)) {
-                doc->SetType(JsonType::Boolean);
-                doc->SetValue(falseStr);
+                doc->SetJsonInternalType(JsonInternalType::Boolean);
+                doc->SetJsonInternalValue(falseStr);
                 pos += falseStr.length() - 1;
             } else if (str[pos] == L'"') {
                 std::wstring value = GetNextQuotedString(str, pos, { L",", L"}", L"]" }, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
                 value  = GetUnescapeStringWithQuote(EscapeStringType::DoubleQuote, value);
-                doc->SetType(JsonType::String);
-                doc->SetValue(value);
+                doc->SetJsonInternalType(JsonInternalType::String);
+                doc->SetJsonInternalValue(value);
             } else if (str[pos] == L'\'') {
                 std::wstring value = GetNextQuotedString(str, pos, { L",", L"}", L"]" }, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
                 value  = GetUnescapeStringWithQuote(EscapeStringType::SingleQuote, value);
-                doc->SetType(JsonType::String);
-                doc->SetValue(value);
+                doc->SetJsonInternalType(JsonInternalType::String);
+                doc->SetJsonInternalValue(value);
             } else if (str[pos] == L'{') {
                 DECLARE_SPTR(Json, jsonObj);
                 Deserialize(str, pos, jsonObj);
-                doc->SetType(JsonType::Object);
-                doc->InsertArray(jsonObj);
+                doc->SetJsonInternalType(JsonInternalType::Object);
+                doc->InsertJsonInternalArray(jsonObj);
             } else if (str[pos] == L'['){
-                doc->SetType(JsonType::Array);
+                doc->SetJsonInternalType(JsonInternalType::Array);
                 GetNextCharacterPos(str, pos, false);
-                while (pos < str.length()) {
-                    DECLARE_SPTR(Json, obj);
-                    ParseJsonObject(str, pos, obj);
-                    doc->InsertArray(obj);
-                    GetNextCharacterPos(str, pos, false);
-                    if (str[pos] == L']')
-                        break;
-                    else if (str[pos] == L',')
+                if (str[pos] != L']') {
+                    while (pos < str.length()) {
+                        DECLARE_SPTR(Json, obj);
+                        ParseJsonObject(str, pos, obj);
+                        doc->InsertJsonInternalArray(obj);
                         GetNextCharacterPos(str, pos, false);
-                    else
-                        THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(str, pos, L"Array elements not end with , or ]"));
+                        if (str[pos] == L']')
+                            break;
+                        else if (str[pos] == L',')
+                            GetNextCharacterPos(str, pos, false);
+                        else
+                            THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(str, pos, L"Array elements not end with , or ]"));
+                    }
                 }
             } else {
-                size_t startPos = pos;
                 std::wstring numStr = GetNextQuotedString(str, pos, { L",", L"}", L"]" }, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
                 Trim(numStr);
                 try
@@ -158,10 +160,14 @@ namespace vcc
                 {
                     THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(str, startPos, L"Unknown json value format: " + numStr));
                 }
-                doc->SetType(JsonType::Number);
-                doc->SetValue(numStr);
+                doc->SetJsonInternalType(JsonInternalType::Number);
+                doc->SetJsonInternalValue(numStr);
             }
-        )
+        }
+        catch(const std::exception& e)
+        {
+            THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(str, startPos, L"Parse json object error: " + str2wstr(e.what())));
+        }
     }
 
     void JsonBuilder::Deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc) const
@@ -191,8 +197,8 @@ namespace vcc
                 // value
                 DECLARE_SPTR(Json, obj);
                 ParseJsonObject(str, pos, obj);
-                jsonObj->SetType(JsonType::Json);
-                jsonObj->InsertNameValuePairs(name, obj);
+                jsonObj->SetJsonInternalType(JsonInternalType::Json);
+                jsonObj->InsertJsonInternalNameValuePairs(name, obj);
 
                 GetNextCharacterPos(str, pos, false);
                 if (str[pos] != L',')

@@ -46,6 +46,8 @@ namespace vcc
 	};
 
 	// system
+	std::wstring GetCurrentFolderPath();
+	void ChangeCurrentFolderPath(const std::wstring &path);
 	std::wstring GetSystemFolderPath(SystemFolderType fileType);
 
     // helper

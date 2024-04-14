@@ -42,8 +42,8 @@ class VPGVccGenerationManagerTest : public testing::Test
             this->_Option->SetWorkspaceSource(L".");
             this->_Option->SetWorkspaceDestination(this->GetWorkspaceSource());
             this->_Option->SetProjectName(L"VCCProjGenerator");
-            this->_Option->SetProjectNameDLL(L"libvpg");
-            this->_Option->SetProjectNameEXE(L"vpg");
+            this->_Option->SetProjectNameDll(L"libvpg");
+            this->_Option->SetProjectNameExe(L"vpg");
             this->_Option->SetProjectNameGtest(L"unittest"); // must be hardcode unittest
             this->_Manager->CreateBasicProject();
 
@@ -79,8 +79,8 @@ class VPGVccGenerationManagerTest : public testing::Test
             this->_Option->SetWorkspaceSource(this->GetWorkspaceSource());
             this->_Option->SetWorkspaceDestination(this->GetWorkspaceTarget());
             this->_Option->SetIsGit(true);
-            this->_Option->SetProjectNameEXE(L"VCCProject");
-            this->_Option->SetProjectNameDLL(L"VCCDllProject");
+            this->_Option->SetProjectNameExe(L"VCCProject");
+            this->_Option->SetProjectNameDll(L"VCCDllProject");
             this->_Option->SetProjectName(L"ProjectName");
             this->_Option->SetProjectNameGtest(L"VCCUnitTest");
         }
@@ -95,8 +95,8 @@ class VPGVccGenerationManagerTest : public testing::Test
 TEST_F(VPGVccGenerationManagerTest, Add)
 {
     // Complex
-    this->_Option->SetProjectNameEXE(L"VCCProject");
-    this->_Option->SetProjectNameDLL(L"VCCDllProject");
+    this->_Option->SetProjectNameExe(L"VCCProject");
+    this->_Option->SetProjectNameDll(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetProjectNameGtest(L"VCCUnitTest");
     this->_Option->SetIsExcludeVCCUnitTest(false);
@@ -119,8 +119,8 @@ TEST_F(VPGVccGenerationManagerTest, Add)
 
     // EXE only
     std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
-    this->_Option->SetProjectNameEXE(L"VCCProject");
-    this->_Option->SetProjectNameDLL(L"");
+    this->_Option->SetProjectNameExe(L"VCCProject");
+    this->_Option->SetProjectNameDll(L"");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetProjectNameGtest(L"VCCUnitTest");
     this->_Option->SetIsExcludeVCCUnitTest(false);
@@ -142,8 +142,8 @@ TEST_F(VPGVccGenerationManagerTest, Add)
 
     // DLL only
     std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
-    this->_Option->SetProjectNameEXE(L"");
-    this->_Option->SetProjectNameDLL(L"VCCDllProject");
+    this->_Option->SetProjectNameExe(L"");
+    this->_Option->SetProjectNameDll(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetProjectNameGtest(L"VCCUnitTest");
     this->_Option->SetIsExcludeVCCUnitTest(false);
@@ -166,8 +166,8 @@ TEST_F(VPGVccGenerationManagerTest, Add)
 
     // No unittest
     std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
-    this->_Option->SetProjectNameEXE(L"VCCProject");
-    this->_Option->SetProjectNameDLL(L"VCCDllProject");
+    this->_Option->SetProjectNameExe(L"VCCProject");
+    this->_Option->SetProjectNameDll(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetProjectNameGtest(L"");
     this->_Option->SetIsExcludeVCCUnitTest(false);
@@ -190,8 +190,8 @@ TEST_F(VPGVccGenerationManagerTest, Add)
 
     // Exclude VCC Unittest
     std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
-    this->_Option->SetProjectNameEXE(L"VCCProject");
-    this->_Option->SetProjectNameDLL(L"VCCDllProject");
+    this->_Option->SetProjectNameExe(L"VCCProject");
+    this->_Option->SetProjectNameDll(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetProjectNameGtest(L"VCCUnitTest");
     this->_Option->SetIsExcludeVCCUnitTest(true);
@@ -214,8 +214,8 @@ TEST_F(VPGVccGenerationManagerTest, Add)
 
     // Plugins
     std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
-    this->_Option->SetProjectNameEXE(L"VCCProject");
-    this->_Option->SetProjectNameDLL(L"VCCDllProject");
+    this->_Option->SetProjectNameExe(L"VCCProject");
+    this->_Option->SetProjectNameDll(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetProjectNameGtest(L"VCCUnitTest");
     this->_Option->InsertPlugins(L"VCC/Versioning/Git");
@@ -243,8 +243,8 @@ TEST_F(VPGVccGenerationManagerTest, Update)
     // cannot test really update case as cannot modify original project git resposne
 
     // no plugin to have plugin
-    this->_Option->SetProjectNameEXE(L"VCCProject");
-    this->_Option->SetProjectNameDLL(L"VCCDllProject");
+    this->_Option->SetProjectNameExe(L"VCCProject");
+    this->_Option->SetProjectNameDll(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetProjectNameGtest(L"VCCUnitTest");
     this->GetManager()->Add();
@@ -278,6 +278,12 @@ TEST_F(VPGVccGenerationManagerTest, Update)
 TEST_F(VPGVccGenerationManagerTest, Generate)
 {            
     // Create file for generation
+    this->_Option->SetProjectNameExe(L"VCCProject");
+    this->_Option->SetProjectNameDll(L"VCCDllProject");
+    this->_Option->SetProjectName(L"ProjectName");
+    this->_Option->SetProjectNameGtest(L"VCCUnitTest");
+    this->GetManager()->Add();
+
     std::wstring codeA =  L"";
     codeA += L"#pragma once\r\n";
     codeA += L"\r\n";
@@ -289,7 +295,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     codeA += L"    EnumD  // VECTOR(EnumClass, EnumD) \r\n";
     codeA += L"};\r\n";
     codeA += L"\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceSource(), L"include/Type/ClassA", L"vcc_a_property.hpp"}), codeA, true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_a_property.hpp"}), codeA, true);
 
     std::wstring codeB =  L"";
     codeB += L"#pragma once\r\n";
@@ -298,7 +304,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     codeB += L"{\r\n";
     codeB += L"    EnumA // GET_SPTR(VCCObject, EnumA) \r\n";
     codeB += L"};\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceSource(), L"include/Type/ClassA", L"vcc_b_property.hpp"}), codeB, true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_b_property.hpp"}), codeB, true);
     
     std::wstring unittest = L"";
     unittest += L"#include <gtest/gtest.h>\r\n";
@@ -313,16 +319,18 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     unittest += L"    DECLARE_SPTR(VCCObjectAPtr, objA);\r\n";
     unittest += L"    DECLARE_SPTR(VCCObjectBPtr, objB);\r\n";
     unittest += L"}\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceSource(), L"unittest/Module", L"class_test.cpp"}), unittest, true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/Module/ClassA", L"class_test.cpp"}), unittest, true);
 
-    // Only use Source Directory
     this->_Option->SetWorkspaceSource(this->GetWorkspaceSource());
-    this->_Option->SetWorkspaceDestination(this->GetWorkspaceSource());
+    this->_Option->SetWorkspaceDestination(this->GetWorkspaceTarget());
     this->_Option->SetProjectPrefix(L"VCC");
     this->GetManager()->Generate();
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_a.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_b.hpp"})));
+
     if (this->GetIsCopyDebugFolderToTestFolder()) {
-        std::wstring path = ConcatPaths({this->GetTestFolder(), L"Generate"});
+        std::wstring path = ConcatPaths({this->GetTestFolder(), L"include/Type/ClassA", L"Generate"});
         RemoveDirectory(path);
-        CopyDirectory(this->GetWorkspaceSource(), path);
+        CopyDirectory(this->GetWorkspaceTarget(), path);
     }
 }
