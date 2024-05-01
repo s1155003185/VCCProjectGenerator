@@ -19,6 +19,7 @@
 # DEBUG_FLAGS, RELEASE_FLAGS, DEBUG_COMPILE_OPTIONS, RELEASE_COMPILE_OPTIONS, GTEST_COMPILE_OPTIONS: flag for debug and release
 # LFLAGS: library that not in the project, need to be handled in if case, as different platform has different paths 
 # EXCLUDE_FOLDER: igore that folder when compile
+# if having vcc.json, please also ensure PROJ_NAME, PROJ_NAME_DLL, PROJ_NAME_EXE are the same. (Not support auto update now, will enhance later)
 
 # Gtest
 # to add new gtest, follow unittest

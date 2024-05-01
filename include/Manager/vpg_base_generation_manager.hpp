@@ -46,17 +46,17 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJ
 
     GETSET(bool, IsExcludeVCCUnitTest, false);
 
-    // Files    
+    // Files
+    GETSET(std::wstring, TypeWorkspace, L"include/Type");
+
     GETSET(std::wstring, ActionTypeDirectory, L"include/Type");
     GETSET(std::wstring, ExceptionTypeDirectory, L"include/Type");
     GETSET(std::wstring, ManagerTypeDirectory, L"include/Type");
     GETSET(std::wstring, ObjectTypeDirectory, L"include/Type");
 
-    GETSET(std::wstring, TypeWorkspace, L"include/Type");
-    GETSET(std::wstring, ObjectHppDirectory, L"include/Model");
-    GETSET(std::wstring, ObjectTypeHppDirectory, L"include/Type");
-    GETSET(std::wstring, PropertyAccessorHppDirectory, L"include/PropertyAccessor");
-    GETSET(std::wstring, PropertyAccessorCppDirectory, L"src/PropertyAccessor");
+    GETSET(std::wstring, ModelDirectory, L"include/Model");
+    GETSET(std::wstring, PropertyAccessorDirectoryHpp, L"include/PropertyAccessor");
+    GETSET(std::wstring, PropertyAccessorDirectoryCpp, L"src/PropertyAccessor");
 
     // Plugins
     VECTOR(std::wstring, Plugins);

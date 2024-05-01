@@ -71,7 +71,9 @@ void VPGProcessManager::VerifyLocalResponse()
         } else {
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Not Exists.");
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Clone from " + gitUrl);
-            GitService::Clone(this->GetLogProperty().get(),  VPGGlobal::GetVccLocalResponseFolder(), gitUrl);
+            GitCloneOption cloneOption;
+            cloneOption.SetIsQuiet(true);
+            GitService::Clone(this->GetLogProperty().get(),  VPGGlobal::GetVccLocalResponseFolder(), gitUrl, &cloneOption);
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
             // switch to correct branch
             VerifyLocalResponse();

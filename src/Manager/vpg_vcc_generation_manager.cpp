@@ -122,7 +122,7 @@ void VPGVccGenerationManager::Generate() const
         DECLARE_UPTR(VPGFileGenerationManager, manager, this->_LogProperty);
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Generate Project ...");
         manager->GernerateProperty(_LogProperty.get(), _Option->GetProjectPrefix(), _Option->GetWorkspaceDestination(), _Option->GetTypeWorkspace(),
-            _Option->GetObjectTypeHppDirectory(), _Option->GetObjectHppDirectory(), _Option->GetPropertyAccessorHppDirectory(), _Option->GetPropertyAccessorCppDirectory());
+            _Option->GetObjectTypeDirectory(), _Option->GetModelDirectory(), _Option->GetPropertyAccessorDirectoryHpp(), _Option->GetPropertyAccessorDirectoryCpp());
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Done");
     )
 }

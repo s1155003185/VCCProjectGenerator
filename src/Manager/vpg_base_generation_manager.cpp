@@ -42,16 +42,16 @@ std::wstring VPGGenerationOption::SerializeJson(const IDocumentBuilder *builder)
 
         json->AddBool(L"IsExcludeVCCUnitTest", _IsExcludeVCCUnitTest);
 
+        json->AddString(L"TypeWorkspace", _TypeWorkspace);
+
         json->AddString(L"ActionTypeDirectory", _ActionTypeDirectory);
         json->AddString(L"ExceptionTypeDirectory", _ExceptionTypeDirectory);
         json->AddString(L"ManagerTypeDirectory", _ManagerTypeDirectory);
         json->AddString(L"ObjectTypeDirectory", _ObjectTypeDirectory);
 
-        json->AddString(L"TypeWorkspace", _TypeWorkspace);
-        json->AddString(L"ObjectHppDirectory", _ObjectHppDirectory);
-        json->AddString(L"ObjectTypeHppDirectory", _ObjectTypeHppDirectory);
-        json->AddString(L"PropertyAccessorHppDirectory", _PropertyAccessorHppDirectory);
-        json->AddString(L"PropertyAccessorCppDirectory", _PropertyAccessorCppDirectory);
+        json->AddString(L"ModelDirectory", _ModelDirectory);
+        json->AddString(L"PropertyAccessorDirectoryHpp", _PropertyAccessorDirectoryHpp);
+        json->AddString(L"PropertyAccessorDirectoryCpp", _PropertyAccessorDirectoryCpp);
 
         DECLARE_SPTR(Json, plugins);
         json->AddArray(L"Plugins", plugins);
@@ -90,6 +90,9 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document)
         if (json->IsContainKey(L"IsExcludeVCCUnitTest"))
             this->SetIsExcludeVCCUnitTest(json->GetBool(L"IsExcludeVCCUnitTest"));
 
+        if (json->IsContainKey(L"TypeWorkspace"))
+            this->SetTypeWorkspace(json->GetString(L"TypeWorkspace"));
+
         if (json->IsContainKey(L"ActionTypeDirectory"))
             this->SetActionTypeDirectory(json->GetString(L"ActionTypeDirectory"));
         if (json->IsContainKey(L"ExceptionTypeDirectory"))
@@ -99,16 +102,12 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document)
         if (json->IsContainKey(L"ObjectTypeDirectory"))
             this->SetObjectTypeDirectory(json->GetString(L"ObjectTypeDirectory"));
 
-        if (json->IsContainKey(L"TypeWorkspace"))
-            this->SetTypeWorkspace(json->GetString(L"TypeWorkspace"));
-        if (json->IsContainKey(L"ObjectHppDirectory"))
-            this->SetObjectHppDirectory(json->GetString(L"ObjectHppDirectory"));
-        if (json->IsContainKey(L"ObjectTypeHppDirectory"))
-            this->SetObjectTypeHppDirectory(json->GetString(L"ObjectTypeHppDirectory"));
-        if (json->IsContainKey(L"PropertyAccessorHppDirectory"))
-            this->SetPropertyAccessorHppDirectory(json->GetString(L"PropertyAccessorHppDirectory"));
-        if (json->IsContainKey(L"PropertyAccessorCppDirectory"))
-            this->SetPropertyAccessorCppDirectory(json->GetString(L"PropertyAccessorCppDirectory"));
+        if (json->IsContainKey(L"ModelDirectory"))
+            this->SetModelDirectory(json->GetString(L"ModelDirectory"));
+        if (json->IsContainKey(L"PropertyAccessorDirectoryHpp"))
+            this->SetPropertyAccessorDirectoryHpp(json->GetString(L"PropertyAccessorDirectoryHpp"));
+        if (json->IsContainKey(L"PropertyAccessorDirectoryCpp"))
+            this->SetPropertyAccessorDirectoryCpp(json->GetString(L"PropertyAccessorDirectoryCpp"));
 
         if (json->IsContainKey(L"Plugins")) {
             auto plugins = json->GetArray(L"Plugins");

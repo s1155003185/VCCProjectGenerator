@@ -22,6 +22,17 @@ namespace vcc
             GitStatusSearchCriteria() : BaseObject() {}
             virtual ~GitStatusSearchCriteria() {}
     };
+    
+    class GitCloneOption : public BaseObject<GitCloneOption>
+    {
+        GETSET(std::wstring, Branch, L"");
+        GETSET(int64_t, Depth, -1);
+        GETSET(bool, IsQuiet, false);
+        
+        public:
+            GitCloneOption() : BaseObject() {}
+            virtual ~GitCloneOption() {}
+    };
 
     enum class GitFileStatus
     {
@@ -368,7 +379,7 @@ namespace vcc
 
         // Initialization
         static void Initialize(const LogProperty *logProperty, const std::wstring &workspace);
-        static void Clone(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &url, const std::wstring &branch = L"", const int64_t &depth = -1);
+        static void Clone(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &url, const GitCloneOption *option = nullptr);
 
         /*-----------------------------------*
          * ----------- Remote     -----------*

@@ -163,11 +163,19 @@ namespace vcc
         )
     }
 
-    void GitService::Clone(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &url, const std::wstring &branch, const int64_t &depth)
+    void GitService::Clone(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &url, const GitCloneOption *option)
     {
         TRY_CATCH(
-            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, 
-                L"git clone " + url + (!branch.empty() ? (L" -b " + branch): L"") + (depth > 0 ? (L" --depth " + std::to_wstring(depth)) : L""));
+            std::wstring optionStr = L"";
+            if (option != nullptr) {
+                if (!IsBlank(option->GetBranch()))
+                    optionStr += L" -b " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, option->GetBranch());
+                if (option->GetDepth() > 0)
+                    optionStr +=L" --depth " + std::to_wstring(option->GetDepth());
+                if (option->GetIsQuiet())
+                    optionStr +=L" --quiet";
+            }
+            ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git clone " + url + optionStr);
         )
     }
 
