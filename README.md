@@ -8,7 +8,7 @@ Document versioning are highly expected but seems no solution at the moment. Als
 
 In order to implement versioning document program, document processor and git manager are need to be implemented at the same time. To speed up, a generator is required to manage those projects. So, there are totally 3 programs need to be written at the same times.
 
-When starting a new project, it is time consuming to create basic structure. In fact, all projects have similar structure and lots of similar functions. Versioning Common Codebase Project is raised to extract common factor to enhance development efficience.
+When starting a new project, it is time consuming to create basic structure. And rewrite codebase is time consuming. In fact, all projects have similar structure and lots of similar functions. Versioning Common Codebase Project is raised to extract common factor to enhance development efficience.
 
 ## Versioning Common Codebase Project Members
 VCC Module is a combination of Interface + C++ DLL. Most process are included in C++ DLL to minimize effort for cross-platform.
