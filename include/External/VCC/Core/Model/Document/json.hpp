@@ -27,6 +27,10 @@ namespace vcc
         GETSET(std::wstring, JsonInternalValue, L"");
         VECTOR_SPTR(Json, JsonInternalArray);
 
+        private:
+            void ValidateKeyIsFound(const std::wstring &key) const;
+            void ValidateKeyNotFound(const std::wstring &key) const;
+
         public:
             Json() : BaseDocument() {}
             virtual ~Json() {}

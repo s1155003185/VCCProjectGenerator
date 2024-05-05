@@ -22,6 +22,7 @@
 using namespace vcc;
 
 const std::wstring MakeFileName = L"Makefile";
+const std::wstring unittestFolderName = L"unittest";
 
 class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJsonObject
 {
@@ -41,9 +42,9 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJ
     GETSET(std::wstring, ProjectName, L"VCCModule"); // Need to assign Default Name first to pass validation
     GETSET(std::wstring, ProjectNameDll, L"libVCCModule"); // Need to assign Default Name first to pass validation
     GETSET(std::wstring, ProjectNameExe, L"VCCModule"); // Need to assign Default Name first to pass validation
-    GETSET(std::wstring, ProjectNameGtest, L"unittest");
     GETSET(bool, IsGit, false);
 
+    GETSET(bool, IsExcludeUnittest, false)
     GETSET(bool, IsExcludeVCCUnitTest, false);
 
     // Files
@@ -152,8 +153,8 @@ void VPGBaseGenerationManager<Derived>::CreateWorkspaceDirectory() const
         checkList.push_back(L"src");
 
         // unittest
-        if (!IsBlank(_Option->GetProjectNameGtest()))
-            checkList.push_back(_Option->GetProjectNameGtest());
+        if (!_Option->GetIsExcludeUnittest())
+            checkList.push_back(unittestFolderName);
         
         std::wstring workspace = _Option->GetWorkspaceDestination();
         for (auto path : checkList) {
@@ -186,13 +187,13 @@ void VPGBaseGenerationManager<Derived>::CreateBasicProject() const
             CopyFile(ConcatPaths({src, L"DllFunctions.cpp"}), ConcatPaths({dest, L"DllFunctions.cpp"}), true);
             CopyFile(ConcatPaths({src, L"DllFunctions.h"}), ConcatPaths({dest, L"DllFunctions.h"}), true);
         }
-        if (!IsBlank(_Option->GetProjectNameGtest())) {
-            CopyFile(ConcatPaths({src, L"unittest", L"gtest_main.cpp"}), ConcatPaths({dest, _Option->GetProjectNameGtest(), L"gtest_main.cpp"}), true);
+        if (!_Option->GetIsExcludeUnittest()) {
+            CopyFile(ConcatPaths({src, unittestFolderName, L"gtest_main.cpp"}), ConcatPaths({dest, unittestFolderName, L"gtest_main.cpp"}), true);
 
             if (!IsBlank(_Option->GetProjectNameDll())) {
-                std::wstring dllUnitTestContent = ReadFile(ConcatPaths({src, L"unittest/Dll/dll_test.cpp"}));
+                std::wstring dllUnitTestContent = ReadFile(ConcatPaths({src, unittestFolderName, L"Dll/dll_test.cpp"}));
                 GetDLLTestFileContent(dllUnitTestContent);
-                AppendFileOneLine(ConcatPaths({dest, _Option->GetProjectNameGtest(), L"Dll/dll_test.cpp"}), dllUnitTestContent, true);
+                AppendFileOneLine(ConcatPaths({dest, unittestFolderName, L"Dll/dll_test.cpp"}), dllUnitTestContent, true);
             }
         }
         // Cannot Copy
@@ -317,7 +318,7 @@ std::wstring VPGBaseGenerationManager<Derived>::AdjustMakefile(const std::wstrin
                 std::wstring projName = !IsBlank(_Option->GetProjectName()) ? (L" " + _Option->GetProjectName()) : L"";
                 std::wstring dllName = !IsBlank(_Option->GetProjectNameDll()) ? (L" " + _Option->GetProjectNameDll()) : L"";
                 std::wstring exeName = !IsBlank(_Option->GetProjectNameExe()) ? (L" " + _Option->GetProjectNameExe()) : L"";
-                std::wstring gtestName = !IsBlank(_Option->GetProjectNameGtest()) ? (L" " + _Option->GetProjectNameGtest()) : L"";
+                std::wstring IsExcludeUnittest = _Option->GetIsExcludeUnittest() ? L" Y" : L" N";
         
                 result += L"# <vcc:name sync=\"ALERT\">\r\n";
                 result += L"#----------------------------------#\r\n";
@@ -326,7 +327,7 @@ std::wstring VPGBaseGenerationManager<Derived>::AdjustMakefile(const std::wstrin
                 result += L"PROJ_NAME :=" + projName + L"\r\n";
                 result += L"PROJ_NAME_DLL :=" + dllName + L"\r\n";
                 result += L"PROJ_NAME_EXE :=" + exeName + L"\r\n";
-                result += L"PROJ_NAME_GTEST :=" + gtestName + L"\r\n";
+                result += L"IS_EXCLUDE_UNITTEST :=" + IsExcludeUnittest + L"\r\n";
                 result += L"# </vcc:name>";
             } else
                 result += element->GetFullText();
@@ -340,7 +341,7 @@ std::wstring VPGBaseGenerationManager<Derived>::AdjustVSCodeLaunchJson(const std
 {
     TRY_CATCH(
         std::wstring programPath = L"${workspaceFolder}/bin/Debug/unittest";
-        if (_Option->GetProjectNameGtest().empty() && !_Option->GetProjectNameExe().empty()) {
+        if (_Option->GetIsExcludeUnittest() && !_Option->GetProjectNameExe().empty()) {
             std::wstring projectName = _Option->GetProjectNameExe();
             #ifdef __WIN32
             projectName += L".exe";

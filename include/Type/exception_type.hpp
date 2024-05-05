@@ -20,6 +20,9 @@ enum class ExceptionType
 	FileCannotOpen,
 	// parser
 	ParserError,
+	// key
+	KeyNotFound,
+	KeyDuplicated,
 
 	SystemError = 50000,
 	// <vcc:exceptionType action:"RESERVE">

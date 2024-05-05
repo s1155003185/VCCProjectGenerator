@@ -37,9 +37,9 @@ std::wstring VPGGenerationOption::SerializeJson(const IDocumentBuilder *builder)
         json->AddString(L"ProjectName", _ProjectName);
         json->AddString(L"ProjectNameDll", _ProjectNameDll);
         json->AddString(L"ProjectNameExe", _ProjectNameExe);
-        json->AddString(L"ProjectNameGtest", _ProjectNameGtest);
         json->AddBool(L"IsGit", _IsGit);
 
+        json->AddBool(L"IsExcludeUnittest", _IsExcludeUnittest);
         json->AddBool(L"IsExcludeVCCUnitTest", _IsExcludeVCCUnitTest);
 
         json->AddString(L"TypeWorkspace", _TypeWorkspace);
@@ -84,9 +84,9 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document)
             this->SetProjectNameDll(json->GetString(L"ProjectNameDll"));
         if (json->IsContainKey(L"ProjectNameExe"))
             this->SetProjectNameExe(json->GetString(L"ProjectNameExe"));
-        if (json->IsContainKey(L"ProjectNameGtest"))
-            this->SetProjectNameGtest(json->GetString(L"ProjectNameGtest"));
-
+            
+        if (json->IsContainKey(L"IsExcludeUnittest"))
+            this->SetIsExcludeUnittest(json->GetBool(L"IsExcludeUnittest"));
         if (json->IsContainKey(L"IsExcludeVCCUnitTest"))
             this->SetIsExcludeVCCUnitTest(json->GetBool(L"IsExcludeVCCUnitTest"));
 

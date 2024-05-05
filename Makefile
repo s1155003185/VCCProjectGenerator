@@ -1,7 +1,7 @@
 # <vcc:vccproj sync="FULL"/>
 
 # command:
-# make (same as make debug)
+# make (same as make release)
 # make debug (build debug version and gtest)
 # make release (build release version)
 # make clean (remove all .o and executable files)
@@ -11,7 +11,7 @@
 # "editor.insertSpaces": true,
 # "editor.detectIndentation": true,
 # Note: cannot seperate object files as some sources only have hpp or h files. Object files will be reused by unittest
-# Note: main.cpp need to be in root directory to avoid duplicate main function by unit test
+# Note: main.cpp need to be in root directory to avoid duplicate main function by unittest
 # Note: files in .vscode is used for F5 only. if need to build Release vesrion, please use "make release"
 
 # Field to change:
@@ -19,11 +19,11 @@
 # DEBUG_FLAGS, RELEASE_FLAGS, DEBUG_COMPILE_OPTIONS, RELEASE_COMPILE_OPTIONS, GTEST_COMPILE_OPTIONS: flag for debug and release
 # LFLAGS: library that not in the project, need to be handled in if case, as different platform has different paths 
 # EXCLUDE_FOLDER: igore that folder when compile
-# if having vcc.json, please also ensure PROJ_NAME, PROJ_NAME_DLL, PROJ_NAME_EXE are the same. (Not support auto update now, will enhance later)
+# if having vcc.json, please also ensure PROJ_NAME, PROJ_NAME_DLL, PROJ_NAME_EXE are the same.
 
 # Gtest
 # to add new gtest, follow unittest
-# change project name for DLL project in dynamic_library_test.cpp
+# change project name for DLL project in dll_test.cpp
 
 #------------------------------------------------------------------------------------------------------#
 #------------------------------------------ Customize Begin  ------------------------------------------#
@@ -35,14 +35,13 @@
 PROJ_NAME := VCCProjGenerator
 PROJ_NAME_DLL := libvpg
 PROJ_NAME_EXE := vpg
-PROJ_NAME_GTEST := unittest
+IS_EXCLUDE_UNITTEST := N
 # </vcc:name>
 # <vcc:property sync="ALERT">
 #----------------------------------#
 #---------- Project Info ----------#
 #----------------------------------#
 # gtest
-GTEST_FOLDER := $(PROJ_NAME_GTEST)
 ifneq ($(PROJ_NAME_EXE),)
 EXE_MAIN_CPP_FILES := main.cpp
 else
@@ -98,6 +97,13 @@ endif
 #------------------------------------------------------------------------------------------------------#
 #------------------------------------------- Customize End  -------------------------------------------#
 #------------------------------------------------------------------------------------------------------#
+
+#----------------------------------#
+#---------- Fix Folder   ----------#
+#----------------------------------#
+# unittest
+PROJ_NAME_GTEST := unittest
+GTEST_FOLDER := $(PROJ_NAME_GTEST)
 
 #----------------------------------#
 #---------- Compile Info ----------#
@@ -257,7 +263,7 @@ endif
 ifneq ($(PROJ_NAME_EXE),)
 	$(MAKE) compile_debug_exe
 endif
-ifneq ($(PROJ_NAME_GTEST),)
+ifneq ($(IS_EXCLUDE_UNITTEST),Y)
 	$(MAKE) gtest
 endif
 	@echo Build Debug Complete!
@@ -279,7 +285,7 @@ debug_dll:
 ifneq ($(PROJ_NAME_DLL),)
 	$(MAKE) compile_debug_dll
 endif
-ifneq ($(PROJ_NAME_GTEST),)
+ifneq ($(IS_EXCLUDE_UNITTEST),Y)
 	$(MAKE) gtest
 endif
 	@echo Build Debug DLL Complete!
@@ -298,7 +304,7 @@ debug_exe:
 ifneq ($(PROJ_NAME_EXE),)
 	$(MAKE) compile_debug_exe
 endif
-ifneq ($(PROJ_NAME_GTEST),)
+ifneq ($(IS_EXCLUDE_UNITTEST),Y)
 	$(MAKE) gtest
 endif
 	@echo Build Debug EXE Complete!

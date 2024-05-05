@@ -5,6 +5,8 @@
 
 #include "class_macro.hpp"
 #include "file_helper.hpp"
+#include "json.hpp"
+#include "json_builder.hpp"
 #include "log_property.hpp"
 #include "process_service.hpp"
 #include "vpg_vcc_generation_manager.hpp"
@@ -44,7 +46,7 @@ class VPGVccGenerationManagerTest : public testing::Test
             this->_Option->SetProjectName(L"VCCProjGenerator");
             this->_Option->SetProjectNameDll(L"libvpg");
             this->_Option->SetProjectNameExe(L"vpg");
-            this->_Option->SetProjectNameGtest(L"unittest"); // must be hardcode unittest
+            this->_Option->SetIsExcludeUnittest(false);
             this->_Manager->CreateBasicProject();
 
             // Cannot use current project as time consumming
@@ -82,7 +84,7 @@ class VPGVccGenerationManagerTest : public testing::Test
             this->_Option->SetProjectNameExe(L"VCCProject");
             this->_Option->SetProjectNameDll(L"VCCDllProject");
             this->_Option->SetProjectName(L"ProjectName");
-            this->_Option->SetProjectNameGtest(L"VCCUnitTest");
+            this->_Option->SetIsExcludeUnittest(false);
         }
 
         void TearDown() override
@@ -98,7 +100,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetProjectNameExe(L"VCCProject");
     this->_Option->SetProjectNameDll(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
-    this->_Option->SetProjectNameGtest(L"VCCUnitTest");
+    this->_Option->SetIsExcludeUnittest(false);
     this->_Option->SetIsExcludeVCCUnitTest(false);
     this->GetManager()->Add();
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
@@ -106,15 +108,15 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest/External/VCC/Core"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/External/VCC/Core"})));
         
     if (this->GetIsCopyDebugFolderToTestFolder()) {
         std::wstring path = ConcatPaths({this->GetTestFolder(), L"VCCComplex"});
         RemoveDirectory(path);
-        CopyDirectory(this->GetWorkspaceSource(), path);        
+        CopyDirectory(this->GetWorkspaceTarget(), path);        
     }
 
     // EXE only
@@ -122,7 +124,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetProjectNameExe(L"VCCProject");
     this->_Option->SetProjectNameDll(L"");
     this->_Option->SetProjectName(L"ProjectName");
-    this->_Option->SetProjectNameGtest(L"VCCUnitTest");
+    this->_Option->SetIsExcludeUnittest(false);
     this->_Option->SetIsExcludeVCCUnitTest(false);
     this->GetManager()->Add();
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
@@ -130,14 +132,14 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
     EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
 
     if (this->GetIsCopyDebugFolderToTestFolder()) {
         std::wstring path = ConcatPaths({this->GetTestFolder(), L"VCCEXE"});
         RemoveDirectory(path);
-        CopyDirectory(this->GetWorkspaceSource(), path);        
+        CopyDirectory(this->GetWorkspaceTarget(), path);        
     }
 
     // DLL only
@@ -145,7 +147,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetProjectNameExe(L"");
     this->_Option->SetProjectNameDll(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
-    this->_Option->SetProjectNameGtest(L"VCCUnitTest");
+    this->_Option->SetIsExcludeUnittest(false);
     this->_Option->SetIsExcludeVCCUnitTest(false);
     this->GetManager()->Add();
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
@@ -153,15 +155,15 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest/External/VCC/Core"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/External/VCC/Core"})));
 
     if (this->GetIsCopyDebugFolderToTestFolder()) {
         std::wstring path = ConcatPaths({this->GetTestFolder(), L"VCCDLL"});
         RemoveDirectory(path);
-        CopyDirectory(this->GetWorkspaceSource(), path);        
+        CopyDirectory(this->GetWorkspaceTarget(), path);        
     }
 
     // No unittest
@@ -169,7 +171,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetProjectNameExe(L"VCCProject");
     this->_Option->SetProjectNameDll(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
-    this->_Option->SetProjectNameGtest(L"");
+    this->_Option->SetIsExcludeUnittest(true);
     this->_Option->SetIsExcludeVCCUnitTest(false);
     this->GetManager()->Add();
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
@@ -177,15 +179,15 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest/External/VCC/Core"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/External/VCC/Core"})));
 
     if (this->GetIsCopyDebugFolderToTestFolder()) {
         std::wstring path = ConcatPaths({this->GetTestFolder(), L"NoUnittest"});
         RemoveDirectory(path);
-        CopyDirectory(this->GetWorkspaceSource(), path);        
+        CopyDirectory(this->GetWorkspaceTarget(), path);        
     }
 
     // Exclude VCC Unittest
@@ -193,7 +195,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetProjectNameExe(L"VCCProject");
     this->_Option->SetProjectNameDll(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
-    this->_Option->SetProjectNameGtest(L"VCCUnitTest");
+    this->_Option->SetIsExcludeUnittest(false);
     this->_Option->SetIsExcludeVCCUnitTest(true);
     this->GetManager()->Add();
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
@@ -201,15 +203,15 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest/External/VCC/Core"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/External/VCC/Core"})));
 
     if (this->GetIsCopyDebugFolderToTestFolder()) {
         std::wstring path = ConcatPaths({this->GetTestFolder(), L"NoVCCUnittest"});
         RemoveDirectory(path);
-        CopyDirectory(this->GetWorkspaceSource(), path);        
+        CopyDirectory(this->GetWorkspaceTarget(), path);        
     }
 
     // Plugins
@@ -217,7 +219,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetProjectNameExe(L"VCCProject");
     this->_Option->SetProjectNameDll(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
-    this->_Option->SetProjectNameGtest(L"VCCUnitTest");
+    this->_Option->SetIsExcludeUnittest(false);
     this->_Option->InsertPlugins(L"VCC/Versioning/Git");
     this->_Option->SetIsExcludeVCCUnitTest(false);
     this->GetManager()->Add();
@@ -226,15 +228,15 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Versioning/Git"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest/External/VCC/Core"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/External/VCC/Core"})));
 
     if (this->GetIsCopyDebugFolderToTestFolder()) {
         std::wstring path = ConcatPaths({this->GetTestFolder(), L"WithPlugins"});
         RemoveDirectory(path);
-        CopyDirectory(this->GetWorkspaceSource(), path);        
+        CopyDirectory(this->GetWorkspaceTarget(), path);        
     }
 }
 
@@ -246,14 +248,14 @@ TEST_F(VPGVccGenerationManagerTest, Update)
     this->_Option->SetProjectNameExe(L"VCCProject");
     this->_Option->SetProjectNameDll(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
-    this->_Option->SetProjectNameGtest(L"VCCUnitTest");
+    this->_Option->SetIsExcludeUnittest(false);
     this->GetManager()->Add();
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
 
@@ -264,14 +266,66 @@ TEST_F(VPGVccGenerationManagerTest, Update)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"VCCUnitTest"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Versioning/Git"})));
 
     if (this->GetIsCopyDebugFolderToTestFolder()) {
         std::wstring path = ConcatPaths({this->GetTestFolder(), L"Update"});
         RemoveDirectory(path);
-        CopyDirectory(this->GetWorkspaceSource(), path);
+        CopyDirectory(this->GetWorkspaceTarget(), path);
+    }
+}
+
+TEST_F(VPGVccGenerationManagerTest, Update_Makefile)
+{
+    // cannot test really update case as cannot modify original project git resposne
+
+    // no plugin to have plugin
+    this->_Option->SetProjectNameExe(L"VCCProject");
+    this->_Option->SetProjectNameDll(L"VCCDllProject");
+    this->_Option->SetProjectName(L"ProjectName");
+    this->_Option->SetIsExcludeUnittest(false);
+    this->GetManager()->Add();
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
+
+    // Update project name
+    std::wstring projectName = L"NewProjectName";
+    std::wstring projectNameDll = L"NewProjectNameDll";
+    std::wstring projectNameExe = L"NewProjectNameExe";
+    std::wstring projectNameGtest = L"unittest";
+
+    DECLARE_UPTR(JsonBuilder, jsonBuilder);
+    jsonBuilder->SetIsBeautify(true);
+
+    std::wstring vccJsonFileContent = ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L".vcc/vcc.json"}));
+    DECLARE_SPTR(Json, json);
+    jsonBuilder->Deserialize(vccJsonFileContent, json);
+    json->SetString(L"ProjectName", projectName);
+    json->SetString(L"ProjectNameDll", projectNameDll);
+    json->SetString(L"ProjectNameExe", projectNameExe);
+    json->SetBool(L"IsExcludeUnittest", false);
+    WriteFile(ConcatPaths({this->GetWorkspaceTarget(), L".vcc/vcc.json"}), jsonBuilder->Serialize(json.get()));
+
+    this->GetManager()->Update();
+    std::wstring makefileFileContent = ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"}));
+    EXPECT_TRUE(CountSubstring(makefileFileContent, L"PROJ_NAME := NewProjectName") == 1);
+    EXPECT_TRUE(CountSubstring(makefileFileContent, L"PROJ_NAME_DLL := NewProjectNameDll") == 1);
+    EXPECT_TRUE(CountSubstring(makefileFileContent, L"PROJ_NAME_EXE := NewProjectNameExe") == 1);
+    EXPECT_TRUE(CountSubstring(makefileFileContent, L"IS_EXCLUDE_UNITTEST := N") == 1);
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
+
+    if (this->GetIsCopyDebugFolderToTestFolder()) {
+        std::wstring path = ConcatPaths({this->GetTestFolder(), L"Update_Makefile"});
+        RemoveDirectory(path);
+        CopyDirectory(this->GetWorkspaceTarget(), path);
     }
 }
 
@@ -281,7 +335,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     this->_Option->SetProjectNameExe(L"VCCProject");
     this->_Option->SetProjectNameDll(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
-    this->_Option->SetProjectNameGtest(L"VCCUnitTest");
+    this->_Option->SetIsExcludeUnittest(false);
     this->GetManager()->Add();
 
     std::wstring codeA =  L"";

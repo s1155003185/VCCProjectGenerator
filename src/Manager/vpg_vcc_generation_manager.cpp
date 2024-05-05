@@ -45,7 +45,7 @@ std::vector<std::wstring> VPGVccGenerationManager::GetUpdateUnitTestList() const
         result.push_back(L"External/VCC/Core/*");
 
     for (auto const &str : _Option->GetPlugins()) {
-        if (!IsBlank(_Option->GetProjectNameGtest())) {
+        if (!_Option->GetIsExcludeUnittest()) {
             if (!(str.starts_with(L"VCC") && _Option->GetIsExcludeVCCUnitTest()))
                 result.push_back(ConcatPaths({L"External/", str, L"*"}));
         }
@@ -59,6 +59,17 @@ void VPGVccGenerationManager::CreateVccJson() const
         DECLARE_UPTR(JsonBuilder, jsonBuilder);
         jsonBuilder->SetIsBeautify(true);
         WriteFile(ConcatPaths({_Option->GetWorkspaceDestination(), VPGGlobal::GetVccJsonFileName()}), _Option->SerializeJson(jsonBuilder.get()), true);
+    )
+}
+
+void VPGVccGenerationManager::ReadVccJson() const
+{
+    TRY_CATCH(
+        std::wstring fileContent = ReadFile(ConcatPaths({_Option->GetWorkspaceDestination(), VPGGlobal::GetVccJsonFileName()}));
+        DECLARE_UPTR(JsonBuilder, jsonBuilder);
+        DECLARE_SPTR(Json, json);
+        jsonBuilder->Deserialize(fileContent, json);
+        _Option->DeserializeJson(json);
     )
 }
 
@@ -78,12 +89,12 @@ void VPGVccGenerationManager::Add() const
         CopyDirectory(src, dest, &copyDirectoryOption);
 
         // handle unittest in next loop as unit test name can be changed
-        if (!IsBlank(_Option->GetProjectNameGtest())) {
+        if (!_Option->GetIsExcludeUnittest()) {
             copyDirectoryOption.ClearIncludeFileFilters();
             for (auto const &str : GetUpdateUnitTestList())
                 copyDirectoryOption.InsertIncludeFileFilters(str);
             if (!copyDirectoryOption.GetIncludeFileFilters().empty())
-                CopyDirectory(ConcatPaths({src, L"unittest"}), ConcatPaths({dest, _Option->GetProjectNameGtest()}), &copyDirectoryOption);
+                CopyDirectory(ConcatPaths({src, unittestFolderName}), ConcatPaths({dest, unittestFolderName}), &copyDirectoryOption);
         }
 
         // Create Json file at the end to force override
@@ -95,6 +106,8 @@ void VPGVccGenerationManager::Add() const
 void VPGVccGenerationManager::Update() const
 {
     TRY_CATCH(
+        ReadVccJson();
+
         std::wstring src = _Option->GetWorkspaceSource();
         std::wstring dest = _Option->GetWorkspaceDestination();
         
@@ -104,11 +117,21 @@ void VPGVccGenerationManager::Update() const
 
         SyncWorkspace(this->_LogProperty.get(), src, dest, GetUpdateList(), {});
         
-        if (!IsBlank(_Option->GetProjectNameGtest())) {
+        if (!_Option->GetIsExcludeUnittest()) {
             auto list = GetUpdateUnitTestList();
             if (!list.empty())
-                SyncWorkspace(this->_LogProperty.get(), ConcatPaths({src, L"unittest"}), ConcatPaths({dest, _Option->GetProjectNameGtest()}), list, {});
+                SyncWorkspace(this->_LogProperty.get(), ConcatPaths({src, unittestFolderName}), ConcatPaths({dest, unittestFolderName}), list, {});
         }
+
+        // Update Makefile and unittest
+        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Update Project according to vcc.json");
+        if (!IsFileExists(ConcatPaths({dest, MakeFileName})))
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Cannot find " + ConcatPaths({dest, MakeFileName}));
+        
+        // Makefile
+        std::wstring makefilePath = ConcatPaths({dest, MakeFileName});
+        std::wstring makefileContent = ReadFile(ConcatPaths({dest, MakeFileName}));
+        WriteFile(makefilePath, this->AdjustMakefile(makefileContent), true);
         
         // Create Json file at the end to force override
         CreateVccJson();
@@ -119,6 +142,8 @@ void VPGVccGenerationManager::Update() const
 void VPGVccGenerationManager::Generate() const
 {
     TRY_CATCH(
+        ReadVccJson();
+        
         DECLARE_UPTR(VPGFileGenerationManager, manager, this->_LogProperty);
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Generate Project ...");
         manager->GernerateProperty(_LogProperty.get(), _Option->GetProjectPrefix(), _Option->GetWorkspaceDestination(), _Option->GetTypeWorkspace(),

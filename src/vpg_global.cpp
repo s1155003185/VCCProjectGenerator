@@ -19,7 +19,7 @@ using namespace vcc;
 
 std::wstring VPGGlobal::GetVersion()
 {
-    return L"v0.0.1";
+    return L"v0.0.3";
 }
 
 std::wstring VPGGlobal::GetVccLocalResponseFolder()
@@ -69,5 +69,5 @@ std::wstring VPGGlobal::GetProjecURL(VPGProjectType projectType)
 
 std::wstring VPGGlobal::GetVccJsonFileName()
 {
-    return L"vcc.json";
+    return L".vcc/vcc.json";
 }

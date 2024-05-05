@@ -218,7 +218,7 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
             } else {
                 // double tag, no second argument
                 if (cmd == L"--ExcludeUnitTest")
-                    _Option->SetProjectNameGtest(L"");
+                    _Option->SetIsExcludeUnittest(true);
                 else if (cmd == L"--ExcludeExternalUnitTest")
                     _Option->SetIsExcludeVCCUnitTest(true);
                 else
@@ -227,11 +227,29 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
         }
 
         if (mode == L"-Add") {
+            // adjust option based on ProjectType
+            switch (_Option->GetProjectType())
+            {
+            case VPGProjectType::CppDll:
+            case VPGProjectType::VccDll:
+                _Option->SetProjectNameExe(L"");
+                break;
+            case VPGProjectType::CppExe:
+            case VPGProjectType::VccExe:
+                _Option->SetProjectNameDll(L"");
+                break;
+            default:
+                break;
+            }
+
             // validation
             if (this->_Option->GetProjectType() == VPGProjectType::NA)
-                THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Interface Type missing");
+                THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Interface Type missing.");
         } else {
-            std::wstring fileContent = ReadFile(ConcatPaths({_Option->GetWorkspaceDestination(), VPGGlobal::GetVccJsonFileName()}));
+            std::wstring vccJsonFilePath = ConcatPaths({_Option->GetWorkspaceDestination(), VPGGlobal::GetVccJsonFileName()});
+            if (!IsFileExists(vccJsonFilePath))
+                THROW_EXCEPTION_MSG(ExceptionType::CustomError, vccJsonFilePath + L": File not found.");
+            std::wstring fileContent = ReadFile(vccJsonFilePath);
             DECLARE_UPTR(JsonBuilder, jsonBuilder);
             DECLARE_SPTR(Json, json);
             jsonBuilder->Deserialize(fileContent, json);

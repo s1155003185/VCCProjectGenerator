@@ -72,7 +72,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
             makeFileStr += L"PROJ_NAME := VCCProjGenerator\r\n";
             makeFileStr += L"PROJ_NAME_DLL := libvpg\r\n";
             makeFileStr += L"PROJ_NAME_EXE := vpg\r\n";
-            makeFileStr += L"PROJ_NAME_GTEST := unittest\r\n";
+            makeFileStr += L"IS_EXCLUDE_UNITTEST := N\r\n";
             makeFileStr += L"# </vcc:name>\r\n";
             makeFileStr += L"HI";
             this->_FileContent = makeFileStr;
@@ -87,7 +87,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
             std::wstring projName = !IsBlank(_Option->GetProjectName()) ? (L" " + _Option->GetProjectName()) : L"";
             std::wstring dllName = !IsBlank(_Option->GetProjectNameDll()) ? (L" " + _Option->GetProjectNameDll()) : L"";
             std::wstring exeName = !IsBlank(_Option->GetProjectNameExe()) ? (L" " + _Option->GetProjectNameExe()) : L"";
-            std::wstring gtestName = !IsBlank(_Option->GetProjectNameGtest()) ? (L" " + _Option->GetProjectNameGtest()) : L"";
+            std::wstring IsExcludeUnittest = _Option->GetIsExcludeUnittest() ? L" Y" : L" N";
             std::wstring makeFileStr = L"hi\r\n";
             makeFileStr += L"# <vcc:name sync=\"ALERT\">\r\n";
             makeFileStr += L"#----------------------------------#\r\n";
@@ -96,7 +96,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
             makeFileStr += L"PROJ_NAME :=" + projName + L"\r\n";
             makeFileStr += L"PROJ_NAME_DLL :=" + dllName + L"\r\n";
             makeFileStr += L"PROJ_NAME_EXE :=" + exeName + L"\r\n";
-            makeFileStr += L"PROJ_NAME_GTEST :=" + gtestName + L"\r\n";
+            makeFileStr += L"IS_EXCLUDE_UNITTEST :=" + IsExcludeUnittest + L"\r\n";
             makeFileStr += L"# </vcc:name>\r\n";
             makeFileStr += L"HI";
             return makeFileStr;
@@ -219,7 +219,7 @@ TEST_F(VPGBaseGenerationManagerTest, DllTestFileContent)
     _Option->SetProjectName(L"libvpg");
     _Option->SetProjectNameDll(L"libvpg");
     _Option->SetProjectNameExe(L"libvpg");
-    _Option->SetProjectNameGtest(L"libvpg");
+    _Option->SetIsExcludeUnittest(false);
     std::wstring originalText  = ReadFile(L"unittest/Dll/dll_test.cpp");
     std::wstring result = originalText;
     this->GetManager()->GetDLLTestFileContent(result);
@@ -233,7 +233,7 @@ TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_Complex)
     _Option->SetProjectName(L"ProjectName");
     _Option->SetProjectNameDll(L"DllName");
     _Option->SetProjectNameExe(L"ExeName");
-    _Option->SetProjectNameGtest(L"GTestName");
+    _Option->SetIsExcludeUnittest(false);
     std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
     EXPECT_EQ(result, GetResultStr(_Option.get()));
 }
@@ -243,7 +243,7 @@ TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_DLLOnly)
     _Option->SetProjectName(L"ProjectName");
     _Option->SetProjectNameDll(L"DllName");
     _Option->SetProjectNameExe(L"");
-    _Option->SetProjectNameGtest(L"GTestName");
+    _Option->SetIsExcludeUnittest(false);
     std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
     EXPECT_EQ(result, GetResultStr(_Option.get()));
 }
@@ -253,7 +253,7 @@ TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_EXEOnly)
     _Option->SetProjectName(L"ProjectName");
     _Option->SetProjectNameDll(L"");
     _Option->SetProjectNameExe(L"ExeName");
-    _Option->SetProjectNameGtest(L"GTestName");
+    _Option->SetIsExcludeUnittest(false);
     std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
     EXPECT_EQ(result, GetResultStr(_Option.get()));
 }
@@ -263,7 +263,7 @@ TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_NoGtest)
     _Option->SetProjectName(L"ProjectName");
     _Option->SetProjectNameDll(L"DllName");
     _Option->SetProjectNameExe(L"ExeName");
-    _Option->SetProjectNameGtest(L"");
+    _Option->SetIsExcludeUnittest(true);
     std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
     EXPECT_EQ(result, GetResultStr(_Option.get()));
 }

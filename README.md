@@ -3,6 +3,69 @@
 Note: Still in initialize version, will have full review when official release
 Note: Don't use XMLReader, it will be combined with Builder and rename to XMLBuilder later
 
+## Features
+- Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
+- Create program structure like sql, the remaining is just handle specific logic.
+
+### Options
+1. Create C++ Complex Project
+2. Create C++ EXE Project
+3. Create C++ DLL Project
+4. Create VCC Complex Project
+5. Create VCC EXE Project
+6. Create VCC DLL Project
+7. Update VCC Project
+8. Generate VCC Project
+
+## Build C++ project
+Follow the instruction listed in Makefile
+
+when compile enter following command in terminal:
+To build debug
+```
+make debug -j10
+```
+
+To build release
+```
+make release -j10
+```
+
+To clean project
+```
+make clean
+```
+
+Other command can be refer to Makefile
+
+Debug program is built in bin/Debug
+Release program is built in bin/Release
+
+## Execute C++ project in VScode
+F5
+
+## Compare to AI Code Generation
+- Stable
+- Reliable
+- Faster
+- No need to test existing code
+- No need to study the code after generation
+- No need to upload code to service provider
+
+## Pending
+- Use precompile header
+- Update vcc.json also update Makefile etc.
+- ProperyAccessor and java bridge, swift bridge.
+- Auto generate ChangeLog
+- Check style
+- Auto generaste document for coding (like java)
+- Enhance class generation for validation, trigger etc.
+- Alert tag for Update
+
+## Known Issue
+- Compile unit test to slow because of linkage. No solution.
+
+****
 ## Versioning Common Codebase Project / Versioning Coding Cooperation Project Introduction
 Document versioning are highly expected but seems no solution at the moment. Also, current existing document processors have straight behavior, such as auto creating style which make characters disappeared, saving whole document for each save, lagging for large document, etc. Unfortunately, seems that those behaviors are not bug. Enhancement cannot be expected. So, Versioning Coding Cooperation Project is introducted to develop a document versioning system.
 
@@ -381,58 +444,6 @@ Execute: vpg -Update -workspace-destination workspace
 Execute: vpg -Generate -workspace-destination workspace
 
 ****
-## Features
-- Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
-- Create program structure like sql, the remaining is just handle specific logic.
-
-## Build C++ project
-Follow the instruction listed in Makefile
-
-when compile enter following command in terminal:
-To build debug
-```
-make debug -j10
-```
-
-To build release
-```
-make release -j10
-```
-
-To clean project
-```
-make clean
-```
-
-Other command can be refer to Makefile
-
-Debug program is built in bin/Debug
-Release program is built in bin/Release
-
-## Execute C++ project in VScode
-F5
-
-## Compare to AI Code Generation
-- Stable
-- Reliable
-- Faster
-- No need to test existing code
-- No need to study the code after generation
-- No need to upload code to service provider
-
-## Pending
-- Use precompile header
-- Update vcc.json also update Makefile etc.
-- ProperyAccessor and java bridge, swift bridge.
-- Auto generate ChangeLog
-- Check style
-- Auto generaste document for coding (like java)
-- Enhance class generation for validation, trigger etc.
-- Alert tag for Update
-
-## Known Issue
-- Compile unit test to slow because of linkage. No solution.
-
 ## History
 The project is start from 2022-06-22. As Document Versioning is needed but no solution can be found. Also, existing document processors have some interesting behaviour, such as
 
@@ -468,6 +479,11 @@ X(Twitter) @VCCProject
 
 ****
 ## Release Log
+2024-05-06 v0.0.3
+- Move vcc.json to .vcc/vcc.json
+- Update Makefile to fix unittest name
+- Trigger Update VCC Module will update Makefile according to vcc.json
+
 2024-05-05 v0.0.2
 - Fix cannot reexecute after switched to tag
 
