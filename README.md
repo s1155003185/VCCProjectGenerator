@@ -385,6 +385,26 @@ Execute: vpg -Generate -workspace-destination workspace
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
 - Create program structure like sql, the remaining is just handle specific logic.
 
+## Build C++ project
+Follow the instruction listed in Makefile
+
+when compile enter following command in terminal:
+To build debug
+```
+make debug -j10
+```
+
+To build release
+```
+make release -j10
+```
+
+Debug program is built in bin/Debug
+Release program is built in bin/Release
+
+## Execute C++ project in VScode
+F5
+
 ## Compare to AI Code Generation
 - Stable
 - Reliable
