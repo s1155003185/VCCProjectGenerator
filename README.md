@@ -456,6 +456,8 @@ If you want to have new feature or report bugs, please tell me via GitHub or X(T
 If you want to contribute, please create branch and tell me to merge when finished. I may need to modify the code to fit the style
 Note that it is open source no license coorporation project, code will be modified without notification. 
 
+## Contact
+X(Twitter) @VCCProject
 
 ****
 ## Release Log
