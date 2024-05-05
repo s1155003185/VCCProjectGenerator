@@ -817,7 +817,7 @@ namespace vcc
         )
     }
 
-    void GitService::SwitchTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, bool isForce)
+    void GitService::Switch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, bool isForce)
     {
         TRY_CATCH(
             assert(!IsBlank(tagName));
@@ -826,7 +826,7 @@ namespace vcc
         )
     }
 
-    void GitService::SwitchTagReverse(const LogProperty *logProperty, const std::wstring &workspace)
+    void GitService::SwitchReverse(const LogProperty *logProperty, const std::wstring &workspace)
     {
         TRY_CATCH(
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git switch -");

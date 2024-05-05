@@ -399,6 +399,13 @@ To build release
 make release -j10
 ```
 
+To clean project
+```
+make clean
+```
+
+Other command can be refer to Makefile
+
 Debug program is built in bin/Debug
 Release program is built in bin/Release
 
@@ -461,6 +468,9 @@ X(Twitter) @VCCProject
 
 ****
 ## Release Log
+2024-05-05 v0.0.2
+- Fix cannot reexecute after switched to tag
+
 2024-05-05 First Release: v0.0.1
 
 2023-12-23 Combine VCCProjectGeneratorEXE and VCCProjectGeneratorDLL and rename to VCCProjectGenerator

@@ -38,7 +38,14 @@ void VPGProcessManager::VerifyLocalResponse()
         if (IsDirectoryExists(localResponseDirectory)) {
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
 
-            GitService::Pull(this->GetLogProperty().get(), localResponseDirectory);
+            // Cannot push for tag
+            try
+            {            
+                GitService::Pull(this->GetLogProperty().get(), localResponseDirectory);
+            }
+            catch(...)
+            {
+            }
             if (_Option->GetProjectType() == VPGProjectType::VccComplex
                 || _Option->GetProjectType() == VPGProjectType::VccDll
                 || _Option->GetProjectType() == VPGProjectType::VccExe) {
@@ -52,14 +59,14 @@ void VPGProcessManager::VerifyLocalResponse()
                 if (!Contains(currentLog->GetTags(), VPGGlobal::GetVersion())) {
                     try
                     {
-                        GitService::SwitchTag(this->GetLogProperty().get(), VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType()), VPGGlobal::GetVersion());
+                        GitService::Switch(this->GetLogProperty().get(), VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType()), VPGGlobal::GetVersion());
                         LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
                     }
                     catch(const std::exception& e)
                     {
                         try {
                             LogService::LogError(this->GetLogProperty().get(), L"", L"VCC Project Generator version Not Exists. Switch to main.");
-                            GitService::SwitchTag(this->GetLogProperty().get(), VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType()), L"main");
+                            GitService::Switch(this->GetLogProperty().get(), VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType()), L"main");
                             GitService::Pull(this->GetLogProperty().get(), VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType()));
                             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
                         } catch (const std::exception &e) {

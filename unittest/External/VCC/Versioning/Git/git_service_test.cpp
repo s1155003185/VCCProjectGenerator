@@ -351,14 +351,14 @@ TEST_F(GitServiceTest, Tag)
     EXPECT_EQ(currentTag.GetNoOfCommit(), (size_t)0);
 
     // Window behavior and Linux Behavior different, Window throw exception (tag will detach branch) while Linux will not
-    // Can use GitService::SwitchTagReverse to switch back
+    // Can use GitService::SwitchReverse to switch back
     // As window will throw exception, meaningless to have unit test for switching tag
     // try {
-    //     GitService::SwitchTag(this->GetLogProperty().get(), this->GetWorkspace(), L"v0.0.1");
+    //     GitService::Switch(this->GetLogProperty().get(), this->GetWorkspace(), L"v0.0.1");
     // } catch (...) {
 
     // }
-    //GitService::SwitchTagReverse(this->GetLogProperty().get(), this->GetWorkspace());
+    //GitService::SwitchReverse(this->GetLogProperty().get(), this->GetWorkspace());
 
     // DECLARE_SPTR(GitLog, log);
     // GitService::GetTag(this->GetLogProperty().get(), this->GetWorkspace(), L"v0.0.1", log);
