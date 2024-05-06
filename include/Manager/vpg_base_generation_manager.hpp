@@ -310,11 +310,11 @@ std::wstring VPGBaseGenerationManager<Derived>::AdjustMakefile(const std::wstrin
     ValidateOption();
     std::wstring result = L"";
     TRY_CATCH(
-        DECLARE_SPTR(XMLElement, elements);
+        DECLARE_SPTR(Xml, elements);
         VPGCodeReader reader(L"#");
-        reader.Parse(fileContent, elements);
-        for (std::shared_ptr<vcc::XMLElement> element : elements->GetChildren()) {
-            if (element->GetNamespace() == L"vcc" && element->GetName() == L"name") {
+        reader.Deserialize(fileContent, elements);
+        for (std::shared_ptr<vcc::Xml> element : elements->GetChildren()) {
+            if (element->GetName() == L"vcc:name") {
                 std::wstring projName = !IsBlank(_Option->GetProjectName()) ? (L" " + _Option->GetProjectName()) : L"";
                 std::wstring dllName = !IsBlank(_Option->GetProjectNameDll()) ? (L" " + _Option->GetProjectNameDll()) : L"";
                 std::wstring exeName = !IsBlank(_Option->GetProjectNameExe()) ? (L" " + _Option->GetProjectNameExe()) : L"";

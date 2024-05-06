@@ -5,8 +5,8 @@
 #include "log_property.hpp"
 #include "vpg_code_reader.hpp"
 
-constexpr auto VCC_NAMESPACE = L"vcc";
-constexpr auto VCC_NAME = L"vccproj";
+const std::wstring VCC_NAMESPACE = L"vcc";
+const std::wstring VCC_NAME = VCC_NAMESPACE + L":vccproj";
 
 constexpr auto SYNC_TOKEN_SHORT = L"sync";
 constexpr auto SYNC_TOKEN_LONG = L"synchronization";
@@ -44,18 +44,17 @@ enum class VPGFileContentSyncTag
 class VPGFileSyncService
 {
     private:
-        static bool _IsSyncTag(const std::wstring &tag);
+        static bool IsSyncTag(const std::wstring &tag);
 
-        static VPGFileContentSyncMode _GetSyncMode(const XMLElement *codeElemet);
-        static VPGFileContentSyncTag _GetSyncTag(std::wstring tagValue);
-        static const XMLElement *_GetTagFromCode(const XMLElement *code, const std::wstring tagName);
-        static bool _IsTagReplace(const XMLElement *child);
-        static bool _IsTagReserve(const XMLElement *child);
+        static VPGFileContentSyncMode GetSyncMode(const Xml *codeElemet);
+        static const Xml *GetTagFromCode(const Xml *code, const std::wstring tagName);
+        static bool IsTagReplace(const Xml *child);
+        static bool IsTagReserve(const Xml *child);
 
-        static std::wstring _GenerateForceCode(const VPGFileContentSyncMode srcMode, const VPGFileContentSyncMode destMode, const XMLElement *src, const XMLElement *dest);
-        static std::wstring _GenerateFullCode(const VPGFileContentSyncMode srcMode, const VPGFileContentSyncMode destMode, const XMLElement *src, const XMLElement *dest);
-        static std::wstring _GenerateDemandCode(const VPGFileContentSyncMode srcMode, const VPGFileContentSyncMode destMode, const XMLElement *src, const XMLElement *dest);
-        static std::wstring _GenerateSkipCode(const std::wstring &dest);
+        static std::wstring GenerateForceCode(const VPGFileContentSyncMode srcMode, const VPGFileContentSyncMode destMode, const Xml *src, const Xml *dest);
+        static std::wstring GenerateFullCode(const VPGFileContentSyncMode srcMode, const VPGFileContentSyncMode destMode, const Xml *src, const Xml *dest);
+        static std::wstring GenerateDemandCode(const VPGFileContentSyncMode srcMode, const VPGFileContentSyncMode destMode, const Xml *src, const Xml *dest);
+        static std::wstring GenerateSkipCode(const std::wstring &dest);
     public:
         VPGFileSyncService() = default;
         ~VPGFileSyncService() {}

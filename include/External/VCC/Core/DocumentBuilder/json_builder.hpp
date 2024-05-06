@@ -16,15 +16,10 @@ namespace vcc
         GETSET(std::wstring, NameColonSpace, L"");
         GETSET(std::wstring, ColonValueSpace, L" ");
 
-        // Error Message
-        GETSET(size_t, NumberOfCharactersBeforePosForErrorMessage, 10);
-        GETSET(size_t, NumberOfCharactersAfterPosForErrorMessage, 50);
-
         private:
             std::wstring GetCurrentIndent() const;
 
         protected:
-            std::wstring GetErrorMessage(const std::wstring &str, const size_t &pos, const std::wstring &msg) const;
             void ParseJsonObject(const std::wstring &str, size_t &pos, std::shared_ptr<Json> doc) const;
             
         public:

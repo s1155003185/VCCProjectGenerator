@@ -1,7 +1,6 @@
 # VCCProjectGenerator / VCCProjectGenerator VSCode Extension
 ### Versioning Common Codebase Project / Versioning Coding Cooperation Project
 Note: Still in initialize version, will have full review when official release
-Note: Don't use XMLReader, it will be combined with Builder and rename to XMLBuilder later
 
 ## Features
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
@@ -22,6 +21,16 @@ Note: Don't use XMLReader, it will be combined with Builder and rename to XMLBui
 2. g++
 3. make
 4. gtest
+
+### Procedcure of Extension
+1. Download VCCProjectGenerator by Git to ~/Document/VCC folder.
+2. Use make to build VCCProjectGenerator.
+3. Download template by Git.
+4. Add / Update based on Template.
+
+If dont want to download extra project, please download following git manually and follow instruction listed in Makefile to adjust.
+1. Versionin Common Codebase Simple C++ Template (https://github.com/s1155003185/VCCSimpleTemplateCPP)
+2. Versionin Common Codebase Module - VCCModule (https://github.com/s1155003185/VCCModule)
 
 ## Build C++ project
 Follow the instruction listed in Makefile

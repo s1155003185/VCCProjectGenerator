@@ -4,11 +4,11 @@
 #include <string>
 
 #include "class_macro.hpp"
-#include "xml_reader.hpp"
+#include "xml_builder.hpp"
 
 using namespace vcc;
 
-class VPGCodeReader : public XMLReader
+class VPGCodeReader : public XmlBuilder
 {
     GETSET(std::wstring, CommandDelimiter, L"//")
     private:
@@ -16,7 +16,7 @@ class VPGCodeReader : public XMLReader
     public:
         VPGCodeReader(std::wstring commandDelimiter);
         
-        virtual void ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, std::shared_ptr<XMLElement> element) override;
-        virtual void ParseXMLElement(const std::wstring &xmlData, size_t &pos, std::shared_ptr<XMLElement> element) override;
+        virtual void ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const override;
+        virtual void ParseXml(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const override;
 
 };
