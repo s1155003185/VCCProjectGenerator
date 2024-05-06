@@ -17,6 +17,12 @@ Note: Don't use XMLReader, it will be combined with Builder and rename to XMLBui
 7. Update VCC Project
 8. Generate VCC Project
 
+### Pre-Requirement
+1. git
+2. g++
+3. make
+4. gtest
+
 ## Build C++ project
 Follow the instruction listed in Makefile
 
