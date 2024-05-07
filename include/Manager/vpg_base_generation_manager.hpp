@@ -113,7 +113,7 @@ class VPGBaseGenerationManager : public BaseManager<Derived>, public IVPGGenerat
 template <typename Derived>
 void VPGBaseGenerationManager<Derived>::ValidateOption() const
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         if (IsBlank(_Option->GetWorkspaceSource()))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace Source is emtpy.");
         if (IsBlank(_Option->GetWorkspaceDestination()))
@@ -122,7 +122,7 @@ void VPGBaseGenerationManager<Derived>::ValidateOption() const
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Project Name is emtpy.");
         if (IsBlank(_Option->GetProjectNameDll()) && IsBlank(_Option->GetProjectNameExe()))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Both DLL name and EXE name both empty.");
-    )
+    }
 }
 
 template <typename Derived>
@@ -134,7 +134,7 @@ void VPGBaseGenerationManager<Derived>::GetDLLTestFileContent(std::wstring &file
 template <typename Derived>
 void VPGBaseGenerationManager<Derived>::CreateWorkspaceDirectory() const
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         ValidateOption();
         // All type has same project structure
         std::vector<std::wstring> checkList;
@@ -164,13 +164,13 @@ void VPGBaseGenerationManager<Derived>::CreateWorkspaceDirectory() const
                 LogService::LogInfo(this->GetLogProperty().get(), L"", L"Create Directory: " + path);
             }        
         }
-    )
+    }
 }
 
 template <typename Derived>
 void VPGBaseGenerationManager<Derived>::CreateBasicProject() const
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         ValidateOption();
         this->CreateWorkspaceDirectory();
 
@@ -215,7 +215,7 @@ void VPGBaseGenerationManager<Derived>::CreateBasicProject() const
         std::wstring tasksFilePath = ConcatPaths({dest,  L".vscode/tasks.json"});
         std::wstring tasksFileContent = ReadFile(ConcatPaths({src,  L".vscode/tasks.json"}));
         WriteFile(tasksFilePath, tasksFileContent, true);   
-    )
+    }
 }
 
 template <typename Derived>
@@ -224,9 +224,9 @@ void VPGBaseGenerationManager<Derived>::SyncWorkspace(const LogProperty *logProp
 {
     try {
         std::vector<std::wstring> needToAdd, needToModify, needToDelete;
-        TRY_CATCH(
+        TRY_CATCH(){
             GetFileDifferenceBetweenWorkspaces(sourceWorkspace, targetWorkspace, needToAdd, needToModify, needToDelete);
-        )
+        }
 
         // Delete
         for (auto path : needToDelete) {
@@ -309,7 +309,7 @@ std::wstring VPGBaseGenerationManager<Derived>::AdjustMakefile(const std::wstrin
 {
     ValidateOption();
     std::wstring result = L"";
-    TRY_CATCH(
+    TRY_CATCH(){
         DECLARE_SPTR(Xml, elements);
         VPGCodeReader reader(L"#");
         reader.Deserialize(fileContent, elements);
@@ -332,14 +332,14 @@ std::wstring VPGBaseGenerationManager<Derived>::AdjustMakefile(const std::wstrin
             } else
                 result += element->GetFullText();
         }
-    )
+    }
     return result;
 }
 
 template <typename Derived>
 std::wstring VPGBaseGenerationManager<Derived>::AdjustVSCodeLaunchJson(const std::wstring &fileContent) const
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         std::wstring programPath = L"${workspaceFolder}/bin/Debug/unittest";
         if (_Option->GetIsExcludeUnittest() && !_Option->GetProjectNameExe().empty()) {
             std::wstring projectName = _Option->GetProjectNameExe();
@@ -362,6 +362,6 @@ std::wstring VPGBaseGenerationManager<Derived>::AdjustVSCodeLaunchJson(const std
             }
         }
         return jsonBuilder->Serialize(json.get());
-    )
+    }
     return fileContent;
 }

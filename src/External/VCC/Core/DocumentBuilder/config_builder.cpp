@@ -16,7 +16,7 @@ namespace vcc
     std::wstring ConfigBuilder::Serialize(const IDocument *doc) const
     {
         std::wstring result = L"";
-        TRY_CATCH(  
+        TRY_CATCH(){  
             Config *configObj = dynamic_cast<Config *>(const_cast<IDocument *>(doc));
             assert(configObj != nullptr);
             for (auto const &pair : configObj->GetConfigs()) {
@@ -29,13 +29,13 @@ namespace vcc
                 else
                     result += value + L"\r\n";
             }
-        )
+        }
         return result;
     }
 
     void ConfigBuilder::Deserialize(const std::wstring &str, size_t &/*pos*/, std::shared_ptr<IDocument> doc) const
     {
-        TRY_CATCH(
+        TRY_CATCH(){
             std::shared_ptr<Config> configObj = dynamic_pointer_cast<Config>(doc);
             assert(configObj != nullptr);
 
@@ -59,14 +59,14 @@ namespace vcc
                         configObj->AddLine(line);
                 }
             }
-        )
+        }
     }
 
     void ConfigBuilder::Deserialize(const std::wstring &str, std::shared_ptr<IDocument> doc) const
     {
-        TRY_CATCH(
+        TRY_CATCH(){
             size_t pos = 0;
             Deserialize(str, pos, doc);
-        )
+        }
     }
 }

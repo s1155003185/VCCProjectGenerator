@@ -22,7 +22,7 @@ const std::wstring propertyAccessorFileSuffixWithoutExtention = L"property_acces
 
 void VPGFileGenerationManager::GetClassMacroList(const std::wstring &projWorkspace)
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         std::wstring filePath = ConcatPaths({projWorkspace, classMacroFilePath});
         std::wstring prefix = L"#define ";
         size_t prefixLen = wcslen(prefix.c_str());
@@ -36,31 +36,31 @@ void VPGFileGenerationManager::GetClassMacroList(const std::wstring &projWorkspa
         });
         if (this->_ClassMacros.empty())
             THROW_EXCEPTION_MSG(ExceptionType::FileNotFound, classMacroFilePath + L" missing");
-    )
+    }
 }
 
 std::wstring VPGFileGenerationManager::GetClassNameFromEnumClassName(const std::wstring &enumClassName)
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         if (enumClassName.ends_with(proeprtyClassNameSuffix) && enumClassName != proeprtyClassNameSuffix)
             return enumClassName.substr(0, enumClassName.length() - proeprtyClassNameSuffix.length());
-    )
+    }
     return enumClassName;
 }
 
 std::wstring VPGFileGenerationManager::GetClassFilenameFromEnumClassFilename(const std::wstring &enumClassFileName)
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         std::wstring tmpFileName = enumClassFileName;
         ReplaceAll(tmpFileName, propertyFileSuffix, L".hpp");
         return tmpFileName;
-    )
+    }
     return enumClassFileName;
 }
 
 void VPGFileGenerationManager::GetFileList(const VPGEnumClassReader *reader, const std::wstring &directoryFullPath, const std::wstring &projectPrefix)
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         for (auto const &filePath : std::filesystem::recursive_directory_iterator(PATH(directoryFullPath))) {
             try
             {
@@ -91,33 +91,33 @@ void VPGFileGenerationManager::GetFileList(const VPGEnumClassReader *reader, con
             {
             }            
         }
-    )
+    }
 }
 
 bool VPGFileGenerationManager::IsClassEnumFile(const std::wstring &filename, const std::wstring &projectPrefix)
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         std::wstring tmpFileName = filename;
         ToLower(tmpFileName);
         std::wstring tmpProjectPrefix = projectPrefix;
         ToLower(tmpProjectPrefix);
         return tmpFileName.ends_with(propertyFileSuffix) && (IsBlank(tmpProjectPrefix) || tmpFileName.starts_with(tmpProjectPrefix));
-    )
+    }
     return false;
 }
 
 bool VPGFileGenerationManager::IsClassEnum(const std::wstring &enumClassName, const std::wstring &projectPrefix)
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         return enumClassName.ends_with(proeprtyClassNameSuffix) && enumClassName.length() > proeprtyClassNameSuffix.length()
             && (IsBlank(projectPrefix) || enumClassName.starts_with(projectPrefix));
-    )
+    }
     return false;
 }
 
 void VPGFileGenerationManager::GenerateObjectTypeFile(const LogProperty *logProperty, const std::wstring &hppFilePath, const std::vector<std::wstring> &propertyTypeList)
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         LogService::LogInfo(logProperty, logId, L"Generate object type file: " + hppFilePath);
         std::wstring content = L"#pragma once\r\n";
         content += L"\r\n";
@@ -129,15 +129,19 @@ void VPGFileGenerationManager::GenerateObjectTypeFile(const LogProperty *logProp
         content += L"};\r\n";
         WriteFile(hppFilePath, content, true);
         LogService::LogInfo(logProperty, logId, L"Generate object type file completed.");
-    )
+    }
 }
 
 void VPGFileGenerationManager::GeneratePropertyClassFile(const LogProperty *logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         LogService::LogInfo(logProperty, logId, L"Generate object class file: " + hppFilePath);
 
         // TODO: need to enable to check all systemn function
+        // need to skip all code in command
+        // Mac: all next tokens after class _LIBCPP_TEMPLATE_VIS under path /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/
+        // Window: C:\msys64\mingw64\include\c++\12.2.0
+
         std::set<std::wstring> systemFileList;
         std::set<std::wstring> projectFileList;
         std::set<std::wstring> abstractClassList;
@@ -242,13 +246,22 @@ void VPGFileGenerationManager::GeneratePropertyClassFile(const LogProperty *logP
         }
         WriteFile(hppFilePath, content, true);
         LogService::LogInfo(logProperty, logId, L"Generate object class file completed.");
-    )
+    }
+}
+
+void VPGFileGenerationManager::GeneratePropertyPropertyAccessorFile(const LogProperty *logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::wstring &cppFilePath, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+{
+    TRY_CATCH(){
+        LogService::LogInfo(logProperty, logId, L"Generate property access file: " + hppFilePath + L" " + cppFilePath);
+
+        LogService::LogInfo(logProperty, logId, L"Generate property access file: " + hppFilePath + L" " + cppFilePath + L" complete.");
+    }
 }
 
 void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty, const std::wstring &projPrefix, const std::wstring &projWorkspace, const std::wstring &typeWorkspace, 
     const std::wstring &objTypeDirectoryHpp, const std::wstring &objDirectoryHpp, const std::wstring &propertyAccessorDirectoryHpp, const std::wstring &propertyAccessorDirectoryCpp)
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         std::wstring typeWorkspaceFullPath = ConcatPaths({projWorkspace, typeWorkspace});
         GetClassMacroList(projWorkspace);
         VPGEnumClassReader enumClassReader(_ClassMacros);
@@ -312,9 +325,9 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
                     objectFilePaths.push_back(middlePath);
                 objectFilePaths.push_back(objectFileName + L".hpp");
                 GeneratePropertyClassFile(logProperty, projPrefix, ConcatPaths(objectFilePaths), enumClassList);
-                // GeneratePropertyPropertyAccessorFile(logProperty, projPrefix, 
-                //     ConcatPaths({projWorkspace, propertyAccessorDirectoryHpp, propertyAccessorFileName + L".hpp"}), 
-                //     ConcatPaths({projWorkspace, propertyAccessorDirectoryCpp, propertyAccessorFileName + L".cpp"}), enumClassList);
+                GeneratePropertyPropertyAccessorFile(logProperty, projPrefix, 
+                    ConcatPaths({projWorkspace, propertyAccessorDirectoryHpp, propertyAccessorFileName + L".hpp"}), 
+                    ConcatPaths({projWorkspace, propertyAccessorDirectoryCpp, propertyAccessorFileName + L".cpp"}), enumClassList);
             }
             LogService::LogInfo(logProperty, logId, L"Parse file completed: " + path);
             // ------------------------------------------------------------------------------------------ //
@@ -327,5 +340,5 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
         VPGFileGenerationManager::GenerateObjectTypeFile(logProperty, ConcatPaths({projWorkspace, objTypeDirectoryHpp, objectTypeHppFileName}), objectTypeList);
 
         LogService::LogInfo(logProperty, logId, L"Generate Property Finished.");
-    )
+    }
 }

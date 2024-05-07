@@ -125,30 +125,30 @@ std::shared_ptr<IVPGGenerationManager> VPGProcessManager::GetGenerationManager()
 
 void VPGProcessManager::Add()
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         this->VerifyLocalResponse();
         GetGenerationManager()->Add();
-    )
+    }
 }
 
 void VPGProcessManager::Update()
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         if (!IsUpdateAvaliable())
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Only VCC Module can be updated.");
         this->VerifyLocalResponse();
         GetGenerationManager()->Update();
-    )
+    }
 }
 
 void VPGProcessManager::Generate()
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         if (!IsUpdateAvaliable())
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Only VCC Module can be updated.");
         this->VerifyLocalResponse();
         GetGenerationManager()->Generate();
-    )
+    }
 }
 
 void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)

@@ -45,11 +45,11 @@ namespace vcc
 
 	std::wstring ToString(double value, size_t decimalPlaces)
 	{
-		TRY_CATCH(
+		TRY_CATCH(){
 			std::wstringstream ss;
 			ss << std::fixed << std::setprecision(decimalPlaces) << value;
 			return ss.str();
-		)
+		}
 		return L"";
 	}
 
@@ -514,9 +514,9 @@ namespace vcc
 	
 	void ReplaceRegex(std::wstring &str, const std::wstring &regex, const std::wstring &replacement)
 	{
-		TRY_CATCH(
+		TRY_CATCH(){
 			str = std::regex_replace(str, std::wregex(regex), replacement, std::regex_constants::format_first_only);
-		)
+		}
 	}
 
 	void ReplaceAll(std::wstring &str, const std::wstring& from, const std::wstring &to)
@@ -531,9 +531,9 @@ namespace vcc
 	
 	void ReplaceRegexAll(std::wstring &str, const std::wstring &regex, const std::wstring &replacement)
 	{
-		TRY_CATCH(
+		TRY_CATCH(){
 			str = std::regex_replace(str, std::wregex(regex), replacement, std::regex_constants::match_any);
-		)
+		}
 	}
 
     std::vector<wchar_t> GetSpecialCharacters(const EscapeStringType &type)

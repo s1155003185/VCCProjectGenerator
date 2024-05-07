@@ -5,6 +5,7 @@ Note: Still in initialize version, will have full review when official release
 ## Features
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
 - Create program structure like sql, the remaining is just handle specific logic.
+- Mainly handle those already stable and optimize features so that dont need to implement from the beginning
 
 ### Options
 1. Create C++ Complex Project

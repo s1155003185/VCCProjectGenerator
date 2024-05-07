@@ -37,9 +37,9 @@ namespace vcc
     std::wstring GetFileName(const std::wstring &filePath)
     {
         std::wstring fileName = L"";
-        TRY_CATCH(
+        TRY_CATCH(){
             fileName = PATH(filePath).filename().wstring();
-        )
+        }
         return fileName;
     }
 
@@ -61,27 +61,27 @@ namespace vcc
 
     std::wstring GetRelativePath(const std::wstring &absolutePath, const std::wstring &basePath)
     {
-        TRY_CATCH(
+        TRY_CATCH(){
             if (IsBlank(basePath))
                 return absolutePath;
             return PATH(absolutePath).lexically_relative(PATH(basePath)).wstring();
-        )
+        }
         return L"";
     }
 
     void GetFileDifferenceBetweenWorkspaces(std::wstring sourceWorkspace, std::wstring targetWorkspace, 
         std::vector<std::wstring> &needToAdd, std::vector<std::wstring> &needToModify, std::vector<std::wstring> &needToDelete)
     {
-        TRY_CATCH(
+        TRY_CATCH(){
             std::vector<std::wstring> srcFileList, tarFileList;
-            TRY_CATCH(
+            TRY_CATCH(){
                 for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(!sourceWorkspace.empty() ? sourceWorkspace : L".")))
                     srcFileList.push_back(GetRelativePath(filePath.path().wstring(), sourceWorkspace));
-            )
-            TRY_CATCH(
+            }
+            TRY_CATCH(){
                 for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(!targetWorkspace.empty() ? targetWorkspace : L".")))
                     tarFileList.push_back(GetRelativePath(filePath.path().wstring(),targetWorkspace));
-            )
+            }
 
             std::sort(srcFileList.begin(), srcFileList.end());
             std::sort(tarFileList.begin(), tarFileList.end());
@@ -103,7 +103,7 @@ namespace vcc
                         needToModify.push_back(std::wstring(str));
                 }
             }
-        )
+        }
     }
 
     std::wstring GetWindowPath(std::wstring path)
@@ -142,9 +142,9 @@ namespace vcc
 
 	bool IsPathMatchFileFilter(const std::wstring &filePath, const std::wstring &fileFilter)
     {
-        TRY_CATCH(
+        TRY_CATCH(){
             return std::regex_match(GetLinuxPath(filePath), std::wregex(GetRegexFromFileFilter(GetLinuxPath(fileFilter))));
-        )
+        }
         return false;
     }
 
@@ -152,13 +152,13 @@ namespace vcc
     {
         if (fileFilters.empty())
             return false;
-        TRY_CATCH(
+        TRY_CATCH(){
             std::vector<std::wstring> regexFilters;
             for (auto const &str: fileFilters) {
                 regexFilters.push_back(GetRegexFromFileFilter(GetLinuxPath(str)));
             }
             return std::regex_match(GetLinuxPath(filePath), std::wregex(Concat(regexFilters, L"|")));
-        )
+        }
         return false;
     }
 
@@ -226,14 +226,14 @@ namespace vcc
 
     void CopyFile(const std::wstring &srcFilePath, const std::wstring &destFilePath, bool isForce)
     {
-        TRY_CATCH(
+        TRY_CATCH(){
             ValidateFile(srcFilePath);
             if (isForce)
                 CreateDirectory(PATH(destFilePath).parent_path().wstring());
             if (isForce && IsFileExists(destFilePath))
                 std::filesystem::remove(destFilePath);
             std::filesystem::copy(PATH(srcFilePath), PATH(destFilePath));
-        )
+        }
     }
 
 	void RemoveFile(const std::wstring &filePath)
@@ -275,7 +275,7 @@ namespace vcc
     {
         assert(!IsBlank(srcDirectory));
         assert(!IsBlank(destDirectory));
-        TRY_CATCH(
+        TRY_CATCH(){
             bool isForce = option != nullptr && option->GetIsForce();
             std::vector<std::wstring> srcFileList;
             for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(srcDirectory))) {
@@ -311,15 +311,15 @@ namespace vcc
                     CopyFile(filePath.path().wstring(), destAbsolutePath);
                 }
             }
-        )
+        }
     }
 
 	void RemoveDirectory(const std::wstring &directory)
     {
         assert(!IsBlank(directory));
-        TRY_CATCH(
+        TRY_CATCH(){
             std::filesystem::remove_all(PATH(directory));
-        )
+        }
     }
 
     std::wstring ReadFile(const std::wstring &filePath)
@@ -386,7 +386,7 @@ namespace vcc
 
 	void WriteFile(const std::wstring &filePath, const std::wstring &content, bool isForce)
     {
-        TRY_CATCH(
+        TRY_CATCH(){
             PATH _filePath(filePath);		
             PATH dir = _filePath.parent_path();
             if (!dir.wstring().empty() && !IsDirectoryExists(dir.wstring()))
@@ -404,7 +404,7 @@ namespace vcc
             } else {
                 THROW_EXCEPTION_MSG(ExceptionType::FileBlocked, L"Cannot open file: " + filePath);
             }
-        )
+        }
     }
 
     void AppendFileOneLine(const std::wstring &filePath, const std::wstring &line, bool isForce) 

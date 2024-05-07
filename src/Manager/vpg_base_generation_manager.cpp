@@ -20,7 +20,7 @@ using namespace vcc;
 
 std::wstring VPGGenerationOption::SerializeJson(const IDocumentBuilder *builder)
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         DECLARE_UPTR(Json, json);
         json->AddString(L"Version", _Version);
         
@@ -60,13 +60,13 @@ std::wstring VPGGenerationOption::SerializeJson(const IDocumentBuilder *builder)
         }
         
         return builder->Serialize(json.get());
-    )
+    }
     return L"";
 }
 
 void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document)
 {
-    TRY_CATCH(
+    TRY_CATCH(){
         std::shared_ptr<Json> json = dynamic_pointer_cast<Json>(document);
         assert(json != nullptr);
 
@@ -115,5 +115,5 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document)
                 this->InsertPlugins(plugin->GetJsonInternalValue());
             }
         }
-    )
+    }
 }
