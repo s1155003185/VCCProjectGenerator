@@ -21,6 +21,8 @@ class VPGFileGenerationManager : public BaseManager<VPGFileGenerationManager>
     MAP(std::wstring, std::wstring, ClassFiles);
     MAP(std::wstring, std::wstring, EnumClassFiles);
 
+    MAP(std::wstring, std::wstring, ProjectClassIncludeFiles);
+
     public:
         VPGFileGenerationManager(std::shared_ptr<LogProperty> logProperty) : BaseManager(logProperty) {}
         virtual ~VPGFileGenerationManager() {}
@@ -29,6 +31,9 @@ class VPGFileGenerationManager : public BaseManager<VPGFileGenerationManager>
         void GetClassMacroList(const std::wstring &projWorkspace);
         
         // get #include file name
+        std::wstring GetProjectClassIncludeFile(const std::wstring &className);
+        std::wstring GetProjectEnumClassIncludeFile(const std::wstring &className);
+
         std::wstring GetClassNameFromEnumClassName(const std::wstring &enumClassName);
         std::wstring GetClassFilenameFromEnumClassFilename(const std::wstring &enumClassFileName);
         void GetFileList(const VPGEnumClassReader *reader, const std::wstring &directoryFullPath, const std::wstring &projectPrefix);

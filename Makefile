@@ -317,6 +317,12 @@ ifneq ($(PROJ_NAME_EXE),)
 endif
 	@echo Build Debug EXE Complete!
 
+unittest: $(GTESTMAIN)
+	$(MAKE) create_debug_folder
+	$(MAKE) copy_debug_lib
+	$(MAKE) gtest
+	@echo Build Unittest Complete!
+
 release:
 	$(MAKE) create_release_folder
 	$(MAKE) clean_release

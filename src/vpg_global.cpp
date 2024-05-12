@@ -19,7 +19,7 @@ using namespace vcc;
 
 std::wstring VPGGlobal::GetVersion()
 {
-    return L"v0.0.3";
+    return L"v0.0.4";
 }
 
 std::wstring VPGGlobal::GetVccLocalResponseFolder()
@@ -70,4 +70,19 @@ std::wstring VPGGlobal::GetProjecURL(VPGProjectType projectType)
 std::wstring VPGGlobal::GetVccJsonFileName()
 {
     return L".vcc/vcc.json";
+}
+
+std::wstring VPGGlobal::GetCppDefaultIncludePathWindow()
+{
+    return L"C:\\msys64\\mingw64\\include\\c++\\12.2.0";
+}
+
+std::wstring VPGGlobal::GetCppDefaultIncludePathLinux()
+{
+    return L"/usr/include";
+}
+
+std::wstring VPGGlobal::GetCppDefaultIncludePathMacOs()
+{
+    return L"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/V1";
 }

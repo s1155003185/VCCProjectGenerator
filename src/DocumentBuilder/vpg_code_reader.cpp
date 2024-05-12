@@ -45,7 +45,7 @@ void VPGCodeReader::ParseXml(const std::wstring &xmlData, size_t &pos, std::shar
                     startPos = pos;
                 }
 
-                pos = xmlData.find(L"<", pos);
+                pos = Find(xmlData, L"<", pos);
 
                 DECLARE_SPTR(Xml, tmp);
                 ParseXMLTag(xmlData, pos, tmp);

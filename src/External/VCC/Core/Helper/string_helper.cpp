@@ -45,7 +45,7 @@ namespace vcc
 
 	std::wstring ToString(double value, size_t decimalPlaces)
 	{
-		TRY_CATCH(){
+		TRY_CATCH() {
 			std::wstringstream ss;
 			ss << std::fixed << std::setprecision(decimalPlaces) << value;
 			return ss.str();
@@ -69,7 +69,19 @@ namespace vcc
 	
 	bool HasPrefix(const std::wstring &str, const std::wstring &prefix, const size_t &pos)
 	{
-		return str.find(prefix, pos) == pos;
+		TRY_CATCH() {
+		 	if (str.length() - pos < prefix.size())
+		 		return false;
+
+		 	size_t cnt = 0;
+		 	for (auto const &c : prefix) {
+				if (str[pos + cnt] != c)
+					return false;
+				cnt++;
+			}
+			return true;
+		}
+		return false;
 	}
 	
 	bool HasPrefix(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &pos)
@@ -311,16 +323,70 @@ namespace vcc
 		RTrim(str);
 	}
 
+	size_t Find(const std::wstring &str, const wchar_t &c, const size_t &pos, const bool &isIgnoreCase)
+	{
+		if (str.empty())
+			return std::wstring::npos;
+		TRY_CATCH() {
+			size_t cnt = pos;
+			for (auto it = str.begin() + pos; it != str.end(); it++) {
+				if (isIgnoreCase) {
+					if (std::towupper(*it) == std::towupper(c))
+						return cnt;
+				} else {
+					if (*it == c)
+						return cnt;
+				}
+				cnt++;
+			}
+		}
+		return std::wstring::npos;
+	}
+
+	size_t Find(const std::wstring &str, const std::wstring &subStr, const size_t &pos, const bool &isIgnoreCase)
+	{
+		if (str.empty() || str.length() - pos < subStr.length())
+			return std::wstring::npos;
+		TRY_CATCH() {
+			if (subStr.length() == 1)
+				return Find(str, subStr[0], pos, isIgnoreCase);
+
+			if (isIgnoreCase) {
+				std::wstring tmpStr = str.substr(pos);
+				std::wstring tmpSubStr = subStr;
+				ToUpper(tmpStr);
+				ToUpper(tmpSubStr);
+				return Find(tmpStr, tmpSubStr);
+			} else {
+				// cannot check at beginning as there is ignoreCase
+				if (str.length() == subStr.length() && str != subStr)
+					return std::wstring::npos;
+				
+				// for (size_t i = pos; i < str.length(); i++) {
+				// 	if (HasPrefix(str, subStr, i))
+				// 		return i;
+				// }
+				return str.find(subStr, pos);
+			}
+		}
+		return std::wstring::npos;
+	}
+
 	void GetCharacterRowAndColumn(const std::wstring &str, size_t pos, size_t &row, size_t &column)
 	{
-		row = 1;
-		column = 1;
-		for (std::wstring::size_type i = 0; i < pos; ++i) {
-			if (str[i] == L'\n') {
-				row++;
-				column = 1;
-			} else
-				column++;
+		TRY_CATCH() {
+			row = 1;
+			column = 1;
+			size_t cnt =0;
+			while (cnt <= pos)
+			{
+				if (str[cnt] == L'\n') {
+					row++;
+					column = 1;
+				} else
+					column++;
+				cnt++;
+			}
 		}
 	}
 
@@ -414,7 +480,7 @@ namespace vcc
         }
 		return result;
 	}
-
+	
 	std::wstring GetNextQuotedString(const std::wstring& str, size_t &pos, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
 	{
@@ -498,7 +564,7 @@ namespace vcc
 
 		while (pos < str.length())
 		{
-			pos = str.find(subStr, pos);
+			pos = Find(str, subStr, pos);
 			if (pos == std::wstring::npos)
 				break;
 			count++;
@@ -509,12 +575,12 @@ namespace vcc
 
     void Replace(std::wstring &str, const std::wstring& from, const std::wstring &to)
     {
-        str.replace(str.find(from), from.length(), to);
+        str.replace(Find(str, from), from.length(), to);
     }
 	
 	void ReplaceRegex(std::wstring &str, const std::wstring &regex, const std::wstring &replacement)
 	{
-		TRY_CATCH(){
+		TRY_CATCH() {
 			str = std::regex_replace(str, std::wregex(regex), replacement, std::regex_constants::format_first_only);
 		}
 	}
@@ -523,7 +589,7 @@ namespace vcc
     {
         size_t startPos = 0;
         size_t foundPos;
-        while ((foundPos = str.find(from, startPos)) != std::wstring::npos) {
+        while ((foundPos = Find(str, from, startPos)) != std::wstring::npos) {
             str.replace(foundPos, from.length(), to);
             startPos = foundPos + to.length();
         }
@@ -531,7 +597,7 @@ namespace vcc
 	
 	void ReplaceRegexAll(std::wstring &str, const std::wstring &regex, const std::wstring &replacement)
 	{
-		TRY_CATCH(){
+		TRY_CATCH() {
 			str = std::regex_replace(str, std::wregex(regex), replacement, std::regex_constants::match_any);
 		}
 	}

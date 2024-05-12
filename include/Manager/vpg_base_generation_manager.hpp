@@ -17,58 +17,13 @@
 #include "vpg_code_reader.hpp"
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_file_sync_service.hpp"
+#include "vpg_generation_option.hpp"
 #include "vpg_project_type.hpp"
 
 using namespace vcc;
 
 const std::wstring MakeFileName = L"Makefile";
 const std::wstring unittestFolderName = L"unittest";
-
-class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJsonObject
-{
-    GETSET(std::wstring, Version, L"v0.0.1");
-    // Generation Use
-    GETSET(VPGProjectType, ProjectType, VPGProjectType::NA);
-    GETSET(std::wstring, WorkspaceSourceGitUrl, L"");
-    GETSET(std::wstring, WorkspaceSource, L"");
-    GETSET(std::wstring, WorkspaceDestination, L"");
-
-    // --------------------------------------------------
-    // Config
-    // --------------------------------------------------
-    // Project
-    GETSET(std::wstring, ProjectPrefix, L"");
-
-    GETSET(std::wstring, ProjectName, L"VCCModule"); // Need to assign Default Name first to pass validation
-    GETSET(std::wstring, ProjectNameDll, L"libVCCModule"); // Need to assign Default Name first to pass validation
-    GETSET(std::wstring, ProjectNameExe, L"VCCModule"); // Need to assign Default Name first to pass validation
-    GETSET(bool, IsGit, false);
-
-    GETSET(bool, IsExcludeUnittest, false)
-    GETSET(bool, IsExcludeVCCUnitTest, false);
-
-    // Files
-    GETSET(std::wstring, TypeWorkspace, L"include/Type");
-
-    GETSET(std::wstring, ActionTypeDirectory, L"include/Type");
-    GETSET(std::wstring, ExceptionTypeDirectory, L"include/Type");
-    GETSET(std::wstring, ManagerTypeDirectory, L"include/Type");
-    GETSET(std::wstring, ObjectTypeDirectory, L"include/Type");
-
-    GETSET(std::wstring, ModelDirectory, L"include/Model");
-    GETSET(std::wstring, PropertyAccessorDirectoryHpp, L"include/PropertyAccessor");
-    GETSET(std::wstring, PropertyAccessorDirectoryCpp, L"src/PropertyAccessor");
-
-    // Plugins
-    VECTOR(std::wstring, Plugins);
-
-    public:;
-        VPGGenerationOption() = default;
-        virtual ~VPGGenerationOption() {}
-
-        virtual std::wstring SerializeJson(const IDocumentBuilder *builder) override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
-};
 
 template <typename Derived>
 class VPGBaseGenerationManager : public BaseManager<Derived>, public IVPGGenerationManager
@@ -113,7 +68,7 @@ class VPGBaseGenerationManager : public BaseManager<Derived>, public IVPGGenerat
 template <typename Derived>
 void VPGBaseGenerationManager<Derived>::ValidateOption() const
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         if (IsBlank(_Option->GetWorkspaceSource()))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace Source is emtpy.");
         if (IsBlank(_Option->GetWorkspaceDestination()))
@@ -134,7 +89,7 @@ void VPGBaseGenerationManager<Derived>::GetDLLTestFileContent(std::wstring &file
 template <typename Derived>
 void VPGBaseGenerationManager<Derived>::CreateWorkspaceDirectory() const
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         ValidateOption();
         // All type has same project structure
         std::vector<std::wstring> checkList;
@@ -170,7 +125,7 @@ void VPGBaseGenerationManager<Derived>::CreateWorkspaceDirectory() const
 template <typename Derived>
 void VPGBaseGenerationManager<Derived>::CreateBasicProject() const
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         ValidateOption();
         this->CreateWorkspaceDirectory();
 
@@ -199,6 +154,7 @@ void VPGBaseGenerationManager<Derived>::CreateBasicProject() const
         // Cannot Copy
         AppendFileOneLine(ConcatPaths({dest, L"LICENSE"}), L"", true);
         AppendFileOneLine(ConcatPaths({dest, L"README.md"}), L"", true);
+        AppendFileOneLine(ConcatPaths({dest, L"CHANGELOG.md"}), L"", true);
 
         if (IsFileExists(ConcatPaths({src, MakeFileName}))) {
             // Makefile
@@ -224,7 +180,7 @@ void VPGBaseGenerationManager<Derived>::SyncWorkspace(const LogProperty *logProp
 {
     try {
         std::vector<std::wstring> needToAdd, needToModify, needToDelete;
-        TRY_CATCH(){
+        TRY_CATCH() {
             GetFileDifferenceBetweenWorkspaces(sourceWorkspace, targetWorkspace, needToAdd, needToModify, needToDelete);
         }
 
@@ -309,7 +265,7 @@ std::wstring VPGBaseGenerationManager<Derived>::AdjustMakefile(const std::wstrin
 {
     ValidateOption();
     std::wstring result = L"";
-    TRY_CATCH(){
+    TRY_CATCH() {
         DECLARE_SPTR(Xml, elements);
         VPGCodeReader reader(L"#");
         reader.Deserialize(fileContent, elements);
@@ -339,7 +295,7 @@ std::wstring VPGBaseGenerationManager<Derived>::AdjustMakefile(const std::wstrin
 template <typename Derived>
 std::wstring VPGBaseGenerationManager<Derived>::AdjustVSCodeLaunchJson(const std::wstring &fileContent) const
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         std::wstring programPath = L"${workspaceFolder}/bin/Debug/unittest";
         if (_Option->GetIsExcludeUnittest() && !_Option->GetProjectNameExe().empty()) {
             std::wstring projectName = _Option->GetProjectNameExe();

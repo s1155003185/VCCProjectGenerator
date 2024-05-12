@@ -3,19 +3,19 @@
 #include <memory>
 #include <string>
 
-#include "json.hpp"
-
 namespace vcc
 {
     class IDocument;
     class IDocumentBuilder;
+    class Json;
     class IJsonObject
     {
         public:
             IJsonObject() {}
             virtual ~IJsonObject() {}
 
-            virtual std::wstring SerializeJson(const IDocumentBuilder *builder) = 0;
-            virtual void DeserializeJson(std::shared_ptr<IDocument> document) = 0;
+            virtual std::shared_ptr<Json> ToJson() const = 0;
+            virtual std::wstring SerializeJson(const IDocumentBuilder *builder) const = 0;
+            virtual void DeserializeJson(std::shared_ptr<IDocument> document) const = 0;
     };
 }

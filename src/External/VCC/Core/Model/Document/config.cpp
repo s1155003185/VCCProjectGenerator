@@ -17,7 +17,7 @@ namespace vcc
 
     std::wstring Config::GetValue(const std::wstring &key) const
     {
-        TRY_CATCH(){
+        TRY_CATCH() {
             if (IsBlank(key) || key == L"#")
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"key is blank or #");
             return GetConfigs(key);
@@ -27,7 +27,7 @@ namespace vcc
 
     void Config::AddValue(const std::wstring &key, const std::wstring &value) const
     {
-        TRY_CATCH(){
+        TRY_CATCH() {
             if (IsBlank(key) || key == L"#")
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"key is blank or #");
             InsertConfigs(key, value);
@@ -36,14 +36,14 @@ namespace vcc
 
     void Config::AddLine(const std::wstring &value) const
     {
-        TRY_CATCH(){
+        TRY_CATCH() {
             InsertConfigs(L"", value);
         }
     }
 
     void Config::AddCommand(const std::wstring &value) const
     {
-        TRY_CATCH(){
+        TRY_CATCH() {
             InsertConfigs(L"#", value);
         }
     }

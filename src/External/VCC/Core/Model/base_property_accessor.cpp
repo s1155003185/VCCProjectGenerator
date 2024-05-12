@@ -28,10 +28,10 @@ namespace vcc
 
     #define LOCK_END Unlock(); }
 
-    void BasePropertyAccessor::ReadLock() const { _Mutex->lock_shared(); }
-    void BasePropertyAccessor::WriteLock() const { _Mutex->lock(); }
+    void BasePropertyAccessor::ReadLock() const { _Mutex.lock_shared(); }
+    void BasePropertyAccessor::WriteLock() const { _Mutex.lock(); }
     void BasePropertyAccessor::ReadWriteLock() const { WriteLock(); }
-    void BasePropertyAccessor::Unlock() const { _Mutex->unlock(); }
+    void BasePropertyAccessor::Unlock() const { _Mutex.unlock(); }
     
     bool BasePropertyAccessor::_ReadBool(const size_t &objectProperty, const int64_t &/*index*/) const { THROW_EXCEPTION_MSG_FOR_OBJECT_PROPERTY_NOT_FOUND return false; }
     bool BasePropertyAccessor::_ReadBool(const size_t &objectProperty, const ITypeUnion */*key*/) const { THROW_EXCEPTION_MSG_FOR_OBJECT_PROPERTY_NOT_FOUND return false; }

@@ -55,6 +55,8 @@ namespace vcc
 	void Trim(std::wstring &str);
 
 	// search
+	size_t Find(const std::wstring &str, const wchar_t &c, const size_t &pos = 0, const bool &isIgnoreCase = false);
+	size_t Find(const std::wstring &str, const std::wstring &subStr, const size_t &pos = 0, const bool &isIgnoreCase = false);
 	void GetCharacterRowAndColumn(const std::wstring &str, size_t pos, size_t &row, size_t &column);
 	void GetNextCharacterPos(const std::wstring &str, size_t &pos, bool fromCurrentPos = false);
 	// pos Point to end char after execution

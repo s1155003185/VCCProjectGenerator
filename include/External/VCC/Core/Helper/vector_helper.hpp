@@ -12,9 +12,15 @@ namespace vcc
     }
 
     template<typename T>
-    inline bool Contains(const std::vector<T> &v, const T &element) 
+    inline bool IsContain(const std::vector<T> &v, const T &value) 
     {
-        return !IsEmpty(v) && std::find(v.begin(), v.end(), element) != v.end();
+        if (IsEmpty(v))
+            return false;
+        for (auto const &element : v) {
+            if (element == value)
+                return true;
+        }
+        return false;
     }
 
     // Concat
@@ -31,7 +37,7 @@ namespace vcc
 
     // Remove
     template <typename T>
-    inline void RemoveVectorIfContainElement(std::vector<T> &sourceVector, const T &obj)
+    inline void RemoveElement(std::vector<T> &sourceVector, const T &obj)
     {
         sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(), [&](const T &element) {
             return element == obj;
@@ -39,10 +45,10 @@ namespace vcc
     }
 
     template <typename T>
-    inline void RemoveVectorIfContainElements(std::vector<T> &sourceVector, const std::vector<T> &obj)
+    inline void RemoveElements(std::vector<T> &sourceVector, const std::vector<T> &obj)
     {
         sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(), [&](const T &element) {
-            return std::find(obj.begin(), obj.end(), element) != obj.end();
+            return IsContain(obj, element);
         }), sourceVector.end());
     }
 };

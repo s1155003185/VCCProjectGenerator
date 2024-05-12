@@ -8,6 +8,7 @@
 #include "json.hpp"
 #include "json_builder.hpp"
 #include "memory_macro.hpp"
+#include "platform_type.hpp"
 #include "vpg_code_reader.hpp"
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_global.hpp"
@@ -55,16 +56,35 @@ std::vector<std::wstring> VPGVccGenerationManager::GetUpdateUnitTestList() const
 
 void VPGVccGenerationManager::CreateVccJson() const
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         DECLARE_UPTR(JsonBuilder, jsonBuilder);
         jsonBuilder->SetIsBeautify(true);
+
+        // Vector cannot be inizalize when create, initialize here
+        // if (_Option->GetPlatforms().empty()) {
+        //     // initialize include paths
+        //     DECLARE_SPTR(VPGGenerationOptionPlatform, platformWin);
+        //     platformWin->SetPlatform(PlatformType::Window);
+        //     platformWin->InsertIncludePaths(VPGGlobal::GetCppDefaultIncludePathWindow());
+        //     _Option->InsertPlatforms(platformWin);
+
+        //     DECLARE_SPTR(VPGGenerationOptionPlatform, platformLinux);
+        //     platformLinux->SetPlatform(PlatformType::Linux);
+        //     platformLinux->InsertIncludePaths(VPGGlobal::GetCppDefaultIncludePathLinux());
+        //     _Option->InsertPlatforms(platformLinux);
+
+        //     DECLARE_SPTR(VPGGenerationOptionPlatform, platformMacOS);
+        //     platformMacOS->SetPlatform(PlatformType::MacOs);
+        //     platformMacOS->InsertIncludePaths(VPGGlobal::GetCppDefaultIncludePathMacOs());
+        //     _Option->InsertPlatforms(platformMacOS);
+        // }
         WriteFile(ConcatPaths({_Option->GetWorkspaceDestination(), VPGGlobal::GetVccJsonFileName()}), _Option->SerializeJson(jsonBuilder.get()), true);
     }
 }
 
 void VPGVccGenerationManager::ReadVccJson() const
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         std::wstring fileContent = ReadFile(ConcatPaths({_Option->GetWorkspaceDestination(), VPGGlobal::GetVccJsonFileName()}));
         DECLARE_UPTR(JsonBuilder, jsonBuilder);
         DECLARE_SPTR(Json, json);
@@ -75,7 +95,7 @@ void VPGVccGenerationManager::ReadVccJson() const
 
 void VPGVccGenerationManager::Add() const
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         VPGBaseGenerationManager::CreateBasicProject();
         std::wstring src = _Option->GetWorkspaceSource();
         std::wstring dest = _Option->GetWorkspaceDestination();
@@ -96,7 +116,7 @@ void VPGVccGenerationManager::Add() const
             if (!copyDirectoryOption.GetIncludeFileFilters().empty())
                 CopyDirectory(ConcatPaths({src, unittestFolderName}), ConcatPaths({dest, unittestFolderName}), &copyDirectoryOption);
         }
-
+        
         // Create Json file at the end to force override
         CreateVccJson();
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Done");
@@ -105,7 +125,7 @@ void VPGVccGenerationManager::Add() const
 
 void VPGVccGenerationManager::Update() const
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         ReadVccJson();
 
         std::wstring src = _Option->GetWorkspaceSource();
@@ -141,7 +161,7 @@ void VPGVccGenerationManager::Update() const
 
 void VPGVccGenerationManager::Generate() const
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         ReadVccJson();
         
         DECLARE_UPTR(VPGFileGenerationManager, manager, this->_LogProperty);

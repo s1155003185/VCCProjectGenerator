@@ -12,12 +12,12 @@ namespace vcc
     enum class LockType;
     class BasePropertyAccessor : public IPropertyAccessor
     {
-        std::shared_mutex *_Mutex = nullptr;
+        inline static std::shared_mutex _Mutex;
         GETSET_SPTR_NULL(IObject, Object);
 
         protected:
-            BasePropertyAccessor(std::shared_ptr<IObject> object) { this->_Mutex = new std::shared_mutex(); this->_Object = object; }
-            ~BasePropertyAccessor() { delete this->_Mutex; }
+            BasePropertyAccessor(std::shared_ptr<IObject> object) { this->_Object = object; }
+            ~BasePropertyAccessor() {}
 
             virtual bool _ReadBool(const size_t &objectProperty, const int64_t &index = -1) const;
             virtual bool _ReadBool(const size_t &objectProperty, const ITypeUnion *key) const;

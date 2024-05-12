@@ -1,6 +1,11 @@
 #pragma once
 
+#include <memory>
+
 #include "i_json_object.hpp"
+#include "json.hpp"
+#include "json_builder.hpp"
+#include "memory_macro.hpp"
 
 namespace vcc
 {
@@ -9,5 +14,14 @@ namespace vcc
     protected:
         BaseJsonObject() = default;
         virtual ~BaseJsonObject() {}
+
+    public:
+        virtual std::wstring SerializeJson(const IDocumentBuilder *builder) const override
+        {
+            TRY_CATCH() {
+                return builder->Serialize(ToJson().get());
+            }
+            return L"";
+        }
     };
 }

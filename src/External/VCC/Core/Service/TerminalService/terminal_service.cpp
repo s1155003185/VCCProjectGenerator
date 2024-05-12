@@ -12,7 +12,7 @@ namespace vcc
 {
     std::wstring TerminalService::Execute(const LogProperty *logProperty, std::wstring id, std::wstring cmd)
     {
-        TRY_CATCH(){
+        TRY_CATCH() {
             return Execute(logProperty, id, L"", cmd);
         }
         return L"";

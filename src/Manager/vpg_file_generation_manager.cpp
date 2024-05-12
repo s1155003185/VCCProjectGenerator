@@ -10,7 +10,9 @@
 #include "log_service.hpp"
 #include "string_helper.hpp"
 
+#include "vpg_cpp_helper.hpp"
 #include "vpg_enum_class_reader.hpp"
+#include "vpg_include_path_service.hpp"
 
 const std::wstring classMacroFilePath = L"include/External/VCC/Core/Macro/class_macro.hpp";
 const std::wstring logId = L"File Generation";
@@ -22,14 +24,14 @@ const std::wstring propertyAccessorFileSuffixWithoutExtention = L"property_acces
 
 void VPGFileGenerationManager::GetClassMacroList(const std::wstring &projWorkspace)
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         std::wstring filePath = ConcatPaths({projWorkspace, classMacroFilePath});
         std::wstring prefix = L"#define ";
         size_t prefixLen = wcslen(prefix.c_str());
         ReadFilePerLine(filePath, [prefix, prefixLen, this](std::wstring line) {
             Trim(line);
-            if (line.starts_with(prefix) && line.find(L"(") != std::wstring::npos) {
-                std::wstring type = line.substr(prefixLen, line.find(L"(") - prefixLen);
+            if (line.starts_with(prefix) && Find(line, L"(") != std::wstring::npos) {
+                std::wstring type = line.substr(prefixLen, Find(line, L"(") - prefixLen);
                 Trim(type);
                 this->_ClassMacros.insert(type);
             }
@@ -39,9 +41,41 @@ void VPGFileGenerationManager::GetClassMacroList(const std::wstring &projWorkspa
     }
 }
 
+std::wstring VPGFileGenerationManager::GetProjectClassIncludeFile(const std::wstring &className)
+{
+    TRY_CATCH() {
+        if (_ProjectClassIncludeFiles.empty())
+            VPGIncludePathService::GetWorkspaceIncludePath(L"", _ProjectClassIncludeFiles);
+        // enum generate class
+        if (_ClassFiles.contains(className))
+            return _ClassFiles[className];
+        else if (_ProjectClassIncludeFiles.contains(className))
+            return _ProjectClassIncludeFiles[className];
+        else if (_ProjectClassIncludeFiles.contains(L"vcc::" + className))
+            return _ProjectClassIncludeFiles[L"vcc::" + className];
+    }
+    return L"";
+}
+
+std::wstring VPGFileGenerationManager::GetProjectEnumClassIncludeFile(const std::wstring &className)
+{
+    TRY_CATCH() {
+        if (_ProjectClassIncludeFiles.empty())
+            VPGIncludePathService::GetWorkspaceIncludePath(L"", _ProjectClassIncludeFiles);
+        // enum generate class
+        if (_EnumClassFiles.contains(className))
+            return _EnumClassFiles[className];
+        else if (_ProjectClassIncludeFiles.contains(className))
+            return _ProjectClassIncludeFiles[className];
+        else if (_ProjectClassIncludeFiles.contains(L"vcc::" + className))
+            return _ProjectClassIncludeFiles[L"vcc::" + className];
+    }
+    return L"";
+}
+
 std::wstring VPGFileGenerationManager::GetClassNameFromEnumClassName(const std::wstring &enumClassName)
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         if (enumClassName.ends_with(proeprtyClassNameSuffix) && enumClassName != proeprtyClassNameSuffix)
             return enumClassName.substr(0, enumClassName.length() - proeprtyClassNameSuffix.length());
     }
@@ -50,7 +84,7 @@ std::wstring VPGFileGenerationManager::GetClassNameFromEnumClassName(const std::
 
 std::wstring VPGFileGenerationManager::GetClassFilenameFromEnumClassFilename(const std::wstring &enumClassFileName)
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         std::wstring tmpFileName = enumClassFileName;
         ReplaceAll(tmpFileName, propertyFileSuffix, L".hpp");
         return tmpFileName;
@@ -60,13 +94,14 @@ std::wstring VPGFileGenerationManager::GetClassFilenameFromEnumClassFilename(con
 
 void VPGFileGenerationManager::GetFileList(const VPGEnumClassReader *reader, const std::wstring &directoryFullPath, const std::wstring &projectPrefix)
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         for (auto const &filePath : std::filesystem::recursive_directory_iterator(PATH(directoryFullPath))) {
-            try
-            {
+            TRY_CATCH_SLIENT() {
+                if (filePath.is_directory())
+                    continue;
                 std::wstring content = ReadFile(filePath.path().wstring());
                 std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-                reader->Parse(content, enumClassList);
+                reader->Parse(GetSimpleCode(content), enumClassList);
                 for (auto const &enumClass : enumClassList) {
                     // enum
                     std::wstring enumClassName = enumClass->GetName();
@@ -87,16 +122,13 @@ void VPGFileGenerationManager::GetFileList(const VPGEnumClassReader *reader, con
                     }
                 }
             }
-            catch(...)
-            {
-            }            
         }
     }
 }
 
 bool VPGFileGenerationManager::IsClassEnumFile(const std::wstring &filename, const std::wstring &projectPrefix)
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         std::wstring tmpFileName = filename;
         ToLower(tmpFileName);
         std::wstring tmpProjectPrefix = projectPrefix;
@@ -108,7 +140,7 @@ bool VPGFileGenerationManager::IsClassEnumFile(const std::wstring &filename, con
 
 bool VPGFileGenerationManager::IsClassEnum(const std::wstring &enumClassName, const std::wstring &projectPrefix)
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         return enumClassName.ends_with(proeprtyClassNameSuffix) && enumClassName.length() > proeprtyClassNameSuffix.length()
             && (IsBlank(projectPrefix) || enumClassName.starts_with(projectPrefix));
     }
@@ -117,7 +149,7 @@ bool VPGFileGenerationManager::IsClassEnum(const std::wstring &enumClassName, co
 
 void VPGFileGenerationManager::GenerateObjectTypeFile(const LogProperty *logProperty, const std::wstring &hppFilePath, const std::vector<std::wstring> &propertyTypeList)
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         LogService::LogInfo(logProperty, logId, L"Generate object type file: " + hppFilePath);
         std::wstring content = L"#pragma once\r\n";
         content += L"\r\n";
@@ -134,12 +166,12 @@ void VPGFileGenerationManager::GenerateObjectTypeFile(const LogProperty *logProp
 
 void VPGFileGenerationManager::GeneratePropertyClassFile(const LogProperty *logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         LogService::LogInfo(logProperty, logId, L"Generate object class file: " + hppFilePath);
 
         // TODO: need to enable to check all systemn function
         // need to skip all code in command
-        // Mac: all next tokens after class _LIBCPP_TEMPLATE_VIS under path /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/
+        // Mac: all next tokens after class _LIBCPP_TEMPLATE_VIS under path /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/V1
         // Window: C:\msys64\mingw64\include\c++\12.2.0
 
         std::set<std::wstring> systemFileList;
@@ -157,14 +189,17 @@ void VPGFileGenerationManager::GeneratePropertyClassFile(const LogProperty *logP
                     continue;
                 std::wstring type = property->GetType();
                 if (std::iswupper(type[0])) {
-                    if (property->GetMacro().substr(0, property->GetMacro().find(L"(")).find(L"SPTR") != std::wstring::npos) {
-                        if (_ClassFiles.contains(type))
-                            projectFileList.insert(L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, _ClassFiles[type]));
+                    if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
+
+                        std::wstring includeFile = GetProjectClassIncludeFile(type);
+                        if (!includeFile.empty())
+                            projectFileList.insert(L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, includeFile));
                         else
                             abstractClassList.insert(L"class " + type + L";");
                     } else {
-                        if (_EnumClassFiles.contains(type))
-                            projectFileList.insert(L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, _EnumClassFiles[type]));
+                        std::wstring includeFile = GetProjectEnumClassIncludeFile(type);
+                        if (!includeFile.empty())
+                            projectFileList.insert(L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, includeFile));
                         else
                             abstractClassList.insert(L"enum class " + property->GetType() + L";");
                     }
@@ -218,7 +253,7 @@ void VPGFileGenerationManager::GeneratePropertyClassFile(const LogProperty *logP
                 if (property->GetMacro().empty())
                     continue;
                 if (std::iswupper(property->GetType()[0])) {
-                    if (property->GetMacro().substr(0, property->GetMacro().find(L"(")).find(L"SPTR") != std::wstring::npos) {
+                    if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
                         isPtrExists = true;
                         break;
                     }
@@ -233,7 +268,7 @@ void VPGFileGenerationManager::GeneratePropertyClassFile(const LogProperty *logP
                     if (property->GetMacro().empty())
                         continue;
                     if (std::iswupper(property->GetType()[0])) {
-                        if (property->GetMacro().find(L"SPTR")) {
+                        if (Find(property->GetMacro(), L"SPTR") != std::wstring::npos) {
                             content += INDENT + INDENT + INDENT + L"obj->Clone" + property->GetPropertyName() + L"(this->_" + property->GetPropertyName() + L");\r\n";
                         }
                     }
@@ -251,7 +286,7 @@ void VPGFileGenerationManager::GeneratePropertyClassFile(const LogProperty *logP
 
 void VPGFileGenerationManager::GeneratePropertyPropertyAccessorFile(const LogProperty *logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::wstring &cppFilePath, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         LogService::LogInfo(logProperty, logId, L"Generate property access file: " + hppFilePath + L" " + cppFilePath);
 
         LogService::LogInfo(logProperty, logId, L"Generate property access file: " + hppFilePath + L" " + cppFilePath + L" complete.");
@@ -261,7 +296,7 @@ void VPGFileGenerationManager::GeneratePropertyPropertyAccessorFile(const LogPro
 void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty, const std::wstring &projPrefix, const std::wstring &projWorkspace, const std::wstring &typeWorkspace, 
     const std::wstring &objTypeDirectoryHpp, const std::wstring &objDirectoryHpp, const std::wstring &propertyAccessorDirectoryHpp, const std::wstring &propertyAccessorDirectoryCpp)
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         std::wstring typeWorkspaceFullPath = ConcatPaths({projWorkspace, typeWorkspace});
         GetClassMacroList(projWorkspace);
         VPGEnumClassReader enumClassReader(_ClassMacros);

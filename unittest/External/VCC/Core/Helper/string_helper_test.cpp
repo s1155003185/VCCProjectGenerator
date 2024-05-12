@@ -170,6 +170,32 @@ TEST(StringHelperTest, EscapeString)
 /* ---------------------------------------------------------------------------------------------------- */
 /*                                      Search                                                          */
 /* ---------------------------------------------------------------------------------------------------- */
+TEST(StringHelperTest, Find_wchar)
+{
+    EXPECT_EQ(Find(L"", L'a', 0, false), std::wstring::npos);
+    EXPECT_EQ(Find(L"a", L'a', 0, false), 0UL);
+    EXPECT_EQ(Find(L"a", L'A', 0, false), std::wstring::npos);
+    EXPECT_EQ(Find(L"a", L'A', 0, true), 0UL);
+    EXPECT_EQ(Find(L"aA", L'A', 0, false), 1UL);
+    EXPECT_EQ(Find(L"aA", L'A', 0, true), 0UL);
+    EXPECT_EQ(Find(L"aA", L'A', 1, false), 1UL);
+}
+
+TEST(StringHelperTest, Find_wstring)
+{
+    EXPECT_EQ(Find(L"", L"", 0, false), std::wstring::npos);
+    EXPECT_EQ(Find(L"a", L"ab", 0, false), std::wstring::npos);
+    EXPECT_EQ(Find(L"a", L"a", 0, false), 0UL);
+    EXPECT_EQ(Find(L"a", L"A", 0, false), std::wstring::npos);
+    EXPECT_EQ(Find(L"a", L"A", 0, true), 0UL);
+    EXPECT_EQ(Find(L"aA", L"A", 0, false), 1UL);
+    EXPECT_EQ(Find(L"aA", L"A", 0, true), 0UL);
+    EXPECT_EQ(Find(L"aA", L"A", 1, false), 1UL);
+    EXPECT_EQ(Find(L"aAb", L"Ab", 1, false), 1UL);
+    EXPECT_EQ(Find(L"aAbc", L"Ab", 1, false), 1UL);
+    EXPECT_EQ(Find(L"aAbcAb", L"Ab", 1, false), 1UL);
+}
+
 TEST(StringHelperTest, GetNextString_Basic)
 {
     std::wstring str = L"abc def ghi";

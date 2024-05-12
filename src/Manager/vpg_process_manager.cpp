@@ -56,7 +56,7 @@ void VPGProcessManager::VerifyLocalResponse()
                 // if not same, then check verison of genertor exists, if not exists, then master, else switch to correct branch
                 DECLARE_SPTR(GitLog, currentLog);
                 GitService::GetCurrentLog(this->GetLogProperty().get(), VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType()), currentLog);
-                if (!Contains(currentLog->GetTags(), VPGGlobal::GetVersion())) {
+                if (!IsContain(currentLog->GetTags(), VPGGlobal::GetVersion())) {
                     try
                     {
                         GitService::Switch(this->GetLogProperty().get(), VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType()), VPGGlobal::GetVersion());
@@ -125,7 +125,7 @@ std::shared_ptr<IVPGGenerationManager> VPGProcessManager::GetGenerationManager()
 
 void VPGProcessManager::Add()
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         this->VerifyLocalResponse();
         GetGenerationManager()->Add();
     }
@@ -133,7 +133,7 @@ void VPGProcessManager::Add()
 
 void VPGProcessManager::Update()
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         if (!IsUpdateAvaliable())
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Only VCC Module can be updated.");
         this->VerifyLocalResponse();
@@ -143,7 +143,7 @@ void VPGProcessManager::Update()
 
 void VPGProcessManager::Generate()
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         if (!IsUpdateAvaliable())
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Only VCC Module can be updated.");
         this->VerifyLocalResponse();

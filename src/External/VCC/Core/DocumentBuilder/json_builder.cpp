@@ -29,7 +29,7 @@ namespace vcc
     std::wstring JsonBuilder::Serialize(const IDocument *doc) const
     {
         std::wstring result = L"";
-        TRY_CATCH(){
+        TRY_CATCH() {
             std::wstring currentNewLineCharacter = _IsBeautify ? _NewLineCharacter : L"";
             std::wstring currentNameColonSpace = _IsBeautify ? _NameColonSpace : L"";
             std::wstring currentColonValueSpace = _IsBeautify ? _ColonValueSpace : L"";
@@ -156,7 +156,7 @@ namespace vcc
 
     void JsonBuilder::Deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc) const
     {
-        TRY_CATCH(){
+        TRY_CATCH() {
             std::shared_ptr<Json> jsonObj = dynamic_pointer_cast<Json>(doc);
             assert(jsonObj != nullptr);
             GetNextCharacterPos(str, pos, true);
@@ -194,7 +194,7 @@ namespace vcc
 
     void JsonBuilder::Deserialize(const std::wstring &str, std::shared_ptr<IDocument> doc) const
     {
-        TRY_CATCH(){
+        TRY_CATCH() {
             size_t pos = 0;
             this->Deserialize(str, pos, doc);
         }

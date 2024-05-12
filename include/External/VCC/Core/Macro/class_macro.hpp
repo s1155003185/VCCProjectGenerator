@@ -95,7 +95,7 @@ namespace vcc
         void Insert##var(size_t index, std::vector<std::shared_ptr<type>> &value) { this->_##var.insert(this->_##var.begin() + index, value.begin(), value.end()); } \
         void Remove##var(size_t index) { this->_##var.erase(this->_##var.begin() + index); } \
         void Clone##var(const std::vector<std::shared_ptr<type>> &value) { this->_##var.clear(); for (std::shared_ptr<type> element : value) { this->Insert##var(element != nullptr ? std::dynamic_pointer_cast<type>(element->Clone()) : nullptr); } }\
-        void Clear##var() { this->_##var.clear(); }
+        void Clear##var() const { this->_##var.clear(); }
 
     // set
 
@@ -108,7 +108,7 @@ namespace vcc
         void Insert##var(std::set<type> value) { this->_##var.insert(value.begin(), value.end()); } \
         void Remove##var(type value) { this->_##var.erase(value); } \
         void Clone##var(const std::set<type> &value) { this->_##var.clear(); this->_##var.insert(value.begin(), value.end()); }\
-        void Clear##var() { this->_##var.clear(); }
+        void Clear##var() const { this->_##var.clear(); }
     
     #define SET_SPTR(type, var) \
     protected: \

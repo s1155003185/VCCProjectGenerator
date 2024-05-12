@@ -12,4 +12,9 @@ class VPGGlobal
         static std::wstring GetProjectName(VPGProjectType projectType);
         static std::wstring GetProjecURL(VPGProjectType projectType);
         static std::wstring GetVccJsonFileName();
+
+        // c++
+        static std::wstring GetCppDefaultIncludePathWindow();
+        static std::wstring GetCppDefaultIncludePathLinux();
+        static std::wstring GetCppDefaultIncludePathMacOs();
 };

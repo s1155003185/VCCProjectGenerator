@@ -1,4 +1,4 @@
-#include "vpg_base_generation_manager.hpp"
+#include "vpg_generation_option.hpp"
 
 #include <assert.h>
 #include <filesystem>
@@ -11,6 +11,8 @@
 #include "i_document_builder.hpp"
 #include "json.hpp"
 #include "memory_macro.hpp"
+#include "platform_type.hpp"
+#include "string_helper.hpp"
 #include "vpg_code_reader.hpp"
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_file_sync_service.hpp"
@@ -18,9 +20,87 @@
 
 using namespace vcc;
 
-std::wstring VPGGenerationOption::SerializeJson(const IDocumentBuilder *builder)
+// std::shared_ptr<Json> VPGGenerationOptionPlatform::ToJson() const
+// {
+//     TRY_CATCH() {
+//         DECLARE_UPTR(Json, json);
+
+//         std::wstring platform = L"";
+//         switch (_Platform)
+//         {
+//         case PlatformType::All:
+//             platform += L"All";
+//             break;
+//         case PlatformType::Window:
+//             platform += L"Window";
+//             break;
+//         case PlatformType::Linux:
+//             platform += L"Linux";
+//             break;
+//         case PlatformType::MacOs:
+//             platform += L"MacOS";
+//             break;
+//         case PlatformType::Android:
+//             platform += L"Android";
+//             break;
+//         case PlatformType::IOs:
+//             platform += L"IOS";
+//             break;
+//         default:
+//             // unknown
+//             assert(false);
+//             break;
+//         }
+//         json->AddString(L"Platform", platform);
+
+//         // Plugins
+//         DECLARE_SPTR(Json, includePaths);
+//         json->AddArray(L"IncludePaths", includePaths);
+//         for (auto const &includePath : _IncludePaths) {
+//             includePaths->AddArrayString(includePath);
+//         }
+//         return json;
+//     }
+//     return nullptr;
+// }
+
+// void VPGGenerationOptionPlatform::DeserializeJson(std::shared_ptr<IDocument> document) const
+// {
+//     TRY_CATCH() {
+//         std::shared_ptr<Json> json = dynamic_pointer_cast<Json>(document);
+//         assert(json != nullptr);
+
+//         if (json->IsContainKey(L"Platform")) {
+//             std::wstring platform = json->GetString(L"Platform");
+//             ToUpper(platform);
+//             if (platform == L"ALL")
+//                 this->SetPlatform(PlatformType::All);
+//             else if (platform == L"WINDOW")
+//                 this->SetPlatform(PlatformType::Window);
+//             else if (platform == L"LINUX")
+//                 this->SetPlatform(PlatformType::Linux);
+//             else if (platform == L"MACOS")
+//                 this->SetPlatform(PlatformType::MacOs);
+//             else if (platform == L"ANDRIOD")
+//                 this->SetPlatform(PlatformType::Android);
+//             else if (platform == L"IOS")
+//                 this->SetPlatform(PlatformType::IOs);
+//             else
+//                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Unknow Platform: " + platform);
+//         }
+
+//         // Plugins
+//         if (json->IsContainKey(L"IncludePaths")) {
+//             for (auto const &plugin : json->GetArray(L"IncludePaths")) {
+//                 this->InsertIncludePaths(plugin->GetJsonInternalValue());
+//             }
+//         }
+//     }
+// }
+
+std::shared_ptr<Json> VPGGenerationOption::ToJson() const
 {
-    TRY_CATCH(){
+    TRY_CATCH() {
         DECLARE_UPTR(Json, json);
         json->AddString(L"Version", _Version);
         
@@ -53,21 +133,28 @@ std::wstring VPGGenerationOption::SerializeJson(const IDocumentBuilder *builder)
         json->AddString(L"PropertyAccessorDirectoryHpp", _PropertyAccessorDirectoryHpp);
         json->AddString(L"PropertyAccessorDirectoryCpp", _PropertyAccessorDirectoryCpp);
 
+        // Platform
+        // DECLARE_SPTR(Json, platforms);
+        // json->AddArray(L"Platforms", platforms);
+        // for (auto const &element : _Platforms) {
+        //     platforms->AddArrayObject(element->ToJson());
+        // }
+
+        // Plugins
         DECLARE_SPTR(Json, plugins);
         json->AddArray(L"Plugins", plugins);
         for (auto const &plugin : _Plugins) {
             plugins->AddArrayString(plugin);
         }
-        
-        return builder->Serialize(json.get());
+        return json;
     }
-    return L"";
+    return nullptr;
 }
 
-void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document)
+void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) const
 {
-    TRY_CATCH(){
-        std::shared_ptr<Json> json = dynamic_pointer_cast<Json>(document);
+    TRY_CATCH() {
+        std::shared_ptr<Json> json = std::dynamic_pointer_cast<Json>(document);
         assert(json != nullptr);
 
         if (json->IsContainKey(L"Version"))
@@ -109,9 +196,19 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document)
         if (json->IsContainKey(L"PropertyAccessorDirectoryCpp"))
             this->SetPropertyAccessorDirectoryCpp(json->GetString(L"PropertyAccessorDirectoryCpp"));
 
+        // Platform
+        // ClearPlatforms();
+        // if (json->IsContainKey(L"Platforms")) {
+        //     for (auto const &element : json->GetArray(L"Platforms")) {
+        //         DECLARE_SPTR(VPGGenerationOptionPlatform, platform);
+        //         platform->DeserializeJson(element);
+        //         this->InsertPlatforms(platform);
+        //     }
+        // }
+
+        // Plugins
         if (json->IsContainKey(L"Plugins")) {
-            auto plugins = json->GetArray(L"Plugins");
-            for (auto const &plugin : plugins) {
+            for (auto const &plugin : json->GetArray(L"Plugins")) {
                 this->InsertPlugins(plugin->GetJsonInternalValue());
             }
         }
