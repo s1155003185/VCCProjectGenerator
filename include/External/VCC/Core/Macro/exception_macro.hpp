@@ -30,4 +30,6 @@ namespace vcc
         throw Exception(exceptionType, str2wstr(__FILE__) + L":" + std::to_wstring(__LINE__) + L":\r\n" + message)
 
     #define TRY_CATCH(...) try { __VA_ARGS__ } catch (const std::exception &e) { THROW_EXCEPTION(e); }
+    #define TRY_CATCH_SLIENT(...) try { __VA_ARGS__ } catch (const std::exception &e) { }
+    #define TRY_CATCH_MSG(exceptionType, message, ...) try { __VA_ARGS__ } catch (const std::exception &e) { THROW_EXCEPTION_MSG(exceptionType, message); }
 }
