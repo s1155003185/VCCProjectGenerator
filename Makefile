@@ -25,6 +25,16 @@
 # to add new gtest, follow unittest
 # change project name for DLL project in dll_test.cpp
 
+# Execute
+# make -j10
+# => same as make release 
+# make release -j10
+# => compile to bin/Release
+# make debug -j10
+# => compile to bin/Debug
+# make unittest -j10
+# => compile gtest only
+
 #------------------------------------------------------------------------------------------------------#
 #------------------------------------------ Customize Begin  ------------------------------------------#
 #------------------------------------------------------------------------------------------------------#

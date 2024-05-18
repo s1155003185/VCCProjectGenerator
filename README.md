@@ -1,5 +1,8 @@
-# VCCProjectGenerator / VCCProjectGenerator VSCode Extension
+# VCCModuel / VCCProjectGenerator / VCCProjectGenerator VSCode Extension
 ### Versioning Common Codebase Project / Versioning Coding Cooperation Project
+Cross plaform project to handle Any Interface with C++ dll.
+Maintain those standard already stable long time ago. No reason to implement twice.
+
 Note: Still in initialize version, will have full review when official release
 
 ## Features
@@ -18,6 +21,8 @@ Note: Still in initialize version, will have full review when official release
 8. Generate VCC Project
 
 ### Pre-Requirement
+Must already install following before execute VCCProjectGenerator and VCCProjectGenerator VSCode Extension.
+Or can download the template from git directly.
 1. git
 2. g++
 3. make
@@ -42,6 +47,11 @@ To build debug
 make debug -j10
 ```
 
+To build unittest only
+```
+make unittest -j10
+```
+
 To build release
 ```
 make release -j10
@@ -57,6 +67,10 @@ Other command can be refer to Makefile
 Debug program is built in bin/Debug
 Release program is built in bin/Release
 
+## Optional
+-	Filter out *.o: File > Preferences > Setting => Files: Exclude => Add **/**.o
+-	Remove unittest/External to skip running unit test of VCCModule.
+
 ## Execute C++ project in VScode
 F5
 
@@ -68,6 +82,33 @@ F5
 - No need to study the code after generation
 - No need to upload code to service provider
 
+****
+## VCCModule Feature
+### Status:
+-	Active: Keep changing. Not recommend to use.
+-	Stable: Workable.
+-	Inactive: Will not update in the future.
+-	Pending: Coming soon.
+### Core:
+-	Action Manager (Pending)
+-	Exception (Stable)
+-	Helper (Stable, Keep update)
+-	Log Service (Stable)
+-   Process Service (Stable)
+-	Property Accessor (Pending)
+-   Terminal Service (Stable)
+-   XML (Read only, Other are still pending)
+### Common:
+-   Git (Actives, basic function only)
+### Module:
+-	TextEditor (Pending)
+-	Document (Pending)
+-	Speedsheet (Pending)
+### UI:
+-	LoginService (Pending)
+-	LicenseService (Pending)
+-	PaymentService (Pending)
+
 ## Pending
 - Use precompile header
 - Update vcc.json also update Makefile etc.
@@ -77,9 +118,11 @@ F5
 - Auto generaste document for coding (like java)
 - Enhance class generation for validation, trigger etc.
 - Alert tag for Update
+- OAuth
 
 ## Known Issue
 - Compile unit test to slow because of linkage. No solution.
+- Regex is too slow
 
 ****
 ## Versioning Common Codebase Project / Versioning Coding Cooperation Project Introduction
@@ -495,6 +538,12 @@ X(Twitter) @VCCProject
 
 ****
 ## Release Log
+2024-05-19 v0.0.4
+- Add make unittest in Makefile
+- Initial Property Accessor
+- Merge XML Reader to XML Builder
+- Improve TRY CATCH macro
+
 2024-05-06 v0.0.3
 - Move vcc.json to .vcc/vcc.json
 - Update Makefile to fix unittest name

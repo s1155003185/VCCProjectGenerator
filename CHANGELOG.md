@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### [v0.0.4] - 2024-05-19
+- Add make unittest in Makefile
+- Initial Property Accessor
+- Merge XML Reader to XML Builder
+- Improve TRY CATCH macro
+
 ### [v0.0.3] - 2024-05-06
 - Move vcc.json to .vcc/vcc.json
 - Update Makefile to fix unittest name
