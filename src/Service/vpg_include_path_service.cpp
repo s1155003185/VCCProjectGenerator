@@ -17,7 +17,7 @@
 
 void VPGIncludePathService::GetWorkspaceIncludePath(const std::wstring &workspace, std::map<std::wstring, std::wstring> &classPathMapping)
 {
-    TRY_CATCH() {
+    TRY
         for (auto const &filePath : std::filesystem::recursive_directory_iterator(PATH(!workspace.empty() ? workspace : L"."))) {
             if (filePath.is_directory() || !filePath.path().wstring().ends_with(L".hpp"))
                 continue;
@@ -29,12 +29,12 @@ void VPGIncludePathService::GetWorkspaceIncludePath(const std::wstring &workspac
                 classPathMapping.insert(std::make_pair(className, GetFileName(filePath.path().wstring())));
             }
         }
-    }
+    CATCH
 }
 
 // void VPGIncludePathService::GetSystemIncludePath(const PlatformType &platformType, const std::wstring &workspace, std::map<std::wstring, std::wstring> &classPathMapping)
 // {
-//     TRY_CATCH() {
+//     TRY
 //         for (auto const &filePath : std::filesystem::recursive_directory_iterator(PATH(!workspace.empty() ? workspace : L"."))) {
 //             std::wstring fileName = GetFileName(filePath.path().wstring());
 //             if (filePath.is_directory() || fileName.starts_with(L"_"))

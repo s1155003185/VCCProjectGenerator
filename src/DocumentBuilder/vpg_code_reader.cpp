@@ -15,7 +15,7 @@ VPGCodeReader::VPGCodeReader(std::wstring commandDelimiter)
 
 void VPGCodeReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
 {
-    TRY_CATCH() {
+    TRY
         std::wstring endTag = L"</" + element->GetName() + L">";
         while (pos < xmlData.length())
         {
@@ -25,13 +25,13 @@ void VPGCodeReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos,
             }  
             pos++;
         }
-    }
+    CATCH
 }
 
 void VPGCodeReader::ParseXml(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
 {
    size_t dataLength = xmlData.length();
-    TRY_CATCH() {
+    TRY
         size_t startPos = pos;
         while (pos < dataLength) {
             if (HasPrefix(xmlData, this->_CommandDelimiter, pos) && HasPrefixTrimSpace(xmlData, this->_CommandDelimiter + L"<vcc:", pos)) {
@@ -62,5 +62,5 @@ void VPGCodeReader::ParseXml(const std::wstring &xmlData, size_t &pos, std::shar
             tmp->SetFullText(pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos));
             element->InsertChildren(tmp);
         }
-    }
+    CATCH
 }

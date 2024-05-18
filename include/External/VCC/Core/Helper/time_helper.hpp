@@ -66,7 +66,7 @@ namespace vcc
     inline std::time_t ParseDatetime(const std::wstring &timeStr, const std::wstring &format)
     {
         std::time_t time = -1;
-        TRY_CATCH() {
+        TRY
             #ifdef _WIN32
                 std::tm timeStruct = {};
                 std::wistringstream dateStream(timeStr);
@@ -78,7 +78,7 @@ namespace vcc
                 strptime(wstr2str(timeStr).c_str(), wstr2str(format).c_str(), &tm);
                 time = mktime(&tm);
             #endif
-        }
+        CATCH
         return time;
     }
 }

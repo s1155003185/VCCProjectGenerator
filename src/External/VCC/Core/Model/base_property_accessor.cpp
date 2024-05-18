@@ -24,9 +24,9 @@ namespace vcc
             default:\
                 assert(false);\
         }\
-        TRY_CATCH() {
+        TRY
 
-    #define LOCK_END Unlock(); }
+    #define LOCK_END Unlock(); CATCH
 
     void BasePropertyAccessor::ReadLock() const { _Mutex.lock_shared(); }
     void BasePropertyAccessor::WriteLock() const { _Mutex.lock(); }

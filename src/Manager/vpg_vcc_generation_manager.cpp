@@ -56,7 +56,7 @@ std::vector<std::wstring> VPGVccGenerationManager::GetUpdateUnitTestList() const
 
 void VPGVccGenerationManager::CreateVccJson() const
 {
-    TRY_CATCH() {
+    TRY
         DECLARE_UPTR(JsonBuilder, jsonBuilder);
         jsonBuilder->SetIsBeautify(true);
 
@@ -79,23 +79,23 @@ void VPGVccGenerationManager::CreateVccJson() const
         //     _Option->InsertPlatforms(platformMacOS);
         // }
         WriteFile(ConcatPaths({_Option->GetWorkspaceDestination(), VPGGlobal::GetVccJsonFileName()}), _Option->SerializeJson(jsonBuilder.get()), true);
-    }
+    CATCH
 }
 
 void VPGVccGenerationManager::ReadVccJson() const
 {
-    TRY_CATCH() {
+    TRY
         std::wstring fileContent = ReadFile(ConcatPaths({_Option->GetWorkspaceDestination(), VPGGlobal::GetVccJsonFileName()}));
         DECLARE_UPTR(JsonBuilder, jsonBuilder);
         DECLARE_SPTR(Json, json);
         jsonBuilder->Deserialize(fileContent, json);
         _Option->DeserializeJson(json);
-    }
+    CATCH
 }
 
 void VPGVccGenerationManager::Add() const
 {
-    TRY_CATCH() {
+    TRY
         VPGBaseGenerationManager::CreateBasicProject();
         std::wstring src = _Option->GetWorkspaceSource();
         std::wstring dest = _Option->GetWorkspaceDestination();
@@ -120,12 +120,12 @@ void VPGVccGenerationManager::Add() const
         // Create Json file at the end to force override
         CreateVccJson();
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Done");
-    }
+    CATCH
 }
 
 void VPGVccGenerationManager::Update() const
 {
-    TRY_CATCH() {
+    TRY
         ReadVccJson();
 
         std::wstring src = _Option->GetWorkspaceSource();
@@ -156,12 +156,12 @@ void VPGVccGenerationManager::Update() const
         // Create Json file at the end to force override
         CreateVccJson();
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Done");        
-    }
+    CATCH
 }
 
 void VPGVccGenerationManager::Generate() const
 {
-    TRY_CATCH() {
+    TRY
         ReadVccJson();
         
         DECLARE_UPTR(VPGFileGenerationManager, manager, this->_LogProperty);
@@ -169,5 +169,5 @@ void VPGVccGenerationManager::Generate() const
         manager->GernerateProperty(_LogProperty.get(), _Option->GetProjectPrefix(), _Option->GetWorkspaceDestination(), _Option->GetTypeWorkspace(),
             _Option->GetObjectTypeDirectory(), _Option->GetModelDirectory(), _Option->GetPropertyAccessorDirectoryHpp(), _Option->GetPropertyAccessorDirectoryCpp());
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Done");
-    }
+    CATCH
 }

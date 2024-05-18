@@ -9,7 +9,7 @@ using namespace vcc;
 
 // remove all command and special characters
 inline std::wstring GetSimpleCode(const std::wstring &str) {
-    TRY_CATCH() {
+    TRY
         std::wstring result = L"";
         std::vector<std::wstring> prefixes = { L"/*", L"//" };
         std::vector<std::wstring> suffixes = { L"*/", L"\n"};
@@ -32,6 +32,6 @@ inline std::wstring GetSimpleCode(const std::wstring &str) {
                 result += std::wstring(1, str[i]);
         }
         return result;
-    }
+    CATCH
     return L"";
 }

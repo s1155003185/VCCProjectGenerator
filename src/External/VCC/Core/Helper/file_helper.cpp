@@ -37,9 +37,9 @@ namespace vcc
     std::wstring GetFileName(const std::wstring &filePath)
     {
         std::wstring fileName = L"";
-        TRY_CATCH() {
+        TRY
             fileName = PATH(filePath).filename().wstring();
-        }
+        CATCH
         return fileName;
     }
 
@@ -61,27 +61,27 @@ namespace vcc
 
     std::wstring GetRelativePath(const std::wstring &absolutePath, const std::wstring &basePath)
     {
-        TRY_CATCH() {
+        TRY
             if (IsBlank(basePath))
                 return absolutePath;
             return PATH(absolutePath).lexically_relative(PATH(basePath)).wstring();
-        }
+        CATCH
         return L"";
     }
 
     void GetFileDifferenceBetweenWorkspaces(std::wstring sourceWorkspace, std::wstring targetWorkspace, 
         std::vector<std::wstring> &needToAdd, std::vector<std::wstring> &needToModify, std::vector<std::wstring> &needToDelete)
     {
-        TRY_CATCH() {
+        TRY
             std::vector<std::wstring> srcFileList, tarFileList;
-            TRY_CATCH() {
+            TRY
                 for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(!sourceWorkspace.empty() ? sourceWorkspace : L".")))
                     srcFileList.push_back(GetRelativePath(filePath.path().wstring(), sourceWorkspace));
-            }
-            TRY_CATCH() {
+            CATCH
+            TRY
                 for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(!targetWorkspace.empty() ? targetWorkspace : L".")))
                     tarFileList.push_back(GetRelativePath(filePath.path().wstring(),targetWorkspace));
-            }
+            CATCH
 
             std::sort(srcFileList.begin(), srcFileList.end());
             std::sort(tarFileList.begin(), tarFileList.end());
@@ -103,7 +103,7 @@ namespace vcc
                         needToModify.push_back(std::wstring(str));
                 }
             }
-        }
+        CATCH
     }
 
     std::wstring GetWindowPath(std::wstring path)
@@ -142,9 +142,9 @@ namespace vcc
 
 	bool IsPathMatchFileFilter(const std::wstring &filePath, const std::wstring &fileFilter)
     {
-        TRY_CATCH() {
+        TRY
             return std::regex_match(GetLinuxPath(filePath), std::wregex(GetRegexFromFileFilter(GetLinuxPath(fileFilter))));
-        }
+        CATCH
         return false;
     }
 
@@ -152,13 +152,13 @@ namespace vcc
     {
         if (fileFilters.empty())
             return false;
-        TRY_CATCH() {
+        TRY
             std::vector<std::wstring> regexFilters;
             for (auto const &str: fileFilters) {
                 regexFilters.push_back(GetRegexFromFileFilter(GetLinuxPath(str)));
             }
             return std::regex_match(GetLinuxPath(filePath), std::wregex(Concat(regexFilters, L"|")));
-        }
+        CATCH
         return false;
     }
 
@@ -226,32 +226,27 @@ namespace vcc
 
     void CopyFile(const std::wstring &srcFilePath, const std::wstring &destFilePath, bool isForce)
     {
-        TRY_CATCH() {
+        TRY
             ValidateFile(srcFilePath);
             if (isForce)
                 CreateDirectory(PATH(destFilePath).parent_path().wstring());
             if (isForce && IsFileExists(destFilePath))
                 std::filesystem::remove(destFilePath);
             std::filesystem::copy(PATH(srcFilePath), PATH(destFilePath));
-        }
+        CATCH
     }
 
 	void RemoveFile(const std::wstring &filePath)
     {
         if (filePath.empty())
             return;
-        try
-        {
+        TRY
             if (!IsFileExists(filePath))
                 return;
                 
             PATH currentPath(filePath);
             std::filesystem::remove(filePath);
-        }
-        catch(const std::exception& e)
-        {
-            THROW_EXCEPTION(e);
-        }
+        CATCH
     }
 
     void CreateDirectory(const std::wstring &path)
@@ -259,23 +254,18 @@ namespace vcc
         if (IsBlank(path) || IsDirectoryExists(path))
             return;
 
-        try
-        {
+        TRY
             PATH currentPath(path);
             CreateDirectory(currentPath.parent_path().wstring());
             std::filesystem::create_directories(path);
-        }
-        catch(const std::exception& e)
-        {
-            THROW_EXCEPTION(e);
-        }
+        CATCH
     }
 
     void CopyDirectory(const std::wstring &srcDirectory, const std::wstring &destDirectory, const CopyDirectoryOption *option)
     {
         assert(!IsBlank(srcDirectory));
         assert(!IsBlank(destDirectory));
-        TRY_CATCH() {
+        TRY
             bool isForce = option != nullptr && option->GetIsForce();
             std::vector<std::wstring> srcFileList;
             for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(srcDirectory))) {
@@ -311,21 +301,21 @@ namespace vcc
                     CopyFile(filePath.path().wstring(), destAbsolutePath);
                 }
             }
-        }
+        CATCH
     }
 
 	void RemoveDirectory(const std::wstring &directory)
     {
         assert(!IsBlank(directory));
-        TRY_CATCH() {
+        TRY
             std::filesystem::remove_all(PATH(directory));
-        }
+        CATCH
     }
 
     std::wstring ReadFile(const std::wstring &filePath)
     {
         std::wstring result = L"";
-        try {
+        TRY
             ValidateFile(filePath);
 
             std::wifstream fileStream(filePath.c_str(), std::ios_base::binary);
@@ -336,15 +326,13 @@ namespace vcc
             buffer << fileStream.rdbuf();
             result = buffer.str();
             fileStream.close();
-        } catch (const std::exception &e) {
-            THROW_EXCEPTION(e);
-        }
+        CATCH
         return result;
     }
 
 	void ReadFilePerLine(const std::wstring &filePath, std::function<void(std::wstring)> action)
     {
-        try {
+        TRY
             ValidateFile(filePath);
 
             std::wifstream fileStream(filePath.c_str(), std::ios_base::in);
@@ -353,14 +341,12 @@ namespace vcc
                 action(line);
             }
             fileStream.close();
-        } catch (const std::exception &e) {
-            THROW_EXCEPTION(e);
-        }
+        CATCH
     }
 
     std::wstring ReadFileOneLine(const std::wstring &filePath, int index) 
     {
-        try {
+        TRY
             ValidateFile(filePath);
 
             std::wifstream fileStream(filePath.c_str(), std::ios_base::in);
@@ -378,15 +364,13 @@ namespace vcc
             }
             fileStream.close();
             return result;
-        } catch (const std::exception &e) {
-            THROW_EXCEPTION(e);
-        }
+        CATCH
         return L"";
     }
 
 	void WriteFile(const std::wstring &filePath, const std::wstring &content, bool isForce)
     {
-        TRY_CATCH() {
+        TRY
             PATH _filePath(filePath);		
             PATH dir = _filePath.parent_path();
             if (!dir.wstring().empty() && !IsDirectoryExists(dir.wstring()))
@@ -404,12 +388,12 @@ namespace vcc
             } else {
                 THROW_EXCEPTION_MSG(ExceptionType::FileBlocked, L"Cannot open file: " + filePath);
             }
-        }
+        CATCH
     }
 
     void AppendFileOneLine(const std::wstring &filePath, const std::wstring &line, bool isForce) 
     {
-        try {
+        TRY
             // 1. Check directory exists
             // 2. Check file exists
             // 3. Check file can read write
@@ -430,8 +414,6 @@ namespace vcc
             fileStream << line + L"\r\n";
             #endif
             fileStream.close();
-        } catch (const std::exception &e) {
-            THROW_EXCEPTION(e);
-        }
+        CATCH
     }
 }

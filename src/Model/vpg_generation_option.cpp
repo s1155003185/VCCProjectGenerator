@@ -22,7 +22,7 @@ using namespace vcc;
 
 // std::shared_ptr<Json> VPGGenerationOptionPlatform::ToJson() const
 // {
-//     TRY_CATCH() {
+//     TRY
 //         DECLARE_UPTR(Json, json);
 
 //         std::wstring platform = L"";
@@ -66,7 +66,7 @@ using namespace vcc;
 
 // void VPGGenerationOptionPlatform::DeserializeJson(std::shared_ptr<IDocument> document) const
 // {
-//     TRY_CATCH() {
+//     TRY
 //         std::shared_ptr<Json> json = dynamic_pointer_cast<Json>(document);
 //         assert(json != nullptr);
 
@@ -100,7 +100,7 @@ using namespace vcc;
 
 std::shared_ptr<Json> VPGGenerationOption::ToJson() const
 {
-    TRY_CATCH() {
+    TRY
         DECLARE_UPTR(Json, json);
         json->AddString(L"Version", _Version);
         
@@ -147,13 +147,13 @@ std::shared_ptr<Json> VPGGenerationOption::ToJson() const
             plugins->AddArrayString(plugin);
         }
         return json;
-    }
+    CATCH
     return nullptr;
 }
 
 void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) const
 {
-    TRY_CATCH() {
+    TRY
         std::shared_ptr<Json> json = std::dynamic_pointer_cast<Json>(document);
         assert(json != nullptr);
 
@@ -212,5 +212,5 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
                 this->InsertPlugins(plugin->GetJsonInternalValue());
             }
         }
-    }
+    CATCH
 }

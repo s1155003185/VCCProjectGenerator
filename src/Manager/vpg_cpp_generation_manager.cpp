@@ -13,9 +13,9 @@ using namespace vcc;
 
 void VPGCppGenerationManager::Add() const
 {
-    TRY_CATCH() {
+    TRY
         LogService::LogInfo(this->GetLogProperty().get(), CLASS_ID, L"Copy Project to " + this->GetOption()->GetWorkspaceDestination());
         this->CreateBasicProject();
         LogService::LogInfo(this->GetLogProperty().get(), CLASS_ID, L"Done.");
-    }
+    CATCH
 }

@@ -45,11 +45,11 @@ namespace vcc
 
 	std::wstring ToString(double value, size_t decimalPlaces)
 	{
-		TRY_CATCH() {
+		TRY
 			std::wstringstream ss;
 			ss << std::fixed << std::setprecision(decimalPlaces) << value;
 			return ss.str();
-		}
+		CATCH
 		return L"";
 	}
 
@@ -69,7 +69,7 @@ namespace vcc
 	
 	bool HasPrefix(const std::wstring &str, const std::wstring &prefix, const size_t &pos)
 	{
-		TRY_CATCH() {
+		TRY
 		 	if (str.length() - pos < prefix.size())
 		 		return false;
 
@@ -80,7 +80,7 @@ namespace vcc
 				cnt++;
 			}
 			return true;
-		}
+		CATCH
 		return false;
 	}
 	
@@ -327,7 +327,7 @@ namespace vcc
 	{
 		if (str.empty())
 			return std::wstring::npos;
-		TRY_CATCH() {
+		TRY
 			size_t cnt = pos;
 			for (auto it = str.begin() + pos; it != str.end(); it++) {
 				if (isIgnoreCase) {
@@ -339,7 +339,7 @@ namespace vcc
 				}
 				cnt++;
 			}
-		}
+		CATCH
 		return std::wstring::npos;
 	}
 
@@ -347,7 +347,7 @@ namespace vcc
 	{
 		if (str.empty() || str.length() - pos < subStr.length())
 			return std::wstring::npos;
-		TRY_CATCH() {
+		TRY
 			if (subStr.length() == 1)
 				return Find(str, subStr[0], pos, isIgnoreCase);
 
@@ -368,13 +368,13 @@ namespace vcc
 				// }
 				return str.find(subStr, pos);
 			}
-		}
+		CATCH
 		return std::wstring::npos;
 	}
 
 	void GetCharacterRowAndColumn(const std::wstring &str, size_t pos, size_t &row, size_t &column)
 	{
-		TRY_CATCH() {
+		TRY
 			row = 1;
 			column = 1;
 			size_t cnt =0;
@@ -387,7 +387,7 @@ namespace vcc
 					column++;
 				cnt++;
 			}
-		}
+		CATCH
 	}
 
 	void GetNextCharacterPos(const std::wstring &str, size_t &pos, bool fromCurrentPos)
@@ -580,9 +580,9 @@ namespace vcc
 	
 	void ReplaceRegex(std::wstring &str, const std::wstring &regex, const std::wstring &replacement)
 	{
-		TRY_CATCH() {
+		TRY
 			str = std::regex_replace(str, std::wregex(regex), replacement, std::regex_constants::format_first_only);
-		}
+		CATCH
 	}
 
 	void ReplaceAll(std::wstring &str, const std::wstring& from, const std::wstring &to)
@@ -597,9 +597,9 @@ namespace vcc
 	
 	void ReplaceRegexAll(std::wstring &str, const std::wstring &regex, const std::wstring &replacement)
 	{
-		TRY_CATCH() {
+		TRY
 			str = std::regex_replace(str, std::wregex(regex), replacement, std::regex_constants::match_any);
-		}
+		CATCH
 	}
 
     std::vector<wchar_t> GetSpecialCharacters(const EscapeStringType &type)
@@ -713,8 +713,7 @@ namespace vcc
 	std::wstring GetUnescapeString(const EscapeStringType &type, const std::wstring &str)
 	{
         std::wstring result = L"";
-        try 
-        {
+        TRY
 			std::map<wchar_t, std::wstring> escapeMap;
 			switch (type)
 			{
@@ -754,11 +753,7 @@ namespace vcc
 					break;
 				}
 			}
-        }
-        catch(const std::exception& e)
-        {
-            THROW_EXCEPTION(e);
-        }
+        CATCH
         return result;
 	}
 	

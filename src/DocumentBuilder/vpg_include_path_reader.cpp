@@ -7,38 +7,38 @@ using namespace vcc;
 
 size_t VPGIncludePathReader::IsQuote(const std::wstring &cppCode, const size_t &pos) const
 {
-    TRY_CATCH() {
+    TRY
         size_t index = 0;
         for (auto const &quote : _OpenQuotes) {
             if (HasPrefix(cppCode, quote, pos))
                 return index;
             index++;
         }
-    }
+    CATCH
     return std::wstring::npos;
 }
 
 size_t VPGIncludePathReader::IsCommand(const std::wstring &cppCode, const size_t &pos) const
 {
-    TRY_CATCH() {
+    TRY
         size_t index = 0;
         for (auto const &quote : _OpenCommands) {
             if (HasPrefix(cppCode, quote, pos))
                 return index;
             index++;
         }
-    }
+    CATCH
     return std::wstring::npos;
 }
 
 size_t VPGIncludePathReader::SkipCommand(const std::wstring &cppCode, const size_t &openCommandIndex, size_t &pos) const
 {
-    TRY_CATCH() {
+    TRY
         std::wstring closeCommand = _CloseCommands[openCommandIndex];
         size_t tmpPos = Find(cppCode, closeCommand, pos);
         if (tmpPos != std::wstring::npos)
             pos = tmpPos + closeCommand.length() - 1;
-    }
+    CATCH
     return false;
 }
 
@@ -46,7 +46,7 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
 {
     if (cppCode.empty())
         return;
-    TRY_CATCH () {
+    TRY
         size_t pos = 0;
         bool isNamespaceTriggered = false;
         GetNextCharacterPos(cppCode, pos, true);
@@ -119,7 +119,7 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
             }
             GetNextCharacterPos(cppCode, pos, false);
         }
-    }
+    CATCH
 }
 
 // void VPGIncludePathReader::ParseLinux(const std::wstring &cppCode, std::set<std::wstring> &classList) const
@@ -168,7 +168,7 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
 
 void VPGIncludePathReader::Parse(const PlatformType &platformType, const std::wstring &cppCode, std::set<std::wstring> &classList) const
 {
-    TRY_CATCH() {
+    TRY
         switch (platformType)
         {
         case PlatformType::NA:
@@ -187,5 +187,5 @@ void VPGIncludePathReader::Parse(const PlatformType &platformType, const std::ws
             assert(false);
             break;
         }
-    }
+    CATCH
 }

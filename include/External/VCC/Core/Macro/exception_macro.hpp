@@ -1,4 +1,8 @@
 #pragma once
+
+#include <queue>
+#include <string>
+
 #include "exception.hpp"
 #include "i_exception.hpp"
 #include "log_service.hpp"
@@ -23,13 +27,13 @@ namespace vcc
     #define THROW_EXCEPTION_MSG(exceptionType, message) throw Exception(exceptionType, message)
     #endif
 
-
     #define THROW_EXCEPTION_DEBUG(e) ____HandleException(e, str2wstr(__FILE__), std::to_wstring(__LINE__))
 
     #define THROW_EXCEPTION_STACK_TRACE(exceptionType, message) \
         throw Exception(exceptionType, str2wstr(__FILE__) + L":" + std::to_wstring(__LINE__) + L":\r\n" + message)
 
-    #define TRY_CATCH(...) try { __VA_ARGS__ } catch (const std::exception &e) { THROW_EXCEPTION(e); }
-    #define TRY_CATCH_SLIENT(...) try { __VA_ARGS__ } catch (...) { }
-    #define TRY_CATCH_MSG(exceptionType, message, ...) try { __VA_ARGS__ } catch (const std::exception &e) { THROW_EXCEPTION_MSG(exceptionType, message); }
+    #define TRY try {
+    #define CATCH  } catch (const std::exception &e) { THROW_EXCEPTION(e); }
+    #define CATCH_SLIENT } catch (...) { }
+    #define CATCH_MSG(exceptionType, message) } catch (const std::exception &e) { THROW_EXCEPTION_MSG(exceptionType, message); }
 }

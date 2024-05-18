@@ -14,7 +14,7 @@ namespace vcc
     std::wstring XmlBuilder::GetString(const std::wstring &xmlData, size_t &pos) const
     {
         size_t endPos = pos;
-        TRY_CATCH() {
+        TRY
             if (xmlData.empty() || xmlData[pos] != L'"')
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(xmlData, pos, L"char is not \""));
 
@@ -29,7 +29,7 @@ namespace vcc
                 if (endPos >= xmlData.length())
                     THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(xmlData, pos, L"ending \" missing"));
             }
-        }
+        CATCH
         // remove head and tail "
         std::wstring  result = GetUnescapeString(EscapeStringType::XML, xmlData.substr(pos + 1, (endPos - 1) - (pos + 1) + 1));
         pos = endPos;
@@ -39,7 +39,7 @@ namespace vcc
     std::wstring XmlBuilder::GetTag(const std::wstring &xmlData, size_t &pos) const
     {
         size_t endPos = pos;
-        TRY_CATCH() {
+        TRY
             if (xmlData.empty())
                 return L"";
 
@@ -50,7 +50,7 @@ namespace vcc
                 }
                 endPos++;
             }
-        }
+        CATCH
         std::wstring  result = GetUnescapeString(EscapeStringType::XML, xmlData.substr(pos, endPos - pos + 1));
         pos = endPos;
         return result;
@@ -58,7 +58,7 @@ namespace vcc
 
     bool XmlBuilder::IsNextCharTagEnd(const std::wstring &xmlData, size_t &pos) const
     {
-        TRY_CATCH() {
+        TRY
             if (xmlData[pos] == L'/') {
                 if (pos + 1 >= xmlData.length())
                     THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(xmlData, pos, L"> missing"));
@@ -73,7 +73,7 @@ namespace vcc
                 GetNextCharacterPos(xmlData, pos, false);
                 return IsNextCharTagEnd(xmlData, pos);
             }
-        }
+        CATCH
         return false;
     }
 
@@ -84,7 +84,7 @@ namespace vcc
 
     void XmlBuilder::ParseXMLHeader(const std::wstring &xmlData, size_t &pos) const
     {
-        TRY_CATCH() {
+        TRY
             // TODO: handle <?...?> and <!...>
             while (pos < xmlData.length()) {
                 if (xmlData[pos] == L'"') {
@@ -95,12 +95,12 @@ namespace vcc
                 }                    
                 pos++;
             }
-        }
+        CATCH
     }
             
     bool XmlBuilder::ParseXMLTagHeader(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
     {
-        TRY_CATCH() {
+        TRY
             if (xmlData[pos] != L'<')
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(xmlData, pos, L"char is not < but " + std::wstring(1, xmlData[pos])));
                 
@@ -146,13 +146,13 @@ namespace vcc
             }
             // tag end with no ceontent
             return xmlData[pos - 1] != L'/';
-        }
+        CATCH
         return false;
     }
 
     void XmlBuilder::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
     {
-        TRY_CATCH() {
+        TRY
             while (pos < xmlData.length())
             {
                 DECLARE_SPTR(Xml, child);
@@ -170,23 +170,23 @@ namespace vcc
                 }                   
                 pos++;
             }
-        }
+        CATCH
     }
     
     void XmlBuilder::RemoveXMLTagTail(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
     {
-        TRY_CATCH() {
+        TRY
             GetNextCharacterPos(xmlData, pos, true);
             std::wstring endTag = L"</" + element->_Name + L">";
             if (!xmlData.substr(pos).starts_with(endTag))
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(xmlData, pos, L"end tab " + endTag + L" missing"));
             pos += endTag.length() - 1;
-        }
+        CATCH
     }
     
     void XmlBuilder::ParseXMLTag(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
     {
-        TRY_CATCH() {
+        TRY
             if (xmlData.empty())
                 return;
             if (xmlData[pos] != L'<')
@@ -204,13 +204,13 @@ namespace vcc
             ParseXMLTagContent(xmlData, pos, element);
             pos++;
             RemoveXMLTagTail(xmlData, pos, element);
-        }
+        CATCH
     }
 
     void XmlBuilder::ParseXml(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
     {
         size_t dataLength = xmlData.length();
-        TRY_CATCH() {
+        TRY
             size_t startPos = pos;
             while (pos < dataLength) {
                 if (std::iswspace(xmlData[pos])) {
@@ -240,31 +240,31 @@ namespace vcc
                 GetNextCharacterPos(xmlData, pos, false);
             }
             element->_FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
-        }
+        CATCH
     }
     
     std::wstring XmlBuilder::Serialize(const IDocument */*doc*/) const
     {
-        TRY_CATCH() {
+        TRY
 
-        }
+        CATCH
         return L"";
     }
 
     void XmlBuilder::Deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc) const
     {
-        TRY_CATCH() {
-            std::shared_ptr<Xml> xmlObject = dynamic_pointer_cast<Xml>(doc);
+        TRY
+            std::shared_ptr<Xml> xmlObject = std::dynamic_pointer_cast<Xml>(doc);
             assert(xmlObject != nullptr);
             ParseXml(str, pos, xmlObject);
-        }
+        CATCH
     }
     
     void XmlBuilder::Deserialize(const std::wstring &str, std::shared_ptr<IDocument> doc) const
     {
-        TRY_CATCH() {
+        TRY
             size_t pos = 0;
             this->Deserialize(str, pos, doc);
-        }
+        CATCH
     }
 }
