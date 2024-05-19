@@ -187,7 +187,6 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     expectedObjectClassFileContent += INDENT + INDENT + INDENT + L"return obj;\r\n";
     expectedObjectClassFileContent += INDENT + INDENT + L"}\r\n";
     expectedObjectClassFileContent += L"};\r\n";
-    expectedObjectClassFileContent += L"\r\n";
     EXPECT_EQ(objectClassFileContent, expectedObjectClassFileContent);
 
     // ------------------------------------------------------------------------------------------ //

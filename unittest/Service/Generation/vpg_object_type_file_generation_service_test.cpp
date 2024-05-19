@@ -14,7 +14,7 @@ using namespace vcc;
 class VPGObjectTypeFileGenerationServiceTest : public testing::Test 
 {
     GET_SPTR(LogProperty, LogProperty);
-    GET(std::wstring, Workspace, L"bin/Debug/VPGFileSyncServiceTest/");
+    GET(std::wstring, Workspace, L"bin/Debug/VPGObjectTypeFileGenerationServiceTest/");
     
     GETSET(std::wstring, FilePathHpp, L"");
     public:

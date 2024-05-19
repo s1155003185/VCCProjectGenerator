@@ -21,8 +21,6 @@ class VPGFileGenerationManager : public BaseManager<VPGFileGenerationManager>
     MAP(std::wstring, std::wstring, ClassFiles);
     MAP(std::wstring, std::wstring, EnumClassFiles);
 
-    MAP(std::wstring, std::wstring, ProjectClassIncludeFiles);
-
     public:
         VPGFileGenerationManager(std::shared_ptr<LogProperty> logProperty) : BaseManager(logProperty) {}
         virtual ~VPGFileGenerationManager() {}
@@ -30,10 +28,6 @@ class VPGFileGenerationManager : public BaseManager<VPGFileGenerationManager>
         // properties
         void GetClassMacroList(const std::wstring &projWorkspace);
         
-        // get #include file name
-        std::wstring GetProjectClassIncludeFile(const std::wstring &className);
-        std::wstring GetProjectEnumClassIncludeFile(const std::wstring &className);
-
         std::wstring GetClassNameFromEnumClassName(const std::wstring &enumClassName);
         std::wstring GetClassFilenameFromEnumClassFilename(const std::wstring &enumClassFileName);
         void GetFileList(const VPGEnumClassReader *reader, const std::wstring &directoryFullPath, const std::wstring &projectPrefix);
@@ -42,7 +36,6 @@ class VPGFileGenerationManager : public BaseManager<VPGFileGenerationManager>
         bool IsClassEnumFile(const std::wstring &filename, const std::wstring &projectPrefix);
         bool IsClassEnum(const std::wstring &enumClassName, const std::wstring &projectPrefix);
         
-        void GeneratePropertyClassFile(const LogProperty *logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
         void GeneratePropertyPropertyAccessorFile(const LogProperty *logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::wstring &cppFilePath, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
         void GernerateProperty(const LogProperty *logProperty, const std::wstring &projPrefix, const std::wstring &projWorkspace, const std::wstring &typeWorkspace, 
             const std::wstring &objTypeDirectoryHpp, const std::wstring &objDirectoryHpp, const std::wstring &propertyAccessorDirectoryHpp, const std::wstring &propertyAccessorDirectoryCpp);
