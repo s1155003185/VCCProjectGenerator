@@ -393,7 +393,9 @@ Restriction
 - Field names should be long form and capital letter.
 - Field names should having component with descending order. E.g. WorkspaceSource instead of SourceWorkspace
 - All fields should use macro in class_macro.hpp.
-- Not allow to use using namespace std, there are so many bugs. If want to use std library, please use std::wstring etc. Now only support <string>, will enhance to support all system type  
+- Not allow to use using namespace std, there are so many bugs. If want to use std library, please use std::wstring etc.
+- The program is based on std::wstring. Should not use std::string.
+- Only support basic type with std::wstring as Other language may not support the type defined in C++.
 - Does not allow ClassA contains ClassB and ClassB contains ClassA. As there is Clone method in Macro which is not trivial.
 
 Procedure
