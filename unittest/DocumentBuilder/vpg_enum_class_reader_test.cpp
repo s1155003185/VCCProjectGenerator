@@ -6,78 +6,100 @@
 
 TEST(VPGEnumClassReaderTest, Normal)
 {
-    std::wstring code = L"";
-    code += L"#pragma once\r\n";
-    code += L"\r\n";
-    code += L"#include <string>\r\n";
-    code += L"#include <vector>\r\n";
-    code += L"\r\n";
-    code += L"#include \"class_macro.hpp\"\r\n";
-    code += L"/*\r\n";
-    code += L"enum class VCCHiddenProperty { // Class Command\r\n";
-    code += L"    EnumA, // Command A\r\n";
-    code += L"    EnumB, /* Command B*/\r\n";
-    code += L"    EnumC,\r\n";
-    code += L"    EnumD // Command D\r\n";
-    code += L"};*/\r\n";
-    code += L"\r\n";
-    code += L"enum class VCCObjectProperty // Class Command\r\n";
-    code += L"{\r\n";
-    code += L"    EnumA, // Command A\r\n";
-    code += L"    EnumB, /* Command B*/\r\n";
-    code += L"    EnumC,\r\n";
-    code += L"    EnumD // Command D\r\n";
-    code += L"};\r\n";
-    code += L"\r\n";    
-    code += L"enum class VCCEnumProperty { EnumA, EnumB, /* Command B */ EnumC }";
+    std::wstring code = L""
+        L"#pragma once\r\n"
+        L"\r\n"
+        L"#include <string>\r\n"
+        L"#include <vector>\r\n"
+        L"\r\n"
+        L"#include \"class_macro.hpp\"\r\n"
+        L"/*\r\n"
+        L"enum class VCCObjectProperty { // Class Command\r\n"
+        L"    EnumA,\r\n"
+        L"    EnumB, // Command B\r\n"
+        L"    EnumC,\r\n"
+        L"    EnumD\r\n"
+        L"};*/\r\n"
+        L"\r\n"
+        L"enum class VCCObjectProperty // Class Command\r\n"
+        L"{\r\n"
+        L"    EnumA // Command A\r\n"
+        L"};\r\n"
+        L"\r\n"
+        L"enum class VCCSingleLineProperty { EnumA, EnumB, /* Command B */ EnumC }"
+        L"\r\n"
+        L"enum class VCCMultiProperty {\r\n"
+        L"    EnumA,\r\n"
+        L"    EnumB, // Command B\r\n"
+        L"    EnumC, /* Command C*/\r\n"
+        L"    EnumD, /* Command D *//* Command E */\r\n"
+        L"    EnumE /* Command F */\r\n"
+        L"      /* Command G */\r\n"
+        L"};\r\n";
 
     VPGEnumClassReader reader({});
     std::vector<std::shared_ptr<VPGEnumClass>> results;
     reader.Parse(code, results);
-    EXPECT_EQ(results.size(), (size_t)2);
+    EXPECT_EQ(results.size(), (size_t)3);
     // first
     std::shared_ptr<VPGEnumClass> element = results.at(0);
     EXPECT_EQ(element->GetName(), L"VCCObjectProperty");
     EXPECT_EQ(element->GetCommand(), L"Class Command");
-    EXPECT_EQ(element->GetProperties().size(), (size_t)4);
+    EXPECT_EQ(element->GetProperties().size(), 1UL);
     EXPECT_EQ(element->GetProperties().at(0)->GetEnum(), L"EnumA");
     EXPECT_EQ(element->GetProperties().at(0)->GetCommand(), L"Command A");
-    EXPECT_EQ(element->GetProperties().at(1)->GetEnum(), L"EnumB");
-    EXPECT_EQ(element->GetProperties().at(1)->GetCommand(), L"Command B");
-    EXPECT_EQ(element->GetProperties().at(2)->GetEnum(), L"EnumC");
-    EXPECT_EQ(element->GetProperties().at(2)->GetCommand(), L"");
-    EXPECT_EQ(element->GetProperties().at(3)->GetEnum(), L"EnumD");
-    EXPECT_EQ(element->GetProperties().at(3)->GetCommand(), L"Command D");
 
     // second
     element = results.at(1);
-    EXPECT_EQ(element->GetName(), L"VCCEnumProperty");
+    EXPECT_EQ(element->GetName(), L"VCCSingleLineProperty");
     EXPECT_EQ(element->GetCommand(), L"");
-    EXPECT_EQ(element->GetProperties().size(), (size_t)3);
+    EXPECT_EQ(element->GetProperties().size(), 3UL);
     EXPECT_EQ(element->GetProperties().at(0)->GetEnum(), L"EnumA");
     EXPECT_EQ(element->GetProperties().at(0)->GetCommand(), L"");
     EXPECT_EQ(element->GetProperties().at(1)->GetEnum(), L"EnumB");
     EXPECT_EQ(element->GetProperties().at(1)->GetCommand(), L"Command B");
     EXPECT_EQ(element->GetProperties().at(2)->GetEnum(), L"EnumC");
     EXPECT_EQ(element->GetProperties().at(2)->GetCommand(), L"");
+
+    // third
+    element = results.at(2);
+    EXPECT_EQ(element->GetName(), L"VCCMultiProperty");
+    EXPECT_EQ(element->GetCommand(), L"");
+    EXPECT_EQ(element->GetProperties().size(), 5UL);
+    EXPECT_EQ(element->GetProperties().at(0)->GetEnum(), L"EnumA");
+    EXPECT_EQ(element->GetProperties().at(0)->GetCommand(), L"");
+    EXPECT_EQ(element->GetProperties().at(1)->GetEnum(), L"EnumB");
+    EXPECT_EQ(element->GetProperties().at(1)->GetCommand(), L"Command B");
+    EXPECT_EQ(element->GetProperties().at(2)->GetEnum(), L"EnumC");
+    EXPECT_EQ(element->GetProperties().at(2)->GetCommand(), L"Command C");
+    EXPECT_EQ(element->GetProperties().at(3)->GetEnum(), L"EnumD");
+    EXPECT_EQ(element->GetProperties().at(3)->GetCommand(), L"Command D\r\nCommand E");
+    EXPECT_EQ(element->GetProperties().at(4)->GetEnum(), L"EnumE");
+    EXPECT_EQ(element->GetProperties().at(4)->GetCommand(), L"Command F\r\nCommand G");
 }
 
 TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
 {
-    std::wstring code = L"";
-    code += L"#pragma once\r\n";
-    code += L"\r\n";
-    code += L"#include <string>\r\n";
-    code += L"#include <vector>\r\n";
-    code += L"\r\n";
-    code += L"enum class VCCObjectProperty\r\n";
-    code += L"{\r\n";
-    code += L"    EnumA, // GET(EnumTypeA, EnumA, L\"Default\") CommandA\r\n";
-    code += L"    EnumB, // GET_SPTR(EnumTypeB, EnumB)\r\n";
-    code += L"    EnumC, // GET_SPTR(EnumTypeC, EnumC, ArgumentA, ArgumentB, ArgumentC)\r\n";
-    code += L"    EnumD, // Command D\r\n";
-    code += L"    EnumE\r\n";
-    code += L"};\r\n";
+    std::wstring code = L""
+        L"#pragma once\r\n"
+        L"\r\n"
+        L"#include <string>\r\n"
+        L"#include <vector>\r\n"
+        L"\r\n"
+        L"enum class VCCObjectProperty\r\n"
+        L"{\r\n"
+    // normal get set
+        L"    EnumA, // GET(EnumTypeA, EnumA, L\"Default\") CommandA\r\n"
+        L"    EnumB, // GET_SPTR(EnumTypeB, EnumB)\r\n"
+        L"    EnumC, // GET_SPTR(EnumTypeC, EnumC, ArgumentA, ArgumentB, ArgumentC)\r\n"
+    // command
+        L"    EnumD, // Command D\r\n"
+        L"    EnumE,\r\n"
+    // vector
+        L"    EnumVector, // VECTOR(int, Vector)\r\n"
+    // map
+        L"    EnumMap // MAP(int, std::wstring, Map) \r\n"
+        L"};\r\n";
 
     DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr);
     manager->GetClassMacroList(L"");
@@ -89,35 +111,54 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
     std::shared_ptr<VPGEnumClass> element = results.at(0);
     EXPECT_EQ(element->GetName(), L"VCCObjectProperty");
     EXPECT_EQ(element->GetCommand(), L"");
-    EXPECT_EQ(element->GetProperties().size(), (size_t)5);
+    EXPECT_EQ(element->GetProperties().size(), (size_t)7);
     EXPECT_EQ(element->GetProperties().at(0)->GetEnum(), L"EnumA");
     EXPECT_EQ(element->GetProperties().at(0)->GetMacro(), L"GET(EnumTypeA, EnumA, L\"Default\")");
-    EXPECT_EQ(element->GetProperties().at(0)->GetType(), L"EnumTypeA");
+    EXPECT_EQ(element->GetProperties().at(0)->GetType1(), L"EnumTypeA");
+    EXPECT_EQ(element->GetProperties().at(0)->GetType2(), L"");
     EXPECT_EQ(element->GetProperties().at(0)->GetPropertyName(), L"EnumA");
     EXPECT_EQ(element->GetProperties().at(0)->GetDefaultValue(), L"L\"Default\"");
     EXPECT_EQ(element->GetProperties().at(0)->GetCommand(), L"CommandA");
     EXPECT_EQ(element->GetProperties().at(1)->GetEnum(), L"EnumB");
     EXPECT_EQ(element->GetProperties().at(1)->GetMacro(), L"GET_SPTR(EnumTypeB, EnumB)");
-    EXPECT_EQ(element->GetProperties().at(1)->GetType(), L"EnumTypeB");
+    EXPECT_EQ(element->GetProperties().at(1)->GetType1(), L"EnumTypeB");
+    EXPECT_EQ(element->GetProperties().at(1)->GetType2(), L"");
     EXPECT_EQ(element->GetProperties().at(1)->GetPropertyName(), L"EnumB");
     EXPECT_EQ(element->GetProperties().at(1)->GetDefaultValue(), L"");
     EXPECT_EQ(element->GetProperties().at(1)->GetCommand(), L"");
     EXPECT_EQ(element->GetProperties().at(2)->GetEnum(), L"EnumC");
     EXPECT_EQ(element->GetProperties().at(2)->GetMacro(), L"GET_SPTR(EnumTypeC, EnumC, ArgumentA, ArgumentB, ArgumentC)");
-    EXPECT_EQ(element->GetProperties().at(2)->GetType(), L"EnumTypeC");
+    EXPECT_EQ(element->GetProperties().at(2)->GetType1(), L"EnumTypeC");
+    EXPECT_EQ(element->GetProperties().at(2)->GetType2(), L"");
     EXPECT_EQ(element->GetProperties().at(2)->GetPropertyName(), L"EnumC");
     EXPECT_EQ(element->GetProperties().at(2)->GetDefaultValue(), L"ArgumentA, ArgumentB, ArgumentC");
     EXPECT_EQ(element->GetProperties().at(2)->GetCommand(), L"");
     EXPECT_EQ(element->GetProperties().at(3)->GetEnum(), L"EnumD");
     EXPECT_EQ(element->GetProperties().at(3)->GetMacro(), L"");
-    EXPECT_EQ(element->GetProperties().at(3)->GetType(), L"");
+    EXPECT_EQ(element->GetProperties().at(3)->GetType1(), L"");
+    EXPECT_EQ(element->GetProperties().at(3)->GetType2(), L"");
     EXPECT_EQ(element->GetProperties().at(3)->GetPropertyName(), L"");
     EXPECT_EQ(element->GetProperties().at(3)->GetDefaultValue(), L"");
     EXPECT_EQ(element->GetProperties().at(3)->GetCommand(), L"Command D");
     EXPECT_EQ(element->GetProperties().at(4)->GetEnum(), L"EnumE");
     EXPECT_EQ(element->GetProperties().at(4)->GetMacro(), L"");
-    EXPECT_EQ(element->GetProperties().at(4)->GetType(), L"");
+    EXPECT_EQ(element->GetProperties().at(4)->GetType1(), L"");
+    EXPECT_EQ(element->GetProperties().at(4)->GetType2(), L"");
     EXPECT_EQ(element->GetProperties().at(4)->GetPropertyName(), L"");
     EXPECT_EQ(element->GetProperties().at(4)->GetDefaultValue(), L"");
     EXPECT_EQ(element->GetProperties().at(4)->GetCommand(), L"");
+    EXPECT_EQ(element->GetProperties().at(5)->GetEnum(), L"EnumVector");
+    EXPECT_EQ(element->GetProperties().at(5)->GetMacro(), L"VECTOR(int, Vector)");
+    EXPECT_EQ(element->GetProperties().at(5)->GetType1(), L"int");
+    EXPECT_EQ(element->GetProperties().at(5)->GetType2(), L"");
+    EXPECT_EQ(element->GetProperties().at(5)->GetPropertyName(), L"Vector");
+    EXPECT_EQ(element->GetProperties().at(5)->GetDefaultValue(), L"");
+    EXPECT_EQ(element->GetProperties().at(5)->GetCommand(), L"");
+    EXPECT_EQ(element->GetProperties().at(6)->GetEnum(), L"EnumMap");
+    EXPECT_EQ(element->GetProperties().at(6)->GetMacro(), L"MAP(int, std::wstring, Map)");
+    EXPECT_EQ(element->GetProperties().at(6)->GetType1(), L"int");
+    EXPECT_EQ(element->GetProperties().at(6)->GetType2(), L"std::wstring");
+    EXPECT_EQ(element->GetProperties().at(6)->GetPropertyName(), L"Map");
+    EXPECT_EQ(element->GetProperties().at(6)->GetDefaultValue(), L"");
+    EXPECT_EQ(element->GetProperties().at(6)->GetCommand(), L"");
 }

@@ -68,7 +68,7 @@ void VPGObjectFileGenerationService::Generate(const LogProperty *logProperty, co
                 // handle enum without macro case
                 if (property->GetMacro().empty())
                     continue;
-                std::wstring type = property->GetType();
+                std::wstring type = property->GetType1();
                 if (std::iswupper(type[0])) {
                     if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
 
@@ -82,10 +82,33 @@ void VPGObjectFileGenerationService::Generate(const LogProperty *logProperty, co
                         if (!includeFile.empty())
                             projectFileList.insert(L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, includeFile));
                         else
-                            abstractClassList.insert(L"enum class " + property->GetType() + L";");
+                            abstractClassList.insert(L"enum class " + type + L";");
                     }
                 } else {
                     // TODO: need to enable to check all systemn function
+                    // system type
+                    if (CountSubstring(type, L"string") > 0)
+                        systemFileList.insert(L"#include <string>");
+                }
+
+                type = property->GetType2();
+                if (!type.empty() && std::iswupper(type[0])) {
+                    if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
+
+                        std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, classFilesByEnumClass, type);
+                        if (!includeFile.empty())
+                            projectFileList.insert(L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, includeFile));
+                        else
+                            abstractClassList.insert(L"class " + type + L";");
+                    } else {
+                        std::wstring includeFile = VPGObjectFileGenerationService::GetProjectEnumClassIncludeFile(projectClassIncludeFiles, enumClassFilesByEnumClass, type);
+                        if (!includeFile.empty())
+                            projectFileList.insert(L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, includeFile));
+                        else
+                            abstractClassList.insert(L"enum class " + type + L";");
+                    }
+                } else {
+                    // only suuport string
                     // system type
                     if (CountSubstring(type, L"string") > 0)
                         systemFileList.insert(L"#include <string>");
@@ -134,7 +157,8 @@ void VPGObjectFileGenerationService::Generate(const LogProperty *logProperty, co
                 // handle enum without macro case
                 if (property->GetMacro().empty())
                     continue;
-                if (std::iswupper(property->GetType()[0])) {
+                if ((!property->GetType1().empty() && std::iswupper(property->GetType1()[0])) 
+                    || (!property->GetType2().empty() && std::iswupper(property->GetType2()[0]))) {
                     if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
                         isPtrExists = true;
                         break;
@@ -149,7 +173,8 @@ void VPGObjectFileGenerationService::Generate(const LogProperty *logProperty, co
                     // handle enum without macro case
                     if (property->GetMacro().empty())
                         continue;
-                    if (std::iswupper(property->GetType()[0])) {
+                    if ((!property->GetType1().empty() && std::iswupper(property->GetType1()[0])) 
+                        || (!property->GetType2().empty() && std::iswupper(property->GetType2()[0]))) {
                         if (Find(property->GetMacro(), L"SPTR") != std::wstring::npos) {
                             content += INDENT + INDENT + INDENT + L"obj->Clone" + property->GetPropertyName() + L"(this->_" + property->GetPropertyName() + L");\r\n";
                         }

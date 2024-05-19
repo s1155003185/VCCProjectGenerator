@@ -14,7 +14,8 @@ class VPGEnumClassProperty : public BaseObject<VPGEnumClassProperty>
     friend class VPGEnumClassReader;
     GETSET(std::wstring, Enum, L"");
     GETSET(std::wstring, Macro, L"");
-    GETSET(std::wstring, Type, L"");
+    GETSET(std::wstring, Type1, L"");
+    GETSET(std::wstring, Type2, L"");
     GETSET(std::wstring, PropertyName, L"");
     GETSET(std::wstring, DefaultValue, L"");
     GETSET(std::wstring, Command, L"");

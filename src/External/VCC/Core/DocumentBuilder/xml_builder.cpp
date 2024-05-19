@@ -70,7 +70,7 @@ namespace vcc
             } else if (xmlData[pos] == L'>') {
                 return true;
             }else if (std::iswspace(xmlData[pos])) {
-                GetNextCharacterPos(xmlData, pos, false);
+                GetNextCharPos(xmlData, pos, false);
                 return IsNextCharTagEnd(xmlData, pos);
             }
         CATCH
@@ -176,7 +176,7 @@ namespace vcc
     void XmlBuilder::RemoveXMLTagTail(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
     {
         TRY
-            GetNextCharacterPos(xmlData, pos, true);
+            GetNextCharPos(xmlData, pos, true);
             std::wstring endTag = L"</" + element->_Name + L">";
             if (!xmlData.substr(pos).starts_with(endTag))
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(xmlData, pos, L"end tab " + endTag + L" missing"));
@@ -195,7 +195,7 @@ namespace vcc
             // remove xml header
             while (IsXMLHeader(xmlData, pos)) {
                 ParseXMLHeader(xmlData, pos);
-                GetNextCharacterPos(xmlData, pos, false);
+                GetNextCharPos(xmlData, pos, false);
             }
             // content
             if (!ParseXMLTagHeader(xmlData, pos, element))
@@ -237,7 +237,7 @@ namespace vcc
                     pos = endPos;
                     break;
                 }
-                GetNextCharacterPos(xmlData, pos, false);
+                GetNextCharPos(xmlData, pos, false);
             }
             element->_FullText = pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos);
         CATCH

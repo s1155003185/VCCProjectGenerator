@@ -89,7 +89,7 @@ namespace vcc
     {
         size_t startPos = pos;
         try {
-            GetNextCharacterPos(str, pos, true);
+            GetNextCharPos(str, pos, true);
             if (HasPrefix(str, nullStr, pos)) {
                 doc->SetJsonInternalType(JsonInternalType::Null);
                 pos += nullStr.length() - 1;
@@ -118,17 +118,17 @@ namespace vcc
                 doc->InsertJsonInternalArray(jsonObj);
             } else if (str[pos] == L'['){
                 doc->SetJsonInternalType(JsonInternalType::Array);
-                GetNextCharacterPos(str, pos, false);
+                GetNextCharPos(str, pos, false);
                 if (str[pos] != L']') {
                     while (pos < str.length()) {
                         DECLARE_SPTR(Json, obj);
                         ParseJsonObject(str, pos, obj);
                         doc->InsertJsonInternalArray(obj);
-                        GetNextCharacterPos(str, pos, false);
+                        GetNextCharPos(str, pos, false);
                         if (str[pos] == L']')
                             break;
                         else if (str[pos] == L',')
-                            GetNextCharacterPos(str, pos, false);
+                            GetNextCharPos(str, pos, false);
                         else
                             THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(str, pos, L"Array elements not end with , or ]"));
                     }
@@ -159,10 +159,10 @@ namespace vcc
         TRY
             std::shared_ptr<Json> jsonObj = std::dynamic_pointer_cast<Json>(doc);
             assert(jsonObj != nullptr);
-            GetNextCharacterPos(str, pos, true);
+            GetNextCharPos(str, pos, true);
             if (str[pos] != L'{')
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(str, pos, L"Json Object not start with {"));
-            GetNextCharacterPos(str, pos, false);
+            GetNextCharPos(str, pos, false);
             while (pos < str.length())
             {
                 // name
@@ -173,10 +173,10 @@ namespace vcc
                 } else if (name.starts_with(L"\'")) {
                     name = GetUnescapeStringWithQuote(EscapeStringType::SingleQuote, name);
                 }
-                GetNextCharacterPos(str, pos, false);
+                GetNextCharPos(str, pos, false);
                 if (str[pos] != L':')
                     THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(str, pos, L"Json Object name " + name + L" not followed by :"));
-                GetNextCharacterPos(str, pos, false);
+                GetNextCharPos(str, pos, false);
 
                 // value
                 DECLARE_SPTR(Json, obj);
@@ -184,10 +184,10 @@ namespace vcc
                 jsonObj->SetJsonInternalType(JsonInternalType::Json);
                 jsonObj->InsertJsonInternalNameValuePairs(name, obj);
 
-                GetNextCharacterPos(str, pos, false);
+                GetNextCharPos(str, pos, false);
                 if (str[pos] != L',')
                     break;
-                GetNextCharacterPos(str, pos, false);
+                GetNextCharPos(str, pos, false);
             }
         CATCH
     }

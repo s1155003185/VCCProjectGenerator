@@ -49,7 +49,7 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
     TRY
         size_t pos = 0;
         bool isNamespaceTriggered = false;
-        GetNextCharacterPos(cppCode, pos, true);
+        GetNextCharPos(cppCode, pos, true);
         while (pos < cppCode.length()) {
             size_t commandIndex = IsCommand(cppCode, pos);
             if (commandIndex != std::wstring::npos) {
@@ -80,10 +80,10 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
                             isNamespaceTriggered = true;
                         } else {
                             if (nextToken == L"class") {
-                                GetNextCharacterPos(cppCode, pos, false);
+                                GetNextCharPos(cppCode, pos, false);
                                 nextToken = GetNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
                                 Trim(nextToken);
-                                GetNextCharacterPos(cppCode, pos, false);
+                                GetNextCharPos(cppCode, pos, false);
                                 // check if it is :
                                 if (cppCode[pos] == L';')
                                     continue;
@@ -94,17 +94,17 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
                                 if (!GetNextQuotedString(cppCode, pos, { L";" }).empty())
                                     classList.insert((!currentNamespace.empty() ? (currentNamespace + L"::") : L"") + nextToken);
                             } else if (nextToken == L"typedef") {
-                                GetNextCharacterPos(cppCode, pos, false);
+                                GetNextCharPos(cppCode, pos, false);
                                 GetNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
-                                GetNextCharacterPos(cppCode, pos, false);
+                                GetNextCharPos(cppCode, pos, false);
                                 nextToken = GetNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
                                 Trim(nextToken);
                                 classList.insert((!currentNamespace.empty() ? (currentNamespace + L"::") : L"") + nextToken);
                             } else if (nextToken == L"using") {
-                                GetNextCharacterPos(cppCode, pos, false);
+                                GetNextCharPos(cppCode, pos, false);
                                 nextToken = GetNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
                                 Trim(nextToken);
-                                GetNextCharacterPos(cppCode, pos, false);
+                                GetNextCharPos(cppCode, pos, false);
                                 // check if it is :
                                 if (cppCode[pos] == L';')
                                     continue;
@@ -117,7 +117,7 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
                     }
                 }
             }
-            GetNextCharacterPos(cppCode, pos, false);
+            GetNextCharPos(cppCode, pos, false);
         }
     CATCH
 }

@@ -65,19 +65,20 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
     DECLARE_SPTR(VPGEnumClassProperty, enumClassPropertyA);
     enumClassPropertyA->SetEnum(L"EnumA");
     enumClassPropertyA->SetMacro(L"GETSET(std::wstring, EnumA, L\"\")");
-    enumClassPropertyA->SetType(L"std::wstring");
+    enumClassPropertyA->SetType1(L"std::wstring");
+    enumClassPropertyA->SetType2(L"");
     enumClassPropertyA->SetPropertyName(L"EnumA");
     enumClassPropertyA->SetDefaultValue(L"");
     enumClass->InsertProperties(enumClassPropertyA);
 
-    // TODO: check map
-    // DECLARE_SPTR(VPGEnumClassProperty, enumClassPropertyB);
-    // enumClassPropertyB->SetEnum(L"EnumB");
-    // enumClassPropertyB->SetMacro(L"Map(int, std::wstring, EnumB)");
-    // enumClassPropertyB->SetType(L"int");
-    // enumClassPropertyB->SetPropertyName(L"EnumB");
-    // enumClassPropertyB->SetDefaultValue(L"");
-    // enumClass->InsertProperties(enumClassPropertyB);
+    DECLARE_SPTR(VPGEnumClassProperty, enumClassPropertyB);
+    enumClassPropertyB->SetEnum(L"EnumB");
+    enumClassPropertyB->SetMacro(L"MAP(int, std::wstring, EnumB)");
+    enumClassPropertyB->SetType1(L"int");
+    enumClassPropertyB->SetType2(L"std::wstring");
+    enumClassPropertyB->SetPropertyName(L"EnumB");
+    enumClassPropertyB->SetDefaultValue(L"");
+    enumClass->InsertProperties(enumClassPropertyB);
 
     enumClassList.push_back(enumClass);
     VPGObjectFileGenerationService::Generate(this->GetLogProperty().get(), classPrefix,
@@ -100,6 +101,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
         L"class VPGObject : public BaseObject<VPGObject>\r\n"
         L"{\r\n"
         L"    GETSET(std::wstring, EnumA, L\"\")\r\n"
+        L"    MAP(int, std::wstring, EnumB)\r\n"
         L"\r\n"
         L"    public:\r\n"
         L"        VPGObject() : BaseObject(ObjectType::Object) {}\r\n"
@@ -110,63 +112,74 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
 
 TEST_F(VPGObjectFileGenerationServiceTest, Object)
 {
-    // std::wstring classPrefix = L"";
-    // std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    // std::map<std::wstring, std::wstring> classFilesByEnumClass;
-    // std::map<std::wstring, std::wstring> enumClassFilesByEnumClass;
-    // std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    std::wstring classPrefix = L"VPG";
+    std::map<std::wstring, std::wstring> projectClassIncludeFiles;
+    std::map<std::wstring, std::wstring> classFilesByEnumClass;
+    std::map<std::wstring, std::wstring> enumClassFilesByEnumClass;
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
 
-    // projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
-    // classFilesByEnumClass.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
-    // enumClassFilesByEnumClass.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
+    classFilesByEnumClass.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
+    enumClassFilesByEnumClass.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
 
-    // DECLARE_SPTR(VPGEnumClass, enumClass);
-    // enumClass->SetName(L"VPGObjectProperty");
+    DECLARE_SPTR(VPGEnumClass, enumClass);
+    enumClass->SetName(L"VPGObjectProperty");
 
-    // DECLARE_SPTR(VPGEnumClassProperty, enumClassPropertyA);
-    // enumClassPropertyA->SetEnum(L"EnumA");
-    // enumClassPropertyA->SetMacro(L"GETSET(std::wstring, EnumA, L\"\")");
-    // enumClassPropertyA->SetType(L"std::wstring");
-    // enumClassPropertyA->SetPropertyName(L"EnumA");
-    // enumClassPropertyA->SetDefaultValue(L"");
-    // enumClass->InsertProperties(enumClassPropertyA);
+    DECLARE_SPTR(VPGEnumClassProperty, enumClassPropertyA);
+    enumClassPropertyA->SetEnum(L"EnumA");
+    enumClassPropertyA->SetMacro(L"GETSET_SPTR(VPGClassA, EnumA)");
+    enumClassPropertyA->SetType1(L"VPGClassA");
+    enumClassPropertyA->SetType2(L"");
+    enumClassPropertyA->SetPropertyName(L"EnumA");
+    enumClassPropertyA->SetDefaultValue(L"");
+    enumClass->InsertProperties(enumClassPropertyA);
 
-    // // TODO: check map
-    // // DECLARE_SPTR(VPGEnumClassProperty, enumClassPropertyB);
-    // // enumClassPropertyB->SetEnum(L"EnumB");
-    // // enumClassPropertyB->SetMacro(L"Map(int, std::wstring, EnumB)");
-    // // enumClassPropertyB->SetType(L"int");
-    // // enumClassPropertyB->SetPropertyName(L"EnumB");
-    // // enumClassPropertyB->SetDefaultValue(L"");
-    // // enumClass->InsertProperties(enumClassPropertyB);
+    DECLARE_SPTR(VPGEnumClassProperty, enumClassPropertyB);
+    enumClassPropertyB->SetEnum(L"EnumB");
+    enumClassPropertyB->SetMacro(L"MAP_SPTR_R(std::wstring, VPGClassB, EnumB)");
+    enumClassPropertyB->SetType1(L"std::wstring");
+    enumClassPropertyB->SetType2(L"VPGClassB");
+    enumClassPropertyB->SetPropertyName(L"EnumB");
+    enumClassPropertyB->SetDefaultValue(L"");
+    enumClass->InsertProperties(enumClassPropertyB);
 
-    // enumClassList.push_back(enumClass);
-    // VPGObjectFileGenerationService::Generate(this->GetLogProperty().get(), classPrefix,
-    //     projectClassIncludeFiles, classFilesByEnumClass, enumClassFilesByEnumClass,
-    //     this->GetFilePathHpp(), enumClassList);
-    // EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
+    enumClassList.push_back(enumClass);
+    VPGObjectFileGenerationService::Generate(this->GetLogProperty().get(), classPrefix,
+        projectClassIncludeFiles, classFilesByEnumClass, enumClassFilesByEnumClass,
+        this->GetFilePathHpp(), enumClassList);
+    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
 
-    // std::wstring content = ReadFile(this->GetFilePathHpp());
-    // std::wstring exptectedResult = L""
-    //     L"#pragma once\r\n"
-    //     L"\r\n"
-    //     L"#include <string>\r\n"
-    //     L"\r\n"
-    //     L"#include \"base_object.hpp\"\r\n"
-    //     L"#include \"class_macro.hpp\"\r\n"
-    //     L"#include \"object_type.hpp\"\r\n"
-    //     L"\r\n"
-    //     L"using namespace vcc;\r\n"
-    //     L"\r\n"
-    //     L"class VPGObject : public BaseObject<VPGObject>\r\n"
-    //     L"{\r\n"
-    //     L"    GETSET(std::wstring, EnumA, L\"\")\r\n"
-    //     L"\r\n"
-    //     L"    public:\r\n"
-    //     L"        VPGObject() : BaseObject(ObjectType::VPGObject) {}\r\n"
-    //     L"        virtual ~VPGObject() {}\r\n"
-    //     L"};\r\n";
-    // EXPECT_EQ(content, exptectedResult);
+    std::wstring content = ReadFile(this->GetFilePathHpp());
+    std::wstring exptectedResult = L""
+        L"#pragma once\r\n"
+        L"\r\n"
+        L"#include <string>\r\n"
+        L"\r\n"
+        L"#include \"base_object.hpp\"\r\n"
+        L"#include \"class_macro.hpp\"\r\n"
+        L"#include \"object_type.hpp\"\r\n"
+        L"#include \"vpg_class_a.hpp\"\r\n"
+        L"#include \"vpg_class_b.hpp\"\r\n"
+        L"\r\n"
+        L"using namespace vcc;\r\n"
+        L"\r\n"
+        L"class VPGObject : public BaseObject<VPGObject>\r\n"
+        L"{\r\n"
+        L"    GETSET_SPTR(VPGClassA, EnumA)\r\n"
+        L"    MAP_SPTR_R(std::wstring, VPGClassB, EnumB)\r\n"
+        L"\r\n"
+        L"    public:\r\n"
+        L"        VPGObject() : BaseObject(ObjectType::Object) {}\r\n"
+        L"        virtual ~VPGObject() {}\r\n"
+        L"\r\n"
+        L"        virtual std::shared_ptr<IObject> Clone() const override {\r\n"
+        L"            std::shared_ptr<VPGObject> obj = std::make_shared<VPGObject>(*this);\r\n"
+        L"            obj->CloneEnumA(this->_EnumA);\r\n"
+        L"            obj->CloneEnumB(this->_EnumB);\r\n"
+        L"            return obj;\r\n"
+        L"        }\r\n"
+        L"};\r\n";
+    EXPECT_EQ(content, exptectedResult);
 }
 
 TEST_F(VPGObjectFileGenerationServiceTest, Multi)
@@ -183,29 +196,26 @@ TEST_F(VPGObjectFileGenerationServiceTest, Multi)
 
     DECLARE_SPTR(VPGEnumClass, enumClassA);
     enumClassA->SetName(L"VPGObjectAProperty");
-
     DECLARE_SPTR(VPGEnumClassProperty, enumClassPropertyA);
     enumClassPropertyA->SetEnum(L"EnumA");
     enumClassPropertyA->SetMacro(L"GETSET(std::wstring, EnumA, L\"\")");
-    enumClassPropertyA->SetType(L"std::wstring");
+    enumClassPropertyA->SetType1(L"std::wstring");
+    enumClassPropertyA->SetType2(L"");
     enumClassPropertyA->SetPropertyName(L"EnumA");
     enumClassPropertyA->SetDefaultValue(L"");
     enumClassA->InsertProperties(enumClassPropertyA);
-
     enumClassList.push_back(enumClassA);
-
 
     DECLARE_SPTR(VPGEnumClass, enumClassB);
     enumClassB->SetName(L"VPGObjectBProperty");
-
     DECLARE_SPTR(VPGEnumClassProperty, enumClassPropertyB);
     enumClassPropertyB->SetEnum(L"EnumA");
     enumClassPropertyB->SetMacro(L"GETSET(std::wstring, EnumA, L\"\")");
-    enumClassPropertyB->SetType(L"std::wstring");
+    enumClassPropertyB->SetType1(L"std::wstring");
+    enumClassPropertyB->SetType2(L"std::wstring");
     enumClassPropertyB->SetPropertyName(L"EnumA");
     enumClassPropertyB->SetDefaultValue(L"");
     enumClassB->InsertProperties(enumClassPropertyB);
-
     enumClassList.push_back(enumClassB);
     
     VPGObjectFileGenerationService::Generate(this->GetLogProperty().get(), classPrefix,

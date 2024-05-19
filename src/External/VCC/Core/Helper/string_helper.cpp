@@ -390,7 +390,7 @@ namespace vcc
 		CATCH
 	}
 
-	void GetNextCharacterPos(const std::wstring &str, size_t &pos, bool fromCurrentPos)
+	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos)
 	{
 		if (!fromCurrentPos)
 			pos++;
@@ -421,7 +421,7 @@ namespace vcc
 			pos = str.length() - 1;
 			return result;
 		}
-		GetNextCharacterPos(str, pos, true);
+		GetNextCharPos(str, pos, true);
 		std::wstring result = L"";
 		try
 		{
@@ -488,7 +488,7 @@ namespace vcc
 			return str;
 		if (pos >= str.length())
 			return L"";
-		GetNextCharacterPos(str, pos, true);
+		GetNextCharPos(str, pos, true);
 		std::wstring result = L"";
 		try
 		{
@@ -518,6 +518,8 @@ namespace vcc
 						if (!closeQuote.empty() && HasPrefix(str, closeQuote, pos)) {
 							pos += closeQuote.length();
 							quotes.pop_back();
+							if (quotes.empty())
+								break;
 							continue;
 						}
 					}
