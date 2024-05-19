@@ -13,6 +13,7 @@
 #include "vpg_cpp_helper.hpp"
 #include "vpg_enum_class_reader.hpp"
 #include "vpg_include_path_service.hpp"
+#include "vpg_object_type_file_generation_service.hpp"
 
 const std::wstring classMacroFilePath = L"include/External/VCC/Core/Macro/class_macro.hpp";
 const std::wstring logId = L"File Generation";
@@ -145,23 +146,6 @@ bool VPGFileGenerationManager::IsClassEnum(const std::wstring &enumClassName, co
             && (IsBlank(projectPrefix) || enumClassName.starts_with(projectPrefix));
     CATCH
     return false;
-}
-
-void VPGFileGenerationManager::GenerateObjectTypeFile(const LogProperty *logProperty, const std::wstring &hppFilePath, const std::vector<std::wstring> &propertyTypeList)
-{
-    TRY
-        LogService::LogInfo(logProperty, logId, L"Generate object type file: " + hppFilePath);
-        std::wstring content = L"#pragma once\r\n";
-        content += L"\r\n";
-        content += L"enum class ObjectType {\r\n";
-        content += INDENT + L"NA" + (!propertyTypeList.empty() ? L"," : L"") + L"\r\n";
-        for (size_t i = 0; i < propertyTypeList.size(); i++) {
-            content += INDENT + propertyTypeList.at(i) + (i < propertyTypeList.size() - 1 ? L"," : L"") + L"\r\n";
-        }
-        content += L"};\r\n";
-        WriteFile(hppFilePath, content, true);
-        LogService::LogInfo(logProperty, logId, L"Generate object type file completed.");
-    CATCH
 }
 
 void VPGFileGenerationManager::GeneratePropertyClassFile(const LogProperty *logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
@@ -309,7 +293,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
         ToLower(filePrefix);
 
         LogService::LogInfo(logProperty, logId, L"Generate property start.");
-        std::vector<std::wstring> objectTypeList;
+        std::set<std::wstring> objectTypes;
         for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(typeWorkspaceFullPath))) {
             std::wstring path = GetLinuxPath(filePath.path().wstring());
             std::wstring fileName = filePath.path().filename().wstring();
@@ -344,7 +328,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
                 }
                 std::wstring classNameWithoutPrefix = enumClass->GetName().substr(!projPrefix.empty() ? projPrefix.size() : 0);
                 classNameWithoutPrefix = GetClassNameFromEnumClassName(classNameWithoutPrefix);
-                objectTypeList.push_back(GetClassNameFromEnumClassName(classNameWithoutPrefix));
+                objectTypes.insert(GetClassNameFromEnumClassName(classNameWithoutPrefix));
             
                 // ------------------------------------------------------------------------------------------ //
                 //                               Generate Object Class File                                   //
@@ -372,7 +356,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
         // ------------------------------------------------------------------------------------------ //
         //                               Generate Object Type File                                    //
         // ------------------------------------------------------------------------------------------ //
-        VPGFileGenerationManager::GenerateObjectTypeFile(logProperty, ConcatPaths({projWorkspace, objTypeDirectoryHpp, objectTypeHppFileName}), objectTypeList);
+        VPGObjectTypeFileGenerationSerive::Generate(logProperty, ConcatPaths({projWorkspace, objTypeDirectoryHpp, objectTypeHppFileName}), objectTypes);
 
         LogService::LogInfo(logProperty, logId, L"Generate Property Finished.");
     CATCH
