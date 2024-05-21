@@ -34,7 +34,7 @@ void VPGCodeReader::ParseXml(const std::wstring &xmlData, size_t &pos, std::shar
     TRY
         size_t startPos = pos;
         while (pos < dataLength) {
-            if (HasPrefix(xmlData, this->_CommandDelimiter, pos) && HasPrefixTrimSpace(xmlData, this->_CommandDelimiter + L"<vcc:", pos)) {
+            if (IsStartWith(xmlData, this->_CommandDelimiter, pos) && IsStartWithTrimSpace(xmlData, this->_CommandDelimiter + L"<vcc:", pos)) {
                 if (pos > 0) {
                     pos--;
                     DECLARE_SPTR(Xml, previous);

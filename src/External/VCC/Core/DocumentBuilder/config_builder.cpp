@@ -45,7 +45,7 @@ namespace vcc
 
                 if (line.empty())
                     configObj->AddLine();
-                else if (HasPrefix(line, L"#"))
+                else if (IsStartWith(line, L"#"))
                     configObj->AddCommand(line);
                 else {
                     size_t eqPos = Find(line, L"=");

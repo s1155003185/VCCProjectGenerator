@@ -67,7 +67,7 @@ namespace vcc
 		return true;
 	}
 	
-	bool HasPrefix(const std::wstring &str, const std::wstring &prefix, const size_t &pos)
+	bool IsStartWith(const std::wstring &str, const std::wstring &prefix, const size_t &pos)
 	{
 		TRY
 		 	if (str.length() - pos < prefix.size())
@@ -84,11 +84,11 @@ namespace vcc
 		return false;
 	}
 	
-	bool HasPrefix(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &pos)
+	bool IsStartWith(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &pos)
 	{
 		bool result = false;
 		for (auto const &prefix : prefixes) {
-			if (HasPrefix(str, prefix, pos)) {
+			if (IsStartWith(str, prefix, pos)) {
 				result = true;
 				break;
 			}
@@ -96,7 +96,7 @@ namespace vcc
 		return result;
 	}
 
-	bool HasPrefixTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &pos)
+	bool IsStartWithTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &pos)
 	{
 		std::wstring trimPrefix = std::wstring(prefix);
 		Trim(trimPrefix);
@@ -131,7 +131,7 @@ namespace vcc
 		return result;
 	}
 
-	bool HasSuffix(const std::wstring &str, const std::wstring &suffix)
+	bool IsEndWith(const std::wstring &str, const std::wstring &suffix)
 	{
 		return str.ends_with(suffix);
 	}
@@ -152,13 +152,13 @@ namespace vcc
 			size_t pos = 0;
 			std::wstring currentStr = L"";
 			while (pos < str.length()) {
-				if (quotes.empty() && HasPrefix(str, delimiters, pos)) {
+				if (quotes.empty() && IsStartWith(str, delimiters, pos)) {
 					results.push_back(currentStr);
 					currentStr = L"";
 
 					std::wstring currentDelimiter = L"";
 					for (auto const &delimiter : delimiters) {
-						if (HasPrefix(str, delimiter, pos)) {
+						if (IsStartWith(str, delimiter, pos)) {
 							currentDelimiter = delimiter;
 							break;
 						}
@@ -172,7 +172,7 @@ namespace vcc
 					if (!quotes.empty()) {
 						if (!quoteEscapeList.empty()) {
 							std::wstring escapeChar = quoteEscapeList[quotes[quotes.size() - 1]];
-							if (!escapeChar.empty() && HasPrefix(str, escapeChar, pos)) {
+							if (!escapeChar.empty() && IsStartWith(str, escapeChar, pos)) {
 								pos += escapeChar.length();
 								currentStr += escapeChar + str[pos];
 								pos++; // for escaped char
@@ -180,7 +180,7 @@ namespace vcc
 							}
 						}
 						std::wstring closeQuote = quoteCloseList[quotes[quotes.size() - 1]];
-						if (!closeQuote.empty() && HasPrefix(str, closeQuote, pos)) {
+						if (!closeQuote.empty() && IsStartWith(str, closeQuote, pos)) {
 							pos += closeQuote.length();
 							currentStr += closeQuote;
 							quotes.pop_back();
@@ -190,7 +190,7 @@ namespace vcc
 					std::wstring currentQuoteOpen = L"";
 					for (size_t i = 0; i < quoteOpenList.size(); i++) {
 						std::wstring quoteOpen = quoteOpenList[i];
-						if (HasPrefix(str, quoteOpen, pos)) {
+						if (IsStartWith(str, quoteOpen, pos)) {
 							currentQuoteOpen = quoteOpen;
 							quotes.push_back(i);
 							break;
@@ -363,7 +363,7 @@ namespace vcc
 					return std::wstring::npos;
 				
 				// for (size_t i = pos; i < str.length(); i++) {
-				// 	if (HasPrefix(str, subStr, i))
+				// 	if (IsStartWith(str, subStr, i))
 				// 		return i;
 				// }
 				return str.find(subStr, pos);
@@ -431,7 +431,7 @@ namespace vcc
 			size_t startPos = pos;
 			std::vector<size_t> quotes;
 			while (pos < str.length()) {
-				if (quotes.empty() && HasPrefix(str, delimiters, pos)) {
+				if (quotes.empty() && IsStartWith(str, delimiters, pos)) {
 					break;
 				} else {
 					// 1. if have quotes, check if it is escape chars
@@ -441,14 +441,14 @@ namespace vcc
 					if (!quotes.empty()) {
 						if (!quoteEscapeList.empty()) {
 							std::wstring escapeChar = quoteEscapeList[quotes[quotes.size() - 1]];
-							if (!escapeChar.empty() && HasPrefix(str, escapeChar, pos)) {
+							if (!escapeChar.empty() && IsStartWith(str, escapeChar, pos)) {
 								pos += escapeChar.length();
 								pos++; // for escaped char
 								continue;
 							}
 						}
 						std::wstring closeQuote = quoteCloseList[quotes[quotes.size() - 1]];
-						if (!closeQuote.empty() && HasPrefix(str, closeQuote, pos)) {
+						if (!closeQuote.empty() && IsStartWith(str, closeQuote, pos)) {
 							pos += closeQuote.length();
 							quotes.pop_back();
 							continue;
@@ -457,7 +457,7 @@ namespace vcc
 					std::wstring currentQuoteOpen = L"";
 					for (size_t i = 0; i < quoteOpenList.size(); i++) {
 						std::wstring quoteOpen = quoteOpenList[i];
-						if (HasPrefix(str, quoteOpen, pos)) {
+						if (IsStartWith(str, quoteOpen, pos)) {
 							currentQuoteOpen = quoteOpen;
 							quotes.push_back(i);
 							break;
@@ -496,7 +496,7 @@ namespace vcc
 				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Quote Open, Close, Escape List having different size.");
 
 			size_t startPos = pos;
-			if (HasPrefix(str, quoteOpenList, pos)) {
+			if (IsStartWith(str, quoteOpenList, pos)) {
 				std::vector<size_t> quotes;
 				while (pos < str.length()) {
 					// first pos must be open quote
@@ -508,14 +508,14 @@ namespace vcc
 					if (!quotes.empty()) {
 						if (!quoteEscapeList.empty()) {
 							std::wstring escapeChar = quoteEscapeList[quotes[quotes.size() - 1]];
-							if (!escapeChar.empty() && HasPrefix(str, escapeChar, pos)) {
+							if (!escapeChar.empty() && IsStartWith(str, escapeChar, pos)) {
 								pos += escapeChar.length();
 								pos++; // for escaped char
 								continue;
 							}
 						}
 						std::wstring closeQuote = quoteCloseList[quotes[quotes.size() - 1]];
-						if (!closeQuote.empty() && HasPrefix(str, closeQuote, pos)) {
+						if (!closeQuote.empty() && IsStartWith(str, closeQuote, pos)) {
 							pos += closeQuote.length();
 							quotes.pop_back();
 							if (quotes.empty())
@@ -526,7 +526,7 @@ namespace vcc
 					std::wstring currentQuoteOpen = L"";
 					for (size_t i = 0; i < quoteOpenList.size(); i++) {
 						std::wstring quoteOpen = quoteOpenList[i];
-						if (HasPrefix(str, quoteOpen, pos)) {
+						if (IsStartWith(str, quoteOpen, pos)) {
 							currentQuoteOpen = quoteOpen;
 							quotes.push_back(i);
 							break;
@@ -542,7 +542,7 @@ namespace vcc
 			} else {
 				// check if string is quoted. If not, return string end with special char
 				while (pos < str.length()) {
-					if (HasPrefix(str, delimiters, pos))
+					if (IsStartWith(str, delimiters, pos))
 						break;
 					pos++;
 				}
@@ -577,7 +577,12 @@ namespace vcc
 
     void Replace(std::wstring &str, const std::wstring& from, const std::wstring &to)
     {
-        str.replace(Find(str, from), from.length(), to);
+		TRY
+			size_t pos = Find(str, from);
+			if (pos == std::wstring::npos)
+				return;
+			str.replace(pos, from.length(), to);
+		CATCH
     }
 	
 	void ReplaceRegex(std::wstring &str, const std::wstring &regex, const std::wstring &replacement)

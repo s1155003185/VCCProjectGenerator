@@ -10,7 +10,7 @@ size_t VPGIncludePathReader::IsQuote(const std::wstring &cppCode, const size_t &
     TRY
         size_t index = 0;
         for (auto const &quote : _OpenQuotes) {
-            if (HasPrefix(cppCode, quote, pos))
+            if (IsStartWith(cppCode, quote, pos))
                 return index;
             index++;
         }
@@ -23,7 +23,7 @@ size_t VPGIncludePathReader::IsCommand(const std::wstring &cppCode, const size_t
     TRY
         size_t index = 0;
         for (auto const &quote : _OpenCommands) {
-            if (HasPrefix(cppCode, quote, pos))
+            if (IsStartWith(cppCode, quote, pos))
                 return index;
             index++;
         }

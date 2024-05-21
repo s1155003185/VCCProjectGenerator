@@ -346,7 +346,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     codeA += L"    EnumA, // Nothing\r\n";
     codeA += L"    EnumB, // GETSET(std::wstring, EnumB, L\"Default\") \r\n";
     codeA += L"    EnumC, // GET(int64_t, EnumC, 0) \r\n";
-    codeA += L"    EnumD  // VECTOR(EnumClass, EnumD) \r\n";
+    codeA += L"    EnumD  // VECTOR(ExceptionType, EnumD) \r\n";
     codeA += L"};\r\n";
     codeA += L"\r\n";
     AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_a_property.hpp"}), codeA, true);
@@ -383,7 +383,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_b.hpp"})));
 
     if (this->GetIsCopyDebugFolderToTestFolder()) {
-        std::wstring path = ConcatPaths({this->GetTestFolder(), L"include/Type/ClassA", L"Generate"});
+        std::wstring path = ConcatPaths({this->GetTestFolder(), L"Generate"});
         RemoveDirectory(path);
         CopyDirectory(this->GetWorkspaceTarget(), path);
     }

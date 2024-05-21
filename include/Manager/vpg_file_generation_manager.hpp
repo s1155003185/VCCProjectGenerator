@@ -18,8 +18,7 @@ class VPGEnumClass;
 class VPGFileGenerationManager : public BaseManager<VPGFileGenerationManager>
 {
     SET(std::wstring, ClassMacros);
-    MAP(std::wstring, std::wstring, ClassFiles);
-    MAP(std::wstring, std::wstring, EnumClassFiles);
+    MAP(std::wstring, std::wstring, IncludeFiles);
 
     public:
         VPGFileGenerationManager(std::shared_ptr<LogProperty> logProperty) : BaseManager(logProperty) {}
@@ -36,9 +35,6 @@ class VPGFileGenerationManager : public BaseManager<VPGFileGenerationManager>
         bool IsClassEnumFile(const std::wstring &filename, const std::wstring &projectPrefix);
         bool IsClassEnum(const std::wstring &enumClassName, const std::wstring &projectPrefix);
         
-        void GeneratePropertyPropertyAccessorFile(const LogProperty *logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::wstring &cppFilePath, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
         void GernerateProperty(const LogProperty *logProperty, const std::wstring &projPrefix, const std::wstring &projWorkspace, const std::wstring &typeWorkspace, 
             const std::wstring &objTypeDirectoryHpp, const std::wstring &objDirectoryHpp, const std::wstring &propertyAccessorDirectoryHpp, const std::wstring &propertyAccessorDirectoryCpp);
-        // TODO
-        // void GenerateType(const std::wstring &srcWorkspace, const &destWorkspace);
 };

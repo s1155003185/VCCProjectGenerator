@@ -17,8 +17,8 @@ TEST(JsonBuilderTest, String)
     DECLARE_SPTR(Json, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"name")->GetJsonInternalType(), JsonInternalType::String);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"name")->GetJsonInternalValue(), L"John");
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"name")->GetJsonInternalType(), JsonInternalType::String);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"name")->GetJsonInternalValue(), L"John");
     EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 
@@ -29,8 +29,8 @@ TEST(JsonBuilderTest, Boolean)
     DECLARE_SPTR(Json, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"answer")->GetJsonInternalType(), JsonInternalType::Boolean);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"answer")->GetJsonInternalValue(), L"true");
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"answer")->GetJsonInternalType(), JsonInternalType::Boolean);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"answer")->GetJsonInternalValue(), L"true");
     EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 
@@ -41,8 +41,8 @@ TEST(JsonBuilderTest, Number)
     DECLARE_SPTR(Json, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"age")->GetJsonInternalType(), JsonInternalType::Number);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"age")->GetJsonInternalValue(), L"11");
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"age")->GetJsonInternalType(), JsonInternalType::Number);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"age")->GetJsonInternalValue(), L"11");
     EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 
@@ -53,10 +53,10 @@ TEST(JsonBuilderTest, Object)
     DECLARE_SPTR(Json, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"Name")->GetJsonInternalType(), JsonInternalType::Object);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"Name")->GetJsonInternalArray()[0]->GetJsonInternalType(), JsonInternalType::Json);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"Name")->GetJsonInternalArray()[0]->GetJsonInternalNameValuePairs(L"firstName")->GetJsonInternalValue(), L"A");
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"Name")->GetJsonInternalArray()[0]->GetJsonInternalNameValuePairs(L"lastName")->GetJsonInternalValue(), L"B");
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"Name")->GetJsonInternalType(), JsonInternalType::Object);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"Name")->GetJsonInternalArray()[0]->GetJsonInternalType(), JsonInternalType::Json);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"Name")->GetJsonInternalArray()[0]->GetJsonInternalNameValuePairsByKey(L"firstName")->GetJsonInternalValue(), L"A");
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"Name")->GetJsonInternalArray()[0]->GetJsonInternalNameValuePairsByKey(L"lastName")->GetJsonInternalValue(), L"B");
     EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 
@@ -67,19 +67,19 @@ TEST(JsonBuilderTest, Array)
     DECLARE_SPTR(Json, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"employees")->GetJsonInternalType(), JsonInternalType::Array);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"employees")->GetJsonInternalArray().size(), (size_t)6);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"employees")->GetJsonInternalArray().at(0)->GetJsonInternalType(), JsonInternalType:: Number);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"employees")->GetJsonInternalArray().at(0)->GetJsonInternalValue(), L"1");
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"employees")->GetJsonInternalArray().at(1)->GetJsonInternalType(), JsonInternalType:: Boolean);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"employees")->GetJsonInternalArray().at(1)->GetJsonInternalValue(), L"true");
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"employees")->GetJsonInternalArray().at(2)->GetJsonInternalType(), JsonInternalType:: Null);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"employees")->GetJsonInternalArray().at(3)->GetJsonInternalType(), JsonInternalType:: String);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"employees")->GetJsonInternalArray().at(3)->GetJsonInternalValue(), L"Str\"ing");
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"employees")->GetJsonInternalArray().at(4)->GetJsonInternalType(), JsonInternalType:: Array);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"employees")->GetJsonInternalArray().at(4)->GetJsonInternalArray().size(), (size_t)2);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"employees")->GetJsonInternalArray().at(5)->GetJsonInternalArray()[0]->GetJsonInternalNameValuePairs(L"firstName")->GetJsonInternalValue(), L"A");
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"employees")->GetJsonInternalArray().at(5)->GetJsonInternalArray()[0]->GetJsonInternalNameValuePairs(L"lastName")->GetJsonInternalValue(), L"B");
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"employees")->GetJsonInternalType(), JsonInternalType::Array);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"employees")->GetJsonInternalArray().size(), (size_t)6);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"employees")->GetJsonInternalArray().at(0)->GetJsonInternalType(), JsonInternalType:: Number);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"employees")->GetJsonInternalArray().at(0)->GetJsonInternalValue(), L"1");
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"employees")->GetJsonInternalArray().at(1)->GetJsonInternalType(), JsonInternalType:: Boolean);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"employees")->GetJsonInternalArray().at(1)->GetJsonInternalValue(), L"true");
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"employees")->GetJsonInternalArray().at(2)->GetJsonInternalType(), JsonInternalType:: Null);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"employees")->GetJsonInternalArray().at(3)->GetJsonInternalType(), JsonInternalType:: String);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"employees")->GetJsonInternalArray().at(3)->GetJsonInternalValue(), L"Str\"ing");
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"employees")->GetJsonInternalArray().at(4)->GetJsonInternalType(), JsonInternalType:: Array);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"employees")->GetJsonInternalArray().at(4)->GetJsonInternalArray().size(), (size_t)2);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"employees")->GetJsonInternalArray().at(5)->GetJsonInternalArray()[0]->GetJsonInternalNameValuePairsByKey(L"firstName")->GetJsonInternalValue(), L"A");
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"employees")->GetJsonInternalArray().at(5)->GetJsonInternalArray()[0]->GetJsonInternalNameValuePairsByKey(L"lastName")->GetJsonInternalValue(), L"B");
     EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 
@@ -90,7 +90,7 @@ TEST(JsonBuilderTest, Null)
     DECLARE_SPTR(Json, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"Name")->GetJsonInternalType(), JsonInternalType::Null);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"Name")->GetJsonInternalType(), JsonInternalType::Null);
     EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 
@@ -101,13 +101,13 @@ TEST(JsonBuilderTest, Full)
     DECLARE_SPTR(Json, json);
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"name")->GetJsonInternalType(), JsonInternalType::String);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"name")->GetJsonInternalValue(), L"John");
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"age")->GetJsonInternalType(), JsonInternalType::Number);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"age")->GetJsonInternalValue(), L"11");
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"tel")->GetJsonInternalType(), JsonInternalType::Null);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"FullName")->GetJsonInternalType(), JsonInternalType::Object);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairs(L"employees")->GetJsonInternalType(), JsonInternalType::Array);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"name")->GetJsonInternalType(), JsonInternalType::String);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"name")->GetJsonInternalValue(), L"John");
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"age")->GetJsonInternalType(), JsonInternalType::Number);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"age")->GetJsonInternalValue(), L"11");
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"tel")->GetJsonInternalType(), JsonInternalType::Null);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"FullName")->GetJsonInternalType(), JsonInternalType::Object);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsByKey(L"employees")->GetJsonInternalType(), JsonInternalType::Array);
     EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 

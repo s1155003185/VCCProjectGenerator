@@ -72,7 +72,11 @@ Release program is built in bin/Release
 -	Remove unittest/External to skip running unit test of VCCModule.
 
 ## Execute C++ project in VScode
-F5
+1. Config Default F5 is to execute "Debug"
+    or
+    In launch.json, copy cwd and program from "Debug" to "C/C++ Runner: Debug Session"
+2. If want to execute exe instead of unittest, change "unittest" in "program" to your program name
+3. F5
 
 ## Compare to AI Code Generation
 - Stable

@@ -15,6 +15,7 @@
 #include "vpg_include_path_service.hpp"
 #include "vpg_object_file_generation_service.hpp"
 #include "vpg_object_type_file_generation_service.hpp"
+#include "vpg_property_accessor_generation_service.hpp"
 
 const std::wstring classMacroFilePath = L"include/External/VCC/Core/Macro/class_macro.hpp";
 const std::wstring logId = L"File Generation";
@@ -65,6 +66,11 @@ std::wstring VPGFileGenerationManager::GetClassFilenameFromEnumClassFilename(con
 void VPGFileGenerationManager::GetFileList(const VPGEnumClassReader *reader, const std::wstring &directoryFullPath, const std::wstring &projectPrefix)
 {
     TRY
+        VPGIncludePathService::GetWorkspaceIncludePath(L"", _IncludeFiles);
+
+        std::map<std::wstring, std::wstring> enumClassFiles;
+        std::map<std::wstring, std::wstring> classFiles;
+
         for (auto const &filePath : std::filesystem::recursive_directory_iterator(PATH(directoryFullPath))) {
             TRY
                 if (filePath.is_directory())
@@ -76,19 +82,36 @@ void VPGFileGenerationManager::GetFileList(const VPGEnumClassReader *reader, con
                     // enum
                     std::wstring enumClassName = enumClass->GetName();
                     std::wstring fileName = filePath.path().filename().wstring();
-                    if (_EnumClassFiles.count(enumClassName) > 0)
+                    if (enumClassFiles.count(enumClassName) > 0)
                         THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Enum Class " + enumClassName + L" duplicated:\r\n"
-                            + _EnumClassFiles[enumClassName] + L"\r\n"
+                            + enumClassFiles[enumClassName] + L"\r\n"
                             + fileName);
-                    _EnumClassFiles.insert(std::make_pair(enumClassName, fileName));
+                    enumClassFiles.insert(std::make_pair(enumClassName, fileName));
+                    if (_IncludeFiles.find(enumClassName) != _IncludeFiles.end()) {
+                        std::wstring currentIncludeFile = _IncludeFiles[enumClassName];
+                        if (currentIncludeFile != fileName) 
+                            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Enum Class " + enumClassName + L" duplicated:\r\n"
+                                + _IncludeFiles[enumClassName] + L"\r\n"
+                                + fileName);
+                    } else
+                        _IncludeFiles.insert(std::make_pair(enumClassName, fileName));
                     // class
                     if (IsClassEnumFile(fileName, projectPrefix) && IsClassEnum(enumClassName, projectPrefix)) {
                         std::wstring className = GetClassNameFromEnumClassName(enumClassName);
-                        if (_ClassFiles.count(className) > 0)
+                        std::wstring classFileName = GetClassFilenameFromEnumClassFilename(fileName);
+                        if (classFiles.count(className) > 0)
                             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Class " + className + L" duplicated:\r\n"
-                                + _ClassFiles[className] + L"\r\n"
-                                + fileName);
-                        _ClassFiles.insert(std::make_pair(className, GetClassFilenameFromEnumClassFilename(fileName)));
+                                + classFiles[className] + L"\r\n"
+                                + classFileName);
+                        classFiles.insert(std::make_pair(className, classFileName));
+                        if (_IncludeFiles.find(className) != _IncludeFiles.end()) {
+                            std::wstring currentIncludeFile = _IncludeFiles[className];
+                            if (currentIncludeFile != classFileName) 
+                                THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Class " + className + L" duplicated:\r\n"
+                                    + _IncludeFiles[className] + L"\r\n"
+                                    + classFileName);
+                        } else
+                            _IncludeFiles.insert(std::make_pair(className, classFileName));
                     }
                 }
             CATCH_SLIENT
@@ -117,15 +140,6 @@ bool VPGFileGenerationManager::IsClassEnum(const std::wstring &enumClassName, co
     return false;
 }
 
-void VPGFileGenerationManager::GeneratePropertyPropertyAccessorFile(const LogProperty *logProperty, const std::wstring &classPrefix, const std::wstring &hppFilePath, const std::wstring &cppFilePath, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
-{
-    TRY
-        LogService::LogInfo(logProperty, logId, L"Generate property access file: " + hppFilePath + L" " + cppFilePath);
-
-        LogService::LogInfo(logProperty, logId, L"Generate property access file: " + hppFilePath + L" " + cppFilePath + L" complete.");
-    CATCH
-}
-
 void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty, const std::wstring &projPrefix, const std::wstring &projWorkspace, const std::wstring &typeWorkspace, 
     const std::wstring &objTypeDirectoryHpp, const std::wstring &objDirectoryHpp, const std::wstring &propertyAccessorDirectoryHpp, const std::wstring &propertyAccessorDirectoryCpp)
 {
@@ -135,8 +149,6 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
         VPGEnumClassReader enumClassReader(_ClassMacros);
         GetFileList(&enumClassReader, typeWorkspaceFullPath, projPrefix);
 
-        std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-        VPGIncludePathService::GetWorkspaceIncludePath(L"", projectClassIncludeFiles);
         //Generate Object Type, Object Class, PropertyAccessor,
         // 1. get all files from directory
         // 2. get all properties with enum class Prefix + Class + Property
@@ -194,11 +206,10 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
                 if (!middlePath.empty())
                     objectFilePaths.push_back(middlePath);
                 objectFilePaths.push_back(objectFileName + L".hpp");
-                VPGObjectFileGenerationService::Generate(logProperty, projPrefix,
-                    projectClassIncludeFiles, _ClassFiles, _EnumClassFiles,
+                VPGObjectFileGenerationService::Generate(logProperty, projPrefix, _IncludeFiles,
                     ConcatPaths(objectFilePaths), enumClassList);
-                GeneratePropertyPropertyAccessorFile(logProperty, projPrefix, 
-                    ConcatPaths({projWorkspace, propertyAccessorDirectoryHpp, propertyAccessorFileName + L".hpp"}), 
+                VPGPropertyAccessorGenerationSerive::GenerateHpp(logProperty, ConcatPaths({projWorkspace, propertyAccessorDirectoryHpp, propertyAccessorFileName + L".hpp"}), enumClassList);
+                VPGPropertyAccessorGenerationSerive::GenerateCpp(logProperty, _IncludeFiles,
                     ConcatPaths({projWorkspace, propertyAccessorDirectoryCpp, propertyAccessorFileName + L".cpp"}), enumClassList);
             }
             LogService::LogInfo(logProperty, logId, L"Parse file completed: " + path);

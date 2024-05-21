@@ -28,10 +28,10 @@ namespace vcc
 	bool IsEmpty(const std::wstring &str);
 	bool IsBlank(const std::wstring &str);
 
-	bool HasPrefix(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
-	bool HasPrefix(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &pos = 0);
-	bool HasPrefixTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
-	bool HasSuffix(const std::wstring &str, const std::wstring &suffix);
+	bool IsStartWith(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
+	bool IsStartWith(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &pos = 0);
+	bool IsStartWithTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
+	bool IsEndWith(const std::wstring &str, const std::wstring &suffix);
 
 	std::vector<std::wstring> SplitString(std::wstring str, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});

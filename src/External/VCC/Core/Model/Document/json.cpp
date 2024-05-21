@@ -26,7 +26,7 @@ namespace vcc
     {
         JsonInternalType result = JsonInternalType::Null;
         TRY
-            result = GetJsonInternalNameValuePairs(key)->GetJsonInternalType();
+            result = GetJsonInternalNameValuePairsByKey(key)->GetJsonInternalType();
         CATCH
         return result;
     }
@@ -77,7 +77,7 @@ namespace vcc
     {
         TRY
             ValidateKeyIsFound(key);
-            return GetJsonInternalNameValuePairs(key)->GetJsonInternalType() == JsonInternalType::Null;
+            return GetJsonInternalNameValuePairsByKey(key)->GetJsonInternalType() == JsonInternalType::Null;
         CATCH
         return false;        
     }
@@ -86,7 +86,7 @@ namespace vcc
     {
         TRY
             ValidateKeyIsFound(key);
-            GetJsonInternalNameValuePairs(key)->SetJsonInternalType(JsonInternalType::Null);
+            GetJsonInternalNameValuePairsByKey(key)->SetJsonInternalType(JsonInternalType::Null);
         CATCH
     }
     
@@ -104,7 +104,7 @@ namespace vcc
     {
         TRY
             ValidateKeyIsFound(key);
-            return GetJsonInternalNameValuePairs(key)->GetJsonInternalValue() == L"true";
+            return GetJsonInternalNameValuePairsByKey(key)->GetJsonInternalValue() == L"true";
         CATCH
         return false;
     }
@@ -113,8 +113,8 @@ namespace vcc
     {
         TRY
             ValidateKeyIsFound(key);
-            GetJsonInternalNameValuePairs(key)->SetJsonInternalType(JsonInternalType::Boolean);
-            GetJsonInternalNameValuePairs(key)->SetJsonInternalValue(value ? L"true" : L"false");
+            GetJsonInternalNameValuePairsByKey(key)->SetJsonInternalType(JsonInternalType::Boolean);
+            GetJsonInternalNameValuePairsByKey(key)->SetJsonInternalValue(value ? L"true" : L"false");
         CATCH
     }
 
@@ -133,7 +133,7 @@ namespace vcc
     {
         TRY
             ValidateKeyIsFound(key);
-            return std::stod(GetJsonInternalNameValuePairs(key)->GetJsonInternalValue());
+            return std::stod(GetJsonInternalNameValuePairsByKey(key)->GetJsonInternalValue());
         CATCH
         return 0.0;        
     }
@@ -155,10 +155,10 @@ namespace vcc
     {
         TRY
             ValidateKeyIsFound(key);
-            GetJsonInternalNameValuePairs(key)->SetJsonInternalType(JsonInternalType::Number);
+            GetJsonInternalNameValuePairsByKey(key)->SetJsonInternalType(JsonInternalType::Number);
             std::wostringstream oss;
             oss << std::fixed << std::setprecision(decimalPlaces) << value;
-            GetJsonInternalNameValuePairs(key)->SetJsonInternalValue(oss.str());
+            GetJsonInternalNameValuePairsByKey(key)->SetJsonInternalValue(oss.str());
         CATCH
     }
 
@@ -177,7 +177,7 @@ namespace vcc
     {
         TRY
             ValidateKeyIsFound(key);
-            return std::stoi(GetJsonInternalNameValuePairs(key)->GetJsonInternalValue());
+            return std::stoi(GetJsonInternalNameValuePairsByKey(key)->GetJsonInternalValue());
         CATCH
         return 0;
     }
@@ -186,7 +186,7 @@ namespace vcc
     {
         TRY
             ValidateKeyIsFound(key);
-            return std::stoll(GetJsonInternalNameValuePairs(key)->GetJsonInternalValue());
+            return std::stoll(GetJsonInternalNameValuePairsByKey(key)->GetJsonInternalValue());
         CATCH
         return 0;
     }
@@ -195,8 +195,8 @@ namespace vcc
     {
         TRY
             ValidateKeyIsFound(key);
-            GetJsonInternalNameValuePairs(key)->SetJsonInternalType(JsonInternalType::Number);
-            GetJsonInternalNameValuePairs(key)->SetJsonInternalValue(std::to_wstring(value));
+            GetJsonInternalNameValuePairsByKey(key)->SetJsonInternalType(JsonInternalType::Number);
+            GetJsonInternalNameValuePairsByKey(key)->SetJsonInternalValue(std::to_wstring(value));
         CATCH
     }
 
@@ -215,7 +215,7 @@ namespace vcc
     {
         TRY
             ValidateKeyIsFound(key);
-            return GetJsonInternalNameValuePairs(key)->GetJsonInternalValue();
+            return GetJsonInternalNameValuePairsByKey(key)->GetJsonInternalValue();
         CATCH
         return L"";
     }
@@ -224,8 +224,8 @@ namespace vcc
     {
         TRY
             ValidateKeyIsFound(key);
-            GetJsonInternalNameValuePairs(key)->SetJsonInternalType(JsonInternalType::String);
-            GetJsonInternalNameValuePairs(key)->SetJsonInternalValue(value);
+            GetJsonInternalNameValuePairsByKey(key)->SetJsonInternalType(JsonInternalType::String);
+            GetJsonInternalNameValuePairsByKey(key)->SetJsonInternalValue(value);
         CATCH
     }
 
@@ -244,8 +244,8 @@ namespace vcc
     {
         TRY
             ValidateKeyIsFound(key);
-            if (GetJsonInternalNameValuePairs(key)->GetJsonInternalArray().size() > 0)
-                return GetJsonInternalNameValuePairs(key)->GetJsonInternalArray().at(0);
+            if (GetJsonInternalNameValuePairsByKey(key)->GetJsonInternalArray().size() > 0)
+                return GetJsonInternalNameValuePairsByKey(key)->GetJsonInternalArray().at(0);
         CATCH
         return nullptr;
     }
@@ -254,8 +254,8 @@ namespace vcc
     // {
     //     TRY
     //         object->SetJsonInternalType(JsonInternalType::Json);
-    //         GetJsonInternalNameValuePairs(key)->ClearArray();
-    //         GetJsonInternalNameValuePairs(key)->GetJsonInternalArray().push_back(std::make_pair(key, object));
+    //         GetJsonInternalNameValuePairsByKey(key)->ClearArray();
+    //         GetJsonInternalNameValuePairsByKey(key)->GetJsonInternalArray().push_back(std::make_pair(key, object));
     //     CATCH
     // }
 
@@ -276,7 +276,7 @@ namespace vcc
     {
         TRY
             ValidateKeyIsFound(key);
-            return GetJsonInternalNameValuePairs(key)->GetJsonInternalArray();
+            return GetJsonInternalNameValuePairsByKey(key)->GetJsonInternalArray();
         CATCH
         static std::vector<std::shared_ptr<Json>> emptyVector;
         emptyVector.clear();
@@ -287,8 +287,8 @@ namespace vcc
     // {
     //     TRY
     //         array->SetJsonInternalType(JsonInternalType::Array);
-    //         GetJsonInternalNameValuePairs(key)->ClearArray();
-    //         GetJsonInternalNameValuePairs(key)->InsertJsonInternalArray();
+    //         GetJsonInternalNameValuePairsByKey(key)->ClearArray();
+    //         GetJsonInternalNameValuePairsByKey(key)->InsertJsonInternalArray();
     //     CATCH
     // }
 

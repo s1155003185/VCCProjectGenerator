@@ -169,7 +169,7 @@ std::wstring VPGFileSyncService::GenerateFullCode(const VPGFileContentSyncMode s
     for (std::shared_ptr<Xml> child : src->GetChildren()) {
         if (!shouldSkip) {
             // if find tag then search tag in source, if reserve, then use source
-            if (HasPrefix(child->GetName(), L"vcc:")) {
+            if (IsStartWith(child->GetName(), L"vcc:")) {
                 const Xml *destTag = VPGFileSyncService::GetTagFromCode(dest, child->GetName());
                 if (destTag != nullptr && VPGFileSyncService::IsTagReserve(destTag)) {
                     result += destTag->GetFullText();
@@ -199,7 +199,7 @@ std::wstring VPGFileSyncService::GenerateDemandCode(const VPGFileContentSyncMode
     for (std::shared_ptr<Xml> child : dest->GetChildren()) {
         if (!shouldSkip) {
             // if find tag then search tag in source, if reserve, then use source
-            if (HasPrefix(child->GetName(), L"vcc:")) {
+            if (IsStartWith(child->GetName(), L"vcc:")) {
                 const Xml *srcTag = VPGFileSyncService::GetTagFromCode(src, child->GetName());
                 if (srcTag != nullptr && VPGFileSyncService::IsTagReplace(child.get())) {
                     result += srcTag->GetFullText();

@@ -167,11 +167,11 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
 
         for (size_t i = 2; i < cmds.size(); i++) {
             std::wstring cmd = cmds[i];
-            if (!HasPrefix(cmd, L"-")) {
+            if (!IsStartWith(cmd, L"-")) {
                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Argument missing - for " + cmd);
             }
             // single tag
-            if (!HasPrefix(cmd, L"--")) {
+            if (!IsStartWith(cmd, L"--")) {
                 // must have second argument
                 if (i + 1 < cmds.size()) {
                     i++;
@@ -180,21 +180,21 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
                         _Option->SetWorkspaceDestination(cmd2);
                     } else if (cmd == L"-interface") {
                         ToUpper(cmd2);
-                        if (HasPrefix(cmd2, L"CPP")) {
-                            if (HasSuffix(cmd2, L"DLL"))
+                        if (IsStartWith(cmd2, L"CPP")) {
+                            if (IsEndWith(cmd2, L"DLL"))
                                 _Option->SetProjectType(VPGProjectType::CppDll);
-                            else if (HasSuffix(cmd2, L"EXE"))
+                            else if (IsEndWith(cmd2, L"EXE"))
                                 _Option->SetProjectType(VPGProjectType::CppExe);
-                            else if (HasSuffix(cmd2, L"COMPLEX"))
+                            else if (IsEndWith(cmd2, L"COMPLEX"))
                                 _Option->SetProjectType(VPGProjectType::CppComplex);
                             else
                                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknown argument " + cmd2);
-                        } else if (HasPrefix(cmd2, L"VCC")) {
-                            if (HasSuffix(cmd2, L"DLL"))
+                        } else if (IsStartWith(cmd2, L"VCC")) {
+                            if (IsEndWith(cmd2, L"DLL"))
                                 _Option->SetProjectType(VPGProjectType::VccDll);
-                            else if (HasSuffix(cmd2, L"EXE"))
+                            else if (IsEndWith(cmd2, L"EXE"))
                                 _Option->SetProjectType(VPGProjectType::VccExe);
-                            else if (HasSuffix(cmd2, L"COMPLEX"))
+                            else if (IsEndWith(cmd2, L"COMPLEX"))
                                 _Option->SetProjectType(VPGProjectType::VccComplex);
                             else
                                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknown argument " + cmd2);

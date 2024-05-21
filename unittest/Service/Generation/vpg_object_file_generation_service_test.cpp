@@ -38,11 +38,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Empty)
 {
     std::wstring classPrefix = L"";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    std::map<std::wstring, std::wstring> classFilesByEnumClass;
-    std::map<std::wstring, std::wstring> enumClassFilesByEnumClass;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGObjectFileGenerationService::Generate(this->GetLogProperty().get(), classPrefix,
-        projectClassIncludeFiles, classFilesByEnumClass, enumClassFilesByEnumClass,
+    VPGObjectFileGenerationService::Generate(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), enumClassList);    
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
 }
@@ -51,13 +48,11 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
 {
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    std::map<std::wstring, std::wstring> classFilesByEnumClass;
-    std::map<std::wstring, std::wstring> enumClassFilesByEnumClass;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
 
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
-    classFilesByEnumClass.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
-    enumClassFilesByEnumClass.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
 
     DECLARE_SPTR(VPGEnumClass, enumClass);
     enumClass->SetName(L"VPGObjectProperty");
@@ -81,8 +76,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
     enumClass->InsertProperties(enumClassPropertyB);
 
     enumClassList.push_back(enumClass);
-    VPGObjectFileGenerationService::Generate(this->GetLogProperty().get(), classPrefix,
-        projectClassIncludeFiles, classFilesByEnumClass, enumClassFilesByEnumClass,
+    VPGObjectFileGenerationService::Generate(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
 
@@ -114,13 +108,11 @@ TEST_F(VPGObjectFileGenerationServiceTest, Object)
 {
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    std::map<std::wstring, std::wstring> classFilesByEnumClass;
-    std::map<std::wstring, std::wstring> enumClassFilesByEnumClass;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
 
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
-    classFilesByEnumClass.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
-    enumClassFilesByEnumClass.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
 
     DECLARE_SPTR(VPGEnumClass, enumClass);
     enumClass->SetName(L"VPGObjectProperty");
@@ -144,8 +136,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Object)
     enumClass->InsertProperties(enumClassPropertyB);
 
     enumClassList.push_back(enumClass);
-    VPGObjectFileGenerationService::Generate(this->GetLogProperty().get(), classPrefix,
-        projectClassIncludeFiles, classFilesByEnumClass, enumClassFilesByEnumClass,
+    VPGObjectFileGenerationService::Generate(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
 
@@ -186,13 +177,11 @@ TEST_F(VPGObjectFileGenerationServiceTest, Multi)
 {
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    std::map<std::wstring, std::wstring> classFilesByEnumClass;
-    std::map<std::wstring, std::wstring> enumClassFilesByEnumClass;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
 
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
-    classFilesByEnumClass.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
-    enumClassFilesByEnumClass.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
 
     DECLARE_SPTR(VPGEnumClass, enumClassA);
     enumClassA->SetName(L"VPGObjectAProperty");
@@ -218,8 +207,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Multi)
     enumClassB->InsertProperties(enumClassPropertyB);
     enumClassList.push_back(enumClassB);
     
-    VPGObjectFileGenerationService::Generate(this->GetLogProperty().get(), classPrefix,
-        projectClassIncludeFiles, classFilesByEnumClass, enumClassFilesByEnumClass,
+    VPGObjectFileGenerationService::Generate(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
 

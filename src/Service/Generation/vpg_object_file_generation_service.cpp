@@ -15,13 +15,10 @@ using namespace vcc;
 #define LOG_ID L"Object File Generation"
 const std::wstring proeprtyClassNameSuffix = L"Property";
 
-std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::map<std::wstring, std::wstring> &classFilesByEnumClass, const std::wstring &className)
+std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::wstring &className)
 {
     TRY
-        // enum generate class
-        if (classFilesByEnumClass.contains(className))
-            return classFilesByEnumClass.at(className);
-        else if (projectClassIncludeFiles.contains(className))
+        if (projectClassIncludeFiles.contains(className))
             return projectClassIncludeFiles.at(className);
         else if (projectClassIncludeFiles.contains(L"vcc::" + className))
             return projectClassIncludeFiles.at(L"vcc::" + className);
@@ -29,22 +26,7 @@ std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const st
     return L"";
 }
 
-std::wstring VPGObjectFileGenerationService::GetProjectEnumClassIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::map<std::wstring, std::wstring> &enumClassFilesByEnumClass, const std::wstring &className)
-{
-    TRY
-        // enum generate class
-        if (enumClassFilesByEnumClass.contains(className))
-            return enumClassFilesByEnumClass.at(className);
-        else if (projectClassIncludeFiles.contains(className))
-            return projectClassIncludeFiles.at(className);
-        else if (projectClassIncludeFiles.contains(L"vcc::" + className))
-            return projectClassIncludeFiles.at(L"vcc::" + className);
-    CATCH
-    return L"";
-}
-
-void VPGObjectFileGenerationService::Generate(const LogProperty *logProperty, const std::wstring &classPrefix,
-    const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::map<std::wstring, std::wstring> &classFilesByEnumClass, const std::map<std::wstring, std::wstring> &enumClassFilesByEnumClass,
+void VPGObjectFileGenerationService::Generate(const LogProperty *logProperty, const std::wstring &classPrefix, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
     const std::wstring &hppFilePath, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
@@ -72,13 +54,13 @@ void VPGObjectFileGenerationService::Generate(const LogProperty *logProperty, co
                 if (std::iswupper(type[0])) {
                     if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
 
-                        std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, classFilesByEnumClass, type);
+                        std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
                         if (!includeFile.empty())
                             projectFileList.insert(L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, includeFile));
                         else
                             abstractClassList.insert(L"class " + type + L";");
                     } else {
-                        std::wstring includeFile = VPGObjectFileGenerationService::GetProjectEnumClassIncludeFile(projectClassIncludeFiles, enumClassFilesByEnumClass, type);
+                        std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
                         if (!includeFile.empty())
                             projectFileList.insert(L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, includeFile));
                         else
@@ -95,13 +77,13 @@ void VPGObjectFileGenerationService::Generate(const LogProperty *logProperty, co
                 if (!type.empty() && std::iswupper(type[0])) {
                     if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
 
-                        std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, classFilesByEnumClass, type);
+                        std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
                         if (!includeFile.empty())
                             projectFileList.insert(L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, includeFile));
                         else
                             abstractClassList.insert(L"class " + type + L";");
                     } else {
-                        std::wstring includeFile = VPGObjectFileGenerationService::GetProjectEnumClassIncludeFile(projectClassIncludeFiles, enumClassFilesByEnumClass, type);
+                        std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
                         if (!includeFile.empty())
                             projectFileList.insert(L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, includeFile));
                         else

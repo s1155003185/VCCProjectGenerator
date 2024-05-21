@@ -11,17 +11,17 @@ using namespace vcc;
 /* ---------------------------------------------------------------------------------------------------- */
 /*                                      Has Prefix                                                      */
 /* ---------------------------------------------------------------------------------------------------- */
-TEST(StringHelperTest, HasPrefixTrimSpace_NoSpace)
+TEST(StringHelperTest, IsStartWithTrimSpace_NoSpace)
 {
     std::wstring prefix = L"//<vcc:abc";
-    EXPECT_TRUE(HasPrefixTrimSpace(prefix, prefix));
+    EXPECT_TRUE(IsStartWithTrimSpace(prefix, prefix));
 }
 
-TEST(StringHelperTest, HasPrefixTrimSpace_Space)
+TEST(StringHelperTest, IsStartWithTrimSpace_Space)
 {
     std::wstring prefix = L"//<vcc:abc";
     std::wstring text = L"// <vcc:abc";
-    EXPECT_TRUE(HasPrefixTrimSpace(text, prefix));
+    EXPECT_TRUE(IsStartWithTrimSpace(text, prefix));
 }
 /* ---------------------------------------------------------------------------------------------------- */
 /*                                      Split String                                                    */

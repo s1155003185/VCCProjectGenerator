@@ -20,7 +20,7 @@ namespace vcc
         TRY
             if (IsBlank(key) || key == L"#")
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"key is blank or #");
-            return GetConfigs(key);
+            return GetConfigsByKey(key);
         CATCH
         return L"";
     }

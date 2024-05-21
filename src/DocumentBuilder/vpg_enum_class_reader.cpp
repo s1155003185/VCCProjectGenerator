@@ -47,7 +47,7 @@ std::wstring VPGEnumClassReader::_GetMacro(const std::wstring &propertyCommand, 
         GetNextCharPos(propertyCommand, pos, true);
         bool hasMacroPrefix = false;
         for (auto str : this->_ClassMacroList) {
-            if (HasPrefix(propertyCommand, str + L"(", pos)) {
+            if (IsStartWith(propertyCommand, str + L"(", pos)) {
                 hasMacroPrefix = true;
                 break;
             }
@@ -141,7 +141,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
         // split macro
         if (!property->_Macro.empty()) {
             pos = 0;
-            if (HasPrefix(property->_Macro, L"MAP", pos)) {
+            if (IsStartWith(property->_Macro, L"MAP", pos)) {
                 property->_Type1 = _GetType(property->_Macro, pos);
                 if (property->_Macro[pos] != L',')
                     return;
@@ -171,14 +171,14 @@ std::wstring VPGEnumClassReader::_GetCommand(const std::wstring &cppCode, size_t
     std::wstring result = L"";
     TRY
         GetNextCharPos(cppCode, pos, true);
-        while (HasPrefix(cppCode, L"//", pos) || HasPrefix(cppCode, L"/*", pos)) {
+        while (IsStartWith(cppCode, L"//", pos) || IsStartWith(cppCode, L"/*", pos)) {
             std::wstring tmpCmd = GetNextQuotedString(cppCode, pos, { L";", L"{", L"\n", L" ", L"/*", L"//" }, { L"/*", L"//"}, {L"*/", L"\n"}, { L"", L"" });
             Trim(tmpCmd);
             if (!result.empty())
                 result += L"\r\n";
-            if (HasPrefix(tmpCmd, L"//")) {
+            if (IsStartWith(tmpCmd, L"//")) {
                 tmpCmd = tmpCmd.substr(2, tmpCmd.length() - 2); // only minus prefix as already trim
-            } else if (HasPrefix(tmpCmd, L"/*")) {
+            } else if (IsStartWith(tmpCmd, L"/*")) {
                 tmpCmd = tmpCmd.substr(2, tmpCmd.length() - 4);
             }
             Trim(tmpCmd);
@@ -210,7 +210,7 @@ void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &p
             }
             if (cppCode[pos] == L',')
                 GetNextCharPos(cppCode, pos, false);
-            if (HasPrefix(cppCode, L"//", pos) || HasPrefix(cppCode, L"/*", pos)) {
+            if (IsStartWith(cppCode, L"//", pos) || IsStartWith(cppCode, L"/*", pos)) {
                 _AssignEnumClassProperty(_GetCommand(cppCode, pos), property);
                 GetNextCharPos(cppCode, pos, false);
             }
@@ -228,12 +228,12 @@ void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &p
 void VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass) const
 {
     TRY
-        if (!HasPrefix(cppCode, L"enum", pos))
+        if (!IsStartWith(cppCode, L"enum", pos))
             THROW_EXCEPTION_MSG(ExceptionType::ParserError, _GetErrorMessage(pos, cppCode[pos], L"enum missing."));
             
         pos += 4; // length of "enum"
         GetNextCharPos(cppCode, pos, false);
-        if (HasPrefix(cppCode, L"class", pos)) {
+        if (IsStartWith(cppCode, L"class", pos)) {
             pos += 4; // length of "class"
             GetNextCharPos(cppCode, pos, false);
         }
@@ -243,10 +243,10 @@ void VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
         enumClass->_Name = _GetEnum(cppCode, pos);
         GetNextCharPos(cppCode, pos, false);
 
-        if (HasPrefix(cppCode, L"//", pos)) {
+        if (IsStartWith(cppCode, L"//", pos)) {
             enumClass->_Command = _GetCommand(cppCode, pos);
             GetNextCharPos(cppCode, pos, false);
-        } else if (HasPrefix(cppCode, L"/*", pos)) {
+        } else if (IsStartWith(cppCode, L"/*", pos)) {
             enumClass->_Command =_GetCommand(cppCode, pos);
             GetNextCharPos(cppCode, pos, false);
         }
@@ -267,9 +267,9 @@ void VPGEnumClassReader::Parse(const std::wstring &cppCode, std::vector<std::sha
     TRY
         size_t pos = 0;
         while (pos < cppCode.size()) {
-            if (HasPrefix(cppCode, L"//", pos) || HasPrefix(cppCode, L"/*", pos)) {
+            if (IsStartWith(cppCode, L"//", pos) || IsStartWith(cppCode, L"/*", pos)) {
                 _GetCommand(cppCode, pos);
-            } else if (HasPrefix(cppCode, L"enum", pos)) {
+            } else if (IsStartWith(cppCode, L"enum", pos)) {
                 DECLARE_SPTR(VPGEnumClass, enumClass);
                 _ParseClass(cppCode, pos, enumClass);
                 results.push_back(enumClass);

@@ -90,14 +90,14 @@ namespace vcc
         size_t startPos = pos;
         try {
             GetNextCharPos(str, pos, true);
-            if (HasPrefix(str, nullStr, pos)) {
+            if (IsStartWith(str, nullStr, pos)) {
                 doc->SetJsonInternalType(JsonInternalType::Null);
                 pos += nullStr.length() - 1;
-            } else if (HasPrefix(str, trueStr, pos)) {
+            } else if (IsStartWith(str, trueStr, pos)) {
                 doc->SetJsonInternalType(JsonInternalType::Boolean);
                 doc->SetJsonInternalValue(trueStr);
                 pos += trueStr.length() - 1;
-            } else if (HasPrefix(str, falseStr, pos)) {
+            } else if (IsStartWith(str, falseStr, pos)) {
                 doc->SetJsonInternalType(JsonInternalType::Boolean);
                 doc->SetJsonInternalValue(falseStr);
                 pos += falseStr.length() - 1;
