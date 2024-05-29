@@ -14,14 +14,14 @@ using namespace vcc;
 
 class VPGCppGenerationManagerTest : public testing::Test 
 {
-    GET_SPTR(LogProperty, LogProperty);
-    GET_SPTR(VPGGenerationOption, Option);
-    GET(std::wstring, Workspace, L"bin/Debug/VPGCppGenerationManagerTest/");
-    GET(std::wstring, WorkspaceSource, L"");
-    GET(std::wstring, WorkspaceTarget, L"");
+    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET_SPTR(VPGGenerationOption, Option);
+    GETSET(std::wstring, Workspace, L"bin/Debug/VPGCppGenerationManagerTest/");
+    GETSET(std::wstring, WorkspaceSource, L"");
+    GETSET(std::wstring, WorkspaceTarget, L"");
 
-    GET(std::wstring, TestFolder, L"../VPGVccGenerationManagerTest_CPPTestProject");
-    GET(bool, IsCopyDebugFolderToTestFolder, false);
+    GETSET(std::wstring, TestFolder, L"../VPGVccGenerationManagerTest_CPPTestProject");
+    GETSET(bool, IsCopyDebugFolderToTestFolder, false);
 
     MANAGER(VPGCppGenerationManager, Manager, _LogProperty, _Option);
 

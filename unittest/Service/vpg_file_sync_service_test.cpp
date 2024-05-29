@@ -9,16 +9,16 @@ using namespace vcc;
 
 class VPGFileSyncServiceTest : public testing::Test 
 {    
-    GET(std::wstring, FullHeader, L"// <vcc:vccproj sync=\"FULL\"/>\r\n")
-    GET(std::wstring, DemandHeader, L"// <vcc:vccproj sync=\"DEMAND\"/>\r\n")
-    GET(std::wstring, SkipHeader, L"// <vcc:vccproj sync=\"SKIP\"/>\r\n")
-    GET(std::wstring, ForceHeader, L"// <vcc:vccproj sync=\"FORCE\"/>\r\n")
+    GETSET(std::wstring, FullHeader, L"// <vcc:vccproj sync=\"FULL\"/>\r\n")
+    GETSET(std::wstring, DemandHeader, L"// <vcc:vccproj sync=\"DEMAND\"/>\r\n")
+    GETSET(std::wstring, SkipHeader, L"// <vcc:vccproj sync=\"SKIP\"/>\r\n")
+    GETSET(std::wstring, ForceHeader, L"// <vcc:vccproj sync=\"FORCE\"/>\r\n")
 
-    GET(std::wstring, StrA, L"")
-    GET(std::wstring, StrB, L"")
+    GETSET(std::wstring, StrA, L"")
+    GETSET(std::wstring, StrB, L"")
 
-    GET(std::wstring, CodeA, L"")
-    GET(std::wstring, CodeB, L"")
+    GETSET(std::wstring, CodeA, L"")
+    GETSET(std::wstring, CodeB, L"")
 
     public:
         void SetUp() override

@@ -13,15 +13,15 @@ using namespace vcc;
 
 class FileHelperTest : public testing::Test 
 {
-    GET_SPTR(LogProperty, LogProperty);
-    GET(std::wstring, Workspace, L"bin/Debug/FileHelperTest/");
-    GET(std::wstring, WorkspaceSource, L"");
-    GET(std::wstring, WorkspaceTarget, L"");
+    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET(std::wstring, Workspace, L"bin/Debug/FileHelperTest/");
+    GETSET(std::wstring, WorkspaceSource, L"");
+    GETSET(std::wstring, WorkspaceTarget, L"");
 
-    GET(std::wstring, FilePathSourceA, L"");
-    GET(std::wstring, FilePathTargetB, L"");
-    GET(std::wstring, FilePathSourceC, L"");
-    GET(std::wstring, FilePathTargetC, L"");
+    GETSET(std::wstring, FilePathSourceA, L"");
+    GETSET(std::wstring, FilePathTargetB, L"");
+    GETSET(std::wstring, FilePathSourceC, L"");
+    GETSET(std::wstring, FilePathTargetC, L"");
 
 
     public:

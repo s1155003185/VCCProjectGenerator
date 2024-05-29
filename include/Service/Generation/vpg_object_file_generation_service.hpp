@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "log_property.hpp"
-#include "vpg_enum_class_reader.hpp"
+#include "vpg_enum_class.hpp"
 
 using namespace vcc;
 

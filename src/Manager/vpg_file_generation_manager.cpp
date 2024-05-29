@@ -11,6 +11,7 @@
 #include "string_helper.hpp"
 
 #include "vpg_cpp_helper.hpp"
+#include "vpg_enum_class.hpp"
 #include "vpg_enum_class_reader.hpp"
 #include "vpg_include_path_service.hpp"
 #include "vpg_object_file_generation_service.hpp"

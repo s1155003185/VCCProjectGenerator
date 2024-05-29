@@ -16,12 +16,12 @@ using namespace vcc;
 
 class VPGBaseGenerationManagerTest : public testing::Test 
 {
-    GET_SPTR(LogProperty, LogProperty);
-    GET(std::wstring, Workspace, L"bin/Debug/VPGBaseGenerationManagerTest/");
-    GET(std::wstring, WorkspaceSource, L"");
-    GET(std::wstring, WorkspaceTarget, L"");
+    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET(std::wstring, Workspace, L"bin/Debug/VPGBaseGenerationManagerTest/");
+    GETSET(std::wstring, WorkspaceSource, L"");
+    GETSET(std::wstring, WorkspaceTarget, L"");
     
-    GET_SPTR(VPGGenerationOption, Option)
+    GETSET_SPTR(VPGGenerationOption, Option)
     // Cannot use VPGBaseGenerationManager directly as it needs template
     MANAGER(VPGCppGenerationManager, Manager, _LogProperty, _Option);
     

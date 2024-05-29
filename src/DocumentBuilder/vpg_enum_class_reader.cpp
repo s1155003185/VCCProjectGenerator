@@ -6,8 +6,11 @@
 #include "exception_macro.hpp"
 #include "memory_macro.hpp"
 #include "string_helper.hpp"
+#include "vpg_enum_class.hpp"
 
 using namespace vcc;
+
+const std::wstring attributeToken = L"@@";
 
 VPGEnumClassReader::VPGEnumClassReader(const std::set<std::wstring> &classMacroList) 
 {
@@ -123,45 +126,80 @@ std::wstring VPGEnumClassReader::_GetDefaultValue(const std::wstring &macroStr, 
     return result;
 }
 
+
+std::vector<std::wstring> VPGEnumClassReader::GetAttribute(const std::wstring &str) const
+{
+    std::vector<std::wstring> result;
+    TRY
+        size_t pos = 0;
+        GetNextCharPos(str, pos, true);
+
+        if (!IsStartWith(str, attributeToken, pos))
+            return result;
+        
+        std::vector<std::wstring> tokens = SplitString(str.substr(pos), { attributeToken });
+        for (auto &token : tokens) {
+            Trim(token);
+            if (token.empty())
+                continue;
+            
+            result.push_back(attributeToken + token);
+        }
+    CATCH
+    return result;
+}
+
 void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCommand, std::shared_ptr<VPGEnumClassProperty> property) const
 {
     TRY
         size_t pos = 0;
         property->_Macro = _GetMacro(propertyCommand, pos);
         Trim(property->_Macro);
-
-        pos++;
+        
+        std::wstring remainStr = property->_Macro.size() < propertyCommand.size() ? propertyCommand.substr(property->_Macro.size()) : L"";
         // if Macro is empty, then rollback to pos = 0
-        if (property->_Macro.empty())
-            pos = 0;
-
-        property->_Command = pos < propertyCommand.size() ? propertyCommand.substr(pos) : L"";
-        Trim(property->_Command);
+        if (property->_Macro.empty()) {
+            property->_Command = remainStr;
+            Trim(property->_Command);
+            return;
+        }
 
         // split macro
-        if (!property->_Macro.empty()) {
-            pos = 0;
-            if (IsStartWith(property->_Macro, L"MAP", pos)) {
-                property->_Type1 = _GetType(property->_Macro, pos);
-                if (property->_Macro[pos] != L',')
-                    return;
-                pos++;
-                property->_Type2 = _GetPropertyName(property->_Macro, pos);
-                if (property->_Macro[pos] != L',')
-                    return;
-                pos++;
-                property->_PropertyName = _GetDefaultValue(property->_Macro, pos);
-            } else {
-                property->_Type1 = _GetType(property->_Macro, pos);
-                if (property->_Macro[pos] != L',')
-                    return;
-                pos++;
-                property->_PropertyName = _GetPropertyName(property->_Macro, pos);
-                if (property->_Macro[pos] != L',')
-                    return;
-                pos++;
-                property->_DefaultValue = _GetDefaultValue(property->_Macro, pos);
-            }
+        pos = 0;
+        if (IsStartWith(property->_Macro, L"MAP", pos)) {
+            property->_Type1 = _GetType(property->_Macro, pos);
+            if (property->_Macro[pos] != L',')
+                return;
+            pos++;
+            property->_Type2 = _GetPropertyName(property->_Macro, pos);
+            if (property->_Macro[pos] != L',')
+                return;
+            pos++;
+            property->_PropertyName = _GetDefaultValue(property->_Macro, pos);
+        } else {
+            property->_Type1 = _GetType(property->_Macro, pos);
+            if (property->_Macro[pos] != L',')
+                return;
+            pos++;
+            property->_PropertyName = _GetPropertyName(property->_Macro, pos);
+            if (property->_Macro[pos] != L',')
+                return;
+            pos++;
+            property->_DefaultValue = _GetDefaultValue(property->_Macro, pos);
+        }
+        
+        // split Remain
+        pos = 0;
+        std::vector<std::wstring> attributes = GetAttribute(remainStr);
+        for (auto const &attribute : attributes) {
+            if (Equal(attribute, attributeToken + L"ReadOnly", true))
+                property->_AccessMode = VPGEnumClassPropertyAccessMode::ReadOnly;
+            else if (Equal(attribute, attributeToken + L"WriteOnly", true))
+                property->_AccessMode = VPGEnumClassPropertyAccessMode::WriteOnly;
+            else if (Equal(attribute, attributeToken + L"ReadWrite", true))
+                property->_AccessMode = VPGEnumClassPropertyAccessMode::ReadWrite;
+            else if (Equal(attribute, attributeToken + L"NoAccess", true))
+                property->_AccessMode = VPGEnumClassPropertyAccessMode::NoAccess;
         }
     CATCH
 }

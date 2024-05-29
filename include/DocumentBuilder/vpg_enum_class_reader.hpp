@@ -4,44 +4,10 @@
 #include <string>
 #include <vector>
 
-#include "base_object.hpp"
 #include "class_macro.hpp"
+#include "vpg_enum_class.hpp"
 
 using namespace vcc;
-
-class VPGEnumClassProperty : public BaseObject<VPGEnumClassProperty>
-{
-    friend class VPGEnumClassReader;
-    GETSET(std::wstring, Enum, L"");
-    GETSET(std::wstring, Macro, L"");
-    GETSET(std::wstring, Type1, L"");
-    GETSET(std::wstring, Type2, L"");
-    GETSET(std::wstring, PropertyName, L"");
-    GETSET(std::wstring, DefaultValue, L"");
-    GETSET(std::wstring, Command, L"");
-
-    public:
-        VPGEnumClassProperty() : BaseObject() {}
-        virtual ~VPGEnumClassProperty() {}
-};
-
-class VPGEnumClass : public BaseObject<VPGEnumClass>
-{
-    friend class VPGEnumClassReader;
-    GETSET(std::wstring, Name, L"");
-    GETSET(std::wstring, Command, L"");
-    VECTOR_SPTR(VPGEnumClassProperty, Properties);
-
-    public:
-        VPGEnumClass() : BaseObject() {}
-        virtual ~VPGEnumClass() {}
-
-        virtual std::shared_ptr<IObject> Clone() const override {
-            std::shared_ptr<VPGEnumClass> obj = std::make_shared<VPGEnumClass>(*this);
-            obj->CloneProperties(this->GetProperties());
-            return obj;
-        }
-};
 
 class VPGEnumClassReader
 {
@@ -61,8 +27,11 @@ class VPGEnumClassReader
         void _ParseProperties(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass) const;
         void _ParseClass(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass) const;
     public:
+        VPGEnumClassReader() = default;
         VPGEnumClassReader(const std::set<std::wstring> &classMacroList);
         ~VPGEnumClassReader() {}
 
+        // all attribute start with @@
+        std::vector<std::wstring> GetAttribute(const std::wstring &str) const;
         void Parse(const std::wstring &cppCode, std::vector<std::shared_ptr<VPGEnumClass>> &results) const;
 };

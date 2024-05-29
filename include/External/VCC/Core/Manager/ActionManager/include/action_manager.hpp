@@ -15,8 +15,8 @@ namespace vcc
     {
         GETSET(int64_t, MaxActionListSize, 100)
         MAP_SPTR_R(int64_t, IAction, Actions)
-        GET(int64_t, CurrentSeqNo, -1)
-        GET(int64_t, MaxSeqNo, -1)
+        GETSET(int64_t, CurrentSeqNo, -1)
+        GETSET(int64_t, MaxSeqNo, -1)
 
     private:
         //mutable std::shared_mutex _mutex;

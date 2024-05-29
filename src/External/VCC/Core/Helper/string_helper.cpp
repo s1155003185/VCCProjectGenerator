@@ -323,6 +323,26 @@ namespace vcc
 		RTrim(str);
 	}
 
+	bool Equal(const std::wstring &str1, const std::wstring &str2, const bool &isIgnoreCase)
+	{
+		TRY
+			if (str1.size() != str2.size())
+				return false;
+			if (str1.empty())
+				return true;
+
+			for (size_t i = 0; i < str1.size(); i++) {
+				if (isIgnoreCase) {
+					if (std::towupper(str1[i]) != std::towupper(str2[i]))
+						return false;
+				} else if (str1[i] != str2[i])
+					return false;
+			}
+			return true;
+		CATCH
+		return false;
+	}
+
 	size_t Find(const std::wstring &str, const wchar_t &c, const size_t &pos, const bool &isIgnoreCase)
 	{
 		if (str.empty())

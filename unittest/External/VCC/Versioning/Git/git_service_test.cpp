@@ -18,8 +18,8 @@ using namespace vcc;
 
 class GitServiceTest : public testing::Test 
 {
-    GET_SPTR(LogProperty, LogProperty);
-    GET(std::wstring, Workspace, L"bin/Debug/Git/");
+    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET(std::wstring, Workspace, L"bin/Debug/Git/");
     public:
 
         void SetUp() override

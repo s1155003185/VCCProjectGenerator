@@ -55,6 +55,7 @@ namespace vcc
 	void Trim(std::wstring &str);
 
 	// search
+	bool Equal(const std::wstring &str1, const std::wstring &str2, const bool &isIgnoreCase = false);
 	size_t Find(const std::wstring &str, const wchar_t &c, const size_t &pos = 0, const bool &isIgnoreCase = false);
 	size_t Find(const std::wstring &str, const std::wstring &subStr, const size_t &pos = 0, const bool &isIgnoreCase = false);
 	void GetCharacterRowAndColumn(const std::wstring &str, size_t pos, size_t &row, size_t &column);
@@ -65,9 +66,9 @@ namespace vcc
 	std::wstring GetNextString(const std::wstring &str, size_t &pos, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
 	std::wstring GetNextQuotedString(const std::wstring& str, size_t &pos, const std::vector<std::wstring> &delimiters,
-		const std::vector<std::wstring> &quoteOpenList = { L"\"", L"'", L"{", L"[" },
-		const std::vector<std::wstring> &quoteCloseList = { L"\"", L"'", L"}", L"]" },
-		const std::vector<std::wstring> &quoteEscapeList = { L"\\", L"\\", L"", L"" });
+		const std::vector<std::wstring> &quoteOpenList = { L"\"", L"'", L"{", L"[", L"(" },
+		const std::vector<std::wstring> &quoteCloseList = { L"\"", L"'", L"}", L"]", L")" },
+		const std::vector<std::wstring> &quoteEscapeList = { L"\\", L"\\", L"", L"", L"" });
 	size_t CountSubstring(const std::wstring &str, const std::wstring subStr);
 
 	// process

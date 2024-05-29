@@ -21,7 +21,7 @@ namespace vcc
         GETSET(std::string, KeyString, "");
         GETSET(std::wstring, KeyWstring, L"");
         GETSET(uintptr_t, KeyPointer, 0);
-        GET_SPTR_NULL(IObject, KeySharedPtr);
+        GETSET_SPTR_NULL(IObject, KeySharedPtr);
 
         protected:
             BaseTypeUnion() {}

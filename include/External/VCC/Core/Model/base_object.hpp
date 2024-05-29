@@ -9,7 +9,7 @@ namespace vcc
     template <typename Derived>
     class BaseObject : public IObject
     {
-        GET(ObjectType, Type, ObjectType::NA)
+        GETSET(ObjectType, Type, ObjectType::NA)
 
         protected:
             BaseObject() {}

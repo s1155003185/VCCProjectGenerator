@@ -15,14 +15,14 @@ using namespace vcc;
 
 class VPGVccGenerationManagerTest : public testing::Test 
 {
-    GET_SPTR(LogProperty, LogProperty);
-    GET_SPTR(VPGGenerationOption, Option);
-    GET(std::wstring, Workspace, L"bin/Debug/VPGVccGenerationManagerTest/");
-    GET(std::wstring, WorkspaceSource, L"");
-    GET(std::wstring, WorkspaceTarget, L"");
+    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET_SPTR(VPGGenerationOption, Option);
+    GETSET(std::wstring, Workspace, L"bin/Debug/VPGVccGenerationManagerTest/");
+    GETSET(std::wstring, WorkspaceSource, L"");
+    GETSET(std::wstring, WorkspaceTarget, L"");
     
-    GET(std::wstring, TestFolder, L"../VPGVccGenerationManagerTest_VCCTestProject");
-    GET(bool, IsCopyDebugFolderToTestFolder, false);
+    GETSET(std::wstring, TestFolder, L"../VPGVccGenerationManagerTest_VCCTestProject");
+    GETSET(bool, IsCopyDebugFolderToTestFolder, false);
 
     MANAGER(VPGVccGenerationManager, Manager, _LogProperty, _Option);
 
@@ -345,7 +345,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     codeA += L"{\r\n";
     codeA += L"    EnumA, // Nothing\r\n";
     codeA += L"    EnumB, // GETSET(std::wstring, EnumB, L\"Default\") \r\n";
-    codeA += L"    EnumC, // GET(int64_t, EnumC, 0) \r\n";
+    codeA += L"    EnumC, // GETSET(int64_t, EnumC, 0) \r\n";
     codeA += L"    EnumD  // VECTOR(ExceptionType, EnumD) \r\n";
     codeA += L"};\r\n";
     codeA += L"\r\n";
@@ -356,7 +356,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     codeB += L"\r\n";
     codeB += L"enum class VCCObjectBPtrProperty // Class Command\r\n";
     codeB += L"{\r\n";
-    codeB += L"    EnumA // GET_SPTR(VCCObject, EnumA) \r\n";
+    codeB += L"    EnumA // GETSET_SPTR(VCCObject, EnumA) \r\n";
     codeB += L"};\r\n";
     AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_b_property.hpp"}), codeB, true);
     

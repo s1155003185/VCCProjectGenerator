@@ -13,8 +13,8 @@ using namespace vcc;
 
 class VPGObjectTypeFileGenerationServiceTest : public testing::Test 
 {
-    GET_SPTR(LogProperty, LogProperty);
-    GET(std::wstring, Workspace, L"bin/Debug/VPGObjectTypeFileGenerationServiceTest/");
+    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET(std::wstring, Workspace, L"bin/Debug/VPGObjectTypeFileGenerationServiceTest/");
     
     GETSET(std::wstring, FilePathHpp, L"");
     public:

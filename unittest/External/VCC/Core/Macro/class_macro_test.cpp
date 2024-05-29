@@ -55,7 +55,7 @@ TEST(ClassMacroTest, CloneSingle)
 {
     int i = 10;
     std::unique_ptr<ClassMacroTestClassElement> testClass = std::make_unique<ClassMacroTestClassElement>(i);
-    std::shared_ptr<ClassMacroTestClassElement> cloneClass = dynamic_pointer_cast<ClassMacroTestClassElement>(testClass->Clone());
+    std::shared_ptr<ClassMacroTestClassElement> cloneClass = std::dynamic_pointer_cast<ClassMacroTestClassElement>(testClass->Clone());
     EXPECT_EQ(cloneClass->GetIndex(), i);
 }
 
@@ -64,7 +64,7 @@ TEST(ClassMacroTest, Clone)
     std::unique_ptr<ClassMacroTestClass> testClass = std::make_unique<ClassMacroTestClass>();
     testClass->SetNumber(1);
 
-    std::shared_ptr<ClassMacroTestClass> cloneClass = dynamic_pointer_cast<ClassMacroTestClass>(testClass->Clone());
+    std::shared_ptr<ClassMacroTestClass> cloneClass = std::dynamic_pointer_cast<ClassMacroTestClass>(testClass->Clone());
     EXPECT_EQ(testClass->GetNumber(), cloneClass->GetNumber());
 }
 

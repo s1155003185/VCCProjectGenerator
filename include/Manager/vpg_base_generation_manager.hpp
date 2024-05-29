@@ -28,8 +28,8 @@ const std::wstring unittestFolderName = L"unittest";
 template <typename Derived>
 class VPGBaseGenerationManager : public BaseManager<Derived>, public IVPGGenerationManager
 {
-    GET_SPTR(LogProperty, LogProperty);
-    GET_SPTR(VPGGenerationOption, Option);
+    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET_SPTR(VPGGenerationOption, Option);
     
     protected:
         void ValidateOption() const;

@@ -16,7 +16,7 @@ namespace vcc
     template <typename Derived>
     class BaseAction : public IAction
     {
-        GET(ActionType, Type, ActionType::NA)
+        GETSET(ActionType, Type, ActionType::NA)
 
         private:
             //mutable std::shared_mutex _mutex;

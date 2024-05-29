@@ -14,10 +14,10 @@ using namespace vcc;
 class VPGProcessManagerTest : public testing::Test 
 {
     MANAGER(VPGProcessManager, Manager, nullptr);
-    GET(std::wstring, Workspace, L"bin/Debug/VPGProcessManagerTest/");
+    GETSET(std::wstring, Workspace, L"bin/Debug/VPGProcessManagerTest/");
 
-    GET(std::wstring, TestFolder, L"../VPGProcessManagerTest_VCCTestProject");
-    GET(bool, IsCopyDebugFolderToTestFolder, false);
+    GETSET(std::wstring, TestFolder, L"../VPGProcessManagerTest_VCCTestProject");
+    GETSET(bool, IsCopyDebugFolderToTestFolder, false);
 
     public:
 

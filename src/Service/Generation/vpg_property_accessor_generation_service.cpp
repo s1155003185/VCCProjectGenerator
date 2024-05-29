@@ -206,6 +206,12 @@ void VPGPropertyAccessorGenerationSerive::GenerateHpp(const LogProperty *logProp
             "using namespace vcc;\r\n";
 
         for (auto const &enumClass : enumClassList) {
+            std::vector<std::shared_ptr<VPGEnumClassProperty>> readWrite;
+            for (auto property : enumClass->GetProperties()) {
+                if (property->GetAccessMode() != VPGEnumClassPropertyAccessMode::NoAccess)
+                    readWrite.push_back(property);
+            }
+
             std::wstring className = enumClass->GetName() + L"Accessor";
             result += L"\r\n"
                 "class " + className + L" : public BasePropertyAccessor\r\n"
@@ -213,7 +219,7 @@ void VPGPropertyAccessorGenerationSerive::GenerateHpp(const LogProperty *logProp
             bool isCollection = false;
             bool isObject = false;
             std::map<std::wstring, std::wstring> types;
-            for (auto const &property : enumClass->GetProperties()) {
+            for (auto const &property : readWrite) {
                 if (IsBlank(property->GetMacro()))
                     continue;
 
@@ -282,9 +288,9 @@ void VPGPropertyAccessorGenerationSerive::GetIsHavingGenerateTypeMapType(const s
     CATCH
 }
 
-void VPGPropertyAccessorGenerationSerive::GenerateRead(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassProperty>> &enumClassProperties, std::wstring &result)
+void VPGPropertyAccessorGenerationSerive::GenerateRead(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassProperty>> &enumClassPropertiesReadOnly, std::wstring &result)
 {
-    if (type == containerToken)
+    if (type == containerToken || enumClassPropertiesReadOnly.empty())
         return;
     TRY
         std::wstring convertedType = L"";
@@ -294,7 +300,7 @@ void VPGPropertyAccessorGenerationSerive::GenerateRead(const std::wstring &prope
         bool isHavingMapType = false;
         bool isHavingVectorType = false;
         bool isHavingGeneralType = false;
-        GetIsHavingGenerateTypeMapType(enumClassProperties, isHavingGeneralType, isHavingVectorType, isHavingMapType);
+        GetIsHavingGenerateTypeMapType(enumClassPropertiesReadOnly, isHavingGeneralType, isHavingVectorType, isHavingMapType);
 
         // General Type
         // header
@@ -310,7 +316,7 @@ void VPGPropertyAccessorGenerationSerive::GenerateRead(const std::wstring &prope
                 + INDENT + L"TRY\r\n";
         if (isHavingGeneralType) {
             result += GetGeneralTypeIndexContentHeader(propertyName);
-            for (auto const &property : enumClassProperties) {
+            for (auto const &property : enumClassPropertiesReadOnly) {
                 if (IsStartWith(property->GetMacro(), L"MAP"))
                     continue;
 
@@ -356,7 +362,7 @@ void VPGPropertyAccessorGenerationSerive::GenerateRead(const std::wstring &prope
                 + INDENT + L"TRY\r\n";
         if (isHavingMapType) {
             result += GetGeneralTypeMapContentHeader(propertyName);
-            for (auto const &property : enumClassProperties) {
+            for (auto const &property : enumClassPropertiesReadOnly) {
                 if (IsStartWith(property->GetMacro(), L"VECTOR"))
                     continue;
                 
@@ -383,9 +389,9 @@ void VPGPropertyAccessorGenerationSerive::GenerateRead(const std::wstring &prope
     CATCH
 }
 
-void VPGPropertyAccessorGenerationSerive::GenerateWrite(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassProperty>> &enumClassProperties, std::wstring &result)
+void VPGPropertyAccessorGenerationSerive::GenerateWrite(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassProperty>> &enumClassPropertiesWriteOnly, std::wstring &result)
 {
-    if (type == containerToken)
+    if (type == containerToken || enumClassPropertiesWriteOnly.empty())
         return;
     TRY
         std::wstring convertedType = L"";
@@ -395,7 +401,7 @@ void VPGPropertyAccessorGenerationSerive::GenerateWrite(const std::wstring &prop
         bool isHavingMapType = false;
         bool isHavingVectorType = false;
         bool isHavingGeneralType = false;
-        GetIsHavingGenerateTypeMapType(enumClassProperties, isHavingGeneralType, isHavingVectorType, isHavingMapType);
+        GetIsHavingGenerateTypeMapType(enumClassPropertiesWriteOnly, isHavingGeneralType, isHavingVectorType, isHavingMapType);
 
         // General Type
         // header
@@ -417,7 +423,7 @@ void VPGPropertyAccessorGenerationSerive::GenerateWrite(const std::wstring &prop
                 + INDENT + L"TRY\r\n";
         if (isHavingGeneralType) {
             result += GetGeneralTypeIndexContentHeader(propertyName);
-            for (auto const &property : enumClassProperties) {
+            for (auto const &property : enumClassPropertiesWriteOnly) {
                 if (IsStartWith(property->GetMacro(), L"MAP"))
                     continue;
 
@@ -469,7 +475,7 @@ void VPGPropertyAccessorGenerationSerive::GenerateWrite(const std::wstring &prop
                 + INDENT + L"TRY\r\n";
         if (isHavingMapType) {
             result += GetGeneralTypeMapContentHeader(propertyName);
-            for (auto const &property : enumClassProperties) {
+            for (auto const &property : enumClassPropertiesWriteOnly) {
                 if (IsStartWith(property->GetMacro(), L"VECTOR"))
                     continue;
                 
@@ -506,9 +512,9 @@ void VPGPropertyAccessorGenerationSerive::GenerateWrite(const std::wstring &prop
     CATCH
 }
 
-void VPGPropertyAccessorGenerationSerive::GenerateClone(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassProperty>> &enumClassProperties, std::wstring &result)
+void VPGPropertyAccessorGenerationSerive::GenerateClone(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassProperty>> &enumClassPropertiesReadOnly, std::wstring &result)
 {
-    if (type == containerToken || type != objectToken)
+    if (type == containerToken || type != objectToken || enumClassPropertiesReadOnly.empty())
         return;
     TRY
         std::wstring convertedType = L"";
@@ -518,7 +524,7 @@ void VPGPropertyAccessorGenerationSerive::GenerateClone(const std::wstring &prop
         bool isHavingMapType = false;
         bool isHavingVectorType = false;
         bool isHavingGeneralType = false;
-        GetIsHavingGenerateTypeMapType(enumClassProperties, isHavingGeneralType, isHavingVectorType, isHavingMapType);
+        GetIsHavingGenerateTypeMapType(enumClassPropertiesReadOnly, isHavingGeneralType, isHavingVectorType, isHavingMapType);
 
         // General Type
         // header
@@ -534,7 +540,7 @@ void VPGPropertyAccessorGenerationSerive::GenerateClone(const std::wstring &prop
                 + INDENT + L"TRY\r\n";
         if (isHavingGeneralType) {
             result += GetGeneralTypeIndexContentHeader(propertyName);
-            for (auto const &property : enumClassProperties) {
+            for (auto const &property : enumClassPropertiesReadOnly) {
                 if (IsStartWith(property->GetMacro(), L"MAP"))
                     continue;
                 
@@ -563,7 +569,7 @@ void VPGPropertyAccessorGenerationSerive::GenerateClone(const std::wstring &prop
                 + INDENT + L"TRY\r\n";
         if (isHavingMapType) {
             result += GetGeneralTypeMapContentHeader(propertyName);
-            for (auto const &property : enumClassProperties) {
+            for (auto const &property : enumClassPropertiesReadOnly) {
                 if (IsStartWith(property->GetMacro(), L"VECTOR"))
                     continue;
                 
@@ -585,9 +591,9 @@ void VPGPropertyAccessorGenerationSerive::GenerateClone(const std::wstring &prop
     CATCH
 }
 
-void VPGPropertyAccessorGenerationSerive::GenerateContainer(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassProperty>> &enumClassProperties, std::wstring &result)
+void VPGPropertyAccessorGenerationSerive::GenerateContainerCount(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassProperty>> &enumClassProperties, std::wstring &result)
 {
-    if (type != containerToken)
+    if (type != containerToken || enumClassProperties.empty())
         return;
     TRY
         bool isHavingMapType = false;
@@ -608,6 +614,19 @@ void VPGPropertyAccessorGenerationSerive::GenerateContainer(const std::wstring &
         result += INDENT + L"CATCH\r\n"
             + INDENT + L"return 0;\r\n"
             "}\r\n";
+    CATCH
+}
+
+
+void VPGPropertyAccessorGenerationSerive::GenerateContainerIsContainKey(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassProperty>> &enumClassProperties, std::wstring &result)
+{
+    if (type != containerToken || enumClassProperties.empty())
+        return;
+    TRY
+        bool isHavingMapType = false;
+        bool isHavingVectorType = false;
+        bool isHavingGeneralType = false;
+        GetIsHavingGenerateTypeMapType(enumClassProperties, isHavingGeneralType, isHavingVectorType, isHavingMapType);
 
         result += L"\r\n"
             "bool " + propertyName + L"Accessor::_IsContainKey";
@@ -632,6 +651,18 @@ void VPGPropertyAccessorGenerationSerive::GenerateContainer(const std::wstring &
         result += INDENT + L"CATCH\r\n"
             + INDENT + L"return false;\r\n"
             "}\r\n";
+    CATCH
+}
+
+void VPGPropertyAccessorGenerationSerive::GenerateContainerRemove(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassProperty>> &enumClassProperties, std::wstring &result)
+{
+    if (type != containerToken || enumClassProperties.empty())
+        return;
+    TRY
+        bool isHavingMapType = false;
+        bool isHavingVectorType = false;
+        bool isHavingGeneralType = false;
+        GetIsHavingGenerateTypeMapType(enumClassProperties, isHavingGeneralType, isHavingVectorType, isHavingMapType);
 
         result += L"\r\n"
             "void " + propertyName + L"Accessor::_RemoveContainerElement";
@@ -737,6 +768,12 @@ void VPGPropertyAccessorGenerationSerive::GenerateCpp(const LogProperty *logProp
             for (auto const &property : enumClass->GetProperties()) {
                 if (property->GetMacro().empty())
                     continue;
+
+                // not support set
+                if (IsStartWith(property->GetMacro(), L"SET")) {
+                    continue;
+                }
+
                 bool isContainer = false;
                 if (IsStartWith(property->GetMacro(), L"MAP")
                     || IsStartWith(property->GetMacro(), L"ORDERED_MAP")) {
@@ -820,18 +857,57 @@ void VPGPropertyAccessorGenerationSerive::GenerateCpp(const LogProperty *logProp
         result += L"\r\n"
             "using namespace vcc;\r\n";
         
+        size_t count = 0;
         for (auto const &enumClass : typeMacroMap) {
             for (auto const &type : GetPropertyAccessorTypeOrder()) {
                 if (enumClass.second.find(type) != enumClass.second.end()) {
-                    VPGPropertyAccessorGenerationSerive::GenerateRead(enumClass.first, type, enumClass.second.at(type), result);
-                    VPGPropertyAccessorGenerationSerive::GenerateWrite(enumClass.first, type, enumClass.second.at(type), result);
-                    VPGPropertyAccessorGenerationSerive::GenerateClone(enumClass.first, type, enumClass.second.at(type), result);
-                    VPGPropertyAccessorGenerationSerive::GenerateContainer(enumClass.first, type, enumClass.second.at(type), result);
+                    std::vector<std::shared_ptr<VPGEnumClassProperty>> readOnly, writeOnly, readWrite;
+                    for (auto property : enumClass.second.at(type)) {
+                        switch (property->GetAccessMode())
+                        {
+                        case VPGEnumClassPropertyAccessMode::NoAccess:
+                            break;
+                        case VPGEnumClassPropertyAccessMode::ReadOnly:
+                            readOnly.push_back(property);
+                            readWrite.push_back(property);
+                            break;
+                        case VPGEnumClassPropertyAccessMode::ReadWrite:
+                            readOnly.push_back(property);
+                            writeOnly.push_back(property);
+                            readWrite.push_back(property);
+                            break;
+                        case VPGEnumClassPropertyAccessMode::WriteOnly:
+                            writeOnly.push_back(property);
+                            readWrite.push_back(property);
+                            break;
+                        default:
+                            assert(false);
+                            break;
+                        }
+                    }
+                    if (readWrite.empty())
+                        continue;
+                    
+                    count += readWrite.size();
+
+                    VPGPropertyAccessorGenerationSerive::GenerateRead(enumClass.first, type, readOnly, result);
+                    VPGPropertyAccessorGenerationSerive::GenerateWrite(enumClass.first, type, writeOnly, result);
+                    VPGPropertyAccessorGenerationSerive::GenerateClone(enumClass.first, type, readOnly, result);
+                    VPGPropertyAccessorGenerationSerive::GenerateContainerCount(enumClass.first, type, readWrite, result);
+                    VPGPropertyAccessorGenerationSerive::GenerateContainerIsContainKey(enumClass.first, type, readOnly, result);
+                    VPGPropertyAccessorGenerationSerive::GenerateContainerRemove(enumClass.first, type, writeOnly, result);
                 }
             }
         }
-
-        WriteFile(cppFilePath, result, true);
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor cpp completed.");
+        if (count > 0) {
+            WriteFile(cppFilePath, result, true);
+            LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor cpp completed.");
+        } else {
+            if (IsFileExists(cppFilePath)) {
+                RemoveFile(cppFilePath);
+                LogService::LogInfo(logProperty, LOG_ID, L"Removed property accessor cpp as no properties are acceesable.");
+            } else
+                LogService::LogInfo(logProperty, LOG_ID, L"No property accessor cpp need to be generated.");
+        }
     CATCH
 }

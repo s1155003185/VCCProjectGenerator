@@ -15,7 +15,7 @@ namespace vcc
     class BaseManager : public IManager, public BaseObject<Derived>
     {
         GETSET_SPTR_NULL(LogProperty, LogProperty);
-        GET(ManagerType, Type, ManagerType::NA);
+        GETSET(ManagerType, Type, ManagerType::NA);
         
     protected:
         BaseManager() = default;

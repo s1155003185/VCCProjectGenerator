@@ -9,15 +9,15 @@
 #include "file_helper.hpp"
 #include "memory_macro.hpp"
 
-#include "vpg_enum_class_reader.hpp"
+#include "vpg_enum_class.hpp"
 #include "vpg_property_accessor_generation_service.hpp"
 
 using namespace vcc;
 
 class VPGPropertyAccessorFileGenerationServiceTest : public testing::Test 
 {
-    GET_SPTR(LogProperty, LogProperty);
-    GET(std::wstring, Workspace, L"bin/Debug/VPGPropertyAccessorFileGenerationServiceTest/");
+    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET(std::wstring, Workspace, L"bin/Debug/VPGPropertyAccessorFileGenerationServiceTest/");
     
     GETSET(std::wstring, FilePathHpp, L"");
     GETSET(std::wstring, FilePathCpp, L"");
@@ -271,6 +271,455 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "{\r\n"
     "    TRY\r\n"
     "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
+    "    CATCH\r\n"
+    "}\r\n";
+    EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedCppContent);
+}
+
+TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
+{
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    DECLARE_SPTR(VPGEnumClass, enumClass);
+    enumClass->SetName(L"VPGObjectProperty");
+    enumClassList.push_back(enumClass);
+
+    DECLARE_SPTR(VPGEnumClassProperty, propBool);
+    propBool->SetEnum(L"ReadWrite");
+    propBool->SetMacro(L"GETSET(bool, ReadWrite, false)");
+    propBool->SetType1(L"bool");
+    propBool->SetType2(L"");
+    propBool->SetPropertyName(L"ReadWrite");
+    propBool->SetDefaultValue(L"");
+    propBool->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
+    enumClass->InsertProperties(propBool);
+    
+    DECLARE_SPTR(VPGEnumClassProperty, propRead);
+    propRead->SetEnum(L"Read");
+    propRead->SetMacro(L"GETSET(bool, Read, false)");
+    propRead->SetType1(L"bool");
+    propRead->SetType2(L"");
+    propRead->SetPropertyName(L"Read");
+    propRead->SetDefaultValue(L"");
+    propRead->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
+    enumClass->InsertProperties(propRead);
+    
+    DECLARE_SPTR(VPGEnumClassProperty, propWrite);
+    propWrite->SetEnum(L"Write");
+    propWrite->SetMacro(L"GETSET(bool, Write, false)");
+    propWrite->SetType1(L"bool");
+    propWrite->SetType2(L"");
+    propWrite->SetPropertyName(L"Write");
+    propWrite->SetDefaultValue(L"");
+    propWrite->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
+    enumClass->InsertProperties(propWrite);
+    
+    DECLARE_SPTR(VPGEnumClassProperty, propNoAccess);
+    propNoAccess->SetEnum(L"NoAccess");
+    propNoAccess->SetMacro(L"GETSET(bool, NoAccess, false)");
+    propNoAccess->SetType1(L"bool");
+    propNoAccess->SetType2(L"");
+    propNoAccess->SetPropertyName(L"NoAccess");
+    propNoAccess->SetDefaultValue(L"");
+    propNoAccess->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
+    enumClass->InsertProperties(propNoAccess);
+
+    std::set<std::wstring> propertyTypes;
+    VPGPropertyAccessorGenerationSerive::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationSerive::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
+    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
+    EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
+
+    std::wstring expectedHppContent = L""
+    "#pragma once\r\n"
+    "\r\n"
+    "#include \"base_property_accessor.hpp\"\r\n"
+    "#include \"property_accessor_macro.hpp\"\r\n"
+    "\r\n"
+    "using namespace vcc;\r\n"
+    "\r\n"
+    "class VPGObjectPropertyAccessor : public BasePropertyAccessor\r\n"
+    "{\r\n"
+    "\r\n"
+    "    public:\r\n"
+    "        VPGObjectPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}\r\n"
+    "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
+    "};\r\n";
+    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), expectedHppContent);
+}
+
+TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
+{
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    DECLARE_SPTR(VPGEnumClass, enumClass);
+    enumClass->SetName(L"VPGObjectProperty");
+    enumClassList.push_back(enumClass);
+
+    DECLARE_SPTR(VPGEnumClassProperty, propBool);
+    propBool->SetEnum(L"ReadWrite");
+    propBool->SetMacro(L"GETSET(bool, ReadWrite, false)");
+    propBool->SetType1(L"bool");
+    propBool->SetType2(L"");
+    propBool->SetPropertyName(L"ReadWrite");
+    propBool->SetDefaultValue(L"");
+    propBool->SetAccessMode(VPGEnumClassPropertyAccessMode::ReadWrite);
+    enumClass->InsertProperties(propBool);
+    
+    DECLARE_SPTR(VPGEnumClassProperty, propRead);
+    propRead->SetEnum(L"Read");
+    propRead->SetMacro(L"GETSET(bool, Read, false)");
+    propRead->SetType1(L"bool");
+    propRead->SetType2(L"");
+    propRead->SetPropertyName(L"Read");
+    propRead->SetDefaultValue(L"");
+    propRead->SetAccessMode(VPGEnumClassPropertyAccessMode::ReadOnly);
+    enumClass->InsertProperties(propRead);
+    
+    DECLARE_SPTR(VPGEnumClassProperty, propWrite);
+    propWrite->SetEnum(L"Write");
+    propWrite->SetMacro(L"GETSET(bool, Write, false)");
+    propWrite->SetType1(L"bool");
+    propWrite->SetType2(L"");
+    propWrite->SetPropertyName(L"Write");
+    propWrite->SetDefaultValue(L"");
+    propWrite->SetAccessMode(VPGEnumClassPropertyAccessMode::WriteOnly);
+    enumClass->InsertProperties(propWrite);
+    
+    DECLARE_SPTR(VPGEnumClassProperty, propNoAccess);
+    propNoAccess->SetEnum(L"NoAccess");
+    propNoAccess->SetMacro(L"GETSET(bool, NoAccess, false)");
+    propNoAccess->SetType1(L"bool");
+    propNoAccess->SetType2(L"");
+    propNoAccess->SetPropertyName(L"NoAccess");
+    propNoAccess->SetDefaultValue(L"");
+    propNoAccess->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
+    enumClass->InsertProperties(propNoAccess);
+
+    std::set<std::wstring> propertyTypes;
+    VPGPropertyAccessorGenerationSerive::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationSerive::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
+    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+
+    std::wstring expectedHppContent = L""
+    "#pragma once\r\n"
+    "\r\n"
+    "#include \"base_property_accessor.hpp\"\r\n"
+    "#include \"property_accessor_macro.hpp\"\r\n"
+    "\r\n"
+    "using namespace vcc;\r\n"
+    "\r\n"
+    "class VPGObjectPropertyAccessor : public BasePropertyAccessor\r\n"
+    "{\r\n"
+    "    PROPERTY_ACCESSOR_HEADER(bool, Bool)\r\n"
+    "\r\n"
+    "    public:\r\n"
+    "        VPGObjectPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}\r\n"
+    "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
+    "};\r\n";
+    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), expectedHppContent);
+
+    std::wstring expectedCppContent = L""
+    "#include \"" + this->GetIncludeFileName() + L"\"\r\n"
+    "\r\n"
+    "#include \"exception_macro.hpp\"\r\n"
+    "#include \"i_object.hpp\"\r\n"
+    "#include \"i_type_union.hpp\"\r\n"
+    "#include \"property_accessor_key.hpp\"\r\n"
+    "#include \"property_accessor_macro.hpp\"\r\n"
+    "#include \"vpg_object.hpp\"\r\n"
+    "#include \"vpg_object_property.hpp\"\r\n"
+    "\r\n"
+    "using namespace vcc;\r\n"
+    "\r\n"
+    "bool VPGObjectPropertyAccessor::_ReadBool(const size_t &objectProperty, const int64_t &index) const\r\n"
+    "{\r\n"
+    "    TRY\r\n"
+    "        assert(index >= -1);\r\n"
+    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        assert(obj != nullptr);\r\n"
+    "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
+    "        {\r\n"
+    "        case VPGObjectProperty::ReadWrite:\r\n"
+    "            return obj->GetReadWrite();\r\n"
+    "        case VPGObjectProperty::Read:\r\n"
+    "            return obj->GetRead();\r\n"
+    "        default:\r\n"
+    "            assert(false);\r\n"
+    "        }\r\n"
+    "    CATCH\r\n"
+    "    return false;\r\n"
+    "}\r\n"
+    "\r\n"
+    "bool VPGObjectPropertyAccessor::_ReadBool(const size_t &objectProperty, const ITypeUnion * /*key*/) const\r\n"
+    "{\r\n"
+    "    TRY\r\n"
+    "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
+    "    CATCH\r\n"
+    "    return false;\r\n"
+    "}\r\n"
+    "\r\n"
+    "void VPGObjectPropertyAccessor::_WriteBool(const size_t &objectProperty, const bool &value, const int64_t &index) const\r\n"
+    "{\r\n"
+    "    TRY\r\n"
+    "        assert(index >= -1);\r\n"
+    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        assert(obj != nullptr);\r\n"
+    "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
+    "        {\r\n"
+    "        case VPGObjectProperty::ReadWrite:\r\n"
+    "            obj->SetReadWrite(value);\r\n"
+    "            break;\r\n"
+    "        case VPGObjectProperty::Write:\r\n"
+    "            obj->SetWrite(value);\r\n"
+    "            break;\r\n"
+    "        default:\r\n"
+    "            assert(false);\r\n"
+    "        }\r\n"
+    "    CATCH\r\n"
+    "}\r\n"
+    "\r\n"
+    "void VPGObjectPropertyAccessor::_WriteBool(const size_t &objectProperty, const bool & /*value*/, const ITypeUnion * /*key*/) const\r\n"
+    "{\r\n"
+    "    TRY\r\n"
+    "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
+    "    CATCH\r\n"
+    "}\r\n";
+    EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedCppContent);
+}
+
+TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
+{
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    DECLARE_SPTR(VPGEnumClass, enumClass);
+    enumClass->SetName(L"VPGObjectProperty");
+    enumClassList.push_back(enumClass);
+
+    DECLARE_SPTR(VPGEnumClassProperty, propBool);
+    propBool->SetEnum(L"ReadWrite");
+    propBool->SetMacro(L"VECTOR(bool, ReadWrite, false)");
+    propBool->SetType1(L"bool");
+    propBool->SetType2(L"");
+    propBool->SetPropertyName(L"ReadWrite");
+    propBool->SetDefaultValue(L"");
+    propBool->SetAccessMode(VPGEnumClassPropertyAccessMode::ReadWrite);
+    enumClass->InsertProperties(propBool);
+    
+    DECLARE_SPTR(VPGEnumClassProperty, propRead);
+    propRead->SetEnum(L"Read");
+    propRead->SetMacro(L"VECTOR(bool, Read, false)");
+    propRead->SetType1(L"bool");
+    propRead->SetType2(L"");
+    propRead->SetPropertyName(L"Read");
+    propRead->SetDefaultValue(L"");
+    propRead->SetAccessMode(VPGEnumClassPropertyAccessMode::ReadOnly);
+    enumClass->InsertProperties(propRead);
+    
+    DECLARE_SPTR(VPGEnumClassProperty, propWrite);
+    propWrite->SetEnum(L"Write");
+    propWrite->SetMacro(L"VECTOR(bool, Write, false)");
+    propWrite->SetType1(L"bool");
+    propWrite->SetType2(L"");
+    propWrite->SetPropertyName(L"Write");
+    propWrite->SetDefaultValue(L"");
+    propWrite->SetAccessMode(VPGEnumClassPropertyAccessMode::WriteOnly);
+    enumClass->InsertProperties(propWrite);
+    
+    DECLARE_SPTR(VPGEnumClassProperty, propNoAccess);
+    propNoAccess->SetEnum(L"NoAccess");
+    propNoAccess->SetMacro(L"VECTOR(bool, NoAccess, false)");
+    propNoAccess->SetType1(L"bool");
+    propNoAccess->SetType2(L"");
+    propNoAccess->SetPropertyName(L"NoAccess");
+    propNoAccess->SetDefaultValue(L"");
+    propNoAccess->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
+    enumClass->InsertProperties(propNoAccess);
+
+    std::set<std::wstring> propertyTypes;
+    VPGPropertyAccessorGenerationSerive::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationSerive::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
+    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+
+    std::wstring expectedHppContent = L""
+    "#pragma once\r\n"
+    "\r\n"
+    "#include \"base_property_accessor.hpp\"\r\n"
+    "#include \"property_accessor_macro.hpp\"\r\n"
+    "\r\n"
+    "using namespace vcc;\r\n"
+    "\r\n"
+    "class VPGObjectPropertyAccessor : public BasePropertyAccessor\r\n"
+    "{\r\n"
+    "    PROPERTY_ACCESSOR_HEADER(bool, Bool)\r\n"
+    "\r\n"
+    "    PROPERTY_ACCESSOR_CONTAINER_HEADER\r\n"
+    "\r\n"
+    "    public:\r\n"
+    "        VPGObjectPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}\r\n"
+    "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
+    "};\r\n";
+    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), expectedHppContent);
+
+    std::wstring expectedCppContent = L""
+    "#include \"" + this->GetIncludeFileName() + L"\"\r\n"
+    "\r\n"
+    "#include <vector>\r\n"
+    "\r\n"
+    "#include \"exception_macro.hpp\"\r\n"
+    "#include \"i_object.hpp\"\r\n"
+    "#include \"i_type_union.hpp\"\r\n"
+    "#include \"property_accessor_key.hpp\"\r\n"
+    "#include \"property_accessor_macro.hpp\"\r\n"
+    "#include \"vpg_object.hpp\"\r\n"
+    "#include \"vpg_object_property.hpp\"\r\n"
+    "\r\n"
+    "using namespace vcc;\r\n"
+    "\r\n"
+    "bool VPGObjectPropertyAccessor::_ReadBool(const size_t &objectProperty, const int64_t &index) const\r\n"
+    "{\r\n"
+    "    TRY\r\n"
+    "        assert(index >= -1);\r\n"
+    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        assert(obj != nullptr);\r\n"
+    "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
+    "        {\r\n"
+    "        case VPGObjectProperty::ReadWrite:\r\n"
+    "            return obj->GetReadWrite(index);\r\n"
+    "        case VPGObjectProperty::Read:\r\n"
+    "            return obj->GetRead(index);\r\n"
+    "        default:\r\n"
+    "            assert(false);\r\n"
+    "        }\r\n"
+    "    CATCH\r\n"
+    "    return false;\r\n"
+    "}\r\n"
+    "\r\n"
+    "bool VPGObjectPropertyAccessor::_ReadBool(const size_t &objectProperty, const ITypeUnion * /*key*/) const\r\n"
+    "{\r\n"
+    "    TRY\r\n"
+    "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
+    "    CATCH\r\n"
+    "    return false;\r\n"
+    "}\r\n"
+    "\r\n"
+    "void VPGObjectPropertyAccessor::_WriteBool(const size_t &objectProperty, const bool &value, const int64_t &index) const\r\n"
+    "{\r\n"
+    "    TRY\r\n"
+    "        assert(index >= -1);\r\n"
+    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        assert(obj != nullptr);\r\n"
+    "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
+    "        {\r\n"
+    "        case VPGObjectProperty::ReadWrite:\r\n"
+    "            if (index > -1)\r\n"
+    "                obj->SetReadWrite(index, value);\r\n"
+    "            else\r\n"
+    "                obj->InsertReadWrite(value);\r\n"
+    "            break;\r\n"
+    "        case VPGObjectProperty::Write:\r\n"
+    "            if (index > -1)\r\n"
+    "                obj->SetWrite(index, value);\r\n"
+    "            else\r\n"
+    "                obj->InsertWrite(value);\r\n"
+    "            break;\r\n"
+    "        default:\r\n"
+    "            assert(false);\r\n"
+    "        }\r\n"
+    "    CATCH\r\n"
+    "}\r\n"
+    "\r\n"
+    "void VPGObjectPropertyAccessor::_WriteBool(const size_t &objectProperty, const bool & /*value*/, const ITypeUnion * /*key*/) const\r\n"
+    "{\r\n"
+    "    TRY\r\n"
+    "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
+    "    CATCH\r\n"
+    "}\r\n"
+    "\r\n"
+    "size_t VPGObjectPropertyAccessor::_GetContainerCount(const size_t &objectProperty) const\r\n"
+    "{\r\n"
+    "    TRY\r\n"
+    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        assert(obj != nullptr);\r\n"
+    "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
+    "        {\r\n"
+    "        case VPGObjectProperty::ReadWrite:\r\n"
+    "            return obj->GetReadWrite().size();\r\n"
+    "        case VPGObjectProperty::Read:\r\n"
+    "            return obj->GetRead().size();\r\n"
+    "        case VPGObjectProperty::Write:\r\n"
+    "            return obj->GetWrite().size();\r\n"
+    "        default:\r\n"
+    "            assert(false);\r\n"
+    "        }\r\n"
+    "    CATCH\r\n"
+    "    return 0;\r\n"
+    "}\r\n"
+    "\r\n"
+    "bool VPGObjectPropertyAccessor::_IsContainKey(const size_t &objectProperty, const ITypeUnion * /*key*/) const\r\n"
+    "{\r\n"
+    "    TRY\r\n"
+    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        assert(obj != nullptr);\r\n"
+    "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
+    "        {\r\n"
+    "        default:\r\n"
+    "            assert(false);\r\n"
+    "        }\r\n"
+    "    CATCH\r\n"
+    "    return false;\r\n"
+    "}\r\n"
+    "\r\n"
+    "void VPGObjectPropertyAccessor::_RemoveContainerElement(const size_t &objectProperty, const int64_t &index) const\r\n"
+    "{\r\n"
+    "    TRY\r\n"
+    "        assert(index >= -1);\r\n"
+    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        assert(obj != nullptr);\r\n"
+    "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
+    "        {\r\n"
+    "        case VPGObjectProperty::ReadWrite:\r\n"
+    "            obj->RemoveReadWrite(index);\r\n"
+    "            break;\r\n"
+    "        case VPGObjectProperty::Write:\r\n"
+    "            obj->RemoveWrite(index);\r\n"
+    "            break;\r\n"
+    "        default:\r\n"
+    "            assert(false);\r\n"
+    "        }\r\n"
+    "    CATCH\r\n"
+    "}\r\n"
+    "\r\n"
+    "void VPGObjectPropertyAccessor::_RemoveContainerElement(const size_t &objectProperty, const ITypeUnion *key) const\r\n"
+    "{\r\n"
+    "    TRY\r\n"
+    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        assert(obj != nullptr);\r\n"
+    "        const PropertyAccessorKey *mapKey = dynamic_cast<const PropertyAccessorKey *>(key)\r\n"
+    "        assert(mapKey != nullptr);\r\n"
+    "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
+    "        {\r\n"
+    "        default:\r\n"
+    "            assert(false);\r\n"
+    "        }\r\n"
+    "    CATCH\r\n"
+    "}\r\n"
+    "\r\n"
+    "void VPGObjectPropertyAccessor::_ClearContainer(const size_t &objectProperty) const\r\n"
+    "{\r\n"
+    "    TRY\r\n"
+    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        assert(obj != nullptr);\r\n"
+    "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
+    "        {\r\n"
+    "        case VPGObjectProperty::ReadWrite:\r\n"
+    "            obj->ClearReadWrite();\r\n"
+    "            break;\r\n"
+    "        case VPGObjectProperty::Write:\r\n"
+    "            obj->ClearWrite();\r\n"
+    "            break;\r\n"
+    "        default:\r\n"
+    "            assert(false);\r\n"
+    "        }\r\n"
     "    CATCH\r\n"
     "}\r\n";
     EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedCppContent);

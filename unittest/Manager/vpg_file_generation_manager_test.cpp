@@ -15,12 +15,12 @@
 
 class VPGFileGenerationManagerTest : public testing::Test 
 {
-    GET_SPTR(LogProperty, LogProperty, LogPropertyType::None);
+    GETSET_SPTR(LogProperty, LogProperty, LogPropertyType::None);
     MANAGER(VPGFileGenerationManager, Manager, _LogProperty);
 
-    GET(std::wstring, Workspace, L"bin/Debug/FileGenerationServiceTest");
-    GET(std::wstring, WorkspaceSource, L"");
-    GET(std::wstring, WorkspaceTarget, L"");
+    GETSET(std::wstring, Workspace, L"bin/Debug/FileGenerationServiceTest");
+    GETSET(std::wstring, WorkspaceSource, L"");
+    GETSET(std::wstring, WorkspaceTarget, L"");
 
     private:
         void CreateFolderInSourceWorkspace(std::wstring folder)
@@ -70,15 +70,15 @@ class VPGFileGenerationManagerTest : public testing::Test
             code += L"{\r\n";
             code += L"    EnumA, // Nothing\r\n";
             code += L"    EnumB, // GETSET(std::wstring, EnumB, L\"Default\") \r\n";
-            code += L"    EnumC, // GET(int64_t, EnumC, 0) \r\n";
+            code += L"    EnumC, // GETSET(int64_t, EnumC, 0) \r\n";
             code += L"    EnumD, // GETSET(ExceptionType, EnumD, ExceptionType::NA)\r\n";
             code += L"    EnumE  // VECTOR(ExceptionType, EnumE) \r\n";
             code += L"};\r\n";
             code += L"\r\n";
             code += L"enum class VCCObjectPtrProperty // Class Command\r\n";
             code += L"{\r\n";
-            code += L"    EnumA, // GET_SPTR(Json, EnumA) \r\n";
-            code += L"    EnumB, // GET_SPTR(Json, EnumB, 1, 2, 3) \r\n";
+            code += L"    EnumA, // GETSET_SPTR(Json, EnumA) \r\n";
+            code += L"    EnumB, // GETSET_SPTR(Json, EnumB, 1, 2, 3) \r\n";
             code += L"    EnumC, // VECTOR_SPTR(Json, EnumC) \r\n";
             code += L"    EnumD, // SET_SPTR(Json, EnumD) \r\n";
             code += L"};";
@@ -151,7 +151,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     expectedObjectClassFileContent += L"class VCCObject : public BaseObject<VCCObject>\r\n";
     expectedObjectClassFileContent += L"{\r\n";
     expectedObjectClassFileContent += INDENT + L"GETSET(std::wstring, EnumB, L\"Default\")\r\n";
-    expectedObjectClassFileContent += INDENT + L"GET(int64_t, EnumC, 0)\r\n";
+    expectedObjectClassFileContent += INDENT + L"GETSET(int64_t, EnumC, 0)\r\n";
     expectedObjectClassFileContent += INDENT + L"GETSET(ExceptionType, EnumD, ExceptionType::NA)\r\n";
     expectedObjectClassFileContent += INDENT + L"VECTOR(ExceptionType, EnumE)\r\n";
     expectedObjectClassFileContent += L"\r\n";
@@ -162,8 +162,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     expectedObjectClassFileContent += L"\r\n";
     expectedObjectClassFileContent += L"class VCCObjectPtr : public BaseObject<VCCObjectPtr>\r\n";
     expectedObjectClassFileContent += L"{\r\n";
-    expectedObjectClassFileContent += INDENT + L"GET_SPTR(Json, EnumA)\r\n";
-    expectedObjectClassFileContent += INDENT + L"GET_SPTR(Json, EnumB, 1, 2, 3)\r\n";
+    expectedObjectClassFileContent += INDENT + L"GETSET_SPTR(Json, EnumA)\r\n";
+    expectedObjectClassFileContent += INDENT + L"GETSET_SPTR(Json, EnumB, 1, 2, 3)\r\n";
     expectedObjectClassFileContent += INDENT + L"VECTOR_SPTR(Json, EnumC)\r\n";
     expectedObjectClassFileContent += INDENT + L"SET_SPTR(Json, EnumD)\r\n";
     expectedObjectClassFileContent += L"\r\n";
@@ -223,7 +223,6 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     "#include \"vcc_a_property_accessor.hpp\"\r\n"
     "\r\n"
     "#include <memory>\r\n"
-    "#include <set>\r\n"
     "#include <string>\r\n"
     "#include <vector>\r\n"
     "\r\n"
@@ -442,8 +441,6 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     "            return std::static_pointer_cast<IObject>(obj->GetEnumB());\r\n"
     "        case VCCObjectPtrProperty::EnumC:\r\n"
     "            return static_cast<long>(obj->GetEnumC(index));\r\n"
-    "        case VCCObjectPtrProperty::EnumD:\r\n"
-    "            return std::static_pointer_cast<IObject>(obj->GetEnumD());\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -479,9 +476,6 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     "            else\r\n"
     "                obj->InsertEnumC(std::static_pointer_cast<Json>(value));\r\n"
     "            break;\r\n"
-    "        case VCCObjectPtrProperty::EnumD:\r\n"
-    "            obj->SetEnumD(std::static_pointer_cast<Json>(value));\r\n"
-    "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -509,8 +503,6 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     "            return std::static_pointer_cast<IObject>(obj->CloneEnumB());\r\n"
     "        case VCCObjectPtrProperty::EnumC:\r\n"
     "            return std::static_pointer_cast<IObject>(obj->CloneEnumC(index));\r\n"
-    "        case VCCObjectPtrProperty::EnumD:\r\n"
-    "            return std::static_pointer_cast<IObject>(obj->CloneEnumD());\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -535,8 +527,6 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     "        {\r\n"
     "        case VCCObjectPtrProperty::EnumC:\r\n"
     "            return obj->GetEnumC().size();\r\n"
-    "        case VCCObjectPtrProperty::EnumD:\r\n"
-    "            return obj->GetEnumD().size();\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -599,9 +589,6 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     "        {\r\n"
     "        case VCCObjectPtrProperty::EnumC:\r\n"
     "            obj->ClearEnumC();\r\n"
-    "            break;\r\n"
-    "        case VCCObjectPtrProperty::EnumD:\r\n"
-    "            obj->ClearEnumD();\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
