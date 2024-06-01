@@ -8,7 +8,7 @@ namespace vcc
     {
         protected:
             IObject() {}
-            ~IObject() {}
+            virtual ~IObject() {}
 
         public:
             virtual std::shared_ptr<IObject> Clone() const = 0;

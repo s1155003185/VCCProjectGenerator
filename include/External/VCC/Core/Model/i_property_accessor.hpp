@@ -3,12 +3,12 @@
 #include <memory>
 #include <string>
 
+#include "i_type_union.hpp"
 #include "property_accessor_macro.hpp"
 
 namespace vcc
 {
     class IObject;
-    enum class ITypeUnion;
     enum class LockType;
 
     // All property must be size_t for dynamic_cast object property type
@@ -54,7 +54,7 @@ namespace vcc
         
         protected:
             IPropertyAccessor() {}
-            ~IPropertyAccessor() {}
+            virtual ~IPropertyAccessor() {}
 
         public:
             // lock

@@ -141,6 +141,15 @@ bool VPGFileGenerationManager::IsClassEnum(const std::wstring &enumClassName, co
     return false;
 }
 
+std::wstring VPGFileGenerationManager::GetConcatPath(const std::wstring &projWorkspace, const std::wstring &objWorkspace, const std::wstring &middlePath, const std::wstring &fileName) const
+{
+    std::vector<std::wstring> objectFilePaths = { projWorkspace, objWorkspace };
+    if (!middlePath.empty())
+        objectFilePaths.push_back(middlePath);
+    objectFilePaths.push_back(fileName);
+    return ConcatPaths(objectFilePaths);
+}
+
 void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty, const std::wstring &projPrefix, const std::wstring &projWorkspace, const std::wstring &typeWorkspace, 
     const std::wstring &objTypeDirectoryHpp, const std::wstring &objDirectoryHpp, const std::wstring &propertyAccessorDirectoryHpp, const std::wstring &propertyAccessorDirectoryCpp)
 {
@@ -202,16 +211,9 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
                     objectFileName.pop_back();
 
                 std::wstring propertyAccessorFileName = objectFileName + L"_" + propertyAccessorFileSuffixWithoutExtention;
-
-                std::vector<std::wstring> objectFilePaths = { projWorkspace, objDirectoryHpp };
-                if (!middlePath.empty())
-                    objectFilePaths.push_back(middlePath);
-                objectFilePaths.push_back(objectFileName + L".hpp");
-                VPGObjectFileGenerationService::Generate(logProperty, projPrefix, _IncludeFiles,
-                    ConcatPaths(objectFilePaths), enumClassList);
-                VPGPropertyAccessorGenerationSerive::GenerateHpp(logProperty, ConcatPaths({projWorkspace, propertyAccessorDirectoryHpp, propertyAccessorFileName + L".hpp"}), enumClassList);
-                VPGPropertyAccessorGenerationSerive::GenerateCpp(logProperty, _IncludeFiles,
-                    ConcatPaths({projWorkspace, propertyAccessorDirectoryCpp, propertyAccessorFileName + L".cpp"}), enumClassList);
+                VPGObjectFileGenerationService::Generate(logProperty, projPrefix, _IncludeFiles, GetConcatPath(projWorkspace, objDirectoryHpp, middlePath, objectFileName + L".hpp"), enumClassList);
+                VPGPropertyAccessorGenerationSerive::GenerateHpp(logProperty, GetConcatPath(projWorkspace, propertyAccessorDirectoryHpp, middlePath, propertyAccessorFileName + L".hpp"), enumClassList);
+                VPGPropertyAccessorGenerationSerive::GenerateCpp(logProperty, _IncludeFiles, GetConcatPath(projWorkspace, propertyAccessorDirectoryCpp, middlePath, propertyAccessorFileName + L".cpp"), enumClassList);
             }
             LogService::LogInfo(logProperty, logId, L"Parse file completed: " + path);
             // ------------------------------------------------------------------------------------------ //

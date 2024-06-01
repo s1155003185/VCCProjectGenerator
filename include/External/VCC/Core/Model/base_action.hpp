@@ -25,7 +25,7 @@ namespace vcc
             BaseAction() {}
         protected:
             BaseAction(ActionType type) : IAction() { this->_Type = type; }
-            ~BaseAction() {}
+            virtual ~BaseAction() {}
 
             virtual void _LogRedo() 
             { 

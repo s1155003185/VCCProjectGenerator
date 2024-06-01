@@ -12,6 +12,6 @@ namespace vcc
     {
         protected:
             BaseDocument() {}
-            ~BaseDocument() {}
+            virtual ~BaseDocument() {}
     };
 }

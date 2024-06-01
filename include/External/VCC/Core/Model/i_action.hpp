@@ -8,7 +8,7 @@ namespace vcc
     {
     protected:
         IAction() {}
-        ~IAction() {}
+        virtual ~IAction() {}
 
         virtual void _DoRedo() = 0;
         virtual void _DoUndo() = 0;

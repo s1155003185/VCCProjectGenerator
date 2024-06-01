@@ -338,49 +338,216 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     this->_Option->SetIsExcludeUnittest(false);
     this->GetManager()->Add();
 
-    std::wstring codeA =  L"";
-    codeA += L"#pragma once\r\n";
-    codeA += L"\r\n";
-    codeA += L"enum class VCCObjectProperty // Class Command\r\n";
-    codeA += L"{\r\n";
-    codeA += L"    EnumA, // Nothing\r\n";
-    codeA += L"    EnumB, // GETSET(std::wstring, EnumB, L\"Default\") \r\n";
-    codeA += L"    EnumC, // GETSET(int64_t, EnumC, 0) \r\n";
-    codeA += L"    EnumD  // VECTOR(ExceptionType, EnumD) \r\n";
-    codeA += L"};\r\n";
-    codeA += L"\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_a_property.hpp"}), codeA, true);
+    // Empty class
+    std::wstring codeEmpty =  L""
+    L"#pragma once\r\n"
+    L"\r\n"
+    L"enum class VCCObjectEmptyProperty\r\n"
+    L"{\r\n"
+    L"};\r\n"
+    L"\r\n";
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_empty_property.hpp"}), codeEmpty, true);
 
-    std::wstring codeB =  L"";
-    codeB += L"#pragma once\r\n";
-    codeB += L"\r\n";
-    codeB += L"enum class VCCObjectBPtrProperty // Class Command\r\n";
-    codeB += L"{\r\n";
-    codeB += L"    EnumA // GETSET_SPTR(VCCObject, EnumA) \r\n";
-    codeB += L"};\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_b_property.hpp"}), codeB, true);
+    // Dependent class
+    std::wstring codeDependent =  L""
+    "#pragma once\r\n"
+    "\r\n"
+    "enum class VCCObjectDependentProperty\r\n"
+    "{\r\n"
+    "    EnumA // GETSET_SPTR(VCCObjectEmpty, EnumA) \r\n"
+    "};\r\n";
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA/Dependent", L"vcc_object_dependent_property.hpp"}), codeDependent, true);
     
-    std::wstring unittest = L"";
-    unittest += L"#include <gtest/gtest.h>\r\n";
-    unittest += L"\r\n";
-    unittest += L"#include \"memory_macro.hpp\"\r\n";
-    unittest += L"\r\n";
-    unittest += L"#include \"vcc_a.hpp\"\r\n";
-    unittest += L"#include \"vcc_b.hpp\"\r\n";
-    unittest += L"\r\n";
-    unittest += L"TEST(ClassTest, Normal)\r\n";
-    unittest += L"{\r\n";
-    unittest += L"    DECLARE_SPTR(VCCObjectAPtr, objA);\r\n";
-    unittest += L"    DECLARE_SPTR(VCCObjectBPtr, objB);\r\n";
-    unittest += L"}\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/Module/ClassA", L"class_test.cpp"}), unittest, true);
+    // copied from TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
+    std::wstring codeSingle =  L""
+    "#pragma once\r\n"
+    "\r\n"
+    "enum class VCCObjectSingleProperty\r\n"
+    "{\r\n"
+    "    Bool, // GETSET(bool, Bool, false) \r\n"
+    "    String, // GETSET(std::wstring, String, L\"\") \r\n"
+    "    Enum // GETSET(ExceptionType, Enum, ExceptionType::NoError) \r\n"
+    "};\r\n";
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_single_property.hpp"}), codeSingle, true);
+
+    // copied from TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
+    std::wstring codeNoAccess =  L""
+    "#pragma once\r\n"
+    "\r\n"
+    "enum class VCCObjectNoAccessProperty\r\n"
+    "{\r\n"
+    "    ReadWrite, // GETSET(bool, ReadWrite, false) @@NoAccess \r\n"
+    "    Read, // GETSET(bool, Read, false) @@NoAccess \r\n"
+    "    Write, // GETSET(bool, Write, false) @@NoAccess \r\n"
+    "    NoAccess // GETSET(bool, NoAccess, false) @@NoAccess \r\n"
+    "};\r\n";
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_no_access_property.hpp"}), codeNoAccess, true);
+ 
+    // copied from TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
+    std::wstring codeNoAccessModeNormal =  L""
+    "#pragma once\r\n"
+    "\r\n"
+    "enum class VCCObjectAccessModeNormalProperty\r\n"
+    "{\r\n"
+    "    ReadWrite, // GETSET(bool, ReadWrite, false) @@ReadWrite\r\n"
+    "    Read, // GETSET(bool, Read, false) @@Read \r\n"
+    "    Write, // GETSET(bool, Write, false) @@Write \r\n"
+    "    NoAccess // GETSET(bool, NoAccess, false) @@NoAccess \r\n"
+    "};\r\n";
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_access_mode_normal_property.hpp"}), codeNoAccessModeNormal, true);
+ 
+    // copied from TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
+    std::wstring codeNoAccessVector =  L""
+    "#pragma once\r\n"
+    "\r\n"
+    "enum class VCCObjectAccessModeVectorProperty\r\n"
+    "{\r\n"
+    "    ReadWrite, // VECTOR(bool, ReadWrite) @@ReadWrite\r\n"
+    "    Read, // VECTOR(bool, Read) @@Read \r\n"
+    "    Write, // VECTOR(bool, Write) @@Write \r\n"
+    "    NoAccess // VECTOR(bool, NoAccess) @@NoAccess \r\n"
+    "};\r\n";
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_access_mode_vector_property.hpp"}), codeNoAccessVector, true);
+ 
+    // copied from TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
+    std::wstring codeMulti =  L""
+    "#pragma once\r\n"
+    "\r\n"
+    "enum class VCCObjectMultiAProperty\r\n"
+    "{\r\n"
+    "    Bool // GETSET(bool, Bool, false)\r\n"
+    "};\r\n"
+    "\r\n"
+    "enum class VCCObjectMultiBProperty\r\n"
+    "{\r\n"
+    "    Bool // GETSET(bool, Bool, false)\r\n"
+    "};\r\n";
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_multi_property.hpp"}), codeMulti, true);
+ 
+    // copied from TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
+    std::wstring codeObject =  L""
+    "#pragma once\r\n"
+    "\r\n"
+    "enum class VCCObjectObjectProperty\r\n"
+    "{\r\n"
+    "    Object // GETSET_SPTR_NULL(VCCObjectEmpty, Object)\r\n"
+    "};\r\n";
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_object_property.hpp"}), codeObject, true);
+ 
+    // copied from TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
+    std::wstring codeContainer =  L""
+    "#pragma once\r\n"
+    "\r\n"
+    "enum class VCCObjectContainerProperty\r\n"
+    "{\r\n"
+    "    VectorInt, // VECTOR(int, VectorInt)\r\n"
+    "    VectorEnum, // VECTOR(ExceptionType, VectorEnum)\r\n"
+    "    VectorObj, // VECTOR_SPTR(VCCObjectEmpty, VectorObj)\r\n"
+    "    MapInt, // MAP(int, int, MapInt)\r\n"
+    "    MapEnum, // MAP(char, ExceptionType, MapEnum)\r\n"
+    "    MapObj // MAP_SPTR(double, VCCObjectEmpty, MapObj)\r\n"
+    "};\r\n";
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_container_property.hpp"}), codeContainer, true);
+ 
+    // copied from TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
+    std::wstring codeMIx =  L""
+    "#pragma once\r\n"
+    "\r\n"
+    "enum class VCCObjectMixProperty\r\n"
+    "{\r\n"
+    "    Bool, // GETSET(bool, Bool, false) \r\n"
+    "    String, // GETSET(std::wstring, String, L\"\") \r\n"
+    "    Object, // GETSET_SPTR_NULL(VCCObjectEmpty, Object) \r\n"
+    "    Vector, // VECTOR(std::wstring, Vector) \r\n"
+    "    Map // MAP(int, double, Map) \r\n"
+    "};\r\n";
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_mix_property.hpp"}), codeMIx, true);
 
     this->_Option->SetWorkspaceSource(this->GetWorkspaceSource());
     this->_Option->SetWorkspaceDestination(this->GetWorkspaceTarget());
     this->_Option->SetProjectPrefix(L"VCC");
     this->GetManager()->Generate();
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_a.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_b.hpp"})));
+    
+    // Empty Class
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_empty.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_empty_property_accessor.hpp"})));
+    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_empty_property_accessor.cpp"})));
+
+    // Dependent Class
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA/Dependent", L"vcc_object_dependent.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA/Dependent", L"vcc_object_dependent_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA/Dependent", L"vcc_object_dependent_property_accessor.cpp"})));
+
+    // Single Class
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_single.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_single_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_single_property_accessor.cpp"})));
+
+    // NoAccess Class
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_no_access.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_no_access_property_accessor.hpp"})));
+    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_no_access_property_accessor.cpp"})));
+
+    // Access Normal Class
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_access_mode_normal.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_access_mode_normal_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_access_mode_normal_property_accessor.cpp"})));
+
+    // Access Vector Class
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_access_mode_vector.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_access_mode_vector_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_access_mode_vector_property_accessor.cpp"})));
+
+    // Multi Class
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_multi.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_multi_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_multi_property_accessor.cpp"})));
+
+    // Object Class
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_object.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_object_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_object_property_accessor.cpp"})));
+
+    // Container Class
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_container.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_container_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_container_property_accessor.cpp"})));
+
+    // Mix Class
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_mix.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_mix_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_mix_property_accessor.cpp"})));
+
+    std::wstring unittest = L""
+    "#include <gtest/gtest.h>\r\n"
+    "\r\n"
+    "#include \"memory_macro.hpp\"\r\n"
+    "\r\n"
+    "#include \"vcc_object_empty.hpp\"\r\n"
+    "#include \"vcc_object_dependent.hpp\"\r\n"
+    "#include \"vcc_object_single.hpp\"\r\n"
+    "#include \"vcc_object_no_access.hpp\"\r\n"
+    "#include \"vcc_object_access_mode_normal.hpp\"\r\n"
+    "#include \"vcc_object_access_mode_vector.hpp\"\r\n"
+    "#include \"vcc_object_multi.hpp\"\r\n"
+    "#include \"vcc_object_container.hpp\"\r\n"
+    "#include \"vcc_object_object.hpp\"\r\n"
+    "#include \"vcc_object_mix.hpp\"\r\n"
+    "\r\n"
+    "TEST(ClassTest, Normal)\r\n"
+    "{\r\n"
+    "    DECLARE_SPTR(VCCObjectEmpty, objEmpty);\r\n"
+    "    DECLARE_SPTR(VCCObjectDependent, objDependent);\r\n"
+    "    DECLARE_SPTR(VCCObjectSingle, objSingle);\r\n"
+    "    DECLARE_SPTR(VCCObjectNoAccess, objectNoAccess);\r\n"
+    "    DECLARE_SPTR(VCCObjectAccessModeVector, objectAccessModeVector);\r\n"
+    "    DECLARE_SPTR(VCCObjectMultiA, objectMultiA);\r\n"
+    "    DECLARE_SPTR(VCCObjectMultiB, objectMultiB);\r\n"
+    "    DECLARE_SPTR(VCCObjectContainer, objectContainer);\r\n"
+    "    DECLARE_SPTR(VCCObjectObject, objectObject);\r\n"
+    "    DECLARE_SPTR(VCCObjectMix, objectMix);\r\n"
+    "}\r\n";
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/Module/ClassA", L"class_test.cpp"}), unittest, true);
 
     if (this->GetIsCopyDebugFolderToTestFolder()) {
         std::wstring path = ConcatPaths({this->GetTestFolder(), L"Generate"});

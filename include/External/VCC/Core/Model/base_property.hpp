@@ -11,6 +11,6 @@ namespace vcc
     {
         protected:
             BaseProperty() {}
-            ~BaseProperty() {}
+            virtual ~BaseProperty() {}
     };
 }

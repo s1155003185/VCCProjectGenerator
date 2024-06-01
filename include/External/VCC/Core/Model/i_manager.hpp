@@ -6,6 +6,6 @@ namespace vcc
     {
         public:
             IManager() {}
-            ~IManager() {}
+            virtual ~IManager() {}
     };
 }

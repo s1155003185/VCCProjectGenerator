@@ -25,6 +25,6 @@ namespace vcc
 
         protected:
             BaseTypeUnion() {}
-            ~BaseTypeUnion() {}
+            virtual ~BaseTypeUnion() {}
     };
 }

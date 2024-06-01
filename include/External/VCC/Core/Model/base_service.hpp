@@ -9,6 +9,6 @@ namespace vcc
     {
         protected:
             BaseService() {}
-            ~BaseService() {}
+            virtual ~BaseService() {}
     };
 }

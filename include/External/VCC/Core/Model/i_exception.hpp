@@ -10,7 +10,7 @@ namespace vcc
     {
         protected:
             IException() {}
-            ~IException() {}
+            virtual ~IException() {}
         public:
             virtual ExceptionType GetErrorType() const = 0;
             virtual int64_t GetErrorCode() const = 0;

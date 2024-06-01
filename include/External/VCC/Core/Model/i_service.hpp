@@ -6,6 +6,6 @@ namespace vcc
     {
         protected:
             IService() {}
-            ~IService() {}
+            virtual ~IService() {}
     };
 }

@@ -10,7 +10,7 @@ namespace vcc
     {
     protected:
         IDocumentBuilder() {}
-        ~IDocumentBuilder() {}
+        virtual ~IDocumentBuilder() {}
 
     public:
         virtual std::wstring Serialize(const IDocument *doc) const = 0;

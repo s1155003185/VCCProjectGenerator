@@ -23,7 +23,7 @@ namespace vcc
                 this->_Type = type;
                 this->_Message = message;
             }
-            ~BaseException() {}
+            virtual ~BaseException() {}
         
         public:
             virtual ExceptionType GetErrorType() const override { return this->_Type; }

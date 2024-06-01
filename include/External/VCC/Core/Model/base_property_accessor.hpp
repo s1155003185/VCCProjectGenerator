@@ -38,7 +38,7 @@ namespace vcc
         
         protected:
             BasePropertyAccessor(std::shared_ptr<IObject> object) { this->_Object = object; }
-            ~BasePropertyAccessor() {}
+            virtual ~BasePropertyAccessor() {}
 
         public:
             // lock

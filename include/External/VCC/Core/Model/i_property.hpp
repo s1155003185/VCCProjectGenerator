@@ -6,6 +6,6 @@ namespace vcc
     {
         protected:
             IProperty() {}
-            ~IProperty() {}
+            virtual ~IProperty() {}
     };
 }

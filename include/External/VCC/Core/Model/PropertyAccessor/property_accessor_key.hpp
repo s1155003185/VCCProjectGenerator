@@ -8,6 +8,6 @@ namespace vcc
     {
         protected:
             PropertyAccessorKey() {}
-            ~PropertyAccessorKey() {}
+            virtual ~PropertyAccessorKey() {}
     };
 }

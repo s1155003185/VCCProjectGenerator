@@ -6,6 +6,6 @@ namespace vcc
     {
         protected:
             ITypeUnion() {}
-            ~ITypeUnion() {}
+            virtual ~ITypeUnion() {}
     };
 }

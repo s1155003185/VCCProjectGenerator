@@ -15,6 +15,6 @@ namespace vcc
 
         protected:
             BaseDocumentBuilder() = default;
-            ~BaseDocumentBuilder() {}
+            virtual ~BaseDocumentBuilder() {}
     };
 }
