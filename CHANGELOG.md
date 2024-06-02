@@ -6,6 +6,7 @@
 - Generate Mode supports generate Property Accessor ReadWrite, ReadOnly, WriteOnly, NoAccess
 - Class Macro remote STATIC_GET and GET, all class properties must support Get Set and the access mode is controlled by Property Accessor
 - Generator support Map (Property Accessor still cannot read key list)
+- Rename HasPrefix, HasSuffix in string_helper.hpp to IsStartWith, IsEndWith
 
 ### [v0.0.4] - 2024-05-19: Basic Strucute: Merge XML and Improve Try Catch
 - Add make unittest in Makefile
