@@ -5,6 +5,9 @@ Maintain those standard already stable long time ago. No reason to implement twi
 
 Note: Still in initialize version, will have full review when official release
 
+Note: Stage 1 Basic Structure complete. 
+Next Stage: Start VCC Project Manager (Multi Project Handling), including Java Interface, Thread, Form, Action, Git.
+
 ## Features
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
 - Create program structure like sql, the remaining is just handle specific logic.
@@ -375,7 +378,15 @@ Procedure:
 
 ### Generate Rule
 The final objective is that user only need to handle enum class like sql table and logic in service and manager only. Other thing will be auto generate.
-Sample in vpg_file_generation_manager_test.cpp
+Note: 
+1. Property Accessor not support Set as there is no way to get set element.
+2. Not support property accessor factory yet.
+3. Not support get map key list yet.
+Note:
+1. For any not support type / macro e.g. SET macro, std::complex, etc. User may need to use ReadLock, WriteLock of Property Accessor to handle manually.
+Sample in 
+1. vpg_file_generation_manager_test.cpp
+2. vpg_property_accessor_generation_service_test.cpp
 
 Definition of Program Structure
     Class: C++ Class. Data storage.
@@ -462,6 +473,31 @@ Example
     };
     ```
 
+#### Field Defintion
+{Enum} // {ClassMacro} [@@AccessMode]
+
+{...}: Compulsory
+[]: Optional
+@@: Key for attributes. Need to state for attribute
+
+{Enum}
+    Enum class enum. Used in property Accessor
+
+{ClassMacro}
+    Getter, Setter stated in class_macro.hpp. If it is not match with any class macro in class_macro.hpp, the rest will be ignored
+
+[@@AccessMode]
+    Default is @@ReadWrite.
+    Option:
+        @@ReadWrite
+            Allow Read and Write through Property Accessor
+        @@ReadOnly
+            Allow Read Only via Property Accessor
+        @@WriteOnly
+            Allow Write Only via Property Accessor
+        @@NoAccess
+            Cannot Access via Property Accessor
+
 ****
 ## Versioning Common Codebase Project Generator VSCode Extension
 
@@ -544,22 +580,25 @@ X(Twitter) @VCCProject
 
 ****
 ## Release Log
-2024-05-19 v0.0.4
+
+### [v0.0.5] - 2024-06-02: Basic Strucute: Property Accessor and Thread safe
+- Generate Mode supports generate Property Accessor ReadWrite, ReadOnly, WriteOnly, NoAccess
+- Class Macro remote STATIC_GET and GET, all class properties must support Get Set and the access mode is controlled by Property Accessor
+- Generator support Map (Property Accessor cannot read key list )
+
+### [v0.0.4] - 2024-05-19: Basic Strucute: Merge XML and Improve Try Catch
 - Add make unittest in Makefile
 - Initial Property Accessor
 - Merge XML Reader to XML Builder
 - Improve TRY CATCH macro
 
-2024-05-06 v0.0.3
+### [v0.0.3] 2024-05-06: Basic Strucute: Update project according to vcc.json
 - Move vcc.json to .vcc/vcc.json
 - Update Makefile to fix unittest name
 - Trigger Update VCC Module will update Makefile according to vcc.json
 
-2024-05-05 v0.0.2
+### [v0.0.2] 2024-05-05: Basic Strucute: Urgent Fix
 - Fix cannot reexecute after switched to tag
 
-2024-05-05 First Release: v0.0.1
-
-2023-12-23 Combine VCCProjectGeneratorEXE and VCCProjectGeneratorDLL and rename to VCCProjectGenerator
-
-2023-04-30 Initialization
+### [v0.0.1] 2024-05-05: Basic Strucute: Initialize
+- Initialize
