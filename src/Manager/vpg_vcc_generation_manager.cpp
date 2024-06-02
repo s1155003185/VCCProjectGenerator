@@ -59,6 +59,7 @@ void VPGVccGenerationManager::CreateVccJson() const
     TRY
         DECLARE_UPTR(JsonBuilder, jsonBuilder);
         jsonBuilder->SetIsBeautify(true);
+        _Option->SetVersion(VPGGlobal::GetVersion());
 
         // Vector cannot be inizalize when create, initialize here
         // if (_Option->GetPlatforms().empty()) {
