@@ -5,7 +5,7 @@
 ### [v0.0.5] - 2024-06-02: Basic Strucute: Property Accessor and Thread safe
 - Generate Mode supports generate Property Accessor ReadWrite, ReadOnly, WriteOnly, NoAccess
 - Class Macro remote STATIC_GET and GET, all class properties must support Get Set and the access mode is controlled by Property Accessor
-- Generator support Map (Property Accessor cannot read key list )
+- Generator support Map (Property Accessor still cannot read key list)
 
 ### [v0.0.4] - 2024-05-19: Basic Strucute: Merge XML and Improve Try Catch
 - Add make unittest in Makefile
