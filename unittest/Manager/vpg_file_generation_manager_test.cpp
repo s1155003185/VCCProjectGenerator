@@ -113,8 +113,19 @@ TEST_F(VPGFileGenerationManagerTest, GetFileList)
 
 TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
 {
-    this->GetManager()->GernerateProperty(this->GetLogProperty().get(), L"VCC", L"", this->GetWorkspaceSource(), 
-        this->GetWorkspaceTarget(), this->GetWorkspaceTarget(), this->GetWorkspaceTarget(), this->GetWorkspaceTarget());
+    VPGGenerationOption option;
+    option.SetProjectPrefix(L"VCC");
+    option.SetWorkspaceSource(L"");
+    option.SetWorkspaceDestination(L"");
+    option.SetTypeWorkspace(this->GetWorkspaceSource());
+    option.SetObjectTypeDirectory(this->GetWorkspaceTarget());
+    option.SetModelDirectory(this->GetWorkspaceTarget());
+    option.SetPropertyAccessorDirectoryHpp(this->GetWorkspaceTarget());
+    option.SetPropertyAccessorDirectoryCpp(this->GetWorkspaceTarget());
+    option.SetPropertyAccessorFactoryDirectoryHpp(this->GetWorkspaceTarget());
+    option.SetPropertyAccessorFactoryDirectoryCpp(this->GetWorkspaceTarget());
+
+    this->GetManager()->GernerateProperty(this->GetLogProperty().get(), &option);
 
     // ------------------------------------------------------------------------------------------ //
     //                                      Object Type File                                      //
@@ -570,4 +581,10 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     "";
     EXPECT_EQ(objectPropertyAccessorFileContentHpp, expectedOBjectPropertyAccessorFileContentHpp);
     EXPECT_EQ(objectPropertyAccessorFileContentCpp, expectedOBjectPropertyAccessorFileContentCpp);
+
+    // ------------------------------------------------------------------------------------------ //
+    //                                      Property Accessor Factory                             //
+    // ------------------------------------------------------------------------------------------ //
+    std::wstring objectPropertyAccessorFactoryFileContentHpp = ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"property_accessor_factory.hpp"}));
+    std::wstring objectPropertyAccessorFactoryFileContentCpp = ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"property_accessor_factory.cpp"}));
 }

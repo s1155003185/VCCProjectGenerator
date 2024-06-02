@@ -5,6 +5,7 @@
 #include "action_type.hpp"
 #include "log_property.hpp"
 #include "log_service.hpp"
+#include "object_type.hpp"
 #include "string_helper.hpp"
 
 #include <memory>
@@ -16,6 +17,8 @@ namespace vcc
     template <typename Derived>
     class BaseAction : public IAction
     {
+        private:
+            ObjectType _ObjectType = ObjectType::NA;
         GETSET(ActionType, Type, ActionType::NA)
 
         private:
@@ -71,6 +74,11 @@ namespace vcc
 
                 this->_DoUndo();
                 this->_LogUndo();
+            }
+
+            virtual const ObjectType& GetObjectType() const override
+            {
+                return _ObjectType;
             }
             
             virtual std::shared_ptr<IObject> Clone() const override

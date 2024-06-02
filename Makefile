@@ -134,6 +134,7 @@ GTESTFLAGS := -lgtest -lpthread
 #---------- CXXFLAGS ----------#
 CXXFLAGS := $(CXXFLAGS_DEBUG_CONTENT)
 
+UNAME := $(shell uname -s)
 #----------------------------------#
 #----------- Library  -----------#
 #----------------------------------#
@@ -200,8 +201,13 @@ else
 #----------------------------------#
 #---------- Linus Version----------#
 #----------------------------------#
+# Darwin = MacOS: only allow .dylib
 MAIN_EXE := $(PROJ_NAME_EXE)
-MAIN_DLL := $(PROJ_NAME_DLL).so
+ifeq ($(UNAME),Darwin)
+	MAIN_DLL := $(PROJ_NAME_DLL).dylib
+else
+	MAIN_DLL := $(PROJ_NAME_DLL).so
+endif
 GTESTMAIN := $(PROJ_NAME_GTEST)
 
 # All Sub Directory - Source need *.cpp instead of directory

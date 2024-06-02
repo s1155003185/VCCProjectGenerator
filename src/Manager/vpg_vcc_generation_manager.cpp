@@ -167,8 +167,7 @@ void VPGVccGenerationManager::Generate() const
         
         DECLARE_UPTR(VPGFileGenerationManager, manager, this->_LogProperty);
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Generate Project ...");
-        manager->GernerateProperty(_LogProperty.get(), _Option->GetProjectPrefix(), _Option->GetWorkspaceDestination(), _Option->GetTypeWorkspace(),
-            _Option->GetObjectTypeDirectory(), _Option->GetModelDirectory(), _Option->GetPropertyAccessorDirectoryHpp(), _Option->GetPropertyAccessorDirectoryCpp());
+        manager->GernerateProperty(_LogProperty.get(), _Option.get());
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Done");
     CATCH
 }

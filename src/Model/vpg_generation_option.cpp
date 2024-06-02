@@ -98,6 +98,43 @@ using namespace vcc;
 //     }
 // }
 
+std::shared_ptr<Json> VPGGenerationOptionExport::ToJson() const
+{
+    TRY
+        DECLARE_UPTR(Json, json);
+        std::wstring interface = L"";
+        switch (_Interface)
+        {
+        case VPGGenerationOptionInterfaceType::Java:
+            interface = L"Java";
+            break;        
+        default:
+            assert(false);
+            break;
+        }
+        json->AddString(L"Interface", interface);
+        return json;
+    CATCH
+    return nullptr;
+}
+
+void VPGGenerationOptionExport::DeserializeJson(std::shared_ptr<IDocument> document) const
+{
+    TRY
+        std::shared_ptr<Json> json = std::dynamic_pointer_cast<Json>(document);
+        if (json->IsContainKey(L"Interface")) {
+            std::wstring interface = json->GetString(L"Interface");
+            ToUpper(interface);
+            if (interface == L"JAVA")
+                this->SetInterface(VPGGenerationOptionInterfaceType::Java);
+            else
+                THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Unknow Interface: " + interface);
+        }
+
+        assert(json != nullptr);
+    CATCH
+}
+
 std::shared_ptr<Json> VPGGenerationOption::ToJson() const
 {
     TRY
@@ -133,6 +170,9 @@ std::shared_ptr<Json> VPGGenerationOption::ToJson() const
         json->AddString(L"PropertyAccessorDirectoryHpp", _PropertyAccessorDirectoryHpp);
         json->AddString(L"PropertyAccessorDirectoryCpp", _PropertyAccessorDirectoryCpp);
 
+        json->AddString(L"PropertyAccessorFactoryDirectoryHpp", _PropertyAccessorFactoryDirectoryHpp);
+        json->AddString(L"PropertyAccessorFactoryDirectoryCpp", _PropertyAccessorFactoryDirectoryCpp);
+
         // Platform
         // DECLARE_SPTR(Json, platforms);
         // json->AddArray(L"Platforms", platforms);
@@ -145,6 +185,12 @@ std::shared_ptr<Json> VPGGenerationOption::ToJson() const
         json->AddArray(L"Plugins", plugins);
         for (auto const &plugin : _Plugins) {
             plugins->AddArrayString(plugin);
+        }
+        // Export
+        DECLARE_SPTR(Json, exports);
+        json->AddArray(L"Exports", exports);
+        for (auto const &element : _Exports) {
+            exports->AddArrayObject(element->ToJson());
         }
         return json;
     CATCH
@@ -196,6 +242,11 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
         if (json->IsContainKey(L"PropertyAccessorDirectoryCpp"))
             this->SetPropertyAccessorDirectoryCpp(json->GetString(L"PropertyAccessorDirectoryCpp"));
 
+        if (json->IsContainKey(L"PropertyAccessorFactoryDirectoryHpp"))
+            this->SetPropertyAccessorFactoryDirectoryHpp(json->GetString(L"PropertyAccessorFactoryDirectoryHpp"));
+        if (json->IsContainKey(L"PropertyAccessorFactoryDirectoryCpp"))
+            this->SetPropertyAccessorFactoryDirectoryCpp(json->GetString(L"PropertyAccessorFactoryDirectoryCpp"));
+
         // Platform
         // ClearPlatforms();
         // if (json->IsContainKey(L"Platforms")) {
@@ -207,9 +258,19 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
         // }
 
         // Plugins
+        ClearPlugins();
         if (json->IsContainKey(L"Plugins")) {
             for (auto const &plugin : json->GetArray(L"Plugins")) {
                 this->InsertPlugins(plugin->GetJsonInternalValue());
+            }
+        }
+        // Exports
+        ClearExports();
+        if (json->IsContainKey(L"Exports")) {
+            for (auto const &element : json->GetArray(L"Exports")) {
+                DECLARE_SPTR(VPGGenerationOptionExport, tmpExport);
+                tmpExport->DeserializeJson(element);
+                this->InsertExports(tmpExport);
             }
         }
     CATCH

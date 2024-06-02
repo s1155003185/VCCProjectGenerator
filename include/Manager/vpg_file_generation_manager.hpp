@@ -8,6 +8,7 @@
 #include "class_macro.hpp"
 #include "log_property.hpp"
 #include "vpg_enum_class_reader.hpp"
+#include "vpg_generation_option.hpp"
 
 using namespace vcc;
 
@@ -38,6 +39,5 @@ class VPGFileGenerationManager : public BaseManager<VPGFileGenerationManager>
         bool IsClassEnumFile(const std::wstring &filename, const std::wstring &projectPrefix);
         bool IsClassEnum(const std::wstring &enumClassName, const std::wstring &projectPrefix);
         
-        void GernerateProperty(const LogProperty *logProperty, const std::wstring &projPrefix, const std::wstring &projWorkspace, const std::wstring &typeWorkspace, 
-            const std::wstring &objTypeDirectoryHpp, const std::wstring &objDirectoryHpp, const std::wstring &propertyAccessorDirectoryHpp, const std::wstring &propertyAccessorDirectoryCpp);
+        void GernerateProperty(const LogProperty *logProperty, const VPGGenerationOption *option);
 };

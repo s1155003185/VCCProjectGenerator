@@ -13,14 +13,14 @@ using namespace vcc;
 /* ---------------------------------------------------------------------------------------------------- */
 TEST(StringHelperTest, IsStartWithTrimSpace_NoSpace)
 {
-    std::wstring prefix = L"//<vcc:abc";
+    std::wstring prefix = L"a<vcc:abc";
     EXPECT_TRUE(IsStartWithTrimSpace(prefix, prefix));
 }
 
 TEST(StringHelperTest, IsStartWithTrimSpace_Space)
 {
-    std::wstring prefix = L"//<vcc:abc";
-    std::wstring text = L"// <vcc:abc";
+    std::wstring prefix = L"a<vcc:abc";
+    std::wstring text = L"a <vcc:abc";
     EXPECT_TRUE(IsStartWithTrimSpace(text, prefix));
 }
 /* ---------------------------------------------------------------------------------------------------- */

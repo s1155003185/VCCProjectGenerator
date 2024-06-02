@@ -1,6 +1,7 @@
 # Change Log
 
 ## [Unreleased]
+- Makefile MacOS extension changed from .so to .dylib
 
 ### [v0.0.5] - 2024-06-02: Basic Strucute: Property Accessor and Thread safe
 - Generate Mode supports generate Property Accessor ReadWrite, ReadOnly, WriteOnly, NoAccess

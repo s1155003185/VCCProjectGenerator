@@ -2,6 +2,8 @@
 #include <memory>
 #include <string>
 
+#include "object_type.hpp"
+
 namespace vcc
 {
     class IObject
@@ -11,6 +13,7 @@ namespace vcc
             virtual ~IObject() {}
 
         public:
+            virtual const ObjectType& GetObjectType() const = 0;
             virtual std::shared_ptr<IObject> Clone() const = 0;
     };
 }

@@ -260,6 +260,10 @@ TEST_F(VPGVccGenerationManagerTest, Update)
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
 
     this->_Option->InsertPlugins(L"VCC/Versioning/Git");
+    DECLARE_UPTR(JsonBuilder, jsonBuilder);
+    jsonBuilder->SetIsBeautify(true);
+    WriteFile(ConcatPaths({this->GetWorkspaceTarget(), L".vcc/vcc.json"}), jsonBuilder->Serialize(this->_Option->ToJson().get()));
+
     this->GetManager()->Update();
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));

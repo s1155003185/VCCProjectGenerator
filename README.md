@@ -102,7 +102,7 @@ Release program is built in bin/Release
 -	Helper (Stable, Keep update)
 -	Log Service (Stable)
 -   Process Service (Stable)
--	Property Accessor (Pending)
+-	Property Accessor (Stable but need adjustment for map, and try to support set)
 -   Terminal Service (Stable)
 -   XML (Read only, Other are still pending)
 ### Common:
@@ -497,6 +497,44 @@ Example
             Allow Write Only via Property Accessor
         @@NoAccess
             Cannot Access via Property Accessor
+
+### Export to Java
+Assume that using Maven Java Project. The library will be compiled to resources folder.
+For MacOS, only test with M Chips.
+
+Please put following code to Pom. Only test for version >= 5.14.0.
+```
+    <dependencies>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>5.14.0</version>
+        </dependency>
+    </dependencies>
+```
+
+Note: NetBeans cannot find net.java.dev.jna, It can only find old version com.sun.jna. After verison 3.0.0, con.sun.jna has been renamed as net.java.dev.jna but the import files still called com.sun.jna.
+For the com.sun.jna version, it does not support Mac M Chips and throw linkage error.
+
+Note: When using jna, when we put "vpg" as dll name, it will auto searh with the libaray with name libvpg.dylib under src/main/resources
+Please having lib name with libxxx.dylib format
+
+```
+import com.sun.jna.Library;
+import com.sun.jna.Native;
+
+interface DllFunctions extends Library {
+    DllFunctions INSTANCE = (DllFunctions) Native.load("vpg", DllFunctions.class);
+
+    int GetVersion();
+}
+public class Test {
+
+    public static void main(String[] args) {
+        System.out.println(DllFunctions.INSTANCE.GetVersion());
+    }
+}
+```
 
 ****
 ## Versioning Common Codebase Project Generator VSCode Extension
