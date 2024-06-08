@@ -536,6 +536,23 @@ public class Test {
 }
 ```
 
+#### Java Type Mapping
+According to JNA (Java Native Access), here is the map of types between c++ and Java. Better to use below type only. If not using below type, generator will use static cast.
+| C++ Type | Java Type |
+| --- | --- |
+| char | byte |
+| short | short |
+| wchart_t | char |
+| int | int |
+| bool | boolean |
+| long | NativeLong |
+| long long | long |
+| float | float |
+| double | double |
+| char* | String |
+| void* | pointer |
+
+
 ****
 ## Versioning Common Codebase Project Generator VSCode Extension
 

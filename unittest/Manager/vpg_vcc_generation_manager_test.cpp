@@ -22,7 +22,7 @@ class VPGVccGenerationManagerTest : public testing::Test
     GETSET(std::wstring, WorkspaceTarget, L"");
     
     GETSET(std::wstring, TestFolder, L"../VPGVccGenerationManagerTest_VCCTestProject");
-    GETSET(bool, IsCopyDebugFolderToTestFolder, false);
+    GETSET(bool, IsCopyDebugFolderToTestFolder, true);
 
     MANAGER(VPGVccGenerationManager, Manager, _LogProperty, _Option);
 

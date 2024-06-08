@@ -16,6 +16,7 @@
 #include "vpg_generation_option.hpp"
 #include "vpg_include_path_service.hpp"
 #include "vpg_object_file_generation_service.hpp"
+#include "vpg_object_factory_file_generation_service.hpp"
 #include "vpg_object_type_file_generation_service.hpp"
 #include "vpg_property_accessor_generation_service.hpp"
 #include "vpg_property_accessor_factory_file_generation_service.hpp"
@@ -24,6 +25,8 @@ const std::wstring classMacroFilePath = L"include/External/VCC/Core/Macro/class_
 const std::wstring logId = L"File Generation";
 
 const std::wstring objectTypeHppFileName = L"object_type.hpp";
+const std::wstring objectFactoryFileNameHpp = L"object_factory.hpp";
+const std::wstring objectFactoryFileNameCpp = L"object_factory.cpp";
 const std::wstring propertyAccessorFactoryFileNameHpp = L"property_accessor_factory.hpp";
 const std::wstring propertyAccessorFactoryFileNameCpp = L"property_accessor_factory.cpp";
 const std::wstring propertyFileSuffix = L"_property.hpp";
@@ -175,7 +178,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
 
         LogService::LogInfo(logProperty, logId, L"Generate property start.");
         std::set<std::wstring> objectTypes;
-        std::set<std::wstring> propertyAccessorFileNames;
+        std::set<std::wstring> objectFileNames, propertyAccessorFileNames;
         for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(typeWorkspaceFullPath))) {
             std::wstring path = GetLinuxPath(filePath.path().wstring());
             std::wstring fileName = filePath.path().filename().wstring();
@@ -220,7 +223,8 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
                     objectFileName.pop_back();
 
                 std::wstring propertyAccessorFileName = objectFileName + L"_" + propertyAccessorFileSuffixWithoutExtention;
-                VPGObjectFileGenerationService::Generate(logProperty, projPrefix, _IncludeFiles, GetConcatPath(projWorkspace, option->GetModelDirectory(), middlePath, objectFileName + L".hpp"), enumClassList);
+                objectFileNames.insert(objectFileName + L".hpp");
+                VPGObjectFileGenerationService::Generate(logProperty, projPrefix, _IncludeFiles, GetConcatPath(projWorkspace, option->GetObjectDirectory(), middlePath, objectFileName + L".hpp"), enumClassList);
                 if (!propertyAccessorDirectoryHpp.empty() && !propertyAccessorDirectoryCpp.empty()) {
                     propertyAccessorFileNames.insert(propertyAccessorFileName + L".hpp");
                     VPGPropertyAccessorGenerationSerive::GenerateHpp(logProperty, GetConcatPath(projWorkspace, propertyAccessorDirectoryHpp, middlePath, propertyAccessorFileName + L".hpp"), enumClassList);
@@ -236,6 +240,14 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
         //                               Generate Object Type File                                    //
         // ------------------------------------------------------------------------------------------ //
         VPGObjectTypeFileGenerationSerive::Generate(logProperty, ConcatPaths({projWorkspace, option->GetObjectTypeDirectory(), objectTypeHppFileName}), objectTypes);
+
+        // ------------------------------------------------------------------------------------------ //
+        //                               Generate Object Factory File                                 //
+        // ------------------------------------------------------------------------------------------ //
+        if (!option->GetObjectFactoryDirectoryHpp().empty() && !option->GetObjectFactoryDirectoryCpp().empty()) {
+            VPGObjectFactoryFileGenerationSerive::GenerateHpp(logProperty, ConcatPaths({projWorkspace, option->GetObjectFactoryDirectoryHpp(), objectFactoryFileNameHpp}));
+            VPGObjectFactoryFileGenerationSerive::GenerateCpp(logProperty, projPrefix, objectFileNames, ConcatPaths({projWorkspace, option->GetObjectFactoryDirectoryCpp(), objectFactoryFileNameCpp}), objectTypes);
+        }
         // ------------------------------------------------------------------------------------------ //
         //                               Generate Property Accessor Factory File                      //
         // ------------------------------------------------------------------------------------------ //
