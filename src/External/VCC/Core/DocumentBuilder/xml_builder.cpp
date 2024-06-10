@@ -103,7 +103,8 @@ namespace vcc
         TRY
             if (xmlData[pos] != L'<')
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(xmlData, pos, L"char is not < but " + std::wstring(1, xmlData[pos])));
-                
+            
+            size_t startPos = pos;
             pos++;
             size_t dataLength = xmlData.length();
             if (pos >= dataLength)
@@ -145,6 +146,7 @@ namespace vcc
                 pos++;
             }
             // tag end with no ceontent
+            element->SetOpeningTag(xmlData.substr(startPos, pos - startPos + 1));
             return xmlData[pos - 1] != L'/';
         CATCH
         return false;
@@ -178,6 +180,7 @@ namespace vcc
         TRY
             GetNextCharPos(xmlData, pos, true);
             std::wstring endTag = L"</" + element->_Name + L">";
+            element->SetClosingTag(endTag);
             if (!xmlData.substr(pos).starts_with(endTag))
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(xmlData, pos, L"end tab " + endTag + L" missing"));
             pos += endTag.length() - 1;

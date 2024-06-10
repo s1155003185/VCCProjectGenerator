@@ -17,6 +17,8 @@ TEST(XMLBuilderTest, ParserSimple_String)
     EXPECT_EQ(element->GetName(), L"");
     EXPECT_EQ(element->GetAttributes().size(), (size_t)0);
     EXPECT_EQ(element->GetChildren().size(), (size_t)0);
+    EXPECT_EQ(element->GetOpeningTag(), L"");
+    EXPECT_EQ(element->GetClosingTag(), L"");
     EXPECT_EQ(element->GetText(), L"abc");
     EXPECT_EQ(element->GetFullText(), xml);
 }
@@ -30,6 +32,8 @@ TEST(XMLBuilderTest, ParserSimple_SingleTag)
     EXPECT_EQ(element->GetName(), L"br");
     EXPECT_EQ(element->GetAttributes().size(), (size_t)0);
     EXPECT_EQ(element->GetChildren().size(), (size_t)0);
+    EXPECT_EQ(element->GetOpeningTag(), L"<br/>");
+    EXPECT_EQ(element->GetClosingTag(), L"");
     EXPECT_EQ(element->GetText(), L"");
     EXPECT_EQ(element->GetFullText(), xml);
 }
@@ -43,6 +47,8 @@ TEST(XMLBuilderTest, ParserSimple_TagWithString)
     EXPECT_EQ(element->GetName(), L"h1");
     EXPECT_EQ(element->GetAttributes().size(), (size_t)0);
     EXPECT_EQ(element->GetChildren().size(), (size_t)0);
+    EXPECT_EQ(element->GetOpeningTag(), L"<h1>");
+    EXPECT_EQ(element->GetClosingTag(), L"</h1>");
     EXPECT_EQ(element->GetText(), L"abc");
     EXPECT_EQ(element->GetFullText(), xml);
 }
@@ -56,6 +62,8 @@ TEST(XMLBuilderTest, ParserSimple_EmptyTag)
     EXPECT_EQ(element->GetName(), L"h2");
     EXPECT_EQ(element->GetAttributes().size(), (size_t)0);
     EXPECT_EQ(element->GetChildren().size(), (size_t)0);
+    EXPECT_EQ(element->GetOpeningTag(), L"<h2>");
+    EXPECT_EQ(element->GetClosingTag(), L"</h2>");
     EXPECT_EQ(element->GetText(), L"");
     EXPECT_EQ(element->GetFullText(), xml);
 }
@@ -69,6 +77,8 @@ TEST(XMLBuilderTest, ParserSimple_Namespace)
     EXPECT_EQ(element->GetName(), L"a:h2");
     EXPECT_EQ(element->GetAttributes().size(), (size_t)0);
     EXPECT_EQ(element->GetChildren().size(), (size_t)0);
+    EXPECT_EQ(element->GetOpeningTag(), L"<a:h2>");
+    EXPECT_EQ(element->GetClosingTag(), L"</a:h2>");
     EXPECT_EQ(element->GetText(), L"");
     EXPECT_EQ(element->GetFullText(), xml);
 }
@@ -82,6 +92,8 @@ TEST(XMLBuilderTest, ParserSimple_TagWithEscapeString)
     EXPECT_EQ(element->GetName(), L"b:h3");
     EXPECT_EQ(element->GetAttributes().size(), (size_t)0);
     EXPECT_EQ(element->GetChildren().size(), (size_t)0);
+    EXPECT_EQ(element->GetOpeningTag(), L"<b:h3>");
+    EXPECT_EQ(element->GetClosingTag(), L"</b:h3>");
     EXPECT_EQ(element->GetText(), L"\"&\"");
     EXPECT_EQ(element->GetFullText(), xml);
 }
@@ -101,6 +113,8 @@ TEST(XMLBuilderTest, ParserSimple_TagWithProperties)
     EXPECT_EQ(element->GetAttributes().at(2)->GetName(), L"height");
     EXPECT_EQ(element->GetAttributes().at(2)->GetValue(), L"222.222");
     EXPECT_EQ(element->GetChildren().size(), (size_t)0);
+    EXPECT_EQ(element->GetOpeningTag(), L"<img src=\"img.jpg\" width=\"111\" height=\"222.222\">");
+    EXPECT_EQ(element->GetClosingTag(), L"</img>");
     EXPECT_EQ(element->GetText(), L"abc");
     EXPECT_EQ(element->GetFullText(), xml);
 }
@@ -119,14 +133,22 @@ TEST(XMLBuilderTest, Full)
     EXPECT_EQ(element->GetName(), L"f:table");
     EXPECT_EQ(element->GetAttributes().size(), (size_t)0);
     EXPECT_EQ(element->GetChildren().size(), (size_t)3);
+    EXPECT_EQ(element->GetOpeningTag(), L"<f:table>");
+    EXPECT_EQ(element->GetClosingTag(), L"</f:table>");
     EXPECT_EQ(element->GetFullText(), L"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<f:table>\r\n    <f:td>Alpha</f:td>\r\n    <f:td>&quot;Beta&quot;</f:td>\r\n    <f:td>&amp;gamma</f:td>\r\n</f:table>");
     EXPECT_EQ(element->GetChildren().at(0)->GetName(), L"f:td");
+    EXPECT_EQ(element->GetChildren().at(0)->GetOpeningTag(), L"<f:td>");
+    EXPECT_EQ(element->GetChildren().at(0)->GetClosingTag(), L"</f:td>");
     EXPECT_EQ(element->GetChildren().at(0)->GetText(), L"Alpha");
     EXPECT_EQ(element->GetChildren().at(0)->GetFullText(), L"\r\n    <f:td>Alpha</f:td>");
     EXPECT_EQ(element->GetChildren().at(1)->GetName(), L"f:td");
+    EXPECT_EQ(element->GetChildren().at(1)->GetOpeningTag(), L"<f:td>");
+    EXPECT_EQ(element->GetChildren().at(1)->GetClosingTag(), L"</f:td>");
     EXPECT_EQ(element->GetChildren().at(1)->GetText(), L"\"Beta\"");
     EXPECT_EQ(element->GetChildren().at(1)->GetFullText(), L"\r\n    <f:td>&quot;Beta&quot;</f:td>");
     EXPECT_EQ(element->GetChildren().at(2)->GetName(), L"f:td");
+    EXPECT_EQ(element->GetChildren().at(2)->GetOpeningTag(), L"<f:td>");
+    EXPECT_EQ(element->GetChildren().at(2)->GetClosingTag(), L"</f:td>");
     EXPECT_EQ(element->GetChildren().at(2)->GetText(), L"&gamma");
     EXPECT_EQ(element->GetChildren().at(2)->GetFullText(), L"\r\n    <f:td>&amp;gamma</f:td>");
     EXPECT_EQ(element->GetFullText(), xml);

@@ -24,6 +24,8 @@ namespace vcc
         GETSET(std::wstring, Name, L"");
         VECTOR_SPTR(XmlAttribute, Attributes);
         VECTOR_SPTR(Xml, Children);
+        GETSET(std::wstring, OpeningTag, L"");
+        GETSET(std::wstring, ClosingTag, L"");
         GETSET(std::wstring, Text, L"");
         GETSET(std::wstring, FullText, L"");
 

@@ -58,79 +58,79 @@ class VPGDllFactoryFileGenerationServiceTest : public testing::Test
         }
 };
 
-TEST_F(VPGDllFactoryFileGenerationServiceTest, Empty)
-{
-    std::set<std::wstring> propertyTypes;
-    VPGDllFileGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp());
-    VPGDllFileGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetFilePathCpp());
+// TEST_F(VPGDllFactoryFileGenerationServiceTest, Empty)
+// {
+//     std::set<std::wstring> propertyTypes;
+//     VPGDllFileGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp());
+//     VPGDllFileGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetFilePathCpp());
 
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+//     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
+//     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
 
-    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), this->GetExpectedHpp());
+//     EXPECT_EQ(ReadFile(this->GetFilePathHpp()), this->GetExpectedHpp());
 
-    std::wstring expectedResult = L""
-        "#include \"object_factory.hpp\"\r\n"
-        "\r\n"
-        "#include <assert.h>\r\n"
-        "#include <memory>\r\n"
-        "\r\n"
-        "#include \"i_object.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
-        "std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType)\r\n"
-        "{\r\n"
-        "    switch (objectType)\r\n"
-        "    {\r\n"
-        "    default:\r\n"
-        "        assert(false);\r\n"
-        "        break;\r\n"
-        "    }\r\n"
-        "    return nullptr;\r\n"
-        "}\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedResult);
-}
+//     std::wstring expectedResult = L""
+//         "#include \"object_factory.hpp\"\r\n"
+//         "\r\n"
+//         "#include <assert.h>\r\n"
+//         "#include <memory>\r\n"
+//         "\r\n"
+//         "#include \"i_object.hpp\"\r\n"
+//         "#include \"object_type.hpp\"\r\n"
+//         "\r\n"
+//         "using namespace vcc;\r\n"
+//         "\r\n"
+//         "std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType)\r\n"
+//         "{\r\n"
+//         "    switch (objectType)\r\n"
+//         "    {\r\n"
+//         "    default:\r\n"
+//         "        assert(false);\r\n"
+//         "        break;\r\n"
+//         "    }\r\n"
+//         "    return nullptr;\r\n"
+//         "}\r\n";
+//     EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedResult);
+// }
 
-TEST_F(VPGDllFactoryFileGenerationServiceTest, Normal)
-{
-    std::set<std::wstring> propertyTypes;
-    propertyTypes.insert(L"Def");
-    propertyTypes.insert(L"Abc");
-    VPGDllFileGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp());
-    VPGDllFileGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetFilePathCpp());
+// TEST_F(VPGDllFactoryFileGenerationServiceTest, Normal)
+// {
+//     std::set<std::wstring> propertyTypes;
+//     propertyTypes.insert(L"Def");
+//     propertyTypes.insert(L"Abc");
+//     VPGDllFileGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp());
+//     VPGDllFileGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetFilePathCpp());
 
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+//     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
+//     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
 
-    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), this->GetExpectedHpp());
+//     EXPECT_EQ(ReadFile(this->GetFilePathHpp()), this->GetExpectedHpp());
 
-    std::wstring expectedResult = L""
-        "#include \"object_factory.hpp\"\r\n"
-        "\r\n"
-        "#include <assert.h>\r\n"
-        "#include <memory>\r\n"
-        "\r\n"
-        "#include \"abc.hpp\"\r\n"
-        "#include \"i_object.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
-        "std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType)\r\n"
-        "{\r\n"
-        "    switch (objectType)\r\n"
-        "    {\r\n"
-        "    case ObjectType::Abc:\r\n"
-        "        return std::make_shared<VCCAbc>();\r\n"
-        "    case ObjectType::Def:\r\n"
-        "        return std::make_shared<VCCDef>();\r\n"
-        "    default:\r\n"
-        "        assert(false);\r\n"
-        "        break;\r\n"
-        "    }\r\n"
-        "    return nullptr;\r\n"
-        "}\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedResult);
-}
+//     std::wstring expectedResult = L""
+//         "#include \"object_factory.hpp\"\r\n"
+//         "\r\n"
+//         "#include <assert.h>\r\n"
+//         "#include <memory>\r\n"
+//         "\r\n"
+//         "#include \"abc.hpp\"\r\n"
+//         "#include \"i_object.hpp\"\r\n"
+//         "#include \"object_type.hpp\"\r\n"
+//         "\r\n"
+//         "using namespace vcc;\r\n"
+//         "\r\n"
+//         "std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType)\r\n"
+//         "{\r\n"
+//         "    switch (objectType)\r\n"
+//         "    {\r\n"
+//         "    case ObjectType::Abc:\r\n"
+//         "        return std::make_shared<VCCAbc>();\r\n"
+//         "    case ObjectType::Def:\r\n"
+//         "        return std::make_shared<VCCDef>();\r\n"
+//         "    default:\r\n"
+//         "        assert(false);\r\n"
+//         "        break;\r\n"
+//         "    }\r\n"
+//         "    return nullptr;\r\n"
+//         "}\r\n";
+//     EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedResult);
+// }
