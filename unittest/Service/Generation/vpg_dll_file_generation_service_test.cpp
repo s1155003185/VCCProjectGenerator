@@ -7,14 +7,14 @@
 #include "class_macro.hpp"
 #include "file_helper.hpp"
 
-#include "vpg_object_factory_file_generation_service.hpp"
+#include "vpg_dll_file_generation_service.hpp"
 
 using namespace vcc;
 
-class VPGObjectFactoryFileGenerationServiceTest : public testing::Test 
+class VPGDllFactoryFileGenerationServiceTest : public testing::Test 
 {
     GETSET_SPTR(LogProperty, LogProperty);
-    GETSET(std::wstring, Workspace, L"bin/Debug/VPGObjectFactoryFileGenerationServiceTest/");
+    GETSET(std::wstring, Workspace, L"bin/Debug/VPGDllFactoryFileGenerationServiceTest/");
     
     GETSET(std::wstring, FilePathHpp, L"");
     GETSET(std::wstring, FilePathCpp, L"");
@@ -27,8 +27,8 @@ class VPGObjectFactoryFileGenerationServiceTest : public testing::Test
             this->_LogProperty->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
-            this->_FilePathHpp = ConcatPaths({this->GetWorkspace(), L"object_factory.hpp"});
-            this->_FilePathCpp = ConcatPaths({this->GetWorkspace(), L"object_factory.cpp"});
+            this->_FilePathHpp = ConcatPaths({this->GetWorkspace(), L"DllFunctions.hpp"});
+            this->_FilePathCpp = ConcatPaths({this->GetWorkspace(), L"DllFunctions.cpp"});
 
             this->_ExpectedHpp = L""
                 "#pragma once\r\n"
@@ -58,11 +58,11 @@ class VPGObjectFactoryFileGenerationServiceTest : public testing::Test
         }
 };
 
-TEST_F(VPGObjectFactoryFileGenerationServiceTest, Empty)
+TEST_F(VPGDllFactoryFileGenerationServiceTest, Empty)
 {
     std::set<std::wstring> propertyTypes;
-    VPGObjectFactoryFileGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp());
-    VPGObjectFactoryFileGenerationService::GenerateCpp(this->GetLogProperty().get(), L"VCC", {}, this->GetFilePathCpp(), propertyTypes);
+    VPGDllFileGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp());
+    VPGDllFileGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetFilePathCpp());
 
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
@@ -93,13 +93,13 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Empty)
     EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedResult);
 }
 
-TEST_F(VPGObjectFactoryFileGenerationServiceTest, Normal)
+TEST_F(VPGDllFactoryFileGenerationServiceTest, Normal)
 {
     std::set<std::wstring> propertyTypes;
     propertyTypes.insert(L"Def");
     propertyTypes.insert(L"Abc");
-    VPGObjectFactoryFileGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp());
-    VPGObjectFactoryFileGenerationService::GenerateCpp(this->GetLogProperty().get(), L"VCC", { L"abc.hpp" }, this->GetFilePathCpp(), propertyTypes);
+    VPGDllFileGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp());
+    VPGDllFileGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetFilePathCpp());
 
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));

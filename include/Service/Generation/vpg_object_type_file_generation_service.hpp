@@ -7,11 +7,11 @@
 
 using namespace vcc;
 
-class VPGObjectTypeFileGenerationSerive
+class VPGObjectTypeFileGenerationService
 {
     private:
-        VPGObjectTypeFileGenerationSerive() = default;
-        ~VPGObjectTypeFileGenerationSerive() {}
+        VPGObjectTypeFileGenerationService() = default;
+        ~VPGObjectTypeFileGenerationService() {}
 
     public:
         static void Generate(const LogProperty *logProperty, const std::wstring &hppFilePath, const std::set<std::wstring> &propertyTypes);

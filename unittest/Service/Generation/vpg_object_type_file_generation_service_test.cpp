@@ -35,7 +35,7 @@ class VPGObjectTypeFileGenerationServiceTest : public testing::Test
 TEST_F(VPGObjectTypeFileGenerationServiceTest, Empty)
 {
     std::set<std::wstring> propertyTypes;
-    VPGObjectTypeFileGenerationSerive::Generate(this->GetLogProperty().get(), this->GetFilePathHpp(), propertyTypes);
+    VPGObjectTypeFileGenerationService::Generate(this->GetLogProperty().get(), this->GetFilePathHpp(), propertyTypes);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     std::wstring content = ReadFile(this->GetFilePathHpp());
     std::wstring expectedResult = L""
@@ -52,7 +52,7 @@ TEST_F(VPGObjectTypeFileGenerationServiceTest, Normal)
     std::set<std::wstring> propertyTypes;
     propertyTypes.insert(L"Def");
     propertyTypes.insert(L"Abc");
-    VPGObjectTypeFileGenerationSerive::Generate(this->GetLogProperty().get(), this->GetFilePathHpp(), propertyTypes);
+    VPGObjectTypeFileGenerationService::Generate(this->GetLogProperty().get(), this->GetFilePathHpp(), propertyTypes);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     std::wstring content = ReadFile(this->GetFilePathHpp());
     std::wstring expectedResult = L""

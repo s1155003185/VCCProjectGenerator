@@ -7,11 +7,11 @@
 
 using namespace vcc;
 
-class VPGPropertyAccessorFactoryFileGenerationSerive
+class VPGPropertyAccessorFactoryFileGenerationService
 {
     private:
-        VPGPropertyAccessorFactoryFileGenerationSerive() = default;
-        ~VPGPropertyAccessorFactoryFileGenerationSerive() {}
+        VPGPropertyAccessorFactoryFileGenerationService() = default;
+        ~VPGPropertyAccessorFactoryFileGenerationService() {}
 
     public:
         static void GenerateHpp(const LogProperty *logProperty, const std::wstring &hppFilePath);

@@ -9,7 +9,7 @@ using namespace vcc;
 
 #define LOG_ID L"Object Type File Generation"
 
-void VPGObjectTypeFileGenerationSerive::Generate(const LogProperty *logProperty, const std::wstring &hppFilePath, const std::set<std::wstring> &propertyTypes)
+void VPGObjectTypeFileGenerationService::Generate(const LogProperty *logProperty, const std::wstring &hppFilePath, const std::set<std::wstring> &propertyTypes)
 {
     TRY
         LogService::LogInfo(logProperty, LOG_ID, L"Generate object type file: " + hppFilePath);

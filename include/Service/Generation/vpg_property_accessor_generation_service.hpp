@@ -9,11 +9,11 @@
 
 using namespace vcc;
 
-class VPGPropertyAccessorGenerationSerive
+class VPGPropertyAccessorGenerationService
 {
     private:
-        VPGPropertyAccessorGenerationSerive() = default;
-        ~VPGPropertyAccessorGenerationSerive() {}
+        VPGPropertyAccessorGenerationService() = default;
+        ~VPGPropertyAccessorGenerationService() {}
 
         static bool IsIncludeString(const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
         static void GetPropertyAccessorTypeName(const std::wstring &originalType, std::wstring &convertedType, std::wstring &convertedName, std::wstring &returnResult);

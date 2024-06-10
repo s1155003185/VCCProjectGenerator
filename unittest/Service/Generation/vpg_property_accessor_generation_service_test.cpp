@@ -86,8 +86,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     enumClass->InsertProperties(propEnum);
 
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationSerive::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationSerive::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
 
@@ -326,8 +326,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
     enumClass->InsertProperties(propNoAccess);
 
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationSerive::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationSerive::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
 
@@ -397,8 +397,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
     enumClass->InsertProperties(propNoAccess);
 
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationSerive::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationSerive::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
 
@@ -537,8 +537,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     enumClass->InsertProperties(propNoAccess);
 
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationSerive::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationSerive::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
 
@@ -735,8 +735,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     enumClassB->InsertProperties(propBool);
 
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationSerive::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationSerive::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
 
@@ -899,8 +899,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
     enumClass->InsertProperties(propObject);
 
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationSerive::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationSerive::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
 
@@ -1104,8 +1104,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     enumClass->InsertProperties(propOrderedMapObj);
     
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationSerive::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationSerive::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
 
@@ -1686,8 +1686,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
 
 
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationSerive::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationSerive::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
 
