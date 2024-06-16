@@ -27,10 +27,10 @@ std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const st
 }
 
 void VPGObjectFileGenerationService::Generate(const LogProperty *logProperty, const std::wstring &classPrefix, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
-    const std::wstring &hppFilePath, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+    const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate object class file: " + hppFilePath);
+        LogService::LogInfo(logProperty, LOG_ID, L"Generate object class file: " + filePathHpp);
 
         // TODO: need to enable to check all systemn function
         // need to skip all code in command
@@ -167,7 +167,7 @@ void VPGObjectFileGenerationService::Generate(const LogProperty *logProperty, co
             }
             content += L"};\r\n";
         }
-        WriteFile(hppFilePath, content, true);
+        WriteFile(filePathHpp, content, true);
         LogService::LogInfo(logProperty, LOG_ID, L"Generate object class file completed.");
     CATCH
 }

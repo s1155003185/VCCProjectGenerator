@@ -12,10 +12,10 @@ using namespace vcc;
 
 #define LOG_ID L"Prorperty Accessor Factory File Generation"
 
-void VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(const LogProperty *logProperty, const std::wstring &hppFilePath)
+void VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(const LogProperty *logProperty, const std::wstring &filePathHpp)
 {
     TRY
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor factory file: " + hppFilePath);
+        LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor factory file: " + filePathHpp);
         std::wstring content = L""
             "#pragma once\r\n"
             "\r\n"
@@ -36,16 +36,16 @@ void VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(const LogPrope
             "    public:\r\n"
             "        static std::shared_ptr<IPropertyAccessor> Create(std::shared_ptr<IObject> object);\r\n"
             "};\r\n";
-        WriteFile(hppFilePath, content, true);
+        WriteFile(filePathHpp, content, true);
         LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor factory file completed.");
     CATCH
 }
 
 void VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(const LogProperty *logProperty, const std::wstring &projectPrefix, const std::set<std::wstring> &includeFiles,
-    const std::wstring &cppFilePath, const std::set<std::wstring> &propertyTypes)
+    const std::wstring &filePathCpp, const std::set<std::wstring> &propertyTypes)
 {
     TRY
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor factory file: " + cppFilePath);
+        LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor factory file: " + filePathCpp);
 
         std::set<std::wstring> tmpIncludePaths = includeFiles;
         tmpIncludePaths.insert(L"base_property_accessor.hpp");
@@ -82,7 +82,7 @@ void VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(const LogPrope
             + INDENT + L"}\r\n"
             + INDENT + L"return nullptr;\r\n"
             "}\r\n";
-        WriteFile(cppFilePath, content, true);
+        WriteFile(filePathCpp, content, true);
         LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor factory completed.");
     CATCH
 }

@@ -33,8 +33,8 @@ std::wstring VPGFileGenerationService::GetIndent(const std::wstring &str)
         if (lines.empty())
             return L"";
 
-        for (size_t i = lines.size() - 1; i >= 0; i--) {
-            std::wstring line = lines[i];
+        for (size_t i = 0; i < lines.size(); i++) {
+            std::wstring line = lines[lines.size() - i - 1];
             while (!line.empty() && line[line.length() - 1] == L'\r')
                 line.pop_back();
 
