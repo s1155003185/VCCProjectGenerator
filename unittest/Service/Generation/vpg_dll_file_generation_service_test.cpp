@@ -42,9 +42,6 @@ class VPGDllFileGenerationServiceTest : public testing::Test
 
 TEST_F(VPGDllFileGenerationServiceTest, Normal)
 {
-    std::set<std::wstring> propertyTypes;
-    propertyTypes.insert(L"Def");
-    propertyTypes.insert(L"Abc");
     VPGDllFileGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp());
     VPGDllFileGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetFilePathCpp());
 

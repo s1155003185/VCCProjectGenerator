@@ -1,3 +1,4 @@
+// <vcc:vccproj gen="DEMAND"/>
 #include "DllFunctions.h"
 
 #include <locale.h>
@@ -15,3 +16,6 @@ int GetVersion(wchar_t **str)
     wcscpy(*str, versionString.c_str());
     return 0;
 }
+
+// <vcc:propertyAccessor gen="FORCE">
+// </vcc:propertyAccessor>
