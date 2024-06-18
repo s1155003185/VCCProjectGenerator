@@ -26,7 +26,7 @@ namespace vcc
     }
 
     // Concat
-    inline std::wstring Concat(const std::set<std::wstring> &v, std::wstring delimitor)
+    inline std::wstring Concat(const std::set<std::wstring> &v, const std::wstring &delimitor)
     {
         std::wstring result = L"";
         if (IsEmpty(v))

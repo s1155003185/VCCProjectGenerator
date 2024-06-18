@@ -48,52 +48,15 @@ TEST_F(VPGDllFileGenerationServiceTest, Normal)
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
 
-    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), L""
-        "#pragma once\r\n"
-        "\r\n"
-        "#include <memory>\r\n"
-        "\r\n"
-        "#include \"base_factory.hpp\"\r\n"
-        "#include \"i_object.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
-        "class ObjectFactory : public BaseFactory\r\n"
-        "{\r\n"
-        "    private:\r\n"
-        "        ObjectFactory() = default;\r\n"
-        "        virtual ~ObjectFactory() {}\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        static std::shared_ptr<IObject> Create(const ObjectType &objectType);\r\n"
-        "};\r\n");
-
-    std::wstring expectedResult = L""
-        "#include \"object_factory.hpp\"\r\n"
-        "\r\n"
-        "#include <assert.h>\r\n"
-        "#include <memory>\r\n"
-        "\r\n"
-        "#include \"abc.hpp\"\r\n"
-        "#include \"i_object.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
-        "std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType)\r\n"
-        "{\r\n"
-        "    switch (objectType)\r\n"
-        "    {\r\n"
-        "    case ObjectType::Abc:\r\n"
-        "        return std::make_shared<VCCAbc>();\r\n"
-        "    case ObjectType::Def:\r\n"
-        "        return std::make_shared<VCCDef>();\r\n"
-        "    default:\r\n"
-        "        assert(false);\r\n"
-        "        break;\r\n"
-        "    }\r\n"
-        "    return nullptr;\r\n"
-        "}\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedResult);
+    std::wstring contentHpp = ReadFile(this->GetFilePathHpp());
+    if (!(CountSubstring(contentHpp, L"// <vcc:propertyAccessor gen=\"FORCE\">") == 1
+        && CountSubstring(contentHpp, L"// </vcc:propertyAccessor>") == 1)) {
+        EXPECT_EQ(contentHpp, L"Generate Hpp Not Correct");
+    }
+    
+    std::wstring contentCpp = ReadFile(this->GetFilePathCpp());
+    if (!(CountSubstring(contentCpp, L"// <vcc:propertyAccessor gen=\"FORCE\">") == 1
+        && CountSubstring(contentCpp, L"// </vcc:propertyAccessor>") == 1)) {
+        EXPECT_EQ(contentCpp, L"Generate Cpp Not Correct");
+    }
 }

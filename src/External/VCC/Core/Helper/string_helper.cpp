@@ -579,7 +579,7 @@ namespace vcc
 		return result;
 	}
 	
-	size_t CountSubstring(const std::wstring &str, const std::wstring subStr)
+	size_t CountSubstring(const std::wstring &str, const std::wstring &subStr)
 	{
 		size_t count = 0;
 		size_t pos = 0;
