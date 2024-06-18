@@ -190,10 +190,10 @@ std::wstring VPGPropertyAccessorGenerationService::GetIncludeFile(const std::map
     return L"";
 }
 
-void VPGPropertyAccessorGenerationService::GenerateHpp(const LogProperty *logProperty, const std::wstring &hppFilePath, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+void VPGPropertyAccessorGenerationService::GenerateHpp(const LogProperty *logProperty, const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor hpp file: " + hppFilePath);
+        LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor hpp file: " + filePathHpp);
 
         std::wstring result = L"#pragma once\r\n\r\n";
 
@@ -268,7 +268,7 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const LogProperty *logPro
                 "};\r\n";
         }
 
-        WriteFile(hppFilePath, result, true);
+        WriteFile(filePathHpp, result, true);
         LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor hpp completed.");
     CATCH
 }
@@ -755,10 +755,10 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
 }
 
 void VPGPropertyAccessorGenerationService::GenerateCpp(const LogProperty *logProperty, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
-            const std::wstring &cppFilePath, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+            const std::wstring &filePathCpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor cpp file: " + cppFilePath);
+        LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor cpp file: " + filePathCpp);
 
         std::set<std::wstring> systemIncludeFiles;
         std::set<std::wstring> projectIncludeFiles;
@@ -866,7 +866,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogProperty *logPro
         }
 
 
-        std::wstring headerFileName = GetFileName(cppFilePath);
+        std::wstring headerFileName = GetFileName(filePathCpp);
         Replace(headerFileName, L".cpp", L".hpp");
         std::wstring result = L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, headerFileName) + L"\r\n";
         // system include files
@@ -924,11 +924,11 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogProperty *logPro
             }
         }
         if (count > 0) {
-            WriteFile(cppFilePath, result, true);
+            WriteFile(filePathCpp, result, true);
             LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor cpp completed.");
         } else {
-            if (IsFileExists(cppFilePath)) {
-                RemoveFile(cppFilePath);
+            if (IsFileExists(filePathCpp)) {
+                RemoveFile(filePathCpp);
                 LogService::LogInfo(logProperty, LOG_ID, L"Removed property accessor cpp as no properties are acceesable.");
             } else
                 LogService::LogInfo(logProperty, LOG_ID, L"No property accessor cpp need to be generated.");

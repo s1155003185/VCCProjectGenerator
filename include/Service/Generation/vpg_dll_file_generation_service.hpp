@@ -14,6 +14,6 @@ class VPGDllFileGenerationService
         ~VPGDllFileGenerationService() {}
 
     public:
-        static void GenerateHpp(const LogProperty *logProperty, const std::wstring &hppFilePath);
-        static void GenerateCpp(const LogProperty *logProperty, const std::wstring &cppFilePath);
+        static void GenerateHpp(const LogProperty *logProperty, const std::wstring &filePathHpp);
+        static void GenerateCpp(const LogProperty *logProperty, const std::wstring &filePathCpp);
 };

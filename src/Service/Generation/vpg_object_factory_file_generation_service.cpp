@@ -12,10 +12,10 @@ using namespace vcc;
 
 #define LOG_ID L"Object Factory File Generation"
 
-void VPGObjectFactoryFileGenerationService::GenerateHpp(const LogProperty *logProperty, const std::wstring &hppFilePath)
+void VPGObjectFactoryFileGenerationService::GenerateHpp(const LogProperty *logProperty, const std::wstring &filePathHpp)
 {
     TRY
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate object factory file: " + hppFilePath);
+        LogService::LogInfo(logProperty, LOG_ID, L"Generate object factory file: " + filePathHpp);
         std::wstring content = L""
             "#pragma once\r\n"
             "\r\n"
@@ -36,16 +36,16 @@ void VPGObjectFactoryFileGenerationService::GenerateHpp(const LogProperty *logPr
             "    public:\r\n"
             "        static std::shared_ptr<IObject> Create(const ObjectType &objectType);\r\n"
             "};\r\n";
-        WriteFile(hppFilePath, content, true);
+        WriteFile(filePathHpp, content, true);
         LogService::LogInfo(logProperty, LOG_ID, L"Generate object factory file completed.");
     CATCH
 }
 
 void VPGObjectFactoryFileGenerationService::GenerateCpp(const LogProperty *logProperty, const std::wstring &projectPrefix, const std::set<std::wstring> &includeFiles,
-    const std::wstring &cppFilePath, const std::set<std::wstring> &propertyTypes)
+    const std::wstring &filePathCpp, const std::set<std::wstring> &propertyTypes)
 {
     TRY
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate object factory file: " + cppFilePath);
+        LogService::LogInfo(logProperty, LOG_ID, L"Generate object factory file: " + filePathCpp);
 
         std::set<std::wstring> tmpIncludePaths = includeFiles;
         tmpIncludePaths.insert(L"i_object.hpp");
@@ -79,7 +79,7 @@ void VPGObjectFactoryFileGenerationService::GenerateCpp(const LogProperty *logPr
             + INDENT + L"}\r\n"
             + INDENT + L"return nullptr;\r\n"
             "}\r\n";
-        WriteFile(cppFilePath, content, true);
+        WriteFile(filePathCpp, content, true);
         LogService::LogInfo(logProperty, LOG_ID, L"Generate object factory completed.");
     CATCH
 }
