@@ -30,8 +30,8 @@ class VPGDllFileGenerationServiceTest : public testing::Test
             this->_FilePathHpp = ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"});
             this->_FilePathCpp = ConcatPaths({this->GetWorkspace(), L"DllFunctions.cpp"});
             
-            CopyFile(L"DllFunctions.h", this->GetWorkspace());
-            CopyFile(L"DllFunctions.cpp", this->GetWorkspace());
+            CopyFile(L"DllFunctions.h", this->GetWorkspace(), true);
+            CopyFile(L"DllFunctions.cpp", this->GetWorkspace(), true);
         }
 
         void TearDown() override
