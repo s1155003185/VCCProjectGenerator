@@ -204,7 +204,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
     CATCH
 }
 
-std::wstring VPGEnumClassReader::_GetCommand(const std::wstring &cppCode, size_t &pos) const
+std::wstring VPGEnumClassReader::_GetCommand(const std::wstring &cppCode, const bool &isClassCommand, size_t &pos) const
 {
     std::wstring result = L"";
     TRY
@@ -221,6 +221,16 @@ std::wstring VPGEnumClassReader::_GetCommand(const std::wstring &cppCode, size_t
             }
             Trim(tmpCmd);
             result += tmpCmd;
+            size_t currentPos = pos;
+            if (isClassCommand) {
+                size_t nextNewLinePos = cppCode.find(L"\n", pos + 1);
+                GetNextCharPos(cppCode, pos, false);
+                if (nextNewLinePos != std::wstring::npos && pos != std::wstring::npos
+                    && nextNewLinePos < pos && (IsStartWith(cppCode, L"//", pos) || IsStartWith(cppCode, L"/*", pos))) {
+                    result = L"";
+                }
+                pos = currentPos;
+            }
             GetNextCharPos(cppCode, pos, false);
         }
         Trim(result);
@@ -249,7 +259,7 @@ void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &p
             if (cppCode[pos] == L',')
                 GetNextCharPos(cppCode, pos, false);
             if (IsStartWith(cppCode, L"//", pos) || IsStartWith(cppCode, L"/*", pos)) {
-                _AssignEnumClassProperty(_GetCommand(cppCode, pos), property);
+                _AssignEnumClassProperty(_GetCommand(cppCode, false, pos), property);
                 GetNextCharPos(cppCode, pos, false);
             }
 
@@ -282,10 +292,10 @@ void VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
         GetNextCharPos(cppCode, pos, false);
 
         if (IsStartWith(cppCode, L"//", pos)) {
-            enumClass->_Command = _GetCommand(cppCode, pos);
+            enumClass->_Command = _GetCommand(cppCode, false, pos);
             GetNextCharPos(cppCode, pos, false);
         } else if (IsStartWith(cppCode, L"/*", pos)) {
-            enumClass->_Command =_GetCommand(cppCode, pos);
+            enumClass->_Command =_GetCommand(cppCode, false, pos);
             GetNextCharPos(cppCode, pos, false);
         }
         if (cppCode[pos] != L'{')
@@ -304,13 +314,20 @@ void VPGEnumClassReader::Parse(const std::wstring &cppCode, std::vector<std::sha
 {
     TRY
         size_t pos = 0;
+        std::wstring currentCommand = L"";
         while (pos < cppCode.size()) {
             if (IsStartWith(cppCode, L"//", pos) || IsStartWith(cppCode, L"/*", pos)) {
-                _GetCommand(cppCode, pos);
+                std::wstring tmpCmd = _GetCommand(cppCode, true, pos);
+                Trim(tmpCmd);
+                if (!currentCommand.empty())
+                    currentCommand += L"\r\n";
+                currentCommand += tmpCmd;
             } else if (IsStartWith(cppCode, L"enum", pos)) {
                 DECLARE_SPTR(VPGEnumClass, enumClass);
+                enumClass->SetCommand(currentCommand);
                 _ParseClass(cppCode, pos, enumClass);
                 results.push_back(enumClass);
+                currentCommand = L"";
             }
             GetNextCharPos(cppCode, pos, false);
         }

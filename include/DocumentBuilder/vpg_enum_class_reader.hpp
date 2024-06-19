@@ -22,7 +22,7 @@ class VPGEnumClassReader
         std::wstring _GetDefaultValue(const std::wstring &macroStr, size_t &pos) const;
         void _AssignEnumClassProperty(const std::wstring &propertyCommand, std::shared_ptr<VPGEnumClassProperty> property) const;
 
-        std::wstring _GetCommand(const std::wstring &cppCode, size_t &pos) const;
+        std::wstring _GetCommand(const std::wstring &cppCode, const bool &isClassCommand, size_t &pos) const;
 
         void _ParseProperties(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass) const;
         void _ParseClass(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass) const;

@@ -70,12 +70,12 @@ TEST_F(VPGEnumClassReaderTest, TableCommand)
         L"\r\n"
         L"#include \"class_macro.hpp\"\r\n"
         L"\r\n"
-        L"// table command 1/r/n"
-        L"enum class VCCObjectProperty // Class Command\r\n"
+        L"// table command 1\r\n"
+        L"enum class VCCObjectProperty\r\n"
         L"{\r\n"
         L"};\r\n"
         L"\r\n"
-        L"/* table command 1*/enum class VCCSingleLineProperty { }"
+        L"/* table command 1*/enum class VCCSingleLineProperty { };\r\n"
         L"\r\n"
         L"// empty command 1\r\n"
         L"\r\n"
@@ -100,7 +100,7 @@ TEST_F(VPGEnumClassReaderTest, TableCommand)
     // third
     element = results.at(2);
     EXPECT_EQ(element->GetName(), L"VCCMultiProperty");
-    EXPECT_EQ(element->GetCommand(), L"table command 1/r/ntable command 2");
+    EXPECT_EQ(element->GetCommand(), L"table command 1\r\ntable command 2");
 }
 
 TEST_F(VPGEnumClassReaderTest, Normal)
