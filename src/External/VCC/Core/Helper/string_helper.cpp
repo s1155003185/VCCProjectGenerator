@@ -422,6 +422,13 @@ namespace vcc
 		}
 	}
 
+	std::wstring GetTailingSubstring(const std::wstring &str, const size_t &length)
+	{
+		if (str.length() <= length)
+			return str;
+		return str.substr(str.length() - length, length);
+	}
+
 	std::wstring GetNextStringSplitBySpace(const std::wstring &str, size_t &pos,
 		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
 	{
@@ -579,14 +586,19 @@ namespace vcc
 		return result;
 	}
 	
-	size_t CountSubstring(const std::wstring &str, const std::wstring &subStr)
+	bool IsContain(const std::wstring &str, const std::wstring &subStr, const size_t &pos, const bool &isIgnoreCase)
+	{
+		return Find(str, subStr, pos, isIgnoreCase) != std::wstring::npos;
+	}
+
+	size_t CountSubstring(const std::wstring &str, const std::wstring &subStr, const bool &isIgnoreCase)
 	{
 		size_t count = 0;
 		size_t pos = 0;
 
 		while (pos < str.length())
 		{
-			pos = Find(str, subStr, pos);
+			pos = Find(str, subStr, pos, isIgnoreCase);
 			if (pos == std::wstring::npos)
 				break;
 			count++;

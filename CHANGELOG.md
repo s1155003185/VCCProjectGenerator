@@ -2,8 +2,9 @@
 
 ## [Unreleased]
 - Makefile MacOS extension changed from .so to .dylib
-- vcc.json rename ModelDirectory to ObjectDirectory
+- vcc.json rename ModelDirectory to ObjectDirectory, ObjectDirectory to ObjectDirectoryHpp, added ObjectDirectoryCpp
 - Object Factory, Property Accessor Factory
+- Generate Class Object with Json Serialize and Deserialize
 
 ### [v0.0.5] - 2024-06-02: Basic Strucute: Property Accessor and Thread safe
 - Generate Mode supports generate Property Accessor ReadWrite, ReadOnly, WriteOnly, NoAccess

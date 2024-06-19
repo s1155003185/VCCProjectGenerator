@@ -74,7 +74,8 @@ std::wstring VPGFileGenerationManager::GetClassFilenameFromEnumClassFilename(con
 void VPGFileGenerationManager::GetFileList(const VPGEnumClassReader *reader, const std::wstring &directoryFullPath, const std::wstring &projectPrefix)
 {
     TRY
-        VPGIncludePathService::GetWorkspaceIncludePath(L"", _IncludeFiles);
+        _EnumClasses.clear();
+        VPGIncludePathService::GetWorkspaceIncludePath(L"", this->_ClassMacros, _IncludeFiles, _EnumClasses);
 
         std::map<std::wstring, std::wstring> enumClassFiles;
         std::map<std::wstring, std::wstring> classFiles;
@@ -224,7 +225,8 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
 
                 std::wstring propertyAccessorFileName = objectFileName + L"_" + propertyAccessorFileSuffixWithoutExtention;
                 objectFileNames.insert(objectFileName + L".hpp");
-                VPGObjectFileGenerationService::Generate(logProperty, projPrefix, _IncludeFiles, GetConcatPath(projWorkspace, option->GetObjectDirectory(), middlePath, objectFileName + L".hpp"), enumClassList);
+                VPGObjectFileGenerationService::GenerateHpp(logProperty, projPrefix, _IncludeFiles, GetConcatPath(projWorkspace, option->GetObjectDirectoryHpp(), middlePath, objectFileName + L".hpp"), enumClassList);
+                VPGObjectFileGenerationService::GenerateCpp(logProperty, _IncludeFiles, _EnumClasses, GetConcatPath(projWorkspace, option->GetObjectDirectoryCpp(), middlePath, objectFileName + L".cpp"), enumClassList);
                 if (!propertyAccessorDirectoryHpp.empty() && !propertyAccessorDirectoryCpp.empty()) {
                     propertyAccessorFileNames.insert(propertyAccessorFileName + L".hpp");
                     VPGPropertyAccessorGenerationService::GenerateHpp(logProperty, GetConcatPath(projWorkspace, propertyAccessorDirectoryHpp, middlePath, propertyAccessorFileName + L".hpp"), enumClassList);

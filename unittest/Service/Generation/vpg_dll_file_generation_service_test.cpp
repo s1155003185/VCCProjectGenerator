@@ -51,12 +51,14 @@ TEST_F(VPGDllFileGenerationServiceTest, Normal)
     std::wstring contentHpp = ReadFile(this->GetFilePathHpp());
     std::wstring generatedHpp = L"// <vcc:propertyAccessor gen=\"FORCE\">\r\n"
         "// </vcc:propertyAccessor>";
-    if (CountSubstring(contentHpp, generatedHpp) != 1)
+    if (CountSubstring(contentHpp, generatedHpp) != 1) {
         EXPECT_EQ(contentHpp, L"Generate Hpp Not Contain:\r\n" + generatedHpp);
-    
+    }
+
     std::wstring contentCpp = ReadFile(this->GetFilePathCpp());
     std::wstring generatedCpp = L"// <vcc:propertyAccessor gen=\"FORCE\">\r\n"
         "// </vcc:propertyAccessor>";
-    if (CountSubstring(contentCpp, generatedCpp) != 1)
+    if (CountSubstring(contentCpp, generatedCpp) != 1) {
         EXPECT_EQ(contentCpp, L"Generate Cpp Not Contain:\r\n" + generatedCpp);
+    }
 }

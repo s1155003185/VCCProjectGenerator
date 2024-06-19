@@ -1,5 +1,6 @@
 #include "vpg_enum_class_reader.hpp"
 
+#include <math.h>
 #include <string>
 #include <vector>
 
@@ -17,9 +18,20 @@ VPGEnumClassReader::VPGEnumClassReader(const std::set<std::wstring> &classMacroL
     this->_ClassMacroList.insert(classMacroList.begin(), classMacroList.end());
 }
 
-std::wstring VPGEnumClassReader::_GetErrorMessage(const size_t &pos, const wchar_t &c, const std::wstring &msg) const
+std::wstring VPGEnumClassReader::_GetErrorMessage(const std::wstring &str, const size_t &pos, const std::wstring &msg) const
 {
-    return L"Error at position " + std::to_wstring(pos + 1) + L" with char '" + std::wstring(1, c) + L"': " + msg;
+        size_t row = 0, column = 0;
+        GetCharacterRowAndColumn(str, pos, row, column);
+        
+        size_t lengthOfPos = std::min(pos, 100UL);
+        size_t lengthOfSub = std::min(str.length() - pos, 100UL);
+
+        std::wstring preString = str.substr(pos - lengthOfPos, lengthOfPos);
+        std::wstring subString = str.substr(pos + 1, lengthOfSub);
+        return L"Error at position " + std::to_wstring(pos + 1) 
+            + L", row " + std::to_wstring(row) 
+            + L", column " + std::to_wstring(column) + L": " + preString + L"<<" + std::wstring(1, str[pos]) + L">>" + subString + L"\r\n "
+            + L" Error message: " + msg;
 }
 
 std::wstring VPGEnumClassReader::_GetEnum(const std::wstring &propertyStr, size_t &pos) const
@@ -166,7 +178,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
 
         // split macro
         pos = 0;
-        if (IsStartWith(property->_Macro, L"MAP", pos)) {
+        if (IsStartWith(property->_Macro, L"MAP", pos) || IsStartWith(property->_Macro, L"ORDERED_MAP", pos)) {
             property->_Type1 = _GetType(property->_Macro, pos);
             if (property->_Macro[pos] != L',')
                 return;
@@ -204,7 +216,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
     CATCH
 }
 
-std::wstring VPGEnumClassReader::_GetCommand(const std::wstring &cppCode, size_t &pos) const
+std::wstring VPGEnumClassReader::_GetCommand(const std::wstring &cppCode, const bool &isClassCommand, size_t &pos) const
 {
     std::wstring result = L"";
     TRY
@@ -221,6 +233,16 @@ std::wstring VPGEnumClassReader::_GetCommand(const std::wstring &cppCode, size_t
             }
             Trim(tmpCmd);
             result += tmpCmd;
+            size_t currentPos = pos;
+            if (isClassCommand) {
+                size_t nextNewLinePos = cppCode.find(L"\n", pos + 1);
+                GetNextCharPos(cppCode, pos, false);
+                if (nextNewLinePos != std::wstring::npos && pos != std::wstring::npos
+                    && nextNewLinePos < pos && (IsStartWith(cppCode, L"//", pos) || IsStartWith(cppCode, L"/*", pos))) {
+                    result = L"";
+                }
+                pos = currentPos;
+            }
             GetNextCharPos(cppCode, pos, false);
         }
         Trim(result);
@@ -249,7 +271,7 @@ void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &p
             if (cppCode[pos] == L',')
                 GetNextCharPos(cppCode, pos, false);
             if (IsStartWith(cppCode, L"//", pos) || IsStartWith(cppCode, L"/*", pos)) {
-                _AssignEnumClassProperty(_GetCommand(cppCode, pos), property);
+                _AssignEnumClassProperty(_GetCommand(cppCode, false, pos), property);
                 GetNextCharPos(cppCode, pos, false);
             }
 
@@ -263,11 +285,11 @@ void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &p
     CATCH
 }
 
-void VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass) const
+bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass) const
 {
     TRY
         if (!IsStartWith(cppCode, L"enum", pos))
-            THROW_EXCEPTION_MSG(ExceptionType::ParserError, _GetErrorMessage(pos, cppCode[pos], L"enum missing."));
+            THROW_EXCEPTION_MSG(ExceptionType::ParserError, _GetErrorMessage(cppCode, pos, L"enum missing."));
             
         pos += 4; // length of "enum"
         GetNextCharPos(cppCode, pos, false);
@@ -276,41 +298,97 @@ void VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
             GetNextCharPos(cppCode, pos, false);
         }
         if (!std::iswalpha(cppCode[pos]))
-            THROW_EXCEPTION_MSG(ExceptionType::ParserError, _GetErrorMessage(pos, cppCode[pos], L"Class Name missing."));
+            THROW_EXCEPTION_MSG(ExceptionType::ParserError, _GetErrorMessage(cppCode, pos, L"Class Name missing."));
 
         enumClass->_Name = _GetEnum(cppCode, pos);
         GetNextCharPos(cppCode, pos, false);
 
         if (IsStartWith(cppCode, L"//", pos)) {
-            enumClass->_Command = _GetCommand(cppCode, pos);
+            enumClass->_Command = _GetCommand(cppCode, false, pos);
             GetNextCharPos(cppCode, pos, false);
         } else if (IsStartWith(cppCode, L"/*", pos)) {
-            enumClass->_Command =_GetCommand(cppCode, pos);
+            enumClass->_Command =_GetCommand(cppCode, false, pos);
             GetNextCharPos(cppCode, pos, false);
         }
-        if (cppCode[pos] != L'{')
-            THROW_EXCEPTION_MSG(ExceptionType::ParserError, _GetErrorMessage(pos, cppCode[pos], L"{ missing."));
+        if (cppCode[pos] == L';') {
+            return false;
+        } else if (cppCode[pos] != L'{')
+            THROW_EXCEPTION_MSG(ExceptionType::ParserError, _GetErrorMessage(cppCode, pos, L"{ missing."));
         GetNextCharPos(cppCode, pos, false);
 
         _ParseProperties(cppCode, pos, enumClass);
         GetNextCharPos(cppCode, pos, false);
 
         if (cppCode[pos] != L'}')
-            THROW_EXCEPTION_MSG(ExceptionType::ParserError, _GetErrorMessage(pos, cppCode[pos], L"} missing."));
+            THROW_EXCEPTION_MSG(ExceptionType::ParserError, _GetErrorMessage(cppCode, pos, L"} missing."));
     CATCH
+    return true;
+}
+
+std::wstring VPGEnumClassReader::GetCppCodeLine(const std::wstring &str, size_t &pos, bool fromCurrentPos) const
+{
+    if (!fromCurrentPos)
+        pos++;
+    size_t startPos = pos;
+    TRY
+        pos = Find(str, L"\n", pos);
+        std::wstring tailingSubstr = GetTailingSubstring(str.substr(startPos, pos - startPos + 1), 3);
+        if (IsEndWith(tailingSubstr, L"\\\r\n") || IsEndWith(tailingSubstr, L"\\\n")) {
+            GetCppCodeLine(str, pos, false);
+        }
+        if (pos == std::wstring::npos)
+            pos = str.length();
+    CATCH
+    return str.substr(startPos, pos - startPos + 1);
 }
 
 void VPGEnumClassReader::Parse(const std::wstring &cppCode, std::vector<std::shared_ptr<VPGEnumClass>> &results) const
 {
     TRY
         size_t pos = 0;
+        std::wstring currentCommand = L"";
+        std::wstring currentNamespace = L"";
+        size_t namespaceEndPos = 0;
         while (pos < cppCode.size()) {
-            if (IsStartWith(cppCode, L"//", pos) || IsStartWith(cppCode, L"/*", pos)) {
-                _GetCommand(cppCode, pos);
-            } else if (IsStartWith(cppCode, L"enum", pos)) {
+            if (namespaceEndPos > 0 && pos > namespaceEndPos)
+                currentNamespace = L"";
+
+            if (IsStartWith(cppCode, L"namespace", pos)) {
+                GetNextString(cppCode, pos, { L" ", L"\t", L"\r", L"\n" });
+                pos++;
+                currentNamespace = GetNextString(cppCode, pos, { L" ", L"\t", L"\r", L"\n", L";" });
+                pos++;
+                size_t openQuotePos = Find(cppCode, L"{", pos);
+                size_t semiPos = Find(cppCode, L";", pos);
+                if (openQuotePos == std::wstring::npos && semiPos == std::wstring::npos)
+                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, _GetErrorMessage(cppCode, openQuotePos, L"Namespace " + currentNamespace + L" missing { or ;"));
+                if (semiPos == std::wstring::npos || openQuotePos < semiPos) {
+                    pos = openQuotePos;
+                    namespaceEndPos = pos;
+                    GetNextQuotedString(cppCode, namespaceEndPos, { L" ", L"\t", L"\r", L"\n", L";" }, { L"{", L"\"", L"//", L"/*" }, { L"}", L"\"", L"\n", L"*/" }, { L"", L"\\", L"", L"" });
+                } else {
+                    pos = semiPos;
+                    currentNamespace = L"";
+                    namespaceEndPos = 0;
+                }
+                currentCommand = L"";
+            } else if (IsStartWith(cppCode, L"//", pos) || IsStartWith(cppCode, L"/*", pos)) {
+                std::wstring tmpCmd = _GetCommand(cppCode, true, pos);
+                Trim(tmpCmd);
+                if (!currentCommand.empty())
+                    currentCommand += L"\r\n";
+                currentCommand += tmpCmd;
+            } else if (cppCode[pos] == L'#') {
+                GetCppCodeLine(cppCode, pos, true);
+                currentCommand = L"";
+            } else if (IsStartWith(cppCode, L"enum ", pos)) {
                 DECLARE_SPTR(VPGEnumClass, enumClass);
-                _ParseClass(cppCode, pos, enumClass);
-                results.push_back(enumClass);
+                enumClass->SetNamespace(currentNamespace);
+                enumClass->SetCommand(currentCommand);
+                bool isFullEnumClass = _ParseClass(cppCode, pos, enumClass);
+                if (isFullEnumClass)
+                    results.push_back(enumClass);
+                currentCommand = L"";
             }
             GetNextCharPos(cppCode, pos, false);
         }

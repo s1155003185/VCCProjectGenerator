@@ -20,6 +20,7 @@ class VPGFileGenerationManager : public BaseManager<VPGFileGenerationManager>
 {
     SET(std::wstring, ClassMacros);
     MAP(std::wstring, std::wstring, IncludeFiles);
+    MAP_SPTR_R(std::wstring, VPGEnumClass, EnumClasses);
 
     private:
         std::wstring GetConcatPath(const std::wstring &projWorkspace, const std::wstring &objWorkspace, const std::wstring &middlePath, const std::wstring &fileName) const;

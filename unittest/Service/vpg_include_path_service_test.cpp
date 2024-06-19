@@ -10,8 +10,11 @@ using namespace vcc;
 TEST(VPGIncludePathSerciceTest, GetWorkspaceIncludePath)
 {
     std::map<std::wstring, std::wstring> classPathMapping;
-    VPGIncludePathService::GetWorkspaceIncludePath(L"", classPathMapping);
+    std::set<std::wstring> classMacroList;
+    std::map<std::wstring, std::shared_ptr<VPGEnumClass>> enumClassMapping;
+    VPGIncludePathService::GetWorkspaceIncludePath(L"", classMacroList, classPathMapping, enumClassMapping);
     EXPECT_EQ(classPathMapping.at(L"vcc::Json"), L"json.hpp");
+    EXPECT_TRUE(enumClassMapping.find(L"vcc::JsonInternalType") != enumClassMapping.end());
 }
 
 // TEST(VPGIncludePathSerciceTest, GetSystemIncludePath)

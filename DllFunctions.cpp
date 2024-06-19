@@ -43,25 +43,25 @@ int GetVersion(wchar_t **str)
 
 //PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(bool, Bool);
 //#include "property_accessor_factory.hpp"
-bool ReadBool(void *ref, int64_t property, int64_t index)
-{
+// bool ReadBool(void *ref, int64_t property, int64_t index)
+// {
 
-}
+// }
 
-bool ReadBoolByKey(void *ref, int64_t property, void *key)
-{
+// bool ReadBoolByKey(void *ref, int64_t property, void *key)
+// {
 
-}
+// }
 
-void WriteBool(void *ref, int64_t property, bool value, int64_t index)
-{
+// void WriteBool(void *ref, int64_t property, bool value, int64_t index)
+// {
 
-}
+// }
 
-void WriteBoolByKey(void *ref, int64_t property, bool value, void *key)
-{
+// void WriteBoolByKey(void *ref, int64_t property, bool value, void *key)
+// {
 
-}
+// }
 
 // PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(char, Char);
 // PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(wchar_t, Wchar);

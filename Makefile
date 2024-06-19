@@ -134,7 +134,6 @@ GTESTFLAGS := -lgtest -lpthread
 #---------- CXXFLAGS ----------#
 CXXFLAGS := $(CXXFLAGS_DEBUG_CONTENT)
 
-UNAME := $(shell uname -m)
 #----------------------------------#
 #----------- Library  -----------#
 #----------------------------------#
@@ -201,6 +200,8 @@ else
 #----------------------------------#
 #---------- Linus Version----------#
 #----------------------------------#
+
+UNAME := $(shell uname -m)
 # Darwin = MacOS: only allow .dylib
 MAIN_EXE := $(PROJ_NAME_EXE)
 ifeq ($(UNAME),arm64)

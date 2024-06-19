@@ -196,6 +196,15 @@ TEST(StringHelperTest, Find_wstring)
     EXPECT_EQ(Find(L"aAbcAb", L"Ab", 1, false), 1UL);
 }
 
+TEST(StringHelperTest, GetTailingSubstring)
+{
+    EXPECT_EQ(GetTailingSubstring(L"", 2), L"");
+    EXPECT_EQ(GetTailingSubstring(L"1", 2), L"1");
+    EXPECT_EQ(GetTailingSubstring(L"12", 2), L"12");
+    EXPECT_EQ(GetTailingSubstring(L"123", 2), L"23");
+    EXPECT_EQ(GetTailingSubstring(L"1234", 2), L"34");
+}
+
 TEST(StringHelperTest, GetNextString_Basic)
 {
     std::wstring str = L"abc def ghi";

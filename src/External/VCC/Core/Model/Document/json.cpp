@@ -129,6 +129,15 @@ namespace vcc
         CATCH
     }
 
+    float Json::GetFloat(const std::wstring &key) const
+    {
+        TRY
+            ValidateKeyIsFound(key);
+            return std::stod(GetJsonInternalNameValuePairsByKey(key)->GetJsonInternalValue());
+        CATCH
+        return 0.0;        
+    }
+
     double Json::GetDouble(const std::wstring &key) const
     {
         TRY
@@ -191,7 +200,7 @@ namespace vcc
         return 0;
     }
 
-    void Json::SetInt(const std::wstring &key, int value) const
+    void Json::SetInt(const std::wstring &key, int64_t value) const
     {
         TRY
             ValidateKeyIsFound(key);
@@ -200,7 +209,7 @@ namespace vcc
         CATCH
     }
 
-    void Json::AddInt(const std::wstring &key, int value) const
+    void Json::AddInt(const std::wstring &key, int64_t value) const
     {
         TRY
             ValidateKeyNotFound(key);
@@ -211,6 +220,30 @@ namespace vcc
         CATCH
     }
 
+    char Json::GetChar(const std::wstring &key) const
+    {
+        TRY
+            ValidateKeyIsFound(key);
+            std::wstring result = GetJsonInternalNameValuePairsByKey(key)->GetJsonInternalValue();
+            if (result.length() != 1)
+                THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Json Value of key " + key + L" is not char");
+            return wstr2str(result)[0];
+        CATCH
+        return L'\0';
+    }
+
+    wchar_t Json::GetWchar(const std::wstring &key) const
+    {
+        TRY
+            ValidateKeyIsFound(key);
+            std::wstring result = GetJsonInternalNameValuePairsByKey(key)->GetJsonInternalValue();
+            if (result.length() != 1)
+                THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Json Value of key " + key + L" is not wchar_t");
+            return result[0];
+        CATCH
+        return L'\0';
+    }
+    
     std::wstring Json::GetString(const std::wstring &key) const
     {
         TRY
@@ -330,7 +363,7 @@ namespace vcc
         CATCH
     }
 
-    void Json::AddArrayInt(int value) const
+    void Json::AddArrayInt(int64_t value) const
     {
         TRY
             DECLARE_SPTR(Json, json);

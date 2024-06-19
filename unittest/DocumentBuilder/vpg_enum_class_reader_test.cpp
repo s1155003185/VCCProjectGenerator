@@ -20,6 +20,25 @@ class VPGEnumClassReaderTest : public testing::Test
         }
 };
 
+TEST_F(VPGEnumClassReaderTest, GetCodeLine)
+{
+    size_t pos = 0;
+    EXPECT_EQ(this->GetReader()->GetCppCodeLine(L"a\nb\nc", pos, true), L"a\n");
+    EXPECT_EQ(pos, 1UL);
+
+    pos = 0;
+    EXPECT_EQ(this->GetReader()->GetCppCodeLine(L"a\r\nb\nc", pos, true), L"a\r\n");
+    EXPECT_EQ(pos, 2UL);
+    
+    pos = 0;
+    EXPECT_EQ(this->GetReader()->GetCppCodeLine(L"a\\\nb\nc", pos, true), L"a\\\nb\n");
+    EXPECT_EQ(pos, 4UL);
+
+    pos = 0;
+    EXPECT_EQ(this->GetReader()->GetCppCodeLine(L"a\\\r\nb\nc", pos, true), L"a\\\r\nb\n");
+    EXPECT_EQ(pos, 5UL);
+}
+
 TEST_F(VPGEnumClassReaderTest, GetAttribute)
 {
     std::vector<std::wstring> result = this->GetReader()->GetAttribute(L"");
@@ -57,6 +76,50 @@ TEST_F(VPGEnumClassReaderTest, GetAttribute)
     result = this->GetReader()->GetAttribute(L"@@ReadWrite( @@NoAccess)");
     expectedResult = { L"@@ReadWrite(", L"@@NoAccess)" };
     EXPECT_EQ(result, expectedResult);
+}
+
+
+TEST_F(VPGEnumClassReaderTest, TableCommand)
+{
+    std::wstring code = L""
+        L"#pragma once\r\n"
+        L"\r\n"
+        L"#include <string>\r\n"
+        L"#include <vector>\r\n"
+        L"\r\n"
+        L"#include \"class_macro.hpp\"\r\n"
+        L"\r\n"
+        L"// table command 1\r\n"
+        L"enum class VCCObjectProperty\r\n"
+        L"{\r\n"
+        L"};\r\n"
+        L"\r\n"
+        L"/* table command 1*/enum class VCCSingleLineProperty { };\r\n"
+        L"\r\n"
+        L"// empty command 1\r\n"
+        L"\r\n"
+        L"// table command 1\r\n"
+        L"// table command 2\r\n"
+        L"enum class VCCMultiProperty {\r\n"
+        L"};\r\n";
+
+    std::vector<std::shared_ptr<VPGEnumClass>> results;
+    this->GetReader()->Parse(code, results);
+    EXPECT_EQ(results.size(), (size_t)3);
+    // first
+    std::shared_ptr<VPGEnumClass> element = results.at(0);
+    EXPECT_EQ(element->GetName(), L"VCCObjectProperty");
+    EXPECT_EQ(element->GetCommand(), L"table command 1");
+
+    // second
+    element = results.at(1);
+    EXPECT_EQ(element->GetName(), L"VCCSingleLineProperty");
+    EXPECT_EQ(element->GetCommand(), L"table command 1");
+
+    // third
+    element = results.at(2);
+    EXPECT_EQ(element->GetName(), L"VCCMultiProperty");
+    EXPECT_EQ(element->GetCommand(), L"table command 1\r\ntable command 2");
 }
 
 TEST_F(VPGEnumClassReaderTest, Normal)
@@ -251,4 +314,52 @@ TEST_F(VPGEnumClassReaderTest, AccessMode)
     EXPECT_EQ(element->GetProperties().at(4)->GetEnum(), L"EnumE");
     EXPECT_EQ(element->GetProperties().at(4)->GetCommand(), L"");
     EXPECT_EQ(element->GetProperties().at(4)->GetAccessMode(), VPGEnumClassPropertyAccessMode::NoAccess);
+}
+
+TEST_F(VPGEnumClassReaderTest, EnumClassMixedWithOthers)
+{
+    std::wstring code = L""
+        "#pragma once\r\n"
+        "\r\n"
+        "#include <string>\r\n"
+        "#include <vector>\r\n"
+        "\r\n"
+        "#include \"class_macro.hpp\"\r\n"
+        "using namespace vcc;\r\n"
+        "\r\n"
+        "typedef abc\r\n"
+        "enum EnumA {\r\n"
+        "};\r\n"
+        "int a = a;\r\n"
+        "const string = L\";\";\r\n"
+        "enum class EnumB {};\r\n"
+        "enum class EnumC;\r\n"
+        "class ClassA {};\r\n"
+        "namespace Name {\r\n"
+        "   enum EnumAInNamespace {};"
+        "   enum class EnumBInNamespace {};\r\n"
+        "   enum class EnumCInNamespace;\r\n"
+        "}\r\n"
+        "enum EnumAOneLine {}; enum class EnumBOneLine {}; enum class EnumCOneLine;\r\n";
+    std::vector<std::shared_ptr<VPGEnumClass>> results;
+    this->GetReader()->Parse(code, results);
+    EXPECT_EQ(results.size(), (size_t)6);
+    std::shared_ptr<VPGEnumClass> element = results.at(0);
+    EXPECT_EQ(element->GetNamespace(), L"");
+    EXPECT_EQ(element->GetName(), L"EnumA");
+    element = results.at(1);
+    EXPECT_EQ(element->GetNamespace(), L"");
+    EXPECT_EQ(element->GetName(), L"EnumB");
+    element = results.at(2);
+    EXPECT_EQ(element->GetNamespace(), L"Name");
+    EXPECT_EQ(element->GetName(), L"EnumAInNamespace");
+    element = results.at(3);
+    EXPECT_EQ(element->GetNamespace(), L"Name");
+    EXPECT_EQ(element->GetName(), L"EnumBInNamespace");
+    element = results.at(4);
+    EXPECT_EQ(element->GetNamespace(), L"");
+    EXPECT_EQ(element->GetName(), L"EnumAOneLine");
+    element = results.at(5);
+    EXPECT_EQ(element->GetNamespace(), L"");
+    EXPECT_EQ(element->GetName(), L"EnumBOneLine");
 }

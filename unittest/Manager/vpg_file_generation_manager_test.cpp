@@ -120,7 +120,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     option.SetTypeWorkspace(this->GetWorkspaceSource());
     option.SetObjectTypeDirectory(this->GetWorkspaceTarget());
     
-    option.SetObjectDirectory(this->GetWorkspaceTarget());
+    option.SetObjectDirectoryHpp(this->GetWorkspaceTarget());
+    option.SetObjectDirectoryCpp(this->GetWorkspaceTarget());
     option.SetPropertyAccessorDirectoryHpp(this->GetWorkspaceTarget());
     option.SetPropertyAccessorDirectoryCpp(this->GetWorkspaceTarget());
 

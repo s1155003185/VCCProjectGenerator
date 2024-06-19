@@ -1,12 +1,9 @@
 #include "vpg_generation_option.hpp"
 
 #include <assert.h>
-#include <filesystem>
-#include <iostream>
 #include <memory>
 
 #include "exception_macro.hpp"
-#include "file_helper.hpp"
 #include "i_document.hpp"
 #include "i_document_builder.hpp"
 #include "json.hpp"
@@ -122,6 +119,7 @@ void VPGGenerationOptionExport::DeserializeJson(std::shared_ptr<IDocument> docum
 {
     TRY
         std::shared_ptr<Json> json = std::dynamic_pointer_cast<Json>(document);
+        assert(json != nullptr);
         if (json->IsContainKey(L"Interface")) {
             std::wstring interface = json->GetString(L"Interface");
             ToUpper(interface);
@@ -130,8 +128,6 @@ void VPGGenerationOptionExport::DeserializeJson(std::shared_ptr<IDocument> docum
             else
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Unknow Interface: " + interface);
         }
-
-        assert(json != nullptr);
     CATCH
 }
 
@@ -166,7 +162,8 @@ std::shared_ptr<Json> VPGGenerationOption::ToJson() const
         json->AddString(L"ManagerTypeDirectory", _ManagerTypeDirectory);
         json->AddString(L"ObjectTypeDirectory", _ObjectTypeDirectory);
 
-        json->AddString(L"ObjectDirectory", _ObjectDirectory);
+        json->AddString(L"ObjectDirectoryHpp", _ObjectDirectoryHpp);
+        json->AddString(L"ObjectDirectoryCpp", _ObjectDirectoryCpp);
         json->AddString(L"PropertyAccessorDirectoryHpp", _PropertyAccessorDirectoryHpp);
         json->AddString(L"PropertyAccessorDirectoryCpp", _PropertyAccessorDirectoryCpp);
 
@@ -237,8 +234,10 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
         if (json->IsContainKey(L"ObjectTypeDirectory"))
             this->SetObjectTypeDirectory(json->GetString(L"ObjectTypeDirectory"));
 
-        if (json->IsContainKey(L"ObjectDirectory"))
-            this->SetObjectDirectory(json->GetString(L"ObjectDirectory"));
+        if (json->IsContainKey(L"ObjectDirectoryHpp"))
+            this->SetObjectDirectoryHpp(json->GetString(L"ObjectDirectoryHpp"));
+        if (json->IsContainKey(L"ObjectDirectoryCpp"))
+            this->SetObjectDirectoryCpp(json->GetString(L"ObjectDirectoryCpp"));
         if (json->IsContainKey(L"PropertyAccessorDirectoryHpp"))
             this->SetPropertyAccessorDirectoryHpp(json->GetString(L"PropertyAccessorDirectoryHpp"));
         if (json->IsContainKey(L"PropertyAccessorDirectoryCpp"))

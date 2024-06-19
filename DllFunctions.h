@@ -15,31 +15,31 @@ extern "C"
 
 DLLEXPORT int GetVersion(wchar_t **str);
 
-#define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(exportType, typeName) \
-    DLLEXPORT exportType Read##typeName(void *ref, int64_t property, int64_t index); \
-    DLLEXPORT exportType Read##typeName##ByKey(void *ref, int64_t property, void *key); \
-    DLLEXPORT void Write##typeName(void *ref, int64_t property, exportType value, int64_t index); \
-    DLLEXPORT void Write##typeName##ByKey(void *ref, int64_t property, exportType value, void *key);
+// #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(exportType, typeName) \
+//     DLLEXPORT exportType Read##typeName(void *ref, int64_t property, int64_t index); \
+//     DLLEXPORT exportType Read##typeName##ByKey(void *ref, int64_t property, void *key); \
+//     DLLEXPORT void Write##typeName(void *ref, int64_t property, exportType value, int64_t index); \
+//     DLLEXPORT void Write##typeName##ByKey(void *ref, int64_t property, exportType value, void *key);
 
-#define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_STRING(typeName) \
-    DLLEXPORT void Read##typeName(void *ref, int64_t property, wchar_t **value, int64_t index); \
-    DLLEXPORT void Read##typeName##ByKey(void *ref, int64_t property, wchar_t **value, void *key); \
-    DLLEXPORT void Write##typeName(void *ref, int64_t property, wchar_t **value, int64_t index); \
-    DLLEXPORT void Write##typeName##ByKey(void *ref, int64_t property, wchar_t **value, void *key);
+// #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_STRING(typeName) \
+//     DLLEXPORT void Read##typeName(void *ref, int64_t property, wchar_t **value, int64_t index); \
+//     DLLEXPORT void Read##typeName##ByKey(void *ref, int64_t property, wchar_t **value, void *key); \
+//     DLLEXPORT void Write##typeName(void *ref, int64_t property, wchar_t **value, int64_t index); \
+//     DLLEXPORT void Write##typeName##ByKey(void *ref, int64_t property, wchar_t **value, void *key);
 
-#define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_OBJECT(typeName) \
-    DLLEXPORT void *Read##typeName(void *ref, int64_t property, int64_t index); \
-    DLLEXPORT void *Read##typeName##ByKey(void *ref, int64_t property, void *key); \
-    DLLEXPORT void Write##typeName(void *ref, int64_t property, void *value, int64_t index); \
-    DLLEXPORT void Write##typeName##ByKey(void *ref, int64_t property, void *value, void *key);
+// #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_OBJECT(typeName) \
+//     DLLEXPORT void *Read##typeName(void *ref, int64_t property, int64_t index); \
+//     DLLEXPORT void *Read##typeName##ByKey(void *ref, int64_t property, void *key); \
+//     DLLEXPORT void Write##typeName(void *ref, int64_t property, void *value, int64_t index); \
+//     DLLEXPORT void Write##typeName##ByKey(void *ref, int64_t property, void *value, void *key);
 
-#define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_CONTAINER \
-    DLLEXPORT long GetContainerCount(void *ref, int64_t property); \
-    DLLEXPORT bool IsContainKey(void *ref, int64_t property, void *key); \
-    DLLEXPORT void RemoveContainerElement(void *ref, int64_t property, int64_t index); \
-    DLLEXPORT void RemoveContainerElement(void *ref, int64_t property, void *key);
+// #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_CONTAINER \
+//     DLLEXPORT long GetContainerCount(void *ref, int64_t property); \
+//     DLLEXPORT bool IsContainKey(void *ref, int64_t property, void *key); \
+//     DLLEXPORT void RemoveContainerElement(void *ref, int64_t property, int64_t index); \
+//     DLLEXPORT void RemoveContainerElement(void *ref, int64_t property, void *key);
 
-PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(bool, Bool);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(bool, Bool);
 // PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(char, Char);
 // PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(wchar_t, Wchar);
 // PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(int, Int8);
