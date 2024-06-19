@@ -10,77 +10,55 @@
 #define DLLEXPORT extern 
 #endif
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif
 
 DLLEXPORT int GetVersion(wchar_t **str);
 
-// DLLEXPORT 
+#define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(exportType, typeName) \
+    DLLEXPORT exportType Read##typeName(void *ref, int64_t property, int64_t index); \
+    DLLEXPORT exportType Read##typeName##ByKey(void *ref, int64_t property, void *key); \
+    DLLEXPORT void Write##typeName(void *ref, int64_t property, exportType value, int64_t index); \
+    DLLEXPORT void Write##typeName##ByKey(void *ref, int64_t property, exportType value, void *key);
 
-// I_PROPERTY_ACCESSOR_HEADER(bool, Bool);
-//         // char, byte
-//         I_PROPERTY_ACCESSOR_HEADER(char, Char);
-//         // wchar_t
-//         I_PROPERTY_ACCESSOR_HEADER(wchar_t, Wchar);
-//         // int8_t
-//         I_PROPERTY_ACCESSOR_HEADER(int8_t, Int8);
-//         // uint8_t
-//         I_PROPERTY_ACCESSOR_HEADER(uint8_t, Uint8);
-//         // short, int16_t
-//         I_PROPERTY_ACCESSOR_HEADER(short, Short);
-//         // uint16_t
-//         I_PROPERTY_ACCESSOR_HEADER(uint16_t, UnsignedShort)
-//         // int, int32_t
-//         I_PROPERTY_ACCESSOR_HEADER(int, Int)
-//         // uint32_t
-//         I_PROPERTY_ACCESSOR_HEADER(uint32_t, UnsignedInt)
-//         // long, int64_t, time_t, enum
-//         I_PROPERTY_ACCESSOR_HEADER(long, Long)
-//         // size_t
-//         I_PROPERTY_ACCESSOR_HEADER(size_t, UnsignedLong)
-//         // float
-//         I_PROPERTY_ACCESSOR_HEADER(float, Float)
-//         // double
-//         I_PROPERTY_ACCESSOR_HEADER(double, Double)
-//         // string
-//         I_PROPERTY_ACCESSOR_HEADER(std::string, String)
-//         // wstring
-//         I_PROPERTY_ACCESSOR_HEADER(std::wstring, Wstring)
-//         // Object
-//         I_PROPERTY_ACCESSOR_OBJECT_HEADER(std::shared_ptr<IObject>, Object)
+#define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_STRING(typeName) \
+    DLLEXPORT void Read##typeName(void *ref, int64_t property, wchar_t **value, int64_t index); \
+    DLLEXPORT void Read##typeName##ByKey(void *ref, int64_t property, wchar_t **value, void *key); \
+    DLLEXPORT void Write##typeName(void *ref, int64_t property, wchar_t **value, int64_t index); \
+    DLLEXPORT void Write##typeName##ByKey(void *ref, int64_t property, wchar_t **value, void *key);
 
-    // #define I_PROPERTY_ACCESSOR_HEADER(type, name) \
-    //     public: \
-    //         virtual type Read##name(const LockType &lockType, const size_t &objectProperty, const int64_t &index = -1) const = 0; \
-    //         virtual type Read##name(const LockType &lockType, const size_t &objectProperty, const ITypeUnion *key) const = 0; \
-    //         virtual void Write##name(const LockType &lockType, const size_t &objectProperty, const type &value, const int64_t &index = -1) const = 0; \
-    //         virtual void Write##name(const LockType &lockType, const size_t &objectProperty, const type &value, const ITypeUnion *key) const = 0; \
+#define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_OBJECT(typeName) \
+    DLLEXPORT void *Read##typeName(void *ref, int64_t property, int64_t index); \
+    DLLEXPORT void *Read##typeName##ByKey(void *ref, int64_t property, void *key); \
+    DLLEXPORT void Write##typeName(void *ref, int64_t property, void *value, int64_t index); \
+    DLLEXPORT void Write##typeName##ByKey(void *ref, int64_t property, void *value, void *key);
 
-    // #define I_PROPERTY_ACCESSOR_OBJECT_HEADER(type, name) \
-    //     public: \
-    //         virtual type Read##name(const LockType &lockType, const size_t &objectProperty, const int64_t &index = -1) const = 0; \
-    //         virtual type Read##name(const LockType &lockType, const size_t &objectProperty, const ITypeUnion *key) const = 0; \
-    //         virtual void Write##name(const LockType &lockType, const size_t &objectProperty, type value, const int64_t &index = -1) const = 0; \
-    //         virtual void Write##name(const LockType &lockType, const size_t &objectProperty, type value, const ITypeUnion *key) const = 0; \
-    //         virtual type Clone##name(const LockType &lockType, const size_t &objectProperty, const int64_t &index = -1) const = 0; \
-    //         virtual type Clone##name(const LockType &lockType, const size_t &objectProperty, const ITypeUnion *key) const = 0; \
+#define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_CONTAINER \
+    DLLEXPORT long GetContainerCount(void *ref, int64_t property); \
+    DLLEXPORT bool IsContainKey(void *ref, int64_t property, void *key); \
+    DLLEXPORT void RemoveContainerElement(void *ref, int64_t property, int64_t index); \
+    DLLEXPORT void RemoveContainerElement(void *ref, int64_t property, void *key);
 
-    // #define I_PROPERTY_ACCESSOR_CONTAINER_HEADER \
-    //     public: \
-    //         virtual size_t GetContainerCount(const LockType &lockType, const size_t &objectProperty) const = 0; \
-    //         virtual bool IsContainKey(const LockType &lockType, const size_t &objectProperty, const ITypeUnion *key) const = 0;\
-    //         virtual void RemoveContainerElement(const LockType &lockType, const size_t &objectProperty, const int64_t &index = -1) const = 0; \
-    //         virtual void RemoveContainerElement(const LockType &lockType, const size_t &objectProperty, const ITypeUnion *key) const = 0; \
-    //         virtual void ClearContainer(const LockType &lockType, const size_t &objectProperty) const = 0;
-
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(bool, Bool);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(char, Char);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(wchar_t, Wchar);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(int, Int8);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(int, Uint8);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(int, Short);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(int, UnsignedShort);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(long, Int);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(long, UnsignedInt);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(long, Long);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(long, UnsignedLong);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(float, Float);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(double, Double);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_STRING(String);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_STRING(Wstring);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_OBJECT(Object);
+// PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_CONTAINER;
 
 // <vcc:propertyAccessor gen="FORCE">
 // </vcc:propertyAccessor>
-
-#ifdef __cplusplus
 }
-#endif
 
 #endif
