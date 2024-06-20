@@ -265,9 +265,10 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
     // Kebab Case = kebab-case
     // Uppercase = UPPERCASE
     // Lowercase = lowercase
+    // dot-separated lowercase = my.variable.name
     DECLARE_SPTR(VPGEnumClass, enumClassA);
     enumClassA->SetName(L"VPGObjectProperty");
-    enumClassA->SetCommand(L"@@Json{ \"Key.Style\": \"Camel\" }");
+    enumClassA->SetCommand(L"@@Json{ \"Key.NamingStyle\": \"Camel\" }");
     DECLARE_SPTR(VPGEnumClassProperty, enumClassPropertyA);
     enumClassPropertyA->SetEnum(L"EnumA");
     enumClassPropertyA->SetMacro(L"GETSET(std::wstring, EnumA, L\"\")");
