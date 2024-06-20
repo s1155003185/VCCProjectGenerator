@@ -224,7 +224,8 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
 
                 std::wstring propertyAccessorFileName = objectFileName + L"_" + propertyAccessorFileSuffixWithoutExtention;
                 objectFileNames.insert(objectFileName + L".hpp");
-                VPGObjectFileGenerationService::Generate(logProperty, projPrefix, _IncludeFiles, GetConcatPath(projWorkspace, option->GetObjectDirectory(), middlePath, objectFileName + L".hpp"), enumClassList);
+                VPGObjectFileGenerationService::GenerateHpp(logProperty, projPrefix, _IncludeFiles, GetConcatPath(projWorkspace, option->GetObjectDirectoryHpp(), middlePath, objectFileName + L".hpp"), enumClassList);
+                VPGObjectFileGenerationService::GenerateCpp(logProperty, projPrefix, _IncludeFiles, GetConcatPath(projWorkspace, option->GetObjectDirectoryCpp(), middlePath, objectFileName + L".cpp"), enumClassList);
                 if (!propertyAccessorDirectoryHpp.empty() && !propertyAccessorDirectoryCpp.empty()) {
                     propertyAccessorFileNames.insert(propertyAccessorFileName + L".hpp");
                     VPGPropertyAccessorGenerationService::GenerateHpp(logProperty, GetConcatPath(projWorkspace, propertyAccessorDirectoryHpp, middlePath, propertyAccessorFileName + L".hpp"), enumClassList);

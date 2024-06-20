@@ -39,7 +39,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Empty)
     std::wstring classPrefix = L"";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGObjectFileGenerationService::Generate(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), enumClassList);    
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
 }
@@ -76,7 +76,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
     enumClass->InsertProperties(enumClassPropertyB);
 
     enumClassList.push_back(enumClass);
-    VPGObjectFileGenerationService::Generate(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
 
@@ -136,7 +136,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Object)
     enumClass->InsertProperties(enumClassPropertyB);
 
     enumClassList.push_back(enumClass);
-    VPGObjectFileGenerationService::Generate(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
 
@@ -207,7 +207,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Multi)
     enumClassB->InsertProperties(enumClassPropertyB);
     enumClassList.push_back(enumClassB);
     
-    VPGObjectFileGenerationService::Generate(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
 

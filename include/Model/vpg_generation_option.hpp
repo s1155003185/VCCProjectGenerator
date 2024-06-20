@@ -70,7 +70,8 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJ
     GETSET(std::wstring, ManagerTypeDirectory, L"include/Type");
     GETSET(std::wstring, ObjectTypeDirectory, L"include/Type");
 
-    GETSET(std::wstring, ObjectDirectory, L"include/Model");
+    GETSET(std::wstring, ObjectDirectoryHpp, L"include/Model");
+    GETSET(std::wstring, ObjectDirectoryCpp, L"src/Model");
     GETSET(std::wstring, PropertyAccessorDirectoryHpp, L"include/PropertyAccessor");
     GETSET(std::wstring, PropertyAccessorDirectoryCpp, L"src/PropertyAccessor");
 
