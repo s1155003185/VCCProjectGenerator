@@ -292,37 +292,138 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         L"#include <string>\r\n"
         L"\r\n"
         L"#include \"base_object.hpp\"\r\n"
+        L"#include \"base_json_object.hpp\"\r\n"
         L"#include \"class_macro.hpp\"\r\n"
         L"#include \"object_type.hpp\"\r\n"
         L"\r\n"
         L"using namespace vcc;\r\n"
         L"\r\n"
-        L"class VPGObject : public BaseObject<VPGObjectA>\r\n"
+        L"class VPGObject : public BaseObject<VPGObjectA>, public BaseJsonObject\r\n"
         L"{\r\n"
         L"    GETSET(std::wstring, EnumA, L\"\")\r\n"
         L"\r\n"
         L"    public:\r\n"
-        L"        VPGObjectA() : BaseObject(ObjectType::ObjectA) {}\r\n"
-        L"        virtual ~VPGObjectA() {}\r\n"
+        L"        VPGObject() : BaseObject(ObjectType::ObjectA) {}\r\n"
+        L"        virtual ~VPGObject() {}\r\n"
+        L"\r\n"
+        L"        virtual std::shared_ptr<Json> ToJson() const override;\r\n"
+        L"        virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;\r\n"
         L"};\r\n");
 
     EXPECT_EQ(ReadFile(this->GetFilePathCpp()),
-        L"#pragma once\r\n"
-        L"\r\n"
-        L"#include <string>\r\n"
-        L"\r\n"
-        L"#include \"base_object.hpp\"\r\n"
-        L"#include \"class_macro.hpp\"\r\n"
-        L"#include \"object_type.hpp\"\r\n"
-        L"\r\n"
-        L"using namespace vcc;\r\n"
-        L"\r\n"
-        L"class VPGObject : public BaseObject<VPGObjectA>\r\n"
-        L"{\r\n"
-        L"    GETSET(std::wstring, EnumA, L\"\")\r\n"
-        L"\r\n"
-        L"    public:\r\n"
-        L"        VPGObjectA() : BaseObject(ObjectType::ObjectA) {}\r\n"
-        L"        virtual ~VPGObjectA() {}\r\n"
-        L"};\r\n");
+        L"#include \"vcc_object.hpp\"\r\n"
+        "\r\n"
+        "#include <assert.h>\r\n"
+        "#include <memory>"
+        "\r\n"
+        "#include \"exception_macro.hpp\"\r\n"
+        "#include \"i_document.hpp\"\r\n"
+        "#include \"i_document_builder.hpp\"\r\n"
+        "#include \"json.hpp\"\r\n"
+        "#include \"memory_macro.hpp\"\r\n"
+        "#include \"string_helper.hpp\"\r\n"
+        "\r\n"
+        "using namespace vcc;\r\n"
+        "\r\n"
+        "std::shared_ptr<Json> VPGObject::ToJson() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        DECLARE_UPTR(Json, json);\r\n"
+        "        json->AddString(L\"EnumA\", _EnumA);\r\n"
+        "        return json;\r\n"
+        "    CATCH\r\n"
+        "    return nullptr;\r\n"
+        "}\r\n"
+        "\r\n"
+        "void VPGObject::DeserializeJson(std::shared_ptr<IDocument> document) const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        std::shared_ptr<Json> json = std::dynamic_pointer_cast<Json>(document);\r\n"
+        "        assert(json != nullptr);\r\n"
+        "        if (json->IsContainKey(L\"EnumA\"))\r\n"
+        "            _EnumA = json->GetString(L\"EnumA\");\r\n"
+        "    CATCH\r\n"
+        "}\r\n");
 }
+
+// TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
+// {
+//     std::wstring classPrefix = L"VPG";
+//     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
+//     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+
+//     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
+//     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
+//     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
+
+//     // Camel Case = camelCase
+//     // Snake Case = snake_case
+//     // Pascal Case = PascalCase
+//     // Kebab Case = kebab-case
+//     // Uppercase = UPPERCASE
+//     // Lowercase = lowercase
+//     // dot-separated lowercase = my.variable.name
+//     DECLARE_SPTR(VPGEnumClass, enumClassA);
+//     enumClassA->SetName(L"VPGObjectProperty");
+//     enumClassA->SetCommand(L"@@Json{ \"Key.NamingStyle\": \"Camel\" }");
+//     DECLARE_SPTR(VPGEnumClassProperty, enumClassPropertyA);
+//     enumClassPropertyA->SetEnum(L"EnumA");
+//     enumClassPropertyA->SetMacro(L"GETSET(std::wstring, EnumA, L\"\")");
+//     enumClassPropertyA->SetType1(L"std::wstring");
+//     enumClassPropertyA->SetType2(L"");
+//     enumClassPropertyA->SetPropertyName(L"EnumA");
+//     enumClassPropertyA->SetDefaultValue(L"");
+//     enumClassA->InsertProperties(enumClassPropertyA);
+//     enumClassList.push_back(enumClassA);
+    
+//     VPGObjectFileGenerationService::GenerateHpp(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
+//         this->GetFilePathHpp(), enumClassList);
+//     VPGObjectFileGenerationService::GenerateCpp(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
+//         this->GetFilePathHpp(), enumClassList);
+//     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
+//     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+
+//     EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
+//         L"#pragma once\r\n"
+//         L"\r\n"
+//         L"#include <string>\r\n"
+//         L"\r\n"
+//         L"#include \"base_object.hpp\"\r\n"
+//         L"#include \"base_json_object.hpp\"\r\n"
+//         L"#include \"class_macro.hpp\"\r\n"
+//         L"#include \"object_type.hpp\"\r\n"
+//         L"\r\n"
+//         L"using namespace vcc;\r\n"
+//         L"\r\n"
+//         L"class VPGObject : public BaseObject<VPGObjectA>, public BaseJsonObject\r\n"
+//         L"{\r\n"
+//         L"    GETSET(std::wstring, EnumA, L\"\")\r\n"
+//         L"\r\n"
+//         L"    public:\r\n"
+//         L"        VPGObjectA() : BaseObject(ObjectType::ObjectA) {}\r\n"
+//         L"        virtual ~VPGObjectA() {}\r\n"
+//         L"\r\n"
+//         L"        virtual std::shared_ptr<Json> ToJson() const override;\r\n"
+//         L"        virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;\r\n"
+//         L"};\r\n");
+
+//     EXPECT_EQ(ReadFile(this->GetFilePathCpp()),
+//         L"#pragma once\r\n"
+//         L"\r\n"
+//         L"#include <string>\r\n"
+//         L"\r\n"
+//         L"#include \"base_object.hpp\"\r\n"
+//         L"#include \"class_macro.hpp\"\r\n"
+//         L"#include \"object_type.hpp\"\r\n"
+//         L"\r\n"
+//         L"using namespace vcc;\r\n"
+//         L"\r\n"
+//         L"class VPGObject : public BaseObject<VPGObjectA>\r\n"
+//         L"{\r\n"
+//         L"    GETSET(std::wstring, EnumA, L\"\")\r\n"
+//         L"\r\n"
+//         L"    public:\r\n"
+//         L"        VPGObjectA() : BaseObject(ObjectType::ObjectA) {}\r\n"
+//         L"        virtual ~VPGObjectA() {}\r\n"
+//         L"};\r\n");
+// }

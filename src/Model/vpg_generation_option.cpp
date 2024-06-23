@@ -1,12 +1,9 @@
 #include "vpg_generation_option.hpp"
 
 #include <assert.h>
-#include <filesystem>
-#include <iostream>
 #include <memory>
 
 #include "exception_macro.hpp"
-#include "file_helper.hpp"
 #include "i_document.hpp"
 #include "i_document_builder.hpp"
 #include "json.hpp"
@@ -122,6 +119,7 @@ void VPGGenerationOptionExport::DeserializeJson(std::shared_ptr<IDocument> docum
 {
     TRY
         std::shared_ptr<Json> json = std::dynamic_pointer_cast<Json>(document);
+        assert(json != nullptr);
         if (json->IsContainKey(L"Interface")) {
             std::wstring interface = json->GetString(L"Interface");
             ToUpper(interface);
@@ -130,8 +128,6 @@ void VPGGenerationOptionExport::DeserializeJson(std::shared_ptr<IDocument> docum
             else
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Unknow Interface: " + interface);
         }
-
-        assert(json != nullptr);
     CATCH
 }
 
