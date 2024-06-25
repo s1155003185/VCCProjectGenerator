@@ -47,7 +47,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogProperty *logProperty,
         // generate external class
         for (auto const &enumClass : enumClassList) {
             // Json
-            bool isJsonObject = enumClass->GetCommand();
+            //bool isJsonObject = enumClass->GetCommand();
 
             for (std::shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
                 // handle enum without macro case
