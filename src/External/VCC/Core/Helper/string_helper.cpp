@@ -579,14 +579,19 @@ namespace vcc
 		return result;
 	}
 	
-	size_t CountSubstring(const std::wstring &str, const std::wstring &subStr)
+	bool IsContainSubstring(const std::wstring &str, const std::wstring &subStr, const size_t &pos, const bool &isIgnoreCase)
+	{
+		return Find(str, subStr, pos, isIgnoreCase) != std::wstring::npos;
+	}
+
+	size_t CountSubstring(const std::wstring &str, const std::wstring &subStr, const bool &isIgnoreCase)
 	{
 		size_t count = 0;
 		size_t pos = 0;
 
 		while (pos < str.length())
 		{
-			pos = Find(str, subStr, pos);
+			pos = Find(str, subStr, pos, isIgnoreCase);
 			if (pos == std::wstring::npos)
 				break;
 			count++;

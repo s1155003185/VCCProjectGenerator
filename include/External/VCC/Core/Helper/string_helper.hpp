@@ -69,7 +69,8 @@ namespace vcc
 		const std::vector<std::wstring> &quoteOpenList = { L"\"", L"'", L"{", L"[", L"(" },
 		const std::vector<std::wstring> &quoteCloseList = { L"\"", L"'", L"}", L"]", L")" },
 		const std::vector<std::wstring> &quoteEscapeList = { L"\\", L"\\", L"", L"", L"" });
-	size_t CountSubstring(const std::wstring &str, const std::wstring &subStr);
+	bool IsContainSubstring(const std::wstring &str, const std::wstring &subStr, const size_t &pos, const bool &isIgnoreCase);
+	size_t CountSubstring(const std::wstring &str, const std::wstring &subStr, const bool &isIgnoreCase);
 
 	// process
 	void Replace(std::wstring &str, const std::wstring& from, const std::wstring &to);
