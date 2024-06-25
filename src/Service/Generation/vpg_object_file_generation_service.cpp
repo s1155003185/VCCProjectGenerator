@@ -193,12 +193,12 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogProperty *logProperty,
 }
 
 void VPGObjectFileGenerationService::GenerateCpp(const LogProperty *logProperty, const std::wstring &classPrefix, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
-    const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+    const std::wstring &filePathCpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate object class file: " + filePathHpp);
+        LogService::LogInfo(logProperty, LOG_ID, L"Generate object class file: " + filePathCpp);
         std::wstring content = L"";
-        WriteFile(filePathHpp, content, true);
+        WriteFile(filePathCpp, content, true);
         LogService::LogInfo(logProperty, LOG_ID, L"Generate object class file completed.");
     CATCH
 }
