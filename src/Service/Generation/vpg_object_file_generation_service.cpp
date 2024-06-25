@@ -47,8 +47,13 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogProperty *logProperty,
         // generate external class
         for (auto const &enumClass : enumClassList) {
             // Json
-            //bool isJsonObject = enumClass->GetCommand();
-
+            bool isJsonObject = IsContainSubstring(enumClass->GetCommand(), L"@@Json", 0, true);
+            if (isJsonObject) {
+                projectFileList.insert(L"#include \"base_json_object.hpp\"");
+                projectFileList.insert(L"#include \"json.hpp\"");
+                projectFileList.insert(L"#include \"i_document.hpp\"");
+            }
+            
             for (std::shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
                 // handle enum without macro case
                 if (property->GetMacro().empty())
@@ -120,10 +125,16 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogProperty *logProperty,
             
         // generate class
         for (auto const &enumClass : enumClassList) {
-            content += L"\r\n";
+            std::wstring inheritClass = L"";
+            // Json
+            bool isJsonObject = IsContainSubstring(enumClass->GetCommand(), L"@@Json", 0, true);
+            if (isJsonObject)
+                inheritClass += L", public BaseJsonObject";
 
+            content += L"\r\n";
+            
             std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - proeprtyClassNameSuffix.length());
-            content += L"class " + className + L" : public BaseObject<" + className + L">\r\n";
+            content += L"class " + className + L" : public BaseObject<" + className + L">" + inheritClass + L"\r\n";
             content += L"{\r\n";
             // generate properties
             for (std::shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
@@ -168,6 +179,12 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogProperty *logProperty,
                 content += INDENT + INDENT + INDENT + L"return obj;\r\n";
                 content += INDENT + INDENT + L"}\r\n";
             }
+            if (isJsonObject) {
+                content += L"\r\n"
+                    + INDENT + INDENT + L"virtual std::shared_ptr<Json> ToJson() const override;\r\n"
+                    + INDENT + INDENT + L"virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;\r\n";
+            }
+
             content += L"};\r\n";
         }
         WriteFile(filePathHpp, content, true);
