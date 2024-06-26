@@ -248,12 +248,19 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogProperty *logProperty,
         for (auto const &enumClass : enumClassList) {
             if (!VPGObjectFileGenerationService::IsJsonObject(enumClass.get()))
                 continue;
+
+            std::wstring toJsonStr = L"";
+            std::wstring deserializeStr = L"";
+            for (auto const &property : enumClass->GetProperties()) {
+
+            }
+            
             content += L"\r\n"
                 "std::shared_ptr<Json> " + enumClass->GetName() + L"::ToJson() const\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + L"DECLARE_UPTR(Json, json);\r\n"
-                // TODO
+                + toJsonStr
                 + INDENT + INDENT + L"return json;\r\n"
                 + INDENT + L"CATCH\r\n"
                 + INDENT + L"return nullptr;\r\n"
@@ -264,7 +271,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogProperty *logProperty,
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + L"std::shared_ptr<Json> json = std::dynamic_pointer_cast<Json>(document);\r\n"
                 + INDENT + INDENT + L"assert(json != nullptr);\r\n"
-                //  TODO
+                + deserializeStr
                 + INDENT + L"CATCH\r\n"
                 + INDENT + L"return nullptr;\r\n"
                 "}\r\n";
