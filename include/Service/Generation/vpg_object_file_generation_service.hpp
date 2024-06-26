@@ -16,6 +16,7 @@ class VPGObjectFileGenerationService
         VPGObjectFileGenerationService() = default;
         ~VPGObjectFileGenerationService() {}
 
+        static bool IsJsonObject(const VPGEnumClass* enumClass);
     public:
         // get #include file name
         static std::wstring GetProjectClassIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::wstring &className);

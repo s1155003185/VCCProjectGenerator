@@ -15,6 +15,14 @@ using namespace vcc;
 #define LOG_ID L"Object File Generation"
 const std::wstring proeprtyClassNameSuffix = L"Property";
 
+bool VPGObjectFileGenerationService::IsJsonObject(const VPGEnumClass* enumClass)
+{
+    TRY
+        return IsContainSubstring(enumClass->GetCommand(), L"@@Json", 0, true);
+    CATCH
+    return false;
+}
+
 std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::wstring &className)
 {
     TRY
@@ -47,7 +55,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogProperty *logProperty,
         // generate external class
         for (auto const &enumClass : enumClassList) {
             // Json
-            bool isJsonObject = IsContainSubstring(enumClass->GetCommand(), L"@@Json", 0, true);
+            bool isJsonObject = VPGObjectFileGenerationService::IsJsonObject(enumClass.get());
             if (isJsonObject) {
                 projectFileList.insert(L"#include \"base_json_object.hpp\"");
                 projectFileList.insert(L"#include \"json.hpp\"");
@@ -127,7 +135,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogProperty *logProperty,
         for (auto const &enumClass : enumClassList) {
             std::wstring inheritClass = L"";
             // Json
-            bool isJsonObject = IsContainSubstring(enumClass->GetCommand(), L"@@Json", 0, true);
+            bool isJsonObject = VPGObjectFileGenerationService::IsJsonObject(enumClass.get());
             if (isJsonObject)
                 inheritClass += L", public BaseJsonObject";
 
@@ -196,8 +204,73 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogProperty *logProperty,
     const std::wstring &filePathCpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
+        bool isContainJsonObject = false;
+        for (auto const &enumClass : enumClassList) {
+            isContainJsonObject = VPGObjectFileGenerationService::IsJsonObject(enumClass.get());
+            if (isContainJsonObject)
+                break;
+        }
+        if (!isContainJsonObject)
+            return;
+        
+        std::wstring includeFileName = GetFileName(filePathCpp);
+        Replace(includeFileName, L".hpp", L".cpp");
+
+        std::set<std::wstring> systemIncludeFiles;
+        std::set<std::wstring> customIncludeFiles;
+
+        systemIncludeFiles.insert(L"assert.h");
+        systemIncludeFiles.insert(L"memory");
+        systemIncludeFiles.insert(L"string");
+        
+        customIncludeFiles.insert(L"exception_macro.hpp");
+        customIncludeFiles.insert(L"i_document.hpp");
+        customIncludeFiles.insert(L"i_document_builder.hpp");
+        customIncludeFiles.insert(L"json.hpp");
+        customIncludeFiles.insert(L"memory_macro.hpp");
+        customIncludeFiles.insert(L"string_helper.hpp");
+        
         LogService::LogInfo(logProperty, LOG_ID, L"Generate object class file: " + filePathCpp);
-        std::wstring content = L"";
+        std::wstring content = L"#include \"" + includeFileName + L"\"\r\n";
+
+        if (!systemIncludeFiles.empty()) {
+            content += L"\r\n";
+            for (auto const &str : systemIncludeFiles)
+                content += L"#include <" + str + L">\r\n";
+        }
+        if (!customIncludeFiles.empty()) {
+            content += L"\r\n";
+            for (auto const &str : customIncludeFiles)
+                content += L"#include \"" + str + L"\"\r\n";
+        }
+        content += L"\r\nusing namespace vcc;\r\n";
+
+        for (auto const &enumClass : enumClassList) {
+            if (!VPGObjectFileGenerationService::IsJsonObject(enumClass.get()))
+                continue;
+            content += L"\r\n"
+                "std::shared_ptr<Json> " + enumClass->GetName() + L"::ToJson() const\r\n"
+                "{\r\n"
+                + INDENT + L"TRY\r\n"
+                + INDENT + INDENT + L"DECLARE_UPTR(Json, json);\r\n"
+                // TODO
+                + INDENT + INDENT + L"return json;\r\n"
+                + INDENT + L"CATCH\r\n"
+                + INDENT + L"return nullptr;\r\n"
+                "}\r\n"
+                "\r\n"
+                "void " + enumClass->GetName() + L"::DeserializeJson(std::shared_ptr<IDocument> document) const\r\n"
+                "{\r\n"
+                + INDENT + L"TRY\r\n"
+                + INDENT + INDENT + L"std::shared_ptr<Json> json = std::dynamic_pointer_cast<Json>(document);\r\n"
+                + INDENT + INDENT + L"assert(json != nullptr);\r\n"
+                //  TODO
+                + INDENT + L"CATCH\r\n"
+                + INDENT + L"return nullptr;\r\n"
+                "}\r\n";
+            
+        }
+
         WriteFile(filePathCpp, content, true);
         LogService::LogInfo(logProperty, LOG_ID, L"Generate object class file completed.");
     CATCH
