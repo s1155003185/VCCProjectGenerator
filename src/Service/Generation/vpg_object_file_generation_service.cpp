@@ -23,6 +23,14 @@ bool VPGObjectFileGenerationService::IsJsonObject(const VPGEnumClass* enumClass)
     return false;
 }
 
+std::wstring VPGObjectFileGenerationService::GetJsonAddType(const std::wstring &type)
+{
+    TRY
+
+    CATCH
+    return L"";
+}
+
 std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::wstring &className)
 {
     TRY
@@ -134,10 +142,14 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogProperty *logProperty,
         // generate class
         for (auto const &enumClass : enumClassList) {
             std::wstring inheritClass = L"";
+            std::wstring extraFunction = L"";
             // Json
-            bool isJsonObject = VPGObjectFileGenerationService::IsJsonObject(enumClass.get());
-            if (isJsonObject)
+            if (VPGObjectFileGenerationService::IsJsonObject(enumClass.get())) {
                 inheritClass += L", public BaseJsonObject";
+                extraFunction += L"\r\n"
+                    + INDENT + INDENT + L"virtual std::shared_ptr<Json> ToJson() const override;\r\n"
+                    + INDENT + INDENT + L"virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;\r\n";
+            }
 
             content += L"\r\n";
             
@@ -187,12 +199,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogProperty *logProperty,
                 content += INDENT + INDENT + INDENT + L"return obj;\r\n";
                 content += INDENT + INDENT + L"}\r\n";
             }
-            if (isJsonObject) {
-                content += L"\r\n"
-                    + INDENT + INDENT + L"virtual std::shared_ptr<Json> ToJson() const override;\r\n"
-                    + INDENT + INDENT + L"virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;\r\n";
-            }
-
+            content += extraFunction;
             content += L"};\r\n";
         }
         WriteFile(filePathHpp, content, true);
@@ -214,7 +221,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogProperty *logProperty,
             return;
         
         std::wstring includeFileName = GetFileName(filePathCpp);
-        Replace(includeFileName, L".hpp", L".cpp");
+        ReplaceAll(includeFileName, L".hpp", L".cpp");
 
         std::set<std::wstring> systemIncludeFiles;
         std::set<std::wstring> customIncludeFiles;
