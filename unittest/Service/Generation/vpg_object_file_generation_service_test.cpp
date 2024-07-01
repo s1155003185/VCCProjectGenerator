@@ -10,6 +10,8 @@
 #include "file_helper.hpp"
 #include "memory_macro.hpp"
 
+#include "vpg_file_generation_manager.hpp"
+#include "vpg_enum_class_reader.hpp"
 #include "vpg_object_file_generation_service.hpp"
 
 using namespace vcc;
@@ -20,6 +22,8 @@ class VPGObjectFileGenerationServiceTest : public testing::Test
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGObjectFileGenerationServiceTest/");
     GETSET(std::wstring, FilePathHpp, L"");
     GETSET(std::wstring, FilePathCpp, L"");
+
+    MANAGER(VPGEnumClassReader, Reader);
     public:
         void SetUp() override
         {
@@ -28,6 +32,10 @@ class VPGObjectFileGenerationServiceTest : public testing::Test
 
             this->_FilePathHpp = ConcatPaths({this->_Workspace, L"vcc_object.hpp"});
             this->_FilePathCpp = ConcatPaths({this->_Workspace, L"vcc_object.cpp"});
+
+            DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr);
+            manager->GetClassMacroList(L"");
+            _Reader->InsertClassMacroList(manager->GetClassMacros());
         }
 
         void TearDown() override
@@ -272,6 +280,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "    OrdredMapObject // ORDERED_MAP_SPTR_R(int, VPGObject, OrdredMapObject)"
         "};\r\n";
 
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClasses;
+    this->GetReader()->Parse(enumClass, enumClasses);
 
 
 
