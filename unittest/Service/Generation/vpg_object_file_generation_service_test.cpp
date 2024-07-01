@@ -259,6 +259,13 @@ TEST_F(VPGObjectFileGenerationServiceTest, Multi)
 
 TEST_F(VPGObjectFileGenerationServiceTest, Json)
 {
+    // Camel Case = camelCase
+    // Snake Case = snake_case
+    // Pascal Case = PascalCase
+    // Kebab Case = kebab-case
+    // Uppercase = UPPERCASE
+    // Lowercase = lowercase
+    // dot-separated lowercase = my.variable.name
     std::wstring enumClass = L""
         "#pragma once\r\n"
         "\r\n"
@@ -267,7 +274,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "{\r\n"
         "    Boolean, // GETSET(bool, Boolean, false)\r\n"
         "    Integer, // GETSET(int, Integer, 0)\r\n"
-        "    Enum, // GETSET(ExceptionType, Enum, ExceptionType::NA)\r\n"
+        "    Enum, // GETSET(JsonInternalType, Enum, JsonInternalType::String)\r\n"
         "    Double, // GETSET(double, Double, 0)\r\n"
         "    Vector, // VECTOR(int, Vector)\r\n"
         "    Map, // MAP(int, int, Map)\r\n"
@@ -280,41 +287,16 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "    OrdredMapObject // ORDERED_MAP_SPTR_R(int, VPGObject, OrdredMapObject)"
         "};\r\n";
 
-    std::vector<std::shared_ptr<VPGEnumClass>> enumClasses;
-    this->GetReader()->Parse(enumClass, enumClasses);
-
-
-
-
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    this->GetReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
 
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
 
-    // Camel Case = camelCase
-    // Snake Case = snake_case
-    // Pascal Case = PascalCase
-    // Kebab Case = kebab-case
-    // Uppercase = UPPERCASE
-    // Lowercase = lowercase
-    // dot-separated lowercase = my.variable.name
-    DECLARE_SPTR(VPGEnumClass, enumClassA);
-    enumClassA->SetName(L"VPGObjectProperty");
-    enumClassA->SetCommand(L"@@Json{ \"Key.NamingStyle\": \"Camel\" }");
-    DECLARE_SPTR(VPGEnumClassProperty, enumClassPropertyA);
-    enumClassPropertyA->SetEnum(L"EnumA");
-    enumClassPropertyA->SetMacro(L"GETSET(std::wstring, EnumA, L\"\")");
-    enumClassPropertyA->SetType1(L"std::wstring");
-    enumClassPropertyA->SetType2(L"");
-    enumClassPropertyA->SetPropertyName(L"EnumA");
-    enumClassPropertyA->SetDefaultValue(L"");
-    enumClassA->InsertProperties(enumClassPropertyA);
-    enumClassList.push_back(enumClassA);
-    
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
@@ -360,6 +342,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "#include \"i_document_builder.hpp\"\r\n"
         "#include \"json.hpp\"\r\n"
         "#include \"memory_macro.hpp\"\r\n"
+        "#include \"number_helper.hpp\"\r\n"
         "#include \"string_helper.hpp\"\r\n"
         "\r\n"
         "using namespace vcc;\r\n"
@@ -368,7 +351,78 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "{\r\n"
         "    TRY\r\n"
         "        DECLARE_UPTR(Json, json);\r\n"
-        "        json->AddString(L\"EnumA\", _EnumA);\r\n"
+        "        // Boolean\r\n"
+        "        json->AddBool(L\"Boolean\", _Boolean);\r\n"
+        "        // Integer\r\n"
+        "        json->AddInt(L\"Integer\", _Integer)\r\n"
+        "        // Enum\r\n"
+        "        switch (_Enum)\r\n"
+        "        {\r\n"
+        "        case JsonInternalType::Array:\r\n"
+        "            json->AddString(L\"Enum\", L\"Array\");\r\n"
+        "            break;\r\n"
+        "        case JsonInternalType::Boolean:\r\n"
+        "            json->AddString(L\"Enum\", L\"Boolean\");\r\n"
+        "            break;\r\n"
+        "        case JsonInternalType::Number:\r\n"
+        "            json->AddString(L\"Enum\", L\"Number\");\r\n"
+        "            break;\r\n"
+        "        case JsonInternalType::Null:\r\n"
+        "            json->AddString(L\"Enum\", L\"Null\");\r\n"
+        "            break;\r\n"
+        "        case JsonInternalType::Object:\r\n"
+        "            json->AddString(L\"Enum\", L\"Object\");\r\n"
+        "            break;\r\n"
+        "        case JsonInternalType::Json:\r\n"
+        "            json->AddString(L\"Enum\", L\"Json\");\r\n"
+        "            break;\r\n"
+        "        case JsonInternalType::String:\r\n"
+        "            json->AddString(L\"Enum\", L\"String\");\r\n"
+        "            break;\r\n"
+        "        default:\r\n"
+        "            assert(false);\r\n"
+        "            break;\r\n"
+        "        }\r\n"
+        "        // Double\r\n"
+        "        json->AddDouble(L\"Double\", _Double, GetDecimalPlaces(_Double));\r\n"
+        "        // Vector\r\n"
+        "        DECLARE_SPTR(Json, tmpVector);\r\n"
+        "        json->AddArray(L\"Vector\", tmpVector);\r\n"
+        "        for (auto const &element : _Vector)\r\n"
+        "            tmpVector->AddArrayInt(element);\r\n"
+        "        // Map\r\n"
+        "        DECLARE_SPTR(Json, tmpMap);\r\n"
+        "        json->AddArray(L\"Map\", tmpMap);\r\n"
+        "        for (auto const &element : _Map) {\r\n"
+        "            tmpVector->AddArrayInt(element);\r\n"
+        // TODO: Map
+        "        }\r\n"
+        "        // Set\r\n"
+        "        DECLARE_SPTR(Json, tmpSet);\r\n"
+        "        json->AddArray(L\"Set\", tmpSet);\r\n"
+        "        for (auto const &element : _Set)\r\n"
+        "            tmpSet->AddArrayInt(element);\r\n"
+        "        \r\n"
+        "        \r\n"
+        "        \r\n"
+        "        \r\n"
+        "        \r\n"
+        "        \r\n"
+        "        \r\n"
+        "        \r\n"
+        "        \r\n"
+        "        \r\n"
+
+        // "    Map, // MAP(int, int, Map)\r\n"
+        // "    Set, // SET(int, Set)\r\n"
+        // "    OrderedMap, // ORDERED_MAP(int, int, OrderedMap)\r\n"
+        // "    Object, // GETSET_SPTR(VPGObject, Object)\r\n"
+        // "    VectorObject, // VECTOR_SPTR(VPGObject, VectorObject)\r\n"
+        // "    MapObject, // MAP_SPTR_R(int, VPGObject, MapObject)\r\n"
+        // "    SetObject, // SET_SPTR(VPGObject, SetObject)"
+        // "    OrdredMapObject // ORDERED_MAP_SPTR_R(int, VPGObject, OrdredMapObject)"
+
+
         "        return json;\r\n"
         "    CATCH\r\n"
         "    return nullptr;\r\n"
@@ -381,6 +435,27 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "        assert(json != nullptr);\r\n"
         "        if (json->IsContainKey(L\"EnumA\"))\r\n"
         "            _EnumA = json->GetString(L\"EnumA\");\r\n"
+
+
+
+        // "    Boolean, // GETSET(bool, Boolean, false)\r\n"
+        // "    Integer, // GETSET(int, Integer, 0)\r\n"
+        // "    Enum, // GETSET(ExceptionType, Enum, ExceptionType::NA)\r\n"
+        // "    Double, // GETSET(double, Double, 0)\r\n"
+        // "    Vector, // VECTOR(int, Vector)\r\n"
+        // "    Map, // MAP(int, int, Map)\r\n"
+        // "    Set, // SET(int, Set)\r\n"
+        // "    OrderedMap, // ORDERED_MAP(int, int, OrderedMap)\r\n"
+        // "    Object, // GETSET_SPTR(VPGObject, Object)\r\n"
+        // "    VectorObject, // VECTOR_SPTR(VPGObject, VectorObject)\r\n"
+        // "    MapObject, // MAP_SPTR_R(int, VPGObject, MapObject)\r\n"
+        // "    SetObject, // SET_SPTR(VPGObject, SetObject)"
+        // "    OrdredMapObject // ORDERED_MAP_SPTR_R(int, VPGObject, OrdredMapObject)"
+
+
+
+
+
         "    CATCH\r\n"
         "}\r\n");
 }
