@@ -251,6 +251,32 @@ TEST_F(VPGObjectFileGenerationServiceTest, Multi)
 
 TEST_F(VPGObjectFileGenerationServiceTest, Json)
 {
+    std::wstring enumClass = L""
+        "#pragma once\r\n"
+        "\r\n"
+        "// @@Json\r\n"
+        "enum class VPGObjectPropety\r\n"
+        "{\r\n"
+        "    Boolean, // GETSET(bool, Boolean, false)\r\n"
+        "    Integer, // GETSET(int, Integer, 0)\r\n"
+        "    Enum, // GETSET(ExceptionType, Enum, ExceptionType::NA)\r\n"
+        "    Double, // GETSET(double, Double, 0)\r\n"
+        "    Vector, // VECTOR(int, Vector)\r\n"
+        "    Map, // MAP(int, int, Map)\r\n"
+        "    Set, // SET(int, Set)\r\n"
+        "    OrderedMap, // ORDERED_MAP(int, int, OrderedMap)\r\n"
+        "    Object, // GETSET_SPTR(VPGObject, Object)\r\n"
+        "    VectorObject, // VECTOR_SPTR(VPGObject, VectorObject)\r\n"
+        "    MapObject, // MAP_SPTR_R(int, VPGObject, MapObject)\r\n"
+        "    SetObject, // SET_SPTR(VPGObject, SetObject)"
+        "    OrdredMapObject // ORDERED_MAP_SPTR_R(int, VPGObject, OrdredMapObject)"
+        "};\r\n";
+
+
+
+
+
+
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
