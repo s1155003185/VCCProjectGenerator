@@ -240,6 +240,17 @@ namespace vcc
         CATCH
     }
 
+    void Json::AddString(const std::wstring &key, const std::string &value) const
+    {
+        TRY
+            ValidateKeyNotFound(key);
+            DECLARE_SPTR(Json, json);
+            json->SetJsonInternalType(JsonInternalType::String);
+            json->SetJsonInternalValue(str2wstr(value));
+            _JsonInternalNameValuePairs.push_back(std::make_pair(key, json));
+        CATCH
+    }
+
     std::shared_ptr<Json> Json::GetObject(const std::wstring &key) const
     {
         TRY
