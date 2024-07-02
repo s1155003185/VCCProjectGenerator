@@ -62,7 +62,10 @@ namespace vcc
                 break;
             }
             case JsonInternalType::Object:
-                result = Serialize(jsonObj->GetJsonInternalArray().at(0).get());
+                if (jsonObj->GetJsonInternalArray().at(0).get() != nullptr)
+                    result = Serialize(jsonObj->GetJsonInternalArray().at(0).get());
+                else
+                    result = L"null";
                 break;
             case JsonInternalType::Json: {
                 _Level++;
