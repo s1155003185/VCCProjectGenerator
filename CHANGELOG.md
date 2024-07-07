@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+
+### [v1.0.0] - 2024-07-07: Java Bridge: Prepare for generate Java Bridge
 - Makefile MacOS extension changed from .so to .dylib
 - vcc.json rename ModelDirectory to ObjectDirectory, ObjectDirectory to ObjectDirectoryHpp, added ObjectDirectoryCpp
 - Object Factory, Property Accessor Factory

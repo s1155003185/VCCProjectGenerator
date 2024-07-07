@@ -5,8 +5,10 @@ Maintain those standard already stable long time ago. No reason to implement twi
 
 Note: Still in initialize version, will have full review when official release
 
-Note: Stage 1 Basic Structure complete. 
-Next Stage: Start VCC Project Manager (Multi Project Handling), including Java Interface, Thread, Form, Action, Git.
+What news: Generate Json Object by Generation Mode (May have bug and only use property name as key)
+What next: Attribute of Generate Json Object by Generation Mode, Rewrite Generator as self writing
+
+Current Stage Objective: Start VCC Project Manager (Multi Project Handling), including Java Interface, Thread, Form, Action, Git.
 
 ## Features
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
@@ -473,8 +475,25 @@ Example
     };
     ```
 
-#### Field Defintion
-{Enum} // {ClassMacro} [@@AccessMode]
+#### Documentation
+// {Class Attribute}
+enum class EnumClassName {
+    EnumA, // {Field Attribute}
+    EnumB, // {Field Attribute}
+    EnumC, // {Field Attribute}
+};
+
+#### Class Attribute
+// [@@Json]
+
+[]: Optional
+@@: Key for attributes. Need to state for attribute
+
+[@@Json]
+    Generate Class as Json Object. Class will have attribute ToJson, SerializeJson and DeserializeJson
+
+#### Field Attribute
+Enum // {ClassMacro} [@@AccessMode]
 
 {...}: Compulsory
 []: Optional
@@ -635,6 +654,12 @@ X(Twitter) @VCCProject
 
 ****
 ## Release Log
+
+### [v1.0.0] - 2024-07-07: Java Bridge: Prepare for generate Java Bridge
+- Makefile MacOS extension changed from .so to .dylib
+- vcc.json rename ModelDirectory to ObjectDirectory, ObjectDirectory to ObjectDirectoryHpp, added ObjectDirectoryCpp
+- Object Factory, Property Accessor Factory
+- Generate Class Object with Json Serialize and Deserialize
 
 ### [v0.0.5] - 2024-06-02: Basic Strucute: Property Accessor and Thread safe
 - Generate Mode supports generate Property Accessor ReadWrite, ReadOnly, WriteOnly, NoAccess
