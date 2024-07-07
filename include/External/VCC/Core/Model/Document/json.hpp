@@ -76,11 +76,24 @@ namespace vcc
             
             // Array
             void AddArrayNull() const;
+
+            bool GetArrayElementBool() const;
             void AddArrayBool(bool value) const;
+
+            double GetArrayElementDouble() const;
             void AddArrayDouble(double value, size_t decimalPlaces) const;
+            
+            int64_t GetArrayElementInt64() const;
             void AddArrayInt(int64_t value) const;
+
+            char GetArrayElementChar() const;
+            wchar_t GetArrayElementWchar() const;
+            std::wstring GetArrayElementString() const;
             void AddArrayString(const std::wstring &value) const;
+
+            std::shared_ptr<Json> GetArrayElementObject() const;
             void AddArrayObject(std::shared_ptr<Json> object) const;
+            
             void AddArrayArray(std::shared_ptr<Json> array) const;
     };
 }

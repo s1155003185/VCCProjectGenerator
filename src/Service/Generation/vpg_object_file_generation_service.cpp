@@ -112,6 +112,7 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetJsonToObject(const 
     TRY
         std::wstring arrayStr = isArray ? L"Array" : L"";
         std::wstring convertedPropertyNameForGeneral = isMap ? L"key" : (isArray ? L"" : (L"L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, propertyName)));
+        std::wstring arrayElementStr = convertedPropertyNameForGeneral.empty() ? L"ArrayElement" : L"";
         std::wstring currentParentName = isMap ? L"tmpObject" : parentName;
         std::wstring currentPropertyName = L"_" + propertyName;
         std::wstring insertPrefix = (isMap || isArray) ? (L"Insert" + propertyName + L"(" + (isMap ? (GetJsonToObjectMapKey(mapKeyType) + L", ") : L"")) : (currentPropertyName + L" = ");
@@ -144,23 +145,23 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetJsonToObject(const 
             result.push_back(INDENT + INDENT + L"THROW_EXCEPTION_MSG(ExceptionType::ParserError, L\"Unknow Interface: \" + interface);");
         } else {
             if (type == L"bool")
-                result.push_back(INDENT + insertPrefix + currentParentName + L"->GetBool(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
+                result.push_back(INDENT + insertPrefix + currentParentName + L"->Get" + arrayElementStr + L"Bool(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
             else if (type == L"char")
-                result.push_back(INDENT + insertPrefix + currentParentName + L"->GetChar(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
+                result.push_back(INDENT + insertPrefix + currentParentName + L"->Get" + arrayElementStr + L"Char(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
             else if (type == L"wchar_t")
-                result.push_back(INDENT + insertPrefix + currentParentName + L"->GetWchar(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
+                result.push_back(INDENT + insertPrefix + currentParentName + L"->Get" + arrayElementStr + L"Wchar(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
             else if (IsContain(type, L"int")
                 || IsContain(type, L"short")
                 || IsContain(type, L"long")
                 || type == L"size_t"
                 || type == L"time_t")
-                result.push_back(INDENT + insertPrefix + L"static_cast<" + type + L">(" + currentParentName + L"->GetInt64(" + convertedPropertyNameForGeneral + L"))" + insertSuffix);
+                result.push_back(INDENT + insertPrefix + L"static_cast<" + type + L">(" + currentParentName + L"->Get" + arrayElementStr + L"Int64(" + convertedPropertyNameForGeneral + L"))" + insertSuffix);
             else if (type == L"double" || type == L"float")
-                result.push_back(INDENT + insertPrefix + L"static_cast<" + type + L">(" + currentParentName + L"->GetDouble(" + convertedPropertyNameForGeneral + L"))" + insertSuffix);
+                result.push_back(INDENT + insertPrefix + L"static_cast<" + type + L">(" + currentParentName + L"->Get" + arrayElementStr + L"Double(" + convertedPropertyNameForGeneral + L"))" + insertSuffix);
             else if (type == L"std::string")
-                result.push_back(INDENT + insertPrefix + L"wstr2str(" + currentParentName + L"->GetString(" + convertedPropertyNameForGeneral + L"))" + insertSuffix);
+                result.push_back(INDENT + insertPrefix + L"wstr2str(" + currentParentName + L"->Get" + arrayElementStr + L"String(" + convertedPropertyNameForGeneral + L"))" + insertSuffix);
             else if (type == L"std::wstring")
-                result.push_back(INDENT + insertPrefix + currentParentName + L"->GetString(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
+                result.push_back(INDENT + insertPrefix + currentParentName + L"->Get" + arrayElementStr + L"String(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
             else
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"VPGObjectFileGenerationService::GenerateCpp Unknown type: " + type);
         }

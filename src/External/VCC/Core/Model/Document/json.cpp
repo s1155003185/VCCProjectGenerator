@@ -343,6 +343,14 @@ namespace vcc
         CATCH
     }
 
+    bool Json::GetArrayElementBool() const
+    {
+        TRY
+            return _JsonInternalValue == L"true" ? true : false; 
+        CATCH
+        return false;
+    }
+
     void Json::AddArrayBool(bool value) const
     {
         TRY
@@ -351,6 +359,14 @@ namespace vcc
             json->SetJsonInternalValue(value ? L"true" : L"false");
             _JsonInternalArray.push_back(json);
         CATCH
+    }
+    
+    double Json::GetArrayElementDouble() const
+    {
+        TRY
+            return std::stod(_JsonInternalValue); 
+        CATCH
+        return 0;
     }
 
     void Json::AddArrayDouble(double value, size_t decimalPlaces) const
@@ -363,6 +379,14 @@ namespace vcc
         CATCH
     }
 
+    int64_t Json::GetArrayElementInt64() const
+    {
+        TRY
+            return std::stoi(_JsonInternalValue); 
+        CATCH
+        return 0;
+    }
+
     void Json::AddArrayInt(int64_t value) const
     {
         TRY
@@ -373,6 +397,34 @@ namespace vcc
         CATCH
     }
 
+    char Json::GetArrayElementChar() const
+    {
+        TRY
+            if (_JsonInternalValue.length() != 1)
+                THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Json Value is not wchar_t");
+            return _JsonInternalValue[0];
+        CATCH
+        return '\0';
+    }
+
+    wchar_t Json::GetArrayElementWchar() const
+    {
+        TRY
+            if (_JsonInternalValue.length() != 1)
+                THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Json Value is not wchar_t");
+            return _JsonInternalValue[0];
+        CATCH
+        return L'\0';
+    }
+
+    std::wstring Json::GetArrayElementString() const
+    {
+        TRY
+            return _JsonInternalValue;
+        CATCH
+        return L"";
+    }
+
     void Json::AddArrayString(const std::wstring &value) const
     {
         TRY
@@ -381,6 +433,14 @@ namespace vcc
             json->SetJsonInternalValue(value);
             _JsonInternalArray.push_back(json);
         CATCH
+    }
+
+    std::shared_ptr<Json> Json::GetArrayElementObject() const
+    {
+        TRY
+            return _JsonInternalArray.empty() ? nullptr : _JsonInternalArray[0];
+        CATCH
+        return nullptr;
     }
 
     void Json::AddArrayObject(std::shared_ptr<Json> object) const

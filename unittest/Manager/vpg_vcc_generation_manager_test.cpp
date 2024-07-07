@@ -467,6 +467,20 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     "};\r\n";
     AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_mix_property.hpp"}), codeMIx, true);
 
+    std::wstring codeJson =  L""
+    "#pragma once\r\n"
+    "\r\n"
+    "// @@Json\r\n"
+    "enum class VCCObjectJsonProperty\r\n"
+    "{\r\n"
+    "    Bool, // GETSET(bool, Bool, false) \r\n"
+    "    String, // GETSET(std::wstring, String, L\"\") \r\n"
+    "    Object, // GETSET_SPTR_NULL(VCCObjectJson, Object) \r\n"
+    "    Vector, // VECTOR(std::wstring, Vector) \r\n"
+    "    Map // MAP(int, double, Map) \r\n"
+    "};\r\n";
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_json_property.hpp"}), codeJson, true);
+
     this->_Option->SetWorkspaceSource(this->GetWorkspaceSource());
     this->_Option->SetWorkspaceDestination(this->GetWorkspaceTarget());
     this->_Option->SetProjectPrefix(L"VCC");
@@ -522,6 +536,12 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_mix_property_accessor.hpp"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_mix_property_accessor.cpp"})));
 
+    // Mix Class
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_json.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/Model/ClassA", L"vcc_object_json.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_mix_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_mix_property_accessor.cpp"})));
+
     std::wstring unittest = L""
     "#include <gtest/gtest.h>\r\n"
     "\r\n"
@@ -537,6 +557,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     "#include \"vcc_object_container.hpp\"\r\n"
     "#include \"vcc_object_object.hpp\"\r\n"
     "#include \"vcc_object_mix.hpp\"\r\n"
+    "#include \"vcc_object_json.hpp\"\r\n"
     "\r\n"
     "TEST(ClassTest, Normal)\r\n"
     "{\r\n"
@@ -550,6 +571,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     "    DECLARE_SPTR(VCCObjectContainer, objectContainer);\r\n"
     "    DECLARE_SPTR(VCCObjectObject, objectObject);\r\n"
     "    DECLARE_SPTR(VCCObjectMix, objectMix);\r\n"
+    "    DECLARE_SPTR(VCCObjectJson, objectJson);\r\n"
     "}\r\n";
     AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/Module/ClassA", L"class_test.cpp"}), unittest, true);
 
