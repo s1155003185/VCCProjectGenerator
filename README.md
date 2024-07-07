@@ -655,7 +655,11 @@ X(Twitter) @VCCProject
 ****
 ## Release Log
 
-### [v1.0.0] - 2024-07-07: Java Bridge: Prepare for generate Java Bridge
+### [v0.1.1] - 2024-07-07: Java Bridge: Self Writing
+- Fix Win Compile
+- Update Generator be Self-writting project
+
+### [v0.1.0] - 2024-07-07: Java Bridge: Prepare for generate Java Bridge
 - Makefile MacOS extension changed from .so to .dylib
 - vcc.json rename ModelDirectory to ObjectDirectory, ObjectDirectory to ObjectDirectoryHpp, added ObjectDirectoryCpp
 - Object Factory, Property Accessor Factory

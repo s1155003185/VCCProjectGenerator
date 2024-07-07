@@ -1,0 +1,33 @@
+{
+    "Version": "v0.1.0",
+    "ProjectType": "VCCModule",
+    "WorkspaceSourceGitUrl": "https://github.com/s1155003185/VCCModule.git",
+    "WorkspaceSource": "/Users/david/Documents/vcc/VCCModule",
+    "WorkspaceDestination": "/Users/david/Desktop/VSCode/test",
+    "ProjectPrefix": "",
+    "ProjectName": "VCCProjGenerator",
+    "ProjectNameDll": "libvpg",
+    "ProjectNameExe": "vpg",
+    "IsGit": true,
+    "IsExcludeUnittest": false,
+    "IsExcludeVCCUnitTest": false,
+    "TypeWorkspace": "include/Type",
+    "ActionTypeDirectory": "include/Type",
+    "ExceptionTypeDirectory": "include/Type",
+    "ManagerTypeDirectory": "include/Type",
+    "ObjectTypeDirectory": "include/Type",
+    "ObjectDirectoryHpp": "include/Model",
+    "ObjectDirectoryCpp": "src/Model",
+    "PropertyAccessorDirectoryHpp": "include/PropertyAccessor",
+    "PropertyAccessorDirectoryCpp": "src/PropertyAccessor",
+    "ObjectFactoryDirectoryHpp": "include/Factory",
+    "ObjectFactoryDirectoryCpp": "src/Factory",
+    "PropertyAccessorFactoryDirectoryHpp": "include/Factory",
+    "PropertyAccessorFactoryDirectoryCpp": "src/Factory",
+    "Plugins": [
+        "VCC/Versioning/Git"
+    ],
+    "Exports": [
+
+    ]
+}

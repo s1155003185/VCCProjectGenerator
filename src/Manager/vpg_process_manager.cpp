@@ -243,7 +243,7 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
             }
 
             // validation
-            if (this->_Option->GetProjectType() == VPGProjectType::NA)
+            if (this->_Option->GetProjectType() == VPGProjectType::VccModule)
                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Interface Type missing.");
         } else {
             std::wstring vccJsonFilePath = ConcatPaths({_Option->GetWorkspaceDestination(), VPGGlobal::GetVccJsonFileName()});

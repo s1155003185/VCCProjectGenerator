@@ -506,7 +506,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "            else if (tmpEnum == L\"STRING\")\r\n"
         "                _Enum = JsonInternalType::String;\r\n"
         "            else\r\n"
-        "                THROW_EXCEPTION_MSG(ExceptionType::ParserError, L\"Unknow Interface: \" + interface);\r\n"
+        "                THROW_EXCEPTION_MSG(ExceptionType::ParserError, L\"Unknow Interface: \" + tmpEnum);\r\n"
         "        }\r\n"
         "        // Double\r\n"
         "        if (json->IsContainKey(L\"Double\"))\r\n"

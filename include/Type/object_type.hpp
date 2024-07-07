@@ -1,9 +1,7 @@
 #pragma once
 
-enum class ObjectType
-{
-    NA = 0
-    // vccobj - begin
-
-    // vccobj - end
+enum class ObjectType {
+    NA,
+    VPGGenerationOption,
+    VPGGenerationOptionExport
 };

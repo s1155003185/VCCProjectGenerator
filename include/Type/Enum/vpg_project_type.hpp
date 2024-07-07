@@ -2,7 +2,7 @@
 
 enum class VPGProjectType
 {
-    NA,
+    VccModule, // by Default
     VccComplex,
     VccDll,
     VccExe,

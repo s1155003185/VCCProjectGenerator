@@ -142,7 +142,7 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetJsonToObject(const 
                 isStart = false;
             }
             result.push_back(INDENT + L"else");
-            result.push_back(INDENT + INDENT + L"THROW_EXCEPTION_MSG(ExceptionType::ParserError, L\"Unknow Interface: \" + interface);");
+            result.push_back(INDENT + INDENT + L"THROW_EXCEPTION_MSG(ExceptionType::ParserError, L\"Unknow Interface: \" + tmpEnum);");
         } else {
             if (type == L"bool")
                 result.push_back(INDENT + insertPrefix + currentParentName + L"->Get" + arrayElementStr + L"Bool(" + convertedPropertyNameForGeneral + L")" + insertSuffix);

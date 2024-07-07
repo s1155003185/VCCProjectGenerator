@@ -23,8 +23,8 @@ std::wstring VPGEnumClassReader::_GetErrorMessage(const std::wstring &str, const
         size_t row = 0, column = 0;
         GetCharacterRowAndColumn(str, pos, row, column);
         
-        size_t lengthOfPos = std::min(pos, 100UL);
-        size_t lengthOfSub = std::min(str.length() - pos, 100UL);
+        size_t lengthOfPos = std::min(pos, (size_t)100);
+        size_t lengthOfSub = std::min(str.length() - pos, (size_t)100);
 
         std::wstring preString = str.substr(pos - lengthOfPos, lengthOfPos);
         std::wstring subString = str.substr(pos + 1, lengthOfSub);
