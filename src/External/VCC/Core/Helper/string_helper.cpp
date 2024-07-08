@@ -42,6 +42,20 @@ namespace vcc
 	{
 		std::transform(str.begin(), str.end(), str.begin(), ::toupper);
 	}
+	
+	void ToCapital(std::wstring &str)
+	{
+		TRY
+			ToLower(str);
+			auto tokens = SplitString(str, { L" " });
+			str = L"";
+			for (auto &token : tokens) {
+				if (token.empty())
+					continue;
+				str += std::wstring(1, std::towupper(token[0])) + (token.length() > 1 ? token.substr(1) : L"" );
+			}
+		CATCH
+	}
 
 	std::wstring ToString(double value, size_t decimalPlaces)
 	{
@@ -321,6 +335,93 @@ namespace vcc
 	{
 		LTrim(str);
 		RTrim(str);
+	}
+
+	std::wstring ConvertNamingStyle(const std::wstring &str, const NamingStyle &from, const NamingStyle &to, const std::wstring& seperator)
+	{
+		std::wstring result = L"";
+		TRY
+			if (from == to)
+				return str;
+			
+			std::vector<std::wstring> tokens;
+			switch (from)
+			{
+			case NamingStyle::CamelCase:
+			case NamingStyle::PascalCase:
+				tokens = SplitStringByUpperCase(str, true, true);
+				break;
+			case NamingStyle::ConstantCase:
+			case NamingStyle::ScreamingSnakeCase:
+			case NamingStyle::SnakeCase:
+				tokens = SplitString(str, { L"_" });
+				break;
+			case NamingStyle::DotSeparatedLowercase:
+				tokens = SplitString(str, { L"." });
+				break;
+			case NamingStyle::KebabCase:
+				tokens = SplitString(str, { L"-" });
+				break;
+			case NamingStyle::Lowercase:
+			case NamingStyle::Uppercase:
+			{
+				std::vector<std::wstring> sepeartorSet;
+				sepeartorSet.push_back(seperator);
+				tokens = SplitString(str, sepeartorSet);
+				break;				
+			}
+			default:
+				assert(false);
+				break;
+			}
+			size_t cnt = 0;
+			for (auto &token : tokens) {
+				switch (to)
+				{
+				case NamingStyle::CamelCase:
+					if (cnt == 0)
+						ToLower(token);
+					else
+						ToCapital(token);
+					result += token;
+					break;
+				case NamingStyle::ConstantCase:
+				case NamingStyle::ScreamingSnakeCase:
+					ToUpper(token);
+					result += (cnt > 0 ? L"_" : L"") + token;
+					break;
+				case NamingStyle::DotSeparatedLowercase:
+					ToLower(token);
+					result += (cnt > 0 ? L"." : L"") + token;
+					break;
+				case NamingStyle::KebabCase:
+					ToLower(token);
+					result += (cnt > 0 ? L"-" : L"") + token;
+					break;
+				case NamingStyle::Lowercase:
+					ToLower(token);
+					result += (cnt > 0 ? seperator : L"") + token;
+					break;
+				case NamingStyle::PascalCase:
+					ToCapital(token);
+					result += token;
+					break;
+				case NamingStyle::SnakeCase:
+					ToLower(token);
+					result += (cnt > 0 ? L"_" : L"") + token;
+					break;
+				case NamingStyle::Uppercase:
+					ToUpper(token);
+					result += (cnt > 0 ? seperator : L"") + token;
+					break;
+				default:
+					assert(false);
+					break;
+				}
+				cnt++;
+			}
+		CATCH
+		return result;
 	}
 
 	bool Equal(const std::wstring &str1, const std::wstring &str2, const bool &isIgnoreCase)

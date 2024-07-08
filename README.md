@@ -3,12 +3,20 @@
 Cross plaform project to handle Any Interface with C++ dll.
 Maintain those standard already stable long time ago. No reason to implement twice.
 
-Note: Still in initialize version, will have full review when official release
-
-What news: Generate Json Object by Generation Mode (May have bug and only use property name as key)
-What next: Attribute of Generate Json Object by Generation Mode, Rewrite Generator as self writing
-
 Current Stage Objective: Start VCC Project Manager (Multi Project Handling), including Java Interface, Thread, Form, Action, Git.
+
+Note: Still in initialize version, will have full review when official release
+Sample Program: To get sample, can download this project from github, then
+    1. go to vpg_vcc_generation_manager_test.cpp
+    2. change GETSET(bool, IsCopyDebugFolderToTestFolder, false); to GETSET(bool, IsCopyDebugFolderToTestFolder, true;
+    3. make unittest -j10
+    4. file will be generated to TestFolder mensioned in vpg_vcc_generation_manager_test.cpp
+
+## What news
+Generate Json Object by Generation Mode and control key naming style with 
+
+## What next
+Java bridge
 
 ## Features
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
@@ -201,6 +209,11 @@ Common and continous update template so that do not need to develop project from
 
 ****
 ## Versionin Common Codebase Project Generator
+Sample Program: To get sample, can download this project from github, then
+    1. go to vpg_vcc_generation_manager_test.cpp
+    2. change GETSET(bool, IsCopyDebugFolderToTestFolder, false); to GETSET(bool, IsCopyDebugFolderToTestFolder, true;
+    3. make unittest -j10
+    4. file will be generated to TestFolder mensioned in vpg_vcc_generation_manager_test.cpp
 
 ### Pre-Requirement
 1. git
@@ -420,61 +433,6 @@ Procedure
     2. For all Class Property file, will generate Class file etc.
     3. All Enum Class File will export to interface like java etc. (Not implement yet)
 
-Example
-    In vpg_object_property.hpp,
-    
-    ```
-    #pragma once
-
-    enum class VPGObjectProperty
-    {
-        EnumA, // Nothing
-        EnumB, // GETSET(std::wstring, EnumB, "Default")
-        EnumC, // GET(int64_t, EnumC, 0)
-        EnumD, // GETSET(VPGEnumClass, EnumD, VPGEnumClass::OptionA)
-        EnumE  // VECTOR(VPGEnumClass, EnumE)
-    };
-    ```
-
-    In vpg_enum_class.hpp,
-    ```
-    #pragma once
-
-    enum class VPGEnumClass
-    {
-        OptionA,
-        OptionB,
-        OptionC,
-        OptionD
-    };
-    ```
-
-    It will generate class file vpg_object.hpp with following content
-
-    ```
-    #pragma once
-
-    #include <string>
-
-    #include "base_object.hpp"
-    #include "class_macro.hpp"
-    #include "object_type.hpp"
-
-    #include "vpg_enum_class.hpp"
-
-    class VCCObject : public BaseObject<VCCObject>
-    {
-        GETSET(std::wstring, EnumB, L\"Default\")
-        GET(int64_t, EnumC, 0)
-        GETSET(VPGEnumClass, EnumD, VPGEnumClass::OptionA)
-        VECTOR(EnumClass, EnumE)
-
-        public:
-            VCCObject() : BaseObject(ObjectType::Object) {}
-            virtual ~VCCObject() {}
-    };
-    ```
-
 #### Documentation
 // {Class Attribute}
 enum class EnumClassName {
@@ -484,13 +442,31 @@ enum class EnumClassName {
 };
 
 #### Class Attribute
-// [@@Json]
+// [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }]
 
 []: Optional
 @@: Key for attributes. Need to state for attribute
+{}: Json format to describe Json file
 
-[@@Json]
+[@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }]
     Generate Class as Json Object. Class will have attribute ToJson, SerializeJson and DeserializeJson
+    Attribute:
+        Key.NamingStyle
+            Value can be following
+            | Value | Result |
+            | --- | --- |
+            | CamelCase | camelCase |
+            | ConstantCase | CONSTANT_CASE |
+            | DotSeparatedLowercase | dot.seperated.lowercase |
+            | KebabCase | kebab-case |
+            | Lowercase | lowercase |
+            | PascalCase | PascalCase |
+            | ScreamingSnakeCase | SCREAMING_SNAKE_CASE |
+            | SnakeCase | snake_case |
+            | Uppercase | UPPERCASE |
+
+        Value.DecimalPlaces
+            value is number. Declare for decimal places for double and float. If not declare, Json number will be trim tailing 0s.
 
 #### Field Attribute
 Enum // {ClassMacro} [@@AccessMode]
@@ -516,6 +492,71 @@ Enum // {ClassMacro} [@@AccessMode]
             Allow Write Only via Property Accessor
         @@NoAccess
             Cannot Access via Property Accessor
+
+#### Example
+    There is TypeWorkspace in vcc.json
+    "TypeWorkspace": "include/Type"
+
+    Create .hpp file under include/Type with suffix _property.hpp
+    e.g. vpg_generation_option_property.hpp
+
+```
+// @@json
+enum class VPGGenerationOptionExportProperty
+{
+    InterfaceType // GETSET(VPGGenerationOptionInterfaceType, Interface, VPGGenerationOptionInterfaceType::Java)
+};
+
+// @@json { "Key.NamingStyle" : "PascalCase" }
+enum class VPGGenerationOptionProperty
+{
+    Version, // GETSET(std::wstring, Version, L"v0.0.1");
+    ProjectType,  // GETSET(VPGProjectType, ProjectType, VPGProjectType::VccModule);
+    WorkspaceSourceGitUrl, // GETSET(std::wstring, WorkspaceSourceGitUrl, L"");
+    WorkspaceSource, // GETSET(std::wstring, WorkspaceSource, L"");
+    WorkspaceDestination, // GETSET(std::wstring, WorkspaceDestination, L"");
+
+    // --------------------------------------------------
+    // Config
+    // --------------------------------------------------
+    // Project
+    ProjectPrefix, // GETSET(std::wstring, ProjectPrefix, L"");
+
+    ProjectName, // GETSET(std::wstring, ProjectName, L"VCCModule"); @@Command Need to assign Default Name first to pass validation
+    ProjectNameDll, // GETSET(std::wstring, ProjectNameDll, L"libVCCModule"); @@Command Need to assign Default Name first to pass validation
+    ProjectNameExe, // GETSET(std::wstring, ProjectNameExe, L"VCCModule"); @@Command Need to assign Default Name first to pass validation
+    IsGit, // GETSET(bool, IsGit, false);
+
+    IsExcludeUnittest, // GETSET(bool, IsExcludeUnittest, false);
+    IsExcludeVCCUnitTest, // GETSET(bool, IsExcludeVCCUnitTest, false);
+
+    // Files
+    TypeWorkspace, // GETSET(std::wstring, TypeWorkspace, L"include/Type");
+
+    ActionTypeDirectory, // GETSET(std::wstring, ActionTypeDirectory, L"include/Type");
+    ExceptionTypeDirectory, // GETSET(std::wstring, ExceptionTypeDirectory, L"include/Type");
+    ManagerTypeDirectory, // GETSET(std::wstring, ManagerTypeDirectory, L"include/Type");
+    ObjectTypeDirectory, // GETSET(std::wstring, ObjectTypeDirectory, L"include/Type");
+
+    ObjectDirectoryHpp, // GETSET(std::wstring, ObjectDirectoryHpp, L"include/Model");
+    ObjectDirectoryCpp, // GETSET(std::wstring, ObjectDirectoryCpp, L"src/Model");
+    PropertyAccessorDirectoryHpp, // GETSET(std::wstring, PropertyAccessorDirectoryHpp, L"include/PropertyAccessor");
+    PropertyAccessorDirectoryCpp, // GETSET(std::wstring, PropertyAccessorDirectoryCpp, L"src/PropertyAccessor");
+
+    ObjectFactoryDirectoryHpp, // GETSET(std::wstring, ObjectFactoryDirectoryHpp, L"include/Factory");
+    ObjectFactoryDirectoryCpp, // GETSET(std::wstring, ObjectFactoryDirectoryCpp, L"src/Factory");
+    PropertyAccessorFactoryDirectoryHpp, // GETSET(std::wstring, PropertyAccessorFactoryDirectoryHpp, L"include/Factory");
+    PropertyAccessorFactoryDirectoryCpp, // GETSET(std::wstring, PropertyAccessorFactoryDirectoryCpp, L"src/Factory");
+    
+    // Plugins
+    Plugins, // VECTOR(std::wstring, Plugins);
+
+    // Export
+    Exports // VECTOR_SPTR(VPGGenerationOptionExport, Exports);
+};
+```
+    Then use generation. It will auto create class, property, factory, property accessor
+
 
 ### Export to Java
 Assume that using Maven Java Project. The library will be compiled to resources folder.
@@ -655,7 +696,10 @@ X(Twitter) @VCCProject
 ****
 ## Release Log
 
-### [v0.1.1] - 2024-07-07: Java Bridge: Self Writing
+### [v0.1.2] - 2024-07-08: Java Bridge: Generation - Create Class as Json Object with 
+- Update Generator: Create Table as Json Object
+
+### [v0.1.1] - 2024-07-08: Java Bridge: Self Writing
 - Fix Win Compile
 - Update Generator be Self-writting project
 

@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 
+#include "json.hpp"
 #include "log_property.hpp"
 #include "vpg_enum_class.hpp"
 
@@ -24,6 +25,9 @@ class VPGObjectFileGenerationService
         static std::vector<std::wstring> GetJsonToObject(const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
             const std::wstring &parentName, const std::wstring &macro, const std::wstring &type, const std::wstring &mapKeyType, const std::wstring &propertyName, const bool &isArray, const bool &isMap);
     public:
+        // Attribute
+        static std::shared_ptr<Json> GetJsonAttributes(const std::wstring &command, const std::wstring &attributeName);
+
         // get #include file name
         static std::wstring GetProjectClassIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::wstring &className);
 

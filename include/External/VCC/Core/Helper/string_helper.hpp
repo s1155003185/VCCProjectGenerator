@@ -17,11 +17,25 @@ namespace vcc
 		XML
 	};
 
+	enum class NamingStyle
+	{
+		CamelCase, // camelCase
+		ConstantCase, // CONSTANT_CASE
+		DotSeparatedLowercase, // dot.seperated.lowercase
+		KebabCase, // kebab-case
+		Lowercase, // lowercase
+		PascalCase, // PascalCase
+		ScreamingSnakeCase, // SCREAMING_SNAKE_CASE
+		SnakeCase, // snake_case
+		Uppercase // UPPERCASE
+	};
+
 	std::wstring str2wstr(const std::string& str);
 	std::string wstr2str(const std::wstring &wstr);
 
 	void ToLower(std::wstring &str);
 	void ToUpper(std::wstring &str);
+	void ToCapital(std::wstring &str);
 
 	std::wstring ToString(double value, size_t decimalPlaces);
 
@@ -53,6 +67,9 @@ namespace vcc
 	void LTrim(std::wstring &str);
 	void RTrim(std::wstring &str);
 	void Trim(std::wstring &str);
+
+	// Conversion
+	std::wstring ConvertNamingStyle(const std::wstring &str, const NamingStyle &from, const NamingStyle &to, const std::wstring& seperator = L" ");
 
 	// search
 	bool Equal(const std::wstring &str1, const std::wstring &str2, const bool &isIgnoreCase = false);

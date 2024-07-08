@@ -2,7 +2,10 @@
 
 ## [Unreleased]
 
-### [v0.1.1] - 2024-07-07: Java Bridge: Self Writing
+### [v0.1.2] - 2024-07-08: Java Bridge: Generation - Create Class as Json Object with 
+- Update Generator: Create Table as Json Object
+
+### [v0.1.1] - 2024-07-08: Java Bridge: Self Writing
 - Fix Win Compile
 - Update Generator be Self-writting project
 

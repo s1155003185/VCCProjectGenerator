@@ -23,6 +23,24 @@ TEST(StringHelperTest, IsStartWithTrimSpace_Space)
     std::wstring text = L"a <vcc:abc";
     EXPECT_TRUE(IsStartWithTrimSpace(text, prefix));
 }
+
+/* ---------------------------------------------------------------------------------------------------- */
+/*                                      Conversion                                                      */
+/* ---------------------------------------------------------------------------------------------------- */
+
+TEST(StringHelperTest, ConvertNamingStyle)
+{
+    std::wstring str = L"PascalCase";
+    EXPECT_EQ(ConvertNamingStyle(str, NamingStyle::PascalCase, NamingStyle::CamelCase), L"pascalCase");
+    EXPECT_EQ(ConvertNamingStyle(str, NamingStyle::PascalCase, NamingStyle::ConstantCase), L"PASCAL_CASE");
+    EXPECT_EQ(ConvertNamingStyle(str, NamingStyle::PascalCase, NamingStyle::DotSeparatedLowercase), L"pascal.case");
+    EXPECT_EQ(ConvertNamingStyle(str, NamingStyle::PascalCase, NamingStyle::KebabCase), L"pascal-case");
+    EXPECT_EQ(ConvertNamingStyle(str, NamingStyle::PascalCase, NamingStyle::Lowercase), L"pascal case");
+    EXPECT_EQ(ConvertNamingStyle(str, NamingStyle::PascalCase, NamingStyle::PascalCase), L"PascalCase");
+    EXPECT_EQ(ConvertNamingStyle(str, NamingStyle::PascalCase, NamingStyle::ScreamingSnakeCase), L"PASCAL_CASE");
+    EXPECT_EQ(ConvertNamingStyle(str, NamingStyle::PascalCase, NamingStyle::SnakeCase), L"pascal_case");
+    EXPECT_EQ(ConvertNamingStyle(str, NamingStyle::PascalCase, NamingStyle::Uppercase), L"PASCAL CASE");
+}
 /* ---------------------------------------------------------------------------------------------------- */
 /*                                      Split String                                                    */
 /* ---------------------------------------------------------------------------------------------------- */

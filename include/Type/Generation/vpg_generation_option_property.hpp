@@ -6,7 +6,7 @@ enum class VPGGenerationOptionExportProperty
     InterfaceType // GETSET(VPGGenerationOptionInterfaceType, Interface, VPGGenerationOptionInterfaceType::Java)
 };
 
-// @@json
+// @@json { "Key.NamingStyle" : "PascalCase" }
 enum class VPGGenerationOptionProperty
 {
     Version, // GETSET(std::wstring, Version, L"v0.0.1");

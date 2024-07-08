@@ -19,12 +19,13 @@ using namespace vcc;
 std::shared_ptr<Json> VPGGenerationOptionExport::ToJson() const
 {
     TRY
+        NamingStyle namestyle = NamingStyle::PascalCase;
         DECLARE_UPTR(Json, json);
         // Interface
         switch (_Interface)
         {
         case VPGGenerationOptionInterfaceType::Java:
-            json->AddString(L"Interface", L"Java");
+            json->AddString(ConvertNamingStyle(L"Interface", NamingStyle::PascalCase, namestyle), L"Java");
             break;
         default:
             assert(false);
@@ -38,11 +39,12 @@ std::shared_ptr<Json> VPGGenerationOptionExport::ToJson() const
 void VPGGenerationOptionExport::DeserializeJson(std::shared_ptr<IDocument> document) const
 {
     TRY
+        NamingStyle namestyle = NamingStyle::PascalCase;
         std::shared_ptr<Json> json = std::dynamic_pointer_cast<Json>(document);
         assert(json != nullptr);
         // Interface
-        if (json->IsContainKey(L"Interface")) {
-            std::wstring tmpEnum = json->GetString(L"Interface");
+        if (json->IsContainKey(ConvertNamingStyle(L"Interface", namestyle, NamingStyle::PascalCase))) {
+            std::wstring tmpEnum = json->GetString(ConvertNamingStyle(L"Interface", namestyle, NamingStyle::PascalCase));
             ToUpper(tmpEnum);
             if (tmpEnum == L"JAVA")
                 _Interface = VPGGenerationOptionInterfaceType::Java;
@@ -55,92 +57,93 @@ void VPGGenerationOptionExport::DeserializeJson(std::shared_ptr<IDocument> docum
 std::shared_ptr<Json> VPGGenerationOption::ToJson() const
 {
     TRY
+        NamingStyle namestyle = NamingStyle::PascalCase;
         DECLARE_UPTR(Json, json);
         // Version
-        json->AddString(L"Version", _Version);
+        json->AddString(ConvertNamingStyle(L"Version", NamingStyle::PascalCase, namestyle), _Version);
         // ProjectType
         switch (_ProjectType)
         {
         case VPGProjectType::VccModule:
-            json->AddString(L"ProjectType", L"VccModule");
+            json->AddString(ConvertNamingStyle(L"ProjectType", NamingStyle::PascalCase, namestyle), L"VccModule");
             break;
         case VPGProjectType::VccComplex:
-            json->AddString(L"ProjectType", L"VccComplex");
+            json->AddString(ConvertNamingStyle(L"ProjectType", NamingStyle::PascalCase, namestyle), L"VccComplex");
             break;
         case VPGProjectType::VccDll:
-            json->AddString(L"ProjectType", L"VccDll");
+            json->AddString(ConvertNamingStyle(L"ProjectType", NamingStyle::PascalCase, namestyle), L"VccDll");
             break;
         case VPGProjectType::VccExe:
-            json->AddString(L"ProjectType", L"VccExe");
+            json->AddString(ConvertNamingStyle(L"ProjectType", NamingStyle::PascalCase, namestyle), L"VccExe");
             break;
         case VPGProjectType::CppComplex:
-            json->AddString(L"ProjectType", L"CppComplex");
+            json->AddString(ConvertNamingStyle(L"ProjectType", NamingStyle::PascalCase, namestyle), L"CppComplex");
             break;
         case VPGProjectType::CppDll:
-            json->AddString(L"ProjectType", L"CppDll");
+            json->AddString(ConvertNamingStyle(L"ProjectType", NamingStyle::PascalCase, namestyle), L"CppDll");
             break;
         case VPGProjectType::CppExe:
-            json->AddString(L"ProjectType", L"CppExe");
+            json->AddString(ConvertNamingStyle(L"ProjectType", NamingStyle::PascalCase, namestyle), L"CppExe");
             break;
         default:
             assert(false);
             break;
         }
         // WorkspaceSourceGitUrl
-        json->AddString(L"WorkspaceSourceGitUrl", _WorkspaceSourceGitUrl);
+        json->AddString(ConvertNamingStyle(L"WorkspaceSourceGitUrl", NamingStyle::PascalCase, namestyle), _WorkspaceSourceGitUrl);
         // WorkspaceSource
-        json->AddString(L"WorkspaceSource", _WorkspaceSource);
+        json->AddString(ConvertNamingStyle(L"WorkspaceSource", NamingStyle::PascalCase, namestyle), _WorkspaceSource);
         // WorkspaceDestination
-        json->AddString(L"WorkspaceDestination", _WorkspaceDestination);
+        json->AddString(ConvertNamingStyle(L"WorkspaceDestination", NamingStyle::PascalCase, namestyle), _WorkspaceDestination);
         // ProjectPrefix
-        json->AddString(L"ProjectPrefix", _ProjectPrefix);
+        json->AddString(ConvertNamingStyle(L"ProjectPrefix", NamingStyle::PascalCase, namestyle), _ProjectPrefix);
         // ProjectName
-        json->AddString(L"ProjectName", _ProjectName);
+        json->AddString(ConvertNamingStyle(L"ProjectName", NamingStyle::PascalCase, namestyle), _ProjectName);
         // ProjectNameDll
-        json->AddString(L"ProjectNameDll", _ProjectNameDll);
+        json->AddString(ConvertNamingStyle(L"ProjectNameDll", NamingStyle::PascalCase, namestyle), _ProjectNameDll);
         // ProjectNameExe
-        json->AddString(L"ProjectNameExe", _ProjectNameExe);
+        json->AddString(ConvertNamingStyle(L"ProjectNameExe", NamingStyle::PascalCase, namestyle), _ProjectNameExe);
         // IsGit
-        json->AddBool(L"IsGit", _IsGit);
+        json->AddBool(ConvertNamingStyle(L"IsGit", NamingStyle::PascalCase, namestyle), _IsGit);
         // IsExcludeUnittest
-        json->AddBool(L"IsExcludeUnittest", _IsExcludeUnittest);
+        json->AddBool(ConvertNamingStyle(L"IsExcludeUnittest", NamingStyle::PascalCase, namestyle), _IsExcludeUnittest);
         // IsExcludeVCCUnitTest
-        json->AddBool(L"IsExcludeVCCUnitTest", _IsExcludeVCCUnitTest);
+        json->AddBool(ConvertNamingStyle(L"IsExcludeVCCUnitTest", NamingStyle::PascalCase, namestyle), _IsExcludeVCCUnitTest);
         // TypeWorkspace
-        json->AddString(L"TypeWorkspace", _TypeWorkspace);
+        json->AddString(ConvertNamingStyle(L"TypeWorkspace", NamingStyle::PascalCase, namestyle), _TypeWorkspace);
         // ActionTypeDirectory
-        json->AddString(L"ActionTypeDirectory", _ActionTypeDirectory);
+        json->AddString(ConvertNamingStyle(L"ActionTypeDirectory", NamingStyle::PascalCase, namestyle), _ActionTypeDirectory);
         // ExceptionTypeDirectory
-        json->AddString(L"ExceptionTypeDirectory", _ExceptionTypeDirectory);
+        json->AddString(ConvertNamingStyle(L"ExceptionTypeDirectory", NamingStyle::PascalCase, namestyle), _ExceptionTypeDirectory);
         // ManagerTypeDirectory
-        json->AddString(L"ManagerTypeDirectory", _ManagerTypeDirectory);
+        json->AddString(ConvertNamingStyle(L"ManagerTypeDirectory", NamingStyle::PascalCase, namestyle), _ManagerTypeDirectory);
         // ObjectTypeDirectory
-        json->AddString(L"ObjectTypeDirectory", _ObjectTypeDirectory);
+        json->AddString(ConvertNamingStyle(L"ObjectTypeDirectory", NamingStyle::PascalCase, namestyle), _ObjectTypeDirectory);
         // ObjectDirectoryHpp
-        json->AddString(L"ObjectDirectoryHpp", _ObjectDirectoryHpp);
+        json->AddString(ConvertNamingStyle(L"ObjectDirectoryHpp", NamingStyle::PascalCase, namestyle), _ObjectDirectoryHpp);
         // ObjectDirectoryCpp
-        json->AddString(L"ObjectDirectoryCpp", _ObjectDirectoryCpp);
+        json->AddString(ConvertNamingStyle(L"ObjectDirectoryCpp", NamingStyle::PascalCase, namestyle), _ObjectDirectoryCpp);
         // PropertyAccessorDirectoryHpp
-        json->AddString(L"PropertyAccessorDirectoryHpp", _PropertyAccessorDirectoryHpp);
+        json->AddString(ConvertNamingStyle(L"PropertyAccessorDirectoryHpp", NamingStyle::PascalCase, namestyle), _PropertyAccessorDirectoryHpp);
         // PropertyAccessorDirectoryCpp
-        json->AddString(L"PropertyAccessorDirectoryCpp", _PropertyAccessorDirectoryCpp);
+        json->AddString(ConvertNamingStyle(L"PropertyAccessorDirectoryCpp", NamingStyle::PascalCase, namestyle), _PropertyAccessorDirectoryCpp);
         // ObjectFactoryDirectoryHpp
-        json->AddString(L"ObjectFactoryDirectoryHpp", _ObjectFactoryDirectoryHpp);
+        json->AddString(ConvertNamingStyle(L"ObjectFactoryDirectoryHpp", NamingStyle::PascalCase, namestyle), _ObjectFactoryDirectoryHpp);
         // ObjectFactoryDirectoryCpp
-        json->AddString(L"ObjectFactoryDirectoryCpp", _ObjectFactoryDirectoryCpp);
+        json->AddString(ConvertNamingStyle(L"ObjectFactoryDirectoryCpp", NamingStyle::PascalCase, namestyle), _ObjectFactoryDirectoryCpp);
         // PropertyAccessorFactoryDirectoryHpp
-        json->AddString(L"PropertyAccessorFactoryDirectoryHpp", _PropertyAccessorFactoryDirectoryHpp);
+        json->AddString(ConvertNamingStyle(L"PropertyAccessorFactoryDirectoryHpp", NamingStyle::PascalCase, namestyle), _PropertyAccessorFactoryDirectoryHpp);
         // PropertyAccessorFactoryDirectoryCpp
-        json->AddString(L"PropertyAccessorFactoryDirectoryCpp", _PropertyAccessorFactoryDirectoryCpp);
+        json->AddString(ConvertNamingStyle(L"PropertyAccessorFactoryDirectoryCpp", NamingStyle::PascalCase, namestyle), _PropertyAccessorFactoryDirectoryCpp);
         // Plugins
         DECLARE_SPTR(Json, tmpPlugins);
-        json->AddArray(L"Plugins", tmpPlugins);
+        json->AddArray(ConvertNamingStyle(L"Plugins", NamingStyle::PascalCase, namestyle), tmpPlugins);
         for (auto const &element : _Plugins) {
             tmpPlugins->AddArrayString(element);
         }
         // Exports
         DECLARE_SPTR(Json, tmpExports);
-        json->AddArray(L"Exports", tmpExports);
+        json->AddArray(ConvertNamingStyle(L"Exports", NamingStyle::PascalCase, namestyle), tmpExports);
         for (auto const &element : _Exports) {
             tmpExports->AddArrayObject(element->ToJson());
         }
@@ -152,14 +155,15 @@ std::shared_ptr<Json> VPGGenerationOption::ToJson() const
 void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) const
 {
     TRY
+        NamingStyle namestyle = NamingStyle::PascalCase;
         std::shared_ptr<Json> json = std::dynamic_pointer_cast<Json>(document);
         assert(json != nullptr);
         // Version
-        if (json->IsContainKey(L"Version"))
-            _Version = json->GetString(L"Version");
+        if (json->IsContainKey(ConvertNamingStyle(L"Version", namestyle, NamingStyle::PascalCase)))
+            _Version = json->GetString(ConvertNamingStyle(L"Version", namestyle, NamingStyle::PascalCase));
         // ProjectType
-        if (json->IsContainKey(L"ProjectType")) {
-            std::wstring tmpEnum = json->GetString(L"ProjectType");
+        if (json->IsContainKey(ConvertNamingStyle(L"ProjectType", namestyle, NamingStyle::PascalCase))) {
+            std::wstring tmpEnum = json->GetString(ConvertNamingStyle(L"ProjectType", namestyle, NamingStyle::PascalCase));
             ToUpper(tmpEnum);
             if (tmpEnum == L"VCCMODULE")
                 _ProjectType = VPGProjectType::VccModule;
@@ -179,85 +183,85 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Unknow Interface: " + tmpEnum);
         }
         // WorkspaceSourceGitUrl
-        if (json->IsContainKey(L"WorkspaceSourceGitUrl"))
-            _WorkspaceSourceGitUrl = json->GetString(L"WorkspaceSourceGitUrl");
+        if (json->IsContainKey(ConvertNamingStyle(L"WorkspaceSourceGitUrl", namestyle, NamingStyle::PascalCase)))
+            _WorkspaceSourceGitUrl = json->GetString(ConvertNamingStyle(L"WorkspaceSourceGitUrl", namestyle, NamingStyle::PascalCase));
         // WorkspaceSource
-        if (json->IsContainKey(L"WorkspaceSource"))
-            _WorkspaceSource = json->GetString(L"WorkspaceSource");
+        if (json->IsContainKey(ConvertNamingStyle(L"WorkspaceSource", namestyle, NamingStyle::PascalCase)))
+            _WorkspaceSource = json->GetString(ConvertNamingStyle(L"WorkspaceSource", namestyle, NamingStyle::PascalCase));
         // WorkspaceDestination
-        if (json->IsContainKey(L"WorkspaceDestination"))
-            _WorkspaceDestination = json->GetString(L"WorkspaceDestination");
+        if (json->IsContainKey(ConvertNamingStyle(L"WorkspaceDestination", namestyle, NamingStyle::PascalCase)))
+            _WorkspaceDestination = json->GetString(ConvertNamingStyle(L"WorkspaceDestination", namestyle, NamingStyle::PascalCase));
         // ProjectPrefix
-        if (json->IsContainKey(L"ProjectPrefix"))
-            _ProjectPrefix = json->GetString(L"ProjectPrefix");
+        if (json->IsContainKey(ConvertNamingStyle(L"ProjectPrefix", namestyle, NamingStyle::PascalCase)))
+            _ProjectPrefix = json->GetString(ConvertNamingStyle(L"ProjectPrefix", namestyle, NamingStyle::PascalCase));
         // ProjectName
-        if (json->IsContainKey(L"ProjectName"))
-            _ProjectName = json->GetString(L"ProjectName");
+        if (json->IsContainKey(ConvertNamingStyle(L"ProjectName", namestyle, NamingStyle::PascalCase)))
+            _ProjectName = json->GetString(ConvertNamingStyle(L"ProjectName", namestyle, NamingStyle::PascalCase));
         // ProjectNameDll
-        if (json->IsContainKey(L"ProjectNameDll"))
-            _ProjectNameDll = json->GetString(L"ProjectNameDll");
+        if (json->IsContainKey(ConvertNamingStyle(L"ProjectNameDll", namestyle, NamingStyle::PascalCase)))
+            _ProjectNameDll = json->GetString(ConvertNamingStyle(L"ProjectNameDll", namestyle, NamingStyle::PascalCase));
         // ProjectNameExe
-        if (json->IsContainKey(L"ProjectNameExe"))
-            _ProjectNameExe = json->GetString(L"ProjectNameExe");
+        if (json->IsContainKey(ConvertNamingStyle(L"ProjectNameExe", namestyle, NamingStyle::PascalCase)))
+            _ProjectNameExe = json->GetString(ConvertNamingStyle(L"ProjectNameExe", namestyle, NamingStyle::PascalCase));
         // IsGit
-        if (json->IsContainKey(L"IsGit"))
-            _IsGit = json->GetBool(L"IsGit");
+        if (json->IsContainKey(ConvertNamingStyle(L"IsGit", namestyle, NamingStyle::PascalCase)))
+            _IsGit = json->GetBool(ConvertNamingStyle(L"IsGit", namestyle, NamingStyle::PascalCase));
         // IsExcludeUnittest
-        if (json->IsContainKey(L"IsExcludeUnittest"))
-            _IsExcludeUnittest = json->GetBool(L"IsExcludeUnittest");
+        if (json->IsContainKey(ConvertNamingStyle(L"IsExcludeUnittest", namestyle, NamingStyle::PascalCase)))
+            _IsExcludeUnittest = json->GetBool(ConvertNamingStyle(L"IsExcludeUnittest", namestyle, NamingStyle::PascalCase));
         // IsExcludeVCCUnitTest
-        if (json->IsContainKey(L"IsExcludeVCCUnitTest"))
-            _IsExcludeVCCUnitTest = json->GetBool(L"IsExcludeVCCUnitTest");
+        if (json->IsContainKey(ConvertNamingStyle(L"IsExcludeVCCUnitTest", namestyle, NamingStyle::PascalCase)))
+            _IsExcludeVCCUnitTest = json->GetBool(ConvertNamingStyle(L"IsExcludeVCCUnitTest", namestyle, NamingStyle::PascalCase));
         // TypeWorkspace
-        if (json->IsContainKey(L"TypeWorkspace"))
-            _TypeWorkspace = json->GetString(L"TypeWorkspace");
+        if (json->IsContainKey(ConvertNamingStyle(L"TypeWorkspace", namestyle, NamingStyle::PascalCase)))
+            _TypeWorkspace = json->GetString(ConvertNamingStyle(L"TypeWorkspace", namestyle, NamingStyle::PascalCase));
         // ActionTypeDirectory
-        if (json->IsContainKey(L"ActionTypeDirectory"))
-            _ActionTypeDirectory = json->GetString(L"ActionTypeDirectory");
+        if (json->IsContainKey(ConvertNamingStyle(L"ActionTypeDirectory", namestyle, NamingStyle::PascalCase)))
+            _ActionTypeDirectory = json->GetString(ConvertNamingStyle(L"ActionTypeDirectory", namestyle, NamingStyle::PascalCase));
         // ExceptionTypeDirectory
-        if (json->IsContainKey(L"ExceptionTypeDirectory"))
-            _ExceptionTypeDirectory = json->GetString(L"ExceptionTypeDirectory");
+        if (json->IsContainKey(ConvertNamingStyle(L"ExceptionTypeDirectory", namestyle, NamingStyle::PascalCase)))
+            _ExceptionTypeDirectory = json->GetString(ConvertNamingStyle(L"ExceptionTypeDirectory", namestyle, NamingStyle::PascalCase));
         // ManagerTypeDirectory
-        if (json->IsContainKey(L"ManagerTypeDirectory"))
-            _ManagerTypeDirectory = json->GetString(L"ManagerTypeDirectory");
+        if (json->IsContainKey(ConvertNamingStyle(L"ManagerTypeDirectory", namestyle, NamingStyle::PascalCase)))
+            _ManagerTypeDirectory = json->GetString(ConvertNamingStyle(L"ManagerTypeDirectory", namestyle, NamingStyle::PascalCase));
         // ObjectTypeDirectory
-        if (json->IsContainKey(L"ObjectTypeDirectory"))
-            _ObjectTypeDirectory = json->GetString(L"ObjectTypeDirectory");
+        if (json->IsContainKey(ConvertNamingStyle(L"ObjectTypeDirectory", namestyle, NamingStyle::PascalCase)))
+            _ObjectTypeDirectory = json->GetString(ConvertNamingStyle(L"ObjectTypeDirectory", namestyle, NamingStyle::PascalCase));
         // ObjectDirectoryHpp
-        if (json->IsContainKey(L"ObjectDirectoryHpp"))
-            _ObjectDirectoryHpp = json->GetString(L"ObjectDirectoryHpp");
+        if (json->IsContainKey(ConvertNamingStyle(L"ObjectDirectoryHpp", namestyle, NamingStyle::PascalCase)))
+            _ObjectDirectoryHpp = json->GetString(ConvertNamingStyle(L"ObjectDirectoryHpp", namestyle, NamingStyle::PascalCase));
         // ObjectDirectoryCpp
-        if (json->IsContainKey(L"ObjectDirectoryCpp"))
-            _ObjectDirectoryCpp = json->GetString(L"ObjectDirectoryCpp");
+        if (json->IsContainKey(ConvertNamingStyle(L"ObjectDirectoryCpp", namestyle, NamingStyle::PascalCase)))
+            _ObjectDirectoryCpp = json->GetString(ConvertNamingStyle(L"ObjectDirectoryCpp", namestyle, NamingStyle::PascalCase));
         // PropertyAccessorDirectoryHpp
-        if (json->IsContainKey(L"PropertyAccessorDirectoryHpp"))
-            _PropertyAccessorDirectoryHpp = json->GetString(L"PropertyAccessorDirectoryHpp");
+        if (json->IsContainKey(ConvertNamingStyle(L"PropertyAccessorDirectoryHpp", namestyle, NamingStyle::PascalCase)))
+            _PropertyAccessorDirectoryHpp = json->GetString(ConvertNamingStyle(L"PropertyAccessorDirectoryHpp", namestyle, NamingStyle::PascalCase));
         // PropertyAccessorDirectoryCpp
-        if (json->IsContainKey(L"PropertyAccessorDirectoryCpp"))
-            _PropertyAccessorDirectoryCpp = json->GetString(L"PropertyAccessorDirectoryCpp");
+        if (json->IsContainKey(ConvertNamingStyle(L"PropertyAccessorDirectoryCpp", namestyle, NamingStyle::PascalCase)))
+            _PropertyAccessorDirectoryCpp = json->GetString(ConvertNamingStyle(L"PropertyAccessorDirectoryCpp", namestyle, NamingStyle::PascalCase));
         // ObjectFactoryDirectoryHpp
-        if (json->IsContainKey(L"ObjectFactoryDirectoryHpp"))
-            _ObjectFactoryDirectoryHpp = json->GetString(L"ObjectFactoryDirectoryHpp");
+        if (json->IsContainKey(ConvertNamingStyle(L"ObjectFactoryDirectoryHpp", namestyle, NamingStyle::PascalCase)))
+            _ObjectFactoryDirectoryHpp = json->GetString(ConvertNamingStyle(L"ObjectFactoryDirectoryHpp", namestyle, NamingStyle::PascalCase));
         // ObjectFactoryDirectoryCpp
-        if (json->IsContainKey(L"ObjectFactoryDirectoryCpp"))
-            _ObjectFactoryDirectoryCpp = json->GetString(L"ObjectFactoryDirectoryCpp");
+        if (json->IsContainKey(ConvertNamingStyle(L"ObjectFactoryDirectoryCpp", namestyle, NamingStyle::PascalCase)))
+            _ObjectFactoryDirectoryCpp = json->GetString(ConvertNamingStyle(L"ObjectFactoryDirectoryCpp", namestyle, NamingStyle::PascalCase));
         // PropertyAccessorFactoryDirectoryHpp
-        if (json->IsContainKey(L"PropertyAccessorFactoryDirectoryHpp"))
-            _PropertyAccessorFactoryDirectoryHpp = json->GetString(L"PropertyAccessorFactoryDirectoryHpp");
+        if (json->IsContainKey(ConvertNamingStyle(L"PropertyAccessorFactoryDirectoryHpp", namestyle, NamingStyle::PascalCase)))
+            _PropertyAccessorFactoryDirectoryHpp = json->GetString(ConvertNamingStyle(L"PropertyAccessorFactoryDirectoryHpp", namestyle, NamingStyle::PascalCase));
         // PropertyAccessorFactoryDirectoryCpp
-        if (json->IsContainKey(L"PropertyAccessorFactoryDirectoryCpp"))
-            _PropertyAccessorFactoryDirectoryCpp = json->GetString(L"PropertyAccessorFactoryDirectoryCpp");
+        if (json->IsContainKey(ConvertNamingStyle(L"PropertyAccessorFactoryDirectoryCpp", namestyle, NamingStyle::PascalCase)))
+            _PropertyAccessorFactoryDirectoryCpp = json->GetString(ConvertNamingStyle(L"PropertyAccessorFactoryDirectoryCpp", namestyle, NamingStyle::PascalCase));
         // Plugins
         ClearPlugins();
-        if (json->IsContainKey(L"Plugins")) {
-            for (auto const &element : json->GetArray(L"Plugins")) {
+        if (json->IsContainKey(ConvertNamingStyle(L"Plugins", namestyle, NamingStyle::PascalCase))) {
+            for (auto const &element : json->GetArray(ConvertNamingStyle(L"Plugins", namestyle, NamingStyle::PascalCase))) {
                 InsertPlugins(element->GetArrayElementString());
             }
         }
         // Exports
         ClearExports();
-        if (json->IsContainKey(L"Exports")) {
-            for (auto const &element : json->GetArray(L"Exports")) {
+        if (json->IsContainKey(ConvertNamingStyle(L"Exports", namestyle, NamingStyle::PascalCase))) {
+            for (auto const &element : json->GetArray(ConvertNamingStyle(L"Exports", namestyle, NamingStyle::PascalCase))) {
                 DECLARE_SPTR(VPGGenerationOptionExport, tmpExports);
                 tmpExports->DeserializeJson(element);
                 InsertExports(tmpExports);
