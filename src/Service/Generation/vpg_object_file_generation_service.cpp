@@ -468,7 +468,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogProperty *logProperty,
             deserializeVariable += INDENT + INDENT + namingStyleStr + L"\r\n";
             bool isHavingDecimal = false;
             for (auto const &property : enumClass->GetProperties()) {
-                isHavingDecimal = (Find(property->GetMacro(), L"MAP") != std::wstring::npos && (property->GetType2() == L"float" || property->GetType1() == L"double"))
+                isHavingDecimal = (Find(property->GetMacro(), L"MAP") != std::wstring::npos && (property->GetType2() == L"float" || property->GetType2() == L"double"))
                     || (Find(property->GetMacro(), L"MAP") == std::wstring::npos && (property->GetType1() == L"float" || property->GetType1() == L"double"));
                 if (isHavingDecimal)
                     break;
