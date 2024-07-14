@@ -42,10 +42,8 @@ namespace vcc
         I_PROPERTY_ACCESSOR_HEADER(float, Float)
         // double
         I_PROPERTY_ACCESSOR_HEADER(double, Double)
-        // string
-        I_PROPERTY_ACCESSOR_HEADER(std::string, String)
         // wstring
-        I_PROPERTY_ACCESSOR_HEADER(std::wstring, Wstring)
+        I_PROPERTY_ACCESSOR_HEADER(std::wstring, String)
         // Object
         I_PROPERTY_ACCESSOR_OBJECT_HEADER(std::shared_ptr<IObject>, Object)
 

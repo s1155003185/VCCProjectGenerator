@@ -62,8 +62,7 @@ namespace vcc
     BASE_PROPERTY_ACCESSOR_DETAIL(size_t, UnsignedLong, 0)
     BASE_PROPERTY_ACCESSOR_DETAIL(float, Float, 0)
     BASE_PROPERTY_ACCESSOR_DETAIL(double, Double, 0)
-    BASE_PROPERTY_ACCESSOR_DETAIL(std::string, String, "")
-    BASE_PROPERTY_ACCESSOR_DETAIL(std::wstring, Wstring, L"")
+    BASE_PROPERTY_ACCESSOR_DETAIL(std::wstring, String, L"")
     BASE_PROPERTY_ACCESSOR_OBJECT_DETAIL(std::shared_ptr<IObject>, Object, nullptr)
     
     BASE_PROPERTY_ACCESSOR_CONTAINER_DETAIL

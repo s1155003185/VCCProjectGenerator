@@ -30,8 +30,7 @@ namespace vcc
         BASE_PROPERTY_ACCESSOR_HEADER(size_t, UnsignedLong)
         BASE_PROPERTY_ACCESSOR_HEADER(float, Float)
         BASE_PROPERTY_ACCESSOR_HEADER(double, Double)
-        BASE_PROPERTY_ACCESSOR_HEADER(std::string, String)
-        BASE_PROPERTY_ACCESSOR_HEADER(std::wstring, Wstring)
+        BASE_PROPERTY_ACCESSOR_HEADER(std::wstring, String)
         BASE_PROPERTY_ACCESSOR_OBJECT_HEADER(std::shared_ptr<IObject>, Object)
 
         BASE_PROPERTY_ACCESSOR_CONTAINER_HEADER

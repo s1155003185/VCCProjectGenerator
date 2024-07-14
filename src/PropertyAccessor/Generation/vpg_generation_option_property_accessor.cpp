@@ -173,7 +173,7 @@ void VPGGenerationOptionPropertyAccessor::_WriteLong(const size_t &objectPropert
     CATCH
 }
 
-std::wstring VPGGenerationOptionPropertyAccessor::_ReadWstring(const size_t &objectProperty, const int64_t &index) const
+std::wstring VPGGenerationOptionPropertyAccessor::_ReadString(const size_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -232,7 +232,7 @@ std::wstring VPGGenerationOptionPropertyAccessor::_ReadWstring(const size_t &obj
     return L"";
 }
 
-std::wstring VPGGenerationOptionPropertyAccessor::_ReadWstring(const size_t &objectProperty, const ITypeUnion * /*key*/) const
+std::wstring VPGGenerationOptionPropertyAccessor::_ReadString(const size_t &objectProperty, const ITypeUnion * /*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -240,7 +240,7 @@ std::wstring VPGGenerationOptionPropertyAccessor::_ReadWstring(const size_t &obj
     return L"";
 }
 
-void VPGGenerationOptionPropertyAccessor::_WriteWstring(const size_t &objectProperty, const std::wstring &value, const int64_t &index) const
+void VPGGenerationOptionPropertyAccessor::_WriteString(const size_t &objectProperty, const std::wstring &value, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -323,7 +323,7 @@ void VPGGenerationOptionPropertyAccessor::_WriteWstring(const size_t &objectProp
     CATCH
 }
 
-void VPGGenerationOptionPropertyAccessor::_WriteWstring(const size_t &objectProperty, const std::wstring & /*value*/, const ITypeUnion * /*key*/) const
+void VPGGenerationOptionPropertyAccessor::_WriteString(const size_t &objectProperty, const std::wstring & /*value*/, const ITypeUnion * /*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND

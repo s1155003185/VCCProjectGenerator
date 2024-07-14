@@ -69,12 +69,21 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
 
     DECLARE_SPTR(VPGEnumClassProperty, propString);
     propString->SetEnum(L"String");
-    propString->SetMacro(L"GETSET(std::wstring, String, L\"\")");
-    propString->SetType1(L"std::wstring");
+    propString->SetMacro(L"GETSET(std::string, String, \"\")");
+    propString->SetType1(L"std::string");
     propString->SetType2(L"");
     propString->SetPropertyName(L"String");
     propString->SetDefaultValue(L"");
     enumClass->InsertProperties(propString);
+
+    DECLARE_SPTR(VPGEnumClassProperty, propWstring);
+    propWstring->SetEnum(L"Wstring");
+    propWstring->SetMacro(L"GETSET(std::wstring, Wstring, L\"\")");
+    propWstring->SetType1(L"std::wstring");
+    propWstring->SetType2(L"");
+    propWstring->SetPropertyName(L"Wstring");
+    propWstring->SetDefaultValue(L"");
+    enumClass->InsertProperties(propWstring);
 
     DECLARE_SPTR(VPGEnumClassProperty, propEnum);
     propEnum->SetEnum(L"Enum");
@@ -105,7 +114,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "{\r\n"
     "    PROPERTY_ACCESSOR_HEADER(bool, Bool)\r\n"
     "    PROPERTY_ACCESSOR_HEADER(long, Long)\r\n"
-    "    PROPERTY_ACCESSOR_HEADER(std::wstring, Wstring)\r\n"
+    "    PROPERTY_ACCESSOR_HEADER(std::wstring, String)\r\n"
     "\r\n"
     "    public:\r\n"
     "        VPGObjectPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}\r\n"
@@ -227,7 +236,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "    CATCH\r\n"
     "}\r\n"
     "\r\n"
-    "std::wstring VPGObjectPropertyAccessor::_ReadWstring(const size_t &objectProperty, const int64_t &index) const\r\n"
+    "std::wstring VPGObjectPropertyAccessor::_ReadString(const size_t &objectProperty, const int64_t &index) const\r\n"
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
@@ -236,7 +245,9 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::String:\r\n"
-    "            return obj->GetString();\r\n"
+    "            return str2wstr(obj->GetString());\r\n"
+    "        case VPGObjectProperty::Wstring:\r\n"
+    "            return obj->GetWstring();\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -244,7 +255,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "    return L\"\";\r\n"
     "}\r\n"
     "\r\n"
-    "std::wstring VPGObjectPropertyAccessor::_ReadWstring(const size_t &objectProperty, const ITypeUnion * /*key*/) const\r\n"
+    "std::wstring VPGObjectPropertyAccessor::_ReadString(const size_t &objectProperty, const ITypeUnion * /*key*/) const\r\n"
     "{\r\n"
     "    TRY\r\n"
     "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
@@ -252,7 +263,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "    return L\"\";\r\n"
     "}\r\n"
     "\r\n"
-    "void VPGObjectPropertyAccessor::_WriteWstring(const size_t &objectProperty, const std::wstring &value, const int64_t &index) const\r\n"
+    "void VPGObjectPropertyAccessor::_WriteString(const size_t &objectProperty, const std::wstring &value, const int64_t &index) const\r\n"
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
@@ -261,7 +272,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::String:\r\n"
-    "            obj->SetString(value);\r\n"
+    "            obj->SetString(wstr2str(value));\r\n"
+    "            break;\r\n"
+    "        case VPGObjectProperty::Wstring:\r\n"
+    "            obj->SetWstring(value);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -269,7 +283,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "    CATCH\r\n"
     "}\r\n"
     "\r\n"
-    "void VPGObjectPropertyAccessor::_WriteWstring(const size_t &objectProperty, const std::wstring & /*value*/, const ITypeUnion * /*key*/) const\r\n"
+    "void VPGObjectPropertyAccessor::_WriteString(const size_t &objectProperty, const std::wstring & /*value*/, const ITypeUnion * /*key*/) const\r\n"
     "{\r\n"
     "    TRY\r\n"
     "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
@@ -1705,7 +1719,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "{\r\n"
     "    PROPERTY_ACCESSOR_HEADER(bool, Bool)\r\n"
     "    PROPERTY_ACCESSOR_HEADER(double, Double)\r\n"
-    "    PROPERTY_ACCESSOR_HEADER(std::wstring, Wstring)\r\n"
+    "    PROPERTY_ACCESSOR_HEADER(std::wstring, String)\r\n"
     "    PROPERTY_ACCESSOR_OBJECT_HEADER(std::shared_ptr<IObject>, Object)\r\n"
     "\r\n"
     "    PROPERTY_ACCESSOR_CONTAINER_HEADER\r\n"
@@ -1838,7 +1852,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "    CATCH\r\n"
     "}\r\n"
     "\r\n"
-    "std::wstring VPGObjectPropertyAccessor::_ReadWstring(const size_t &objectProperty, const int64_t &index) const\r\n"
+    "std::wstring VPGObjectPropertyAccessor::_ReadString(const size_t &objectProperty, const int64_t &index) const\r\n"
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
@@ -1857,7 +1871,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "    return L\"\";\r\n"
     "}\r\n"
     "\r\n"
-    "std::wstring VPGObjectPropertyAccessor::_ReadWstring(const size_t &objectProperty, const ITypeUnion * /*key*/) const\r\n"
+    "std::wstring VPGObjectPropertyAccessor::_ReadString(const size_t &objectProperty, const ITypeUnion * /*key*/) const\r\n"
     "{\r\n"
     "    TRY\r\n"
     "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
@@ -1865,7 +1879,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "    return L\"\";\r\n"
     "}\r\n"
     "\r\n"
-    "void VPGObjectPropertyAccessor::_WriteWstring(const size_t &objectProperty, const std::wstring &value, const int64_t &index) const\r\n"
+    "void VPGObjectPropertyAccessor::_WriteString(const size_t &objectProperty, const std::wstring &value, const int64_t &index) const\r\n"
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
@@ -1888,7 +1902,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "    CATCH\r\n"
     "}\r\n"
     "\r\n"
-    "void VPGObjectPropertyAccessor::_WriteWstring(const size_t &objectProperty, const std::wstring & /*value*/, const ITypeUnion * /*key*/) const\r\n"
+    "void VPGObjectPropertyAccessor::_WriteString(const size_t &objectProperty, const std::wstring & /*value*/, const ITypeUnion * /*key*/) const\r\n"
     "{\r\n"
     "    TRY\r\n"
     "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"

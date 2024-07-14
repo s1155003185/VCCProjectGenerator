@@ -1,6 +1,7 @@
 # Change Log
 
 ## [Unreleased]
+- Remove support of std::string, all change to use std::wstring
 
 ### [v0.1.2] - 2024-07-14: Java Bridge: Generation - Create Class as Json Object with 
 - Update Generator: Create Table as Json Object

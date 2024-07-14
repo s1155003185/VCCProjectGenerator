@@ -143,13 +143,10 @@ void VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(const std
             convertedType = L"double";
             convertedName = L"Double";
             returnResult = L"0";
-        } else if (originalType == L"std::string") {
-            convertedType = L"std::string";
-            convertedName = L"String";
-            returnResult = L"\"\"";
-        } else if (originalType == L"std::wstring") {
+        } else if (originalType == L"std::string"
+            || originalType == L"std::wstring") {
             convertedType = L"std::wstring";
-            convertedName = L"Wstring";
+            convertedName = L"String";
             returnResult = L"L\"\"";
         } else
             THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Unknown type: " + originalType);
@@ -172,7 +169,6 @@ std::vector<std::wstring> VPGPropertyAccessorGenerationService::GetPropertyAcces
     result.push_back(L"size_t");
     result.push_back(L"float");
     result.push_back(L"double");
-    result.push_back(L"std::string");
     result.push_back(L"std::wstring");
     result.push_back(objectToken);
     result.push_back(containerToken);
@@ -334,6 +330,8 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
                         std::wstring type = isOrderedMap ? property->GetType2() : property->GetType1();
                         if (!type.empty() && std::iswupper(type[0]))
                             result += INDENT + INDENT + INDENT + L"return static_cast<long>(obj->Get" + property->GetPropertyName() + (isOrderedMap ? L"ByIndex" : L"") + L"(index)"+ (isOrderedMap ? L".second" : L"") + L");\r\n";
+                        else if (type == L"std::string")
+                            result += INDENT + INDENT + INDENT + L"return str2wstr(obj->Get" + property->GetPropertyName() + (isOrderedMap ? L"ByIndex" : L"") + L"(index)" + (isOrderedMap ? L".second" : L"") + L");\r\n";
                         else
                             result += INDENT + INDENT + INDENT + L"return obj->Get" + property->GetPropertyName() + (isOrderedMap ? L"ByIndex" : L"") + L"(index)" + (isOrderedMap ? L".second" : L"") + L";\r\n";
                     }
@@ -341,6 +339,8 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
                     result += INDENT + INDENT + INDENT + L"return std::static_pointer_cast<IObject>(obj->Get" + property->GetPropertyName() + L"());\r\n";
                 else if (!property->GetType1().empty() && std::iswupper(property->GetType1()[0]))
                     result += INDENT + INDENT + INDENT + L"return static_cast<long>(obj->Get" + property->GetPropertyName() + L"());\r\n";
+                else if (property->GetType1() == L"std::string")
+                    result += INDENT + INDENT + INDENT + L"return str2wstr(obj->Get" + property->GetPropertyName() + L"());\r\n";
                 else
                     result += INDENT + INDENT + INDENT + L"return obj->Get" + property->GetPropertyName() + L"();\r\n";
             }
@@ -374,13 +374,16 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
                 VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(property->GetType1(), tmpConvertedType, tmpConvertedName, tmpReturnResult);
                 result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L":\r\n";
                 
+                std::wstring mapGetKey = L"mapKey->GetKey" + tmpConvertedName + L"()";
                 bool isOrderedMap = IsStartWith(property->GetMacro(), L"ORDERED_MAP");
                 if (type == objectToken)
-                    result += INDENT + INDENT + INDENT + L"return std::static_pointer_cast<IObject>(obj->Get" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(mapKey->GetKey" + tmpConvertedName + L"())" + (isOrderedMap ? L".second" : L"") + L");\r\n";
+                    result += INDENT + INDENT + INDENT + L"return std::static_pointer_cast<IObject>(obj->Get" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(" + mapGetKey + L")" + (isOrderedMap ? L".second" : L"") + L");\r\n";
                 else if (!property->GetType2().empty() && std::iswupper(property->GetType2()[0]))
-                    result += INDENT + INDENT + INDENT + L"return static_cast<long>(obj->Get" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(mapKey->GetKey" + tmpConvertedName + L"())" + (isOrderedMap ? L".second" : L"") + L");\r\n";
+                    result += INDENT + INDENT + INDENT + L"return static_cast<long>(obj->Get" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(" + mapGetKey + L")" + (isOrderedMap ? L".second" : L"") + L");\r\n";
+                else if (property->GetType2() == L"std::string")
+                    result += INDENT + INDENT + INDENT + L"return str2wstr(obj->Get" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(" + mapGetKey + L")"+ (isOrderedMap ? L".second" : L"") + L");\r\n";
                 else
-                    result += INDENT + INDENT + INDENT + L"return obj->Get" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(mapKey->GetKey" + tmpConvertedName + L"())"+ (isOrderedMap ? L".second" : L"") + L";\r\n";
+                    result += INDENT + INDENT + INDENT + L"return obj->Get" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(" + mapGetKey + L")"+ (isOrderedMap ? L".second" : L"") + L";\r\n";
             }
             result += generalTypeContentFooter;
         } else
@@ -443,6 +446,11 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
                             + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"ByIndex" : L"") + L"(index, static_cast<" + type + L">(value));\r\n"
                             + INDENT + INDENT + INDENT + L"else\r\n"
                             + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(static_cast<" + type + L">(value));\r\n";
+                    } else if (type == L"std::string") {
+                        result += INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
+                            + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"ByIndex" : L"") + L"(index, wstr2str(value));\r\n"
+                            + INDENT + INDENT + INDENT + L"else\r\n"
+                            + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(wstr2str(value));\r\n";                    
                     } else {
                         result += INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
                             + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"ByIndex" : L"") + L"(index, value);\r\n"
@@ -453,6 +461,8 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
                     result += INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"(std::static_pointer_cast<" + property->GetType1() + L">(value));\r\n";
                 else if (!property->GetType1().empty() && std::iswupper(property->GetType1()[0]))
                     result += INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"(static_cast<" + property->GetType1() + L">(value));\r\n";
+                else if (property->GetType1() == L"std::string")
+                    result += INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"(wstr2str(value));\r\n";
                 else
                     result += INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"(value);\r\n";
                 result += INDENT + INDENT + INDENT + L"break;\r\n";
@@ -492,24 +502,30 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
                 VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(property->GetType1(), tmpConvertedType, tmpConvertedName, tmpReturnResult);
                 result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L":\r\n";
                 
+                std::wstring mapGetKey = L"mapKey->GetKey" + tmpConvertedName + L"()";
                 bool isOrderedMap = IsStartWith(property->GetMacro(), L"ORDERED_MAP");
                 if (type == objectToken) {
-                    result += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(mapKey->GetKey" + tmpConvertedName + L"()))\r\n"
-                        + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(mapKey->GetKey" + tmpConvertedName + L"(), std::static_pointer_cast<" + property->GetType2() + L">(value));\r\n"
+                    result += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(" + mapGetKey + L", std::static_pointer_cast<" + property->GetType2() + L">(value));\r\n"
                         + INDENT + INDENT + INDENT + L"else\r\n"
-                        + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(mapKey->GetKey" + tmpConvertedName + L"(), std::static_pointer_cast<" + property->GetType2() + L">(value));\r\n";
+                        + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(" + mapGetKey + L", std::static_pointer_cast<" + property->GetType2() + L">(value));\r\n";
                 } else {
                     std::wstring type = property->GetType2();
                     if (!type.empty() && std::iswupper(type[0])) {
-                        result += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(mapKey->GetKey" + tmpConvertedName + L"()))\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(mapKey->GetKey" + tmpConvertedName + L"(), static_cast<" + type + L">(value));\r\n"
+                        result += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
+                            + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(" + mapGetKey + L", static_cast<" + type + L">(value));\r\n"
                             + INDENT + INDENT + INDENT + L"else\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(mapKey->GetKey" + tmpConvertedName + L"(), static_cast<" + type + L">(value));\r\n";
+                            + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(" + mapGetKey + L", static_cast<" + type + L">(value));\r\n";
+                    } else if (type == L"std::string") {
+                        result += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
+                            + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(" + mapGetKey + L", str2wstr(value));\r\n"
+                            + INDENT + INDENT + INDENT + L"else\r\n"
+                            + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(" + mapGetKey + L", wstr2str(value));\r\n";
                     } else {
-                        result += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(mapKey->GetKey" + tmpConvertedName + L"()))\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(mapKey->GetKey" + tmpConvertedName + L"(), value);\r\n"
+                        result += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
+                            + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(" + mapGetKey + L", value);\r\n"
                             + INDENT + INDENT + INDENT + L"else\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(mapKey->GetKey" + tmpConvertedName + L"(), value);\r\n";
+                            + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(" + mapGetKey + L", value);\r\n";
                     }
                     
                 }

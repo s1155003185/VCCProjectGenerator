@@ -18,8 +18,7 @@ namespace vcc
         GETSET(long, KeyLong, 0);
         GETSET(float, KeyFloat, 0);
         GETSET(double, KeyDouble, 0);
-        GETSET(std::string, KeyString, "");
-        GETSET(std::wstring, KeyWstring, L"");
+        GETSET(std::wstring, KeyString, L"");
         GETSET(uintptr_t, KeyPointer, 0);
         GETSET_SPTR_NULL(IObject, KeySharedPtr);
 
