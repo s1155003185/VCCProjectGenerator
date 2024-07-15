@@ -8,11 +8,10 @@ namespace vcc
 {
     class IObject
     {
-        protected:
+        public:
             IObject() {}
             virtual ~IObject() {}
 
-        public:
             virtual const ObjectType& GetObjectType() const = 0;
             virtual std::shared_ptr<IObject> Clone() const = 0;
     };

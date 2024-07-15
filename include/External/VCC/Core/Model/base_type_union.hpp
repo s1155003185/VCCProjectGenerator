@@ -14,7 +14,7 @@ namespace vcc
         GETSET(char, KeyChar, '\0');
         GETSET(wchar_t, KeyWchar, L'\0');
         GETSET(short, KeyShort, 0);
-        GETSET(int, KeyInt, 0);
+        GETSET(int64_t, KeyInt, 0);
         GETSET(long, KeyLong, 0);
         GETSET(float, KeyFloat, 0);
         GETSET(double, KeyDouble, 0);

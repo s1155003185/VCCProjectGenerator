@@ -22,7 +22,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
 {
     protected:
 
-        virtual std::wstring _ReadString(const size_t &objectProperty, const int64_t &index = -1) const override
+        virtual std::wstring _ReadString(const int64_t &objectProperty, const int64_t &index = -1) const override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -30,7 +30,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             return obj->GetString();
         }
 
-        virtual void _WriteString(const size_t &objectProperty, const std::wstring &value, const int64_t &index = -1) const override
+        virtual void _WriteString(const int64_t &objectProperty, const std::wstring &value, const int64_t &index = -1) const override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -39,7 +39,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             obj->GetString();
         }
             
-        virtual int _ReadInt(const size_t &objectProperty, const int64_t &index = -1) const override
+        virtual int _ReadInt(const int64_t &objectProperty, const int64_t &index = -1) const override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -47,7 +47,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             return obj->GetInteger();
         }
 
-        virtual void _WriteInt(const size_t &objectProperty, const int &value, const int64_t &index = -1) const override
+        virtual void _WriteInt(const int64_t &objectProperty, const int &value, const int64_t &index = -1) const override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -55,7 +55,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             obj->SetInteger(value);
         }
 
-        virtual std::shared_ptr<IObject> _ReadObject(const size_t &objectProperty, const int64_t &index = -1) const override
+        virtual std::shared_ptr<IObject> _ReadObject(const int64_t &objectProperty, const int64_t &index = -1) const override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -63,7 +63,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             return obj->GetObject();
         }
 
-        virtual void _WriteObject(const size_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index = -1) const override
+        virtual void _WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index = -1) const override
         {
             assert(objectProperty == 0L);
             assert(index == -1);

@@ -4,7 +4,7 @@ namespace vcc
 {
     class ITypeUnion
     {
-        protected:
+        public:
             ITypeUnion() {}
             virtual ~ITypeUnion() {}
     };

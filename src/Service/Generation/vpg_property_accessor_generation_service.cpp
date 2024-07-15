@@ -303,9 +303,9 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
         result += L"\r\n"
             + convertedType + L" " + propertyName + L"Accessor::_Read" + convertedName;
         if (isHavingGeneralType) {
-            result += L"(const size_t &objectProperty, const int64_t &index) const\r\n";
+            result += L"(const int64_t &objectProperty, const int64_t &index) const\r\n";
         } else {
-            result += L"(const size_t &objectProperty, const int64_t & /*index*/) const\r\n";
+            result += L"(const int64_t &objectProperty, const int64_t & /*index*/) const\r\n";
         }
         // body
         result += L"{\r\n"
@@ -355,9 +355,9 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
         result += L"\r\n"
             + convertedType + L" " + propertyName + L"Accessor::_Read" + convertedName;
         if (isHavingMapType)
-            result += L"(const size_t &objectProperty, const ITypeUnion *key) const\r\n";
+            result += L"(const int64_t &objectProperty, const ITypeUnion *key) const\r\n";
         else
-            result += L"(const size_t &objectProperty, const ITypeUnion * /*key*/) const\r\n";
+            result += L"(const int64_t &objectProperty, const ITypeUnion * /*key*/) const\r\n";
         
         // body
         result += L"{\r\n"
@@ -414,14 +414,14 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
             "void " + propertyName + L"Accessor::_Write" + convertedName;
         if (isHavingGeneralType) {
             if (type == objectToken)
-                result += L"(const size_t &objectProperty, " + convertedType + L" value, const int64_t &index) const\r\n";
+                result += L"(const int64_t &objectProperty, " + convertedType + L" value, const int64_t &index) const\r\n";
             else
-                result += L"(const size_t &objectProperty, const " + convertedType + L" &value, const int64_t &index) const\r\n";
+                result += L"(const int64_t &objectProperty, const " + convertedType + L" &value, const int64_t &index) const\r\n";
         } else {
             if (type == objectToken)
-                result += L"(const size_t &objectProperty, " + convertedType + L" /*value*/, const int64_t & /*index*/) const\r\n";
+                result += L"(const int64_t &objectProperty, " + convertedType + L" /*value*/, const int64_t & /*index*/) const\r\n";
             else
-                result += L"(const size_t &objectProperty, const " + convertedType + L" & /*value*/, const int64_t & /*index*/) const\r\n";
+                result += L"(const int64_t &objectProperty, const " + convertedType + L" & /*value*/, const int64_t & /*index*/) const\r\n";
         }
         // body
         result += L"{\r\n"
@@ -478,14 +478,14 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
             "void " + propertyName + L"Accessor::_Write" + convertedName;
         if (isHavingMapType) {
             if (type == objectToken)
-                result += L"(const size_t &objectProperty, " + convertedType + L" value, const ITypeUnion *key) const\r\n";
+                result += L"(const int64_t &objectProperty, " + convertedType + L" value, const ITypeUnion *key) const\r\n";
             else
-                result += L"(const size_t &objectProperty, const " + convertedType + L" &value, const ITypeUnion *key) const\r\n";
+                result += L"(const int64_t &objectProperty, const " + convertedType + L" &value, const ITypeUnion *key) const\r\n";
         } else {
             if (type == objectToken)
-                result += L"(const size_t &objectProperty, " + convertedType + L" /*value*/, const ITypeUnion * /*key*/) const\r\n";
+                result += L"(const int64_t &objectProperty, " + convertedType + L" /*value*/, const ITypeUnion * /*key*/) const\r\n";
             else
-                result += L"(const size_t &objectProperty, const " + convertedType + L" & /*value*/, const ITypeUnion * /*key*/) const\r\n";
+                result += L"(const int64_t &objectProperty, const " + convertedType + L" & /*value*/, const ITypeUnion * /*key*/) const\r\n";
         }
         // body
         result += L"{\r\n"
@@ -558,9 +558,9 @@ void VPGPropertyAccessorGenerationService::GenerateClone(const std::wstring &pro
         result += L"\r\n"
             + convertedType + L" " + propertyName + L"Accessor::_Clone" + convertedName;
         if (isHavingGeneralType) {
-            result += L"(const size_t &objectProperty, const int64_t &index) const\r\n";
+            result += L"(const int64_t &objectProperty, const int64_t &index) const\r\n";
         } else {
-            result += L"(const size_t &objectProperty, const int64_t & /*index*/) const\r\n";
+            result += L"(const int64_t &objectProperty, const int64_t & /*index*/) const\r\n";
         }
         // body
         result += L"{\r\n"
@@ -590,9 +590,9 @@ void VPGPropertyAccessorGenerationService::GenerateClone(const std::wstring &pro
         result += L"\r\n"
             + convertedType + L" " + propertyName + L"Accessor::_Clone" + convertedName;
         if (isHavingMapType)
-            result += L"(const size_t &objectProperty, const ITypeUnion *key) const\r\n";
+            result += L"(const int64_t &objectProperty, const ITypeUnion *key) const\r\n";
         else
-            result += L"(const size_t &objectProperty, const ITypeUnion * /*key*/) const\r\n";
+            result += L"(const int64_t &objectProperty, const ITypeUnion * /*key*/) const\r\n";
         
         // body
         result += L"{\r\n"
@@ -632,7 +632,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerCount(const std::wst
         GetIsHavingGenerateTypeMapType(enumClassProperties, isHavingGeneralType, isHavingVectorType, isHavingMapType);
 
         result += L"\r\n"
-            "size_t " + propertyName + L"Accessor::_GetContainerCount(const size_t &objectProperty) const\r\n"
+            "size_t " + propertyName + L"Accessor::_GetContainerCount(const int64_t &objectProperty) const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n" 
             + GetGeneralContentHeader(propertyName);
@@ -661,9 +661,9 @@ void VPGPropertyAccessorGenerationService::GenerateContainerIsContainKey(const s
         result += L"\r\n"
             "bool " + propertyName + L"Accessor::_IsContainKey";
         if (isHavingMapType)
-            result += L"(const size_t &objectProperty, const ITypeUnion *key) const\r\n";
+            result += L"(const int64_t &objectProperty, const ITypeUnion *key) const\r\n";
         else
-            result += L"(const size_t &objectProperty, const ITypeUnion * /*key*/) const\r\n";
+            result += L"(const int64_t &objectProperty, const ITypeUnion * /*key*/) const\r\n";
         result += L"{\r\n"
             + INDENT + L"TRY\r\n";
         if (isHavingMapType) {
@@ -701,9 +701,9 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
         result += L"\r\n"
             "void " + propertyName + L"Accessor::_RemoveContainerElement";
         if (isHavingVectorType)
-            result += L"(const size_t &objectProperty, const int64_t &index) const\r\n";
+            result += L"(const int64_t &objectProperty, const int64_t &index) const\r\n";
         else
-            result += L"(const size_t &objectProperty, const int64_t & /*index*/) const\r\n";
+            result += L"(const int64_t &objectProperty, const int64_t & /*index*/) const\r\n";
         result += L"{\r\n"
             + INDENT + L"TRY\r\n";
         if (isHavingVectorType) {
@@ -729,9 +729,9 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
         result += L"\r\n"
             "void " + propertyName + L"Accessor::_RemoveContainerElement";
         if (isHavingMapType)
-            result += L"(const size_t &objectProperty, const ITypeUnion *key) const\r\n";
+            result += L"(const int64_t &objectProperty, const ITypeUnion *key) const\r\n";
         else
-            result += L"(const size_t &objectProperty, const ITypeUnion * /*key*/) const\r\n";
+            result += L"(const int64_t &objectProperty, const ITypeUnion * /*key*/) const\r\n";
         result += L"{\r\n"
             + INDENT + L"TRY\r\n";
         if (isHavingMapType) {
@@ -755,7 +755,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
             "}\r\n";
 
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_ClearContainer(const size_t &objectProperty) const\r\n"
+            "void " + propertyName + L"Accessor::_ClearContainer(const int64_t &objectProperty) const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n"
             + GetGeneralContentHeader(propertyName);

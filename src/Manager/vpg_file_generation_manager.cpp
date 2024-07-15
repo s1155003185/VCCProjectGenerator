@@ -11,6 +11,7 @@
 #include "string_helper.hpp"
 
 #include "vpg_cpp_helper.hpp"
+#include "vpg_dll_file_generation_service.hpp"
 #include "vpg_enum_class.hpp"
 #include "vpg_enum_class_reader.hpp"
 #include "vpg_generation_option.hpp"
@@ -180,6 +181,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
         LogService::LogInfo(logProperty, logId, L"Generate property start.");
         std::set<std::wstring> objectTypes;
         std::set<std::wstring> objectFileNames, propertyAccessorFileNames;
+        DECLARE_SPTR(VPGDllFileGenerationServiceOption, dllOption);
         for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(typeWorkspaceFullPath))) {
             std::wstring path = GetLinuxPath(filePath.path().wstring());
             std::wstring fileName = filePath.path().filename().wstring();
@@ -254,9 +256,16 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
         //                               Generate Property Accessor Factory File                      //
         // ------------------------------------------------------------------------------------------ //
         if (!option->GetPropertyAccessorFactoryDirectoryHpp().empty() && !option->GetPropertyAccessorFactoryDirectoryCpp().empty()) {
+            dllOption->SetIsGeneratePropertyAccessor(true);
             VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(logProperty, ConcatPaths({projWorkspace, option->GetPropertyAccessorFactoryDirectoryHpp(), propertyAccessorFactoryFileNameHpp}));
             VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(logProperty, projPrefix, propertyAccessorFileNames, ConcatPaths({projWorkspace, option->GetPropertyAccessorFactoryDirectoryCpp(), propertyAccessorFactoryFileNameCpp}), objectTypes);
         }
+
+        // ------------------------------------------------------------------------------------------ //
+        //                               Generate DLL Inteface File                                   //
+        // ------------------------------------------------------------------------------------------ //
+        VPGDllFileGenerationService::GenerateHpp(logProperty, ConcatPaths({projWorkspace, L"DllFunctions.hpp"}), dllOption.get());
+        VPGDllFileGenerationService::GenerateCpp(logProperty, ConcatPaths({projWorkspace, L"DllFunctions.cpp"}), dllOption.get());
 
         LogService::LogInfo(logProperty, logId, L"Generate Property Finished.");
     CATCH
