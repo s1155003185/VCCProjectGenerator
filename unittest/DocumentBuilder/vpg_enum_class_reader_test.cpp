@@ -10,7 +10,7 @@ class VPGEnumClassReaderTest : public testing::Test
     public:
         void SetUp() override
         {
-            DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr);
+            DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr, L"");
             manager->GetClassMacroList(L"");
             _Reader->InsertClassMacroList(manager->GetClassMacros());
         }

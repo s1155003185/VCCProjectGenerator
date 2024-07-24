@@ -18,6 +18,7 @@ using namespace vcc;
 class VPGEnumClass;
 class VPGFileGenerationManager : public BaseManager<VPGFileGenerationManager>
 {
+    GETSET(std::wstring, Workspace, L"");
     SET(std::wstring, ClassMacros);
     MAP(std::wstring, std::wstring, IncludeFiles);
     MAP_SPTR_R(std::wstring, VPGEnumClass, EnumClasses);
@@ -26,7 +27,7 @@ class VPGFileGenerationManager : public BaseManager<VPGFileGenerationManager>
         std::wstring GetConcatPath(const std::wstring &projWorkspace, const std::wstring &objWorkspace, const std::wstring &middlePath, const std::wstring &fileName) const;
 
     public:
-        VPGFileGenerationManager(std::shared_ptr<LogProperty> logProperty) : BaseManager(logProperty) {}
+        VPGFileGenerationManager(std::shared_ptr<LogProperty> logProperty, std::wstring workspace) : BaseManager(logProperty) { _Workspace = workspace; }
         virtual ~VPGFileGenerationManager() {}
 
         // properties

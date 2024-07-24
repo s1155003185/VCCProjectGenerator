@@ -31,7 +31,6 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJ
     GETSET(VPGProjectType, ProjectType, VPGProjectType::VccModule)
     GETSET(std::wstring, WorkspaceSourceGitUrl, L"")
     GETSET(std::wstring, WorkspaceSource, L"")
-    GETSET(std::wstring, WorkspaceDestination, L"")
     GETSET(std::wstring, ProjectPrefix, L"")
     GETSET(std::wstring, ProjectName, L"VCCModule")
     GETSET(std::wstring, ProjectNameDll, L"libVCCModule")

@@ -16,6 +16,7 @@ using namespace vcc;
 class VPGProcessManager : public BaseManager<VPGProcessManager>
 {
     // project
+    GETSET(std::wstring, Workspace, L"");
     GETSET_SPTR(VPGGenerationOption, Option);
 
     private:

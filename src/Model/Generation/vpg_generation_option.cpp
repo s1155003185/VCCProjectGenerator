@@ -93,8 +93,6 @@ std::shared_ptr<Json> VPGGenerationOption::ToJson() const
         json->AddString(ConvertNamingStyle(L"WorkspaceSourceGitUrl", NamingStyle::PascalCase, namestyle), _WorkspaceSourceGitUrl);
         // WorkspaceSource
         json->AddString(ConvertNamingStyle(L"WorkspaceSource", NamingStyle::PascalCase, namestyle), _WorkspaceSource);
-        // WorkspaceDestination
-        json->AddString(ConvertNamingStyle(L"WorkspaceDestination", NamingStyle::PascalCase, namestyle), _WorkspaceDestination);
         // ProjectPrefix
         json->AddString(ConvertNamingStyle(L"ProjectPrefix", NamingStyle::PascalCase, namestyle), _ProjectPrefix);
         // ProjectName
@@ -188,9 +186,6 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
         // WorkspaceSource
         if (json->IsContainKey(ConvertNamingStyle(L"WorkspaceSource", namestyle, NamingStyle::PascalCase)))
             _WorkspaceSource = json->GetString(ConvertNamingStyle(L"WorkspaceSource", namestyle, NamingStyle::PascalCase));
-        // WorkspaceDestination
-        if (json->IsContainKey(ConvertNamingStyle(L"WorkspaceDestination", namestyle, NamingStyle::PascalCase)))
-            _WorkspaceDestination = json->GetString(ConvertNamingStyle(L"WorkspaceDestination", namestyle, NamingStyle::PascalCase));
         // ProjectPrefix
         if (json->IsContainKey(ConvertNamingStyle(L"ProjectPrefix", namestyle, NamingStyle::PascalCase)))
             _ProjectPrefix = json->GetString(ConvertNamingStyle(L"ProjectPrefix", namestyle, NamingStyle::PascalCase));

@@ -23,7 +23,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
     
     GETSET_SPTR(VPGGenerationOption, Option)
     // Cannot use VPGBaseGenerationManager directly as it needs template
-    MANAGER(VPGCppGenerationManager, Manager, _LogProperty, _Option);
+    MANAGER(VPGCppGenerationManager, Manager, _LogProperty, L"", _Option);
     
     GETSET(std::wstring, FileContent, L"");
     
@@ -62,7 +62,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
             _Option->SetWorkspaceSource(L"A");
-            _Option->SetWorkspaceDestination(L"B");
+            _Manager->SetWorkspace(L"B");
 
             std::wstring makeFileStr = L"hi\r\n";
             makeFileStr += L"# <vcc:name sync=\"ALERT\">\r\n";

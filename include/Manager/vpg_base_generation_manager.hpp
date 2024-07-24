@@ -28,14 +28,15 @@ const std::wstring unittestFolderName = L"unittest";
 template <typename Derived>
 class VPGBaseGenerationManager : public BaseManager<Derived>, public IVPGGenerationManager
 {
-    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET(std::wstring, Workspace, L"");
     GETSET_SPTR(VPGGenerationOption, Option);
     
     protected:
         void ValidateOption() const;
     public:
-        VPGBaseGenerationManager(std::shared_ptr<LogProperty> logProperty, std::shared_ptr<VPGGenerationOption> option) : BaseManager<Derived>(logProperty)
+        VPGBaseGenerationManager(std::shared_ptr<LogProperty> logProperty, std::wstring &workspace, std::shared_ptr<VPGGenerationOption> option) : BaseManager<Derived>(logProperty)
         { 
+            this->_Workspace = workspace;
             assert(option != nullptr);
             this->_Option = option;
         }
@@ -71,8 +72,8 @@ void VPGBaseGenerationManager<Derived>::ValidateOption() const
     TRY
         if (IsBlank(_Option->GetWorkspaceSource()))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace Source is emtpy.");
-        if (IsBlank(_Option->GetWorkspaceDestination()))
-            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace Distination is emtpy.");
+        if (IsBlank(_Workspace))
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace is emtpy.");
         if (IsBlank(_Option->GetProjectName()))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Project Name is emtpy.");
         if (IsBlank(_Option->GetProjectNameDll()) && IsBlank(_Option->GetProjectNameExe()))
@@ -111,9 +112,8 @@ void VPGBaseGenerationManager<Derived>::CreateWorkspaceDirectory() const
         if (!_Option->GetIsExcludeUnittest())
             checkList.push_back(unittestFolderName);
         
-        std::wstring workspace = _Option->GetWorkspaceDestination();
         for (auto path : checkList) {
-            std::wstring absPath = ConcatPaths({workspace, path});
+            std::wstring absPath = ConcatPaths({_Workspace, path});
             if (!IsDirectoryExists(absPath)) {
                 CreateDirectory(absPath);
                 LogService::LogInfo(this->GetLogProperty().get(), L"", L"Create Directory: " + path);
@@ -130,7 +130,7 @@ void VPGBaseGenerationManager<Derived>::CreateBasicProject() const
         this->CreateWorkspaceDirectory();
 
         std::wstring src = _Option->GetWorkspaceSource();
-        std::wstring dest = _Option->GetWorkspaceDestination();
+        std::wstring dest = _Workspace;
         if (_Option->GetIsGit()) {
             CopyFile(ConcatPaths({src, L".gitignore"}), ConcatPaths({dest, L".gitignore"}), true);
         }

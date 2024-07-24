@@ -37,7 +37,7 @@ class VPGObjectFileGenerationServiceTest : public testing::Test
             this->_FilePathHpp = ConcatPaths({this->_Workspace, L"vcc_object.hpp"});
             this->_FilePathCpp = ConcatPaths({this->_Workspace, L"vcc_object.cpp"});
 
-            DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr);
+            DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr, L"");
             manager->GetClassMacroList(L"");
             _Reader->InsertClassMacroList(manager->GetClassMacros());
 

@@ -11,8 +11,8 @@ using namespace vcc;
 class VPGVccGenerationManager : public VPGBaseGenerationManager<VPGVccGenerationManager>
 {
     public:
-        VPGVccGenerationManager() : VPGVccGenerationManager(nullptr, nullptr) {}
-        VPGVccGenerationManager(std::shared_ptr<LogProperty> logProperty, std::shared_ptr<VPGGenerationOption> option) : VPGBaseGenerationManager(logProperty, option) {}
+        VPGVccGenerationManager() : VPGVccGenerationManager(nullptr, L"", nullptr) {}
+        VPGVccGenerationManager(std::shared_ptr<LogProperty> logProperty, std::wstring workspace, std::shared_ptr<VPGGenerationOption> option) : VPGBaseGenerationManager(logProperty, workspace, option) {}
         virtual ~VPGVccGenerationManager() {}
 
         std::vector<std::wstring> GetUpdateList() const;

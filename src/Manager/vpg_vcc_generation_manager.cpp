@@ -79,14 +79,14 @@ void VPGVccGenerationManager::CreateVccJson() const
         //     platformMacOS->InsertIncludePaths(VPGGlobal::GetCppDefaultIncludePathMacOs());
         //     _Option->InsertPlatforms(platformMacOS);
         // }
-        WriteFile(ConcatPaths({_Option->GetWorkspaceDestination(), VPGGlobal::GetVccJsonFileName()}), _Option->SerializeJson(jsonBuilder.get()), true);
+        WriteFile(ConcatPaths({_Workspace, VPGGlobal::GetVccJsonFileName()}), _Option->SerializeJson(jsonBuilder.get()), true);
     CATCH
 }
 
 void VPGVccGenerationManager::ReadVccJson() const
 {
     TRY
-        std::wstring fileContent = ReadFile(ConcatPaths({_Option->GetWorkspaceDestination(), VPGGlobal::GetVccJsonFileName()}));
+        std::wstring fileContent = ReadFile(ConcatPaths({_Workspace, VPGGlobal::GetVccJsonFileName()}));
         DECLARE_UPTR(JsonBuilder, jsonBuilder);
         DECLARE_SPTR(Json, json);
         jsonBuilder->Deserialize(fileContent, json);
@@ -99,7 +99,7 @@ void VPGVccGenerationManager::Add() const
     TRY
         VPGBaseGenerationManager::CreateBasicProject();
         std::wstring src = _Option->GetWorkspaceSource();
-        std::wstring dest = _Option->GetWorkspaceDestination();
+        std::wstring dest = _Workspace;
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Copy Project to " + dest + L" ...");
         CopyDirectoryOption copyDirectoryOption;
         copyDirectoryOption.SetIsForce(true);
@@ -130,7 +130,7 @@ void VPGVccGenerationManager::Update() const
         ReadVccJson();
 
         std::wstring src = _Option->GetWorkspaceSource();
-        std::wstring dest = _Option->GetWorkspaceDestination();
+        std::wstring dest = _Workspace;
         
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Sync Project ...");
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"From " + src);
@@ -165,7 +165,7 @@ void VPGVccGenerationManager::Generate() const
     TRY
         ReadVccJson();
         
-        DECLARE_UPTR(VPGFileGenerationManager, manager, this->_LogProperty);
+        DECLARE_UPTR(VPGFileGenerationManager, manager, this->_LogProperty, _Workspace);
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Generate Project ...");
         manager->GernerateProperty(_LogProperty.get(), _Option.get());
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Done");

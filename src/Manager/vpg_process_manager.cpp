@@ -111,11 +111,11 @@ std::shared_ptr<IVPGGenerationManager> VPGProcessManager::GetGenerationManager()
     case VPGProjectType::VccComplex:
     case VPGProjectType::VccDll:
     case VPGProjectType::VccExe:
-        return std::make_shared<VPGVccGenerationManager>(this->GetLogProperty(), _Option);
+        return std::make_shared<VPGVccGenerationManager>(this->GetLogProperty(), _Workspace, _Option);
     case VPGProjectType::CppComplex:
     case VPGProjectType::CppDll:
     case VPGProjectType::CppExe:
-        return std::make_shared<VPGCppGenerationManager>(this->GetLogProperty(), _Option);
+        return std::make_shared<VPGCppGenerationManager>(this->GetLogProperty(), _Workspace, _Option);
     default:
         assert(false);
         break;
@@ -158,6 +158,7 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
 
     this->InitLogProperty();
 
+    _Workspace = GetCurrentFolderPath();
     try {
         std::wstring mode = cmds[1];
         if (mode == L"-Version") {
@@ -177,7 +178,7 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
                     i++;
                     std::wstring cmd2 = cmds[i];
                     if (cmd == L"-workspace-destination") {
-                        _Option->SetWorkspaceDestination(cmd2);
+                        _Workspace = cmd2;
                     } else if (cmd == L"-interface") {
                         ToUpper(cmd2);
                         if (IsStartWith(cmd2, L"CPP")) {
@@ -246,7 +247,7 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
             if (this->_Option->GetProjectType() == VPGProjectType::VccModule)
                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Interface Type missing.");
         } else {
-            std::wstring vccJsonFilePath = ConcatPaths({_Option->GetWorkspaceDestination(), VPGGlobal::GetVccJsonFileName()});
+            std::wstring vccJsonFilePath = ConcatPaths({_Workspace, VPGGlobal::GetVccJsonFileName()});
             if (!IsFileExists(vccJsonFilePath))
                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, vccJsonFilePath + L": File not found.");
             std::wstring fileContent = ReadFile(vccJsonFilePath);

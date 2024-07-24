@@ -187,8 +187,6 @@ std::wstring VPGGenerationOptionPropertyAccessor::_ReadString(const int64_t &obj
             return obj->GetWorkspaceSourceGitUrl();
         case VPGGenerationOptionProperty::WorkspaceSource:
             return obj->GetWorkspaceSource();
-        case VPGGenerationOptionProperty::WorkspaceDestination:
-            return obj->GetWorkspaceDestination();
         case VPGGenerationOptionProperty::ProjectPrefix:
             return obj->GetProjectPrefix();
         case VPGGenerationOptionProperty::ProjectName:
@@ -256,9 +254,6 @@ void VPGGenerationOptionPropertyAccessor::_WriteString(const int64_t &objectProp
             break;
         case VPGGenerationOptionProperty::WorkspaceSource:
             obj->SetWorkspaceSource(value);
-            break;
-        case VPGGenerationOptionProperty::WorkspaceDestination:
-            obj->SetWorkspaceDestination(value);
             break;
         case VPGGenerationOptionProperty::ProjectPrefix:
             obj->SetProjectPrefix(value);

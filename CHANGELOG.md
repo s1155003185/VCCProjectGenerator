@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 - Remove support of std::string, all change to use std::wstring
+- Generate Dll Interface for Property Accessor
+- vcc.json remove WorkspaceDestination, change WorkspaceSourceGitUrl to ParentGitUrl, WorkspaceSource to ParentFolder
 
 ### [v0.1.2] - 2024-07-14: Java Bridge: Generation - Create Class as Json Object with 
 - Update Generator: Create Table as Json Object

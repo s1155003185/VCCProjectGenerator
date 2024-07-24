@@ -22,9 +22,9 @@ class VPGVccGenerationManagerTest : public testing::Test
     GETSET(std::wstring, WorkspaceTarget, L"");
     
     GETSET(std::wstring, TestFolder, L"../VPGVccGenerationManagerTest_VCCTestProject");
-    GETSET(bool, IsCopyDebugFolderToTestFolder, true);
+    GETSET(bool, IsCopyDebugFolderToTestFolder, false);
 
-    MANAGER(VPGVccGenerationManager, Manager, _LogProperty, _Option);
+    MANAGER(VPGVccGenerationManager, Manager, _LogProperty, L"", _Option);
 
     public:
         void SetUp() override
@@ -40,9 +40,9 @@ class VPGVccGenerationManagerTest : public testing::Test
             CreateDirectory(this->GetWorkspaceTarget());
 
             // option for initialize source
+            this->_Manager->SetWorkspace(this->GetWorkspaceSource());
             this->_Option->SetProjectType(VPGProjectType::VccComplex);
             this->_Option->SetWorkspaceSource(L".");
-            this->_Option->SetWorkspaceDestination(this->GetWorkspaceSource());
             this->_Option->SetProjectName(L"VCCProjGenerator");
             this->_Option->SetProjectNameDll(L"libvpg");
             this->_Option->SetProjectNameExe(L"vpg");
@@ -78,8 +78,8 @@ class VPGVccGenerationManagerTest : public testing::Test
             AppendFileOneLine(mainFilePath, mainFileContent);
             
             // option for testing
+            this->_Manager->SetWorkspace(this->GetWorkspaceTarget());
             this->_Option->SetWorkspaceSource(this->GetWorkspaceSource());
-            this->_Option->SetWorkspaceDestination(this->GetWorkspaceTarget());
             this->_Option->SetIsGit(true);
             this->_Option->SetProjectNameExe(L"VCCProject");
             this->_Option->SetProjectNameDll(L"VCCDllProject");
@@ -482,8 +482,8 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_json_property.hpp"}), codeJson, true);
 
     this->_Option->SetWorkspaceSource(this->GetWorkspaceSource());
-    this->_Option->SetWorkspaceDestination(this->GetWorkspaceTarget());
     this->_Option->SetProjectPrefix(L"VCC");
+    this->GetManager()->SetWorkspace(this->GetWorkspaceTarget());
     this->GetManager()->Generate();
     
     // Empty Class

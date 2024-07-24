@@ -23,7 +23,7 @@ class VPGCppGenerationManagerTest : public testing::Test
     GETSET(std::wstring, TestFolder, L"../VPGVccGenerationManagerTest_CPPTestProject");
     GETSET(bool, IsCopyDebugFolderToTestFolder, false);
 
-    MANAGER(VPGCppGenerationManager, Manager, _LogProperty, _Option);
+    MANAGER(VPGCppGenerationManager, Manager, _LogProperty, L"", _Option);
 
     public:
         void SetUp() override
@@ -41,9 +41,9 @@ class VPGCppGenerationManagerTest : public testing::Test
             CreateDirectory(this->GetWorkspaceTarget());
 
             // option for initialize source
+            this->_Manager->SetWorkspace(this->GetWorkspaceSource());
             this->_Option->SetProjectType(VPGProjectType::CppComplex);
             this->_Option->SetWorkspaceSource(L".");
-            this->_Option->SetWorkspaceDestination(this->GetWorkspaceSource());
             this->_Option->SetProjectName(L"VCCProjGenerator");
             this->_Option->SetProjectNameDll(L"libvpg");
             this->_Option->SetProjectNameExe(L"vpg");
@@ -56,8 +56,8 @@ class VPGCppGenerationManagerTest : public testing::Test
             AppendFileOneLine(mainFilePath, mainFileContent);
 
             // option for testing
+            this->_Manager->SetWorkspace(this->GetWorkspaceTarget());
             this->_Option->SetWorkspaceSource(this->GetWorkspaceSource());
-            this->_Option->SetWorkspaceDestination(this->GetWorkspaceTarget());
             this->_Option->SetProjectNameExe(L"CPPProject");
             this->_Option->SetProjectNameDll(L"CPPDllProject");
             this->_Option->SetProjectName(L"ProjectName");

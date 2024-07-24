@@ -163,7 +163,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
 {
     TRY
         std::wstring projPrefix = option->GetProjectPrefix();
-        std::wstring projWorkspace = option->GetWorkspaceDestination();
+        std::wstring projWorkspace = _Workspace;
         std::wstring typeWorkspaceFullPath = ConcatPaths({projWorkspace, option->GetTypeWorkspace()});
         std::wstring propertyAccessorDirectoryHpp = option->GetPropertyAccessorDirectoryHpp();
         std::wstring propertyAccessorDirectoryCpp = option->GetPropertyAccessorDirectoryCpp();

@@ -16,7 +16,7 @@
 class VPGFileGenerationManagerTest : public testing::Test 
 {
     GETSET_SPTR(LogProperty, LogProperty, LogPropertyType::None);
-    MANAGER(VPGFileGenerationManager, Manager, _LogProperty);
+    MANAGER(VPGFileGenerationManager, Manager, _LogProperty, L"");
 
     GETSET(std::wstring, Workspace, L"bin/Debug/FileGenerationServiceTest");
     GETSET(std::wstring, WorkspaceSource, L"");
@@ -113,10 +113,10 @@ TEST_F(VPGFileGenerationManagerTest, GetFileList)
 
 TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
 {
+    _Manager->SetWorkspace(L"");
     VPGGenerationOption option;
     option.SetProjectPrefix(L"VCC");
     option.SetWorkspaceSource(L"");
-    option.SetWorkspaceDestination(L"");
     option.SetTypeWorkspace(this->GetWorkspaceSource());
     option.SetObjectTypeDirectory(this->GetWorkspaceTarget());
     
