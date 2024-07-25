@@ -183,10 +183,10 @@ std::wstring VPGGenerationOptionPropertyAccessor::_ReadString(const int64_t &obj
         {
         case VPGGenerationOptionProperty::Version:
             return obj->GetVersion();
-        case VPGGenerationOptionProperty::WorkspaceSourceGitUrl:
-            return obj->GetWorkspaceSourceGitUrl();
-        case VPGGenerationOptionProperty::WorkspaceSource:
-            return obj->GetWorkspaceSource();
+        case VPGGenerationOptionProperty::TemplateGitUrl:
+            return obj->GetTemplateGitUrl();
+        case VPGGenerationOptionProperty::TemplateWorkspace:
+            return obj->GetTemplateWorkspace();
         case VPGGenerationOptionProperty::ProjectPrefix:
             return obj->GetProjectPrefix();
         case VPGGenerationOptionProperty::ProjectName:
@@ -249,11 +249,11 @@ void VPGGenerationOptionPropertyAccessor::_WriteString(const int64_t &objectProp
         case VPGGenerationOptionProperty::Version:
             obj->SetVersion(value);
             break;
-        case VPGGenerationOptionProperty::WorkspaceSourceGitUrl:
-            obj->SetWorkspaceSourceGitUrl(value);
+        case VPGGenerationOptionProperty::TemplateGitUrl:
+            obj->SetTemplateGitUrl(value);
             break;
-        case VPGGenerationOptionProperty::WorkspaceSource:
-            obj->SetWorkspaceSource(value);
+        case VPGGenerationOptionProperty::TemplateWorkspace:
+            obj->SetTemplateWorkspace(value);
             break;
         case VPGGenerationOptionProperty::ProjectPrefix:
             obj->SetProjectPrefix(value);

@@ -2,6 +2,6 @@
 
 enum class ObjectType {
     NA,
-    VPGGenerationOption,
-    VPGGenerationOptionExport
+    GenerationOption,
+    GenerationOptionExport
 };

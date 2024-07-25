@@ -31,8 +31,8 @@ void VPGProcessManager::VerifyLocalResponse()
     try {
         // 1. Check if source file exists, if not exist then clone
         // 2. Check if version != branch, then checkout
-        std::wstring localResponseDirectory = _Option->GetWorkspaceSource();
-        std::wstring gitUrl = _Option->GetWorkspaceSourceGitUrl();
+        std::wstring localResponseDirectory = _Option->GetTemplateWorkspace();
+        std::wstring gitUrl = _Option->GetTemplateGitUrl();
 
         LogService::LogInfo(this->GetLogProperty().get(), L"", L"Check VCC Local response existance: " + localResponseDirectory);
         if (IsDirectoryExists(localResponseDirectory)) {
@@ -258,10 +258,10 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
             _Option->SetProjectType(VPGProjectType::VccComplex);
         }
 
-        std::wstring localResponseDirectory = !_Option->GetWorkspaceSource().empty() ? _Option->GetWorkspaceSource() : VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType());
-        std::wstring gitUrl = !_Option->GetWorkspaceSourceGitUrl().empty() ? _Option->GetWorkspaceSourceGitUrl() : VPGGlobal::GetProjecURL(_Option->GetProjectType());
-        _Option->SetWorkspaceSource(localResponseDirectory);
-        _Option->SetWorkspaceSourceGitUrl(gitUrl);
+        std::wstring localResponseDirectory = !_Option->GetTemplateWorkspace().empty() ? _Option->GetTemplateWorkspace() : VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType());
+        std::wstring gitUrl = !_Option->GetTemplateGitUrl().empty() ? _Option->GetTemplateGitUrl() : VPGGlobal::GetProjecURL(_Option->GetProjectType());
+        _Option->SetTemplateWorkspace(localResponseDirectory);
+        _Option->SetTemplateGitUrl(gitUrl);
 
         if (mode == L"-Add")
             this->Add();

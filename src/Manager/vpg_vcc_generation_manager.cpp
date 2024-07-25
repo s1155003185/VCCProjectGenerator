@@ -98,7 +98,7 @@ void VPGVccGenerationManager::Add() const
 {
     TRY
         VPGBaseGenerationManager::CreateBasicProject();
-        std::wstring src = _Option->GetWorkspaceSource();
+        std::wstring src = _Option->GetTemplateWorkspace();
         std::wstring dest = _Workspace;
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Copy Project to " + dest + L" ...");
         CopyDirectoryOption copyDirectoryOption;
@@ -129,7 +129,7 @@ void VPGVccGenerationManager::Update() const
     TRY
         ReadVccJson();
 
-        std::wstring src = _Option->GetWorkspaceSource();
+        std::wstring src = _Option->GetTemplateWorkspace();
         std::wstring dest = _Workspace;
         
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Sync Project ...");

@@ -116,7 +116,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     _Manager->SetWorkspace(L"");
     VPGGenerationOption option;
     option.SetProjectPrefix(L"VCC");
-    option.SetWorkspaceSource(L"");
+    option.SetTemplateWorkspace(L"");
     option.SetTypeWorkspace(this->GetWorkspaceSource());
     option.SetObjectTypeDirectory(this->GetWorkspaceTarget());
     

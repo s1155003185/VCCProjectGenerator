@@ -89,10 +89,10 @@ std::shared_ptr<Json> VPGGenerationOption::ToJson() const
             assert(false);
             break;
         }
-        // WorkspaceSourceGitUrl
-        json->AddString(ConvertNamingStyle(L"WorkspaceSourceGitUrl", NamingStyle::PascalCase, namestyle), _WorkspaceSourceGitUrl);
-        // WorkspaceSource
-        json->AddString(ConvertNamingStyle(L"WorkspaceSource", NamingStyle::PascalCase, namestyle), _WorkspaceSource);
+        // TemplateGitUrl
+        json->AddString(ConvertNamingStyle(L"TemplateGitUrl", NamingStyle::PascalCase, namestyle), _TemplateGitUrl);
+        // TemplateWorkspace
+        json->AddString(ConvertNamingStyle(L"TemplateWorkspace", NamingStyle::PascalCase, namestyle), _TemplateWorkspace);
         // ProjectPrefix
         json->AddString(ConvertNamingStyle(L"ProjectPrefix", NamingStyle::PascalCase, namestyle), _ProjectPrefix);
         // ProjectName
@@ -180,12 +180,12 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
             else
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Unknow Interface: " + tmpEnum);
         }
-        // WorkspaceSourceGitUrl
-        if (json->IsContainKey(ConvertNamingStyle(L"WorkspaceSourceGitUrl", namestyle, NamingStyle::PascalCase)))
-            _WorkspaceSourceGitUrl = json->GetString(ConvertNamingStyle(L"WorkspaceSourceGitUrl", namestyle, NamingStyle::PascalCase));
-        // WorkspaceSource
-        if (json->IsContainKey(ConvertNamingStyle(L"WorkspaceSource", namestyle, NamingStyle::PascalCase)))
-            _WorkspaceSource = json->GetString(ConvertNamingStyle(L"WorkspaceSource", namestyle, NamingStyle::PascalCase));
+        // TemplateGitUrl
+        if (json->IsContainKey(ConvertNamingStyle(L"TemplateGitUrl", namestyle, NamingStyle::PascalCase)))
+            _TemplateGitUrl = json->GetString(ConvertNamingStyle(L"TemplateGitUrl", namestyle, NamingStyle::PascalCase));
+        // TemplateWorkspace
+        if (json->IsContainKey(ConvertNamingStyle(L"TemplateWorkspace", namestyle, NamingStyle::PascalCase)))
+            _TemplateWorkspace = json->GetString(ConvertNamingStyle(L"TemplateWorkspace", namestyle, NamingStyle::PascalCase));
         // ProjectPrefix
         if (json->IsContainKey(ConvertNamingStyle(L"ProjectPrefix", namestyle, NamingStyle::PascalCase)))
             _ProjectPrefix = json->GetString(ConvertNamingStyle(L"ProjectPrefix", namestyle, NamingStyle::PascalCase));

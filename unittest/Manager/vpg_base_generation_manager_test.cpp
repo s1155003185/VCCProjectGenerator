@@ -61,7 +61,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
             this->_WorkspaceTarget = this->_Workspace + L"Target";
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
-            _Option->SetWorkspaceSource(L"A");
+            _Option->SetTemplateWorkspace(L"A");
             _Manager->SetWorkspace(L"B");
 
             std::wstring makeFileStr = L"hi\r\n";

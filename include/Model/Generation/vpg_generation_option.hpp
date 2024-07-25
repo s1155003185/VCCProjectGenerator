@@ -18,7 +18,7 @@ class VPGGenerationOptionExport : public BaseObject<VPGGenerationOptionExport>, 
     GETSET(VPGGenerationOptionInterfaceType, Interface, VPGGenerationOptionInterfaceType::Java)
 
     public:
-        VPGGenerationOptionExport() : BaseObject(ObjectType::VPGGenerationOptionExport) {}
+        VPGGenerationOptionExport() : BaseObject(ObjectType::GenerationOptionExport) {}
         virtual ~VPGGenerationOptionExport() {}
 
         virtual std::shared_ptr<Json> ToJson() const override;
@@ -29,8 +29,8 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJ
 {
     GETSET(std::wstring, Version, L"v0.0.1")
     GETSET(VPGProjectType, ProjectType, VPGProjectType::VccModule)
-    GETSET(std::wstring, WorkspaceSourceGitUrl, L"")
-    GETSET(std::wstring, WorkspaceSource, L"")
+    GETSET(std::wstring, TemplateGitUrl, L"")
+    GETSET(std::wstring, TemplateWorkspace, L"")
     GETSET(std::wstring, ProjectPrefix, L"")
     GETSET(std::wstring, ProjectName, L"VCCModule")
     GETSET(std::wstring, ProjectNameDll, L"libVCCModule")
@@ -55,7 +55,7 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJ
     VECTOR_SPTR(VPGGenerationOptionExport, Exports)
 
     public:
-        VPGGenerationOption() : BaseObject(ObjectType::VPGGenerationOption) {}
+        VPGGenerationOption() : BaseObject(ObjectType::GenerationOption) {}
         virtual ~VPGGenerationOption() {}
 
         virtual std::shared_ptr<IObject> Clone() const override {

@@ -13,9 +13,9 @@ std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType)
 {
     switch (objectType)
     {
-    case ObjectType::VPGGenerationOption:
+    case ObjectType::GenerationOption:
         return std::make_shared<VPGGenerationOption>();
-    case ObjectType::VPGGenerationOptionExport:
+    case ObjectType::GenerationOptionExport:
         return std::make_shared<VPGGenerationOptionExport>();
     default:
         assert(false);

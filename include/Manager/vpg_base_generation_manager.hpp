@@ -70,7 +70,7 @@ template <typename Derived>
 void VPGBaseGenerationManager<Derived>::ValidateOption() const
 {
     TRY
-        if (IsBlank(_Option->GetWorkspaceSource()))
+        if (IsBlank(_Option->GetTemplateWorkspace()))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace Source is emtpy.");
         if (IsBlank(_Workspace))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace is emtpy.");
@@ -129,7 +129,7 @@ void VPGBaseGenerationManager<Derived>::CreateBasicProject() const
         ValidateOption();
         this->CreateWorkspaceDirectory();
 
-        std::wstring src = _Option->GetWorkspaceSource();
+        std::wstring src = _Option->GetTemplateWorkspace();
         std::wstring dest = _Workspace;
         if (_Option->GetIsGit()) {
             CopyFile(ConcatPaths({src, L".gitignore"}), ConcatPaths({dest, L".gitignore"}), true);

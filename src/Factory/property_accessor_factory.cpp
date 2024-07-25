@@ -16,9 +16,9 @@ std::shared_ptr<IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_p
 
     switch (object->GetObjectType())
     {
-    case ObjectType::VPGGenerationOption:
+    case ObjectType::GenerationOption:
         return std::make_shared<VPGGenerationOptionPropertyAccessor>(object);
-    case ObjectType::VPGGenerationOptionExport:
+    case ObjectType::GenerationOptionExport:
         return std::make_shared<VPGGenerationOptionExportPropertyAccessor>(object);
     default:
         assert(false);

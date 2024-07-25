@@ -42,7 +42,7 @@ class VPGVccGenerationManagerTest : public testing::Test
             // option for initialize source
             this->_Manager->SetWorkspace(this->GetWorkspaceSource());
             this->_Option->SetProjectType(VPGProjectType::VccComplex);
-            this->_Option->SetWorkspaceSource(L".");
+            this->_Option->SetTemplateWorkspace(L".");
             this->_Option->SetProjectName(L"VCCProjGenerator");
             this->_Option->SetProjectNameDll(L"libvpg");
             this->_Option->SetProjectNameExe(L"vpg");
@@ -79,7 +79,7 @@ class VPGVccGenerationManagerTest : public testing::Test
             
             // option for testing
             this->_Manager->SetWorkspace(this->GetWorkspaceTarget());
-            this->_Option->SetWorkspaceSource(this->GetWorkspaceSource());
+            this->_Option->SetTemplateWorkspace(this->GetWorkspaceSource());
             this->_Option->SetIsGit(true);
             this->_Option->SetProjectNameExe(L"VCCProject");
             this->_Option->SetProjectNameDll(L"VCCDllProject");
@@ -481,7 +481,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     "};\r\n";
     AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_json_property.hpp"}), codeJson, true);
 
-    this->_Option->SetWorkspaceSource(this->GetWorkspaceSource());
+    this->_Option->SetTemplateWorkspace(this->GetWorkspaceSource());
     this->_Option->SetProjectPrefix(L"VCC");
     this->GetManager()->SetWorkspace(this->GetWorkspaceTarget());
     this->GetManager()->Generate();

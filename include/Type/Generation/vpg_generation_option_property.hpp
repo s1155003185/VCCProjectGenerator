@@ -11,8 +11,8 @@ enum class VPGGenerationOptionProperty
 {
     Version, // GETSET(std::wstring, Version, L"v0.0.1")
     ProjectType,  // GETSET(VPGProjectType, ProjectType, VPGProjectType::VccModule)
-    WorkspaceSourceGitUrl, // GETSET(std::wstring, WorkspaceSourceGitUrl, L"")
-    WorkspaceSource, // GETSET(std::wstring, WorkspaceSource, L"")
+    TemplateGitUrl, // GETSET(std::wstring, TemplateGitUrl, L"")
+    TemplateWorkspace, // GETSET(std::wstring, TemplateWorkspace, L"")
 
     // --------------------------------------------------
     // Config
