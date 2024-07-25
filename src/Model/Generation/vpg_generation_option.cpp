@@ -31,6 +31,12 @@ std::shared_ptr<Json> VPGGenerationOptionExport::ToJson() const
             assert(false);
             break;
         }
+        // DllBridgeDirectory
+        json->AddString(ConvertNamingStyle(L"DllBridgeDirectory", NamingStyle::PascalCase, namestyle), _DllBridgeDirectory);
+        // ObjectDirectory
+        json->AddString(ConvertNamingStyle(L"ObjectDirectory", NamingStyle::PascalCase, namestyle), _ObjectDirectory);
+        // TypeDirectory
+        json->AddString(ConvertNamingStyle(L"TypeDirectory", NamingStyle::PascalCase, namestyle), _TypeDirectory);
         return json;
     CATCH
     return nullptr;
@@ -51,6 +57,15 @@ void VPGGenerationOptionExport::DeserializeJson(std::shared_ptr<IDocument> docum
             else
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Unknow Interface: " + tmpEnum);
         }
+        // DllBridgeDirectory
+        if (json->IsContainKey(ConvertNamingStyle(L"DllBridgeDirectory", namestyle, NamingStyle::PascalCase)))
+            _DllBridgeDirectory = json->GetString(ConvertNamingStyle(L"DllBridgeDirectory", namestyle, NamingStyle::PascalCase));
+        // ObjectDirectory
+        if (json->IsContainKey(ConvertNamingStyle(L"ObjectDirectory", namestyle, NamingStyle::PascalCase)))
+            _ObjectDirectory = json->GetString(ConvertNamingStyle(L"ObjectDirectory", namestyle, NamingStyle::PascalCase));
+        // TypeDirectory
+        if (json->IsContainKey(ConvertNamingStyle(L"TypeDirectory", namestyle, NamingStyle::PascalCase)))
+            _TypeDirectory = json->GetString(ConvertNamingStyle(L"TypeDirectory", namestyle, NamingStyle::PascalCase));
     CATCH
 }
 

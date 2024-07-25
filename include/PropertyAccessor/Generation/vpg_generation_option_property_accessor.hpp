@@ -10,6 +10,7 @@ using namespace vcc;
 class VPGGenerationOptionExportPropertyAccessor : public BasePropertyAccessor
 {
     PROPERTY_ACCESSOR_HEADER(long, Long)
+    PROPERTY_ACCESSOR_HEADER(std::wstring, String)
 
     public:
         VPGGenerationOptionExportPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}

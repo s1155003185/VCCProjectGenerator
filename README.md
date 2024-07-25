@@ -12,10 +12,11 @@ Sample Program: To get sample, can download this project from github, then
     3. make unittest -j10
     4. file will be generated to TestFolder mensioned in vpg_vcc_generation_manager_test.cpp
 
-## What news
-Generate Json Object by Generation Mode and control key naming style with 
+## What's new
+Generate Dll Interface for Property Accessor
+Note: vcc.json description is outdated, will update after generate java bridge
 
-## What next
+## What's next
 Java bridge
 
 ## Features
@@ -695,6 +696,12 @@ X(Twitter) @VCCProject
 
 ****
 ## Release Log
+
+### [v0.1.3]
+- Remove support of std::string, all change to use std::wstring
+- Generate Dll Interface for Property Accessor
+- vcc.json remove WorkspaceDestination, change WorkspaceSourceGitUrl to TemplateGitUrl, WorkspaceSource to TemplateWorkspace
+Note: Generation mode need to change WorkspaceDestination if using different PC.
 
 ### [v0.1.2] - 2024-07-14: Java Bridge: Generation - Create Class as Json Object with 
 - Update Generator: Create Table as Json Object

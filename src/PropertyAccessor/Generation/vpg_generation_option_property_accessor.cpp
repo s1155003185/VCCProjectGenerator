@@ -65,6 +65,65 @@ void VPGGenerationOptionExportPropertyAccessor::_WriteLong(const int64_t &object
     CATCH
 }
 
+std::wstring VPGGenerationOptionExportPropertyAccessor::_ReadString(const int64_t &objectProperty, const int64_t &index) const
+{
+    TRY
+        assert(index >= -1);
+        std::shared_ptr<VPGGenerationOptionExport> obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
+        {
+        case VPGGenerationOptionExportProperty::DllBridgeDirectory:
+            return obj->GetDllBridgeDirectory();
+        case VPGGenerationOptionExportProperty::ObjectDirectory:
+            return obj->GetObjectDirectory();
+        case VPGGenerationOptionExportProperty::TypeDirectory:
+            return obj->GetTypeDirectory();
+        default:
+            assert(false);
+        }
+    CATCH
+    return L"";
+}
+
+std::wstring VPGGenerationOptionExportPropertyAccessor::_ReadString(const int64_t &objectProperty, const ITypeUnion * /*key*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return L"";
+}
+
+void VPGGenerationOptionExportPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring &value, const int64_t &index) const
+{
+    TRY
+        assert(index >= -1);
+        std::shared_ptr<VPGGenerationOptionExport> obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
+        {
+        case VPGGenerationOptionExportProperty::DllBridgeDirectory:
+            obj->SetDllBridgeDirectory(value);
+            break;
+        case VPGGenerationOptionExportProperty::ObjectDirectory:
+            obj->SetObjectDirectory(value);
+            break;
+        case VPGGenerationOptionExportProperty::TypeDirectory:
+            obj->SetTypeDirectory(value);
+            break;
+        default:
+            assert(false);
+        }
+    CATCH
+}
+
+void VPGGenerationOptionExportPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring & /*value*/, const ITypeUnion * /*key*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
 bool VPGGenerationOptionPropertyAccessor::_ReadBool(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY

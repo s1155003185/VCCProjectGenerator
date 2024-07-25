@@ -3,7 +3,14 @@
 // @@json
 enum class VPGGenerationOptionExportProperty
 {
-    InterfaceType // GETSET(VPGGenerationOptionInterfaceType, Interface, VPGGenerationOptionInterfaceType::Java)
+    InterfaceType, // GETSET(VPGGenerationOptionInterfaceType, Interface, VPGGenerationOptionInterfaceType::Java)
+    
+    // Bridge Location
+    DllBridgeDirectory, // GETSET(std::wstring, DllBridgeDirectory, L"")
+
+    // Export Location
+    ObjectDirectory, // GETSET(std::wstring, ObjectDirectory, L"")
+    TypeDirectory // GETSET(std::wstring, TypeDirectory, L"")
 };
 
 // @@json { "Key.NamingStyle" : "PascalCase" }
