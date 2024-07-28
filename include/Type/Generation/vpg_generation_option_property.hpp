@@ -4,7 +4,8 @@
 enum class VPGGenerationOptionExportProperty
 {
     InterfaceType, // GETSET(VPGGenerationOptionInterfaceType, Interface, VPGGenerationOptionInterfaceType::Java)
-    
+    Workspace, // GETSET(std::wstring, Workspace, L"")
+
     // Bridge Location
     DllBridgeDirectory, // GETSET(std::wstring, DllBridgeDirectory, L"")
 

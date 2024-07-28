@@ -165,7 +165,7 @@ namespace vcc
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
-            std::shared_ptr<IObject> ptr(object); \
+            std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
             return PropertyAccessorFactory::Create(ptr)->Read##typeName(LockType::ReadLock, property, index); \
         CATCH \
         return defaultValue; \
@@ -175,7 +175,7 @@ namespace vcc
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
             ITypeUnion *typeUnion = static_cast<ITypeUnion *>(key); \
-            std::shared_ptr<IObject> ptr(object); \
+            std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
             return PropertyAccessorFactory::Create(ptr)->Read##typeName(LockType::ReadLock, property, typeUnion); \
         CATCH \
         return defaultValue; \
@@ -184,7 +184,7 @@ namespace vcc
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
-            std::shared_ptr<IObject> ptr(object); \
+            std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
             PropertyAccessorFactory::Create(ptr)->Write##typeName(LockType::WriteLock, property, value, index); \
         CATCH \
     } \
@@ -193,7 +193,7 @@ namespace vcc
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
             ITypeUnion *typeUnion = static_cast<ITypeUnion *>(key); \
-            std::shared_ptr<IObject> ptr(object); \
+            std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
             PropertyAccessorFactory::Create(ptr)->Write##typeName(LockType::WriteLock, property, value, typeUnion); \
         CATCH \
     }
@@ -203,7 +203,7 @@ namespace vcc
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
-            std::shared_ptr<IObject> ptr(object); \
+            std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
             std::wstring result = PropertyAccessorFactory::Create(ptr)->ReadString(LockType::ReadLock, property, index); \
             size_t size = (result.length() + 1) * sizeof(wchar_t); \
             *value = static_cast<wchar_t*>(malloc(size)); \
@@ -215,7 +215,7 @@ namespace vcc
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
             ITypeUnion *typeUnion = static_cast<ITypeUnion *>(key); \
-            std::shared_ptr<IObject> ptr(object); \
+            std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
             std::wstring result = PropertyAccessorFactory::Create(ptr)->ReadString(LockType::ReadLock, property, typeUnion); \
             size_t size = (result.length() + 1) * sizeof(wchar_t); \
             *value = static_cast<wchar_t*>(malloc(size)); \
@@ -228,7 +228,7 @@ namespace vcc
             if (value != nullptr && *value != nullptr) \
             { \
                 IObject *object = static_cast<IObject *>(ref); \
-                std::shared_ptr<IObject> ptr(object); \
+                std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
                 PropertyAccessorFactory::Create(ptr)->WriteString(LockType::WriteLock, property, *value, index); \
                 free(*value); \
                 *value = nullptr; \
@@ -242,7 +242,7 @@ namespace vcc
             { \
                 IObject *object = static_cast<IObject *>(ref); \
                 ITypeUnion *typeUnion = static_cast<ITypeUnion *>(key); \
-                std::shared_ptr<IObject> ptr(object); \
+                std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
                 PropertyAccessorFactory::Create(ptr)->WriteString(LockType::WriteLock, property, *value, typeUnion); \
                 free(*value); \
                 *value = nullptr; \
@@ -255,7 +255,7 @@ namespace vcc
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
-            std::shared_ptr<IObject> ptr(object); \
+            std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
             std::shared_ptr<IObject> result = PropertyAccessorFactory::Create(ptr)->ReadObject(LockType::ReadLock, property, index); \
             return result != nullptr ? result.get() : nullptr; \
         CATCH \
@@ -266,7 +266,7 @@ namespace vcc
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
             ITypeUnion *typeUnion = static_cast<ITypeUnion *>(key); \
-            std::shared_ptr<IObject> ptr(object); \
+            std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
             std::shared_ptr<IObject> result = PropertyAccessorFactory::Create(ptr)->ReadObject(LockType::ReadLock, property, typeUnion); \
             return result != nullptr ? result.get() : nullptr; \
         CATCH \
@@ -276,7 +276,7 @@ namespace vcc
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
-            std::shared_ptr<IObject> ptr(object); \
+            std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
             IObject *result = static_cast<IObject *>(value); \
             std::shared_ptr<IObject> resultPtr(result); \
             PropertyAccessorFactory::Create(ptr)->WriteObject(LockType::WriteLock, property, resultPtr, index); \
@@ -287,7 +287,7 @@ namespace vcc
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
             ITypeUnion *typeUnion = static_cast<ITypeUnion *>(key); \
-            std::shared_ptr<IObject> ptr(object); \
+            std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
             IObject *result = static_cast<IObject *>(value); \
             std::shared_ptr<IObject> resultPtr(result); \
             PropertyAccessorFactory::Create(ptr)->WriteObject(LockType::WriteLock, property, resultPtr, typeUnion); \
@@ -299,7 +299,7 @@ namespace vcc
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
-            std::shared_ptr<IObject> ptr(object); \
+            std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
             return PropertyAccessorFactory::Create(ptr)->GetContainerCount(LockType::ReadLock, property); \
         CATCH \
         return 0; \
@@ -309,7 +309,7 @@ namespace vcc
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
             ITypeUnion *typeUnion = static_cast<ITypeUnion *>(key); \
-            std::shared_ptr<IObject> ptr(object); \
+            std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
             return PropertyAccessorFactory::Create(ptr)->IsContainKey(LockType::ReadLock, property, typeUnion); \
         CATCH \
         return false; \
@@ -318,7 +318,7 @@ namespace vcc
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
-            std::shared_ptr<IObject> ptr(object); \
+            std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
             PropertyAccessorFactory::Create(ptr)->RemoveContainerElement(LockType::WriteLock, property, index); \
         CATCH \
     } \
@@ -327,7 +327,7 @@ namespace vcc
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
             ITypeUnion *typeUnion = static_cast<ITypeUnion *>(key); \
-            std::shared_ptr<IObject> ptr(object); \
+            std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
             PropertyAccessorFactory::Create(ptr)->RemoveContainerElement(LockType::WriteLock, property, typeUnion); \
         CATCH \
     } \
@@ -335,7 +335,7 @@ namespace vcc
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
-            std::shared_ptr<IObject> ptr(object); \
+            std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
             return PropertyAccessorFactory::Create(ptr)->ClearContainer(LockType::WriteLock, property); \
         CATCH \
     }

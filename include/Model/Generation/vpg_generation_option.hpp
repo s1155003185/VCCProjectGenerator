@@ -16,6 +16,7 @@ using namespace vcc;
 class VPGGenerationOptionExport : public BaseObject<VPGGenerationOptionExport>, public BaseJsonObject
 {
     GETSET(VPGGenerationOptionInterfaceType, Interface, VPGGenerationOptionInterfaceType::Java)
+    GETSET(std::wstring, Workspace, L"")
     GETSET(std::wstring, DllBridgeDirectory, L"")
     GETSET(std::wstring, ObjectDirectory, L"")
     GETSET(std::wstring, TypeDirectory, L"")

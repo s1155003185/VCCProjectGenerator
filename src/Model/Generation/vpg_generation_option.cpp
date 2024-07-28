@@ -31,6 +31,8 @@ std::shared_ptr<Json> VPGGenerationOptionExport::ToJson() const
             assert(false);
             break;
         }
+        // Workspace
+        json->AddString(ConvertNamingStyle(L"Workspace", NamingStyle::PascalCase, namestyle), _Workspace);
         // DllBridgeDirectory
         json->AddString(ConvertNamingStyle(L"DllBridgeDirectory", NamingStyle::PascalCase, namestyle), _DllBridgeDirectory);
         // ObjectDirectory
@@ -57,6 +59,9 @@ void VPGGenerationOptionExport::DeserializeJson(std::shared_ptr<IDocument> docum
             else
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Unknow Interface: " + tmpEnum);
         }
+        // Workspace
+        if (json->IsContainKey(ConvertNamingStyle(L"Workspace", namestyle, NamingStyle::PascalCase)))
+            _Workspace = json->GetString(ConvertNamingStyle(L"Workspace", namestyle, NamingStyle::PascalCase));
         // DllBridgeDirectory
         if (json->IsContainKey(ConvertNamingStyle(L"DllBridgeDirectory", namestyle, NamingStyle::PascalCase)))
             _DllBridgeDirectory = json->GetString(ConvertNamingStyle(L"DllBridgeDirectory", namestyle, NamingStyle::PascalCase));
