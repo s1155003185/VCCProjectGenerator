@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-### [v0.1.3]
+### [v0.1.3] - 2024-07-28: Java Bridge: Generation - Dll Interface for Property Accessor
 - Remove support of std::string, all change to use std::wstring
 - Generate Dll Interface for Property Accessor
 - vcc.json remove WorkspaceDestination, change WorkspaceSourceGitUrl to TemplateGitUrl, WorkspaceSource to TemplateWorkspace
