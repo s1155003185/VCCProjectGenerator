@@ -264,7 +264,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
         // ------------------------------------------------------------------------------------------ //
         //                               Generate DLL Inteface File                                   //
         // ------------------------------------------------------------------------------------------ //
-        VPGDllFileGenerationService::GenerateHpp(logProperty, ConcatPaths({projWorkspace, L"DllFunctions.hpp"}), dllOption.get());
+        VPGDllFileGenerationService::GenerateHpp(logProperty, ConcatPaths({projWorkspace, L"DllFunctions.h"}), dllOption.get());
         VPGDllFileGenerationService::GenerateCpp(logProperty, ConcatPaths({projWorkspace, L"DllFunctions.cpp"}), dllOption.get());
 
         LogService::LogInfo(logProperty, logId, L"Generate Property Finished.");

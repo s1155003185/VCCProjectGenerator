@@ -334,7 +334,7 @@ TEST_F(VPGVccGenerationManagerTest, Update_Makefile)
 }
 
 TEST_F(VPGVccGenerationManagerTest, Generate)
-{            
+{
     // Create file for generation
     this->_Option->SetProjectNameExe(L"VCCProject");
     this->_Option->SetProjectNameDll(L"VCCDllProject");

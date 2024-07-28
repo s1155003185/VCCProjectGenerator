@@ -7,12 +7,12 @@
 
 
 // <vcc:dllInterfaceHeader gen="FORCE">
-#include "property_accessor_macro.hpp"
-#include "lock_type.hpp"
+#include "exception_macro.hpp"
 #include "i_object.hpp"
 #include "i_type_union.hpp"
-#include "exception_macro.hpp"
+#include "lock_type.hpp"
 #include "property_accessor_factory.hpp"
+#include "property_accessor_macro.hpp"
 
 using namespace vcc;
 // </vcc:dllInterfaceHeader>

@@ -12,6 +12,7 @@
 
 // <vcc:dllInterfaceHeader gen="FORCE">
 #include "property_accessor_macro.hpp"
+
 using namespace vcc;
 // </vcc:dllInterfaceHeader>
 

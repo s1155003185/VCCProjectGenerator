@@ -31,19 +31,18 @@ void VPGDllFileGenerationService::GenerateHpp(const LogProperty *logProperty, co
         }
 
         if (!customIncludeFiles.empty()) {
-            content += L"\r\n";
             for (auto const &file : customIncludeFiles)
                 content += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, file) + L"\r\n";
             content += L"\r\n"
                 "using namespace vcc;\r\n";
         }
-        WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathHpp), L"dllInterfaceHeader", content, L"//"), true);
+        WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathHpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
 
         // content
         content = L"";
         if (option->GetIsGeneratePropertyAccessor()) {
-            content += L"\r\n"
-                "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(bool, Bool)\r\n"
+            content +=
+                L"PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(bool, Bool)\r\n"
                 "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(char, Char)\r\n"
                 "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(wchar_t, Wchar)\r\n"
                 "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(int, Int8)\r\n"
@@ -61,7 +60,7 @@ void VPGDllFileGenerationService::GenerateHpp(const LogProperty *logProperty, co
                 "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_CONTAINER\r\n";
         }
 
-        WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathHpp), L"dllInterface", content, L"//"), true);
+        WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathHpp), L"vcc:dllInterface", content, L"//"), true);
         LogService::LogInfo(logProperty, LOG_ID, L"Modify DllFunctions.hpp file completed.");
     CATCH
 }
@@ -87,21 +86,20 @@ void VPGDllFileGenerationService::GenerateCpp(const LogProperty *logProperty, co
         }
 
         if (!customIncludeFiles.empty()) {
-            content += L"\r\n";
             for (auto const &file : customIncludeFiles)
                 content += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, file) + L"\r\n";
             content += L"\r\n"
                 "using namespace vcc;\r\n";
         }
-        WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathCpp), L"dllInterfaceHeader", content, L"//"), true);
+        WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathCpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
 
         // content
         content = L"";
         if (option->GetIsGeneratePropertyAccessor()) {
-            content += L"\r\n"
-                "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(bool, Bool, false)\r\n"
-                "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(char, Char, L'\0')\r\n"
-                "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(wchar_t, Wchar, L'\0')\r\n"
+            content +=
+                L"PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(bool, Bool, false)\r\n"
+                "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(char, Char, L'\\0')\r\n"
+                "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(wchar_t, Wchar, L'\\0')\r\n"
                 "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(int, Int8, 0)\r\n"
                 "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(int, Uint8, 0)\r\n"
                 "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(int, Short, 0)\r\n"
@@ -116,7 +114,7 @@ void VPGDllFileGenerationService::GenerateCpp(const LogProperty *logProperty, co
                 "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL_OBJECT\r\n"
                 "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL_CONTAINER\r\n";
         }
-        WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathCpp), L"dllInterface", content, L"//"), true);
+        WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathCpp), L"vcc:dllInterface", content, L"//"), true);
 
         LogService::LogInfo(logProperty, LOG_ID, L"Modify DllFunctions.cpp completed.");
     CATCH
