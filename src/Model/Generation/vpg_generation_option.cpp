@@ -154,8 +154,6 @@ std::shared_ptr<Json> VPGGenerationOption::ToJson() const
         for (auto const &element : _Plugins) {
             tmpPlugins->AddArrayString(element);
         }
-        // IsExportDllInterfaceWithProjectPrefix
-        json->AddBool(ConvertNamingStyle(L"IsExportDllInterfaceWithProjectPrefix", NamingStyle::PascalCase, namestyle), _IsExportDllInterfaceWithProjectPrefix);
         // Exports
         DECLARE_SPTR(Json, tmpExports);
         json->AddArray(ConvertNamingStyle(L"Exports", NamingStyle::PascalCase, namestyle), tmpExports);
@@ -270,9 +268,6 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
                 InsertPlugins(element->GetArrayElementString());
             }
         }
-        // IsExportDllInterfaceWithProjectPrefix
-        if (json->IsContainKey(ConvertNamingStyle(L"IsExportDllInterfaceWithProjectPrefix", namestyle, NamingStyle::PascalCase)))
-            _IsExportDllInterfaceWithProjectPrefix = json->GetBool(ConvertNamingStyle(L"IsExportDllInterfaceWithProjectPrefix", namestyle, NamingStyle::PascalCase));
         // Exports
         ClearExports();
         if (json->IsContainKey(ConvertNamingStyle(L"Exports", namestyle, NamingStyle::PascalCase))) {

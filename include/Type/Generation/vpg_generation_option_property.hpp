@@ -57,6 +57,5 @@ enum class VPGGenerationOptionProperty
     Plugins, // VECTOR(std::wstring, Plugins)
 
     // Export
-    IsExportDllInterfaceWithProjectPrefix, // GETSET(bool, IsExportDllInterfaceWithProjectPrefix, false)
     Exports // VECTOR_SPTR(VPGGenerationOptionExport, Exports)
 };

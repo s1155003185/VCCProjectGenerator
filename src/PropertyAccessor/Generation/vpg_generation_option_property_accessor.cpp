@@ -138,8 +138,6 @@ bool VPGGenerationOptionPropertyAccessor::_ReadBool(const int64_t &objectPropert
             return obj->GetIsExcludeUnittest();
         case VPGGenerationOptionProperty::IsExcludeVCCUnitTest:
             return obj->GetIsExcludeVCCUnitTest();
-        case VPGGenerationOptionProperty::IsExportDllInterfaceWithProjectPrefix:
-            return obj->GetIsExportDllInterfaceWithProjectPrefix();
         default:
             assert(false);
         }
@@ -171,9 +169,6 @@ void VPGGenerationOptionPropertyAccessor::_WriteBool(const int64_t &objectProper
             break;
         case VPGGenerationOptionProperty::IsExcludeVCCUnitTest:
             obj->SetIsExcludeVCCUnitTest(value);
-            break;
-        case VPGGenerationOptionProperty::IsExportDllInterfaceWithProjectPrefix:
-            obj->SetIsExportDllInterfaceWithProjectPrefix(value);
             break;
         default:
             assert(false);

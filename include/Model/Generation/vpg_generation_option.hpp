@@ -55,7 +55,6 @@ class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJ
     GETSET(std::wstring, PropertyAccessorFactoryDirectoryHpp, L"include/Factory")
     GETSET(std::wstring, PropertyAccessorFactoryDirectoryCpp, L"src/Factory")
     VECTOR(std::wstring, Plugins)
-    GETSET(bool, IsExportDllInterfaceWithProjectPrefix, false)
     VECTOR_SPTR(VPGGenerationOptionExport, Exports)
 
     public:
