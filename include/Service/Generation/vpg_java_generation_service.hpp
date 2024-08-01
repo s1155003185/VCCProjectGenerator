@@ -5,6 +5,8 @@
 
 #include "log_property.hpp"
 
+#include "vpg_generation_option.hpp"
+
 using namespace vcc;
 
 class VPGJavaGenerationService
@@ -14,5 +16,5 @@ class VPGJavaGenerationService
         ~VPGJavaGenerationService() {}
 
     public:
-        static void Generate(const LogProperty *logProperty, const std::wstring &javaFilePath);
+        static void GenerateJavaBridge(const LogProperty *logProperty, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option);
 };
