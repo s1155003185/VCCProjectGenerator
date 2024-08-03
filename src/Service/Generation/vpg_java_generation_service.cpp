@@ -76,30 +76,30 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
             if (IsStartWith(content, dllExport, pos)) {
                 pos += dllExport.length() - 1;
 
-            } else if (IsStartWith(content, dllInterfaceExportPropertyAccessor, pos)) {
-                // pos = Find(content, L"(", pos);
-                // size_t endPos = Find(content, L")", pos);
-                // pos = endPos;
             } else if (IsStartWith(content, dllInterfaceExportPropertyAccessorString, pos)) {
                 result += INDENT + L"void ReadString(PointerByReference ref, Integer property, PointerByReference value, Integer index);\r\n"
                     + INDENT + L"void ReadStringByKey(PointerByReference ref, Integer property, PointerByReference value, PointerByReference key);\r\n"
                     + INDENT + L"void WriteString(PointerByReference ref, Integer property, PointerByReference value, Integer index);\r\n"
                     + INDENT + L"void WriteStringByKey(PointerByReference ref, Integer property, PointerByReference value, PointerByReference key);\r\n";
-                //pos += dllInterfaceExportPropertyAccessorString.length() - 1;
+                pos += dllInterfaceExportPropertyAccessorString.length() - 1;
             } else if (IsStartWith(content, dllInterfaceExportPropertyAccessorObject, pos)) {
                 result += INDENT + L"PointerByReference ReadObject(PointerByReference ref, Integer property, Integer index);\r\n"
                     + INDENT + L"PointerByReference ReadObjectByKey(PointerByReference ref, Integer property, PointerByReference key);\r\n"
                     + INDENT + L"void WriteObject(PointerByReference ref, Integer property, PointerByReference value, Integer index);\r\n"
                     + INDENT + L"void WriteObjectByKey(PointerByReference ref, Integer property, PointerByReference value, PointerByReference key);\r\n";
-                //pos += dllInterfaceExportPropertyAccessorObject.length() - 1;
+                pos += dllInterfaceExportPropertyAccessorObject.length() - 1;
             } else if (IsStartWith(content, dllInterfaceExportPropertyAccessorContainer, pos)) {
                 result += INDENT + L"Integer GetContainerCount(PointerByReference ref, Integer property);\r\n"
                     + INDENT + L"Boolean IsContainKey(PointerByReference ref, Integer property, PointerByReference key);\r\n"
                     + INDENT + L"void RemoveContainerElement(PointerByReference ref, Integer property, Integer index);\r\n"
                     + INDENT + L"void RemoveContainerElementByKey(PointerByReference ref, Integer property, PointerByReference key);\r\n"
                     + INDENT + L"void ClearContainer(PointerByReference ref, Integer property);\r\n";
-                //pos += dllInterfaceExportPropertyAccessorContainer.length() - 1;
-            }
+                pos += dllInterfaceExportPropertyAccessorContainer.length() - 1;
+            } else if (IsStartWith(content, dllInterfaceExportPropertyAccessor, pos)) {
+                // pos = Find(content, L"(", pos);
+                // size_t endPos = Find(content, L")", pos);
+                // pos = endPos;
+            } 
             GetNextCharPos(content, pos, false);
         }
         result += L"}\r\n";
