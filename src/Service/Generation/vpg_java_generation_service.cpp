@@ -5,11 +5,60 @@
 #include "log_property.hpp"
 
 #include "vpg_generation_option.hpp"
+#include "vpg_generation_option_interface_type.hpp"
 
 using namespace vcc;
 
 #define LOG_ID L"Java Generation"
+#define JAVA_BRIDGE_FILE_NAME L"DllFunctions.java"
+#define JAVA_PROJECT_SOURCE_PARENT_FOLDER L"src/main/java"
 
+std::shared_ptr<VPGGenerationOptionExport> VPGJavaGenerationService::GetJavaOption(const VPGGenerationOption *option)
+{
+    std::shared_ptr<VPGGenerationOptionExport> result = nullptr;
+    TRY
+        for (auto element : option->GetExports()) {
+            if (element->GetInterface() == VPGGenerationOptionInterfaceType::Java) {
+                result = element;
+                break;
+            }
+        }
+    CATCH
+    return result;
+}
+
+std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstring &content, const VPGGenerationOption *option)
+{
+    std::wstring result = L"";
+    TRY
+        std::shared_ptr<VPGGenerationOptionExport> javaOption = VPGJavaGenerationService::GetJavaOption(option);
+        if (javaOption == nullptr || IsBlank(javaOption->GetWorkspace()) || IsBlank(javaOption->GetDllBridgeDirectory()))
+            return result;
+
+        std::wstring filePrefix = option->GetProjectPrefix();
+        Trim(filePrefix);
+        ToUpper(filePrefix);
+
+        if (!IsStartWith(javaOption->GetDllBridgeDirectory(), JAVA_PROJECT_SOURCE_PARENT_FOLDER))
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Dll Bridge Directory is not start with " + JAVA_PROJECT_SOURCE_PARENT_FOLDER);
+
+        std::wstring packageFolder = GetRelativePath(javaOption->GetDllBridgeDirectory(), JAVA_PROJECT_SOURCE_PARENT_FOLDER);
+        packageFolder = GetLinuxPath(packageFolder);
+        ReplaceAll(packageFolder, L"/", L".");
+        result += L"package " + packageFolder + L"\r\n"
+            "\r\n"
+            "import com.sun.jna.Library;\r\n"
+            "import com.sun.jna.Native;\r\n"
+            "import com.sun.jna.ptr.PointerByReference;\r\n"
+            "\r\n"
+            "interface " + filePrefix + L"DllFunctions extends Library {\r\n"
+            + INDENT + filePrefix + L"DllFunctions INSTANCE = (" + filePrefix + L"DllFunctions)Native.load(\"vpg\", " + filePrefix + L"DllFunctions.class);\r\n"
+            "\r\n";
+
+        result += L"}\r\n";
+    CATCH
+    return result;
+}
 
 void VPGJavaGenerationService::GenerateJavaBridge(const LogProperty *logProperty, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option)
 {
@@ -17,48 +66,18 @@ void VPGJavaGenerationService::GenerateJavaBridge(const LogProperty *logProperty
         assert(option != nullptr);
         if (!IsFileExists(dllInterfacehppFilePath))
             return;
+
+        std::shared_ptr<VPGGenerationOptionExport> javaOption = VPGJavaGenerationService::GetJavaOption(option);
+        if (javaOption == nullptr || IsBlank(javaOption->GetWorkspace()) || IsBlank(javaOption->GetDllBridgeDirectory()))
+            return;
         
-        //LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Bridge: " + filePathHpp);
-
-        // // header
-        // std::wstring content = L"";
-        // std::set<std::wstring> customIncludeFiles;
-        // if (option->GetIsGeneratePropertyAccessor()) {
-        //     customIncludeFiles.insert(L"property_accessor_macro.hpp");
-        // }
-
-        // if (!customIncludeFiles.empty()) {
-        //     for (auto const &file : customIncludeFiles)
-        //         content += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, file) + L"\r\n";
-        //     content += L"\r\n"
-        //         "using namespace vcc;\r\n";
-        // }
-        // WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathHpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
-
-        // // content
-        // content = L"";
-        // if (option->GetIsGeneratePropertyAccessor()) {
-        //     content +=
-        //         L"PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(bool, Bool)\r\n"
-        //         "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(char, Char)\r\n"
-        //         "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(wchar_t, Wchar)\r\n"
-        //         "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(int, Int8)\r\n"
-        //         "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(int, Uint8)\r\n"
-        //         "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(int, Short)\r\n"
-        //         "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(int, UnsignedShort)\r\n"
-        //         "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(long, Int)\r\n"
-        //         "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(long, UnsignedInt)\r\n"
-        //         "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(long, Long)\r\n"
-        //         "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(long, UnsignedLong)\r\n"
-        //         "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(float, Float)\r\n"
-        //         "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(double, Double)\r\n"
-        //         "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_STRING\r\n"
-        //         "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_OBJECT\r\n"
-        //         "PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_CONTAINER\r\n";
-        // }
-
-        // WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathHpp), L"vcc:dllInterface", content, L"//"), true);
+        std::wstring filePrefix = option->GetProjectPrefix();
+        Trim(filePrefix);
+        ToUpper(filePrefix);
+        std::wstring javaFileName = filePrefix + JAVA_BRIDGE_FILE_NAME;
+        std::wstring filePath = ConcatPaths({ javaOption->GetWorkspace(), javaOption->GetDllBridgeDirectory(), javaFileName });
+        LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Bridge: " + filePath);
+        WriteFile(filePath, VPGJavaGenerationService::GenerateJavaBridgeContent(ReadFile(dllInterfacehppFilePath), option), true);
         LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Bridge completed.");
-
     CATCH
 }

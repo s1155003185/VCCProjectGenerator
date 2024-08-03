@@ -14,6 +14,7 @@ class VPGJavaGenerationServiceTest : public testing::Test
 {
     GETSET_SPTR(LogProperty, LogProperty);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGJavaGenerationServiceTest/");
+    GETSET_SPTR_NULL(VPGGenerationOptionExport, JavaOption);
     
     GETSET_SPTR_NULL(VPGGenerationOption, Option);
     public:
@@ -23,6 +24,15 @@ class VPGJavaGenerationServiceTest : public testing::Test
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
             _Option = std::make_shared<VPGGenerationOption>();
+            _Option->SetProjectPrefix(L"VPG");
+
+            _JavaOption = std::make_shared<VPGGenerationOptionExport>();
+            _Option->InsertExports(_JavaOption);
+            _JavaOption->SetInterface(VPGGenerationOptionInterfaceType::Java);
+            _JavaOption->SetWorkspace(_Workspace);
+            _JavaOption->SetDllBridgeDirectory(L"src/main/java/com/vcc/test/");
+            _JavaOption->SetTypeDirectory(L"src/main/java/com/vcc/type");
+            _JavaOption->SetObjectDirectory(L"src/main/java/com/vcc/Module");
         }
 
         void TearDown() override
@@ -96,9 +106,10 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "}\r\n"
         "\r\n"
         "#endif\r\n", true);
+
     VPGJavaGenerationService::GenerateJavaBridge(this->GetLogProperty().get(), ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}), this->GetOption().get());
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"VPGDllFunctions.java"})));
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"VPGDllFunctions.java"})),
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetDllBridgeDirectory(), L"VPGDllFunctions.java"})));
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetDllBridgeDirectory(), L"VPGDllFunctions.java"})),
         L"package com.vcc.test;\r\n"
         "\r\n"
         "import com.sun.jna.Library;\r\n"

@@ -73,6 +73,8 @@ std::wstring VPGGenerationOptionExportPropertyAccessor::_ReadString(const int64_
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
         {
+        case VPGGenerationOptionExportProperty::Workspace:
+            return obj->GetWorkspace();
         case VPGGenerationOptionExportProperty::DllBridgeDirectory:
             return obj->GetDllBridgeDirectory();
         case VPGGenerationOptionExportProperty::ObjectDirectory:
@@ -102,6 +104,9 @@ void VPGGenerationOptionExportPropertyAccessor::_WriteString(const int64_t &obje
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
         {
+        case VPGGenerationOptionExportProperty::Workspace:
+            obj->SetWorkspace(value);
+            break;
         case VPGGenerationOptionExportProperty::DllBridgeDirectory:
             obj->SetDllBridgeDirectory(value);
             break;

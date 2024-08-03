@@ -15,6 +15,9 @@ class VPGJavaGenerationService
         VPGJavaGenerationService() = default;
         ~VPGJavaGenerationService() {}
 
+        static std::shared_ptr<VPGGenerationOptionExport> GetJavaOption(const VPGGenerationOption *option);
+        static std::wstring GenerateJavaBridgeContent(const std::wstring &content, const VPGGenerationOption *option);
+
     public:
         static void GenerateJavaBridge(const LogProperty *logProperty, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option);
 };
