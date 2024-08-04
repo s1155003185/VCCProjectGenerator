@@ -24,6 +24,12 @@ int main(int argc, char **argv)
 			std::wstring arg = str2wstr(argv[i]);
 			argList.push_back(arg);
 		}
+
+		// debug use
+		// argList.clear();
+		// argList.push_back(L"vpg");
+		// argList.push_back(L"-Generate");
+
 		VPGProcessManager process(logProperty);
 		process.Execute(argList);
 	} catch (std::exception &ex) {

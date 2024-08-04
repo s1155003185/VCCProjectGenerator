@@ -29,6 +29,16 @@ int GetVersion(wchar_t **str)
     return 0;
 }
 
+#include "object_factory.hpp"
+#include "object_type.hpp"
+std::shared_ptr<IObject> obj = nullptr;
+void *CreateObject(int64_t objectType)
+{
+    ObjectType tmpObjectType = static_cast<ObjectType>(objectType);
+    obj = ObjectFactory::Create(tmpObjectType);
+    return obj.get();
+}
+
 // <vcc:dllInterface gen="FORCE">
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(bool, Bool, false)
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(char, Char, L'\0')

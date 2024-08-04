@@ -51,6 +51,7 @@ namespace vcc
 	std::wstring GetSystemFolderPath(SystemFolderType fileType);
 
     // helper
+	std::wstring GetParentPath(const std::wstring &filePath);
 	std::wstring GetFileName(const std::wstring &filePath);
     std::wstring ConcatPaths(const std::vector<std::wstring>& paths);
 	std::wstring GetRelativePath(const std::wstring &absolutePath, const std::wstring &basePath);

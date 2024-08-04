@@ -37,6 +37,10 @@ namespace vcc
 	void ToUpper(std::wstring &str);
 	void ToCapital(std::wstring &str);
 
+	bool IsLower(const std::wstring &str);
+	bool IsUpper(const std::wstring &str);
+	bool IsCaptial(const std::wstring &str);
+
 	std::wstring ToString(double value, size_t decimalPlaces);
 
 	bool IsEmpty(const std::wstring &str);

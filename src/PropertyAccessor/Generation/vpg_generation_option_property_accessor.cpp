@@ -24,7 +24,7 @@ long VPGGenerationOptionExportPropertyAccessor::_ReadLong(const int64_t &objectP
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
         {
-        case VPGGenerationOptionExportProperty::InterfaceType:
+        case VPGGenerationOptionExportProperty::Interface:
             return static_cast<long>(obj->GetInterface());
         default:
             assert(false);
@@ -49,7 +49,7 @@ void VPGGenerationOptionExportPropertyAccessor::_WriteLong(const int64_t &object
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
         {
-        case VPGGenerationOptionExportProperty::InterfaceType:
+        case VPGGenerationOptionExportProperty::Interface:
             obj->SetInterface(static_cast<VPGGenerationOptionInterfaceType>(value));
             break;
         default:

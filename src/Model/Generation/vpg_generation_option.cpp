@@ -278,7 +278,7 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
         if (json->IsContainKey(ConvertNamingStyle(L"Exports", namestyle, NamingStyle::PascalCase))) {
             for (auto const &element : json->GetArray(ConvertNamingStyle(L"Exports", namestyle, NamingStyle::PascalCase))) {
                 DECLARE_SPTR(VPGGenerationOptionExport, tmpExports);
-                tmpExports->DeserializeJson(element);
+                tmpExports->DeserializeJson(element->GetArrayElementObject());
                 InsertExports(tmpExports);
             }
         }

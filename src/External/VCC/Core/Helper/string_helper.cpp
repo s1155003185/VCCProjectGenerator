@@ -57,6 +57,44 @@ namespace vcc
 		CATCH
 	}
 
+	bool IsLower(const std::wstring &str)
+	{
+		TRY
+			if (str.empty())
+				return false;
+			for (wchar_t c : str) {
+				if (!std::iswlower(c))
+					return false;
+			}
+			return true;
+		CATCH
+		return false;
+	}
+
+	bool IsUpper(const std::wstring &str)
+	{
+		TRY
+			if (str.empty())
+				return false;
+			for (wchar_t c : str) {
+				if (!std::iswupper(c))
+					return false;
+			}
+			return true;
+		CATCH
+		return false;
+	}
+
+	bool IsCaptial(const std::wstring &str)
+	{
+		TRY
+			if (str.empty())
+				return false;
+			return std::iswupper(str[0]);
+		CATCH
+		return false;
+	}
+
 	std::wstring ToString(double value, size_t decimalPlaces)
 	{
 		TRY

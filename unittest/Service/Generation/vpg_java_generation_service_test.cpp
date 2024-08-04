@@ -6,6 +6,7 @@
 #include "class_macro.hpp"
 #include "file_helper.hpp"
 
+#include "vpg_file_generation_manager.hpp"
 #include "vpg_java_generation_service.hpp"
 
 using namespace vcc;
@@ -17,14 +18,23 @@ class VPGJavaGenerationServiceTest : public testing::Test
     GETSET_SPTR_NULL(VPGGenerationOptionExport, JavaOption);
     
     GETSET_SPTR_NULL(VPGGenerationOption, Option);
+    
+    MANAGER(VPGEnumClassReader, Reader);
+
     public:
         void SetUp() override
         {
             this->_LogProperty->SetIsConsoleLog(false);
+
+            DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr, L"");
+            manager->GetClassMacroList(L"");
+            _Reader->InsertClassMacroList(manager->GetClassMacros());
+
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
             _Option = std::make_shared<VPGGenerationOption>();
             _Option->SetProjectPrefix(L"VPG");
+            _Option->SetTypeWorkspace(_Workspace);
 
             _JavaOption = std::make_shared<VPGGenerationOptionExport>();
             _Option->InsertExports(_JavaOption);
@@ -32,7 +42,7 @@ class VPGJavaGenerationServiceTest : public testing::Test
             _JavaOption->SetWorkspace(_Workspace);
             _JavaOption->SetDllBridgeDirectory(L"src/main/java/com/vcc/test/");
             _JavaOption->SetTypeDirectory(L"src/main/java/com/vcc/type");
-            _JavaOption->SetObjectDirectory(L"src/main/java/com/vcc/Module");
+            _JavaOption->SetObjectDirectory(L"src/main/java/com/vcc/module");
         }
 
         void TearDown() override
@@ -107,8 +117,13 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "import com.sun.jna.Native;\r\n"
         "import com.sun.jna.ptr.PointerByReference;\r\n"
         "\r\n"
-        "interface VPGDllFunctions extends Library {\r\n"
-        "    VPGDllFunctions INSTANCE = (VPGDllFunctions)Native.load(\"vpg\", VPGDllFunctions.class);\r\n"
+        "public interface VPGDllFunctions extends Library {\r\n"
+        "    VPGDllFunctions Instance = loadLibrary();\r\n"
+        "\r\n"
+        "    static private VPGDllFunctions loadLibrary() {\r\n"
+        "        String prefix = System.getProperty(\"os.name\").startsWith(\"Windows\") ? \"lib\" : \"\";\r\n"
+        "        return (VPGDllFunctions)Native.load(prefix + \"vpg\", VPGDllFunctions.class);\r\n"
+        "    }\r\n"
         "\r\n"
         "    Integer GetVersion(PointerByReference str);\r\n"
         "    PointerByReference CreateObject(Integer property);\r\n"
@@ -133,4 +148,138 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "}\r\n"
         );
 
+}
+
+TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
+{
+    std::wstring enumClass1 =
+        L"#param once\r\n"
+        "enum class VPGTypeA {\r\n"
+        "   EnumA,\r\n"
+        "   EnumB,\r\n"
+        "   EnumC\r\n"
+        "};\r\n";
+
+    std::wstring enumClass2 =
+        L"#param once\r\n"
+        "enum class VPGTypeBProperty {\r\n"
+        "   EnumA = 0, // GETSET(std::wstring, EnumA, L"")\r\n"
+        "   EnumB, // GETSET(int64_t, EnumB, 1)\r\n"
+        "   EnumC = 999 // VECTOR(double, EnumC)\r\n"
+        "};\r\n";
+
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList1;
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList2;
+    this->GetReader()->Parse(enumClass1, enumClassList1);
+    this->GetReader()->Parse(enumClass2, enumClassList2);
+
+    std::wstring filePath1 = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeA.java"});
+    std::wstring filePath2 = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeBProperty.java"});
+    
+    VPGJavaGenerationService::GenerateEnum(this->GetLogProperty().get(), filePath1, L"", enumClassList1.at(0).get(), this->GetOption().get(), this->GetJavaOption().get());
+    VPGJavaGenerationService::GenerateEnum(this->GetLogProperty().get(), filePath2, L"", enumClassList2.at(0).get(), this->GetOption().get(), this->GetJavaOption().get());
+    
+    EXPECT_TRUE(IsFileExists(filePath1));
+    EXPECT_EQ(ReadFile(filePath1),
+        L"package com.vcc.type;\r\n"
+        "\r\n"
+        "public enum VPGTypeA {\r\n"
+        "    EnumA(0),\r\n"
+        "    EnumB(1),\r\n"
+        "    EnumC(2);\r\n"
+        "\r\n"
+        "    public final Integer value;\r\n"
+        "\r\n"
+        "    VPGTypeA(Integer value) {\r\n"
+        "        this.value = value;\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public Integer getValue() {\r\n"
+        "        return value;\r\n"
+        "    }\r\n"
+        "}\r\n");
+
+    EXPECT_TRUE(IsFileExists(filePath2));
+    EXPECT_EQ(ReadFile(filePath2),
+        L"package com.vcc.type;\r\n"
+        "\r\n"
+        "public enum VPGTypeBProperty {\r\n"
+        "    EnumA(0),\r\n"
+        "    EnumB(1),\r\n"
+        "    EnumC(999);\r\n"
+        "\r\n"
+        "    public final Integer value;\r\n"
+        "\r\n"
+        "    VPGTypeBProperty(Integer value) {\r\n"
+        "        this.value = value;\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public Integer getValue() {\r\n"
+        "        return value;\r\n"
+        "    }\r\n"
+        "}\r\n");
+}
+
+TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
+{   
+    std::wstring enumClass =
+        L"#param once\r\n"
+        "enum class VPGTypeBProperty {\r\n"
+        "   EnumA = 0, // GETSET(std::wstring, EnumA, L"")\r\n"
+        "   EnumB, // GETSET(int64_t, EnumB, 1)\r\n"
+        "   EnumC = 999 // VECTOR(double, EnumC)\r\n"
+        "};\r\n";
+
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    this->GetReader()->Parse(enumClass, enumClassList);
+
+    std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMap;
+    std::wstring filePath = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"});
+    VPGJavaGenerationService::GenerateObject(this->GetLogProperty().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMap, this->GetOption().get(), this->GetJavaOption().get());
+    
+    EXPECT_TRUE(IsFileExists(filePath));
+    EXPECT_EQ(ReadFile(filePath),
+        L"package com.vcc.module;\r\n"
+        "\r\n"
+        "import com.sun.jna.Memory;\r\n"
+        "import com.sun.jna.Native;\r\n"
+        "import com.sun.jna.Pointer;\r\n"
+        "import com.sun.jna.ptr.PointerByReference;\r\n"
+        "import com.vcc.test.VPGDllFunctions;\r\n"
+        "import com.vcc.type.VPGTypeBProperty;\r\n"
+        "\r\n"
+        "public class VPGTypeB {\r\n"
+        "    public PointerByReference Reference = null;\r\n"
+        "\r\n"
+        "    public VPGTypeB(PointerByReference reference) {\r\n"
+        "        this.Reference = reference;\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public String getEnumA() {\r\n"
+        "        PointerByReference result = new PointerByReference();\r\n"
+        "        VPGDllFunctions.Instance.ReadString(Reference, VPGTypeBProperty.EnumA.getValue(), result, -1);\r\n"
+        "        return result.getValue().getWideString(0);\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    @SuppressWarnings(\"unchecked\")\r\n"
+        "    public void setEnumA(String value) {\r\n"
+        "        try {\r\n"
+        "            Pointer ptr = new Memory(Native.WCHAR_SIZE * (value.length() + 1));\r\n"
+        "            ptr.setWideString(0, value);\r\n"
+        "            PointerByReference cppString = new PointerByReference();\r\n"
+        "            cppString.setValue(ptr);\r\n"
+        "            VPGDllFunctions.Instance.WriteString(Reference, VPGGenerationOptionProperty.Version.getValue(), cppString, -1);\r\n"
+        "        } catch (Exception e) {\r\n"
+        "        }\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public Integer getEnumB() {\r\n"
+        "        \r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public void setEnumB(Integer value) {\r\n"
+        "        \r\n"
+        "    }\r\n"
+        "\r\n"
+        "}\r\n");
 }

@@ -12,6 +12,7 @@ using namespace vcc;
 class VPGEnumClassReader
 {
     SET(std::wstring, ClassMacroList);
+    GETSET(int64_t, EnumValue, -1);
     private:
         std::wstring _GetErrorMessage(const std::wstring &str, const size_t &pos, const std::wstring &msg) const;
 

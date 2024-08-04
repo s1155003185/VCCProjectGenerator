@@ -8,7 +8,7 @@
 using namespace vcc;
 
 #define LOG_ID L"Property Accessor Generation"
-const std::wstring proeprtyClassNameSuffix = L"Property";
+const std::wstring propertyClassNameSuffix = L"Property";
 const std::wstring containerToken = L"<Container>";
 const std::wstring objectToken = L"<Object>";
 const std::wstring enumToken = L"<Enum>";
@@ -19,7 +19,7 @@ const std::wstring generalTypeContentFooter = INDENT + INDENT + L"default:\r\n"
 
 std::wstring GetClassNameFromClassPropertyName(const std::wstring &classPropertyName)
 {
-    return classPropertyName.substr(0, classPropertyName.size() - proeprtyClassNameSuffix.size());
+    return classPropertyName.substr(0, classPropertyName.size() - propertyClassNameSuffix.size());
 }
 
 std::wstring GetGeneralTypeIndexContentHeader(const std::wstring &classPropertyName)
@@ -789,7 +789,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogProperty *logPro
         // type macro
         for (auto const &enumClass : enumClassList) {
             // include orginal class and enum class
-            std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().size() - proeprtyClassNameSuffix.size());
+            std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().size() - propertyClassNameSuffix.size());
 
             // include object class
             std::wstring includePath = VPGPropertyAccessorGenerationService::GetIncludeFile(projectClassIncludeFiles, className);

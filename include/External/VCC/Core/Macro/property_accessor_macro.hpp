@@ -230,8 +230,6 @@ namespace vcc
                 IObject *object = static_cast<IObject *>(ref); \
                 std::shared_ptr<IObject> ptr(object, [](IObject*){}); \
                 PropertyAccessorFactory::Create(ptr)->WriteString(LockType::WriteLock, property, *value, index); \
-                free(*value); \
-                *value = nullptr; \
             } \
         CATCH \
     } \

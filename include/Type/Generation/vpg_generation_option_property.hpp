@@ -3,7 +3,7 @@
 // @@json
 enum class VPGGenerationOptionExportProperty
 {
-    InterfaceType, // GETSET(VPGGenerationOptionInterfaceType, Interface, VPGGenerationOptionInterfaceType::Java)
+    Interface, // GETSET(VPGGenerationOptionInterfaceType, Interface, VPGGenerationOptionInterfaceType::Java)
     Workspace, // GETSET(std::wstring, Workspace, L"")
 
     // Bridge Location

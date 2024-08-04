@@ -34,6 +34,15 @@ namespace vcc
         #endif
     }
 
+    std::wstring GetParentPath(const std::wstring &filePath)
+    {
+        std::wstring parentPath = L"";
+        TRY
+            parentPath = PATH(filePath).parent_path().wstring();
+        CATCH
+        return parentPath;
+    }
+
     std::wstring GetFileName(const std::wstring &filePath)
     {
         std::wstring fileName = L"";

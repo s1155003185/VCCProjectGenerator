@@ -17,7 +17,7 @@
 using namespace vcc;
 
 #define LOG_ID L"Object File Generation"
-const std::wstring proeprtyClassNameSuffix = L"Property";
+const std::wstring propertyClassNameSuffix = L"Property";
 
 std::shared_ptr<Json> VPGObjectFileGenerationService::GetJsonAttributes(const std::wstring &command, const std::wstring &attributeName)
 {
@@ -226,7 +226,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogProperty *logProperty,
         projectFileList.insert(L"object_type.hpp");
         // generate external class
         for (auto const &enumClass : enumClassList) {            
-            std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - proeprtyClassNameSuffix.length());
+            std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - propertyClassNameSuffix.length());
             classInCurrentFileList.insert(className);
             // Json
             bool isJsonObject = VPGObjectFileGenerationService::IsJsonObject(enumClass.get());
@@ -331,7 +331,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogProperty *logProperty,
 
             content += L"\r\n";
             
-            std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - proeprtyClassNameSuffix.length());
+            std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - propertyClassNameSuffix.length());
             content += L"class " + className + L" : public BaseObject<" + className + L">" + inheritClass + L"\r\n";
             content += L"{\r\n";
             // generate properties
@@ -457,7 +457,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogProperty *logProperty,
             if (!VPGObjectFileGenerationService::IsJsonObject(enumClass.get()))
                 continue;
 
-            std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - proeprtyClassNameSuffix.length());
+            std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - propertyClassNameSuffix.length());
             
             std::wstring toJsonVarable = L"";
             std::wstring deserializeVariable = L"";
@@ -508,7 +508,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogProperty *logProperty,
                         toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->AddArrayObject(element->ToJson());\r\n";
 
                         deserializeStr += INDENT + INDENT + INDENT + INDENT + L"DECLARE_SPTR(" + originalType + L", tmp" + propertyName + L");\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->DeserializeJson(element);\r\n"
+                            + INDENT + INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->DeserializeJson(element->GetArrayElementObject());\r\n"
                             + INDENT + INDENT + INDENT + INDENT + L"Insert" + propertyName + L"(tmp" + propertyName + L");\r\n";
                     } else {
                         std::vector<std::wstring> jsonStrings = GetObjectToJson(enumClassMapping, L"tmp" + propertyName, originalMacro, originalType, L"element", true, false);

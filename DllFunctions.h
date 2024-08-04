@@ -21,6 +21,8 @@ extern "C"
 
 DLLEXPORT int GetVersion(wchar_t **str);
 
+DLLEXPORT void *CreateObject(int64_t objectType);
+
 // <vcc:dllInterface gen="FORCE">
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(bool, Bool)
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(char, Char)

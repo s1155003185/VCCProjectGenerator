@@ -13,11 +13,11 @@ Sample Program: To get sample, can download this project from github, then
     4. file will be generated to TestFolder mensioned in vpg_vcc_generation_manager_test.cpp
 
 ## What's new
-Generate Dll Interface for Property Accessor
+Generate Java Enum according to C++ Enum Class under Type Workspace
 Note: vcc.json description is outdated, will update after generate java bridge
 
 ## What's next
-Java bridge
+Generate Java Class according to C++ Enum Class under Type Workspace
 
 ## Features
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
@@ -696,6 +696,9 @@ X(Twitter) @VCCProject
 
 ****
 ## Release Log
+
+### [v0.1.4] - 2024-08-25: Java Bridge: Generation - Java Bridege for Enum
+- Generate Java Enum according to C++ Enum Class under Type Workspace.
 
 ### [v0.1.3] - 2024-07-28: Generation - Dll Interface for Property Accessor
 - Remove support of std::string, all change to use std::wstring
