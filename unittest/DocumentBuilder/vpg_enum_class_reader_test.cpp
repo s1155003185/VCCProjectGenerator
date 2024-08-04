@@ -122,6 +122,38 @@ TEST_F(VPGEnumClassReaderTest, TableCommand)
     EXPECT_EQ(element->GetCommand(), L"table command 1\r\ntable command 2");
 }
 
+TEST_F(VPGEnumClassReaderTest, NormalEnumClass)
+{
+    std::wstring code = L""
+        L"#pragma once\r\n"
+        L"\r\n"
+        L"enum class VCCObjectProperty\r\n"
+        L"{\r\n"
+        L"    EnumA = 0,\r\n"
+        L"    EnumB,\r\n"
+        L"    EnumC = 999,\r\n"
+        L"    EnumD = 1000\r\n"
+        L"};\r\n"
+        L"\r\n";
+
+    std::vector<std::shared_ptr<VPGEnumClass>> results;
+    this->GetReader()->Parse(code, results);
+    EXPECT_EQ(results.size(), (size_t)1);
+
+    std::shared_ptr<VPGEnumClass> element = results.at(0);
+    EXPECT_EQ(element->GetName(), L"VCCObjectProperty");
+    EXPECT_EQ(element->GetCommand(), L"");
+    EXPECT_EQ(element->GetProperties().size(), 4UL);
+    EXPECT_EQ(element->GetProperties().at(0)->GetEnum(), L"EnumA");
+    EXPECT_EQ(element->GetProperties().at(0)->GetEnumValue(), 0);
+    EXPECT_EQ(element->GetProperties().at(1)->GetEnum(), L"EnumB");
+    EXPECT_EQ(element->GetProperties().at(1)->GetEnumValue(), 1);
+    EXPECT_EQ(element->GetProperties().at(2)->GetEnum(), L"EnumC");
+    EXPECT_EQ(element->GetProperties().at(2)->GetEnumValue(), 999);
+    EXPECT_EQ(element->GetProperties().at(3)->GetEnum(), L"EnumD");
+    EXPECT_EQ(element->GetProperties().at(3)->GetEnumValue(), 1000);
+}
+
 TEST_F(VPGEnumClassReaderTest, Normal)
 {
     std::wstring code = L""
