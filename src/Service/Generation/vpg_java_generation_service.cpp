@@ -255,20 +255,30 @@ void VPGJavaGenerationService::GenerateJavaBridge(const LogProperty *logProperty
 
 std::wstring VPGJavaGenerationService::GenerateEnumContent()
 {
+    TRY
+    CATCH
     return L"";
 }
 
-void VPGJavaGenerationService::GenerateEnum(const LogProperty *logProperty, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option)
+void VPGJavaGenerationService::GenerateEnum(const LogProperty *logProperty, const VPGGenerationOption *option)
 {
-
+    // need to use enum class name as file name
+    // java project only allow one class in one file with the name same as file
+    TRY
+    CATCH
 }
 
 std::wstring VPGJavaGenerationService::GenerateObjectContent()
 {
+    TRY
+    CATCH
     return L"";
 }
 
 void VPGJavaGenerationService::GenerateObject(const LogProperty *logProperty, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option)
 {
-
+    // need to use class name as file name
+    // java project only allow one class in one file with the name same as file
+    TRY
+    CATCH
 }

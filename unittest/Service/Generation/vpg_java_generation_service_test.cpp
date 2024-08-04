@@ -25,6 +25,7 @@ class VPGJavaGenerationServiceTest : public testing::Test
 
             _Option = std::make_shared<VPGGenerationOption>();
             _Option->SetProjectPrefix(L"VPG");
+            _Option->SetTypeWorkspace(_Workspace);
 
             _JavaOption = std::make_shared<VPGGenerationOptionExport>();
             _Option->InsertExports(_JavaOption);
@@ -137,9 +138,60 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
 
 TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
 {
+    WriteFile(ConcatPaths({this->GetWorkspace(), L"vpg_type.h"}),
+        L"#param once\r\n"
+        "enum class VPGTypeA {\r\n"
+        "   EnumA,\r\n"
+        "   EnumB,\r\n"
+        "   EnumC\r\n"
+        "};\r\n"
+        "\r\n"
+        "enum class VPGTypeB {\r\n"
+        "   EnumA = 0,\r\n"
+        "   EnumB,\r\n"
+        "   EnumC = 999\r\n"
+        "};\r\n", true);
 
+    VPGJavaGenerationService::GenerateEnum(this->GetLogProperty().get(), this->GetOption().get());
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeA.java"})));
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeA.java"})),
+        L"package com.vcc.type;\r\n"
+        "\r\n"
+        "public enum VPGTypeA {\r\n"
+        "    EnumA(0),\r\n"
+        "    EnumB(1),\r\n"
+        "    EnumC(2);\r\n"
+        "\r\n"
+        "    public final Integer value;\r\n"
+        "\r\n"
+        "    VPGTypeA(Integer value) {\r\n"
+        "        this.value = value;\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public int getValue() {\r\n"
+        "        return value;\r\n"
+        "    }\r\n"
+        "}\r\n");
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeB.java"})));
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeB.java"})),
+        L"package com.vcc.type;\r\n"
+        "\r\n"
+        "public enum VPGTypeB {\r\n"
+        "    EnumA(0),\r\n"
+        "    EnumB(1),\r\n"
+        "    EnumC(999);\r\n"
+        "\r\n"
+        "    public final Integer value;\r\n"
+        "\r\n"
+        "    VPGTypeB(Integer value) {\r\n"
+        "        this.value = value;\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public int getValue() {\r\n"
+        "        return value;\r\n"
+        "    }\r\n"
+        "}\r\n");
 }
-
 
 TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
 {
