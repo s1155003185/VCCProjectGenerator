@@ -16,6 +16,7 @@ class VPGJavaGenerationService
         ~VPGJavaGenerationService() {}
 
         static std::shared_ptr<VPGGenerationOptionExport> GetJavaOption(const VPGGenerationOption *option);
+        static std::wstring GetCppToJavaConvertedType(const std::wstring &cppType);
         static std::wstring GenerateJavaBridgeContent(const std::wstring &content, const VPGGenerationOption *option);
 
     public:

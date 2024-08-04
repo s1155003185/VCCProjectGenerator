@@ -34,6 +34,39 @@ std::shared_ptr<VPGGenerationOptionExport> VPGJavaGenerationService::GetJavaOpti
     return result;
 }
 
+std::wstring VPGJavaGenerationService::GetCppToJavaConvertedType(const std::wstring &cppType)
+{
+    TRY
+        if (cppType == L"bool") {
+            return L"Boolean";
+        } else if (cppType == L"char"
+            || cppType == L"byte") {
+            return L"Byte";
+        } else if (cppType == L"wchar_t") {
+            return L"Char";
+        } else if (IsContain(cppType, L"int")
+            || IsContain(cppType, L"short")
+            || IsContain(cppType, L"long")
+            || cppType == L"size_t"
+            || cppType == L"time_t") {
+            return L"Integer";
+        } else if (cppType == L"float") {
+            return L"Float";
+        } else if (cppType == L"double") {
+            return L"Double";
+        } else if (cppType == L"std::string"
+            || cppType == L"std::wstring") {
+            return L"PointerByReference";
+        } else if (cppType == L"void*" || cppType == L"void *") {
+            return L"PointerByReference";
+        } else if (cppType == L"void") {
+            return L"void";
+        } else
+            THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Unknown type: " + cppType);
+    CATCH
+    return L"";
+}
+
 std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstring &content, const VPGGenerationOption *option)
 {
     std::wstring result = L"";
@@ -68,11 +101,10 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
 
         size_t pos = Find(content, dllExportStart);
         if (pos == std::wstring::npos)
-            THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"DllFunctions.h is missing 'extern \"C\"'");
+            THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"DllFunctions.h missing 'extern \"C\"'");
 
         pos += dllExportStart.size() - 1;
         while (pos < content.length()) {
-            std::wstring subStr = content.substr(pos);
             if (IsStartWith(content, dllExport, pos)) {
                 pos += dllExport.length() - 1;
 
@@ -96,9 +128,29 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                     + INDENT + L"void ClearContainer(PointerByReference ref, Integer property);\r\n";
                 pos += dllInterfaceExportPropertyAccessorContainer.length() - 1;
             } else if (IsStartWith(content, dllInterfaceExportPropertyAccessor, pos)) {
-                // pos = Find(content, L"(", pos);
-                // size_t endPos = Find(content, L")", pos);
-                // pos = endPos;
+                pos = Find(content, L"(", pos);
+                if (pos == std::wstring::npos)
+                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"DllFunctions.h macro " + dllInterfaceExportPropertyAccessor + L" missing (");
+                pos++;
+                size_t endPos = Find(content, L")", pos);
+                if (endPos == std::wstring::npos)
+                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"DllFunctions.h macro " + dllInterfaceExportPropertyAccessor + L" missing )");
+
+                std::wstring subStr = content.substr(pos, endPos - pos);
+                Trim(subStr);
+                std::vector<std::wstring> tokens = SplitString(subStr, {L","});
+                if (tokens.size() != 2)
+                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"DllFunctions.h macro " + dllInterfaceExportPropertyAccessor + L" missing does not have 2 arguments");
+                std::wstring type = tokens[0];
+                Trim(type);
+                std::wstring name = tokens[1];
+                Trim(name);
+                std::wstring convectedType = GetCppToJavaConvertedType(type);
+                result += INDENT + convectedType + L" Read" + name + L"(PointerByReference ref, Integer property, Integer index);\r\n"
+                    + INDENT + convectedType + L" Read" + name + L"ByKey(PointerByReference ref, Integer property, PointerByReference key);\r\n"
+                    + INDENT + L"void Write" + name + L"(PointerByReference ref, Integer property, " + convectedType + L" value, Integer index);\r\n"
+                    + INDENT + L"void Write" + name + L"ByKey(PointerByReference ref, Integer property, " + convectedType + L" value, PointerByReference key);\r\n";
+                pos = endPos;
             } 
             GetNextCharPos(content, pos, false);
         }
