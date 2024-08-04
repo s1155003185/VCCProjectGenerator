@@ -106,8 +106,23 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
         pos += dllExportStart.size() - 1;
         while (pos < content.length()) {
             if (IsStartWith(content, dllExport, pos)) {
-                pos += dllExport.length() - 1;
+                pos += dllExport.length();
+                size_t endPos1 = Find(content, L";", pos);
+                size_t endPos2 = Find(content, L"{", pos);
+                size_t endPos = 0;
+                if (endPos1 == std::wstring::npos && endPos2 == std::wstring::npos)
+                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"DllFunctions.h DLLEXPORT missing ; or {");
+                else if (endPos1 == std::wstring::npos)
+                    endPos = endPos2;
+                else if (endPos2 == std::wstring::npos)
+                    endPos = endPos1;
+                else
+                    endPos = std::min(endPos1, endPos2);
+                std::wstring cppFunction = content.substr(pos, endPos - pos);
+                Trim(cppFunction);
 
+                
+                pos = endPos;
             } else if (IsStartWith(content, dllInterfaceExportPropertyAccessorString, pos)) {
                 result += INDENT + L"void ReadString(PointerByReference ref, Integer property, PointerByReference value, Integer index);\r\n"
                     + INDENT + L"void ReadStringByKey(PointerByReference ref, Integer property, PointerByReference value, PointerByReference key);\r\n"
