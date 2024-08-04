@@ -16,6 +16,7 @@
 #include "vpg_enum_class_reader.hpp"
 #include "vpg_generation_option.hpp"
 #include "vpg_include_path_service.hpp"
+#include "vpg_java_generation_service.hpp"
 #include "vpg_object_file_generation_service.hpp"
 #include "vpg_object_factory_file_generation_service.hpp"
 #include "vpg_object_type_file_generation_service.hpp"
@@ -266,6 +267,11 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
         // ------------------------------------------------------------------------------------------ //
         VPGDllFileGenerationService::GenerateHpp(logProperty, ConcatPaths({projWorkspace, L"DllFunctions.h"}), dllOption.get());
         VPGDllFileGenerationService::GenerateCpp(logProperty, ConcatPaths({projWorkspace, L"DllFunctions.cpp"}), dllOption.get());
+
+        // ------------------------------------------------------------------------------------------ //
+        //                               Generate JAVA bridge                                         //
+        // ------------------------------------------------------------------------------------------ //
+        VPGJavaGenerationService::GenerateJavaBridge(logProperty, ConcatPaths({projWorkspace, L"DllFunctions.h"}), option);
 
         LogService::LogInfo(logProperty, logId, L"Generate Property Finished.");
     CATCH
