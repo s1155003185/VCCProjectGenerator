@@ -265,9 +265,22 @@ void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &p
             property->_Enum = name;
             GetNextCharPos(cppCode, pos, false);
             if (cppCode[pos] == L'=') {
-                GetNextCharPos(cppCode, pos, false);
-                GetNextCharPos(cppCode, pos, false);
+                std::wstring enumValueStr = L"";
+                for (; pos < cppCode.size(); pos++) {
+                    if (std::iswdigit(cppCode[pos]))
+                        enumValueStr += cppCode[pos];
+                    else {
+                        if (!enumValueStr.empty())
+                            break;
+                    }
+                }
+                if (!enumValueStr.empty()) {
+                    _EnumValue = std::stod(enumValueStr);
+                    _EnumValue--;
+                }
             }
+            _EnumValue++;
+            property->_EnumValue = _EnumValue;
             if (cppCode[pos] == L',')
                 GetNextCharPos(cppCode, pos, false);
             if (IsStartWith(cppCode, L"//", pos) || IsStartWith(cppCode, L"/*", pos)) {
