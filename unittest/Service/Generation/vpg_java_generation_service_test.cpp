@@ -134,3 +134,14 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         );
 
 }
+
+TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
+{
+
+}
+
+
+TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
+{
+
+}

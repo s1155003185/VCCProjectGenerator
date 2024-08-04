@@ -252,3 +252,23 @@ void VPGJavaGenerationService::GenerateJavaBridge(const LogProperty *logProperty
         LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Bridge completed.");
     CATCH
 }
+
+std::wstring VPGJavaGenerationService::GenerateEnumContent()
+{
+    return L"";
+}
+
+void VPGJavaGenerationService::GenerateEnum(const LogProperty *logProperty, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option)
+{
+
+}
+
+std::wstring VPGJavaGenerationService::GenerateObjectContent()
+{
+    return L"";
+}
+
+void VPGJavaGenerationService::GenerateObject(const LogProperty *logProperty, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option)
+{
+
+}
