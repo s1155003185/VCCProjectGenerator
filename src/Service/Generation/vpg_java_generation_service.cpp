@@ -106,6 +106,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
         pos += dllExportStart.size() - 1;
         while (pos < content.length()) {
             if (IsStartWith(content, dllExport, pos)) {
+                // normal function
                 pos += dllExport.length();
                 size_t endPos1 = Find(content, L";", pos);
                 size_t endPos2 = Find(content, L"{", pos);
@@ -121,7 +122,63 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                 std::wstring cppFunction = content.substr(pos, endPos - pos);
                 Trim(cppFunction);
 
+                // 1. determine return is void * or not
+                // 2. get function name
+                // 3. pharse argument list
+                size_t argumentStartPos = Find(cppFunction, L"(");
+                if (argumentStartPos == std::wstring::npos)
+                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"DllFunctions.h DLLEXPORT function " + cppFunction + L" missing arguments");
+                size_t argumentEndPos = Find(cppFunction, L")", argumentStartPos);
+                if (argumentEndPos == std::wstring::npos)
+                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"DllFunctions.h DLLEXPORT function " + cppFunction + L" argument list missing ending )");
+                std::wstring functionNameWithReturn = cppFunction.substr(0, argumentStartPos);
+                std::wstring functionArgumentList = cppFunction.substr(argumentStartPos + 1, argumentEndPos - argumentStartPos - 1);
                 
+                // return type and function name
+                std::wstring returnType = L"";
+                std::wstring functionName = L"";
+                size_t tmpPos = 0;
+                if (IsContain(functionNameWithReturn, L"*")) {
+                    returnType = L"void *";
+                    tmpPos = Find(functionNameWithReturn, L"*");
+                    tmpPos++;
+                    functionName = functionNameWithReturn.substr(tmpPos);
+                } else {
+                    returnType = GetNextString(functionNameWithReturn, tmpPos, { L" ", L"\t", L"\r", L"\n" });
+                    tmpPos++;
+                    functionName = GetNextString(functionNameWithReturn, tmpPos, { L" ", L"\t", L"\r", L"\n" });
+                }
+                Trim(returnType);
+                Trim(functionName);
+                result += INDENT + GetCppToJavaConvertedType(returnType) + L" " + functionName + L"(";
+
+                // argument
+                Trim(functionArgumentList);
+                std::wstring argumentStr = L"";
+                std::vector<std::wstring> tokens =  SplitString(functionArgumentList, {L","});
+                
+                std::wstring argumentType = L"";
+                std::wstring argumentName = L"";
+                for (auto const &token : tokens) {
+                    tmpPos = 0;
+                    if (!argumentStr.empty())
+                        argumentStr += L", ";
+
+                    if (IsContain(token, L"*")) {
+                        argumentType = L"void *";
+                        tmpPos = token.find_last_of(L"*");
+                        tmpPos++;
+                        argumentName = token.substr(tmpPos);
+                    } else {
+                        argumentType = GetNextString(token, tmpPos, { L" ", L"\t", L"\r", L"\n" });
+                        tmpPos++;
+                        argumentName = GetNextString(token, tmpPos, { L" ", L"\t", L"\r", L"\n" });
+                    }
+                    Trim(argumentType);
+                    Trim(argumentName);
+                    argumentStr += GetCppToJavaConvertedType(argumentType) + L" " + argumentName;
+                }
+                result += argumentStr + L");\r\n";
                 pos = endPos;
             } else if (IsStartWith(content, dllInterfaceExportPropertyAccessorString, pos)) {
                 result += INDENT + L"void ReadString(PointerByReference ref, Integer property, PointerByReference value, Integer index);\r\n"

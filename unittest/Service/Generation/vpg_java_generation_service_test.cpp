@@ -110,7 +110,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "interface VPGDllFunctions extends Library {\r\n"
         "    VPGDllFunctions INSTANCE = (VPGDllFunctions)Native.load(\"vpg\", VPGDllFunctions.class);\r\n"
         "\r\n"
-        "    int GetVersion(PointerByReference result);\r\n"
+        "    Integer GetVersion(PointerByReference str);\r\n"
         "    PointerByReference CreateObject(Integer property);\r\n"
         "    Boolean ReadBool(PointerByReference ref, Integer property, Integer index);\r\n"
         "    Byte ReadChar(PointerByReference ref, Integer property, Integer index);\r\n"
