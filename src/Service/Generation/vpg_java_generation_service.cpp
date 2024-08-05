@@ -267,10 +267,18 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent()
     return L"";
 }
 
-void VPGJavaGenerationService::GenerateEnumAndObject(const LogProperty *logProperty, const VPGGenerationOption *option)
+void VPGJavaGenerationService::GenerateEnumAndObject(const LogProperty *logProperty, const std::wstring &workspace, const VPGGenerationOption *option)
 {
     // need to use class name as file name
     // java project only allow one class in one file with the name same as file
     TRY
+        assert(option != nullptr);
+        
+        std::shared_ptr<VPGGenerationOptionExport> javaOption = VPGJavaGenerationService::GetJavaOption(option);
+        if (javaOption == nullptr || IsBlank(javaOption->GetWorkspace()))
+            return;
+
+        std::wstring typeWorkspaceFullPath = ConcatPaths({workspace, option->GetTypeWorkspace()});
+
     CATCH
 }

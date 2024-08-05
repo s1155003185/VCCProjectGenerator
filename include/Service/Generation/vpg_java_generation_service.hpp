@@ -26,5 +26,5 @@ class VPGJavaGenerationService
         static std::wstring GenerateObjectContent();
     public:
         static void GenerateJavaBridge(const LogProperty *logProperty, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option);
-        static void GenerateEnumAndObject(const LogProperty *logProperty, const VPGGenerationOption *option);
+        static void GenerateEnumAndObject(const LogProperty *logProperty, const std::wstring &workspace, const VPGGenerationOption *option);
 };
