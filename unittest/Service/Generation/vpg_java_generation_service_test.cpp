@@ -136,9 +136,9 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
 
 }
 
-TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
+TEST_F(VPGJavaGenerationServiceTest, GenerateEnumAndObject)
 {
-    WriteFile(ConcatPaths({this->GetWorkspace(), L"vpg_type.h"}),
+    WriteFile(ConcatPaths({this->GetWorkspace(), L"vpg_type_property.hpp"}),
         L"#param once\r\n"
         "enum class VPGTypeA {\r\n"
         "   EnumA,\r\n"
@@ -146,7 +146,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
         "   EnumC\r\n"
         "};\r\n"
         "\r\n"
-        "enum class VPGTypeB {\r\n"
+        "enum class VPGTypeBProperty {\r\n"
         "   EnumA = 0,\r\n"
         "   EnumB,\r\n"
         "   EnumC = 999\r\n"
@@ -172,11 +172,11 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
         "        return value;\r\n"
         "    }\r\n"
         "}\r\n");
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeB.java"})));
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeB.java"})),
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeBProperty.java"})));
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeBProperty.java"})),
         L"package com.vcc.type;\r\n"
         "\r\n"
-        "public enum VPGTypeB {\r\n"
+        "public enum VPGTypeBProperty {\r\n"
         "    EnumA(0),\r\n"
         "    EnumB(1),\r\n"
         "    EnumC(999);\r\n"
@@ -191,9 +191,9 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
         "        return value;\r\n"
         "    }\r\n"
         "}\r\n");
-}
 
-TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
-{
-
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"})));
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"})),
+        L"package com.vcc.Module;\r\n"
+        "\r\n"");
 }

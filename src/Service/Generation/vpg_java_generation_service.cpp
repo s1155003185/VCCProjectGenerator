@@ -260,14 +260,6 @@ std::wstring VPGJavaGenerationService::GenerateEnumContent()
     return L"";
 }
 
-void VPGJavaGenerationService::GenerateEnum(const LogProperty *logProperty, const VPGGenerationOption *option)
-{
-    // need to use enum class name as file name
-    // java project only allow one class in one file with the name same as file
-    TRY
-    CATCH
-}
-
 std::wstring VPGJavaGenerationService::GenerateObjectContent()
 {
     TRY
@@ -275,7 +267,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent()
     return L"";
 }
 
-void VPGJavaGenerationService::GenerateObject(const LogProperty *logProperty, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option)
+void VPGJavaGenerationService::GenerateEnumAndObject(const LogProperty *logProperty, const VPGGenerationOption *option)
 {
     // need to use class name as file name
     // java project only allow one class in one file with the name same as file

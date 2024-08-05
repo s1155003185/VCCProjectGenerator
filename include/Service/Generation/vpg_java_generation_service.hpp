@@ -1,10 +1,13 @@
 #pragma once
 
+#include <memory>
 #include <set>
 #include <string>
+#include <vector>
 
 #include "log_property.hpp"
 
+#include "vpg_enum_class.hpp"
 #include "vpg_generation_option.hpp"
 
 using namespace vcc;
@@ -23,6 +26,5 @@ class VPGJavaGenerationService
         static std::wstring GenerateObjectContent();
     public:
         static void GenerateJavaBridge(const LogProperty *logProperty, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option);
-        static void GenerateEnum(const LogProperty *logProperty, const VPGGenerationOption *option);
-        static void GenerateObject(const LogProperty *logProperty, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option);
+        static void GenerateEnumAndObject(const LogProperty *logProperty, const VPGGenerationOption *option);
 };
