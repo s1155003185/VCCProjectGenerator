@@ -152,7 +152,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnumAndObject)
         "   EnumC = 999\r\n"
         "};\r\n", true);
 
-    VPGJavaGenerationService::GenerateEnum(this->GetLogProperty().get(), this->GetOption().get());
+    VPGJavaGenerationService::GenerateEnumAndObject(this->GetLogProperty().get(), this->GetOption().get());
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeA.java"})));
     EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeA.java"})),
         L"package com.vcc.type;\r\n"
@@ -195,5 +195,5 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnumAndObject)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"})));
     EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"})),
         L"package com.vcc.Module;\r\n"
-        "\r\n"");
+        "\r\n");
 }
