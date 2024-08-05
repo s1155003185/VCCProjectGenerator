@@ -4,6 +4,7 @@
 #include "file_helper.hpp"
 #include "log_property.hpp"
 
+#include "vpg_file_generation_manager.hpp"
 #include "vpg_generation_option.hpp"
 #include "vpg_generation_option_interface_type.hpp"
 
@@ -12,6 +13,8 @@ using namespace vcc;
 #define LOG_ID L"Java Generation"
 #define JAVA_BRIDGE_FILE_NAME L"DllFunctions.java"
 #define JAVA_PROJECT_SOURCE_PARENT_FOLDER L"src/main/java"
+
+const std::wstring proeprtyClassNameSuffix = L"Property";
 
 const std::wstring dllExport = L"DLLEXPORT";
 const std::wstring dllExportStart = L"extern \"C\"";
@@ -279,6 +282,25 @@ void VPGJavaGenerationService::GenerateEnumAndObject(const LogProperty *logPrope
             return;
 
         std::wstring typeWorkspaceFullPath = ConcatPaths({workspace, option->GetTypeWorkspace()});
+        DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr, workspace);
+        manager->GetClassMacroList(workspace);
+        DECLARE_UPTR(VPGEnumClassReader, reader, manager->GetClassMacros());
+        manager->GetFileList(reader.get(), typeWorkspaceFullPath, option->GetProjectPrefix());
+        for (auto const &enumClass : manager->GetEnumClasses()) {
+            if (!IsBlank(javaOption->GetTypeDirectory())) {
+                LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Enum: " + enumClass.second->GetName() + L".java" );
 
+                LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Enum completed.");
+            }
+            if (!IsBlank(javaOption->GetObjectDirectory())) {
+                std::wstring objectName = enumClass.second->GetName();
+                if (!IsEndWith(objectName, proeprtyClassNameSuffix)) {
+                    objectName = objectName.substr(0, objectName.size() - proeprtyClassNameSuffix.size());
+                    LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Object: " + enumClass.second->GetName() + L".java" );
+
+                    LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Object completed.");
+                }
+            }
+        }
     CATCH
 }

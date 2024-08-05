@@ -272,6 +272,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
         //                               Generate JAVA bridge                                         //
         // ------------------------------------------------------------------------------------------ //
         VPGJavaGenerationService::GenerateJavaBridge(logProperty, ConcatPaths({projWorkspace, L"DllFunctions.h"}), option);
+        VPGJavaGenerationService::GenerateEnumAndObject(logProperty, projWorkspace, option);
 
         LogService::LogInfo(logProperty, logId, L"Generate Property Finished.");
     CATCH
