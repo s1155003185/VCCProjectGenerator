@@ -77,7 +77,7 @@ void VPGFileGenerationManager::GetFileList(const VPGEnumClassReader *reader, con
 {
     TRY
         _EnumClasses.clear();
-        VPGIncludePathService::GetWorkspaceIncludePath(L"", this->_ClassMacros, _IncludeFiles, _EnumClasses);
+        VPGIncludePathService::GetWorkspaceIncludePath(_Workspace, this->_ClassMacros, _IncludeFiles, _EnumClasses);
 
         std::map<std::wstring, std::wstring> enumClassFiles;
         std::map<std::wstring, std::wstring> classFiles;
