@@ -32,7 +32,7 @@ const std::wstring objectFactoryFileNameCpp = L"object_factory.cpp";
 const std::wstring propertyAccessorFactoryFileNameHpp = L"property_accessor_factory.hpp";
 const std::wstring propertyAccessorFactoryFileNameCpp = L"property_accessor_factory.cpp";
 const std::wstring propertyFileSuffix = L"_property.hpp";
-const std::wstring proeprtyClassNameSuffix = L"Property";
+const std::wstring propertyClassNameSuffix = L"Property";
 const std::wstring propertyAccessorFileSuffixWithoutExtention = L"property_accessor";
 
 void VPGFileGenerationManager::GetClassMacroList(const std::wstring &projWorkspace)
@@ -57,8 +57,8 @@ void VPGFileGenerationManager::GetClassMacroList(const std::wstring &projWorkspa
 std::wstring VPGFileGenerationManager::GetClassNameFromEnumClassName(const std::wstring &enumClassName)
 {
     TRY
-        if (enumClassName.ends_with(proeprtyClassNameSuffix) && enumClassName != proeprtyClassNameSuffix)
-            return enumClassName.substr(0, enumClassName.length() - proeprtyClassNameSuffix.length());
+        if (enumClassName.ends_with(propertyClassNameSuffix) && enumClassName != propertyClassNameSuffix)
+            return enumClassName.substr(0, enumClassName.length() - propertyClassNameSuffix.length());
     CATCH
     return enumClassName;
 }
@@ -145,7 +145,7 @@ bool VPGFileGenerationManager::IsClassEnumFile(const std::wstring &filename, con
 bool VPGFileGenerationManager::IsClassEnum(const std::wstring &enumClassName, const std::wstring &projectPrefix)
 {
     TRY
-        return enumClassName.ends_with(proeprtyClassNameSuffix) && enumClassName.length() > proeprtyClassNameSuffix.length()
+        return enumClassName.ends_with(propertyClassNameSuffix) && enumClassName.length() > propertyClassNameSuffix.length()
             && (IsBlank(projectPrefix) || enumClassName.starts_with(projectPrefix));
     CATCH
     return false;
@@ -212,7 +212,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty,
             for (auto const &enumClass : enumClassList) {
                 if (!IsClassEnum(enumClass->GetName(), projPrefix)) {
                     std::wstring classPrefixStr = !IsBlank(projPrefix) ? (L"Prefix " + projPrefix + L" or ") : L"";
-                    LogService::LogWarning(logProperty, logId, L"Class " + classPrefixStr + L"Suffix " + proeprtyClassNameSuffix + L"missing. Skip: " + enumClass->GetName());
+                    LogService::LogWarning(logProperty, logId, L"Class " + classPrefixStr + L"Suffix " + propertyClassNameSuffix + L"missing. Skip: " + enumClass->GetName());
                     continue;
                 }
                 std::wstring classNameWithoutPrefix = enumClass->GetName().substr(!projPrefix.empty() ? projPrefix.size() : 0);

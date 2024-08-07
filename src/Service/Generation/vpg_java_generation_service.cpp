@@ -17,7 +17,7 @@ using namespace vcc;
 #define JAVA_BRIDGE_FILE_NAME L"DllFunctions.java"
 #define JAVA_PROJECT_SOURCE_PARENT_FOLDER L"src/main/java"
 
-const std::wstring proeprtyClassNameSuffix = L"Property";
+const std::wstring propertyClassNameSuffix = L"Property";
 
 const std::wstring dllExport = L"DLLEXPORT";
 const std::wstring dllExportStart = L"extern \"C\"";
@@ -285,7 +285,7 @@ void VPGJavaGenerationService::GenerateEnumAndObject(const LogProperty *logPrope
             || (IsBlank(javaOption->GetTypeDirectory()) && IsBlank(javaOption->GetObjectDirectory())))
             return;
 
-        std::wstring typeWorkspaceFullPath = ConcatPaths({workspace, option->GetTypeWorkspace()});
+        std::wstring typeWorkspaceFullPath = GetLinuxPath(ConcatPaths({workspace, option->GetTypeWorkspace()}));
         DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr, workspace);
         manager->GetClassMacroList(workspace);
         DECLARE_UPTR(VPGEnumClassReader, reader, manager->GetClassMacros());
@@ -300,7 +300,6 @@ void VPGJavaGenerationService::GenerateEnumAndObject(const LogProperty *logPrope
             includeFileEnumClassMap.find(enumClassIncludeFilePair.second)->second.push_back(enumClassIncludeFilePair.first);
         }
         
-        std::wstring typeWorkspaceFullPath = GetLinuxPath(typeWorkspaceFullPath);
         for (auto const &filePath : std::filesystem::recursive_directory_iterator(PATH(typeWorkspaceFullPath))) {
             if (filePath.is_directory())
                 continue;
@@ -310,6 +309,7 @@ void VPGJavaGenerationService::GenerateEnumAndObject(const LogProperty *logPrope
             
             std::wstring filePathLinuxPath = GetLinuxPath(filePath.path().wstring());
             std::wstring relativePath = GetRelativePath(filePathLinuxPath.substr(Find(filePathLinuxPath, typeWorkspaceFullPath)), typeWorkspaceFullPath);
+            relativePath = PATH(relativePath).parent_path().wstring();
 
             for (auto const &enumClassName : includeFileEnumClassMap.find(fileName)->second) {
                 if (manager->GetEnumClasses().find(enumClassName) == manager->GetEnumClasses().end())
@@ -324,12 +324,12 @@ void VPGJavaGenerationService::GenerateEnumAndObject(const LogProperty *logPrope
                 }
                 if (!IsBlank(javaOption->GetObjectDirectory())) {
                     std::wstring objectName = enumClassName;
-                    if (!IsEndWith(objectName, proeprtyClassNameSuffix)) {
-                        objectName = objectName.substr(0, objectName.size() - proeprtyClassNameSuffix.size());
+                    if (IsEndWith(objectName, propertyClassNameSuffix)) {
+                        objectName = objectName.substr(0, objectName.size() - propertyClassNameSuffix.size());
                         std::wstring javaFileName = objectName + L".java";
-                        std::wstring javaEnumFilePath = ConcatPaths({ javaOption->GetWorkspace(), javaOption->GetObjectDirectory(), relativePath, javaFileName });
-                        LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Object: " + objectName + L".java" );
-                        WriteFile(javaEnumFilePath, VPGJavaGenerationService::GenerateEnumContent(), true);
+                        std::wstring javaObjectFilePath = ConcatPaths({ javaOption->GetWorkspace(), javaOption->GetObjectDirectory(), relativePath, javaFileName });
+                        LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Object: " + javaFileName);
+                        WriteFile(javaObjectFilePath, VPGJavaGenerationService::GenerateObjectContent(), true);
                         LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Object completed.");
                     }
                 }
