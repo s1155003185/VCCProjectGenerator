@@ -281,7 +281,8 @@ void VPGJavaGenerationService::GenerateEnumAndObject(const LogProperty *logPrope
         assert(option != nullptr);
         
         std::shared_ptr<VPGGenerationOptionExport> javaOption = VPGJavaGenerationService::GetJavaOption(option);
-        if (javaOption == nullptr || IsBlank(javaOption->GetWorkspace()))
+        if (javaOption == nullptr || IsBlank(javaOption->GetWorkspace()) 
+            || (IsBlank(javaOption->GetTypeDirectory()) && IsBlank(javaOption->GetObjectDirectory())))
             return;
 
         std::wstring typeWorkspaceFullPath = ConcatPaths({workspace, option->GetTypeWorkspace()});
@@ -289,12 +290,41 @@ void VPGJavaGenerationService::GenerateEnumAndObject(const LogProperty *logPrope
         manager->GetClassMacroList(workspace);
         DECLARE_UPTR(VPGEnumClassReader, reader, manager->GetClassMacros());
         manager->GetFileList(reader.get(), typeWorkspaceFullPath, option->GetProjectPrefix());
+
+        std::map<std::wstring, std::vector<std::wstring>> includeFileEnumClassMap;
+        for (auto const &enumClassIncludeFilePair : manager->GetIncludeFiles()) {
+            if (includeFileEnumClassMap.find(enumClassIncludeFilePair.second) == includeFileEnumClassMap.end()) {
+                std::vector<std::wstring> emptyList;
+                includeFileEnumClassMap.insert(std::make_pair(enumClassIncludeFilePair.second, emptyList));
+            }
+            includeFileEnumClassMap.find(enumClassIncludeFilePair.second)->second.push_back(enumClassIncludeFilePair.first);
+        }
         
         for (auto const &filePath : std::filesystem::recursive_directory_iterator(PATH(typeWorkspaceFullPath))) {
             if (filePath.is_directory())
                 continue;
             std::wstring fileName = filePath.path().filename().wstring();
+            if (includeFileEnumClassMap.find(fileName) == includeFileEnumClassMap.end())
+                continue;
+            for (auto const &enumClassName : includeFileEnumClassMap.find(fileName)->second) {
+                if (manager->GetEnumClasses().find(enumClassName) == manager->GetEnumClasses().end())
+                    continue;
 
+                if (!IsBlank(javaOption->GetTypeDirectory())) {
+                    LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Enum: " + enumClassName + L".java" );
+
+                    LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Enum completed.");
+                }
+                if (!IsBlank(javaOption->GetObjectDirectory())) {
+                    std::wstring objectName = enumClassName;
+                    if (!IsEndWith(objectName, proeprtyClassNameSuffix)) {
+                        objectName = objectName.substr(0, objectName.size() - proeprtyClassNameSuffix.size());
+                        LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Object: " + objectName + L".java" );
+
+                        LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Object completed.");
+                    }
+                }
+            }
         }
 
         // for (auto const &enumClass : manager->GetEnumClasses()) {
