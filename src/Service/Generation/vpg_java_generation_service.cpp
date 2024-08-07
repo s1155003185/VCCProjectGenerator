@@ -1,5 +1,8 @@
 #include "vpg_java_generation_service.hpp"
 
+#include <filesystem>
+#include <fstream>
+
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
 #include "log_property.hpp"
@@ -286,21 +289,29 @@ void VPGJavaGenerationService::GenerateEnumAndObject(const LogProperty *logPrope
         manager->GetClassMacroList(workspace);
         DECLARE_UPTR(VPGEnumClassReader, reader, manager->GetClassMacros());
         manager->GetFileList(reader.get(), typeWorkspaceFullPath, option->GetProjectPrefix());
-        for (auto const &enumClass : manager->GetEnumClasses()) {
-            if (!IsBlank(javaOption->GetTypeDirectory())) {
-                LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Enum: " + enumClass.second->GetName() + L".java" );
+        
+        for (auto const &filePath : std::filesystem::recursive_directory_iterator(PATH(typeWorkspaceFullPath))) {
+            if (filePath.is_directory())
+                continue;
+            std::wstring fileName = filePath.path().filename().wstring();
 
-                LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Enum completed.");
-            }
-            if (!IsBlank(javaOption->GetObjectDirectory())) {
-                std::wstring objectName = enumClass.second->GetName();
-                if (!IsEndWith(objectName, proeprtyClassNameSuffix)) {
-                    objectName = objectName.substr(0, objectName.size() - proeprtyClassNameSuffix.size());
-                    LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Object: " + enumClass.second->GetName() + L".java" );
-
-                    LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Object completed.");
-                }
-            }
         }
+
+        // for (auto const &enumClass : manager->GetEnumClasses()) {
+        //     if (!IsBlank(javaOption->GetTypeDirectory())) {
+        //         LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Enum: " + enumClass.second->GetName() + L".java" );
+
+        //         LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Enum completed.");
+        //     }
+        //     if (!IsBlank(javaOption->GetObjectDirectory())) {
+        //         std::wstring objectName = enumClass.second->GetName();
+        //         if (!IsEndWith(objectName, proeprtyClassNameSuffix)) {
+        //             objectName = objectName.substr(0, objectName.size() - proeprtyClassNameSuffix.size());
+        //             LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Object: " + enumClass.second->GetName() + L".java" );
+
+        //             LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Object completed.");
+        //         }
+        //     }
+        // }
     CATCH
 }
