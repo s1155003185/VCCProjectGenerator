@@ -40,6 +40,24 @@ std::shared_ptr<VPGGenerationOptionExport> VPGJavaGenerationService::GetJavaOpti
     return result;
 }
 
+std::wstring VPGJavaGenerationService::GetJavaPactkage(const std::wstring &path, const std::wstring &filePathName)
+{
+    std::wstring result = L"";
+    TRY
+        if (!IsStartWith(path, JAVA_PROJECT_SOURCE_PARENT_FOLDER))
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, filePathName + L" is not start with " + JAVA_PROJECT_SOURCE_PARENT_FOLDER);
+
+        result = GetRelativePath(path, JAVA_PROJECT_SOURCE_PARENT_FOLDER);
+        result = GetLinuxPath(result);
+        if (IsStartWith(result, L"/"))
+            result = result.substr(1);
+        if (IsEndWith(result, L"/"))
+            result.pop_back();
+        ReplaceAll(result, L"/", L".");
+    CATCH
+    return result;
+}
+
 std::wstring VPGJavaGenerationService::GetCppToJavaConvertedType(const std::wstring &cppType)
 {
     TRY
@@ -85,16 +103,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
         Trim(filePrefix);
         ToUpper(filePrefix);
 
-        if (!IsStartWith(javaOption->GetDllBridgeDirectory(), JAVA_PROJECT_SOURCE_PARENT_FOLDER))
-            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Dll Bridge Directory is not start with " + JAVA_PROJECT_SOURCE_PARENT_FOLDER);
-
-        std::wstring packageFolder = GetRelativePath(javaOption->GetDllBridgeDirectory(), JAVA_PROJECT_SOURCE_PARENT_FOLDER);
-        packageFolder = GetLinuxPath(packageFolder);
-        if (IsStartWith(packageFolder, L"/"))
-            packageFolder = packageFolder.substr(1);
-        if (IsEndWith(packageFolder, L"/"))
-            packageFolder.pop_back();
-        ReplaceAll(packageFolder, L"/", L".");
+        std::wstring packageFolder = GetJavaPactkage(javaOption->GetDllBridgeDirectory(), L"Dll Bridge Directory");
         result += L"package " + packageFolder + L";\r\n"
             "\r\n"
             "import com.sun.jna.Library;\r\n"
@@ -259,18 +268,52 @@ void VPGJavaGenerationService::GenerateJavaBridge(const LogProperty *logProperty
     CATCH
 }
 
-std::wstring VPGJavaGenerationService::GenerateEnumContent()
+std::wstring VPGJavaGenerationService::GenerateEnumContent(const VPGEnumClass *enumClass, const VPGGenerationOptionExport *option)
 {
+    std::wstring result = L"";
     TRY
+        std::wstring packageFolder = GetJavaPactkage(option->GetTypeDirectory(), L"Type Directory");
+        result += L"package " + packageFolder + L";\r\n"
+            "\r\n"
+            "public enum " + enumClass->GetName() + L" {\r\n";
+        int64_t enumValue = 0;
+        for (size_t i = 0; i < enumClass->GetProperties().size(); i++) {
+            auto const &property = enumClass->GetProperties().at(i);
+            if (property->GetEnumValue() > -1)
+                enumValue = property->GetEnumValue();
+            result += INDENT + property->GetEnum() + L"(" + std::to_wstring(enumValue) + L")" 
+                + (i == enumClass->GetProperties().size() - 1 ? L";" : L",") + L"\r\n";
+            enumValue++;
+        }
+        result += L"\r\n"
+            + INDENT + L"public final Integer value;\r\n"
+            "\r\n"
+            + INDENT + enumClass->GetName() + L"(Integer value) {\r\n"
+            + INDENT + INDENT + L"this.value = value;\r\n"
+            + INDENT + L"}\r\n"
+            "\r\n"
+            + INDENT + L"public Integer getValue() {\r\n"
+            + INDENT + INDENT + L"return value;\r\n"
+            + INDENT + L"}\r\n"
+            "}\r\n";
     CATCH
-    return L"";
+    return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateObjectContent()
+std::wstring VPGJavaGenerationService::GenerateObjectContent(const VPGEnumClass *enumClass, const VPGGenerationOptionExport *option)
 {
+    std::wstring result = L"";
     TRY
+        std::wstring packageFolder = GetJavaPactkage(option->GetObjectDirectory(), L"Object Directory");
+        std::wstring objectName = enumClass->GetName();
+        objectName = objectName.substr(0, objectName.size() - propertyClassNameSuffix.size());
+        result += L"package " + packageFolder + L";\r\n"
+            "\r\n"
+            "public enum " + objectName + L" {\r\n";
+
+        result += L"}\r\n";
     CATCH
-    return L"";
+    return result;
 }
 
 void VPGJavaGenerationService::GenerateEnumAndObject(const LogProperty *logProperty, const std::wstring &workspace, const VPGGenerationOption *option)
@@ -319,7 +362,7 @@ void VPGJavaGenerationService::GenerateEnumAndObject(const LogProperty *logPrope
                     std::wstring javaFileName = enumClassName + L".java";
                     std::wstring javaEnumFilePath = ConcatPaths({ javaOption->GetWorkspace(), javaOption->GetTypeDirectory(), relativePath, javaFileName });
                     LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Enum: " + javaFileName);
-                    WriteFile(javaEnumFilePath, VPGJavaGenerationService::GenerateEnumContent(), true);
+                    WriteFile(javaEnumFilePath, VPGJavaGenerationService::GenerateEnumContent(manager->GetEnumClasses().find(enumClassName)->second.get(), javaOption.get()), true);
                     LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Enum completed.");
                 }
                 if (!IsBlank(javaOption->GetObjectDirectory())) {
@@ -329,7 +372,7 @@ void VPGJavaGenerationService::GenerateEnumAndObject(const LogProperty *logPrope
                         std::wstring javaFileName = objectName + L".java";
                         std::wstring javaObjectFilePath = ConcatPaths({ javaOption->GetWorkspace(), javaOption->GetObjectDirectory(), relativePath, javaFileName });
                         LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Object: " + javaFileName);
-                        WriteFile(javaObjectFilePath, VPGJavaGenerationService::GenerateObjectContent(), true);
+                        WriteFile(javaObjectFilePath, VPGJavaGenerationService::GenerateObjectContent(manager->GetEnumClasses().find(enumClassName)->second.get(), javaOption.get()), true);
                         LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Object completed.");
                     }
                 }

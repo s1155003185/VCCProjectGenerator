@@ -168,7 +168,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnumAndObject)
         "        this.value = value;\r\n"
         "    }\r\n"
         "\r\n"
-        "    public int getValue() {\r\n"
+        "    public Integer getValue() {\r\n"
         "        return value;\r\n"
         "    }\r\n"
         "}\r\n");
@@ -183,11 +183,11 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnumAndObject)
         "\r\n"
         "    public final Integer value;\r\n"
         "\r\n"
-        "    VPGTypeB(Integer value) {\r\n"
+        "    VPGTypeBProperty(Integer value) {\r\n"
         "        this.value = value;\r\n"
         "    }\r\n"
         "\r\n"
-        "    public int getValue() {\r\n"
+        "    public Integer getValue() {\r\n"
         "        return value;\r\n"
         "    }\r\n"
         "}\r\n");
