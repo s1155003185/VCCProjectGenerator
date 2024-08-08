@@ -147,9 +147,9 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnumAndObject)
         "};\r\n"
         "\r\n"
         "enum class VPGTypeBProperty {\r\n"
-        "   EnumA = 0,\r\n"
-        "   EnumB,\r\n"
-        "   EnumC = 999\r\n"
+        "   EnumA = 0, // GETSET(std::wstring, EnumA, L"")\r\n"
+        "   EnumB, // GETSET(int64_t, EnumB, 1)\r\n"
+        "   EnumC = 999 // VECTOR(double, EnumC)\r\n"
         "};\r\n", true);
 
     VPGJavaGenerationService::GenerateEnumAndObject(this->GetLogProperty().get(), L"", this->GetOption().get());
@@ -195,5 +195,34 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnumAndObject)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"})));
     EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"})),
         L"package com.vcc.Module;\r\n"
-        "\r\n");
+        "\r\n"
+        "import com.sun.jna.ptr.PointerByReference;\r\n"
+        "import com.vcc.test.VPGDllFunctions\r\n"
+        "import com.vcc.type.VPGTypeBProperty;\r\n"
+        "\r\n"
+        "public class VPGTypeB {\r\n"
+        "    private PointerByReference handle = nullptr;\r\n"
+        "\r\n"
+        "    VPGTypeB(PointerByReference handle) {\r\n"
+        "        this.handle = handle;\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public String getEnumA() {\r\n"
+        "        PointerByReference result = new PointerByReference();\r\n"
+        "        VPGDllFunctions.INSTANCE.ReadString(handle, VPGTypeBProperty.EnumA.getValue(), result, -1);\r\n"
+        "        return result.getValue().getWideString(0);\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public void setEnumA(String value) {\r\n"
+        "        VPGDllFunctions.INSTANCE.WriteString(handle, VPGTypeBProperty.EnumA.getValue(), PointerByReference value, Integer index);\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public Integer getEnumB() {\r\n"
+        "        \r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public void setEnumB(Integer value) {\r\n"
+        "        \r\n"
+        "    }\r\n"
+        "}\r\n");
 }
