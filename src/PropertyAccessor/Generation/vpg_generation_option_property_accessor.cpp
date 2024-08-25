@@ -6,8 +6,6 @@
 
 #include "exception_macro.hpp"
 #include "i_object.hpp"
-#include "i_type_union.hpp"
-#include "property_accessor_key.hpp"
 #include "property_accessor_macro.hpp"
 #include "vpg_generation_option.hpp"
 #include "vpg_generation_option_interface_type.hpp"
@@ -33,7 +31,7 @@ long VPGGenerationOptionExportPropertyAccessor::_ReadLong(const int64_t &objectP
     return 0L;
 }
 
-long VPGGenerationOptionExportPropertyAccessor::_ReadLong(const int64_t &objectProperty, const ITypeUnion * /*key*/) const
+long VPGGenerationOptionExportPropertyAccessor::_ReadLong(const int64_t &objectProperty, const void * /*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -58,7 +56,14 @@ void VPGGenerationOptionExportPropertyAccessor::_WriteLong(const int64_t &object
     CATCH
 }
 
-void VPGGenerationOptionExportPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long & /*value*/, const ITypeUnion * /*key*/) const
+void VPGGenerationOptionExportPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long & /*value*/, const void * /*key*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGGenerationOptionExportPropertyAccessor::_InsertLong(const int64_t &objectProperty, const long & /*value*/, const int64_t & /*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -88,7 +93,7 @@ std::wstring VPGGenerationOptionExportPropertyAccessor::_ReadString(const int64_
     return L"";
 }
 
-std::wstring VPGGenerationOptionExportPropertyAccessor::_ReadString(const int64_t &objectProperty, const ITypeUnion * /*key*/) const
+std::wstring VPGGenerationOptionExportPropertyAccessor::_ReadString(const int64_t &objectProperty, const void * /*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -122,7 +127,14 @@ void VPGGenerationOptionExportPropertyAccessor::_WriteString(const int64_t &obje
     CATCH
 }
 
-void VPGGenerationOptionExportPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring & /*value*/, const ITypeUnion * /*key*/) const
+void VPGGenerationOptionExportPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring & /*value*/, const void * /*key*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGGenerationOptionExportPropertyAccessor::_InsertString(const int64_t &objectProperty, const std::wstring & /*value*/, const int64_t & /*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -150,7 +162,7 @@ bool VPGGenerationOptionPropertyAccessor::_ReadBool(const int64_t &objectPropert
     return false;
 }
 
-bool VPGGenerationOptionPropertyAccessor::_ReadBool(const int64_t &objectProperty, const ITypeUnion * /*key*/) const
+bool VPGGenerationOptionPropertyAccessor::_ReadBool(const int64_t &objectProperty, const void * /*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -181,7 +193,14 @@ void VPGGenerationOptionPropertyAccessor::_WriteBool(const int64_t &objectProper
     CATCH
 }
 
-void VPGGenerationOptionPropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool & /*value*/, const ITypeUnion * /*key*/) const
+void VPGGenerationOptionPropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool & /*value*/, const void * /*key*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGGenerationOptionPropertyAccessor::_InsertBool(const int64_t &objectProperty, const bool & /*value*/, const int64_t & /*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -205,7 +224,7 @@ long VPGGenerationOptionPropertyAccessor::_ReadLong(const int64_t &objectPropert
     return 0L;
 }
 
-long VPGGenerationOptionPropertyAccessor::_ReadLong(const int64_t &objectProperty, const ITypeUnion * /*key*/) const
+long VPGGenerationOptionPropertyAccessor::_ReadLong(const int64_t &objectProperty, const void * /*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -230,7 +249,14 @@ void VPGGenerationOptionPropertyAccessor::_WriteLong(const int64_t &objectProper
     CATCH
 }
 
-void VPGGenerationOptionPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long & /*value*/, const ITypeUnion * /*key*/) const
+void VPGGenerationOptionPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long & /*value*/, const void * /*key*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGGenerationOptionPropertyAccessor::_InsertLong(const int64_t &objectProperty, const long & /*value*/, const int64_t & /*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -294,7 +320,7 @@ std::wstring VPGGenerationOptionPropertyAccessor::_ReadString(const int64_t &obj
     return L"";
 }
 
-std::wstring VPGGenerationOptionPropertyAccessor::_ReadString(const int64_t &objectProperty, const ITypeUnion * /*key*/) const
+std::wstring VPGGenerationOptionPropertyAccessor::_ReadString(const int64_t &objectProperty, const void * /*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -382,10 +408,30 @@ void VPGGenerationOptionPropertyAccessor::_WriteString(const int64_t &objectProp
     CATCH
 }
 
-void VPGGenerationOptionPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring & /*value*/, const ITypeUnion * /*key*/) const
+void VPGGenerationOptionPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring & /*value*/, const void * /*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGGenerationOptionPropertyAccessor::_InsertString(const int64_t &objectProperty, const std::wstring &value, const int64_t &index) const
+{
+    TRY
+        assert(index >= -1);
+        std::shared_ptr<VPGGenerationOption> obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
+        {
+        case VPGGenerationOptionProperty::Plugins:
+            if (index > -1)
+                obj->InsertPlugins(index, value);
+            else
+                obj->InsertPlugins(value);
+            break;
+        default:
+            assert(false);
+        }
     CATCH
 }
 
@@ -406,7 +452,7 @@ std::shared_ptr<IObject> VPGGenerationOptionPropertyAccessor::_ReadObject(const 
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGGenerationOptionPropertyAccessor::_ReadObject(const int64_t &objectProperty, const ITypeUnion * /*key*/) const
+std::shared_ptr<IObject> VPGGenerationOptionPropertyAccessor::_ReadObject(const int64_t &objectProperty, const void * /*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -434,10 +480,30 @@ void VPGGenerationOptionPropertyAccessor::_WriteObject(const int64_t &objectProp
     CATCH
 }
 
-void VPGGenerationOptionPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const ITypeUnion * /*key*/) const
+void VPGGenerationOptionPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const void * /*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGGenerationOptionPropertyAccessor::_InsertObject(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index) const
+{
+    TRY
+        assert(index >= -1);
+        std::shared_ptr<VPGGenerationOption> obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
+        {
+        case VPGGenerationOptionProperty::Exports:
+            if (index > -1)
+                obj->InsertExports(index, std::static_pointer_cast<VPGGenerationOptionExport>(value));
+            else
+                obj->InsertExports(std::static_pointer_cast<VPGGenerationOptionExport>(value));
+            break;
+        default:
+            assert(false);
+        }
     CATCH
 }
 
@@ -458,7 +524,7 @@ std::shared_ptr<IObject> VPGGenerationOptionPropertyAccessor::_CloneObject(const
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGGenerationOptionPropertyAccessor::_CloneObject(const int64_t &objectProperty, const ITypeUnion * /*key*/) const
+std::shared_ptr<IObject> VPGGenerationOptionPropertyAccessor::_CloneObject(const int64_t &objectProperty, const void * /*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -484,7 +550,7 @@ size_t VPGGenerationOptionPropertyAccessor::_GetContainerCount(const int64_t &ob
     return 0;
 }
 
-bool VPGGenerationOptionPropertyAccessor::_IsContainKey(const int64_t &objectProperty, const ITypeUnion * /*key*/) const
+bool VPGGenerationOptionPropertyAccessor::_IsContainKey(const int64_t &objectProperty, const void * /*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -512,7 +578,7 @@ void VPGGenerationOptionPropertyAccessor::_RemoveContainerElement(const int64_t 
     CATCH
 }
 
-void VPGGenerationOptionPropertyAccessor::_RemoveContainerElement(const int64_t &objectProperty, const ITypeUnion * /*key*/) const
+void VPGGenerationOptionPropertyAccessor::_RemoveContainerElement(const int64_t &objectProperty, const void * /*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND

@@ -48,6 +48,70 @@ bool VPGObjectFileGenerationService::IsJsonObject(const VPGEnumClass* enumClass)
     return false;
 }
 
+std::vector<std::wstring> VPGObjectFileGenerationService::GetObjectToJsonEnumSwitch(const std::wstring &switchVariable, const std::wstring &returnVariable,
+    const std::wstring &type, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping)
+{
+    std::vector<std::wstring> result;
+    TRY
+        result.push_back(L"std::wstring " + returnVariable + L" = L\"\";");
+        result.push_back(L"switch (" + switchVariable + L")");
+        result.push_back(L"{");
+
+        std::shared_ptr<VPGEnumClass> enumEnumClass = nullptr;
+        if (enumClassMapping.find(type) != enumClassMapping.end()) {
+            enumEnumClass = enumClassMapping.at(type);
+        } else if (enumClassMapping.find(L"vcc::" + type) != enumClassMapping.end()) {
+            enumEnumClass = enumClassMapping.at(L"vcc::" + type);
+        } else
+            THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"VPGObjectFileGenerationService::GenerateCpp Enum Class " + type + L" cannot found");
+        for (auto const &enumEnumClassProperty : enumEnumClass->GetProperties()) {
+            result.push_back(L"case " + enumEnumClass->GetName() + L"::" + enumEnumClassProperty->GetEnum() + L":");
+            result.push_back(INDENT + returnVariable + L" = L\"" + enumEnumClassProperty->GetEnum() + L"\";");
+            result.push_back(INDENT + L"break;");
+        }
+        result.push_back(L"default:");
+        result.push_back(INDENT + L"assert(false);");
+        result.push_back(INDENT + L"break;");
+        result.push_back(L"}");
+    CATCH
+    return result;
+}
+
+std::vector<std::wstring> VPGObjectFileGenerationService::GetJsonToObjectEnumSwitch(const std::wstring &propertyName, const bool isKey,
+    const std::wstring &type, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping)
+{
+    std::vector<std::wstring> result;
+    TRY
+        std::wstring jsonEnumValue = isKey ? L"keyEnum" : L"valueEnum";
+        std::wstring jsonStr = jsonEnumValue + L"Str";
+        std::wstring jsonStrUpper = jsonStr + L"Upper";
+
+        result.push_back(INDENT + L"std::wstring " + jsonStr + L" = " + (isKey ? L"key;" : (L"json->GetString(ConvertNamingStyle(L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, propertyName) + L", namestyle, NamingStyle::PascalCase));")));
+        result.push_back(INDENT + L"std::wstring " + jsonStrUpper + L" = " + jsonStr + L";");
+        result.push_back(INDENT + L"ToUpper(" + jsonStrUpper + L");");
+        result.push_back(INDENT + L"int64_t " + jsonEnumValue + L" = -1;");
+
+        std::shared_ptr<VPGEnumClass> enumEnumClass = nullptr;
+        if (enumClassMapping.find(type) != enumClassMapping.end()) {
+            enumEnumClass = enumClassMapping.at(type);
+        } else if (enumClassMapping.find(L"vcc::" + type) != enumClassMapping.end()) {
+            enumEnumClass = enumClassMapping.at(L"vcc::" + type);
+        } else
+            THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"VPGObjectFileGenerationService::GenerateCpp Enum Class " + type + L" cannot found");
+        
+        bool isStart = true;
+        for (auto const &enumEnumClassProperty : enumEnumClass->GetProperties()) {
+            std::wstring ifPrefix = isStart ? L"" : L"else ";
+            std::wstring enumNameUpper = enumEnumClassProperty->GetEnum();
+            ToUpper(enumNameUpper);
+            result.push_back(INDENT + ifPrefix + L"if (" + jsonStrUpper + L" == L\"" + enumNameUpper + L"\")");
+            result.push_back(INDENT + INDENT + jsonEnumValue + L" = static_cast<int64_t>(" + enumEnumClass->GetName() + L"::" + enumEnumClassProperty->GetEnum() + L");");
+            isStart = false;
+        }
+    CATCH
+    return result;
+}
+
 std::vector<std::wstring> VPGObjectFileGenerationService::GetObjectToJson(const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
     const std::wstring &parentName, const std::wstring &macro, const std::wstring &type, const std::wstring &propertyName, const bool &isArray, const bool &isMap)
 {
@@ -61,25 +125,19 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetObjectToJson(const 
             result.push_back(parentName + L"->Add" + arrayStr + L"Object(" + convertedPropertyName + currentPropertyName + L"->ToJson());");
         } else if (std::iswupper(type[0])) {
             // Enum
-            result.push_back(L"switch (" + currentPropertyName + L")");
-            result.push_back(L"{");
-
-            std::shared_ptr<VPGEnumClass> enumEnumClass = nullptr;
-            if (enumClassMapping.find(type) != enumClassMapping.end()) {
-                enumEnumClass = enumClassMapping.at(type);
-            } else if (enumClassMapping.find(L"vcc::" + type) != enumClassMapping.end()) {
-                enumEnumClass = enumClassMapping.at(L"vcc::" + type);
-            } else
-                THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"VPGObjectFileGenerationService::GenerateCpp Enum Class " + type + L" cannot found");
-            for (auto const &enumEnumClassProperty : enumEnumClass->GetProperties()) {
-                result.push_back(L"case " + enumEnumClass->GetName() + L"::" + enumEnumClassProperty->GetEnum() + L":");
-                result.push_back(INDENT + parentName + L"->Add" + arrayStr + L"String(" + convertedPropertyName + L"L\"" + enumEnumClassProperty->GetEnum() + L"\");");
-                result.push_back(INDENT + L"break;");
+            std::wstring tmpPropertyName = L"";
+            if (isMap) {
+                tmpPropertyName = L"valueStr";
+            } else {
+                tmpPropertyName = propertyName.substr(0, 1);
+                ToLower(tmpPropertyName);
+                if (propertyName.size() > 1)
+                    tmpPropertyName += propertyName.substr(1);
+                tmpPropertyName += L"ValueStr";
             }
-            result.push_back(L"default:");
-            result.push_back(INDENT + L"assert(false);");
-            result.push_back(INDENT + L"break;");
-            result.push_back(L"}");
+            std::vector<std::wstring> enumSwitchStr = GetObjectToJsonEnumSwitch(currentPropertyName, tmpPropertyName, type, enumClassMapping);
+            result.insert(result.end(), enumSwitchStr.begin(), enumSwitchStr.end());
+            result.push_back(parentName + L"->Add" + arrayStr + L"String(" + convertedPropertyName  + tmpPropertyName +L");");
         } else if (type == L"bool")
             result.push_back(parentName + L"->Add" + arrayStr + L"Bool(" + convertedPropertyName + currentPropertyName + L");");
         else if (IsContain(type, L"int")
@@ -123,7 +181,10 @@ std::wstring VPGObjectFileGenerationService::GetJsonToObjectMapKey(const std::ws
             result = L"wstr2str(key)";
         } else if (type == L"std::wstring") {
             result = L"key";
-        } else
+        } else if (IsCaptial(type)) {
+            result = L"static_cast<" + type + L">(keyEnum)";
+        }
+        else
             THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Unknown type: " + type);
     CATCH
     return result;
@@ -134,58 +195,52 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetJsonToObject(const 
 {
     std::vector<std::wstring> result;
     TRY
+        bool ifCaseNeedKey = IsCaptial(mapKeyType);
+        bool ifCaseNeedValue = !IsContain(macro, L"SPTR") && std::iswupper(type[0]); // for enum only
         std::wstring arrayStr = isArray ? L"Array" : L"";
-        std::wstring convertedPropertyNameForGeneral = isMap ? L"key" : (isArray ? L"" : (L"ConvertNamingStyle(L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, propertyName) + L", namestyle, NamingStyle::PascalCase)"));
+        std::wstring convertedPropertyNameForGeneral = isMap ? (ifCaseNeedKey ? L"keyEnumStr" : L"key") : (isArray ? L"" : (L"ConvertNamingStyle(L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, propertyName) + L", namestyle, NamingStyle::PascalCase)"));
         std::wstring arrayElementStr = convertedPropertyNameForGeneral.empty() ? L"ArrayElement" : L"";
         std::wstring currentParentName = isMap ? L"tmpObject" : parentName;
         std::wstring currentPropertyName = L"_" + propertyName;
         std::wstring insertPrefix = (isMap || isArray) ? (L"Insert" + propertyName + L"(" + (isMap ? (GetJsonToObjectMapKey(mapKeyType) + L", ") : L"")) : (currentPropertyName + L" = ");
         std::wstring insertSuffix = (isMap || isArray) ? L");" : L";";
+        std::wstring indentPrefix = INDENT;
+        if (ifCaseNeedKey || ifCaseNeedValue) {
+            if (ifCaseNeedValue) {
+                std::vector<std::wstring> enumSwitchStr = GetJsonToObjectEnumSwitch(propertyName, false, type, enumClassMapping);
+                result.insert(result.end(), enumSwitchStr.begin(), enumSwitchStr.end());
+            }
+            std::wstring ifContent = ifCaseNeedValue ? L" && " : L"";
+            ifContent = ifCaseNeedKey ? (L"keyEnum > -1" + ifContent) : L"";
+            ifContent += ifCaseNeedValue ? L"valueEnum > -1" : L"";
+            result.push_back(INDENT + L"if (" + ifContent + L")");
+            indentPrefix += INDENT;
+        }
         if (IsContain(macro, L"SPTR")) {
             // Object
-            result.push_back(INDENT + L"_" + propertyName + L"->DeserializeJson(" + currentParentName + L"->GetObject(ConvertNamingStyle(L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, propertyName) + L", namestyle, NamingStyle::PascalCase)));");
+            result.push_back(indentPrefix + L"_" + propertyName + L"->DeserializeJson(" + currentParentName + L"->GetObject(ConvertNamingStyle(L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, propertyName) + L", namestyle, NamingStyle::PascalCase)));");
         } else if (std::iswupper(type[0])) {
             // Enum
-            result.push_back(INDENT + L"std::wstring tmpEnum = json->GetString(ConvertNamingStyle(L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, propertyName) + L", namestyle, NamingStyle::PascalCase));");
-            result.push_back(INDENT + L"ToUpper(tmpEnum);");
-            bool isStart = true;
-            std::shared_ptr<VPGEnumClass> enumEnumClass = nullptr;
-            if (enumClassMapping.find(type) != enumClassMapping.end()) {
-                enumEnumClass = enumClassMapping.at(type);
-            } else if (enumClassMapping.find(L"vcc::" + type) != enumClassMapping.end()) {
-                enumEnumClass = enumClassMapping.at(L"vcc::" + type);
-            } else
-                THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"VPGObjectFileGenerationService::GenerateCpp Enum Class " + type + L" cannot found");
-            for (auto const &enumEnumClassProperty : enumEnumClass->GetProperties()) {
-                std::wstring ifPrefix = isStart ? L"" : L"else ";
-                std::wstring enumNameUpper = enumEnumClassProperty->GetEnum();
-                ToUpper(enumNameUpper);
-                result.push_back(INDENT + ifPrefix + L"if (tmpEnum == L\"" + enumNameUpper + L"\")");
-                result.push_back(INDENT + INDENT + insertPrefix + enumEnumClass->GetName() + L"::" + enumEnumClassProperty->GetEnum() + insertSuffix);
-                
-                isStart = false;
-            }
-            result.push_back(INDENT + L"else");
-            result.push_back(INDENT + INDENT + L"THROW_EXCEPTION_MSG(ExceptionType::ParserError, L\"Unknow Interface: \" + tmpEnum);");
+            result.push_back(indentPrefix + insertPrefix + L"static_cast<" + type + L">(valueEnum)" + insertSuffix);
         } else {
             if (type == L"bool")
-                result.push_back(INDENT + insertPrefix + currentParentName + L"->Get" + arrayElementStr + L"Bool(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
+                result.push_back(indentPrefix + insertPrefix + currentParentName + L"->Get" + arrayElementStr + L"Bool(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
             else if (type == L"char")
-                result.push_back(INDENT + insertPrefix + currentParentName + L"->Get" + arrayElementStr + L"Char(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
+                result.push_back(indentPrefix + insertPrefix + currentParentName + L"->Get" + arrayElementStr + L"Char(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
             else if (type == L"wchar_t")
-                result.push_back(INDENT + insertPrefix + currentParentName + L"->Get" + arrayElementStr + L"Wchar(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
+                result.push_back(indentPrefix + insertPrefix + currentParentName + L"->Get" + arrayElementStr + L"Wchar(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
             else if (IsContain(type, L"int")
                 || IsContain(type, L"short")
                 || IsContain(type, L"long")
                 || type == L"size_t"
                 || type == L"time_t")
-                result.push_back(INDENT + insertPrefix + L"static_cast<" + type + L">(" + currentParentName + L"->Get" + arrayElementStr + L"Int64(" + convertedPropertyNameForGeneral + L"))" + insertSuffix);
+                result.push_back(indentPrefix + insertPrefix + L"static_cast<" + type + L">(" + currentParentName + L"->Get" + arrayElementStr + L"Int64(" + convertedPropertyNameForGeneral + L"))" + insertSuffix);
             else if (type == L"double" || type == L"float")
-                result.push_back(INDENT + insertPrefix + L"static_cast<" + type + L">(" + currentParentName + L"->Get" + arrayElementStr + L"Double(" + convertedPropertyNameForGeneral + L"))" + insertSuffix);
+                result.push_back(indentPrefix + insertPrefix + L"static_cast<" + type + L">(" + currentParentName + L"->Get" + arrayElementStr + L"Double(" + convertedPropertyNameForGeneral + L"))" + insertSuffix);
             else if (type == L"std::string")
-                result.push_back(INDENT + insertPrefix + L"wstr2str(" + currentParentName + L"->Get" + arrayElementStr + L"String(" + convertedPropertyNameForGeneral + L"))" + insertSuffix);
+                result.push_back(indentPrefix + insertPrefix + L"wstr2str(" + currentParentName + L"->Get" + arrayElementStr + L"String(" + convertedPropertyNameForGeneral + L"))" + insertSuffix);
             else if (type == L"std::wstring")
-                result.push_back(INDENT + insertPrefix + currentParentName + L"->Get" + arrayElementStr + L"String(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
+                result.push_back(indentPrefix + insertPrefix + currentParentName + L"->Get" + arrayElementStr + L"String(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
             else
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"VPGObjectFileGenerationService::GenerateCpp Unknown type: " + type);
         }
@@ -533,9 +588,25 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogProperty *logProperty,
                         + INDENT + INDENT + INDENT + L"std::shared_ptr<Json> tmpObject = json->GetObject(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase));\r\n"
                         + INDENT + INDENT + INDENT + L"std::vector<std::wstring> tmpKeys = tmpObject->GetKeys();\r\n"
                         + INDENT + INDENT + INDENT + L"for (auto const &key : tmpKeys) {\r\n";
+                        
+                    std::wstring toJsonStrKeyStr = L"";
+                    if (IsCaptial(originalType)) {
+                        std::vector<std::wstring> objectToJsonEnumKeySwitchStrings = GetObjectToJsonEnumSwitch(L"element.first", L"keyStr", originalType, enumClassMapping);
+                        for (auto const &str : objectToJsonEnumKeySwitchStrings)
+                            toJsonStr += INDENT + INDENT + INDENT + str + L"\r\n";
+
+                        toJsonStrKeyStr = L"keyStr";
+
+                        std::vector<std::wstring> jsonToObjectEnumkeySwtichStrings = GetJsonToObjectEnumSwitch(L"key", true, originalType, enumClassMapping);
+                        for (auto const &str : jsonToObjectEnumkeySwtichStrings)
+                            deserializeStr += INDENT + INDENT + INDENT + str + L"\r\n";
+                    } else if (originalType == L"std::wstring")
+                        toJsonStrKeyStr = L"element.first";
+                    else
+                        toJsonStrKeyStr = L"std::to_wstring(element.first)";
                     if (IsContain(originalMacro, L"SPTR")) {
                         // Object
-                        toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->AddObject(" + (originalType != L"std::wstring" ? L"std::to_wstring(element.first)" : L"element.first") + L", element->ToJson());\r\n";
+                        toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->AddObject(" + toJsonStrKeyStr + L", element.second->ToJson());\r\n";
                     
                         deserializeStr += INDENT + INDENT + INDENT + INDENT + L"if (tmpObject->GetObject(key) != nullptr) {\r\n"
                             + INDENT + INDENT + INDENT + INDENT + INDENT + L"DECLARE_SPTR(" + property->GetType2() + L", tmpElementObject);\r\n"
@@ -544,7 +615,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogProperty *logProperty,
                             + INDENT + INDENT + INDENT + INDENT + L"} else\r\n"
                             + INDENT + INDENT + INDENT + INDENT + INDENT + L"Insert" + propertyName + L"(" + GetJsonToObjectMapKey(originalType) + L", nullptr);\r\n";
                     } else {
-                        std::vector<std::wstring> jsonStrings = GetObjectToJson(enumClassMapping, L"tmp" + propertyName, originalMacro, property->GetType2(), L"std::to_wstring(element.first)", false, true);
+                        std::vector<std::wstring> jsonStrings = GetObjectToJson(enumClassMapping, L"tmp" + propertyName, originalMacro, property->GetType2(), toJsonStrKeyStr, false, true);
                         for (auto const &str : jsonStrings)
                             toJsonStr += INDENT + INDENT + INDENT + str + L"\r\n";
 

@@ -21,6 +21,7 @@ enum class ExceptionType
 	// parser
 	ParserError,
 	// key
+	KeyInvalid,
 	KeyNotFound,
 	KeyDuplicated,
 

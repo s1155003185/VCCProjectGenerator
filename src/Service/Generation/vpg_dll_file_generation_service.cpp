@@ -79,7 +79,6 @@ void VPGDllFileGenerationService::GenerateCpp(const LogProperty *logProperty, co
         if (option->GetIsGeneratePropertyAccessor()) {
             customIncludeFiles.insert(L"exception_macro.hpp");
             customIncludeFiles.insert(L"i_object.hpp");
-            customIncludeFiles.insert(L"i_type_union.hpp");
             customIncludeFiles.insert(L"lock_type.hpp");
             customIncludeFiles.insert(L"property_accessor_factory.hpp");
             customIncludeFiles.insert(L"property_accessor_macro.hpp");

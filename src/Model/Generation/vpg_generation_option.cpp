@@ -22,15 +22,17 @@ std::shared_ptr<Json> VPGGenerationOptionExport::ToJson() const
         NamingStyle namestyle = NamingStyle::PascalCase;
         DECLARE_UPTR(Json, json);
         // Interface
+        std::wstring interfaceValueStr = L"";
         switch (_Interface)
         {
         case VPGGenerationOptionInterfaceType::Java:
-            json->AddString(ConvertNamingStyle(L"Interface", NamingStyle::PascalCase, namestyle), L"Java");
+            interfaceValueStr = L"Java";
             break;
         default:
             assert(false);
             break;
         }
+        json->AddString(ConvertNamingStyle(L"Interface", NamingStyle::PascalCase, namestyle), interfaceValueStr);
         // Workspace
         json->AddString(ConvertNamingStyle(L"Workspace", NamingStyle::PascalCase, namestyle), _Workspace);
         // DllBridgeDirectory
@@ -52,12 +54,14 @@ void VPGGenerationOptionExport::DeserializeJson(std::shared_ptr<IDocument> docum
         assert(json != nullptr);
         // Interface
         if (json->IsContainKey(ConvertNamingStyle(L"Interface", namestyle, NamingStyle::PascalCase))) {
-            std::wstring tmpEnum = json->GetString(ConvertNamingStyle(L"Interface", namestyle, NamingStyle::PascalCase));
-            ToUpper(tmpEnum);
-            if (tmpEnum == L"JAVA")
-                _Interface = VPGGenerationOptionInterfaceType::Java;
-            else
-                THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Unknow Interface: " + tmpEnum);
+            std::wstring valueEnumStr = json->GetString(ConvertNamingStyle(L"Interface", namestyle, NamingStyle::PascalCase));
+            std::wstring valueEnumStrUpper = valueEnumStr;
+            ToUpper(valueEnumStrUpper);
+            int64_t valueEnum = -1;
+            if (valueEnumStrUpper == L"JAVA")
+                valueEnum = static_cast<int64_t>(VPGGenerationOptionInterfaceType::Java);
+            if (valueEnum > -1)
+                _Interface = static_cast<VPGGenerationOptionInterfaceType>(valueEnum);
         }
         // Workspace
         if (json->IsContainKey(ConvertNamingStyle(L"Workspace", namestyle, NamingStyle::PascalCase)))
@@ -82,33 +86,35 @@ std::shared_ptr<Json> VPGGenerationOption::ToJson() const
         // Version
         json->AddString(ConvertNamingStyle(L"Version", NamingStyle::PascalCase, namestyle), _Version);
         // ProjectType
+        std::wstring projectTypeValueStr = L"";
         switch (_ProjectType)
         {
         case VPGProjectType::VccModule:
-            json->AddString(ConvertNamingStyle(L"ProjectType", NamingStyle::PascalCase, namestyle), L"VccModule");
+            projectTypeValueStr = L"VccModule";
             break;
         case VPGProjectType::VccComplex:
-            json->AddString(ConvertNamingStyle(L"ProjectType", NamingStyle::PascalCase, namestyle), L"VccComplex");
+            projectTypeValueStr = L"VccComplex";
             break;
         case VPGProjectType::VccDll:
-            json->AddString(ConvertNamingStyle(L"ProjectType", NamingStyle::PascalCase, namestyle), L"VccDll");
+            projectTypeValueStr = L"VccDll";
             break;
         case VPGProjectType::VccExe:
-            json->AddString(ConvertNamingStyle(L"ProjectType", NamingStyle::PascalCase, namestyle), L"VccExe");
+            projectTypeValueStr = L"VccExe";
             break;
         case VPGProjectType::CppComplex:
-            json->AddString(ConvertNamingStyle(L"ProjectType", NamingStyle::PascalCase, namestyle), L"CppComplex");
+            projectTypeValueStr = L"CppComplex";
             break;
         case VPGProjectType::CppDll:
-            json->AddString(ConvertNamingStyle(L"ProjectType", NamingStyle::PascalCase, namestyle), L"CppDll");
+            projectTypeValueStr = L"CppDll";
             break;
         case VPGProjectType::CppExe:
-            json->AddString(ConvertNamingStyle(L"ProjectType", NamingStyle::PascalCase, namestyle), L"CppExe");
+            projectTypeValueStr = L"CppExe";
             break;
         default:
             assert(false);
             break;
         }
+        json->AddString(ConvertNamingStyle(L"ProjectType", NamingStyle::PascalCase, namestyle), projectTypeValueStr);
         // TemplateGitUrl
         json->AddString(ConvertNamingStyle(L"TemplateGitUrl", NamingStyle::PascalCase, namestyle), _TemplateGitUrl);
         // TemplateWorkspace
@@ -181,24 +187,26 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
             _Version = json->GetString(ConvertNamingStyle(L"Version", namestyle, NamingStyle::PascalCase));
         // ProjectType
         if (json->IsContainKey(ConvertNamingStyle(L"ProjectType", namestyle, NamingStyle::PascalCase))) {
-            std::wstring tmpEnum = json->GetString(ConvertNamingStyle(L"ProjectType", namestyle, NamingStyle::PascalCase));
-            ToUpper(tmpEnum);
-            if (tmpEnum == L"VCCMODULE")
-                _ProjectType = VPGProjectType::VccModule;
-            else if (tmpEnum == L"VCCCOMPLEX")
-                _ProjectType = VPGProjectType::VccComplex;
-            else if (tmpEnum == L"VCCDLL")
-                _ProjectType = VPGProjectType::VccDll;
-            else if (tmpEnum == L"VCCEXE")
-                _ProjectType = VPGProjectType::VccExe;
-            else if (tmpEnum == L"CPPCOMPLEX")
-                _ProjectType = VPGProjectType::CppComplex;
-            else if (tmpEnum == L"CPPDLL")
-                _ProjectType = VPGProjectType::CppDll;
-            else if (tmpEnum == L"CPPEXE")
-                _ProjectType = VPGProjectType::CppExe;
-            else
-                THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Unknow Interface: " + tmpEnum);
+            std::wstring valueEnumStr = json->GetString(ConvertNamingStyle(L"ProjectType", namestyle, NamingStyle::PascalCase));
+            std::wstring valueEnumStrUpper = valueEnumStr;
+            ToUpper(valueEnumStrUpper);
+            int64_t valueEnum = -1;
+            if (valueEnumStrUpper == L"VCCMODULE")
+                valueEnum = static_cast<int64_t>(VPGProjectType::VccModule);
+            else if (valueEnumStrUpper == L"VCCCOMPLEX")
+                valueEnum = static_cast<int64_t>(VPGProjectType::VccComplex);
+            else if (valueEnumStrUpper == L"VCCDLL")
+                valueEnum = static_cast<int64_t>(VPGProjectType::VccDll);
+            else if (valueEnumStrUpper == L"VCCEXE")
+                valueEnum = static_cast<int64_t>(VPGProjectType::VccExe);
+            else if (valueEnumStrUpper == L"CPPCOMPLEX")
+                valueEnum = static_cast<int64_t>(VPGProjectType::CppComplex);
+            else if (valueEnumStrUpper == L"CPPDLL")
+                valueEnum = static_cast<int64_t>(VPGProjectType::CppDll);
+            else if (valueEnumStrUpper == L"CPPEXE")
+                valueEnum = static_cast<int64_t>(VPGProjectType::CppExe);
+            if (valueEnum > -1)
+                _ProjectType = static_cast<VPGProjectType>(valueEnum);
         }
         // TemplateGitUrl
         if (json->IsContainKey(ConvertNamingStyle(L"TemplateGitUrl", namestyle, NamingStyle::PascalCase)))

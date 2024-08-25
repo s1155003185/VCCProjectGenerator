@@ -9,7 +9,6 @@
 // <vcc:dllInterfaceHeader gen="FORCE">
 #include "exception_macro.hpp"
 #include "i_object.hpp"
-#include "i_type_union.hpp"
 #include "lock_type.hpp"
 #include "property_accessor_factory.hpp"
 #include "property_accessor_macro.hpp"

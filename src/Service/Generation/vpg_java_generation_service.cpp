@@ -10,6 +10,7 @@
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_generation_option.hpp"
 #include "vpg_generation_option_interface_type.hpp"
+#include "vpg_property_accessor_generation_service.hpp"
 
 using namespace vcc;
 
@@ -77,22 +78,24 @@ std::wstring VPGJavaGenerationService::GetJavaGetterSetterCppToJavaConvertedType
 {
     TRY
         if (cppType == L"bool") {
-            return L"Boolean";
+            return L"boolean";
         } else if (cppType == L"char"
             || cppType == L"byte") {
-            return L"Byte";
+            return L"byte";
         } else if (cppType == L"wchar_t") {
             return L"char";
+        } else if (cppType == L"int") {
+            return L"int";
         } else if (IsContain(cppType, L"int")
             || IsContain(cppType, L"short")
             || IsContain(cppType, L"long")
             || cppType == L"size_t"
             || cppType == L"time_t") {
-            return L"Integer";
+            return L"long";
         } else if (cppType == L"float") {
-            return L"Float";
+            return L"float";
         } else if (cppType == L"double") {
-            return L"Double";
+            return L"double";
         } else if (cppType == L"std::string"
             || cppType == L"std::wstring") {
             return L"String";
@@ -118,21 +121,11 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
         Trim(filePrefix);
         ToUpper(filePrefix);
 
+        std::set<std::wstring> importPackages;
+        importPackages.insert(L"com.sun.jna.Library");
+        importPackages.insert(L"com.sun.jna.Native");
+        importPackages.insert(L"com.sun.jna.ptr.PointerByReference");
         std::wstring packageFolder = GetJavaPactkage(javaOption->GetDllBridgeDirectory(), L"", L"Dll Bridge Directory");
-        result += L"package " + packageFolder + L";\r\n"
-            "\r\n"
-            "import com.sun.jna.Library;\r\n"
-            "import com.sun.jna.Native;\r\n"
-            "import com.sun.jna.ptr.PointerByReference;\r\n"
-            "\r\n"
-            "public interface " + filePrefix + L"DllFunctions extends Library {\r\n"
-            + INDENT + filePrefix + L"DllFunctions Instance = loadLibrary();\r\n"
-            "\r\n"
-            + INDENT + L"static private " + filePrefix + L"DllFunctions loadLibrary() {\r\n"
-            + INDENT + INDENT + L"String prefix = System.getProperty(\"os.name\").startsWith(\"Windows\") ? \"lib\" : \"\";\r\n"
-            + INDENT + INDENT + L"return (" + filePrefix + L"DllFunctions)Native.load(prefix + \"vpg\", " + filePrefix + L"DllFunctions.class);\r\n"
-            + INDENT + L"}\r\n"
-            "\r\n";
 
         size_t pos = Find(content, dllExportStart);
         if (pos == std::wstring::npos)
@@ -211,30 +204,42 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                     }
                     Trim(argumentType);
                     Trim(argumentName);
-                    argumentStr += GetPropertyAccessorCppToJavaConvertedType(argumentType) + L" " + argumentName;
+
+                    std::wstring javaType = GetPropertyAccessorCppToJavaConvertedType(argumentType);
+                    if (javaType == L"Pointer")
+                        importPackages.insert(L"com.sun.jna.Pointer");
+                    argumentStr += javaType + L" " + argumentName;
                 }
                 result += argumentStr + L");\r\n";
                 pos = endPos;
             } else if (IsStartWith(content, dllInterfaceExportPropertyAccessorString, pos)) {
-                result += INDENT + L"void ReadString(PointerByReference ref, Integer property, PointerByReference value, Integer index);\r\n"
-                    + INDENT + L"void ReadStringByKey(PointerByReference ref, Integer property, PointerByReference value, PointerByReference key);\r\n"
-                    + INDENT + L"void WriteString(PointerByReference ref, Integer property, PointerByReference value, Integer index);\r\n"
-                    + INDENT + L"void WriteStringByKey(PointerByReference ref, Integer property, PointerByReference value, PointerByReference key);\r\n";
+                importPackages.insert(L"com.sun.jna.Pointer");
+                result += INDENT + L"void ReadString(PointerByReference ref, long property, PointerByReference value, long index);\r\n"
+                    + INDENT + L"void ReadStringByKey(PointerByReference ref, long property, PointerByReference value, Pointer key);\r\n"
+                    + INDENT + L"void WriteString(PointerByReference ref, long property, PointerByReference value, long index);\r\n"
+                    + INDENT + L"void WriteStringByKey(PointerByReference ref, long property, PointerByReference value, Pointer key);\r\n"
+                    + INDENT + L"void InsertString(PointerByReference ref, long property, PointerByReference value, long index);\r\n";
                 pos += dllInterfaceExportPropertyAccessorString.length() - 1;
             } else if (IsStartWith(content, dllInterfaceExportPropertyAccessorObject, pos)) {
-                result += INDENT + L"PointerByReference ReadObject(PointerByReference ref, Integer property, Integer index);\r\n"
-                    + INDENT + L"PointerByReference ReadObjectByKey(PointerByReference ref, Integer property, PointerByReference key);\r\n"
-                    + INDENT + L"void WriteObject(PointerByReference ref, Integer property, PointerByReference value, Integer index);\r\n"
-                    + INDENT + L"void WriteObjectByKey(PointerByReference ref, Integer property, PointerByReference value, PointerByReference key);\r\n";
+                importPackages.insert(L"com.sun.jna.Pointer");
+                result += INDENT + L"PointerByReference ReadObject(PointerByReference ref, long property, long index);\r\n"
+                    + INDENT + L"PointerByReference ReadObjectByKey(PointerByReference ref, long property, Pointer key);\r\n"
+                    + INDENT + L"void WriteObject(PointerByReference ref, long property, PointerByReference value, long index);\r\n"
+                    + INDENT + L"void WriteObjectByKey(PointerByReference ref, long property, PointerByReference value, Pointer key);\r\n"
+                    + INDENT + L"PointerByReference AddObject(PointerByReference ref, long property, long objectType, long index);\r\n"
+                    + INDENT + L"void InsertObject(PointerByReference ref, long property, PointerByReference value, long index);\r\n";
                 pos += dllInterfaceExportPropertyAccessorObject.length() - 1;
             } else if (IsStartWith(content, dllInterfaceExportPropertyAccessorContainer, pos)) {
-                result += INDENT + L"Integer GetContainerCount(PointerByReference ref, Integer property);\r\n"
-                    + INDENT + L"Boolean IsContainKey(PointerByReference ref, Integer property, PointerByReference key);\r\n"
-                    + INDENT + L"void RemoveContainerElement(PointerByReference ref, Integer property, Integer index);\r\n"
-                    + INDENT + L"void RemoveContainerElementByKey(PointerByReference ref, Integer property, PointerByReference key);\r\n"
-                    + INDENT + L"void ClearContainer(PointerByReference ref, Integer property);\r\n";
+                importPackages.insert(L"com.sun.jna.Pointer");
+                result += INDENT + L"long GetContainerCount(PointerByReference ref, long property);\r\n"
+                    + INDENT + L"boolean IsContainKey(PointerByReference ref, long property, Pointer key);\r\n"
+                    + INDENT + L"void RemoveContainerElement(PointerByReference ref, long property, long index);\r\n"
+                    + INDENT + L"void RemoveContainerElementByKey(PointerByReference ref, long property, Pointer key);\r\n"
+                    + INDENT + L"void ClearContainer(PointerByReference ref, long property);\r\n";
                 pos += dllInterfaceExportPropertyAccessorContainer.length() - 1;
             } else if (IsStartWith(content, dllInterfaceExportPropertyAccessor, pos)) {
+                importPackages.insert(L"com.sun.jna.Pointer");
+
                 pos = Find(content, L"(", pos);
                 if (pos == std::wstring::npos)
                     THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"DllFunctions.h macro " + dllInterfaceExportPropertyAccessor + L" missing (");
@@ -253,15 +258,33 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                 std::wstring name = tokens[1];
                 Trim(name);
                 std::wstring convectedType = GetPropertyAccessorCppToJavaConvertedType(type);
-                result += INDENT + convectedType + L" Read" + name + L"(PointerByReference ref, Integer property, Integer index);\r\n"
-                    + INDENT + convectedType + L" Read" + name + L"ByKey(PointerByReference ref, Integer property, PointerByReference key);\r\n"
-                    + INDENT + L"void Write" + name + L"(PointerByReference ref, Integer property, " + convectedType + L" value, Integer index);\r\n"
-                    + INDENT + L"void Write" + name + L"ByKey(PointerByReference ref, Integer property, " + convectedType + L" value, PointerByReference key);\r\n";
+                result += INDENT + convectedType + L" Read" + name + L"(PointerByReference ref, long property, long index);\r\n"
+                    + INDENT + convectedType + L" Read" + name + L"ByKey(PointerByReference ref, long property, Pointer key);\r\n"
+                    + INDENT + L"void Write" + name + L"(PointerByReference ref, long property, " + convectedType + L" value, long index);\r\n"
+                    + INDENT + L"void Write" + name + L"ByKey(PointerByReference ref, long property, " + convectedType + L" value, Pointer key);\r\n"
+                    + INDENT + L"void Insert" + name + L"(PointerByReference ref, long property, " + convectedType + L" value, long index);\r\n";
                 pos = endPos;
             } 
             GetNextCharPos(content, pos, false);
         }
-        result += L"}\r\n";
+        std::wstring importPackageStr = L"";
+        for (auto const &str : importPackages)
+            importPackageStr += L"import " + str + L";\r\n";
+
+        result = L"package " + packageFolder + L";\r\n"
+            "\r\n"
+            + importPackageStr
+            + L"\r\n"
+            "public interface " + filePrefix + L"DllFunctions extends Library {\r\n"
+            + INDENT + filePrefix + L"DllFunctions Instance = loadLibrary();\r\n"
+            "\r\n"
+            + INDENT + L"static private " + filePrefix + L"DllFunctions loadLibrary() {\r\n"
+            + INDENT + INDENT + L"String prefix = System.getProperty(\"os.name\").startsWith(\"Windows\") ? \"lib\" : \"\";\r\n"
+            + INDENT + INDENT + L"return (" + filePrefix + L"DllFunctions)Native.load(prefix + \"vpg\", " + filePrefix + L"DllFunctions.class);\r\n"
+            + INDENT + L"}\r\n"
+            "\r\n"
+            + result
+            + L"}\r\n";
     CATCH
     return result;
 }
@@ -296,6 +319,8 @@ std::wstring VPGJavaGenerationService::GenerateEnumContent(const std::wstring &p
         std::wstring packageFolder = GetJavaPactkage(option->GetTypeDirectory(), middlePath, L"Type Directory");
         result += L"package " + packageFolder + L";\r\n"
             "\r\n"
+            "import java.util.Objects;\r\n"
+            "\r\n"
             "public enum " + enumClassName + L" {\r\n";
         int64_t enumValue = 0;
         for (size_t i = 0; i < enumClass->GetProperties().size(); i++) {
@@ -316,7 +341,357 @@ std::wstring VPGJavaGenerationService::GenerateEnumContent(const std::wstring &p
             + INDENT + L"public Integer getValue() {\r\n"
             + INDENT + INDENT + L"return value;\r\n"
             + INDENT + L"}\r\n"
+            "\r\n"
+            + INDENT + L"public static " + enumClassName + L" parse(Integer value) {\r\n"
+            + INDENT + INDENT + L"for (" + enumClassName + L" type : values()) {\r\n"
+            + INDENT + INDENT + INDENT + L"if (Objects.equals(type.value, value)) {\r\n"
+            + INDENT + INDENT + INDENT + INDENT + L"return type;\r\n"
+            + INDENT + INDENT + INDENT + L"}\r\n"
+            + INDENT + INDENT + L"}\r\n"
+            + INDENT + INDENT + L"throw new IllegalArgumentException(\"Invalid " + enumClassName + L" value: \" + value);\r\n"
+            + INDENT + L"}\r\n"
+            "\r\n"
             "}\r\n";
+    CATCH
+    return result;
+}
+
+std::wstring VPGJavaGenerationService::GetGetterSetterMapKeyContent(const std::wstring &classPropertyEnum, const std::wstring &macro, const std::wstring &dllInstantPrefix, const std::wstring &javaType1,
+    const std::wstring &orginalFunction, const bool &isReturnNeeded)
+{
+    std::wstring result = L"";
+    TRY
+        if (IsContain(macro, L"SPTR")) {
+            result += INDENT + INDENT + (isReturnNeeded ? L"return " : L"") + dllInstantPrefix + orginalFunction + L"(Reference, " + classPropertyEnum + L", key.Reference);\r\n";
+        } else {
+            if (javaType1 == L"String")
+                result += INDENT + INDENT + L"Pointer keyPtr = new Memory(Native.WCHAR_SIZE * (key.length() + 1));\r\n"
+                    + INDENT + INDENT + L"keyPtr.setWideString(0, key);\r\n";
+            else if (IsCaptial(javaType1)) {
+                // Enum
+                result += INDENT + INDENT + L"Pointer keyPtr = new Memory(Native.getNativeSize(long.class));\r\n"
+                    + INDENT + INDENT + L"keyPtr.setLong(0, (long)key.getValue());\r\n";
+            } else {
+                std::wstring capitialType = javaType1;
+                ToCapital(capitialType);
+                result += INDENT + INDENT + L"Pointer keyPtr = new Memory(Native.getNativeSize(" + javaType1 + L".class));\r\n"
+                    + INDENT + INDENT + L"keyPtr.set" + capitialType + L"(0, key);\r\n";
+            }
+            result += INDENT + INDENT + (isReturnNeeded ? L"return " : L"") + dllInstantPrefix + orginalFunction + L"(Reference, " + classPropertyEnum + L", keyPtr);\r\n";
+        }
+    CATCH
+    return result;
+}
+
+std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainerCount(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty, bool isVector, bool isMap, bool isSet)
+{
+    std::wstring result = L"";
+    TRY
+        if (!isVector && !isMap && !isSet)
+            return result;
+
+        std::wstring dllInstantPrefix = projectPrefix + L"DllFunctions.Instance.";
+        std::wstring classPropertyEnum = objectProperty + L"." + property->GetEnum() + L".getValue()";
+
+        result += L"\r\n"
+        + INDENT + L"public long get" + property->GetPropertyName() + L"Count() {\r\n"
+        + INDENT + INDENT + L"return " + dllInstantPrefix + L"GetContainerCount(Reference, " + classPropertyEnum + L");\r\n"
+        + INDENT + L"}\r\n";
+    CATCH
+    return result;
+}
+
+std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty, const std::wstring &javaType1, bool isVector, bool isMap, bool isSet)
+{
+    std::wstring result = L"";
+    TRY
+        if (!isVector && !isMap && !isSet)
+            return result;
+        
+        bool isAllowWrite = property->GetAccessMode() == VPGEnumClassPropertyAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassPropertyAccessMode::WriteOnly;
+        std::wstring dllInstantPrefix = projectPrefix + L"DllFunctions.Instance.";
+        std::wstring classPropertyEnum = objectProperty + L"." + property->GetEnum() + L".getValue()";
+        std::wstring macro = property->GetMacro().substr(0, property->GetMacro().find(L"("));
+
+        if (isMap)
+            result += L"\r\n"
+                + INDENT + L"public boolean is" + property->GetPropertyName() + L"ContainKey(" + javaType1 + L" key) {\r\n"
+                + GetGetterSetterMapKeyContent(classPropertyEnum, macro, dllInstantPrefix, javaType1, L"IsContainKey", true)
+                + INDENT + L"}\r\n";
+
+        if (isVector && isAllowWrite)
+            result += L"\r\n"
+                + INDENT + L"public void remove" + property->GetPropertyName() + L"At(long index) {\r\n"
+                + INDENT + INDENT + dllInstantPrefix + L"RemoveContainerElement(Reference, " + classPropertyEnum + L", index);\r\n"
+                + INDENT + L"}\r\n";
+
+        if (isMap && isAllowWrite) {
+            result += L"\r\n"
+                + INDENT + L"public void remove" + property->GetPropertyName() + L"ByKey(" + javaType1 + L" key) {\r\n"
+                + GetGetterSetterMapKeyContent(classPropertyEnum, macro, dllInstantPrefix, javaType1, L"RemoveContainerElementByKey", false)
+                + INDENT + L"}\r\n";
+        }
+            
+        if (isSet) {
+            // TODO: no handle at the moment
+        }
+        
+        if (isAllowWrite)
+            result += L"\r\n"
+                + INDENT + L"public void clear" + property->GetPropertyName() + L"() {\r\n"
+                + INDENT + INDENT + dllInstantPrefix + L"ClearContainer(Reference, " + classPropertyEnum + L");\r\n"
+                + INDENT + L"}\r\n";
+    CATCH
+    return result;
+}
+
+std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterRead(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
+    const std::wstring &macro, const std::wstring &cppType1, const std::wstring &javaType1, const std::wstring &cppType2, const std::wstring &javaType2,
+    bool isVector, bool isMap, bool isSet, std::set<std::wstring> &importFiles)
+{
+    std::wstring result = L"";
+    TRY
+        bool isAllowRead = property->GetAccessMode() == VPGEnumClassPropertyAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassPropertyAccessMode::ReadOnly;
+        if (!isAllowRead)
+            return result;
+
+        std::wstring dllInstantPrefix = projectPrefix + L"DllFunctions.Instance.";
+        std::wstring classPropertyEnum = objectProperty + L"." + property->GetEnum() + L".getValue()";
+        
+        std::wstring javaFunctionNameSuffix = L"";
+        std::wstring javaFunctionArgument = L"";
+        std::wstring dllFunctionIndex = L"-1";
+        if (isVector) {
+            javaFunctionNameSuffix = L"At";
+            javaFunctionArgument = L"long index";
+            dllFunctionIndex = L"index";
+        } else if (isMap) {
+            javaFunctionNameSuffix = L"ByKey";
+            javaFunctionArgument = javaType1 + L" key";
+            dllFunctionIndex = L"keyPtr";
+            
+            importFiles.insert(L"com.sun.jna.Memory");
+            importFiles.insert(L"com.sun.jna.Native");
+            importFiles.insert(L"com.sun.jna.Pointer");
+        } else if (isSet) {
+            // not support set
+            return result;
+        }
+        
+        std::wstring returnJavaType = isMap ? javaType2 : javaType1;
+        std::wstring returnCppType = isMap ? cppType2 : cppType1;
+
+        std::wstring convertedType = L"";
+        std::wstring convertedName = L"";
+        std::wstring returnResult = L"";
+        VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(returnCppType, convertedType, convertedName, returnResult);
+
+        result += L"\r\n"
+            + INDENT + L"public " + returnJavaType + L" get" + property->GetPropertyName() + javaFunctionNameSuffix + L"(" + javaFunctionArgument + L") {\r\n";
+        if (isMap) {
+            if (IsContain(macro, L"SPTR")) {
+                result += INDENT + INDENT + L"Pointer keyReference = key.Reference;\r\n";
+            } else {
+                if (javaType1 == L"String")
+                    result += INDENT + INDENT + L"Pointer keyPtr = new Memory(Native.WCHAR_SIZE * (key.length() + 1));\r\n"
+                        + INDENT + INDENT + L"keyPtr.setWideString(0, key);\r\n";
+                else if (IsCaptial(javaType1)) {
+                    // Enum
+                    result += INDENT + INDENT + L"Pointer keyPtr = new Memory(Native.getNativeSize(long.class));\r\n"
+                        + INDENT + INDENT + L"keyPtr.setLong(0, (long)key.getValue());\r\n";
+                } else {
+                    std::wstring capitialType = javaType1;
+                    ToCapital(capitialType);
+                    result += INDENT + INDENT + L"Pointer keyPtr = new Memory(Native.getNativeSize(" + javaType1 + L".class));\r\n"
+                        + INDENT + INDENT + L"keyPtr.set" + capitialType + L"(0, key);\r\n";
+                }
+            }
+        }
+        if (returnJavaType == L"String") {
+            result += INDENT + INDENT + L"PointerByReference result = new PointerByReference();\r\n"
+                + INDENT + INDENT + dllInstantPrefix + L"ReadString" + (isMap ? L"ByKey" : L"") + L"(Reference, " + classPropertyEnum + L", result, " + dllFunctionIndex + L");\r\n"
+                + INDENT + INDENT + L"return result.getValue().getWideString(0);\r\n"; 
+        } else if (IsContain(macro, L"SPTR")) {
+            // Object
+            result += INDENT + INDENT + L"return new " + returnJavaType + L"(" + dllInstantPrefix + L"ReadObject" + (isMap ? L"ByKey" : L"") + L"(Reference, " + classPropertyEnum + L", " + dllFunctionIndex + L"));\r\n";
+        } else if (IsCaptial(returnJavaType)) {
+            // Enum
+            result += INDENT + INDENT + L"return " + returnJavaType + L".parse((int)" + dllInstantPrefix + L"ReadLong" + (isMap ? L"ByKey" : L"") + L"(Reference, " + classPropertyEnum + L", " + dllFunctionIndex + L"));\r\n";
+        } else {
+            // Normal Type
+            result += INDENT + INDENT + L"return " + dllInstantPrefix + L"Read" + convertedName + (isMap ? L"ByKey" : L"") + L"(Reference, " + classPropertyEnum + L", " + dllFunctionIndex + L");\r\n";
+        }
+        result += INDENT + L"}\r\n";
+    CATCH
+    return result;
+}
+
+std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterWrite(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
+    const std::wstring &macro, const std::wstring &cppType1, const std::wstring &javaType1, const std::wstring &cppType2, const std::wstring &javaType2,
+    bool isVector, bool isMap, bool isSet,
+    const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles)
+{
+    std::wstring result= L"";
+    TRY
+        bool isAllowWrite = property->GetAccessMode() == VPGEnumClassPropertyAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassPropertyAccessMode::WriteOnly;
+        if (!isAllowWrite)
+            return result;
+
+        std::wstring dllInstantPrefix = projectPrefix + L"DllFunctions.Instance.";
+        std::wstring classPropertyEnum = objectProperty + L"." + property->GetEnum() + L".getValue()";
+        
+        std::wstring convertedType = L"";
+        std::wstring convertedName = L"";
+        std::wstring returnResult = L"";
+        VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(cppType1, convertedType, convertedName, returnResult);
+        
+        std::wstring javaFunctionNameSuffix = L"";
+        std::wstring javaFunctionArgument = L"";
+        std::wstring dllFunctionIndex = L"-1";
+        if (isVector) {
+            javaFunctionNameSuffix = L"At";
+            javaFunctionArgument = L"long index, ";
+            dllFunctionIndex = L"index";
+            
+            if (javaType1 == L"String") {
+                importFiles.insert(L"com.sun.jna.Memory");
+                importFiles.insert(L"com.sun.jna.Native");
+                importFiles.insert(L"com.sun.jna.Pointer");
+            }
+        } else if (isMap) {
+            javaFunctionNameSuffix = L"ByKey";
+            javaFunctionArgument = javaType1 + L" key, ";
+            dllFunctionIndex = L"keyPtr";
+            
+            importFiles.insert(L"com.sun.jna.Memory");
+            importFiles.insert(L"com.sun.jna.Native");
+            importFiles.insert(L"com.sun.jna.Pointer");
+        } else if (isSet) {
+            // not support set
+            return result;
+        } else {
+            if (javaType1 == L"String") {
+                importFiles.insert(L"com.sun.jna.Memory");
+                importFiles.insert(L"com.sun.jna.Native");
+                importFiles.insert(L"com.sun.jna.Pointer");
+            }
+        }
+
+        std::wstring javaType = isMap ? javaType2 : javaType1;
+        std::wstring cppType = isMap ? cppType2 : cppType1;
+
+        result += L"\r\n"
+            + INDENT + L"public void set" + property->GetPropertyName() + javaFunctionNameSuffix + L"(" + javaFunctionArgument + javaType + L" value) {\r\n";
+        if (isMap) {
+            if (IsContain(macro, L"SPTR")) {
+                result += INDENT + INDENT + L"Pointer keyReference = key.Reference;\r\n";
+            } else {
+                if (javaType1 == L"String")
+                    result += INDENT + INDENT + L"Pointer keyPtr = new Memory(Native.WCHAR_SIZE * (key.length() + 1));\r\n"
+                        + INDENT + INDENT + L"keyPtr.setWideString(0, key);\r\n";
+                else if (IsCaptial(javaType1)) {
+                    // Enum
+                    result += INDENT + INDENT + L"Pointer keyPtr = new Memory(Native.getNativeSize(long.class));\r\n"
+                        + INDENT + INDENT + L"keyPtr.setLong(0, (long)key.getValue());\r\n";
+                } else {
+                    std::wstring capitialType = javaType1;
+                    ToCapital(capitialType);
+                    result += INDENT + INDENT + L"Pointer keyPtr = new Memory(Native.getNativeSize(" + javaType1 + L".class));\r\n"
+                        + INDENT + INDENT + L"keyPtr.set" + capitialType + L"(0, key);\r\n";
+                }
+            }
+        }
+        if (javaType == L"String") {
+            result += INDENT + INDENT + L"Pointer valuePtr = new Memory(Native.WCHAR_SIZE * (value.length() + 1));\r\n"
+                + INDENT + INDENT + L"valuePtr.setWideString(0, value);\r\n"
+                + INDENT + INDENT + L"PointerByReference valueReference = new PointerByReference();\r\n"
+                + INDENT + INDENT + L"valueReference.setValue(valuePtr);\r\n"
+                + INDENT + INDENT + dllInstantPrefix + L"WriteString" + (isMap ? L"ByKey" : L"") + L"(Reference, " + classPropertyEnum + L", valueReference, " + dllFunctionIndex + L");\r\n";
+        } else if (IsContain(macro, L"SPTR")) {
+            // Object
+            result += INDENT + INDENT + dllInstantPrefix + L"WriteObject" + (isMap ? L"ByKey" : L"") + L"(Reference, " + classPropertyEnum + L", value.Reference, " + dllFunctionIndex + L");\r\n";
+        } else if (IsCaptial(cppType)) {
+            // Enum
+            result += INDENT + INDENT + dllInstantPrefix + L"WriteLong" + (isMap ? L"ByKey" : L"") + L"(Reference, " + classPropertyEnum + L", value.getValue(), " + dllFunctionIndex + L");\r\n";
+        } else {
+            result += INDENT + INDENT + dllInstantPrefix + L"Write" + convertedName + (isMap ? L"ByKey" : L"") + L"(Reference, " + classPropertyEnum + L", value, " + dllFunctionIndex + L");\r\n";
+        }
+        result += INDENT + L"}\r\n";
+
+        if (isVector) {
+            if ((IsContain(macro, L"SPTR"))) {
+                std::wstring objectTypeClass = projectPrefix + L"ObjectType";
+                if (importFileMap.find(L"ObjectType") != importFileMap.end())
+                    importFiles.insert(importFileMap.find(L"ObjectType")->second + L"." + objectTypeClass);
+
+                std::wstring objectType = cppType1;
+                if (IsStartWith(cppType1, projectPrefix))
+                    objectType = cppType1.substr(projectPrefix.length());
+                    
+                result += L"\r\n"
+                    + INDENT + L"public " + javaType1 + L" add" + property->GetPropertyName() + L"() {\r\n"
+                    + INDENT + INDENT + L"return add" + property->GetPropertyName() + javaFunctionNameSuffix + L"(-1);\r\n"
+                    + INDENT + L"}\r\n"
+                    "\r\n"
+                    + INDENT + L"public " + javaType1 + L" add" + property->GetPropertyName() + javaFunctionNameSuffix + L"(long index) {\r\n"
+                    + INDENT + INDENT + L"return new " + cppType1 + L"(" + dllInstantPrefix + L"AddObject(Reference, " + classPropertyEnum + L", " + objectTypeClass + L"." + objectType + L".getValue(), " + dllFunctionIndex + L"));\r\n"
+                    + INDENT + L"}\r\n";
+            }
+        }
+    CATCH
+    return result;
+}
+
+std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterInsert(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
+    const std::wstring &macro, const std::wstring &cppType1, const std::wstring &javaType1,
+    bool isVector, std::set<std::wstring> &importFiles)
+{
+    std::wstring result = L"";
+    TRY
+        if (!isVector)
+            return result;
+        
+        bool isAllowWrite = property->GetAccessMode() == VPGEnumClassPropertyAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassPropertyAccessMode::WriteOnly;
+        if (!isAllowWrite)
+            return result;
+
+        std::wstring dllInstantPrefix = projectPrefix + L"DllFunctions.Instance.";
+        std::wstring classPropertyEnum = objectProperty + L"." + property->GetEnum() + L".getValue()";
+        
+        std::wstring convertedType = L"";
+        std::wstring convertedName = L"";
+        std::wstring returnResult = L"";
+        VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(cppType1, convertedType, convertedName, returnResult);
+
+        std::wstring javaFunctionNameSuffix = L"At";
+        std::wstring dllFunctionIndex = L"index";
+
+        result += L"\r\n"
+            + INDENT + L"public void insert" + property->GetPropertyName() + L"(" + javaType1 + L" value) {\r\n"
+            + INDENT+ INDENT + L"insert" + property->GetPropertyName() + javaFunctionNameSuffix + L"(-1, value);\r\n"
+            + INDENT + L"}\r\n"
+            "\r\n";
+        result += INDENT + L"public void insert" + property->GetPropertyName() + javaFunctionNameSuffix + L"(long index, " + javaType1 + L" value) {\r\n";
+        if (javaType1 == L"String") {
+            importFiles.insert(L"com.sun.jna.Memory");
+            importFiles.insert(L"com.sun.jna.Native");
+            importFiles.insert(L"com.sun.jna.Pointer");
+
+            result += INDENT + INDENT + L"Pointer valuePtr = new Memory(Native.WCHAR_SIZE * (value.length() + 1));\r\n"
+                + INDENT + INDENT + L"valuePtr.setWideString(0, value);\r\n"
+                + INDENT + INDENT + L"PointerByReference valueReference = new PointerByReference();\r\n"
+                + INDENT + INDENT + L"valueReference.setValue(valuePtr);\r\n"
+                + INDENT + INDENT + dllInstantPrefix + L"InsertString(Reference, " + classPropertyEnum + L", valueReference, " + dllFunctionIndex + L");\r\n";
+        } else if (IsContain(macro, L"SPTR")) {
+            // Object
+            result += INDENT + INDENT + dllInstantPrefix + L"InsertObject(Reference, " + classPropertyEnum + L", value.Reference, " + dllFunctionIndex + L");\r\n";
+        } else if (IsCaptial(cppType1)) {
+            // Enum
+            result += INDENT + INDENT + dllInstantPrefix + L"InsertLong(Reference, " + classPropertyEnum + L", value.getValue(), " + dllFunctionIndex + L");\r\n";
+        } else {
+            result += INDENT + INDENT + dllInstantPrefix + L"Insert" + convertedName + L"(Reference, " + classPropertyEnum + L", value, " + dllFunctionIndex + L");\r\n";
+        }
+        result += INDENT + L"}\r\n";
     CATCH
     return result;
 }
@@ -332,6 +707,9 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetter(const std::wst
         bool isAllowRead = property->GetAccessMode() == VPGEnumClassPropertyAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassPropertyAccessMode::ReadOnly;
         bool isAllowWrite = property->GetAccessMode() == VPGEnumClassPropertyAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassPropertyAccessMode::WriteOnly;
 
+        if (!isAllowRead && !isAllowWrite)
+            return result;
+        
         std::wstring cppType1 = property->GetType1();
         if (IsBlank(cppType1))
             return result;
@@ -354,71 +732,60 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetter(const std::wst
                 importFiles.insert(importFileMap.find(javaType2)->second + L"." + javaType2);
         }
         // not support set
-        if (IsStartWith(macro, L"VECTOR")) {
+        // container
+        bool isVector = IsStartWith(macro, L"VECTOR") || IsStartWith(macro, L"ORDERED_MAP");
+        bool isMap = IsStartWith(macro, L"MAP") || IsStartWith(macro, L"ORDERED_MAP");
+        bool isSet = IsStartWith(macro, L"SET");
+        result += GenerateObjectGetterSetterContainerCount(property, projectPrefix, objectProperty, isVector, isMap, isSet);
 
-        } else if (IsStartWith(macro, L"MAP")) {
-
-        } else if (IsStartWith(macro, L"ORDERED_MAP")) {
-
-        } else if (IsStartWith(macro, L"SET")) {
-            // TODO: Set
+        if (!isVector && !isMap && !isSet) {
+            result += GenerateObjectGetterSetterRead(property, projectPrefix, objectProperty,
+                macro, cppType1, javaType1, cppType2, javaType2,
+                false, false, false,
+                importFiles);
+            result += GenerateObjectGetterSetterWrite(property, projectPrefix, objectProperty,
+                macro, cppType1, javaType1, cppType2, javaType2,
+                false, false, false,
+                importFileMap, importFiles);
         } else {
-            if (javaType1 == L"String") {
-                importFiles.insert(L"com.sun.jna.Memory");
-                importFiles.insert(L"com.sun.jna.Native");
-                importFiles.insert(L"com.sun.jna.Pointer");
+            if (isVector) {
+                result += GenerateObjectGetterSetterRead(property, projectPrefix, objectProperty,
+                    macro, cppType1, javaType1, cppType2, javaType2,
+                    true, false, false,
+                    importFiles);
+                result += GenerateObjectGetterSetterWrite(property, projectPrefix, objectProperty,
+                    macro, cppType1, javaType1, cppType2, javaType2,
+                    true, false, false,
+                    importFileMap, importFiles);
             }
-            
-            // Enum
-            if (isAllowRead) {
-                result += L"\r\n"
-                    + INDENT + L"public " + javaType1 + L" get" + property->GetPropertyName() + L"() {\r\n";
-                if (javaType1 == L"String") {
-                    result += INDENT + INDENT + L"PointerByReference result = new PointerByReference();\r\n"
-                        + INDENT + INDENT + dllInstantPrefix + L"ReadString(Reference, " + objectProperty + L"." + property->GetEnum() + L".getValue(), result, -1);\r\n"
-                        + INDENT + INDENT + L"return result.getValue().getWideString(0);\r\n"; 
-                } else if (IsContain(macro, L"SPTR")) {
-                    // Object
-                    result += INDENT + INDENT + L"\r\n";
-                } else if (IsCaptial(javaType1)) {
-                    // Enum
-                    result += INDENT + INDENT + L"\r\n";
-                } else {
-                    // Normal Type
-                    result += INDENT + INDENT + L"\r\n";
-                }
-// +        PointerByReference result = new PointerByReference();\r
-// +        VPGDllFunctions.Instance.ReadString(handle, VPGTypeBProperty.EnumA.getValue(), result, -1);\r
-// +        return result.getValue().getWideString(0);\r
-                result += INDENT + L"}\r\n";
+            if (isMap) {
+                result += GenerateObjectGetterSetterRead(property, projectPrefix, objectProperty,
+                    macro, cppType1, javaType1, cppType2, javaType2,
+                    false, true, false,
+                    importFiles);
+                result += GenerateObjectGetterSetterWrite(property, projectPrefix, objectProperty,
+                    macro, cppType1, javaType1, cppType2, javaType2,
+                    false, true, false,
+                    importFileMap, importFiles);
             }
-            if (isAllowWrite) {
-                result += L"\r\n";
-                if (javaType1 == L"String")
-                    result += INDENT + L"@SuppressWarnings(\"unchecked\")\r\n";
-                result += INDENT + L"public void set" + property->GetPropertyName() + L"(" + javaType1 + L" value) {\r\n";
-                if (javaType1 == L"String") {
-                    result += INDENT + INDENT + L"try {\r\n"
-                        + INDENT + INDENT + INDENT + L"Pointer ptr = new Memory(Native.WCHAR_SIZE * (value.length() + 1));\r\n"
-                        + INDENT + INDENT + INDENT + L"ptr.setWideString(0, value);\r\n"
-                        + INDENT + INDENT + INDENT + L"PointerByReference cppString = new PointerByReference();\r\n"
-                        + INDENT + INDENT + INDENT + L"cppString.setValue(ptr);\r\n"
-                        + INDENT + INDENT + INDENT + L"VPGDllFunctions.Instance.WriteString(Reference, VPGGenerationOptionProperty.Version.getValue(), cppString, -1);\r\n"
-                        + INDENT + INDENT + L"} catch (Exception e) {\r\n"
-                        + INDENT + INDENT + L"}\r\n";
-                } else if (IsContain(macro, L"SPTR")) {
-                    // Object
-                    result += INDENT + INDENT + L"\r\n";
-                } else if (IsCaptial(javaType1)) {
-                    // Enum
-                    result += INDENT + INDENT + L"\r\n";
-                } else {
-                    // Normal Type
-                    result += INDENT + INDENT + L"\r\n";
-                }
-                result += INDENT + L"}\r\n";
+            if (isSet) {
+                result += GenerateObjectGetterSetterRead(property, projectPrefix, objectProperty,
+                    macro, cppType1, javaType1, cppType2, javaType2,
+                    false, false, true,
+                    importFiles);
+                result += GenerateObjectGetterSetterWrite(property, projectPrefix, objectProperty,
+                    macro, cppType1, javaType1, cppType2, javaType2,
+                    false, false, true,
+                    importFileMap, importFiles);
             }
         }
+
+        result += GenerateObjectGetterSetterInsert(property, projectPrefix, objectProperty,
+            macro, cppType1, javaType1,
+            isVector, importFiles);
+
+        // container
+        result += GenerateObjectGetterSetterContainer(property, projectPrefix, objectProperty, javaType1, isVector, isMap, isSet);
     CATCH
     return result;
 }
@@ -457,8 +824,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
             + INDENT + INDENT + L"this.Reference = reference;\r\n"
             + INDENT + L"}\r\n"
             + getterSetterStr
-            + L"\r\n"
-            "}\r\n";
+            + L"}\r\n";
     CATCH
     return result;
 }

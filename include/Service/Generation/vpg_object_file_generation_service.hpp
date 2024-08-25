@@ -19,6 +19,10 @@ class VPGObjectFileGenerationService
 
         // Json
         static bool IsJsonObject(const VPGEnumClass* enumClass);
+        static std::vector<std::wstring> GetObjectToJsonEnumSwitch(const std::wstring &switchVariable, const std::wstring &returnVariable,
+            const std::wstring &type, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping);
+        static std::vector<std::wstring> GetJsonToObjectEnumSwitch(const std::wstring &propertyName, const bool isKey,
+            const std::wstring &type, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping);
         static std::vector<std::wstring> GetObjectToJson(const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
             const std::wstring &parentName, const std::wstring &macro, const std::wstring &type, const std::wstring &propertyName, const bool &isArray, const bool &isMap);
         static std::wstring GetJsonToObjectMapKey(const std::wstring &type);

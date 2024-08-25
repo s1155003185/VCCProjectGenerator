@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+- Use void * instead of ITypeUnion for Property Accessor Map Key.
+- Generate Java Class according to C++ Enum Class under Type Workspace.
 
 ### [v0.1.4] - 2024-08-25: Java Bridge: Generation - Java Bridege for Enum
 - Generate Java Enum according to C++ Enum Class under Type Workspace.
