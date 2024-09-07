@@ -371,13 +371,15 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
                 std::wstring tmpConvertedName = L"";
                 std::wstring tmpReturnResult = L"";
                 VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(property->GetType1(), tmpConvertedType, tmpConvertedName, tmpReturnResult);
+                
+                std::wstring castType = property->GetType1() == L"std::wstring" ? L"wchar_t" : property->GetType1();
                 result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L": {\r\n"
-                    + INDENT + INDENT + INDENT + L"const " + property->GetType1() + L" *keyPtr = static_cast<const " + property->GetType1() + L" *>(key);\r\n"
+                    + INDENT + INDENT + INDENT + L"const " + castType + L" *keyPtr = static_cast<const " + castType + L" *>(key);\r\n"
                     + INDENT + INDENT + INDENT + L"assert(keyPtr != nullptr);\r\n"
                     + INDENT + INDENT + INDENT + L"if (keyPtr == nullptr)\r\n"
                     + INDENT + INDENT + INDENT + INDENT + L"THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n";
                 
-                std::wstring mapGetKey = L"*keyPtr";
+                std::wstring mapGetKey = property->GetType1() == L"std::wstring" ? L"keyPtr" : L"*keyPtr";
                 bool isOrderedMap = IsStartWith(property->GetMacro(), L"ORDERED_MAP");
                 if (type == objectToken)
                     result += INDENT + INDENT + INDENT + L"return std::static_pointer_cast<IObject>(obj->Get" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(" + mapGetKey + L")" + (isOrderedMap ? L".second" : L"") + L");\r\n";
@@ -504,13 +506,15 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
                 std::wstring tmpConvertedName = L"";
                 std::wstring tmpReturnResult = L"";
                 VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(property->GetType1(), tmpConvertedType, tmpConvertedName, tmpReturnResult);
+                
+                std::wstring castType = property->GetType1() == L"std::wstring" ? L"wchar_t" : property->GetType1();
                 result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L": {\r\n"
-                    + INDENT + INDENT + INDENT + L"const " + property->GetType1() + L" *keyPtr = static_cast<const " + property->GetType1() + L" *>(key);\r\n"
+                    + INDENT + INDENT + INDENT + L"const " + castType + L" *keyPtr = static_cast<const " + castType + L" *>(key);\r\n"
                     + INDENT + INDENT + INDENT + L"assert(keyPtr != nullptr);\r\n"
                     + INDENT + INDENT + INDENT + L"if (keyPtr == nullptr)\r\n"
                     + INDENT + INDENT + INDENT + INDENT + L"THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n";
 
-                std::wstring mapGetKey = L"*keyPtr";
+                std::wstring mapGetKey = property->GetType1() == L"std::wstring" ? L"keyPtr" : L"*keyPtr";
                 bool isOrderedMap = IsStartWith(property->GetMacro(), L"ORDERED_MAP");
                 if (type == objectToken) {
                     result += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
@@ -689,12 +693,14 @@ void VPGPropertyAccessorGenerationService::GenerateClone(const std::wstring &pro
                 VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(property->GetType1(), tmpConvertedType, tmpConvertedName, tmpReturnResult);
                 
                 bool isOrderedMap = IsStartWith(property->GetMacro(), L"ORDERED_MAP");
+                std::wstring castType = property->GetType1() == L"std::wstring" ? L"wchar_t" : property->GetType1();
+                std::wstring mapGetKey = property->GetType1() == L"std::wstring" ? L"keyPtr" : L"*keyPtr";
                 result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L": {\r\n"
-                    + INDENT + INDENT + INDENT + L"const " + property->GetType1() + L" *keyPtr = static_cast<const " + property->GetType1() + L" *>(key);\r\n"
+                    + INDENT + INDENT + INDENT + L"const " + castType + L" *keyPtr = static_cast<const " + castType + L" *>(key);\r\n"
                     + INDENT + INDENT + INDENT + L"assert(keyPtr != nullptr);\r\n"
                     + INDENT + INDENT + INDENT + L"if (keyPtr == nullptr)\r\n"
                     + INDENT + INDENT + INDENT + INDENT + L"THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-                    + INDENT + INDENT + INDENT + L"return std::static_pointer_cast<IObject>(obj->Clone" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(*keyPtr));\r\n"
+                    + INDENT + INDENT + INDENT + L"return std::static_pointer_cast<IObject>(obj->Clone" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(" + mapGetKey + L"));\r\n"
                     + INDENT + INDENT + L"}\r\n";
             }
             result += generalTypeContentFooter;
@@ -711,11 +717,6 @@ void VPGPropertyAccessorGenerationService::GenerateContainerCount(const std::wst
     if (type != containerToken || enumClassProperties.empty())
         return;
     TRY
-        bool isHavingMapType = false;
-        bool isHavingVectorType = false;
-        bool isHavingGeneralType = false;
-        GetIsHavingGenerateTypeMapType(enumClassProperties, isHavingGeneralType, isHavingVectorType, isHavingMapType);
-
         result += L"\r\n"
             "size_t " + propertyName + L"Accessor::_GetContainerCount(const int64_t &objectProperty) const\r\n"
             "{\r\n"
@@ -732,6 +733,38 @@ void VPGPropertyAccessorGenerationService::GenerateContainerCount(const std::wst
     CATCH
 }
 
+void VPGPropertyAccessorGenerationService::GenerateContainerMapKey(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassProperty>> &enumClassProperties, std::wstring &result)
+{
+    if (type != containerToken || enumClassProperties.empty())
+        return;
+    TRY
+        bool isHavingMapType = false;
+        bool isHavingVectorType = false;
+        bool isHavingGeneralType = false;
+        GetIsHavingGenerateTypeMapType(enumClassProperties, isHavingGeneralType, isHavingVectorType, isHavingMapType);
+
+        result += L"\r\n"
+            "std::set<void *> " + propertyName + L"Accessor::_GetMapKeys(const int64_t &objectProperty) const\r\n"
+            "{\r\n"
+            + INDENT + L"std::set<void *> result;\r\n"
+            + INDENT + L"TRY\r\n";
+        if (isHavingMapType) {
+            result += GetGeneralContentHeader(propertyName);
+            for (auto const &property : enumClassProperties) {
+                if (IsStartWith(property->GetMacro(), L"MAP") || IsStartWith(property->GetMacro(), L"ORDERED_MAP")) {
+                    result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L":\r\n"
+                        + INDENT + INDENT + INDENT + L"return obj->Get" + property->GetPropertyName() + L"VoidKeys();\r\n";
+                }
+            }
+            result += generalTypeContentFooter;
+        } else
+            result += INDENT + INDENT + L"THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n";
+
+        result += INDENT + L"CATCH\r\n"
+            + INDENT + L"return result;\r\n"
+            "}\r\n";
+    CATCH
+}
 
 void VPGPropertyAccessorGenerationService::GenerateContainerIsContainKey(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassProperty>> &enumClassProperties, std::wstring &result)
 {
@@ -755,16 +788,15 @@ void VPGPropertyAccessorGenerationService::GenerateContainerIsContainKey(const s
             result += GetGeneralTypeMapContentHeader(propertyName);
             for (auto const &property : enumClassProperties) {
                 if (IsStartWith(property->GetMacro(), L"MAP") || IsStartWith(property->GetMacro(), L"ORDERED_MAP")) {
-                    std::wstring tmpConvertedType = L"";
-                    std::wstring tmpConvertedName = L"";
-                    std::wstring tmpReturnResult = L"";
-                    VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(property->GetType1(), tmpConvertedType, tmpConvertedName, tmpReturnResult);
+                    std::wstring castType = property->GetType1() == L"std::wstring" ? L"wchar_t" : property->GetType1();
+                    std::wstring mapGetKey = property->GetType1() == L"std::wstring" ? L"keyPtr" : L"*keyPtr";
+                
                     result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L": {\r\n"
-                        + INDENT + INDENT + INDENT + L"const " + property->GetType1() + L" *keyPtr = static_cast<const " + property->GetType1() + L" *>(key);\r\n"
+                        + INDENT + INDENT + INDENT + L"const " + castType + L" *keyPtr = static_cast<const " + castType + L" *>(key);\r\n"
                         + INDENT + INDENT + INDENT + L"assert(keyPtr != nullptr);\r\n"
                         + INDENT + INDENT + INDENT + L"if (keyPtr == nullptr)\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-                        + INDENT + INDENT + INDENT + L"return obj->Is" + property->GetPropertyName() + L"ContainKey(*keyPtr);\r\n"
+                        + INDENT + INDENT + INDENT + L"return obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L");\r\n"
                         + INDENT + INDENT + L"}\r\n";
                 }
             }
@@ -834,12 +866,14 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
                     VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(property->GetType1(), tmpConvertedType, tmpConvertedName, tmpReturnResult);
                     
                     bool isOrderedMap = IsStartWith(property->GetMacro(), L"ORDERED_MAP");
+                    std::wstring castType = property->GetType1() == L"std::wstring" ? L"wchar_t" : property->GetType1();
+                    std::wstring mapGetKey = property->GetType1() == L"std::wstring" ? L"keyPtr" : L"*keyPtr";
                     result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L": {\r\n"
-                        + INDENT + INDENT + INDENT + L"const " + property->GetType1() + L" *keyPtr = static_cast<const " + property->GetType1() + L" *>(key);\r\n"
+                        + INDENT + INDENT + INDENT + L"const " + castType + L" *keyPtr = static_cast<const " + castType + L" *>(key);\r\n"
                         + INDENT + INDENT + INDENT + L"assert(keyPtr != nullptr);\r\n"
                         + INDENT + INDENT + INDENT + L"if (keyPtr == nullptr)\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-                        + INDENT + INDENT + INDENT + L"obj->Remove" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(*keyPtr);\r\n"
+                        + INDENT + INDENT + INDENT + L"obj->Remove" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(" + mapGetKey + L");\r\n"
                         + INDENT + INDENT + INDENT + L"break;\r\n"
                         + INDENT + INDENT + L"}\r\n";
                 }
@@ -1029,6 +1063,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogProperty *logPro
                     VPGPropertyAccessorGenerationService::GenerateInsert(enumClass.first, type, writeOnly, result);
                     VPGPropertyAccessorGenerationService::GenerateClone(enumClass.first, type, readOnly, result);
                     VPGPropertyAccessorGenerationService::GenerateContainerCount(enumClass.first, type, readWrite, result);
+                    VPGPropertyAccessorGenerationService::GenerateContainerMapKey(enumClass.first, type, readWrite, result);
                     VPGPropertyAccessorGenerationService::GenerateContainerIsContainKey(enumClass.first, type, readOnly, result);
                     VPGPropertyAccessorGenerationService::GenerateContainerRemove(enumClass.first, type, writeOnly, result);
                 }

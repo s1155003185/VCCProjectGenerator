@@ -106,6 +106,8 @@ namespace vcc
         mutable std::map<keyType, valueType> _##var; \
     public: \
         std::map<keyType, valueType> &Get##var() const { return _##var; } \
+        std::set<keyType> Get##var##Keys() const { std::set<keyType> result; for (auto const &pair : _##var) result.insert(pair.first); return result; } \
+        std::set<void *> Get##var##VoidKeys() const { std::set<void *> result; for (auto const &pair : _##var) result.insert((void *)&pair.first); return result; } \
         valueType Get##var(keyType key) const { return _##var[key]; } \
         void Set##var(keyType key, valueType value) const { if (_##var.find(key) != _##var.end()) _##var[key] = value; else this->Insert##var(key, value); } \
         bool Is##var##ContainKey(keyType key) const { return _##var.find(key) != _##var.end(); } \
@@ -120,6 +122,8 @@ namespace vcc
         mutable std::map<keyType, std::shared_ptr<valueType>> _##var; \
     public: \
         std::map<keyType, std::shared_ptr<valueType>> &Get##var() const { return _##var; } \
+        std::set<keyType> Get##var##Keys() const { std::set<keyType> result; for (auto const &pair : _##var) result.insert(pair.first); return result; } \
+        std::set<void *> Get##var##VoidKeys() const { std::set<void *> result; for (auto const &pair : _##var) result.insert((void *)&pair.first); return result; } \
         std::shared_ptr<valueType> Get##var(keyType key) const { return _##var[key]; } \
         void Set##var(keyType key, std::shared_ptr<valueType> value) const { if (_##var.find(key) != _##var.end()) _##var[key] = value; else this->Insert##var(key, value); } \
         bool Is##var##ContainKey(keyType key) const { return _##var.find(key) != _##var.end(); } \
@@ -135,6 +139,8 @@ namespace vcc
         mutable std::vector<std::pair<keyType, valueType>> _##var; \
     public: \
         std::vector<std::pair<keyType, valueType>> &Get##var() const { return _##var; } \
+        std::set<keyType> Get##var##Keys() const { std::set<keyType> result; for (auto const &pair : _##var) result.insert(pair.first); return result; } \
+        std::set<void *> Get##var##VoidKeys() const { std::set<void *> result; for (auto const &pair : _##var) result.insert((void *)&pair.first); return result; } \
         std::pair<keyType, valueType> Get##var##ByIndex(int64_t index) const { return _##var[index]; } \
         valueType Get##var##ByKey(keyType key) const { for (auto const &pair : _##var) {  if (pair.first == key) return pair.second; } throw Exception(ExceptionType::CustomError, L"key not found");  } \
         void Set##var##ByIndex(int64_t index, std::pair<keyType, valueType> value) const { _##var[index] = value; } \
@@ -153,6 +159,8 @@ namespace vcc
         mutable std::vector<std::pair<keyType, std::shared_ptr<valueType>>> _##var; \
     public: \
         std::vector<std::pair<keyType, std::shared_ptr<valueType>>> &Get##var() const { return _##var; } \
+        std::set<keyType> Get##var##Keys() const { std::set<keyType> result; for (auto const &pair : _##var) result.insert(pair.first); return result; } \
+        std::set<void *> Get##var##VoidKeys() const { std::set<void *> result; for (auto const &pair : _##var) result.insert((void *)&pair.first); return result; } \
         std::pair<keyType, std::shared_ptr<valueType>> Get##var##ByIndex(int64_t index) const { return _##var[index]; } \
         std::shared_ptr<valueType> Get##var##ByKey(keyType key) const { for (auto const &pair : _##var) { if (pair.first == key) return pair.second; } throw Exception(ExceptionType::CustomError, L"key not found"); return nullptr; } \
         int64_t Find##var(keyType key) const { for (size_t i = 0; i < _##var.size(); i++) { if (_##var[i].first == key) return i; } return -1; } \

@@ -550,6 +550,15 @@ size_t VPGGenerationOptionPropertyAccessor::_GetContainerCount(const int64_t &ob
     return 0;
 }
 
+std::set<void *> VPGGenerationOptionPropertyAccessor::_GetMapKeys(const int64_t &objectProperty) const
+{
+    std::set<void *> result;
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return result;
+}
+
 bool VPGGenerationOptionPropertyAccessor::_IsContainKey(const int64_t &objectProperty, const void * /*key*/) const
 {
     TRY
