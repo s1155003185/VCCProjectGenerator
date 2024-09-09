@@ -17,4 +17,7 @@ class VPGGlobal
         static std::wstring GetCppDefaultIncludePathWindow();
         static std::wstring GetCppDefaultIncludePathLinux();
         static std::wstring GetCppDefaultIncludePathMacOs();
+
+        // helper
+        static std::wstring GetConvertedPath(const std::wstring &path);
 };

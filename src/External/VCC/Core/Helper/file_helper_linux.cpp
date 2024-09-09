@@ -13,7 +13,7 @@ namespace vcc
     {
         std::wstring result = L"";
         try {
-            std::wstring folderName = L"";
+            std::wstring cmd = L"";
 			switch (fileType)
 			{
 			// case SystemFolderType::AdminTools:
@@ -53,7 +53,7 @@ namespace vcc
 			// 	csidl = CSIDL_MYPICTURES;
 			// 	break;
 			case SystemFolderType::LocalDocuments:
-				folderName = L"Documents";
+				cmd = L"echo ~/Documents";
 				break;
 			// case SystemFolderType::ProgramFiles:
 			// 	csidl = CSIDL_PROGRAM_FILES;
@@ -64,6 +64,9 @@ namespace vcc
 			// case SystemFolderType::System:
 			// 	csidl = CSIDL_SYSTEM;
 			// 	break;
+			case SystemFolderType::UserHome:
+				cmd = L"echo $HOME";
+				break;
 			// case SystemFolderType::Windows:
 			// 	csidl = CSIDL_WINDOWS;
 			// 	break;
@@ -71,7 +74,7 @@ namespace vcc
 				assert(false);
 				break;
 			}
-            result = TerminalService::Execute(nullptr, L"", L"echo ~/" + folderName);
+            result = TerminalService::Execute(nullptr, L"", cmd);
         } catch (const std::exception &e) {
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, str2wstr(e.what()));
         }

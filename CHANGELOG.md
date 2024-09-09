@@ -3,6 +3,8 @@
 ## [Unreleased]
 - Use void * instead of ITypeUnion for Property Accessor Map Key.
 - Generate Java Class according to C++ Enum Class under Type Workspace.
+- Update vcc.json and Makefile to export dll, exe to Java project
+- Update vcc.json TemplateWorkspace use ${userHome} instead of hardcode.
 
 ### [v0.1.4] - 2024-08-25: Java Bridge: Generation - Java Bridege for Enum
 - Generate Java Enum according to C++ Enum Class under Type Workspace.

@@ -2,7 +2,7 @@
     "Version": "v0.1.3",
     "ProjectType": "VccModule",
     "TemplateGitUrl": "https://github.com/s1155003185/VCCModule.git",
-    "TemplateWorkspace": "/Users/david/Documents/vcc/VCCModule",
+    "TemplateWorkspace": "${userHome}/Documents/vcc/VCCModule",
     "ProjectPrefix": "VPG",
     "ProjectName": "VCCProjGenerator",
     "ProjectNameDll": "libvpg",

@@ -18,6 +18,7 @@
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_file_sync_service.hpp"
 #include "vpg_generation_option.hpp"
+#include "vpg_global.hpp"
 #include "vpg_project_type.hpp"
 
 using namespace vcc;
@@ -71,7 +72,7 @@ void VPGBaseGenerationManager<Derived>::ValidateOption() const
 {
     TRY
         if (IsBlank(_Option->GetTemplateWorkspace()))
-            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace Source is emtpy.");
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Template Workspace is emtpy.");
         if (IsBlank(_Workspace))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace is emtpy.");
         if (IsBlank(_Option->GetProjectName()))
@@ -129,7 +130,7 @@ void VPGBaseGenerationManager<Derived>::CreateBasicProject() const
         ValidateOption();
         this->CreateWorkspaceDirectory();
 
-        std::wstring src = _Option->GetTemplateWorkspace();
+        std::wstring src = VPGGlobal::GetConvertedPath(_Option->GetTemplateWorkspace());
         std::wstring dest = _Workspace;
         if (_Option->GetIsGit()) {
             CopyFile(ConcatPaths({src, L".gitignore"}), ConcatPaths({dest, L".gitignore"}), true);

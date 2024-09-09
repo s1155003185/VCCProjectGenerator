@@ -14,6 +14,8 @@ constexpr auto URL_GIT = L".git";
 constexpr auto CPP_GIT_PROJ_NAME =  L"VCCSimpleTemplateCPP";
 constexpr auto VCC_GIT_PROJ_NAME = L"VCCModule";
 
+constexpr auto USER_HOME_VARIABLE = L"${userHome}";
+
 using namespace vcc;
 
 
@@ -24,21 +26,17 @@ std::wstring VPGGlobal::GetVersion()
 
 std::wstring VPGGlobal::GetVccLocalResponseFolder()
 {
-    try {
-        return ConcatPaths({GetSystemFolderPath(SystemFolderType::LocalDocuments), L"vcc"});
-    } catch (const std::exception &e) {
-        THROW_EXCEPTION(e);
-    }
+    TRY
+        return ConcatPaths({USER_HOME_VARIABLE, L"Documents", L"vcc"});
+    CATCH
     return L"";
 }
 
 std::wstring VPGGlobal::GetVccProjectLocalResponseDirectory(VPGProjectType projectType)
 {
-    try {
+    TRY
         return ConcatPaths({VPGGlobal::GetVccLocalResponseFolder(), VPGGlobal::GetProjectName(projectType)});
-    } catch (const std::exception &e) {
-        THROW_EXCEPTION(e);
-    }
+    CATCH
     return L"";
 }
 
@@ -85,4 +83,14 @@ std::wstring VPGGlobal::GetCppDefaultIncludePathLinux()
 std::wstring VPGGlobal::GetCppDefaultIncludePathMacOs()
 {
     return L"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/V1";
+}
+
+std::wstring VPGGlobal::GetConvertedPath(const std::wstring &path)
+{
+    std::wstring result = path;
+    TRY
+        std::wstring userHomePath = GetSystemFolderPath(SystemFolderType::UserHome);
+        ReplaceAll(result, USER_HOME_VARIABLE, userHomePath);
+    CATCH
+    return result;
 }

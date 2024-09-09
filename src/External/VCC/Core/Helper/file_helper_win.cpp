@@ -68,6 +68,9 @@ namespace vcc
 			// case SystemFolderType::System:
 			// 	csidl = CSIDL_SYSTEM;
 			// 	break;
+			case SystemFolderType::UserHome:
+				csidl = CSIDL_PROFILE;
+				break;
 			// case SystemFolderType::Windows:
 			// 	csidl = CSIDL_WINDOWS;
 			// 	break;

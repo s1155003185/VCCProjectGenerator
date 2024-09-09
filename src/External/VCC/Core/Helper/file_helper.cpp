@@ -65,7 +65,11 @@ namespace vcc
                 result /= PATH(path);
             }
         }
-        return result.wstring();
+        #ifdef __WIN32
+        return GetWindowPath(result.wstring());
+        #else
+        return GetLinuxPath(result.wstring());
+        #endif
     }
 
     std::wstring GetRelativePath(const std::wstring &absolutePath, const std::wstring &basePath)

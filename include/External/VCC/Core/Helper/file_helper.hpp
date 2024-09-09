@@ -26,10 +26,11 @@ namespace vcc
 		// InternetCache,
 		// LocalAppData,
 		// LocalPictures,
-		LocalDocuments
+		LocalDocuments,
 		// ProgramFiles,
 		// ProgramFilesCommon,
 		// System,
+		UserHome
 		// Windows
 	};
 
