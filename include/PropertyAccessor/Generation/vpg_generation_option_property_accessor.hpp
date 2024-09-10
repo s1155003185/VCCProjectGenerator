@@ -9,6 +9,7 @@ using namespace vcc;
 
 class VPGGenerationOptionExportPropertyAccessor : public BasePropertyAccessor
 {
+    PROPERTY_ACCESSOR_HEADER(bool, Bool)
     PROPERTY_ACCESSOR_HEADER(long, Long)
     PROPERTY_ACCESSOR_HEADER(std::wstring, String)
 

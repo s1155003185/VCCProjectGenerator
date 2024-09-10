@@ -14,6 +14,62 @@
 
 using namespace vcc;
 
+bool VPGGenerationOptionExportPropertyAccessor::_ReadBool(const int64_t &objectProperty, const int64_t &index) const
+{
+    TRY
+        assert(index >= -1);
+        std::shared_ptr<VPGGenerationOptionExport> obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
+        {
+        case VPGGenerationOptionExportProperty::IsExportExternalLib:
+            return obj->GetIsExportExternalLib();
+        default:
+            assert(false);
+        }
+    CATCH
+    return false;
+}
+
+bool VPGGenerationOptionExportPropertyAccessor::_ReadBool(const int64_t &objectProperty, const void * /*key*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return false;
+}
+
+void VPGGenerationOptionExportPropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool &value, const int64_t &index) const
+{
+    TRY
+        assert(index >= -1);
+        std::shared_ptr<VPGGenerationOptionExport> obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
+        {
+        case VPGGenerationOptionExportProperty::IsExportExternalLib:
+            obj->SetIsExportExternalLib(value);
+            break;
+        default:
+            assert(false);
+        }
+    CATCH
+}
+
+void VPGGenerationOptionExportPropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool & /*value*/, const void * /*key*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGGenerationOptionExportPropertyAccessor::_InsertBool(const int64_t &objectProperty, const bool & /*value*/, const int64_t & /*index*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
 long VPGGenerationOptionExportPropertyAccessor::_ReadLong(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
@@ -80,6 +136,10 @@ std::wstring VPGGenerationOptionExportPropertyAccessor::_ReadString(const int64_
         {
         case VPGGenerationOptionExportProperty::Workspace:
             return obj->GetWorkspace();
+        case VPGGenerationOptionExportProperty::ExportDirectoryDll:
+            return obj->GetExportDirectoryDll();
+        case VPGGenerationOptionExportProperty::ExportDirectoryExe:
+            return obj->GetExportDirectoryExe();
         case VPGGenerationOptionExportProperty::DllBridgeDirectory:
             return obj->GetDllBridgeDirectory();
         case VPGGenerationOptionExportProperty::ObjectDirectory:
@@ -111,6 +171,12 @@ void VPGGenerationOptionExportPropertyAccessor::_WriteString(const int64_t &obje
         {
         case VPGGenerationOptionExportProperty::Workspace:
             obj->SetWorkspace(value);
+            break;
+        case VPGGenerationOptionExportProperty::ExportDirectoryDll:
+            obj->SetExportDirectoryDll(value);
+            break;
+        case VPGGenerationOptionExportProperty::ExportDirectoryExe:
+            obj->SetExportDirectoryExe(value);
             break;
         case VPGGenerationOptionExportProperty::DllBridgeDirectory:
             obj->SetDllBridgeDirectory(value);

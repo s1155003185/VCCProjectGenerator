@@ -17,6 +17,9 @@ class VPGGenerationOptionExport : public BaseObject<VPGGenerationOptionExport>, 
 {
     GETSET(VPGGenerationOptionInterfaceType, Interface, VPGGenerationOptionInterfaceType::Java)
     GETSET(std::wstring, Workspace, L"")
+    GETSET(bool, IsExportExternalLib, true)
+    GETSET(std::wstring, ExportDirectoryDll, L"")
+    GETSET(std::wstring, ExportDirectoryExe, L"")
     GETSET(std::wstring, DllBridgeDirectory, L"")
     GETSET(std::wstring, ObjectDirectory, L"")
     GETSET(std::wstring, TypeDirectory, L"")

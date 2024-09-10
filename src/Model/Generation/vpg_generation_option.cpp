@@ -35,6 +35,12 @@ std::shared_ptr<Json> VPGGenerationOptionExport::ToJson() const
         json->AddString(ConvertNamingStyle(L"Interface", NamingStyle::PascalCase, namestyle), interfaceValueStr);
         // Workspace
         json->AddString(ConvertNamingStyle(L"Workspace", NamingStyle::PascalCase, namestyle), _Workspace);
+        // IsExportExternalLib
+        json->AddBool(ConvertNamingStyle(L"IsExportExternalLib", NamingStyle::PascalCase, namestyle), _IsExportExternalLib);
+        // ExportDirectoryDll
+        json->AddString(ConvertNamingStyle(L"ExportDirectoryDll", NamingStyle::PascalCase, namestyle), _ExportDirectoryDll);
+        // ExportDirectoryExe
+        json->AddString(ConvertNamingStyle(L"ExportDirectoryExe", NamingStyle::PascalCase, namestyle), _ExportDirectoryExe);
         // DllBridgeDirectory
         json->AddString(ConvertNamingStyle(L"DllBridgeDirectory", NamingStyle::PascalCase, namestyle), _DllBridgeDirectory);
         // ObjectDirectory
@@ -66,6 +72,15 @@ void VPGGenerationOptionExport::DeserializeJson(std::shared_ptr<IDocument> docum
         // Workspace
         if (json->IsContainKey(ConvertNamingStyle(L"Workspace", namestyle, NamingStyle::PascalCase)))
             _Workspace = json->GetString(ConvertNamingStyle(L"Workspace", namestyle, NamingStyle::PascalCase));
+        // IsExportExternalLib
+        if (json->IsContainKey(ConvertNamingStyle(L"IsExportExternalLib", namestyle, NamingStyle::PascalCase)))
+            _IsExportExternalLib = json->GetBool(ConvertNamingStyle(L"IsExportExternalLib", namestyle, NamingStyle::PascalCase));
+        // ExportDirectoryDll
+        if (json->IsContainKey(ConvertNamingStyle(L"ExportDirectoryDll", namestyle, NamingStyle::PascalCase)))
+            _ExportDirectoryDll = json->GetString(ConvertNamingStyle(L"ExportDirectoryDll", namestyle, NamingStyle::PascalCase));
+        // ExportDirectoryExe
+        if (json->IsContainKey(ConvertNamingStyle(L"ExportDirectoryExe", namestyle, NamingStyle::PascalCase)))
+            _ExportDirectoryExe = json->GetString(ConvertNamingStyle(L"ExportDirectoryExe", namestyle, NamingStyle::PascalCase));
         // DllBridgeDirectory
         if (json->IsContainKey(ConvertNamingStyle(L"DllBridgeDirectory", namestyle, NamingStyle::PascalCase)))
             _DllBridgeDirectory = json->GetString(ConvertNamingStyle(L"DllBridgeDirectory", namestyle, NamingStyle::PascalCase));
