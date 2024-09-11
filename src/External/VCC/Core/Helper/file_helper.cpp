@@ -33,6 +33,14 @@ namespace vcc
         return GetSystemFolderPathLinux(fileType);
         #endif
     }
+    
+	bool IsAbsolutePath(const std::wstring &filePath)
+    {
+        TRY
+            return PATH(filePath).is_absolute();
+        CATCH
+        return false;
+    }
 
     std::wstring GetParentPath(const std::wstring &filePath)
     {

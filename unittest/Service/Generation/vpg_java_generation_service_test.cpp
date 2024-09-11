@@ -108,7 +108,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "\r\n"
         "#endif\r\n", true);
 
-    VPGJavaGenerationService::GenerateJavaBridge(this->GetLogProperty().get(), ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}), this->GetOption().get());
+    VPGJavaGenerationService::GenerateJavaBridge(this->GetLogProperty().get(), L"", ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}), this->GetOption().get());
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetDllBridgeDirectory(), L"VPGDllFunctions.java"})));
     EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetDllBridgeDirectory(), L"VPGDllFunctions.java"})),
         L"package com.vcc.test;\r\n"

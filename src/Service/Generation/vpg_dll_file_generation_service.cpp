@@ -27,6 +27,8 @@ void VPGDllFileGenerationService::GenerateHpp(const LogProperty *logProperty, co
         std::wstring content = L"";
         std::set<std::wstring> customIncludeFiles;
         if (option->GetIsGeneratePropertyAccessor()) {
+            customIncludeFiles.insert(L"object_factory.hpp");
+            customIncludeFiles.insert(L"property_accessor_factory.hpp");
             customIncludeFiles.insert(L"property_accessor_macro.hpp");
         }
 

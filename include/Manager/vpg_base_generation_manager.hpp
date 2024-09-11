@@ -295,21 +295,22 @@ std::wstring VPGBaseGenerationManager<Derived>::AdjustMakefile(const std::wstrin
                 for (auto const &exportOption : _Option->GetExports()) {
                     if (IsBlank(exportOption->GetWorkspace()))
                         continue;
-                    
+                    std::wstring workspace = IsAbsolutePath(exportOption->GetWorkspace()) ? exportOption->GetWorkspace() : ConcatPaths({ _Workspace, exportOption->GetWorkspace() });
+
                     if (!IsBlank(exportOption->GetExportDirectoryDll())) {
-                        exportDllDirWindow += L" " + GetWindowPath(ConcatPaths({ exportOption->GetWorkspace(), exportOption->GetExportDirectoryDll() }));
-                        exportDllDirLinux += L" " + GetLinuxPath(ConcatPaths({ exportOption->GetWorkspace(), exportOption->GetExportDirectoryDll() }));
+                        exportDllDirWindow += L" " + GetWindowPath(ConcatPaths({ workspace, exportOption->GetExportDirectoryDll() }));
+                        exportDllDirLinux += L" " + GetLinuxPath(ConcatPaths({ workspace, exportOption->GetExportDirectoryDll() }));
                         if (exportOption->GetIsExportExternalLib()) {
-                            exportExternalLibDirWindow += L" " + GetWindowPath(ConcatPaths({ exportOption->GetWorkspace(), exportOption->GetExportDirectoryDll() }));
-                            exportExternalLibDirLinux += L" " + GetLinuxPath(ConcatPaths({ exportOption->GetWorkspace(), exportOption->GetExportDirectoryDll() }));
+                            exportExternalLibDirWindow += L" " + GetWindowPath(ConcatPaths({ workspace, exportOption->GetExportDirectoryDll() }));
+                            exportExternalLibDirLinux += L" " + GetLinuxPath(ConcatPaths({ workspace, exportOption->GetExportDirectoryDll() }));
                         }
                     }
                     if (!IsBlank(exportOption->GetExportDirectoryExe())) {
-                        exportExeDirWindow += L" " + GetWindowPath(ConcatPaths({ exportOption->GetWorkspace(), exportOption->GetExportDirectoryExe() }));
-                        exportExeDirLinux += L" " + GetLinuxPath(ConcatPaths({ exportOption->GetWorkspace(), exportOption->GetExportDirectoryExe() }));
+                        exportExeDirWindow += L" " + GetWindowPath(ConcatPaths({ workspace, exportOption->GetExportDirectoryExe() }));
+                        exportExeDirLinux += L" " + GetLinuxPath(ConcatPaths({ workspace, exportOption->GetExportDirectoryExe() }));
                         if (exportOption->GetIsExportExternalLib()) {
-                            exportExternalLibDirWindow += L" " + GetWindowPath(ConcatPaths({ exportOption->GetWorkspace(), exportOption->GetExportDirectoryExe() }));
-                            exportExternalLibDirLinux += L" " + GetLinuxPath(ConcatPaths({ exportOption->GetWorkspace(), exportOption->GetExportDirectoryExe() }));                            
+                            exportExternalLibDirWindow += L" " + GetWindowPath(ConcatPaths({ workspace, exportOption->GetExportDirectoryExe() }));
+                            exportExternalLibDirLinux += L" " + GetLinuxPath(ConcatPaths({ workspace, exportOption->GetExportDirectoryExe() }));                            
                         }
                     }
                 }

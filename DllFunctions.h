@@ -11,6 +11,8 @@
 #endif
 
 // <vcc:dllInterfaceHeader gen="FORCE">
+#include "object_factory.hpp"
+#include "property_accessor_factory.hpp"
 #include "property_accessor_macro.hpp"
 
 using namespace vcc;

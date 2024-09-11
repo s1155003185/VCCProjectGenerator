@@ -319,7 +319,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
     return result;
 }
 
-void VPGJavaGenerationService::GenerateJavaBridge(const LogProperty *logProperty, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option)
+void VPGJavaGenerationService::GenerateJavaBridge(const LogProperty *logProperty, const std::wstring &targetWorkspace, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option)
 {
     TRY
         assert(option != nullptr);
@@ -334,7 +334,8 @@ void VPGJavaGenerationService::GenerateJavaBridge(const LogProperty *logProperty
         Trim(filePrefix);
         ToUpper(filePrefix);
         std::wstring javaFileName = filePrefix + JAVA_BRIDGE_FILE_NAME;
-        std::wstring filePath = ConcatPaths({ javaOption->GetWorkspace(), javaOption->GetDllBridgeDirectory(), javaFileName });
+        std::wstring workspace = IsAbsolutePath(javaOption->GetWorkspace()) ? javaOption->GetWorkspace() : ConcatPaths({ targetWorkspace, javaOption->GetWorkspace() });
+        std::wstring filePath = ConcatPaths({ workspace, javaOption->GetDllBridgeDirectory(), javaFileName });
         LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Bridge: " + filePath);
         WriteFile(filePath, VPGJavaGenerationService::GenerateJavaBridgeContent(ReadFile(dllInterfacehppFilePath), option), true);
         LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Bridge completed.");

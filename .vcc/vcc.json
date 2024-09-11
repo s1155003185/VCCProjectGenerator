@@ -31,8 +31,8 @@
             "Interface": "Java",
             "Workspace": "../VCCProjectManagerBasic",
             "IsExportExternalLib": true,
-            "ExportDllDirectory": "src/main/resources",
-            "ExeDirectory": "",
+            "ExportDirectoryDll": "src/main/resources",
+            "ExportDirectoryExe": "",
             "DllBridgeDirectory": "src/main/java/com/vcc",
             "ObjectDirectory": "src/main/java/com/vcc/model",
             "TypeDirectory": "src/main/java/com/vcc/type"

@@ -8,9 +8,14 @@ Current Stage Objective: Start VCC Project Manager (Multi Project Handling), inc
 Note: Still in initialize version, will have full review when official release
 Sample Program: To get sample, can download this project from github, then
     1. go to vpg_vcc_generation_manager_test.cpp
-    2. change GETSET(bool, IsCopyDebugFolderToTestFolder, false); to GETSET(bool, IsCopyDebugFolderToTestFolder, true;
+    2. change GETSET(bool, IsCopyDebugFolderToTestFolder, false); to GETSET(bool, IsCopyDebugFolderToTestFolder, true);
     3. make unittest -j10
     4. file will be generated to TestFolder mensioned in vpg_vcc_generation_manager_test.cpp
+
+Note: Fixed Update Function not work because of
+using // <vcc:exceptionType action:"RESERVE"> in exception_type.hpp
+Please change to 
+// <vcc:exceptionType action="RESERVE">
 
 ## What's new
 Generate Java Enum according to C++ Enum Class under Type Workspace

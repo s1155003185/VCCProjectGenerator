@@ -201,6 +201,8 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const LogProperty *logPro
             "using namespace vcc;\r\n";
 
         for (auto const &enumClass : enumClassList) {
+            if (!IsEndWith(enumClass->GetName(), propertyClassNameSuffix))
+                continue;
             std::vector<std::shared_ptr<VPGEnumClassProperty>> readWrite;
             for (auto property : enumClass->GetProperties()) {
                 if (property->GetAccessMode() != VPGEnumClassPropertyAccessMode::NoAccess)
@@ -916,6 +918,8 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogProperty *logPro
         std::map<std::wstring, std::map<std::wstring, std::vector<std::shared_ptr<VPGEnumClassProperty>>>> typeMacroMap;
         // type macro
         for (auto const &enumClass : enumClassList) {
+            if (!IsEndWith(enumClass->GetName(), propertyClassNameSuffix))
+                continue;
             // include orginal class and enum class
             std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().size() - propertyClassNameSuffix.size());
 

@@ -15,11 +15,19 @@
 # Note: files in .vscode is used for F5 only. if need to build Release vesrion, please use "make release"
 
 # Field to change:
+#----------------------------------#
+#---------- Project Name ----------#
+#----------------------------------#
 # PROJ_NAME, PROJ_NAME_DLL, PROJ_NAME_EXE: project name
 # DEBUG_FLAGS, RELEASE_FLAGS, DEBUG_COMPILE_OPTIONS, RELEASE_COMPILE_OPTIONS, GTEST_COMPILE_OPTIONS: flag for debug and release
 # LFLAGS: library that not in the project, need to be handled in if case, as different platform has different paths 
 # EXCLUDE_FOLDER: igore that folder when compile
 # if having vcc.json, please also ensure PROJ_NAME, PROJ_NAME_DLL, PROJ_NAME_EXE are the same.
+
+#----------------------------------#
+#---------- Export ----------------#
+#----------------------------------#
+# EXPORT_DLL_DIR, EXPORT_EXE_DIR, EXPORT_EXTERNAL_LIB: Export path for dll and exe after building Release.
 
 # Gtest
 # to add new gtest, follow unittest

@@ -50,7 +50,7 @@ class VPGJavaGenerationService
         static std::wstring GenerateObjectGetterSetter(const std::wstring &projectPrefix, const std::wstring &objectProperty, const VPGEnumClassProperty *property, const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles);
         static std::wstring GenerateObjectContent(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &middlePath, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMap, const VPGGenerationOptionExport *option);
     public:
-        static void GenerateJavaBridge(const LogProperty *logProperty, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option);
+        static void GenerateJavaBridge(const LogProperty *logProperty, const std::wstring &targetWorkspace, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option);
         
         static void GenerateEnum(const LogProperty *logProperty, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass, const VPGGenerationOption *option, const VPGGenerationOptionExport *javaOption);
         static void GenerateObject(const LogProperty *logProperty, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass,

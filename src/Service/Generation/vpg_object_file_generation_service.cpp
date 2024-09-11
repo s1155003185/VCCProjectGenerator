@@ -280,7 +280,9 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogProperty *logProperty,
         projectFileList.insert(L"class_macro.hpp");
         projectFileList.insert(L"object_type.hpp");
         // generate external class
-        for (auto const &enumClass : enumClassList) {            
+        for (auto const &enumClass : enumClassList) {
+            if (!IsEndWith(enumClass->GetName(), propertyClassNameSuffix))
+                continue;
             std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - propertyClassNameSuffix.length());
             classInCurrentFileList.insert(className);
             // Json
@@ -374,6 +376,8 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogProperty *logProperty,
             
         // generate class
         for (auto const &enumClass : enumClassList) {
+            if (!IsEndWith(enumClass->GetName(), propertyClassNameSuffix))
+                continue;
             std::wstring inheritClass = L"";
             std::wstring extraFunction = L"";
             // Json
@@ -476,6 +480,8 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogProperty *logProperty,
         std::wstring content = L"#include \"" + includeFileName + L"\"\r\n";
 
         for (auto const &enumClass : enumClassList) {
+            if (!IsEndWith(enumClass->GetName(), propertyClassNameSuffix))
+                continue;
             for (auto const &property : enumClass->GetProperties()) {
                 if (!property->GetType1().empty() && std::iswupper(property->GetType1()[0])) {
                     if (classPathMapping.find(property->GetType1()) != classPathMapping.end())
@@ -509,6 +515,9 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogProperty *logProperty,
             "using namespace vcc;\r\n";
 
         for (auto const &enumClass : enumClassList) {
+            if (!IsEndWith(enumClass->GetName(), propertyClassNameSuffix))
+                continue;
+                
             if (!VPGObjectFileGenerationService::IsJsonObject(enumClass.get()))
                 continue;
 
