@@ -6,28 +6,28 @@ Maintain those standard already stable long time ago. No reason to implement twi
 Current Stage Objective: Start VCC Project Manager (Multi Project Handling), including Java Interface, Thread, Form, Action, Git.
 
 Note: Still in initialize version, will have full review when official release
-Sample Program: To get sample, can download this project from github, then
-    1. go to vpg_vcc_generation_manager_test.cpp
-    2. change GETSET(bool, IsCopyDebugFolderToTestFolder, false); to GETSET(bool, IsCopyDebugFolderToTestFolder, true);
-    3. make unittest -j10
-    4. file will be generated to TestFolder mensioned in vpg_vcc_generation_manager_test.cpp
+- Will review Java PointerByReference usage
+- Will review C++ and Java File / Directory naming rule
 
 Note: Fixed Update Function not work because of
 using // <vcc:exceptionType action:"RESERVE"> in exception_type.hpp
 Please change to 
 // <vcc:exceptionType action="RESERVE">
 
+Please go to following session to see how to create VCC Project to generate c++ dll with Java Interface
+- Tutorial for Create VCC DLL Project to generate dll with Java Interface
+
 ## What's new
-Generate Java Enum according to C++ Enum Class under Type Workspace
-Note: vcc.json description is outdated, will update after generate java bridge
+Generate Java Enum and Class according to C++ Enum Class under Type Workspace
 
 ## What's next
-Generate Java Class according to C++ Enum Class under Type Workspace
+Form, Action, Thread
 
 ## Features
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
 - Create program structure like sql, the remaining is just handle specific logic.
 - Mainly handle those already stable and optimize features so that dont need to implement from the beginning
+- Generate Java Class and Enum Automatcally after writting c++ enum class and executing Generate VCC Project.
 
 ### Options
 1. Create C++ Complex Project
@@ -42,12 +42,18 @@ Generate Java Class according to C++ Enum Class under Type Workspace
 ### Pre-Requirement
 Must already install following before execute VCCProjectGenerator and VCCProjectGenerator VSCode Extension.
 Or can download the template from git directly.
+
+C++
 1. git
 2. g++
 3. make
 4. gtest
 
-### Procedcure of Extension
+Optional if using Java Interface
+1. Maven Project
+2. Java 21 or above
+
+### Work flow for Extension
 1. Download VCCProjectGenerator by Git to ~/Document/VCC folder.
 2. Use make to build VCCProjectGenerator.
 3. Download template by Git.
@@ -56,6 +62,11 @@ Or can download the template from git directly.
 If dont want to download extra project, please download following git manually and follow instruction listed in Makefile to adjust.
 1. Versionin Common Codebase Simple C++ Template (https://github.com/s1155003185/VCCSimpleTemplateCPP)
 2. Versionin Common Codebase Module - VCCModule (https://github.com/s1155003185/VCCModule)
+
+## Sample Program
+VCCProjectGenerator is self writting program.
+Please download from github (https://github.com/s1155003185/VCCProjectGenerator).
+Then follow the instruction listed in README.md to change.
 
 ## Build C++ project
 Follow the instruction listed in Makefile
@@ -98,45 +109,43 @@ Release program is built in bin/Release
 3. F5
 
 ## Compare to AI Code Generation
+Suitable for long term project
 - Stable
 - Reliable
-- Faster
 - No need to test existing code
 - No need to study the code after generation
 - No need to upload code to service provider
 
 ****
 ## VCCModule Feature
-### Status:
--	Active: Keep changing. Not recommend to use.
--	Stable: Workable.
--	Inactive: Will not update in the future.
--	Pending: Coming soon.
-### Core:
+### Core
 -	Action Manager (Pending)
--	Exception (Stable)
--	Helper (Stable, Keep update)
--	Log Service (Stable)
--   Process Service (Stable)
--	Property Accessor (Stable but need adjustment for map, and try to support set)
--   Terminal Service (Stable)
+-	Exception
+-	Helper (Keep update)
+-	Log Service
+-   Process Service
+-	Property Accessor (Not Support set at the moment)
+-   Terminal Service
 -   XML (Read only, Other are still pending)
-### Common:
--   Git (Actives, basic function only)
-### Module:
+### Common
+-   Git (Basic function only, will complete in next stage)
+### Module
 -	TextEditor (Pending)
 -	Document (Pending)
 -	Speedsheet (Pending)
-### UI:
+### UI
 -	LoginService (Pending)
 -	LicenseService (Pending)
 -	PaymentService (Pending)
+### Generation By Generator
+-   Auto Update Makefile according to vcc.json
+-   Auto Copy dll to Java dll folder after make release (Note: JNA cannot read debug mode dll)
+-   Auto Create C++ Class Structure, Property Accessor, DLL Interface based on enum in TypeWorkspace of c++ in vcc.json
+-   Auto Create Java Class and Enum based on enum in TypeWorkspace of c++ in vcc.json
 
 ## Pending
 - Use precompile header
-- Update vcc.json also update Makefile etc.
-- ProperyAccessor and java bridge, swift bridge.
-- Auto generate ChangeLog
+- Swift bridge.
 - Check style
 - Auto generaste document for coding (like java)
 - Enhance class generation for validation, trigger etc.
@@ -200,7 +209,7 @@ Common and continous update template so that do not need to develop project from
 - Handle Form, Action, Virtual List, Virtual Table, Theme etc.
 
 ##  Versioning Coding Cooperation Project Members
-1. Versioning Coding Cooperation - Office
+1. Versioning Coding Cooperation - Office (Not Implement Yet)
 => Free Version: Document, SpreedSheet, Text Editor
 => Subscription Version: Git, Multi-user workspace, Plugins etc.
 
@@ -209,23 +218,18 @@ Common and continous update template so that do not need to develop project from
 => Free Version: VCC Project Generator and normal git operation. Fixed that inherited project is VCC Project Module.
 => Subscription Version: Self-define inherited project, Multi project handling, Document Versioning.
 
-## Versionin Common Codebase Project - Project Generator Feature
-1. Auto Create C++ Project
-2. Auto Create, Update, Generate VCCModule (Any Interface + C++ DLL Moduel)
-
 ****
 ## Versionin Common Codebase Project Generator
-Sample Program: To get sample, can download this project from github, then
-    1. go to vpg_vcc_generation_manager_test.cpp
-    2. change GETSET(bool, IsCopyDebugFolderToTestFolder, false); to GETSET(bool, IsCopyDebugFolderToTestFolder, true;
-    3. make unittest -j10
-    4. file will be generated to TestFolder mensioned in vpg_vcc_generation_manager_test.cpp
 
-### Pre-Requirement
+C++
 1. git
 2. g++
 3. make
 4. gtest
+
+If using Java Interface
+1. Maven Project
+2. Java 21 or above
 
 ### Compile
 1. Clone VCCProjectGenerator source code from https://github.com/s1155003185/VCCProjectGenerator
@@ -282,7 +286,7 @@ Description:
     Generate project from template.
 
 ### Command - Update
-vpg -Update [-workspace-destination <workspace-destination>]workspace
+vpg -Update [-workspace-destination <workspace-destination>]
 
 -workspace-destination <workspace-destination>
     Target workspace. If not state, then current workspace.
@@ -292,7 +296,7 @@ Description:
     First update template to the version that same as VCCProjectGenerator. Then compare different and update the files in workspace. Details: vcc.json, Update Rule.
 
 ### Command - Generate
-vpg -Generate [-workspace-destination <workspace-destination>]workspace
+vpg -Generate [-workspace-destination <workspace-destination>]
 
 Description:
     Only for VCC Module. Other properties are overriden by vcc.json. Details: vcc.json, Generate Rule.
@@ -300,18 +304,64 @@ Description:
 ### vcc.json
 For VCCModule, there is vcc.json. Update Mode and Generate Mode fully depends on vcc.json. Can include this to .gitignore file.
 
+Sample
+```
+{
+    "Version": "v0.1.5",
+    "ProjectType": "VccModule",
+    "TemplateGitUrl": "https://github.com/s1155003185/VCCModule.git",
+    "TemplateWorkspace": "${userHome}/Documents/vcc/VCCModule",
+    "ProjectPrefix": "VPG",
+    "ProjectName": "VCCProjGenerator",
+    "ProjectNameDll": "libvpg",
+    "ProjectNameExe": "vpg",
+    "IsGit": true,
+    "IsExcludeUnittest": false,
+    "IsExcludeVCCUnitTest": false,
+    "TypeWorkspace": "include/Type",
+    "ActionTypeDirectory": "include/Type",
+    "ExceptionTypeDirectory": "include/Type",
+    "ManagerTypeDirectory": "include/Type",
+    "ObjectTypeDirectory": "include/Type",
+    "ObjectDirectoryHpp": "include/Model",
+    "ObjectDirectoryCpp": "src/Model",
+    "PropertyAccessorDirectoryHpp": "include/PropertyAccessor",
+    "PropertyAccessorDirectoryCpp": "src/PropertyAccessor",
+    "ObjectFactoryDirectoryHpp": "include/Factory",
+    "ObjectFactoryDirectoryCpp": "src/Factory",
+    "PropertyAccessorFactoryDirectoryHpp": "include/Factory",
+    "PropertyAccessorFactoryDirectoryCpp": "src/Factory",
+    "Plugins": [
+        "VCC/Versioning/Git"
+    ],
+    "Exports": [
+        {
+            "Interface": "Java",
+            "Workspace": "../VCCProjectManagerBasic",
+            "IsExportExternalLib": true,
+            "ExportDirectoryDll": "src/main/resources",
+            "ExportDirectoryExe": "",
+            "DllBridgeDirectory": "src/main/java/com/vcc",
+            "ObjectDirectory": "src/main/java/com/vcc/model",
+            "TypeDirectory": "src/main/java/com/vcc/type"
+        }
+    ]
+}
+```
+
 #### Properies
 Version
-    Current VCCModule Version. Please manaully update while manually update Project from git source.
+    ReadOnly. Current VCCModule Version. VCCProjectGenerator and VCCModel version must be the same.
 
 ProjectType
     VCCModule. Reserve for other project type, such as Java and Swift.
 
-WorkspaceSourceGitUrl
-    Git source.
+TemplateGitUrl
+    Template Git source.
 
-WorkspaceDestination
-    Current workspace. Just for referece.
+TemplateWorkspace
+    Template workspace. Update mode will update current resource from the source in Template workspace.
+    By default, value is "${userHome}/Documents/vcc/VCCModule". Generator will auto update ${userHome} to user home path.
 
 ProjectPrefix
     In generation mode, generator only read file with that prefix and generate class with that prefix. It is used to distinguish different project if having multi dll.
@@ -319,43 +369,90 @@ ProjectPrefix
     Generator only read file have prefix vpg_* and generate class as VPGObject
 
 ProjectName
-    Project name.
+    Project name. Update mode will also update Makefile.
+
 
 ProjectNameDll
-    DLL name. If does not compile dll, keep it empty. Will auto update Makefile and related files (Enhancement in next version).
+    DLL name. If does not compile dll, keep it empty.
+    Update mode will auto update Makefile.
+    Generate mode will update DllFunction.h.
 
 ProjectNameExe
-    EXE name. If does not compile exe, keep it empty. Will auto update Makefile and related files (Enhancement in next version).
-
-ProjectNameGtest
-    gtest folder name. Although can have rename to the other name, but keep it unittest is advise. If does not compile unittest, keep it empty. Will auto update Makefile and related files (Enhancement in next version).
+    EXE name. If does not compile exe, keep it empty.
+    Update mode will auto update Makefile.
 
 IsGit
-    If true, then generate .gitignore.
+    If true, then generate .gitignore. (Pending to init git)
+
+IsExcludeUnittest
+    If true, then skip update unittest/
 
 IsExcludeVCCUnitTest
     If true, then skip update unittest/External/VCC/
 
 TypeWorkspace
-    In Generation mode, generator will search file with suffix *_property.hpp to create Class, Property Accessor etc. Detail: Generation Rule.
+    In Generation mode, Generator will search files with suffix *_property.hpp to create Class, Property Accessor etc. Detail: Generation Rule.
 
 ActionTypeDirectory, ExceptionTypeDirectory, ManagerTypeDirectory, ObjectTypeDirectory
     The location to export action_type.hpp, exception_type.hpp, manager_type.hpp, object_type.hpp
     All are used to export to interface. Cannot delete those files. action_type may be moved to External/VCC/Form/Action/ in the future such that action can be optional.
 
-ModelDirectory
+ObjectDirectoryHpp, ObjectDirectoryCpp
     In Generation mode, class files are generated here.
+    
+PropertyAccessorDirectoryHpp, PropertyAccessorDirectoryCpp
+    In Generation mode, Property Accessor files are generated here.
 
-PropertyAccessorDirectoryHpp
-    In Generation mode, property accessor hpp files are generated here. Not support in current version.
+ObjectFactoryDirectoryHpp, ObjectFactoryDirectoryCpp
+    In Generation mode, Object Factory file is generated here.
 
-PropertyAccessorDirectoryCpp
-    In Generation mode, property accessor cpp files are generated here. Not support in current version.
+PropertyAccessorFactoryDirectoryHpp, PropertyAccessorFactoryDirectoryCpp
+    In Generation mode, Property Accessor Factory file is generated here.
 
 Plugins
-    In Update mode, generator will copy folders under include/External, src/External, unittest/External to workspace.
+    In Update mode, Generator will copy folders under include/External, src/External, unittest/External to workspace.
     Option:
         VCC/Versioning/Git
+
+Exports
+    In Update Mode, Generator will update Makefile so that dll, exe will be copied after make release. Note: JNA cannot read debug mode dll.
+    In Generate Mode, Generator will generate class, enum, bridge according to TypeWorkspace stated above.
+
+    Interface
+        Only accept "Java" at the moment. Pending to have Swift and Cpp
+
+    Workspace
+        Destination of Target Project. Recommand to use relative path.
+
+    IsExportExternalLib
+        true or false
+        If true, copy all files in directory lib to with main exe and dll.
+        
+    ExportDirectoryDll
+        Relative path based on Workspace.
+        After changed, please trigger Update Mode to update Makefile.
+        When make, dll file will be copied to the path specified.
+        For Java, it must have prefix src/main/resources
+
+    ExportDirectoryExe
+        Relative path based on Workspace.
+        After changed, please trigger Update Mode to update Makefile.
+        When make, dll file will be copied to the path specified.
+
+    DllBridgeDirectory
+        Relative path based on Workspace.
+        In Generation Mode, Dll bridge will be generated in path specified.
+        In Java, it must have prefix src/main/java
+
+    ObjectDirectory
+        Relative path based on Workspace.
+        In Generation Mode, Java class file will be generated in path specified.
+        In Java, it must have prefix src/main/java
+
+    TypeDirectory
+        Relative path based on Workspace.
+        In Generation Mode, Java class file will be generated in path specified.
+        In Java, it must have prefix src/main/java
 
 ### Update Rule
 Procedure:
@@ -400,9 +497,7 @@ Procedure:
 ### Generate Rule
 The final objective is that user only need to handle enum class like sql table and logic in service and manager only. Other thing will be auto generate.
 Note: 
-1. Property Accessor not support Set as there is no way to get set element.
-2. Not support property accessor factory yet.
-3. Not support get map key list yet.
+1. Set is not supported at the moment.
 Note:
 1. For any not support type / macro e.g. SET macro, std::complex, etc. User may need to use ReadLock, WriteLock of Property Accessor to handle manually.
 Sample in 
@@ -411,11 +506,12 @@ Sample in
 
 Definition of Program Structure
     Class: C++ Class. Data storage.
-    Structure: C++ Structure. Used to support huge data process. Not support at the moment.
-    PropertyAccessor: Bridge between Control and model. Provide thread safe access, validation, trigger etc. Not support at the moment.
-    Service: Class with static function only. It is used to provide logic.
-    Manager: Class with model. Call service to modify model.
+    Factory: Generate class based on Enum.
     Form: Class with Manager. Call Manager to do action.
+    Manager: Class with model. Call service to modify model.
+    PropertyAccessor: Bridge between Control and model with thread safe access. Plending to have validation, trigger etc.
+    Service: Class with static function only. It is used to provide logic.
+    Structure: C++ Structure. Used to support huge data process. Not support at the moment.
 
 Definition of Enum Class
     Class Property file: file name with format projectPrefix_objectName_property.hpp
@@ -423,7 +519,6 @@ Definition of Enum Class
     Enum Class file: file name with format projectPrefix_enumName.hpp;
         If project prefix is defined in vcc.json, then all files and classes that not having project prefix will be skipped.
         All enum that used in class must be defined in TypeWorkspace. Otherwise will have compile error.
-
 
 Restriction
 - Field names should be long form and capital letter.
@@ -437,15 +532,143 @@ Restriction
 Procedure
     1. Read all files in TypeWorkspace.
     2. For all Class Property file, will generate Class file etc.
-    3. All Enum Class File will export to interface like java etc. (Not implement yet)
+    3. All Enum Class File will export to interface like java etc. Only support Java at the moment.
+
+Note
+    Under DllFunctions.h, user can have custom function with C basic type within extern "C" { } but the function must start with DLLEXPORT. When export java interface, the custom function also will be generated. But the usage of PointerByReference will be review later.
+    Please do not write any codes within tag dllInterfaceHeader and dllInterface. They will be overriden by Generator.
+
+    Sample: in DllFunctions.h
+```
+// <vcc:vccproj gen="DEMAND"/>
+#ifndef DLL_FUNCTIONS_H
+#define DLL_FUNCTIONS_H
+
+#include <string>
+
+#ifdef _WIN32
+#define DLLEXPORT __declspec (dllexport) 
+#else
+#define DLLEXPORT extern 
+#endif
+
+// <vcc:dllInterfaceHeader gen="FORCE">
+#include "object_factory.hpp"
+#include "property_accessor_factory.hpp"
+#include "property_accessor_macro.hpp"
+
+using namespace vcc;
+// </vcc:dllInterfaceHeader>
+
+extern "C"
+{
+
+DLLEXPORT int GetVersion(wchar_t **str);
+
+DLLEXPORT void *CreateObject(int64_t objectType);
+
+// <vcc:dllInterface gen="FORCE">
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(bool, Bool)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(char, Char)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(wchar_t, Wchar)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(int, Int8)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(int, Uint8)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(int, Short)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(int, UnsignedShort)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(long, Int)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(long, UnsignedInt)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(long, Long)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(long, UnsignedLong)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(float, Float)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(double, Double)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_STRING
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_OBJECT
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_CONTAINER
+// </vcc:dllInterface>
+}
+
+#endif
+```
+
+in DllFunctions.cpp
+```
+// <vcc:vccproj gen="DEMAND"/>
+#include "DllFunctions.h"
+
+#include <locale.h>
+#include <stdio.h>
+#include <wchar.h>
+
+
+// <vcc:dllInterfaceHeader gen="FORCE">
+#include "exception_macro.hpp"
+#include "i_object.hpp"
+#include "lock_type.hpp"
+#include "property_accessor_factory.hpp"
+#include "property_accessor_macro.hpp"
+
+using namespace vcc;
+// </vcc:dllInterfaceHeader>
+
+int GetVersion(wchar_t **str)
+{
+    std::wstring versionString = L"v0.0.1";
+    size_t size = (versionString.length() + 1) * sizeof(wchar_t);
+    *str = static_cast<wchar_t*>(malloc(size));
+    if (*str == nullptr) {
+        return -1;
+    }
+    wcscpy(*str, versionString.c_str());
+    return 0;
+}
+
+#include "object_factory.hpp"
+#include "object_type.hpp"
+std::shared_ptr<IObject> obj = nullptr;
+void *CreateObject(int64_t objectType)
+{
+    ObjectType tmpObjectType = static_cast<ObjectType>(objectType);
+    obj = ObjectFactory::Create(tmpObjectType);
+    return obj.get();
+}
+
+// <vcc:dllInterface gen="FORCE">
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(bool, Bool, false)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(char, Char, L'\0')
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(wchar_t, Wchar, L'\0')
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(int, Int8, 0)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(int, Uint8, 0)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(int, Short, 0)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(int, UnsignedShort, 0)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(long, Int, 0)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(long, UnsignedInt, 0)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(long, Long, 0)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(long, UnsignedLong, 0)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(float, Float, 0)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(double, Double, 0)
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL_STRING
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL_OBJECT
+PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL_CONTAINER
+// </vcc:dllInterface>
+
+```
+
 
 #### Documentation
 // {Class Attribute}
-enum class EnumClassName {
+enum class ##ClassName##Property {
     EnumA, // {Field Attribute}
     EnumB, // {Field Attribute}
-    EnumC, // {Field Attribute}
+    EnumC // {Field Attribute}
 };
+
+Note:
+1.  Enum Class must be in file with ##prefix##_##class_name##_property.hpp
+    where ##prefix## must be the Project Prefix defined in vcc.json
+    the file name must be end with _property.hpp
+    e.g. vpg_person_property.hpp
+2.  Enum Class must be defined with ##PREFIX##ClassName##Property
+    e.g. VPGPersionProperty
 
 #### Class Attribute
 // [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }]
@@ -666,6 +889,60 @@ Execute: vpg -Update -workspace-destination workspace
 Execute: vpg -Generate -workspace-destination workspace
 
 ****
+## Tutorial for Create VCC DLL Project to generate dll with Java Interface
+
+1. For C++, create a folder and use VSCode open it.
+2. For Java, create a folder next to C++ folder and create a Maven Project within the folder
+    |- CppProjectFolder
+    |- JavaProjectFolder
+3. Place following code to pom.xml.
+
+    <dependencies>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>5.14.0</version>
+        </dependency>
+    </dependencies>
+
+4. In C++ Project VSCode bar, type "> Create VCC DLL Project" and execute. VSCode will download corresponding VCC Project Generator from GitHub to ~/Documents/VCC in local computer.
+5. Open vcc.json file, update ProjectPrefix, ProjectName, ProjectNameDll. ProjectNameDll must be started with prefix "lib" for JNA.
+    In this tutorial, use VPG as Project Prefix.
+
+    Under Exports, write config like following
+    "Exports": [
+        {
+            "Interface": "Java",
+            "Workspace": "../JavaProjectFolder",
+            "IsExportExternalLib": true,
+            "ExportDirectoryDll": "src/main/resources",
+            "ExportDirectoryExe": "",
+            "DllBridgeDirectory": "src/main/java/company/name",
+            "ObjectDirectory": "src/main/java/company/name/model",
+            "TypeDirectory": "src/main/java/com/company/name/type"
+        }
+    ]
+
+    Note: company/name is company / organization name, please replace to what you need.
+6. In C++ Project VSCode bar, type "> Update VCC Project" and execute.
+7. Go to VSCode Explorer, under "include/Type", create a file with name vpg_test_property.hpp
+8. In vpg_test_property.hpp, write code
+```
+#pragma once
+
+enum class VPGTestProperty
+{
+    PropertyA // GETSET(std::wstring, PropertyA, L"")
+};
+```
+Note: If file name is not end with _property.hpp but in type workspace folder, generate will not generate the c++ class and property accessor. But will also export to Java interface.
+9. In C++ Project VSCode bar, type "> Generate VCC Project" and execute.
+10. In terminal, type "make release -j10" and execute.
+11. Generator has already been generated whole C++ Project structure and Java Project Structure.
+Note: As C++ is using shared_ptr when handle object, Need to find some place to store the pointer first. Otherwise, you will get freed pointer in Java.
+Note: At the moment, there is no place to create object and return pointer to Java, user need to create object manually. Create pointer problem will be handled in next stage (Form Handling).
+
+****
 ## History
 The project is start from 2022-06-22. As Document Versioning is needed but no solution can be found. Also, existing document processors have some interesting behaviour, such as
 
@@ -701,6 +978,14 @@ X(Twitter) @VCCProject
 
 ****
 ## Release Log
+
+### [v0.1.5] - 2024-09-17: Java Bridge: Generation - Auto Create Java Class and Enum according
+- Use void * instead of ITypeUnion for Property Accessor Map Key.
+- Generate Java Class according to C++ Enum Class under Type Workspace.
+- Update vcc.json and Makefile to export dll, exe to Java project
+- Update vcc.json TemplateWorkspace use ${userHome} instead of hardcode.
+- Auto copy dll / exe to Java Project
+- Fix Update Mode not working because of using // <vcc:exceptionType action:"RESERVE"> in exception_type.hpp instead of // <vcc:exceptionType action="RESERVE">
 
 ### [v0.1.4] - 2024-08-25: Java Bridge: Generation - Java Bridege for Enum
 - Generate Java Enum according to C++ Enum Class under Type Workspace.

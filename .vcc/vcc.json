@@ -1,5 +1,5 @@
 {
-    "Version": "v0.1.3",
+    "Version": "v0.1.5",
     "ProjectType": "VccModule",
     "TemplateGitUrl": "https://github.com/s1155003185/VCCModule.git",
     "TemplateWorkspace": "${userHome}/Documents/vcc/VCCModule",

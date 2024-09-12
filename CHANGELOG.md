@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+
+### [v0.1.5] - 2024-09-17: Java Bridge: Generation - Auto Create Java Class and Enum according
 - Use void * instead of ITypeUnion for Property Accessor Map Key.
 - Generate Java Class according to C++ Enum Class under Type Workspace.
 - Update vcc.json and Makefile to export dll, exe to Java project
