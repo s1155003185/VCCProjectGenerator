@@ -38,11 +38,14 @@ TEST_F(VPGObjectTypeFileGenerationServiceTest, Empty)
     VPGObjectTypeFileGenerationService::Generate(this->GetLogProperty().get(), this->GetFilePathHpp(), propertyTypes);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     std::wstring content = ReadFile(this->GetFilePathHpp());
-    std::wstring expectedResult = L""
+    std::wstring expectedResult = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         L"#pragma once\r\n"
         L"\r\n"
-        L"enum class ObjectType {\r\n"
+        L"enum class ObjectType\r\n"
+        L"{\r\n"
         L"    NA\r\n"
+        L"    // <vcc:custom sync=\"SKIP\" gen=\"SKIP\">\r\n"
+        L"    // </vcc:custom>\r\n"
         L"};\r\n";
     EXPECT_EQ(content, expectedResult);
 }
@@ -55,13 +58,16 @@ TEST_F(VPGObjectTypeFileGenerationServiceTest, Normal)
     VPGObjectTypeFileGenerationService::Generate(this->GetLogProperty().get(), this->GetFilePathHpp(), propertyTypes);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     std::wstring content = ReadFile(this->GetFilePathHpp());
-    std::wstring expectedResult = L""
+    std::wstring expectedResult = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         L"#pragma once\r\n"
         L"\r\n"
-        L"enum class ObjectType {\r\n"
+        L"enum class ObjectType\r\n"
+        L"{\r\n"
         L"    NA,\r\n"
         L"    Abc,\r\n"
         L"    Def\r\n"
+        L"    // <vcc:custom sync=\"SKIP\" gen=\"SKIP\">\r\n"
+        L"    // </vcc:custom>\r\n"
         L"};\r\n";
     EXPECT_EQ(content, expectedResult);
 }

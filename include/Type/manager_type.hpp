@@ -1,10 +1,11 @@
+// <vcc:vccproj sync="FULL" gen="FULL"/>
 #pragma once
 
 enum class ManagerType
 {
     NA = 0,
-    // vccobj - begin
     Action,
     Git,
-    // vccobj - end
+    // <vcc:custom sync="SKIP" gen="SKIP">
+    // </vcc:custom>
 };

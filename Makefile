@@ -377,12 +377,15 @@ endif
 	@echo Build Release Complete!
 ifneq ($(EXPORT_DLL_DIR),)
 	$(MAKE) export_release_dll
+ifneq ($(EXPORT_EXTERNAL_LIB),)
+	$(MAKE) export_release_external_lib
+endif
 endif
 ifneq ($(EXPORT_EXE_DIR),)
 	$(MAKE) export_release_exe
-endif
 ifneq ($(EXPORT_EXTERNAL_LIB),)
 	$(MAKE) export_release_external_lib
+endif
 endif
 
 release_dll:
@@ -395,9 +398,9 @@ endif
 	@echo Build Release DLL Complete!
 ifneq ($(EXPORT_DLL_DIR),)
 	$(MAKE) export_release_dll
-endif
 ifneq ($(EXPORT_EXTERNAL_LIB),)
 	$(MAKE) export_release_external_lib
+endif
 endif
 
 release_exe:
@@ -410,9 +413,9 @@ endif
 	@echo Build Release EXE Complete!
 ifneq ($(EXPORT_EXE_DIR),)
 	$(MAKE) export_release_exe
-endif
 ifneq ($(EXPORT_EXTERNAL_LIB),)
 	$(MAKE) export_release_external_lib
+endif
 endif
 
 #----------------------------------#

@@ -21,7 +21,11 @@ namespace vcc
         
         GETSET(bool, IsConsoleLog, false);
         GETSET(std::wstring, FilePath, L"");
-        // Command
+        // Debug
+        GETSET(bool, IsLogDebug, false);
+        // Thread
+        GETSET(bool, IsLogThread, false);
+        // Terminal
         GETSET(bool, IsLogTerminal, false);
         GETSET(bool, IsLogTerminalResult, false);
         // Process
@@ -44,6 +48,10 @@ namespace vcc
                 this->SetIsConsoleLog(false);
                 this->SetFilePath(L"");
 
+                this->SetIsLogDebug(false);
+
+                this->SetIsLogThread(false);
+
                 this->SetIsLogTerminal(false);
                 this->SetIsLogTerminalResult(false);
 
@@ -57,6 +65,10 @@ namespace vcc
                 this->SetIsConsoleLog(true);
                 this->SetFilePath(filePath);
                 assert(!filePath.empty());
+
+                this->SetIsLogDebug(true);
+                
+                this->SetIsLogThread(true);
 
                 this->SetIsLogTerminal(true);
                 this->SetIsLogTerminalResult(true);

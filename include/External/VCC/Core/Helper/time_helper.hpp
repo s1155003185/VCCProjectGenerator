@@ -1,6 +1,7 @@
 #pragma once
 #include <chrono>
 #include <mutex>
+#include <thread>
 
 #ifdef _WIN32
 #include <ctime>
@@ -14,6 +15,10 @@
 
 namespace vcc
 {
+    inline void Sleep(long long milliseconds) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+    }
+
     inline std::wstring GetDateString(time_t timer)
     {
         std::tm bt{};

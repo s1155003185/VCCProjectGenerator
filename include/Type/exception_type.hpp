@@ -1,3 +1,4 @@
+// <vcc:vccproj sync="FULL" gen="FULL"/>
 #pragma once
 
 // TODO: need review
@@ -26,7 +27,7 @@ enum class ExceptionType
 	KeyDuplicated,
 
 	SystemError = 50000,
-	// <vcc:exceptionType action="RESERVE">
-	// </vcc:exceptionType>
+    // <vcc:custom sync="SKIP" gen="SKIP">
+    // </vcc:custom>
     CustomError = 99999
 };

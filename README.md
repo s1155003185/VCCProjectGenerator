@@ -18,10 +18,10 @@ Please go to following session to see how to create VCC Project to generate c++ 
 - Tutorial for Create VCC DLL Project to generate dll with Java Interface
 
 ## What's new
-Generate Java Enum and Class according to C++ Enum Class under Type Workspace
+Thread
 
 ## What's next
-Form, Action, Thread
+Form, Action
 
 ## Features
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
@@ -126,6 +126,7 @@ Suitable for long term project
 -   Process Service
 -	Property Accessor (Not Support set at the moment)
 -   Terminal Service
+-   Thread Service
 -   XML (Read only, Other are still pending)
 ### Common
 -   Git (Basic function only, will complete in next stage)
@@ -978,6 +979,11 @@ X(Twitter) @VCCProject
 
 ****
 ## Release Log
+
+### [v0.2.0] - 2024-10-03: Form - Initialize Thread
+- Initialize Thread, ThreadService, ThreadManager
+- LogService add LogDebug and LogThread
+- ActionType, ExceptionType, FormType, ManagerType, ObjectType add custom tag
 
 ### [v0.1.5] - 2024-09-17: Java Bridge: Generation - Auto Create Java Class and Enum according
 - Use void * instead of ITypeUnion for Property Accessor Map Key.

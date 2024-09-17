@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### [v0.2.0] - 2024-10-03: Form - Initialize Thread
+- Initialize Thread, ThreadService, ThreadManager
+- LogService add LogDebug and LogThread
+- ActionType, ExceptionType, FormType, ManagerType, ObjectType add custom tag
+
 ### [v0.1.5] - 2024-09-17: Java Bridge: Generation - Auto Create Java Class and Enum according
 - Use void * instead of ITypeUnion for Property Accessor Map Key.
 - Generate Java Class according to C++ Enum Class under Type Workspace.

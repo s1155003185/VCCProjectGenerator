@@ -137,12 +137,16 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     // ------------------------------------------------------------------------------------------ //
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"object_type.hpp"})));
     EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"object_type.hpp"})),
-        L"#pragma once\r\n"
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#pragma once\r\n"
         "\r\n"
-        "enum class ObjectType {\r\n"
+        "enum class ObjectType\r\n"
+        "{\r\n"
         "    NA,\r\n"
         "    Object,\r\n"
         "    ObjectPtr\r\n"
+        L"    // <vcc:custom sync=\"SKIP\" gen=\"SKIP\">\r\n"
+        L"    // </vcc:custom>\r\n"
         "};\r\n");
 
     // ------------------------------------------------------------------------------------------ //
