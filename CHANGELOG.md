@@ -1,6 +1,7 @@
 # Change Log
 
 ## [Unreleased]
+- Rename VCCModule Folder to Camel Case to fit java naming style
 
 ### [v0.2.0] - 2024-10-03: Form - Initialize Thread
 - Initialize Thread, ThreadService, ThreadManager

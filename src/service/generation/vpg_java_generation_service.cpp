@@ -57,7 +57,6 @@ std::wstring VPGJavaGenerationService::GetJavaPactkage(const std::wstring &path,
         if (IsEndWith(result, L"/"))
             result.pop_back();
         ReplaceAll(result, L"/", L".");
-        ToLower(result);
     CATCH
     return result;
 }
@@ -892,7 +891,6 @@ void VPGJavaGenerationService::GenerateEnum(const LogProperty *logProperty, cons
             return;
         
         std::wstring tmpFilePath = GetParentPath(filePath);
-        ToLower(tmpFilePath);
         tmpFilePath = ConcatPaths({ tmpFilePath, GetFileName(filePath) });
 
         LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Enum: " + tmpFilePath);
@@ -912,7 +910,6 @@ void VPGJavaGenerationService::GenerateObject(const LogProperty *logProperty, co
             return;
             
         std::wstring tmpFilePath = GetParentPath(filePath);
-        ToLower(tmpFilePath);
         tmpFilePath = ConcatPaths({ tmpFilePath, GetFileName(filePath) });
        
         std::wstring objectName = enumClass->GetName();

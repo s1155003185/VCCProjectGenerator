@@ -58,10 +58,10 @@ class VPGVccGenerationManagerTest : public testing::Test
             dirOption.SetIsRecursive(true);
             dirOption.SetIsForce(true);
             dirOption.InsertIncludeFileFilters(L".vscode/*");
-            dirOption.InsertIncludeFileFilters(L"include/External/VCC/*");
-            dirOption.InsertIncludeFileFilters(L"include/Type/*_type.hpp");
-            dirOption.InsertIncludeFileFilters(L"src/External/VCC/*");
-            dirOption.InsertIncludeFileFilters(L"unittest/External/VCC/*");
+            dirOption.InsertIncludeFileFilters(L"include/external/vcc/*");
+            dirOption.InsertIncludeFileFilters(L"include/type/*_type.hpp");
+            dirOption.InsertIncludeFileFilters(L"src/external/vcc/*");
+            dirOption.InsertIncludeFileFilters(L"unittest/external/vcc/*");
             dirOption.InsertIncludeFileFilters(L"unittest/dllTest/*");
             dirOption.InsertIncludeFileFilters(L"unittest/gtest_main.cpp");
             dirOption.InsertIncludeFileFilters(L"*Makefile");
@@ -109,9 +109,9 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/External/VCC/Core"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/versioning/Git"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/external/vcc/core"})));
         
     if (this->GetIsCopyDebugFolderToTestFolder()) {
         std::wstring path = ConcatPaths({this->GetTestFolder(), L"VCCComplex"});
@@ -133,8 +133,8 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/versioning/Git"})));
 
     if (this->GetIsCopyDebugFolderToTestFolder()) {
         std::wstring path = ConcatPaths({this->GetTestFolder(), L"VCCEXE"});
@@ -156,9 +156,9 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/External/VCC/Core"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/versioning/Git"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/external/vcc/core"})));
 
     if (this->GetIsCopyDebugFolderToTestFolder()) {
         std::wstring path = ConcatPaths({this->GetTestFolder(), L"VCCDLL"});
@@ -180,9 +180,9 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/External/VCC/Core"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/versioning/Git"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/external/vcc/core"})));
 
     if (this->GetIsCopyDebugFolderToTestFolder()) {
         std::wstring path = ConcatPaths({this->GetTestFolder(), L"NoUnittest"});
@@ -204,9 +204,9 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/External/VCC/Core"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/versioning/Git"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/external/vcc/core"})));
 
     if (this->GetIsCopyDebugFolderToTestFolder()) {
         std::wstring path = ConcatPaths({this->GetTestFolder(), L"NoVCCUnittest"});
@@ -220,7 +220,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetProjectNameDll(L"VCCDllProject");
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetIsExcludeUnittest(false);
-    this->_Option->InsertPlugins(L"VCC/Versioning/Git");
+    this->_Option->InsertPlugins(L"vcc/versioning/git");
     this->_Option->SetIsExcludeVCCUnitTest(false);
     this->GetManager()->Add();
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
@@ -229,9 +229,9 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Versioning/Git"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/External/VCC/Core"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/versioning/git"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/external/vcc/core"})));
 
     if (this->GetIsCopyDebugFolderToTestFolder()) {
         std::wstring path = ConcatPaths({this->GetTestFolder(), L"WithPlugins"});
@@ -256,10 +256,10 @@ TEST_F(VPGVccGenerationManagerTest, Update)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/versioning/git"})));
 
-    this->_Option->InsertPlugins(L"VCC/Versioning/Git");
+    this->_Option->InsertPlugins(L"vcc/versioning/git");
     DECLARE_UPTR(JsonBuilder, jsonBuilder);
     jsonBuilder->SetIsBeautify(true);
     WriteFile(ConcatPaths({this->GetWorkspaceTarget(), L".vcc/vcc.json"}), jsonBuilder->Serialize(this->_Option->ToJson().get()));
@@ -271,8 +271,8 @@ TEST_F(VPGVccGenerationManagerTest, Update)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Versioning/Git"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/versioning/git"})));
 
     if (this->GetIsCopyDebugFolderToTestFolder()) {
         std::wstring path = ConcatPaths({this->GetTestFolder(), L"Update"});
@@ -297,8 +297,8 @@ TEST_F(VPGVccGenerationManagerTest, Update_Makefile)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Core"})));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/External/VCC/Version/Git"})));
+    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
+    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/versioning/Git"})));
 
     // Update project name
     std::wstring projectName = L"NewProjectName";
@@ -350,7 +350,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     L"{\r\n"
     L"};\r\n"
     L"\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_empty_property.hpp"}), codeEmpty, true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/ClassA", L"vcc_object_empty_property.hpp"}), codeEmpty, true);
 
     // Dependent class
     std::wstring codeDependent =  L""
@@ -360,7 +360,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     "{\r\n"
     "    EnumA // GETSET_SPTR(VCCObjectEmpty, EnumA) \r\n"
     "};\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA/Dependent", L"vcc_object_dependent_property.hpp"}), codeDependent, true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/ClassA/Dependent", L"vcc_object_dependent_property.hpp"}), codeDependent, true);
     
     // copied from TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     std::wstring codeSingle =  L""
@@ -372,7 +372,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     "    String, // GETSET(std::wstring, String, L\"\") \r\n"
     "    Enum // GETSET(ExceptionType, Enum, ExceptionType::NoError) \r\n"
     "};\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_single_property.hpp"}), codeSingle, true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/ClassA", L"vcc_object_single_property.hpp"}), codeSingle, true);
 
     // copied from TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
     std::wstring codeNoAccess =  L""
@@ -385,7 +385,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     "    Write, // GETSET(bool, Write, false) @@NoAccess \r\n"
     "    NoAccess // GETSET(bool, NoAccess, false) @@NoAccess \r\n"
     "};\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_no_access_property.hpp"}), codeNoAccess, true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/ClassA", L"vcc_object_no_access_property.hpp"}), codeNoAccess, true);
  
     // copied from TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
     std::wstring codeNoAccessModeNormal =  L""
@@ -398,7 +398,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     "    Write, // GETSET(bool, Write, false) @@Write \r\n"
     "    NoAccess // GETSET(bool, NoAccess, false) @@NoAccess \r\n"
     "};\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_access_mode_normal_property.hpp"}), codeNoAccessModeNormal, true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/ClassA", L"vcc_object_access_mode_normal_property.hpp"}), codeNoAccessModeNormal, true);
  
     // copied from TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     std::wstring codeNoAccessVector =  L""
@@ -411,7 +411,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     "    Write, // VECTOR(bool, Write) @@Write \r\n"
     "    NoAccess // VECTOR(bool, NoAccess) @@NoAccess \r\n"
     "};\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_access_mode_vector_property.hpp"}), codeNoAccessVector, true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/ClassA", L"vcc_object_access_mode_vector_property.hpp"}), codeNoAccessVector, true);
  
     // copied from TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     std::wstring codeMulti =  L""
@@ -426,7 +426,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     "{\r\n"
     "    Bool // GETSET(bool, Bool, false)\r\n"
     "};\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_multi_property.hpp"}), codeMulti, true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/ClassA", L"vcc_object_multi_property.hpp"}), codeMulti, true);
  
     // copied from TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
     std::wstring codeObject =  L""
@@ -436,7 +436,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     "{\r\n"
     "    Object // GETSET_SPTR_NULL(VCCObjectEmpty, Object)\r\n"
     "};\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_object_property.hpp"}), codeObject, true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/ClassA", L"vcc_object_object_property.hpp"}), codeObject, true);
  
     // copied from TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     std::wstring codeContainer =  L""
@@ -451,7 +451,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     "    MapEnum, // MAP(char, ExceptionType, MapEnum)\r\n"
     "    MapObj // MAP_SPTR(double, VCCObjectEmpty, MapObj)\r\n"
     "};\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_container_property.hpp"}), codeContainer, true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/ClassA", L"vcc_object_container_property.hpp"}), codeContainer, true);
  
     // copied from TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     std::wstring codeMIx =  L""
@@ -465,7 +465,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     "    Vector, // VECTOR(std::wstring, Vector) \r\n"
     "    Map // MAP(int, double, Map) \r\n"
     "};\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_mix_property.hpp"}), codeMIx, true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/ClassA", L"vcc_object_mix_property.hpp"}), codeMIx, true);
 
     std::wstring codeJson =  L""
     "#pragma once\r\n"
@@ -479,7 +479,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     "    Vector, // VECTOR(std::wstring, Vector) \r\n"
     "    Map // MAP(int, double, Map) \r\n"
     "};\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/Type/ClassA", L"vcc_object_json_property.hpp"}), codeJson, true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/ClassA", L"vcc_object_json_property.hpp"}), codeJson, true);
 
     this->_Option->SetTemplateWorkspace(this->GetWorkspaceSource());
     this->_Option->SetProjectPrefix(L"VCC");
@@ -487,60 +487,60 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     this->GetManager()->Generate();
     
     // Empty Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_empty.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_empty_property_accessor.hpp"})));
-    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_empty_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_empty.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_empty_property_accessor.hpp"})));
+    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_empty_property_accessor.cpp"})));
 
     // Dependent Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA/Dependent", L"vcc_object_dependent.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA/Dependent", L"vcc_object_dependent_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA/Dependent", L"vcc_object_dependent_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA/Dependent", L"vcc_object_dependent.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA/Dependent", L"vcc_object_dependent_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA/Dependent", L"vcc_object_dependent_property_accessor.cpp"})));
 
     // Single Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_single.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_single_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_single_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_single.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_single_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_single_property_accessor.cpp"})));
 
     // NoAccess Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_no_access.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_no_access_property_accessor.hpp"})));
-    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_no_access_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_no_access.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_no_access_property_accessor.hpp"})));
+    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_no_access_property_accessor.cpp"})));
 
     // Access Normal Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_access_mode_normal.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_access_mode_normal_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_access_mode_normal_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_access_mode_normal.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_access_mode_normal_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_access_mode_normal_property_accessor.cpp"})));
 
     // Access Vector Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_access_mode_vector.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_access_mode_vector_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_access_mode_vector_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_access_mode_vector.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_access_mode_vector_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_access_mode_vector_property_accessor.cpp"})));
 
     // Multi Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_multi.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_multi_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_multi_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_multi.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_multi_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_multi_property_accessor.cpp"})));
 
     // Object Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_object.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_object_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_object_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_object.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_object_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_object_property_accessor.cpp"})));
 
     // Container Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_container.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_container_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_container_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_container.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_container_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_container_property_accessor.cpp"})));
 
     // Mix Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_mix.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_mix_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_mix_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_mix.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_mix_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_mix_property_accessor.cpp"})));
 
     // Mix Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/Model/ClassA", L"vcc_object_json.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/Model/ClassA", L"vcc_object_json.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/PropertyAccessor/ClassA", L"vcc_object_mix_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/PropertyAccessor/ClassA", L"vcc_object_mix_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_json.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/model/ClassA", L"vcc_object_json.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_mix_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_mix_property_accessor.cpp"})));
 
     std::wstring unittest = L""
     "#include <gtest/gtest.h>\r\n"
@@ -573,7 +573,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     "    DECLARE_SPTR(VCCObjectMix, objectMix);\r\n"
     "    DECLARE_SPTR(VCCObjectJson, objectJson);\r\n"
     "}\r\n";
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/Module/ClassA", L"class_test.cpp"}), unittest, true);
+    AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), L"unittest/module/ClassA", L"class_test.cpp"}), unittest, true);
 
     if (this->GetIsCopyDebugFolderToTestFolder()) {
         std::wstring path = ConcatPaths({this->GetTestFolder(), L"Generate"});

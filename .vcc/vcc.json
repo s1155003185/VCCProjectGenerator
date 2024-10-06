@@ -1,5 +1,5 @@
 {
-    "Version": "v0.1.5",
+    "Version": "v0.2.1",
     "ProjectType": "VccModule",
     "TemplateGitUrl": "https://github.com/s1155003185/VCCModule.git",
     "TemplateWorkspace": "${userHome}/Documents/vcc/VCCModule",
@@ -10,21 +10,21 @@
     "IsGit": true,
     "IsExcludeUnittest": false,
     "IsExcludeVCCUnitTest": false,
-    "TypeWorkspace": "include/Type",
-    "ActionTypeDirectory": "include/Type",
-    "ExceptionTypeDirectory": "include/Type",
-    "ManagerTypeDirectory": "include/Type",
-    "ObjectTypeDirectory": "include/Type",
-    "ObjectDirectoryHpp": "include/Model",
-    "ObjectDirectoryCpp": "src/Model",
-    "PropertyAccessorDirectoryHpp": "include/PropertyAccessor",
-    "PropertyAccessorDirectoryCpp": "src/PropertyAccessor",
-    "ObjectFactoryDirectoryHpp": "include/Factory",
-    "ObjectFactoryDirectoryCpp": "src/Factory",
-    "PropertyAccessorFactoryDirectoryHpp": "include/Factory",
-    "PropertyAccessorFactoryDirectoryCpp": "src/Factory",
+    "TypeWorkspace": "include/type",
+    "ActionTypeDirectory": "include/type",
+    "ExceptionTypeDirectory": "include/type",
+    "ManagerTypeDirectory": "include/type",
+    "ObjectTypeDirectory": "include/type",
+    "ObjectDirectoryHpp": "include/model",
+    "ObjectDirectoryCpp": "src/model",
+    "PropertyAccessorDirectoryHpp": "include/propertyAccessor",
+    "PropertyAccessorDirectoryCpp": "src/propertyAccessor",
+    "ObjectFactoryDirectoryHpp": "include/factory",
+    "ObjectFactoryDirectoryCpp": "src/factory",
+    "PropertyAccessorFactoryDirectoryHpp": "include/factory",
+    "PropertyAccessorFactoryDirectoryCpp": "src/factory",
     "Plugins": [
-        "VCC/Versioning/Git"
+        "vcc/versioning/git"
     ],
     "Exports": [
         {

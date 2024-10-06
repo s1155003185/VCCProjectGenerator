@@ -27,14 +27,14 @@ std::vector<std::wstring> VPGVccGenerationManager::GetUpdateList() const
     result.push_back(ConcatPaths({_Option->GetObjectTypeDirectory(), L"object_type.hpp"}));
     
     // VCC Core
-    result.push_back(L"include/External/VCC/LICENSE");
-    result.push_back(L"include/External/VCC/Core/*");
-    result.push_back(L"src/External/VCC/Core/*");
+    result.push_back(L"include/external/vcc/LICENSE");
+    result.push_back(L"include/external/vcc/core/*");
+    result.push_back(L"src/external/vcc/core/*");
     
     // plugins
     for (auto const &str : _Option->GetPlugins()) {
-        result.push_back(ConcatPaths({L"include/External/", str, L"*"}));
-        result.push_back(ConcatPaths({L"src/External/", str, L"*"}));
+        result.push_back(ConcatPaths({L"include/external/", str, L"*"}));
+        result.push_back(ConcatPaths({L"src/external/", str, L"*"}));
     }
     return result;
 }
@@ -43,12 +43,12 @@ std::vector<std::wstring> VPGVccGenerationManager::GetUpdateUnitTestList() const
 {
     std::vector<std::wstring> result;
     if (!_Option->GetIsExcludeVCCUnitTest())
-        result.push_back(L"External/VCC/Core/*");
+        result.push_back(L"external/vcc/core/*");
 
     for (auto const &str : _Option->GetPlugins()) {
         if (!_Option->GetIsExcludeUnittest()) {
-            if (!(str.starts_with(L"VCC") && _Option->GetIsExcludeVCCUnitTest()))
-                result.push_back(ConcatPaths({L"External/", str, L"*"}));
+            if (!(str.starts_with(L"vcc") && _Option->GetIsExcludeVCCUnitTest()))
+                result.push_back(ConcatPaths({L"external/", str, L"*"}));
         }
     }
     return result;    
@@ -60,25 +60,6 @@ void VPGVccGenerationManager::CreateVccJson() const
         DECLARE_UPTR(JsonBuilder, jsonBuilder);
         jsonBuilder->SetIsBeautify(true);
         _Option->SetVersion(VPGGlobal::GetVersion());
-
-        // Vector cannot be inizalize when create, initialize here
-        // if (_Option->GetPlatforms().empty()) {
-        //     // initialize include paths
-        //     DECLARE_SPTR(VPGGenerationOptionPlatform, platformWin);
-        //     platformWin->SetPlatform(PlatformType::Window);
-        //     platformWin->InsertIncludePaths(VPGGlobal::GetCppDefaultIncludePathWindow());
-        //     _Option->InsertPlatforms(platformWin);
-
-        //     DECLARE_SPTR(VPGGenerationOptionPlatform, platformLinux);
-        //     platformLinux->SetPlatform(PlatformType::Linux);
-        //     platformLinux->InsertIncludePaths(VPGGlobal::GetCppDefaultIncludePathLinux());
-        //     _Option->InsertPlatforms(platformLinux);
-
-        //     DECLARE_SPTR(VPGGenerationOptionPlatform, platformMacOS);
-        //     platformMacOS->SetPlatform(PlatformType::MacOs);
-        //     platformMacOS->InsertIncludePaths(VPGGlobal::GetCppDefaultIncludePathMacOs());
-        //     _Option->InsertPlatforms(platformMacOS);
-        // }
         WriteFile(ConcatPaths({_Workspace, VPGGlobal::GetVccJsonFileName()}), _Option->SerializeJson(jsonBuilder.get()), true);
     CATCH
 }

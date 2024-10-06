@@ -18,7 +18,7 @@ Please go to following session to see how to create VCC Project to generate c++ 
 - Tutorial for Create VCC DLL Project to generate dll with Java Interface
 
 ## What's new
-Thread
+Changed VCCModule Foler to Camel Case to fit java naming style
 
 ## What's next
 Form, Action
@@ -304,11 +304,12 @@ Description:
 
 ### vcc.json
 For VCCModule, there is vcc.json. Update Mode and Generate Mode fully depends on vcc.json. Can include this to .gitignore file.
+Path in the project is recommaneded to be in Camel Case. So, when export to java, it will fit java naming style.
 
 Sample
 ```
 {
-    "Version": "v0.1.5",
+    "Version": "v0.2.1",
     "ProjectType": "VccModule",
     "TemplateGitUrl": "https://github.com/s1155003185/VCCModule.git",
     "TemplateWorkspace": "${userHome}/Documents/vcc/VCCModule",
@@ -319,21 +320,21 @@ Sample
     "IsGit": true,
     "IsExcludeUnittest": false,
     "IsExcludeVCCUnitTest": false,
-    "TypeWorkspace": "include/Type",
-    "ActionTypeDirectory": "include/Type",
-    "ExceptionTypeDirectory": "include/Type",
-    "ManagerTypeDirectory": "include/Type",
-    "ObjectTypeDirectory": "include/Type",
-    "ObjectDirectoryHpp": "include/Model",
-    "ObjectDirectoryCpp": "src/Model",
-    "PropertyAccessorDirectoryHpp": "include/PropertyAccessor",
-    "PropertyAccessorDirectoryCpp": "src/PropertyAccessor",
-    "ObjectFactoryDirectoryHpp": "include/Factory",
-    "ObjectFactoryDirectoryCpp": "src/Factory",
-    "PropertyAccessorFactoryDirectoryHpp": "include/Factory",
-    "PropertyAccessorFactoryDirectoryCpp": "src/Factory",
+    "TypeWorkspace": "include/type",
+    "ActionTypeDirectory": "include/type",
+    "ExceptionTypeDirectory": "include/type",
+    "ManagerTypeDirectory": "include/type",
+    "ObjectTypeDirectory": "include/type",
+    "ObjectDirectoryHpp": "include/model",
+    "ObjectDirectoryCpp": "src/model",
+    "PropertyAccessorDirectoryHpp": "include/propertyAccessor",
+    "PropertyAccessorDirectoryCpp": "src/propertyAccessor",
+    "ObjectFactoryDirectoryHpp": "include/factory",
+    "ObjectFactoryDirectoryCpp": "src/factory",
+    "PropertyAccessorFactoryDirectoryHpp": "include/factory",
+    "PropertyAccessorFactoryDirectoryCpp": "src/factory",
     "Plugins": [
-        "VCC/Versioning/Git"
+        "vcc/versioning/git"
     ],
     "Exports": [
         {
@@ -413,7 +414,7 @@ PropertyAccessorFactoryDirectoryHpp, PropertyAccessorFactoryDirectoryCpp
 Plugins
     In Update mode, Generator will copy folders under include/External, src/External, unittest/External to workspace.
     Option:
-        VCC/Versioning/Git
+        vcc/versioning/git
 
 Exports
     In Update Mode, Generator will update Makefile so that dll, exe will be copied after make release. Note: JNA cannot read debug mode dll.

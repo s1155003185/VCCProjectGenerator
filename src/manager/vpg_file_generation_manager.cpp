@@ -23,7 +23,7 @@
 #include "vpg_property_accessor_generation_service.hpp"
 #include "vpg_property_accessor_factory_file_generation_service.hpp"
 
-const std::wstring classMacroFilePath = L"include/External/VCC/Core/Macro/class_macro.hpp";
+const std::wstring classMacroFilePath = L"include/external/vcc/core/macro/class_macro.hpp";
 const std::wstring logId = L"File Generation";
 
 const std::wstring objectTypeHppFileName = L"object_type.hpp";

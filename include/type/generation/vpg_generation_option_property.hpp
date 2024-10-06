@@ -41,22 +41,22 @@ enum class VPGGenerationOptionProperty
     IsExcludeVCCUnitTest, // GETSET(bool, IsExcludeVCCUnitTest, false)
 
     // Files
-    TypeWorkspace, // GETSET(std::wstring, TypeWorkspace, L"include/Type")
+    TypeWorkspace, // GETSET(std::wstring, TypeWorkspace, L"include/type")
 
-    ActionTypeDirectory, // GETSET(std::wstring, ActionTypeDirectory, L"include/Type")
-    ExceptionTypeDirectory, // GETSET(std::wstring, ExceptionTypeDirectory, L"include/Type")
-    ManagerTypeDirectory, // GETSET(std::wstring, ManagerTypeDirectory, L"include/Type")
-    ObjectTypeDirectory, // GETSET(std::wstring, ObjectTypeDirectory, L"include/Type")
+    ActionTypeDirectory, // GETSET(std::wstring, ActionTypeDirectory, L"include/type")
+    ExceptionTypeDirectory, // GETSET(std::wstring, ExceptionTypeDirectory, L"include/type")
+    ManagerTypeDirectory, // GETSET(std::wstring, ManagerTypeDirectory, L"include/type")
+    ObjectTypeDirectory, // GETSET(std::wstring, ObjectTypeDirectory, L"include/type")
 
-    ObjectDirectoryHpp, // GETSET(std::wstring, ObjectDirectoryHpp, L"include/Model")
-    ObjectDirectoryCpp, // GETSET(std::wstring, ObjectDirectoryCpp, L"src/Model")
-    PropertyAccessorDirectoryHpp, // GETSET(std::wstring, PropertyAccessorDirectoryHpp, L"include/PropertyAccessor")
-    PropertyAccessorDirectoryCpp, // GETSET(std::wstring, PropertyAccessorDirectoryCpp, L"src/PropertyAccessor")
+    ObjectDirectoryHpp, // GETSET(std::wstring, ObjectDirectoryHpp, L"include/model")
+    ObjectDirectoryCpp, // GETSET(std::wstring, ObjectDirectoryCpp, L"src/model")
+    PropertyAccessorDirectoryHpp, // GETSET(std::wstring, PropertyAccessorDirectoryHpp, L"include/propertyAccessor")
+    PropertyAccessorDirectoryCpp, // GETSET(std::wstring, PropertyAccessorDirectoryCpp, L"src/propertyAccessor")
 
-    ObjectFactoryDirectoryHpp, // GETSET(std::wstring, ObjectFactoryDirectoryHpp, L"include/Factory")
-    ObjectFactoryDirectoryCpp, // GETSET(std::wstring, ObjectFactoryDirectoryCpp, L"src/Factory")
-    PropertyAccessorFactoryDirectoryHpp, // GETSET(std::wstring, PropertyAccessorFactoryDirectoryHpp, L"include/Factory")
-    PropertyAccessorFactoryDirectoryCpp, // GETSET(std::wstring, PropertyAccessorFactoryDirectoryCpp, L"src/Factory")
+    ObjectFactoryDirectoryHpp, // GETSET(std::wstring, ObjectFactoryDirectoryHpp, L"include/factory")
+    ObjectFactoryDirectoryCpp, // GETSET(std::wstring, ObjectFactoryDirectoryCpp, L"src/factory")
+    PropertyAccessorFactoryDirectoryHpp, // GETSET(std::wstring, PropertyAccessorFactoryDirectoryHpp, L"include/factory")
+    PropertyAccessorFactoryDirectoryCpp, // GETSET(std::wstring, PropertyAccessorFactoryDirectoryCpp, L"src/factory")
     
     // Plugins
     Plugins, // VECTOR(std::wstring, Plugins)
