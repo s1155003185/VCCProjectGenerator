@@ -6,8 +6,6 @@ Maintain those standard already stable long time ago. No reason to implement twi
 Current Stage Objective: Start VCC Project Manager (Multi Project Handling), including Java Interface, Thread, Form, Action, Git.
 
 Note: Still in initialize version, will have full review when official release
-- Will review Java PointerByReference usage
-- Will review C++ and Java File / Directory naming rule
 
 Note: Fixed Update Function not work because of
 using // <vcc:exceptionType action:"RESERVE"> in exception_type.hpp

@@ -146,6 +146,14 @@ void VPGVccGenerationManager::Generate() const
     TRY
         ReadVccJson();
         
+        // Update Makefile
+        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Update Project according to vcc.json");
+        if (!IsFileExists(ConcatPaths({_Workspace, MakeFileName})))
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Cannot find " + ConcatPaths({_Workspace, MakeFileName}));
+        std::wstring makefilePath = ConcatPaths({_Workspace, MakeFileName});
+        std::wstring makefileContent = ReadFile(ConcatPaths({_Workspace, MakeFileName}));
+        WriteFile(makefilePath, this->AdjustMakefile(makefileContent), true);
+        
         DECLARE_UPTR(VPGFileGenerationManager, manager, this->_LogProperty, _Workspace);
         LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Generate Project ...");
         manager->GernerateProperty(_LogProperty.get(), _Option.get());
