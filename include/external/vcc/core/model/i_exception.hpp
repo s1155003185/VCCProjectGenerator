@@ -15,6 +15,6 @@ namespace vcc
             virtual ExceptionType GetErrorType() const = 0;
             virtual int64_t GetErrorCode() const = 0;
             virtual std::wstring GetErrorMessage() const = 0;
-            virtual void SetErrorMessage(const std::wstring &message) = 0;
+            virtual void SetErrorMessage(const std::wstring &message) const = 0;
     };
 }

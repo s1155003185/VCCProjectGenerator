@@ -60,13 +60,13 @@ IS_EXCLUDE_UNITTEST := N
 #---------- Export ----------------#
 #----------------------------------#
 ifeq ($(OS),Windows_NT)
-EXPORT_DLL_DIR := ..\\VCCProjectManagerBasic\\src\\main\\resources
-EXPORT_EXE_DIR :=
-EXPORT_EXTERNAL_LIB := ..\\VCCProjectManagerBasic\\src\\main\\resources
+EXPORT_DLL_DIR :=  ..\\VCCProjectManagerBasic\\src\\main\\resources
+EXPORT_EXE_DIR := 
+EXPORT_EXTERNAL_LIB :=  ..\\VCCProjectManagerBasic\\src\\main\\resources
 else
-EXPORT_DLL_DIR := ../VCCProjectManagerBasic/src/main/resources
-EXPORT_EXE_DIR :=
-EXPORT_EXTERNAL_LIB := ../VCCProjectManagerBasic/src/main/resources
+EXPORT_DLL_DIR :=  ../VCCProjectManagerBasic/src/main/resources
+EXPORT_EXE_DIR := 
+EXPORT_EXTERNAL_LIB :=  ../VCCProjectManagerBasic/src/main/resources
 endif
 # </vcc:export>
 # <vcc:property sync="ALERT">
@@ -365,6 +365,21 @@ unittest:
 	@echo Build Unittest Complete!
 
 release:
+	$(MAKE) release_no_export
+ifneq ($(EXPORT_DLL_DIR),)
+	$(MAKE) export_release_dll
+ifneq ($(EXPORT_EXTERNAL_LIB),)
+	$(MAKE) export_release_external_lib
+endif
+endif
+ifneq ($(EXPORT_EXE_DIR),)
+	$(MAKE) export_release_exe
+ifneq ($(EXPORT_EXTERNAL_LIB),)
+	$(MAKE) export_release_external_lib
+endif
+endif
+
+release_no_export:
 	$(MAKE) create_release_folder
 	$(MAKE) clean_release
 	$(MAKE) copy_release_lib
@@ -375,20 +390,17 @@ ifneq ($(PROJ_NAME_EXE),)
 	$(MAKE) compile_release_exe
 endif
 	@echo Build Release Complete!
+
+release_dll:
+	$(MAKE) release_dll_no_export
 ifneq ($(EXPORT_DLL_DIR),)
 	$(MAKE) export_release_dll
 ifneq ($(EXPORT_EXTERNAL_LIB),)
 	$(MAKE) export_release_external_lib
 endif
 endif
-ifneq ($(EXPORT_EXE_DIR),)
-	$(MAKE) export_release_exe
-ifneq ($(EXPORT_EXTERNAL_LIB),)
-	$(MAKE) export_release_external_lib
-endif
-endif
 
-release_dll:
+release_dll_no_export:
 	$(MAKE) create_release_folder
 	$(MAKE) clean_release
 	$(MAKE) copy_release_lib
@@ -396,14 +408,17 @@ ifneq ($(PROJ_NAME_DLL),)
 	$(MAKE) compile_release_dll
 endif
 	@echo Build Release DLL Complete!
-ifneq ($(EXPORT_DLL_DIR),)
-	$(MAKE) export_release_dll
+
+release_exe:
+	$(MAKE) release_exe_no_export
+ifneq ($(EXPORT_EXE_DIR),)
+	$(MAKE) export_release_exe
 ifneq ($(EXPORT_EXTERNAL_LIB),)
 	$(MAKE) export_release_external_lib
 endif
 endif
 
-release_exe:
+release_exe_no_export:
 	$(MAKE) create_release_folder
 	$(MAKE) clean_release
 	$(MAKE) copy_release_lib
@@ -411,12 +426,6 @@ ifneq ($(PROJ_NAME_EXE),)
 	$(MAKE) compile_release_exe
 endif
 	@echo Build Release EXE Complete!
-ifneq ($(EXPORT_EXE_DIR),)
-	$(MAKE) export_release_exe
-ifneq ($(EXPORT_EXTERNAL_LIB),)
-	$(MAKE) export_release_external_lib
-endif
-endif
 
 #----------------------------------#
 #-------------- DEBUG--------------#

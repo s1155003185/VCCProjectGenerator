@@ -2,10 +2,10 @@
 
 #include "i_form.hpp"
 #include "base_form.hpp"
+#include "base_object.hpp"
 #include "class_macro.hpp"
 #include "log_property.hpp"
-
-#include "form_type.hpp"
+#include "object_type.hpp"
 
 namespace vcc
 {
@@ -13,12 +13,11 @@ namespace vcc
     class BaseForm : public IForm, public BaseObject<Derived>
     {
         GETSET_SPTR_NULL(LogProperty, LogProperty);
-        GETSET(FormType, Type, FormType::NA);
         
     protected:
         BaseForm() = default;
-        BaseForm(std::shared_ptr<LogProperty> logProperty) { this->_LogProperty = logProperty; }
-        BaseForm(std::shared_ptr<LogProperty> logProperty, FormType type) : BaseForm(logProperty) { this->_Type = type; }
+        BaseForm(std::shared_ptr<LogProperty> logProperty, ObjectType type)
+            : BaseObject<Derived>(type), _LogProperty(logProperty) {}
         virtual ~BaseForm() {}
     };
 }

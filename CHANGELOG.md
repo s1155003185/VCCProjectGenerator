@@ -4,6 +4,7 @@
 - Rename VCCModule Folder to Camel Case to fit java naming style
 - VCCProjectGenerator Generation mode update Makefile according to vcc.json
 - Drop and Create template in Document/VCC folder if VCCProjectGenerator version not match with template instead of Git Pull
+- Remove file form_type.hpp, merge FormType to ObjectType
 
 ### [v0.2.0] - 2024-10-03: Form - Initialize Thread
 - Initialize Thread, ThreadService, ThreadManager

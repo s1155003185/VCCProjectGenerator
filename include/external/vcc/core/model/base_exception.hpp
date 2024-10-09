@@ -13,8 +13,8 @@ namespace vcc
     class BaseException : public IException
     {
         private:
-            ExceptionType _Type = ExceptionType::CustomError;
-            std::wstring _Message = L"";
+            mutable ExceptionType _Type = ExceptionType::CustomError;
+            mutable std::wstring _Message = L"";
         protected:
             BaseException() : BaseException(ExceptionType::CustomError) {}
             BaseException(ExceptionType type) : BaseException(type, L"") {}
@@ -29,7 +29,7 @@ namespace vcc
             virtual ExceptionType GetErrorType() const override { return this->_Type; }
             virtual int64_t GetErrorCode() const  override { return static_cast<int64_t>(this->_Type); }
             virtual std::wstring GetErrorMessage() const override { return this->_Message; }
-            virtual void SetErrorMessage(const std::wstring &message) override { this->_Message = std::wstring(message); }
+            virtual void SetErrorMessage(const std::wstring &message) const override { this->_Message = std::wstring(message); }
 
             virtual const char* what() const throw () override
             {

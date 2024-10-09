@@ -28,67 +28,94 @@ void VPGProcessManager::InitLogProperty()
 
 void VPGProcessManager::VerifyLocalResponse()
 {
-    try {
+    TRY
         // 1. Check if source file exists, if not exist then clone
         // 2. Check if version != branch, then checkout
-        std::wstring localResponseDirectory = VPGGlobal::GetConvertedPath(_Option->GetTemplateWorkspace());
+        // std::wstring localResponseDirectory = VPGGlobal::GetConvertedPath(_Option->GetTemplateWorkspace());
+        // if (IsBlank(localResponseDirectory))
+        //     localResponseDirectory = VPGGlobal::GetConvertedPath(VPGGlobal::GetVccLocalResponseFolder());
+        std::wstring localResponseDirectoryBase = VPGGlobal::GetConvertedPath(VPGGlobal::GetVccLocalResponseFolder());
+        std::wstring localResponseDirectoryProject = VPGGlobal::GetConvertedPath(VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType()));
         std::wstring gitUrl = _Option->GetTemplateGitUrl();
 
-        LogService::LogInfo(this->GetLogProperty().get(), L"", L"Check VCC Local response existance: " + localResponseDirectory);
-        if (IsDirectoryExists(localResponseDirectory)) {
-            LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
+        LogService::LogInfo(this->GetLogProperty().get(), L"", L"Check VCC Local response existance: " + localResponseDirectoryProject);
+        bool isNeedToCloneGitResponse = false;
+        if (IsDirectoryExists(localResponseDirectoryProject)) {
+            if (GitService::IsGitResponse(this->GetLogProperty().get(), localResponseDirectoryProject)) {
+                LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
 
-            // Cannot push for tag
-            try
-            {            
-                GitService::Pull(this->GetLogProperty().get(), localResponseDirectory);
-            }
-            catch(...)
-            {
-            }
-            if (_Option->GetProjectType() == VPGProjectType::VccComplex
-                || _Option->GetProjectType() == VPGProjectType::VccDll
-                || _Option->GetProjectType() == VPGProjectType::VccExe) {
+                // Cannot push for tag
+                try
+                {            
+                    GitService::Pull(this->GetLogProperty().get(), localResponseDirectoryProject);
+                }
+                catch(...)
+                {
+                }
+                if (_Option->GetProjectType() == VPGProjectType::VccComplex
+                    || _Option->GetProjectType() == VPGProjectType::VccDll
+                    || _Option->GetProjectType() == VPGProjectType::VccExe) {
 
-                LogService::LogInfo(this->GetLogProperty().get(), L"", L"Check Version.");
-                // check tag version
-                // if same as current version of generator, no action
-                // if not same, then check verison of genertor exists, if not exists, then master, else switch to correct branch
-                std::wstring localResponseDirectoryProject = VPGGlobal::GetConvertedPath(VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType()));
-                DECLARE_SPTR(GitLog, currentLog);
-                GitService::GetCurrentLog(this->GetLogProperty().get(), localResponseDirectoryProject, currentLog);
-                if (!IsContain(currentLog->GetTags(), VPGGlobal::GetVersion())) {
-                    try
-                    {
-                        GitService::Switch(this->GetLogProperty().get(), localResponseDirectoryProject, VPGGlobal::GetVersion());
-                        LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
-                    }
-                    catch(const std::exception& e)
-                    {
-                        try {
-                            LogService::LogError(this->GetLogProperty().get(), L"", L"VCC Project Generator version Not Exists. Switch to main.");
-                            GitService::Switch(this->GetLogProperty().get(), localResponseDirectoryProject, L"main");
-                            GitService::Pull(this->GetLogProperty().get(), localResponseDirectoryProject);
-                            LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
-                        } catch (const std::exception &e) {
-                            LogService::LogWarning(this->GetLogProperty().get(), L"", str2wstr(e.what()));
+                    LogService::LogInfo(this->GetLogProperty().get(), L"", L"Check Version.");
+                    // check tag version
+                    // if same as current version of generator, no action
+                    // if not same, then check verison of genertor exists, if not exists, then master, else switch to correct branch
+                    DECLARE_SPTR(GitLog, currentLog);
+                    GitService::GetCurrentLog(this->GetLogProperty().get(), localResponseDirectoryProject, currentLog);
+                    if (!IsContain(currentLog->GetTags(), VPGGlobal::GetVersion())) {
+                        std::wstring currentBranchName = L"";
+                        TRY
+                            currentBranchName = GitService::GetCurrentBranchName(this->GetLogProperty().get(), localResponseDirectoryProject);
+                        CATCH_SLIENT
+                        // If version is main and current tag version not exists, then no switch
+                        std::wstring mainBranch = L"main";
+                        std::vector<std::wstring> allTags;
+                        GitService::GetTags(this->GetLogProperty().get(), localResponseDirectoryProject, nullptr, allTags);
+                        if (currentBranchName == L"main" && !IsContain(allTags, VPGGlobal::GetVersion())) {
+                            LogService::LogInfo(this->GetLogProperty().get(), L"", L"Currently in main branch and " + VPGGlobal::GetVersion() + L" is not found. Keep in main branch.");
+                        } else {
+                            isNeedToCloneGitResponse = true;
+                            LogService::LogInfo(this->GetLogProperty().get(), L"", L"Outdated.");
+                            LogService::LogInfo(this->GetLogProperty().get(), L"", L"Remove current response.");
+                            RemoveDirectory(localResponseDirectoryProject);
                         }
                     }
                 }
-            }
+            } else {
+                isNeedToCloneGitResponse = true;
+                LogService::LogInfo(this->GetLogProperty().get(), L"", localResponseDirectoryProject + L" already exists.");
+            }            
         } else {
-            LogService::LogInfo(this->GetLogProperty().get(), L"", L"Not Exists.");
+            isNeedToCloneGitResponse = true;
+            LogService::LogInfo(this->GetLogProperty().get(), L"", localResponseDirectoryProject + L" not Exists.");
+        }
+        if (isNeedToCloneGitResponse) {
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Clone from " + gitUrl);
             GitCloneOption cloneOption;
             cloneOption.SetIsQuiet(true);
-            GitService::Clone(this->GetLogProperty().get(),  VPGGlobal::GetConvertedPath(VPGGlobal::GetVccLocalResponseFolder()), gitUrl, &cloneOption);
+            GitService::Clone(this->GetLogProperty().get(), localResponseDirectoryBase, gitUrl, &cloneOption);
             LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
-            // switch to correct branch
-            VerifyLocalResponse();
+
+            // Switch to correct version
+            LogService::LogInfo(this->GetLogProperty().get(), L"", L"Switch to current version" + VPGGlobal::GetVersion() + L".");
+            try
+            {
+                GitService::Switch(this->GetLogProperty().get(), localResponseDirectoryProject, VPGGlobal::GetVersion());
+                LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
+            }
+            catch(const std::exception& e)
+            {
+                try {
+                    LogService::LogError(this->GetLogProperty().get(), L"", L"VCC Project Generator version Not Exists. Switch to main.");
+                    GitService::Switch(this->GetLogProperty().get(), localResponseDirectoryProject, L"main");
+                    GitService::Pull(this->GetLogProperty().get(), localResponseDirectoryProject);
+                    LogService::LogInfo(this->GetLogProperty().get(), L"", L"Done.");
+                } catch (const std::exception &e) {
+                    LogService::LogWarning(this->GetLogProperty().get(), L"", str2wstr(e.what()));
+                }
+            }
         }
-    } catch (const std::exception &e) {
-        THROW_EXCEPTION(e);
-    }
+    CATCH
 }
 
 bool VPGProcessManager::IsUpdateAvaliable()
