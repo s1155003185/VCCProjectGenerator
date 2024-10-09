@@ -295,7 +295,7 @@ std::wstring VPGBaseGenerationManager<Derived>::AdjustMakefile(const std::wstrin
                 for (auto const &exportOption : _Option->GetExports()) {
                     if (IsBlank(exportOption->GetWorkspace()))
                         continue;
-                    std::wstring workspace = IsAbsolutePath(exportOption->GetWorkspace()) ? exportOption->GetWorkspace() : ConcatPaths({ _Workspace, exportOption->GetWorkspace() });
+                    std::wstring workspace = exportOption->GetWorkspace(); //IsAbsolutePath(exportOption->GetWorkspace()) ? exportOption->GetWorkspace() : ConcatPaths({ _Workspace, exportOption->GetWorkspace() });
 
                     if (!IsBlank(exportOption->GetExportDirectoryDll())) {
                         exportDllDirWindow += L" " + GetWindowPath(ConcatPaths({ workspace, exportOption->GetExportDirectoryDll() }));
@@ -314,6 +314,9 @@ std::wstring VPGBaseGenerationManager<Derived>::AdjustMakefile(const std::wstrin
                         }
                     }
                 }
+                ReplaceAll(exportDllDirWindow, L"\\", L"\\\\");
+                ReplaceAll(exportExeDirWindow, L"\\", L"\\\\");
+                ReplaceAll(exportExternalLibDirWindow, L"\\", L"\\\\");
 
                 result += L"# <vcc:export sync=\"ALERT\">\r\n"
                     "#----------------------------------#\r\n"
