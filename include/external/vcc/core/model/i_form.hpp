@@ -10,7 +10,7 @@ namespace vcc
         
         public:
             // Clean and Reset
-            virtual void OnInitialize() = 0;
+            virtual void OnInitialize() const = 0;
             
     };
 }

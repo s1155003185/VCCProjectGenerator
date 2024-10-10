@@ -3,7 +3,8 @@
 
 enum class FormType
 {
-    NA = 0
+    NA = 0,
+    Git
     // <vcc:custom sync="SKIP" gen="SKIP">
     // </vcc:custom>
 };
