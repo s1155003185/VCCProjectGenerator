@@ -11,5 +11,5 @@ class VPGGitForm : public BaseForm<VPGGitForm>
         VPGGitForm(std::shared_ptr<LogProperty> logProperty) : BaseForm(logProperty, ObjectType::GitForm) {}
         virtual ~VPGGitForm() {}
         
-        void OnInitialize() const override {}
+        void OnInitialize() const override;
 };
