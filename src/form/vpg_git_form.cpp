@@ -2,5 +2,5 @@
 
 void VPGGitForm::OnInitialize() const
 {
-
+    this->_Log = nullptr;
 }
