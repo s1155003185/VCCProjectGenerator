@@ -5,7 +5,8 @@ enum class ObjectType
 {
     NA,
     GenerationOption,
-    GenerationOptionExport
+    GenerationOptionExport,
+    GitForm
     // <vcc:custom sync="SKIP" gen="SKIP">
     // </vcc:custom>
 };

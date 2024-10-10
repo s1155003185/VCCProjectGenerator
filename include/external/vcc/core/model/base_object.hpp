@@ -13,7 +13,7 @@ namespace vcc
             mutable ObjectType _ObjectType = ObjectType::NA;
 
             BaseObject() {}
-            BaseObject(ObjectType type) : BaseObject() { this->_ObjectType = type; }
+            BaseObject(ObjectType type) : _ObjectType(type) { }
             virtual ~BaseObject() {}
 
         public:
