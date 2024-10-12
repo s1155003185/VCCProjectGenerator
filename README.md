@@ -979,6 +979,9 @@ X(Twitter) @VCCProject
 ****
 ## Release Log
 
+### [v0.2.2] - 2024-10-12: Form - Urgent Fix
+- Fix Generator not work
+
 ### [v0.2.1] - 2024-10-12: Form - Initialize Thread
 - Rename VCCModule Folder to Camel Case to fit java naming style
 - VCCProjectGenerator Generation mode update Makefile according to vcc.json

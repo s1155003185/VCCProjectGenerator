@@ -65,7 +65,9 @@ void VPGProcessManager::VerifyLocalResponse()
                     if (!IsContain(currentLog->GetTags(), VPGGlobal::GetVersion())) {
                         std::wstring currentBranchName = L"";
                         TRY
-                            currentBranchName = GitService::GetCurrentBranchName(this->GetLogProperty().get(), localResponseDirectoryProject);
+                            GitTagCurrentTag currentTag = GitService::GetCurrentTag(this->GetLogProperty().get(), localResponseDirectoryProject);
+                            if (IsBlank(currentTag.GetTagName()))
+                                currentBranchName = GitService::GetCurrentBranchName(this->GetLogProperty().get(), localResponseDirectoryProject);
                         CATCH_SLIENT
                         // If version is main and current tag version not exists, then no switch
                         std::wstring mainBranch = L"main";
