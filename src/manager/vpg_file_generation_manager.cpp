@@ -160,7 +160,7 @@ std::wstring VPGFileGenerationManager::GetConcatPath(const std::wstring &projWor
     return ConcatPaths(objectFilePaths);
 }
 
-void VPGFileGenerationManager::GernerateProperty(const LogProperty *logProperty, const VPGGenerationOption *option)
+void VPGFileGenerationManager::GernerateProperty(const LogConfig *logProperty, const VPGGenerationOption *option)
 {
     TRY
         std::wstring projPrefix = option->GetProjectPrefix();

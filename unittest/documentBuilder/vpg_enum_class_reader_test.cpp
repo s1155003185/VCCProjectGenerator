@@ -122,22 +122,11 @@ TEST_F(VPGEnumClassReaderTest, TableCommand)
     EXPECT_EQ(element->GetCommand(), L"table command 1\r\ntable command 2");
 }
 
-TEST_F(VPGEnumClassReaderTest, NormalEnumClass)
-{
-    std::wstring code = L""
-        L"#pragma once\r\n"
-        L"\r\n"
-        L"enum class VCCObjectProperty\r\n"
-        L"{\r\n"
-        L"    EnumA = 0,\r\n"
-        L"    EnumB,\r\n"
-        L"    EnumC = 999,\r\n"
-        L"    EnumD = 1000\r\n"
-        L"};\r\n"
-        L"\r\n";
 
+void CheckVPGEnumClassReaderTestNormalEnumClassResult(const VPGEnumClassReader *reader, const std::wstring &code)
+{
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    this->GetReader()->Parse(code, results);
+    reader->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
 
     std::shared_ptr<VPGEnumClass> element = results.at(0);
@@ -154,41 +143,55 @@ TEST_F(VPGEnumClassReaderTest, NormalEnumClass)
     EXPECT_EQ(element->GetProperties().at(3)->GetEnumValue(), 1000);
 }
 
-TEST_F(VPGEnumClassReaderTest, Normal)
+TEST_F(VPGEnumClassReaderTest, NormalEnumClass1)
 {
-    std::wstring code = L""
+    CheckVPGEnumClassReaderTestNormalEnumClassResult(this->GetReader().get(),
         L"#pragma once\r\n"
         L"\r\n"
-        L"#include <string>\r\n"
-        L"#include <vector>\r\n"
-        L"\r\n"
-        L"#include \"class_macro.hpp\"\r\n"
-        L"/*\r\n"
-        L"enum class VCCObjectProperty { // Class Command\r\n"
-        L"    EnumA,\r\n"
-        L"    EnumB, // Command B\r\n"
-        L"    EnumC,\r\n"
-        L"    EnumD\r\n"
-        L"};*/\r\n"
-        L"\r\n"
-        L"enum class VCCObjectProperty // Class Command\r\n"
+        L"enum class VCCObjectProperty\r\n"
         L"{\r\n"
-        L"    EnumA // Command A\r\n"
+        L"    EnumA = 0,\r\n"
+        L"    EnumB,\r\n"
+        L"    EnumC = 999,\r\n"
+        L"    EnumD = 1000\r\n"
         L"};\r\n"
-        L"\r\n"
-        L"enum class VCCSingleLineProperty { EnumA, EnumB, /* Command B */ EnumC }"
-        L"\r\n"
-        L"enum class VCCMultiProperty {\r\n"
-        L"    EnumA,\r\n"
-        L"    EnumB, // Command B\r\n"
-        L"    EnumC, /* Command C*/\r\n"
-        L"    EnumD, /* Command D *//* Command E */\r\n"
-        L"    EnumE /* Command F */\r\n"
-        L"      /* Command G */\r\n"
-        L"};\r\n";
+        L"\r\n");
+}
 
+TEST_F(VPGEnumClassReaderTest, NormalEnumClass2)
+{      
+    CheckVPGEnumClassReaderTestNormalEnumClassResult(this->GetReader().get(),
+        L"#pragma once\r\n"
+        L"\r\n"
+        L"enum class VCCObjectProperty\r\n"
+        L"{\r\n"
+        L"    EnumA = 0\r\n"
+        L"    ,EnumB\r\n"
+        L"    ,EnumC = 999\r\n"
+        L"    ,EnumD = 1000\r\n"
+        L"};\r\n"
+        L"\r\n");
+}
+
+TEST_F(VPGEnumClassReaderTest, NormalEnumClass3)
+{
+    CheckVPGEnumClassReaderTestNormalEnumClassResult(this->GetReader().get(),
+        L"#pragma once\r\n"
+        L"\r\n"
+        L"enum class VCCObjectProperty\r\n"
+        L"{\r\n"
+        L"    EnumA = 0\r\n"
+        L"    , EnumB\r\n"
+        L"    , EnumC = 999\r\n"
+        L"    , EnumD = 1000\r\n"
+        L"};\r\n"
+        L"\r\n");
+}
+
+void CheckVPGEnumClassReaderTestNormalResult(const VPGEnumClassReader *reader, const std::wstring &code)
+{
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    this->GetReader()->Parse(code, results);
+    reader->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)3);
     // first
     std::shared_ptr<VPGEnumClass> element = results.at(0);
@@ -225,6 +228,111 @@ TEST_F(VPGEnumClassReaderTest, Normal)
     EXPECT_EQ(element->GetProperties().at(3)->GetCommand(), L"Command D\r\nCommand E");
     EXPECT_EQ(element->GetProperties().at(4)->GetEnum(), L"EnumE");
     EXPECT_EQ(element->GetProperties().at(4)->GetCommand(), L"Command F\r\nCommand G");
+}
+
+TEST_F(VPGEnumClassReaderTest, Normal1)
+{
+    CheckVPGEnumClassReaderTestNormalResult(this->GetReader().get(),
+        L"#pragma once\r\n"
+        L"\r\n"
+        L"#include <string>\r\n"
+        L"#include <vector>\r\n"
+        L"\r\n"
+        L"#include \"class_macro.hpp\"\r\n"
+        L"/*\r\n"
+        L"enum class VCCObjectProperty { // Class Command\r\n"
+        L"    EnumA, \r\n"
+        L"    EnumB, // Command B\r\n"
+        L"    EnumC,\r\n"
+        L"    EnumD\r\n"
+        L"};*/\r\n"
+        L"\r\n"
+        L"enum class VCCObjectProperty // Class Command\r\n"
+        L"{\r\n"
+        L"    EnumA // Command A\r\n"
+        L"};\r\n"
+        L"\r\n"
+        L"enum class VCCSingleLineProperty { EnumA, EnumB, /* Command B */ EnumC }"
+        L"\r\n"
+        L"enum class VCCMultiProperty {\r\n"
+        L"    EnumA, \r\n"
+        L"    EnumB, // Command B\r\n"
+        L"    EnumC, /* Command C*/\r\n"
+        L"    EnumD, /* Command D *//* Command E */\r\n"
+        L"    EnumE /* Command F */\r\n"
+        L"      /* Command G */\r\n"
+        L"};\r\n"
+    );
+}
+
+TEST_F(VPGEnumClassReaderTest, Normal2)
+{   
+    CheckVPGEnumClassReaderTestNormalResult(this->GetReader().get(),
+        L"#pragma once\r\n"
+        L"\r\n"
+        L"#include <string>\r\n"
+        L"#include <vector>\r\n"
+        L"\r\n"
+        L"#include \"class_macro.hpp\"\r\n"
+        L"/*\r\n"
+        L"enum class VCCObjectProperty { // Class Command\r\n"
+        L"    EnumA\r\n"
+        L"    , EnumB // Command B\r\n"
+        L"    , EnumC\r\n"
+        L"    , EnumD\r\n"
+        L"};*/\r\n"
+        L"\r\n"
+        L"enum class VCCObjectProperty // Class Command\r\n"
+        L"{\r\n"
+        L"    EnumA // Command A\r\n"
+        L"};\r\n"
+        L"\r\n"
+        L"enum class VCCSingleLineProperty { EnumA, EnumB /* Command B */, EnumC }"
+        L"\r\n"
+        L"enum class VCCMultiProperty {\r\n"
+        L"    EnumA\r\n"
+        L"    , EnumB // Command B\r\n"
+        L"    , EnumC /* Command C*/\r\n"
+        L"    , EnumD /* Command D *//* Command E */\r\n"
+        L"    , EnumE /* Command F */\r\n"
+        L"      /* Command G */\r\n"
+        L"};\r\n"
+    );
+}
+
+TEST_F(VPGEnumClassReaderTest, Normal3)
+{    
+    CheckVPGEnumClassReaderTestNormalResult(this->GetReader().get(),
+        L"#pragma once\r\n"
+        L"\r\n"
+        L"#include <string>\r\n"
+        L"#include <vector>\r\n"
+        L"\r\n"
+        L"#include \"class_macro.hpp\"\r\n"
+        L"/*\r\n"
+        L"enum class VCCObjectProperty { // Class Command\r\n"
+        L"    EnumA\r\n"
+        L"    ,EnumB // Command B\r\n"
+        L"    ,EnumC\r\n"
+        L"    ,EnumD\r\n"
+        L"};*/\r\n"
+        L"\r\n"
+        L"enum class VCCObjectProperty // Class Command\r\n"
+        L"{\r\n"
+        L"    EnumA // Command A\r\n"
+        L"};\r\n"
+        L"\r\n"
+        L"enum class VCCSingleLineProperty { EnumA, EnumB /* Command B */, EnumC }"
+        L"\r\n"
+        L"enum class VCCMultiProperty {\r\n"
+        L"    EnumA\r\n"
+        L"    ,EnumB // Command B\r\n"
+        L"    ,EnumC /* Command C*/\r\n"
+        L"    ,EnumD /* Command D *//* Command E */\r\n"
+        L"    ,EnumE /* Command F */\r\n"
+        L"      /* Command G */\r\n"
+        L"};\r\n"
+    );
 }
 
 TEST_F(VPGEnumClassReaderTest, VCCEnumClassProperty)

@@ -13,7 +13,7 @@ using namespace vcc;
 
 class VPGPropertyAccessorFactoryFileGenerationServiceTest : public testing::Test 
 {
-    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET_SPTR(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGPropertyAccessorFactoryFileGenerationServiceTest/");
     
     GETSET(std::wstring, FilePathHpp, L"");
@@ -24,7 +24,7 @@ class VPGPropertyAccessorFactoryFileGenerationServiceTest : public testing::Test
     public:
         void SetUp() override
         {
-            this->_LogProperty->SetIsConsoleLog(false);
+            this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
             this->_FilePathHpp = ConcatPaths({this->GetWorkspace(), L"property_accessor_factory.hpp"});
@@ -61,8 +61,8 @@ class VPGPropertyAccessorFactoryFileGenerationServiceTest : public testing::Test
 TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Empty)
 {
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp());
-    VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(this->GetLogProperty().get(), L"VCC", {}, this->GetFilePathCpp(), propertyTypes);
+    VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp());
+    VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VCC", {}, this->GetFilePathCpp(), propertyTypes);
 
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
@@ -101,8 +101,8 @@ TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Normal)
     std::set<std::wstring> propertyTypes;
     propertyTypes.insert(L"Def");
     propertyTypes.insert(L"Abc");
-    VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp());
-    VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(this->GetLogProperty().get(), L"VCC", { L"abc.hpp" }, this->GetFilePathCpp(), propertyTypes);
+    VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp());
+    VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VCC", { L"abc.hpp" }, this->GetFilePathCpp(), propertyTypes);
 
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));

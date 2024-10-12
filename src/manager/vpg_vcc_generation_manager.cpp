@@ -81,7 +81,7 @@ void VPGVccGenerationManager::Add() const
         VPGBaseGenerationManager::CreateBasicProject();
         std::wstring src = VPGGlobal::GetConvertedPath(_Option->GetTemplateWorkspace());
         std::wstring dest = _Workspace;
-        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Copy Project to " + dest + L" ...");
+        LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Copy Project to " + dest + L" ...");
         CopyDirectoryOption copyDirectoryOption;
         copyDirectoryOption.SetIsForce(true);
         copyDirectoryOption.SetIsRecursive(true);
@@ -101,7 +101,7 @@ void VPGVccGenerationManager::Add() const
         
         // Create Json file at the end to force override
         CreateVccJson();
-        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Done");
+        LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Done");
     CATCH
 }
 
@@ -113,20 +113,20 @@ void VPGVccGenerationManager::Update() const
         std::wstring src = VPGGlobal::GetConvertedPath(_Option->GetTemplateWorkspace());
         std::wstring dest = _Workspace;
         
-        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Sync Project ...");
-        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"From " + src);
-        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"To " + dest);
+        LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Sync Project ...");
+        LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"From " + src);
+        LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"To " + dest);
 
-        SyncWorkspace(this->_LogProperty.get(), src, dest, GetUpdateList(), {});
+        SyncWorkspace(this->_LogConfig.get(), src, dest, GetUpdateList(), {});
         
         if (!_Option->GetIsExcludeUnittest()) {
             auto list = GetUpdateUnitTestList();
             if (!list.empty())
-                SyncWorkspace(this->_LogProperty.get(), ConcatPaths({src, unittestFolderName}), ConcatPaths({dest, unittestFolderName}), list, {});
+                SyncWorkspace(this->_LogConfig.get(), ConcatPaths({src, unittestFolderName}), ConcatPaths({dest, unittestFolderName}), list, {});
         }
 
         // Update Makefile and unittest
-        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Update Project according to vcc.json");
+        LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Update Project according to vcc.json");
         if (!IsFileExists(ConcatPaths({dest, MakeFileName})))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Cannot find " + ConcatPaths({dest, MakeFileName}));
         
@@ -137,7 +137,7 @@ void VPGVccGenerationManager::Update() const
         
         // Create Json file at the end to force override
         CreateVccJson();
-        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Done");        
+        LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Done");        
     CATCH
 }
 
@@ -147,16 +147,16 @@ void VPGVccGenerationManager::Generate() const
         ReadVccJson();
         
         // Update Makefile
-        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Update Project according to vcc.json");
+        LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Update Project according to vcc.json");
         if (!IsFileExists(ConcatPaths({_Workspace, MakeFileName})))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Cannot find " + ConcatPaths({_Workspace, MakeFileName}));
         std::wstring makefilePath = ConcatPaths({_Workspace, MakeFileName});
         std::wstring makefileContent = ReadFile(ConcatPaths({_Workspace, MakeFileName}));
         WriteFile(makefilePath, this->AdjustMakefile(makefileContent), true);
         
-        DECLARE_UPTR(VPGFileGenerationManager, manager, this->_LogProperty, _Workspace);
-        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Generate Project ...");
-        manager->GernerateProperty(_LogProperty.get(), _Option.get());
-        LogService::LogInfo(this->_LogProperty.get(), CLASS_ID, L"Done");
+        DECLARE_UPTR(VPGFileGenerationManager, manager, this->_LogConfig, _Workspace);
+        LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Generate Project ...");
+        manager->GernerateProperty(_LogConfig.get(), _Option.get());
+        LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Done");
     CATCH
 }

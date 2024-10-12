@@ -10,7 +10,7 @@
 #include "class_macro.hpp"
 #include "file_helper.hpp"
 #include "git_service.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "memory_macro.hpp"
 #include "terminal_service.hpp"
 
@@ -18,18 +18,18 @@ using namespace vcc;
 
 class GitServiceTest : public testing::Test 
 {
-    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET_SPTR(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/Git/");
     public:
 
         void SetUp() override
         {
-            this->_LogProperty->SetIsConsoleLog(false);
+            this->_LogConfig->SetIsConsoleLog(false);
 
             if (IsDirectoryExists(this->GetWorkspace())) {
                 #ifdef __WIN32
                     // window git will hold some files in bin/Debug/Git folder, cannot delete whole folder by c++ remove_all 
-                    TerminalService::Execute(this->GetLogProperty().get(), L"", L"rmdir /s /q \"" + ConcatPaths({std::filesystem::current_path().wstring(), this->GetWorkspace()}) + L"\"");
+                    TerminalService::Execute(this->GetLogConfig().get(), L"", L"rmdir /s /q \"" + ConcatPaths({std::filesystem::current_path().wstring(), this->GetWorkspace()}) + L"\"");
                 #else
                     std::filesystem::remove_all(this->GetWorkspace());
                 #endif
@@ -46,7 +46,7 @@ class GitServiceTest : public testing::Test
 
 TEST_F(GitServiceTest, Version)
 {
-    std::wstring version = GitService::GetVersion(this->GetLogProperty().get());
+    std::wstring version = GitService::GetVersion(this->GetLogConfig().get());
     EXPECT_TRUE(regex_match(version, std::wregex(L"[0-9]+.[0-9]+.[0-9]+")));
 }
 
@@ -55,7 +55,7 @@ TEST_F(GitServiceTest, Version)
 // TEST_F(GitServiceTest, Remote)
 // {
 //     std::vector<std::shared_ptr<GitRemote>> remotes;
-//     GitService::GetRemote(this->GetLogProperty().get(), L"", remotes);
+//     GitService::GetRemote(this->GetLogConfig().get(), L"", remotes);
 //     EXPECT_EQ(remotes.size(), (size_t)2);
 //     EXPECT_EQ(remotes.at(0)->GetName(), L"origin");
 //     EXPECT_EQ(remotes.at(0)->GetURL(), L"https://github.com/s1155003185/VCCProjectGenerator.git");
@@ -324,15 +324,15 @@ TEST_F(GitServiceTest, ParseGitBranch)
 TEST_F(GitServiceTest, Tag)
 {
     // init
-    GitService::Initialize(this->GetLogProperty().get(), this->GetWorkspace());
+    GitService::Initialize(this->GetLogConfig().get(), this->GetWorkspace());
 
     WriteFile(ConcatPaths({this->GetWorkspace(), L"test.txt"}), L"hi\r\n", true);
-    GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
-    GitService::Commit(this->GetLogProperty().get(), this->GetWorkspace(), L"Test Commit");
+    GitService::Stage(this->GetLogConfig().get(), this->GetWorkspace(), L"test.txt");
+    GitService::Commit(this->GetLogConfig().get(), this->GetWorkspace(), L"Test Commit");
     // meaningless to test exception case
     // try
     // {
-    //     GitTagCurrentTag noTag = GitService::GetCurrentTag(this->GetLogProperty().get(), this->GetWorkspace());
+    //     GitTagCurrentTag noTag = GitService::GetCurrentTag(this->GetLogConfig().get(), this->GetWorkspace());
     //     // show throw exception
     //     EXPECT_TRUE(false);
     // }
@@ -341,12 +341,12 @@ TEST_F(GitServiceTest, Tag)
     //     EXPECT_TRUE(true);
     // }
     
-    GitService::CreateTag(this->GetLogProperty().get(), this->GetWorkspace(), L"v0.0.1", nullptr);
+    GitService::CreateTag(this->GetLogConfig().get(), this->GetWorkspace(), L"v0.0.1", nullptr);
     std::vector<std::wstring> tags;
-    GitService::GetTags(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, tags);
+    GitService::GetTags(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, tags);
     EXPECT_EQ(tags.size(), (size_t)1);
     EXPECT_EQ(tags[0], L"v0.0.1");
-    GitTagCurrentTag currentTag = GitService::GetCurrentTag(this->GetLogProperty().get(), this->GetWorkspace());
+    GitTagCurrentTag currentTag = GitService::GetCurrentTag(this->GetLogConfig().get(), this->GetWorkspace());
     EXPECT_EQ(currentTag.GetTagName(), L"v0.0.1");
     EXPECT_EQ(currentTag.GetNoOfCommit(), (size_t)0);
 
@@ -354,38 +354,38 @@ TEST_F(GitServiceTest, Tag)
     // Can use GitService::SwitchReverse to switch back
     // As window will throw exception, meaningless to have unit test for switching tag
     // try {
-    //     GitService::Switch(this->GetLogProperty().get(), this->GetWorkspace(), L"v0.0.1");
+    //     GitService::Switch(this->GetLogConfig().get(), this->GetWorkspace(), L"v0.0.1");
     // } catch (...) {
 
     // }
-    //GitService::SwitchReverse(this->GetLogProperty().get(), this->GetWorkspace());
+    //GitService::SwitchReverse(this->GetLogConfig().get(), this->GetWorkspace());
 
     // DECLARE_SPTR(GitLog, log);
-    // GitService::GetTag(this->GetLogProperty().get(), this->GetWorkspace(), L"v0.0.1", log);
+    // GitService::GetTag(this->GetLogConfig().get(), this->GetWorkspace(), L"v0.0.1", log);
     // EXPECT_EQ(log->GetTags().size(), (size_t)1);
     // EXPECT_EQ(log->GetTags().at(0), L"v0.0.1");
 
-    GitService::DeleteTag(this->GetLogProperty().get(), this->GetWorkspace(), L"v0.0.1");
+    GitService::DeleteTag(this->GetLogConfig().get(), this->GetWorkspace(), L"v0.0.1");
 }
 
 TEST_F(GitServiceTest, Branch)
 {
     // init
-    GitService::Initialize(this->GetLogProperty().get(), this->GetWorkspace());
+    GitService::Initialize(this->GetLogConfig().get(), this->GetWorkspace());
 
     WriteFile(ConcatPaths({this->GetWorkspace(), L"test.txt"}), L"hi\r\n", true);
-    GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
-    GitService::Commit(this->GetLogProperty().get(), this->GetWorkspace(), L"Test Commit");
+    GitService::Stage(this->GetLogConfig().get(), this->GetWorkspace(), L"test.txt");
+    GitService::Commit(this->GetLogConfig().get(), this->GetWorkspace(), L"Test Commit");
    
     // Create Branch
-    GitService::CreateBranch(this->GetLogProperty().get(), this->GetWorkspace(), L"branch", nullptr);
+    GitService::CreateBranch(this->GetLogConfig().get(), this->GetWorkspace(), L"branch", nullptr);
     // main for linux, master for window
-    EXPECT_TRUE(GitService::GetCurrentBranchName(this->GetLogProperty().get(), this->GetWorkspace()) == L"main"
-        || GitService::GetCurrentBranchName(this->GetLogProperty().get(), this->GetWorkspace()) == L"master");
+    EXPECT_TRUE(GitService::GetCurrentBranchName(this->GetLogConfig().get(), this->GetWorkspace()) == L"main"
+        || GitService::GetCurrentBranchName(this->GetLogConfig().get(), this->GetWorkspace()) == L"master");
 
     // Current Branch
     // DECLARE_SPTR(GitBranch, currentbranch);
-    // GitService::GetCurrentBranch(this->GetLogProperty().get(), this->GetWorkspace(), currentbranch);
+    // GitService::GetCurrentBranch(this->GetLogConfig().get(), this->GetWorkspace(), currentbranch);
     // EXPECT_EQ(currentbranch->GetName(), L"branch");
     // EXPECT_EQ(currentbranch->GetIsActive(), false);
     // EXPECT_TRUE(!currentbranch->GetHashID().empty());
@@ -395,27 +395,27 @@ TEST_F(GitServiceTest, Branch)
     // Switch Branch
     GitBranchSwitchBranchOption switchBranchOption;
     switchBranchOption.SetIsQuite(true);
-    GitService::SwitchBranch(this->GetLogProperty().get(), this->GetWorkspace(), L"branch", &switchBranchOption);
+    GitService::SwitchBranch(this->GetLogConfig().get(), this->GetWorkspace(), L"branch", &switchBranchOption);
     // DECLARE_SPTR(GitBranch, switchBranch);
-    // GitService::GetCurrentBranch(this->GetLogProperty().get(), this->GetWorkspace(), switchBranch);
+    // GitService::GetCurrentBranch(this->GetLogConfig().get(), this->GetWorkspace(), switchBranch);
     // EXPECT_EQ(switchBranch->GetName(), L"branch");
     // EXPECT_EQ(switchBranch->GetIsActive(), true);
     // EXPECT_TRUE(!switchBranch->GetHashID().empty());
     // EXPECT_TRUE(!switchBranch->GetTitle().empty());
     // EXPECT_EQ(switchBranch->GetPointToBranch(), L""); 
-    EXPECT_EQ(GitService::GetCurrentBranchName(this->GetLogProperty().get(), this->GetWorkspace()), L"branch");
+    EXPECT_EQ(GitService::GetCurrentBranchName(this->GetLogConfig().get(), this->GetWorkspace()), L"branch");
 
     // Get Branches
     std::vector<std::shared_ptr<GitBranch>> branches;
-    GitService::GetBranches(this->GetLogProperty().get(), this->GetWorkspace(), branches);
+    GitService::GetBranches(this->GetLogConfig().get(), this->GetWorkspace(), branches);
     EXPECT_EQ(branches.at(0)->GetName(), L"branch");
     EXPECT_TRUE(branches.at(1)->GetName() == L"main" || branches.at(1)->GetName() == L"master");
 
     // Delete
     // no testing switch as window use master but linux use main
-    //GitService::SwitchBranch(this->GetLogProperty().get(), this->GetWorkspace(), L"main");
+    //GitService::SwitchBranch(this->GetLogConfig().get(), this->GetWorkspace(), L"main");
     // cannot delete as still in main branch
-    //GitService::DeleteBranch(this->GetLogProperty().get(), this->GetWorkspace(), L"branch");
+    //GitService::DeleteBranch(this->GetLogConfig().get(), this->GetWorkspace(), L"branch");
 }
 
 TEST_F(GitServiceTest, ParseGitDiff)
@@ -444,29 +444,29 @@ TEST_F(GitServiceTest, ParseGitDiff)
 TEST_F(GitServiceTest, StageAndDifference)
 {
     // init
-    GitService::Initialize(this->GetLogProperty().get(), this->GetWorkspace());
+    GitService::Initialize(this->GetLogConfig().get(), this->GetWorkspace());
     EXPECT_TRUE(std::filesystem::exists(this->GetWorkspace() + L"/.git/HEAD"));
     
     // check existance
-    EXPECT_TRUE(GitService::IsGitResponse(this->GetLogProperty().get(), this->GetWorkspace()));
+    EXPECT_TRUE(GitService::IsGitResponse(this->GetLogConfig().get(), this->GetWorkspace()));
 
     // config
     DECLARE_SPTR(GitConfig, config);
-    GitService::GetLocalConfig(this->GetLogProperty().get(), this->GetWorkspace(), config);
+    GitService::GetLocalConfig(this->GetLogConfig().get(), this->GetWorkspace(), config);
     EXPECT_TRUE(config->GetUserName().empty());
     EXPECT_TRUE(config->GetUserEmail().empty());
     
-    GitService::SetLocalUserName(this->GetLogProperty().get(), this->GetWorkspace(), L"test");
-    GitService::SetLocalUserEmail(this->GetLogProperty().get(), this->GetWorkspace(), L"test@test.com");
-    EXPECT_EQ(GitService::GetLocalUserName(this->GetLogProperty().get(), this->GetWorkspace()), L"test");
-    EXPECT_EQ(GitService::GetLocalUserEmail(this->GetLogProperty().get(), this->GetWorkspace()), L"test@test.com");
-    EXPECT_EQ(GitService::GetUserName(this->GetLogProperty().get(), this->GetWorkspace()), L"test");
-    EXPECT_EQ(GitService::GetUserEmail(this->GetLogProperty().get(), this->GetWorkspace()), L"test@test.com");
-    EXPECT_TRUE(GitService::IsLocalConfigExists(this->GetLogProperty().get(), this->GetWorkspace(), L"user.name"));
+    GitService::SetLocalUserName(this->GetLogConfig().get(), this->GetWorkspace(), L"test");
+    GitService::SetLocalUserEmail(this->GetLogConfig().get(), this->GetWorkspace(), L"test@test.com");
+    EXPECT_EQ(GitService::GetLocalUserName(this->GetLogConfig().get(), this->GetWorkspace()), L"test");
+    EXPECT_EQ(GitService::GetLocalUserEmail(this->GetLogConfig().get(), this->GetWorkspace()), L"test@test.com");
+    EXPECT_EQ(GitService::GetUserName(this->GetLogConfig().get(), this->GetWorkspace()), L"test");
+    EXPECT_EQ(GitService::GetUserEmail(this->GetLogConfig().get(), this->GetWorkspace()), L"test@test.com");
+    EXPECT_TRUE(GitService::IsLocalConfigExists(this->GetLogConfig().get(), this->GetWorkspace(), L"user.name"));
 
     // Case: Empty File
     DECLARE_SPTR(GitStatus, statusEmpty);
-    GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, statusEmpty);
+    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusEmpty);
     // main for linux, master for window
     EXPECT_TRUE(statusEmpty->GetBranch() == L"main" || statusEmpty->GetBranch() == L"master");
     EXPECT_EQ(statusEmpty->GetRemoteBranch(), L"");
@@ -474,64 +474,64 @@ TEST_F(GitServiceTest, StageAndDifference)
     // Case: New File
     WriteFile(ConcatPaths({this->GetWorkspace(), L"test.txt"}), L"hi\r\n", true);
     DECLARE_SPTR(GitStatus, statusCreateFile);
-    GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, statusCreateFile);
+    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusCreateFile);
     EXPECT_EQ(statusCreateFile->GetIndexFiles().size(), (size_t)0);
     EXPECT_EQ(statusCreateFile->GetWorkingTreeFiles().size(), (size_t)1);
     EXPECT_EQ(statusCreateFile->GetWorkingTreeFiles()[GitFileStatus::Untracked].size(), (size_t)1);
     EXPECT_EQ(statusCreateFile->GetWorkingTreeFiles()[GitFileStatus::Untracked].at(0), L"test.txt");
 
     // Case: Staged
-    GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
+    GitService::Stage(this->GetLogConfig().get(), this->GetWorkspace(), L"test.txt");
     DECLARE_SPTR(GitStatus, statusNewState);
-    GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, statusNewState);
+    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusNewState);
     EXPECT_EQ(statusNewState->GetIndexFiles().size(), (size_t)1);
     EXPECT_EQ(statusNewState->GetIndexFiles()[GitFileStatus::Added].size(), (size_t)1);
     EXPECT_EQ(statusNewState->GetIndexFiles()[GitFileStatus::Added].at(0), L"test.txt");
     EXPECT_EQ(statusNewState->GetWorkingTreeFiles().size(), (size_t)0);
-    GitService::Unstage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
-    GitService::StageAll(this->GetLogProperty().get(), this->GetWorkspace());
-    GitService::UnstageAll(this->GetLogProperty().get(), this->GetWorkspace());
-    GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
+    GitService::Unstage(this->GetLogConfig().get(), this->GetWorkspace(), L"test.txt");
+    GitService::StageAll(this->GetLogConfig().get(), this->GetWorkspace());
+    GitService::UnstageAll(this->GetLogConfig().get(), this->GetWorkspace());
+    GitService::Stage(this->GetLogConfig().get(), this->GetWorkspace(), L"test.txt");
  
     // Case: Committed
-    GitService::Commit(this->GetLogProperty().get(), this->GetWorkspace(), L"Test Commit");
+    GitService::Commit(this->GetLogConfig().get(), this->GetWorkspace(), L"Test Commit");
     DECLARE_SPTR(GitStatus, statusNewCommit);
-    GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, statusNewCommit);
+    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusNewCommit);
     EXPECT_EQ(statusNewCommit->GetIndexFiles().size(), (size_t)0);
     EXPECT_EQ(statusNewCommit->GetWorkingTreeFiles().size(), (size_t)0);
     
     // Case: Modified
     AppendFileOneLine(ConcatPaths({this->GetWorkspace(), L"test.txt"}), L"HI", false);
     DECLARE_SPTR(GitStatus, statusModify);
-    GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, statusModify);
+    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusModify);
     EXPECT_EQ(statusModify->GetIndexFiles().size(), (size_t)0);
     EXPECT_EQ(statusModify->GetWorkingTreeFiles().size(), (size_t)1);
     EXPECT_EQ(statusModify->GetWorkingTreeFiles()[GitFileStatus::Modified].size(), (size_t)1);
     EXPECT_EQ(statusModify->GetWorkingTreeFiles()[GitFileStatus::Modified].at(0), L"test.txt");
     DECLARE_SPTR(GitDifferenceSummary, differentSummary);
-    GitService::GetDifferenceSummary(this->GetLogProperty().get(), this->GetWorkspace(), {}, differentSummary);
+    GitService::GetDifferenceSummary(this->GetLogConfig().get(), this->GetWorkspace(), {}, differentSummary);
     EXPECT_EQ(differentSummary->GetFiles().size(), (size_t)1);
     EXPECT_EQ(differentSummary->GetFiles().at(0), L"test.txt");
     EXPECT_EQ(differentSummary->GetAddLineCounts().at(0), (size_t)1);
     EXPECT_EQ(differentSummary->GetDeleteLineCounts().at(0), (size_t)0);
     DECLARE_SPTR(GitDifference, diff);
-    GitService::GetDifferenceWorkingFile(this->GetLogProperty().get(), this->GetWorkspace(), {}, L"test.txt", diff); // output in ParseGitDiff
+    GitService::GetDifferenceWorkingFile(this->GetLogConfig().get(), this->GetWorkspace(), {}, L"test.txt", diff); // output in ParseGitDiff
     EXPECT_EQ(diff->GetFilePathOld(), L"test.txt");
     EXPECT_EQ(diff->GetFilePathNew(), L"test.txt");
     EXPECT_EQ(diff->GetLineNumberOld()[0], (size_t)1);
     EXPECT_EQ(diff->GetLineCountOld()[0], (size_t)0);
     EXPECT_EQ(diff->GetLineNumberNew()[0], (size_t)1);
     EXPECT_EQ(diff->GetLineCountNew()[0], (size_t)2);
-    GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
+    GitService::Stage(this->GetLogConfig().get(), this->GetWorkspace(), L"test.txt");
     DECLARE_SPTR(GitStatus, statusModifyState);
-    GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, statusModifyState);
+    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusModifyState);
     EXPECT_EQ(statusModifyState->GetIndexFiles().size(), (size_t)1);
     EXPECT_EQ(statusModifyState->GetIndexFiles()[GitFileStatus::Modified].size(), (size_t)1);
     EXPECT_EQ(statusModifyState->GetIndexFiles()[GitFileStatus::Modified].at(0), L"test.txt");
     EXPECT_EQ(statusModifyState->GetWorkingTreeFiles().size(), (size_t)0);
     AppendFileOneLine(ConcatPaths({this->GetWorkspace(), L"test.txt"}), L"BI", false);
     DECLARE_SPTR(GitStatus, statusModifyState2);
-    GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, statusModifyState2);
+    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusModifyState2);
     EXPECT_EQ(statusModifyState2->GetIndexFiles().size(), (size_t)1);
     EXPECT_EQ(statusModifyState2->GetIndexFiles()[GitFileStatus::Modified].size(), (size_t)1);
     EXPECT_EQ(statusModifyState2->GetIndexFiles()[GitFileStatus::Modified].at(0), L"test.txt");
@@ -539,42 +539,42 @@ TEST_F(GitServiceTest, StageAndDifference)
     EXPECT_EQ(statusModifyState2->GetWorkingTreeFiles()[GitFileStatus::Modified].size(), (size_t)1);
     EXPECT_EQ(statusModifyState2->GetWorkingTreeFiles()[GitFileStatus::Modified].at(0), L"test.txt");
 
-    GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test.txt");
-    GitService::Commit(this->GetLogProperty().get(), this->GetWorkspace(), L"Test Modify");
+    GitService::Stage(this->GetLogConfig().get(), this->GetWorkspace(), L"test.txt");
+    GitService::Commit(this->GetLogConfig().get(), this->GetWorkspace(), L"Test Modify");
 
     // Case: Renamed
     std::filesystem::rename(ConcatPaths({this->GetWorkspace(), L"test.txt"}), ConcatPaths({this->GetWorkspace(), L"test2.txt"}));
     DECLARE_SPTR(GitStatus, statusRename);
-    GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, statusRename);
+    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusRename);
     EXPECT_EQ(statusRename->GetIndexFiles().size(), (size_t)0);
     EXPECT_EQ(statusRename->GetWorkingTreeFiles().size(), (size_t)2);
     EXPECT_EQ(statusRename->GetWorkingTreeFiles()[GitFileStatus::Untracked].size(), (size_t)1);
     EXPECT_EQ(statusRename->GetWorkingTreeFiles()[GitFileStatus::Untracked].at(0), L"test2.txt");
     EXPECT_EQ(statusRename->GetWorkingTreeFiles()[GitFileStatus::Deleted].size(), (size_t)1);
     EXPECT_EQ(statusRename->GetWorkingTreeFiles()[GitFileStatus::Deleted].at(0), L"test.txt");
-    GitService::StageAll(this->GetLogProperty().get(), this->GetWorkspace());
+    GitService::StageAll(this->GetLogConfig().get(), this->GetWorkspace());
     DECLARE_SPTR(GitStatus, statusRenameState);
-    GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, statusRenameState);
+    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusRenameState);
     EXPECT_EQ(statusRenameState->GetIndexFiles().size(), (size_t)1);
     EXPECT_EQ(statusRenameState->GetIndexFiles()[GitFileStatus::Renamed].size(), (size_t)1);
     EXPECT_EQ(statusRenameState->GetIndexFiles()[GitFileStatus::Renamed].at(0), L"test.txt -> test2.txt");
     EXPECT_EQ(statusRenameState->GetWorkingTreeFiles().size(), (size_t)0);
-    GitService::Commit(this->GetLogProperty().get(), this->GetWorkspace(), L"Test Rename");
+    GitService::Commit(this->GetLogConfig().get(), this->GetWorkspace(), L"Test Rename");
 
     // Case: Deleted
     RemoveFile(ConcatPaths({this->GetWorkspace(), L"test2.txt"}));
     DECLARE_SPTR(GitStatus, statusDelete);
-    GitService::GetStatus(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, statusDelete);
+    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusDelete);
     EXPECT_EQ(statusDelete->GetIndexFiles().size(), (size_t)0);
     EXPECT_EQ(statusDelete->GetWorkingTreeFiles().size(), (size_t)1);
     EXPECT_EQ(statusDelete->GetWorkingTreeFiles()[GitFileStatus::Deleted].size(), (size_t)1);
     EXPECT_EQ(statusDelete->GetWorkingTreeFiles()[GitFileStatus::Deleted].at(0), L"test2.txt");
-    GitService::Stage(this->GetLogProperty().get(), this->GetWorkspace(), L"test2.txt");
-    GitService::Commit(this->GetLogProperty().get(), this->GetWorkspace(), L"Test Delete");
+    GitService::Stage(this->GetLogConfig().get(), this->GetWorkspace(), L"test2.txt");
+    GitService::Commit(this->GetLogConfig().get(), this->GetWorkspace(), L"Test Delete");
 
     // Summary Log
     std::vector<std::shared_ptr<GitLog>> logs;
-    GitService::GetLogs(this->GetLogProperty().get(), this->GetWorkspace(), nullptr, logs);
+    GitService::GetLogs(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, logs);
     EXPECT_EQ(logs.size(), (size_t)4);
     EXPECT_EQ(logs.at(0)->GetTitle(), L"Test Delete");
     EXPECT_EQ(logs.at(1)->GetTitle(), L"Test Rename");
@@ -582,17 +582,17 @@ TEST_F(GitServiceTest, StageAndDifference)
     EXPECT_EQ(logs.at(3)->GetTitle(), L"Test Commit");
 
     // Test normal operation
-    GitService::FetchAll(this->GetLogProperty().get(), this->GetWorkspace());
+    GitService::FetchAll(this->GetLogConfig().get(), this->GetWorkspace());
     // Note: cannot pull as it is local response
-    //GitService::Pull(this->GetLogProperty().get(), this->GetWorkspace(), nullptr);
+    //GitService::Pull(this->GetLogConfig().get(), this->GetWorkspace(), nullptr);
 }
 
 // TEST_F(GitServiceTest, Config)
 // {
 //     DECLARE_SPTR(GitConfig, config);
-//     GitService::GetGlobalConfig(this->GetLogProperty().get(), config);
-//     std::wstring userName = GitService::GetGlobalUserName(this->GetLogProperty().get());
-//     std::wstring userEmail = GitService::GetGlobalUserEmail(this->GetLogProperty().get());
+//     GitService::GetGlobalConfig(this->GetLogConfig().get(), config);
+//     std::wstring userName = GitService::GetGlobalUserName(this->GetLogConfig().get());
+//     std::wstring userEmail = GitService::GetGlobalUserEmail(this->GetLogConfig().get());
 //     EXPECT_TRUE(!config->GetUserName().empty());
 //     EXPECT_TRUE(!config->GetUserEmail().empty());
 //     EXPECT_EQ(config->GetUserName(), userName);

@@ -14,7 +14,7 @@ using namespace vcc;
 
 class VPGDllFileGenerationServiceTest : public testing::Test 
 {
-    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET_SPTR(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGDllFileGenerationServiceTest/");
     
     GETSET(std::wstring, FilePathHpp, L"");
@@ -25,7 +25,7 @@ class VPGDllFileGenerationServiceTest : public testing::Test
     public:
         void SetUp() override
         {
-            this->_LogProperty->SetIsConsoleLog(false);
+            this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
             this->_FilePathHpp = ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"});
@@ -45,8 +45,8 @@ TEST_F(VPGDllFileGenerationServiceTest, Normal)
 {
     DECLARE_SPTR(VPGDllFileGenerationServiceOption, option);
     option->SetIsGeneratePropertyAccessor(true);
-    VPGDllFileGenerationService::GenerateHpp(this->GetLogProperty().get(), this->GetFilePathHpp(), option.get());
-    VPGDllFileGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetFilePathCpp(), option.get());
+    VPGDllFileGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), option.get());
+    VPGDllFileGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetFilePathCpp(), option.get());
 
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));

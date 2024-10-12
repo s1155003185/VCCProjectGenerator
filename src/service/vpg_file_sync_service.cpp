@@ -8,7 +8,7 @@
 #include "exception_macro.hpp"
 #include "exception_type.hpp"
 #include "file_helper.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "memory_macro.hpp"
 #include "xml_builder.hpp"
 
@@ -104,7 +104,7 @@ bool VPGFileSyncService::IsTagReserve(const Xml *child)
     return false;
 }
 
-void VPGFileSyncService::CopyFile(const LogProperty *logProperty, const std::wstring &sourcePath, const std::wstring &destPath)
+void VPGFileSyncService::CopyFile(const LogConfig *logProperty, const std::wstring &sourcePath, const std::wstring &destPath)
 {
     TRY
         if (!IsFileExists(sourcePath))

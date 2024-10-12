@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "terminal_service.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "string_helper.hpp"
 
 using namespace vcc;
@@ -14,7 +14,7 @@ TEST(TerminalServiceTest, Normal)
 // Terminal cannot cap exception console log
 // TEST(CommandTest, Exception)
 // {
-//     LogProperty logProperty(LogPropertyType::None);
+//     LogConfig logProperty(LogConfigType::None);
 //     bool isException = false;
 //     try {
 //         TerminalService::Execute(logProperty, L"", "git -version");

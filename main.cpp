@@ -2,7 +2,9 @@
 #include <string>
 #include <vector>
 
-#include "log_property.hpp"
+#include "application.hpp"
+
+#include "log_config.hpp"
 #include "memory_macro.hpp"
 #include "vpg_process_manager.hpp"
 #include "string_helper.hpp"
@@ -11,8 +13,11 @@ using namespace vcc;
 
 int main(int argc, char **argv)
 {
-	DECLARE_SPTR(LogProperty, logProperty);
-	logProperty->Init(LogPropertyType::None);
+	Application::Run();
+
+
+	DECLARE_SPTR(LogConfig, logProperty);
+	logProperty->Init(LogConfigInitialType::None);
 	logProperty->SetIsConsoleLog(true);
 	try {
 		if (argc < 2) {

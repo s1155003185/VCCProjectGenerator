@@ -7,7 +7,7 @@
 #include "base_manager.hpp"
 #include "class_macro.hpp"
 #include "i_vpg_generation_manager.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "vpg_base_generation_manager.hpp"
 #include "vpg_project_type.hpp"
 
@@ -23,10 +23,10 @@ class VPGProcessManager : public BaseManager<VPGProcessManager>
         std::shared_ptr<IVPGGenerationManager> GetGenerationManager();
 
     public:
-        VPGProcessManager(std::shared_ptr<LogProperty> logProperty) : BaseManager(logProperty) {};
+        VPGProcessManager(std::shared_ptr<LogConfig> logProperty) : BaseManager(logProperty) {};
         ~VPGProcessManager() {};
 
-        void InitLogProperty();
+        void InitLogConfig();
         // Ensure VPG Generator have same version as Versioning Commond Codebase Response
         void VerifyLocalResponse();
 

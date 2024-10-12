@@ -3,7 +3,7 @@
 #include "class_macro.hpp"
 
 #include "action_type.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "log_service.hpp"
 #include "object_type.hpp"
 #include "string_helper.hpp"
@@ -34,7 +34,7 @@ namespace vcc
             { 
                 std::wstring message = this->_GetRedoMessage();
                 if (!IsBlank(message)) {
-                    std::shared_ptr<LogProperty> defaultProperty = std::make_shared<LogProperty>();
+                    std::shared_ptr<LogConfig> defaultProperty = std::make_shared<LogConfig>();
                     LogService::LogInfo(defaultProperty.get(), L"", message); 
                 }
             }
@@ -43,7 +43,7 @@ namespace vcc
             { 
                 std::wstring message = this->_GetUndoMessage();
                 if (!IsBlank(message)) {
-                    std::shared_ptr<LogProperty> defaultProperty = std::make_shared<LogProperty>();
+                    std::shared_ptr<LogConfig> defaultProperty = std::make_shared<LogConfig>();
                     LogService::LogInfo(defaultProperty.get(), L"", message); 
                 }
             }

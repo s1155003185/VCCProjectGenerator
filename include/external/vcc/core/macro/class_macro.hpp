@@ -182,8 +182,8 @@ namespace vcc
     
     #define MANAGER(type, var, ...) \
     protected: \
-        std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
+        mutable std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
     public: \
-        type* Get##var() const { return _##var.get(); }
+        std::shared_ptr<type> Get##var() const { return _##var; }
         
 }

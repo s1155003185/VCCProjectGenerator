@@ -138,9 +138,9 @@ namespace vcc
                     for (auto &thread : _ActiveThreads) {
                         TRY
                         #ifdef _WIN32
-                            TerminalService::Execute(_LogProperty.get(), L"Thread", L"taskkill /PID " + thread->GetPid() + L" /F");
+                            TerminalService::Execute(_LogConfig.get(), L"Thread", L"taskkill /PID " + thread->GetPid() + L" /F");
                         #else
-                            TerminalService::Execute(_LogProperty.get(), L"Thread", L"kill " + thread->GetPid());
+                            TerminalService::Execute(_LogConfig.get(), L"Thread", L"kill " + thread->GetPid());
                         #endif
                         // wait 1s
                         Sleep(1000);
@@ -149,7 +149,7 @@ namespace vcc
                     // Remove Complete thread
                     Trigger();
                 } else if (_TerminateMode == ThreadManagerTerminateMode::Wait) {
-                    DECLARE_SPTR(Thread, tmpThread, _LogProperty, L"ThreadTerminate", L"Start", L"Complete", [this](const Thread * /*thread*/) {
+                    DECLARE_SPTR(Thread, tmpThread, _LogConfig, L"ThreadTerminate", L"Start", L"Complete", [this](const Thread * /*thread*/) {
                         while (true) {
                             this->Trigger();
                             if (this->GetActiveThreads().empty())

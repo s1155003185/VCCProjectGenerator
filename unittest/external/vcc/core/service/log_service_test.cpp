@@ -14,7 +14,7 @@ TEST(LogServiceTest, LogTest)
     std::wstring filePath = ConcatPaths({std::filesystem::current_path().wstring(), L"bin/Debug/AppLogs/LogServiceTest.log"});
     RemoveFile(filePath);
     
-    std::shared_ptr<LogProperty> property = std::make_shared<LogProperty>(LogPropertyType::None);
+    std::shared_ptr<LogConfig> property = std::make_shared<LogConfig>(LogConfigInitialType::None);
     property->SetUserID(L"user");
     property->SetIsConsoleLog(false);
     property->SetIsLogTerminal(true);

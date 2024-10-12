@@ -7,13 +7,13 @@
 
 #include "class_macro.hpp"
 #include "file_helper.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 
 using namespace vcc;
 
 class FileHelperTest : public testing::Test 
 {
-    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET_SPTR(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/FileHelperTest/");
     GETSET(std::wstring, WorkspaceSource, L"");
     GETSET(std::wstring, WorkspaceTarget, L"");
@@ -28,7 +28,7 @@ class FileHelperTest : public testing::Test
 
         void SetUp() override
         {
-            this->_LogProperty->SetIsConsoleLog(false);
+            this->_LogConfig->SetIsConsoleLog(false);
             
             this->_WorkspaceSource = this->_Workspace + L"Source";
             this->_WorkspaceTarget = this->_Workspace + L"Target";

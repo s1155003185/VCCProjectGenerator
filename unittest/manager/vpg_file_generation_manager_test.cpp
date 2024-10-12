@@ -15,8 +15,8 @@
 
 class VPGFileGenerationManagerTest : public testing::Test 
 {
-    GETSET_SPTR(LogProperty, LogProperty, LogPropertyType::None);
-    MANAGER(VPGFileGenerationManager, Manager, _LogProperty, L"");
+    GETSET_SPTR(LogConfig, LogConfig, LogConfigInitialType::None);
+    MANAGER(VPGFileGenerationManager, Manager, _LogConfig, L"");
 
     GETSET(std::wstring, Workspace, L"bin/Debug/FileGenerationServiceTest");
     GETSET(std::wstring, WorkspaceSource, L"");
@@ -130,7 +130,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     option.SetPropertyAccessorFactoryDirectoryHpp(this->GetWorkspaceTarget());
     option.SetPropertyAccessorFactoryDirectoryCpp(this->GetWorkspaceTarget());
 
-    this->GetManager()->GernerateProperty(this->GetLogProperty().get(), &option);
+    this->GetManager()->GernerateProperty(this->GetLogConfig().get(), &option);
 
     // ------------------------------------------------------------------------------------------ //
     //                                      Object Type File                                      //

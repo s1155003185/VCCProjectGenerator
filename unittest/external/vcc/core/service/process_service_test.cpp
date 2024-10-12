@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "process_service.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "string_helper.hpp"
 
 using namespace vcc;

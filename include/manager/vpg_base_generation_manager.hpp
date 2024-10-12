@@ -35,7 +35,7 @@ class VPGBaseGenerationManager : public BaseManager<Derived>, public IVPGGenerat
     protected:
         void ValidateOption() const;
     public:
-        VPGBaseGenerationManager(std::shared_ptr<LogProperty> logProperty, std::wstring &workspace, std::shared_ptr<VPGGenerationOption> option) : BaseManager<Derived>(logProperty)
+        VPGBaseGenerationManager(std::shared_ptr<LogConfig> logProperty, std::wstring &workspace, std::shared_ptr<VPGGenerationOption> option) : BaseManager<Derived>(logProperty)
         { 
             this->_Workspace = workspace;
             assert(option != nullptr);
@@ -51,7 +51,7 @@ class VPGBaseGenerationManager : public BaseManager<Derived>, public IVPGGenerat
         std::wstring AdjustMakefile(const std::wstring &fileContent) const;
         std::wstring AdjustVSCodeLaunchJson(const std::wstring &fileContent) const;
 
-        void SyncWorkspace(const LogProperty *logProperty, const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
+        void SyncWorkspace(const LogConfig *logProperty, const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
             const std::vector<std::wstring> &includeFileFilters, const std::vector<std::wstring> &excludeFileFilters) const;
         
         virtual void Add() const override = 0;
@@ -117,7 +117,7 @@ void VPGBaseGenerationManager<Derived>::CreateWorkspaceDirectory() const
             std::wstring absPath = ConcatPaths({_Workspace, path});
             if (!IsDirectoryExists(absPath)) {
                 CreateDirectory(absPath);
-                LogService::LogInfo(this->GetLogProperty().get(), L"", L"Create Directory: " + path);
+                LogService::LogInfo(this->GetLogConfig().get(), L"", L"Create Directory: " + path);
             }        
         }
     CATCH
@@ -176,7 +176,7 @@ void VPGBaseGenerationManager<Derived>::CreateBasicProject() const
 }
 
 template <typename Derived>
-void VPGBaseGenerationManager<Derived>::SyncWorkspace(const LogProperty *logProperty, const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
+void VPGBaseGenerationManager<Derived>::SyncWorkspace(const LogConfig *logProperty, const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
             const std::vector<std::wstring> &includeFileFilters, const std::vector<std::wstring> &excludeFileFilters) const
 {
     TRY

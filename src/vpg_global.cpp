@@ -5,7 +5,7 @@
 #include "terminal_service.hpp"
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 
 #include "vpg_project_type.hpp"
 
@@ -21,7 +21,7 @@ using namespace vcc;
 
 std::wstring VPGGlobal::GetVersion()
 {
-    return L"v0.2.2";
+    return L"v0.2.3";
 }
 
 std::wstring VPGGlobal::GetVccLocalResponseFolder()

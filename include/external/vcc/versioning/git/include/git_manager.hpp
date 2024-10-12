@@ -9,7 +9,7 @@ namespace vcc
     class GitManager : public BaseManager<GitManager>
     {
         public:
-            GitManager(std::shared_ptr<LogProperty> logProperty) : BaseManager(logProperty, ManagerType::Git) {}
+            GitManager(std::shared_ptr<LogConfig> logProperty) : BaseManager(logProperty, ManagerType::Git) {}
             ~GitManager() {}
     };
 }

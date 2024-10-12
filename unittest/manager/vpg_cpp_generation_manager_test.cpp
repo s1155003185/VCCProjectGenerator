@@ -5,7 +5,7 @@
 
 #include "class_macro.hpp"
 #include "file_helper.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "process_service.hpp"
 
 #include "vpg_cpp_generation_manager.hpp"
@@ -14,7 +14,7 @@ using namespace vcc;
 
 class VPGCppGenerationManagerTest : public testing::Test 
 {
-    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET_SPTR(LogConfig, LogConfig);
     GETSET_SPTR(VPGGenerationOption, Option);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGCppGenerationManagerTest/");
     GETSET(std::wstring, WorkspaceSource, L"");
@@ -23,7 +23,7 @@ class VPGCppGenerationManagerTest : public testing::Test
     GETSET(std::wstring, TestFolder, L"../VPGVccGenerationManagerTest_CPPTestProject");
     GETSET(bool, IsCopyDebugFolderToTestFolder, false);
 
-    MANAGER(VPGCppGenerationManager, Manager, _LogProperty, L"", _Option);
+    MANAGER(VPGCppGenerationManager, Manager, _LogConfig, L"", _Option);
 
     public:
         void SetUp() override
@@ -31,7 +31,7 @@ class VPGCppGenerationManagerTest : public testing::Test
             this->_WorkspaceSource = this->_Workspace + L"Source";
             this->_WorkspaceTarget = this->_Workspace + L"Target";
 
-            this->_LogProperty->SetIsConsoleLog(false);
+            this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
             std::filesystem::remove_all(PATH(this->GetWorkspaceSource()));
             std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
@@ -91,7 +91,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
-    // ProcessService::Execute(this->GetLogProperty().get(), L"", this->GetWorkspaceTarget(), L"make");
+    // ProcessService::Execute(this->GetLogConfig().get(), L"", this->GetWorkspaceTarget(), L"make");
     // EXPECT_TRUE(IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPProject.exe"))
     //     || IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPProject")));
     // EXPECT_TRUE(IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPDllProject.dll"))
@@ -119,7 +119,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
-    // ProcessService::Execute(this->GetLogProperty().get(), L"", this->GetWorkspaceTarget(), L"make");
+    // ProcessService::Execute(this->GetLogConfig().get(), L"", this->GetWorkspaceTarget(), L"make");
     // EXPECT_TRUE(IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPProject.exe"))
     //     || IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPProject")));
     // EXPECT_FALSE(IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPDllProject.dll"))
@@ -148,7 +148,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
-    // ProcessService::Execute(this->GetLogProperty().get(), L"", this->GetWorkspaceTarget(), L"make");
+    // ProcessService::Execute(this->GetLogConfig().get(), L"", this->GetWorkspaceTarget(), L"make");
     // EXPECT_FALSE(IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPProject.exe"))
     //     || IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPProject")));
     // EXPECT_TRUE(IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPDllProject.dll"))
@@ -177,7 +177,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
-    // ProcessService::Execute(this->GetLogProperty().get(), L"", this->GetWorkspaceTarget(), L"make");
+    // ProcessService::Execute(this->GetLogConfig().get(), L"", this->GetWorkspaceTarget(), L"make");
     // EXPECT_TRUE(IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPProject.exe"))
     //     || IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPProject")));
     // EXPECT_TRUE(IsFileExists(ConcatPaths({ConcatPaths({this->GetWorkspaceTarget(), L"bin/Debug/"), L"CPPDllProject.dll"))

@@ -13,7 +13,7 @@ using namespace vcc;
 
 #define LOG_ID L"Object Type File Generation"
 
-void VPGObjectTypeFileGenerationService::Generate(const LogProperty *logProperty, const std::wstring &filePathHpp, const std::set<std::wstring> &propertyTypes)
+void VPGObjectTypeFileGenerationService::Generate(const LogConfig *logProperty, const std::wstring &filePathHpp, const std::set<std::wstring> &propertyTypes)
 {
     TRY
         LogService::LogInfo(logProperty, LOG_ID, L"Generate object type file: " + filePathHpp);

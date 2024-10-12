@@ -8,7 +8,7 @@
 #include "exception_macro.hpp"
 #include "exception_type.hpp"
 #include "file_helper.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "string_helper.hpp"
 
 using namespace vcc;

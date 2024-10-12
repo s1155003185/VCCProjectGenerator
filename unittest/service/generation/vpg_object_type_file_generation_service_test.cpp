@@ -13,14 +13,14 @@ using namespace vcc;
 
 class VPGObjectTypeFileGenerationServiceTest : public testing::Test 
 {
-    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET_SPTR(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGObjectTypeFileGenerationServiceTest/");
     
     GETSET(std::wstring, FilePathHpp, L"");
     public:
         void SetUp() override
         {
-            this->_LogProperty->SetIsConsoleLog(false);
+            this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
             this->_FilePathHpp = ConcatPaths({this->GetWorkspace(), L"object_type.hpp"});
@@ -35,7 +35,7 @@ class VPGObjectTypeFileGenerationServiceTest : public testing::Test
 TEST_F(VPGObjectTypeFileGenerationServiceTest, Empty)
 {
     std::set<std::wstring> propertyTypes;
-    VPGObjectTypeFileGenerationService::Generate(this->GetLogProperty().get(), this->GetFilePathHpp(), propertyTypes);
+    VPGObjectTypeFileGenerationService::Generate(this->GetLogConfig().get(), this->GetFilePathHpp(), propertyTypes);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     std::wstring content = ReadFile(this->GetFilePathHpp());
     std::wstring expectedResult = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
@@ -55,7 +55,7 @@ TEST_F(VPGObjectTypeFileGenerationServiceTest, Normal)
     std::set<std::wstring> propertyTypes;
     propertyTypes.insert(L"Def");
     propertyTypes.insert(L"Abc");
-    VPGObjectTypeFileGenerationService::Generate(this->GetLogProperty().get(), this->GetFilePathHpp(), propertyTypes);
+    VPGObjectTypeFileGenerationService::Generate(this->GetLogConfig().get(), this->GetFilePathHpp(), propertyTypes);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     std::wstring content = ReadFile(this->GetFilePathHpp());
     std::wstring expectedResult = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"

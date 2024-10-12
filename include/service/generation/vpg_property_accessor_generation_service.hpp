@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "vpg_enum_class.hpp"
 
 using namespace vcc;
@@ -34,7 +34,7 @@ class VPGPropertyAccessorGenerationService
 
         static void GetPropertyAccessorTypeName(const std::wstring &originalType, std::wstring &convertedType, std::wstring &convertedName, std::wstring &returnResult);
 
-        static void GenerateHpp(const LogProperty *logProperty, const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
-        static void GenerateCpp(const LogProperty *logProperty, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
+        static void GenerateHpp(const LogConfig *logProperty, const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
+        static void GenerateCpp(const LogConfig *logProperty, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
             const std::wstring &filePathCpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
 };

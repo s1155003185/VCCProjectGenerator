@@ -17,7 +17,7 @@
 #include "config_builder.hpp"
 #include "time_helper.hpp"
 #include "exception_macro.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "memory_macro.hpp"
 #include "process_service.hpp"
 #include "string_helper.hpp"
@@ -71,7 +71,7 @@ namespace vcc
         return GitFileStatus::NA;
     }
     
-    std::wstring GitService::Execute(const LogProperty *logProperty, const std::wstring &command)
+    std::wstring GitService::Execute(const LogConfig *logProperty, const std::wstring &command)
     {
         TRY
             return ProcessService::Execute(logProperty, GIT_LOG_ID, command);
@@ -79,7 +79,7 @@ namespace vcc
         return L"";
     }
     
-    std::wstring GitService::GetVersion(const LogProperty *logProperty)
+    std::wstring GitService::GetVersion(const LogConfig *logProperty)
     {
         TRY
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git --version");
@@ -90,7 +90,7 @@ namespace vcc
         return L"";
     }
 
-    bool GitService::IsGitResponse(const LogProperty *logProperty, const std::wstring &workspace)
+    bool GitService::IsGitResponse(const LogConfig *logProperty, const std::wstring &workspace)
     {
         bool result = false;
         try {
@@ -103,7 +103,7 @@ namespace vcc
         return result;
     }
 
-    void GitService::GetStatus(const LogProperty *logProperty, const std::wstring &workspace, const GitStatusSearchCriteria *searchCriteria, std::shared_ptr<GitStatus> status)
+    void GitService::GetStatus(const LogConfig *logProperty, const std::wstring &workspace, const GitStatusSearchCriteria *searchCriteria, std::shared_ptr<GitStatus> status)
     {
         TRY
             std::wstring optionStr = L"";
@@ -156,14 +156,14 @@ namespace vcc
     }
 
     // Initialization
-    void GitService::Initialize(const LogProperty *logProperty, const std::wstring &workspace)
+    void GitService::Initialize(const LogConfig *logProperty, const std::wstring &workspace)
     {
         TRY
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git init");
         CATCH
     }
 
-    void GitService::Clone(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &url, const GitCloneOption *option)
+    void GitService::Clone(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &url, const GitCloneOption *option)
     {
         TRY
             std::wstring optionStr = L"";
@@ -179,7 +179,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::GetRemote(const LogProperty *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitRemote>> &remotes)
+    void GitService::GetRemote(const LogConfig *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitRemote>> &remotes)
     {
         TRY
             std::wstring result = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git remote -v");
@@ -204,7 +204,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::AddRemote(const LogProperty *logProperty, const std::wstring &workspace, const GitRemoteAddOption *option)
+    void GitService::AddRemote(const LogConfig *logProperty, const std::wstring &workspace, const GitRemoteAddOption *option)
     {
         TRY
             assert(option != nullptr);
@@ -228,7 +228,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::RenameRemote(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldName, const std::wstring &newName)
+    void GitService::RenameRemote(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &oldName, const std::wstring &newName)
     {
         TRY
             assert(!IsBlank(oldName));
@@ -237,7 +237,7 @@ namespace vcc
         CATCH
     }
     
-    void GitService::RemoveRemote(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &name)
+    void GitService::RemoveRemote(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &name)
     {
         TRY
             assert(!IsBlank(name));
@@ -245,14 +245,14 @@ namespace vcc
         CATCH
     }
 
-    void GitService::FetchAll(const LogProperty *logProperty, const std::wstring &workspace)
+    void GitService::FetchAll(const LogConfig *logProperty, const std::wstring &workspace)
     {
         TRY
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git fetch --all");
         CATCH
     }
 
-    void GitService::Pull(const LogProperty *logProperty, const std::wstring &workspace, const GitPullOption *option)
+    void GitService::Pull(const LogConfig *logProperty, const std::wstring &workspace, const GitPullOption *option)
     {
         TRY
             std::wstring optionStr = L"";
@@ -285,7 +285,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::Push(const LogProperty *logProperty, const std::wstring &workspace, const GitPushOption *option)
+    void GitService::Push(const LogConfig *logProperty, const std::wstring &workspace, const GitPushOption *option)
     {
         TRY
             std::wstring optionStr = L"";
@@ -655,7 +655,7 @@ namespace vcc
         CATCH
     }
     
-    void GitService::GetLogs(const LogProperty *logProperty, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria, std::vector<std::shared_ptr<GitLog>> &logs)
+    void GitService::GetLogs(const LogConfig *logProperty, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria, std::vector<std::shared_ptr<GitLog>> &logs)
     {
         TRY
             ParseGitLogGraph(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git log --graph --oneline --pretty=format:\"(%H)(%h)(%T)(%t)(%P)(%p)\" " + GetGitLogSearchCriteriaString(searchCriteria)),
@@ -689,7 +689,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::GetCurrentLog(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitLog> log)
+    void GitService::GetCurrentLog(const LogConfig *logProperty, const std::wstring &workspace, std::shared_ptr<GitLog> log)
     {
         TRY
             DECLARE_SPTR(GitLogSearchCriteria, searchCriteria);
@@ -702,7 +702,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::GetLog(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID, std::shared_ptr<GitLog> log)
+    void GitService::GetLog(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &hashID, std::shared_ptr<GitLog> log)
     {
         TRY
             assert(!IsBlank(hashID));
@@ -710,7 +710,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::GetTags(const LogProperty *logProperty, const std::wstring &workspace, const GitTagSearchCriteria *searchCriteria, std::vector<std::wstring> &tags)
+    void GitService::GetTags(const LogConfig *logProperty, const std::wstring &workspace, const GitTagSearchCriteria *searchCriteria, std::vector<std::wstring> &tags)
     {
         TRY
             std::wstring optionStr = L"";
@@ -729,7 +729,7 @@ namespace vcc
         CATCH
     }
 
-    // void GitService::GetTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, std::shared_ptr<GitLog> log)
+    // void GitService::GetTag(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &tagName, std::shared_ptr<GitLog> log)
     // {
     //     TRY
     //         assert(!IsBlank(tagName));
@@ -751,7 +751,7 @@ namespace vcc
     //     CATCH
     // }
 
-    GitTagCurrentTag GitService::GetCurrentTag(const LogProperty *logProperty, const std::wstring &workspace)
+    GitTagCurrentTag GitService::GetCurrentTag(const LogConfig *logProperty, const std::wstring &workspace)
     {
         GitTagCurrentTag currentTag;
         TRY
@@ -777,7 +777,7 @@ namespace vcc
         return currentTag;
     }
 
-    void GitService::CreateTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, const GitTagCreateTagOption *option)
+    void GitService::CreateTag(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &tagName, const GitTagCreateTagOption *option)
     {
         TRY
             assert(!IsBlank(tagName));
@@ -817,7 +817,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::Switch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName, bool isForce)
+    void GitService::Switch(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &tagName, bool isForce)
     {
         TRY
             assert(!IsBlank(tagName));
@@ -826,14 +826,14 @@ namespace vcc
         CATCH
     }
 
-    void GitService::SwitchReverse(const LogProperty *logProperty, const std::wstring &workspace)
+    void GitService::SwitchReverse(const LogConfig *logProperty, const std::wstring &workspace)
     {
         TRY
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git switch -");
         CATCH
     }
 
-    void GitService::DeleteTag(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &tagName)
+    void GitService::DeleteTag(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &tagName)
     {
         TRY
             assert(!IsBlank(tagName));
@@ -868,7 +868,7 @@ namespace vcc
         CATCH
     }
 
-    // void GitService::GetCurrentBranch(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitBranch> branch)
+    // void GitService::GetCurrentBranch(const LogConfig *logProperty, const std::wstring &workspace, std::shared_ptr<GitBranch> branch)
     // {
     //     TRY
     //         std::wstring str = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git branch -v");
@@ -881,7 +881,7 @@ namespace vcc
     //     }
     //}
 
-    std::wstring GitService::GetCurrentBranchName(const LogProperty *logProperty, const std::wstring &workspace)
+    std::wstring GitService::GetCurrentBranchName(const LogConfig *logProperty, const std::wstring &workspace)
     {
         TRY
             return SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git branch --show-current"))[0];
@@ -889,7 +889,7 @@ namespace vcc
         return L"";
     }
 
-    void GitService::GetBranches(const LogProperty *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitBranch>> &branches)
+    void GitService::GetBranches(const LogConfig *logProperty, const std::wstring &workspace, std::vector<std::shared_ptr<GitBranch>> &branches)
     {
         TRY
             std::wstring str = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git branch -v --all");
@@ -906,7 +906,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::CreateBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName, const GitBranchCreateBranchOption *option)
+    void GitService::CreateBranch(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &branchName, const GitBranchCreateBranchOption *option)
     {
         TRY
             assert(!IsBlank(branchName));
@@ -940,7 +940,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::SwitchBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName, const GitBranchSwitchBranchOption *option)
+    void GitService::SwitchBranch(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &branchName, const GitBranchSwitchBranchOption *option)
     {
         TRY
             assert(!IsBlank(branchName));
@@ -957,7 +957,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::RenameBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce)
+    void GitService::RenameBranch(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce)
     {
         TRY
             assert(!IsBlank(oldBranchName));
@@ -967,7 +967,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::CopyBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce)
+    void GitService::CopyBranch(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce)
     {
         TRY
             assert(!IsBlank(oldBranchName));
@@ -977,7 +977,7 @@ namespace vcc
         CATCH
     }        
         
-    void GitService::DeleteBranch(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &branchName, bool isForce)
+    void GitService::DeleteBranch(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &branchName, bool isForce)
     {
         TRY
             assert(!IsBlank(branchName));
@@ -986,7 +986,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::GetDifferenceSummary(const LogProperty *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, std::shared_ptr<GitDifferenceSummary> summary)
+    void GitService::GetDifferenceSummary(const LogConfig *logProperty, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, std::shared_ptr<GitDifferenceSummary> summary)
     {
         TRY
             std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git diff " + Concat(hashIDs, L" ") + L" --numstat"));
@@ -1084,7 +1084,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::GetDifferenceIndexFile(const LogProperty *logProperty, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &filePath,  std::shared_ptr<GitDifference> diff)
+    void GitService::GetDifferenceIndexFile(const LogConfig *logProperty, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &filePath,  std::shared_ptr<GitDifference> diff)
     {
         TRY
             assert(!IsBlank(filePath));
@@ -1100,7 +1100,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::GetDifferenceWorkingFile(const LogProperty *logProperty, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &filePath, std::shared_ptr<GitDifference> diff)
+    void GitService::GetDifferenceWorkingFile(const LogConfig *logProperty, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &filePath, std::shared_ptr<GitDifference> diff)
     {
         TRY
             assert(!IsBlank(filePath));
@@ -1116,7 +1116,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::GetDifferenceFile(const LogProperty *logProperty, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &filePath, std::shared_ptr<GitDifference> diff)
+    void GitService::GetDifferenceFile(const LogConfig *logProperty, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &filePath, std::shared_ptr<GitDifference> diff)
     {
         TRY
             assert(!IsBlank(filePath));
@@ -1132,7 +1132,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::GetDifferenceCommit(const LogProperty *logProperty, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff)
+    void GitService::GetDifferenceCommit(const LogConfig *logProperty, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff)
     {
         TRY
             assert(!IsBlank(filePath));
@@ -1145,55 +1145,55 @@ namespace vcc
         CATCH
     }
 
-    void GitService::Stage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
+    void GitService::Stage(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &filePath)
     {
         TRY
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git add \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
         CATCH
     }
-    void GitService::StageAll(const LogProperty *logProperty, const std::wstring &workspace)
+    void GitService::StageAll(const LogConfig *logProperty, const std::wstring &workspace)
     {
         TRY
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git add *");
         CATCH
     }
 
-    void GitService::Unstage(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
+    void GitService::Unstage(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &filePath)
     {
         TRY
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git reset \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
         CATCH
     }
 
-    void GitService::UnstageAll(const LogProperty *logProperty, const std::wstring &workspace)
+    void GitService::UnstageAll(const LogConfig *logProperty, const std::wstring &workspace)
     {
         TRY
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git reset");
         CATCH
     }
 
-    void GitService::Commit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &command)
+    void GitService::Commit(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &command)
     {
         TRY
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git commit -m \"" + GetEscapeString(EscapeStringType::DoubleQuote, command) + L"\"");
         CATCH
     }
 
-    void GitService::Amend(const LogProperty *logProperty, const std::wstring &workspace)
+    void GitService::Amend(const LogConfig *logProperty, const std::wstring &workspace)
     {
         TRY
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git commit --amend");
         CATCH  
     }
 
-    void GitService::DiscardFile(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath)
+    void GitService::DiscardFile(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &filePath)
     {
         TRY
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git checkout \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
         CATCH
     }
 
-    void GitService::RestoreFileToParticularCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &filePath, const std::wstring &hashID)
+    void GitService::RestoreFileToParticularCommit(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &filePath, const std::wstring &hashID)
     {
         TRY
             assert(!IsBlank(hashID));
@@ -1201,7 +1201,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::ResetCommit(const LogProperty *logProperty, const std::wstring &workspace,  const GitResetMode &resetMode, const std::wstring &hashID)
+    void GitService::ResetCommit(const LogConfig *logProperty, const std::wstring &workspace,  const GitResetMode &resetMode, const std::wstring &hashID)
     {
         TRY
             std::wstring modeStr = L"";
@@ -1234,14 +1234,14 @@ namespace vcc
         CATCH
     }
 
-    void GitService::ReverseCommit(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &hashID)
+    void GitService::ReverseCommit(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &hashID)
     {
         TRY
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git revert " + hashID);
         CATCH
     }
 
-    bool GitService::IsConfigExists(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key)
+    bool GitService::IsConfigExists(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &key)
     {
         bool result = false;
         try {
@@ -1253,7 +1253,7 @@ namespace vcc
         return result;
     }
 
-    void GitService::GetConfig(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitConfig> config)
+    void GitService::GetConfig(const LogConfig *logProperty, const std::wstring &workspace, std::shared_ptr<GitConfig> config)
     {
         TRY
             GitService::GetLocalConfig(logProperty, workspace, config);
@@ -1270,7 +1270,7 @@ namespace vcc
         CATCH
     }
 
-    std::wstring GitService::GetConfig(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key)
+    std::wstring GitService::GetConfig(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &key)
     {
         std::wstring result = L"";
         TRY
@@ -1285,7 +1285,7 @@ namespace vcc
         return result;
     }
 
-    std::wstring GitService::GetUserName(const LogProperty *logProperty, const std::wstring &workspace)
+    std::wstring GitService::GetUserName(const LogConfig *logProperty, const std::wstring &workspace)
     {
         TRY
             return GitService::GetConfig(logProperty, workspace, GIT_CONFIG_USER_NAME);
@@ -1293,7 +1293,7 @@ namespace vcc
         return L"";        
     }
     
-    std::wstring GitService::GetUserEmail(const LogProperty *logProperty, const std::wstring &workspace)
+    std::wstring GitService::GetUserEmail(const LogConfig *logProperty, const std::wstring &workspace)
     {
         TRY
             return GitService::GetConfig(logProperty, workspace, GIT_CONFIG_USER_EMAIL);
@@ -1301,7 +1301,7 @@ namespace vcc
         return L"";
     }
 
-    bool GitService::IsGlobalConfigExists(const LogProperty *logProperty, const std::wstring &key)
+    bool GitService::IsGlobalConfigExists(const LogConfig *logProperty, const std::wstring &key)
     {
         bool result = false;
         try {
@@ -1314,7 +1314,7 @@ namespace vcc
         return result;        
     }
 
-    void GitService::GetGlobalConfig(const LogProperty *logProperty, std::shared_ptr<GitConfig> config)
+    void GitService::GetGlobalConfig(const LogConfig *logProperty, std::shared_ptr<GitConfig> config)
     {
         TRY
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global --list");
@@ -1338,7 +1338,7 @@ namespace vcc
         CATCH
     }
 
-    std::wstring GitService::GetGlobalConfig(const LogProperty *logProperty, const std::wstring &key)
+    std::wstring GitService::GetGlobalConfig(const LogConfig *logProperty, const std::wstring &key)
     {
         TRY
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global " + key);
@@ -1347,14 +1347,14 @@ namespace vcc
         return L"";
     }
     
-    void GitService::SetGlobalConfig(const LogProperty *logProperty, const std::wstring &key, const std::wstring &value)
+    void GitService::SetGlobalConfig(const LogConfig *logProperty, const std::wstring &key, const std::wstring &value)
     {
         TRY
             ProcessService::Execute(logProperty, GIT_LOG_ID, L"git config --global " + key + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, value) + L"\"");
         CATCH
     }
 
-    std::wstring GitService::GetGlobalUserName(const LogProperty *logProperty)
+    std::wstring GitService::GetGlobalUserName(const LogConfig *logProperty)
     {
         TRY
             return GitService::GetGlobalConfig(logProperty, GIT_CONFIG_USER_NAME);
@@ -1362,14 +1362,14 @@ namespace vcc
         return L"";
     }
 
-    void GitService::SetGlobalUserName(const LogProperty *logProperty, const std::wstring &value)
+    void GitService::SetGlobalUserName(const LogConfig *logProperty, const std::wstring &value)
     {
         TRY
             GitService::SetGlobalConfig(logProperty, GIT_CONFIG_USER_NAME, value);
         CATCH
     }
 
-    std::wstring GitService::GetGlobalUserEmail(const LogProperty *logProperty)
+    std::wstring GitService::GetGlobalUserEmail(const LogConfig *logProperty)
     {
         TRY
             return GitService::GetGlobalConfig(logProperty, GIT_CONFIG_USER_EMAIL);
@@ -1377,14 +1377,14 @@ namespace vcc
         return L"";
     }
 
-    void GitService::SetGlobalUserEmail(const LogProperty *logProperty, const std::wstring &value)
+    void GitService::SetGlobalUserEmail(const LogConfig *logProperty, const std::wstring &value)
     {
         TRY
             GitService::SetGlobalConfig(logProperty, GIT_CONFIG_USER_EMAIL, value);
         CATCH
     }
 
-    bool GitService::IsLocalConfigExists(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key)
+    bool GitService::IsLocalConfigExists(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &key)
     {
         bool result = false;
         try {
@@ -1396,7 +1396,7 @@ namespace vcc
         return result;       
     }
 
-    void GitService::GetLocalConfig(const LogProperty *logProperty, const std::wstring &workspace, std::shared_ptr<GitConfig> config)
+    void GitService::GetLocalConfig(const LogConfig *logProperty, const std::wstring &workspace, std::shared_ptr<GitConfig> config)
     {
         TRY
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local --list");
@@ -1419,7 +1419,7 @@ namespace vcc
         CATCH
     }
 
-    std::wstring GitService::GetLocalConfig(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key)
+    std::wstring GitService::GetLocalConfig(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &key)
     {
         TRY
             std::wstring cmdResult = ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local " + key);
@@ -1428,14 +1428,14 @@ namespace vcc
         return L"";
     }
 
-    void GitService::SetLocalConfig(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &key, const std::wstring &value)
+    void GitService::SetLocalConfig(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &key, const std::wstring &value)
     {
         TRY
             ProcessService::Execute(logProperty, GIT_LOG_ID, workspace, L"git config --local " + key + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, value) + L"\"");
         CATCH
     }
 
-    std::wstring GitService::GetLocalUserName(const LogProperty *logProperty, const std::wstring &workspace)
+    std::wstring GitService::GetLocalUserName(const LogConfig *logProperty, const std::wstring &workspace)
     {
         TRY
             return GitService::GetLocalConfig(logProperty, workspace, GIT_CONFIG_USER_NAME);
@@ -1443,14 +1443,14 @@ namespace vcc
         return L"";
     }
 
-    void GitService::SetLocalUserName(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &value)
+    void GitService::SetLocalUserName(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &value)
     {
         TRY
             GitService::SetLocalConfig(logProperty, workspace, GIT_CONFIG_USER_NAME, value);
         CATCH
     }
 
-    std::wstring GitService::GetLocalUserEmail(const LogProperty *logProperty, const std::wstring &workspace)
+    std::wstring GitService::GetLocalUserEmail(const LogConfig *logProperty, const std::wstring &workspace)
     {
         TRY
             return GitService::GetLocalConfig(logProperty, workspace, GIT_CONFIG_USER_EMAIL);
@@ -1458,7 +1458,7 @@ namespace vcc
         return L"";
     }
 
-    void GitService::SetLocalUserEmail(const LogProperty *logProperty, const std::wstring &workspace, const std::wstring &value)
+    void GitService::SetLocalUserEmail(const LogConfig *logProperty, const std::wstring &workspace, const std::wstring &value)
     {
         TRY
             GitService::SetLocalConfig(logProperty, workspace, GIT_CONFIG_USER_EMAIL, value);

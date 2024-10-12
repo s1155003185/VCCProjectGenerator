@@ -19,7 +19,7 @@ using namespace vcc;
 
 class VPGObjectFileGenerationServiceTest : public testing::Test 
 {
-    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET_SPTR(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGObjectFileGenerationServiceTest/");
     GETSET(std::wstring, FilePathHpp, L"");
     GETSET(std::wstring, FilePathCpp, L"");
@@ -31,7 +31,7 @@ class VPGObjectFileGenerationServiceTest : public testing::Test
     public:
         void SetUp() override
         {
-            this->_LogProperty->SetIsConsoleLog(false);
+            this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
             this->_FilePathHpp = ConcatPaths({this->_Workspace, L"vcc_object.hpp"});
@@ -64,7 +64,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Empty)
     std::wstring classPrefix = L"";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), enumClassList);    
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
@@ -91,7 +91,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
@@ -141,7 +141,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Object)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
 
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
@@ -204,7 +204,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Multi)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
 
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
@@ -277,9 +277,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObject", L"vcc_object.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"JsonInternalType", L"json.hpp"));
 
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), enumClassList);
-    VPGObjectFileGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetIncludeFiles(), this->GetEnumClasses(),
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetIncludeFiles(), this->GetEnumClasses(),
         this->GetFilePathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
@@ -735,9 +735,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObject", L"vcc_object.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"JsonInternalType", L"json.hpp"));
 
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), enumClassList);
-    VPGObjectFileGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetIncludeFiles(), this->GetEnumClasses(),
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetIncludeFiles(), this->GetEnumClasses(),
         this->GetFilePathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
@@ -893,9 +893,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObject", L"vcc_object.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"JsonInternalType", L"json.hpp"));
 
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogProperty().get(), classPrefix, projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), enumClassList);
-    VPGObjectFileGenerationService::GenerateCpp(this->GetLogProperty().get(), this->GetIncludeFiles(), this->GetEnumClasses(),
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetIncludeFiles(), this->GetEnumClasses(),
         this->GetFilePathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));

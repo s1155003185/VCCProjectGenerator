@@ -5,7 +5,7 @@
 
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_generation_option.hpp"
@@ -333,7 +333,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
     return result;
 }
 
-void VPGJavaGenerationService::GenerateJavaBridge(const LogProperty *logProperty, const std::wstring &targetWorkspace, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option)
+void VPGJavaGenerationService::GenerateJavaBridge(const LogConfig *logProperty, const std::wstring &targetWorkspace, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option)
 {
     TRY
         assert(option != nullptr);
@@ -898,7 +898,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
     return result;
 }
 
-void VPGJavaGenerationService::GenerateEnum(const LogProperty *logProperty, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass, const VPGGenerationOption *option, const VPGGenerationOptionExport *javaOption)
+void VPGJavaGenerationService::GenerateEnum(const LogConfig *logProperty, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass, const VPGGenerationOption *option, const VPGGenerationOptionExport *javaOption)
 {
     TRY
         assert(option != nullptr);
@@ -915,7 +915,7 @@ void VPGJavaGenerationService::GenerateEnum(const LogProperty *logProperty, cons
     CATCH
 }
 
-void VPGJavaGenerationService::GenerateObject(const LogProperty *logProperty, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass,
+void VPGJavaGenerationService::GenerateObject(const LogConfig *logProperty, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass,
     const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMap,
     const VPGGenerationOption *option, const VPGGenerationOptionExport *javaOption)
 {

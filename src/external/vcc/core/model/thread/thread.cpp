@@ -32,12 +32,12 @@ namespace vcc
             if (_Action) {
                 _State = ProcessState::Busy;
                 std::wstring id = IsBlank(_Id) ? (L"Thread." + GetPid()) : _Id;
-                LogService::LogThread(_LogProperty.get(), id, IsBlank(_MessageStart) ? L"Thread Start" : _MessageStart);
+                LogService::LogThread(_LogConfig.get(), id, IsBlank(_MessageStart) ? L"Thread Start" : _MessageStart);
                 if (!IsBlank(_DebugMessage))
-                    LogService::LogDebug(_LogProperty.get(), id, _DebugMessage);
+                    LogService::LogDebug(_LogConfig.get(), id, _DebugMessage);
 
                 _Action(this);
-                LogService::LogThread(_LogProperty.get(), id, IsBlank(_MessageComplete) ? L"Thread Terminated" : _MessageComplete);
+                LogService::LogThread(_LogConfig.get(), id, IsBlank(_MessageComplete) ? L"Thread Terminated" : _MessageComplete);
                 if (_State == ProcessState::Busy || _State == ProcessState::Idle)
                     _State = ProcessState::Complete;
             }

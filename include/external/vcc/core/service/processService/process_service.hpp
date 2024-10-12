@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "log_property.hpp"
+#include "log_config.hpp"
 
 namespace vcc
 {
@@ -24,7 +24,7 @@ namespace vcc
             ~ProcessService() {}
 
             static std::vector<std::string> ParseCMDLinux(const std::string &cmd);
-            static std::wstring Execute(const LogProperty *logProperty, const std::wstring &id, const std::wstring &command);
-            static std::wstring Execute(const LogProperty *logProperty, const std::wstring &id, const std::wstring &workspace, const std::wstring &command);
+            static std::wstring Execute(const LogConfig *logProperty, const std::wstring &id, const std::wstring &command);
+            static std::wstring Execute(const LogConfig *logProperty, const std::wstring &id, const std::wstring &workspace, const std::wstring &command);
     };
 }

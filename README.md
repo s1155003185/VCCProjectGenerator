@@ -841,6 +841,48 @@ According to JNA (Java Native Access), here is the map of types between c++ and 
 | char* | String |
 | void* | pointer |
 
+## Java UI
+Here are some notes for Java UI.
+
+Please ensure the program have following lines in main.
+
+Set UI style be nature current platform style.
+```
+try {
+    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+} 
+catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
+    // handle exception
+}
+```
+
+Set MacOS menu bar be screen menu bar.
+```
+System.setProperty("apple.laf.useScreenMenuBar", "true");
+```
+
+Sample
+```
+/**
+* @param args the command line arguments
+*/
+public static void main(String args[]) {
+    try {
+        UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+    } 
+    catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
+        java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    }
+    // Set the property to use the screen menu bar on macOS
+    System.setProperty("apple.laf.useScreenMenuBar", "true");
+    
+    /* Create and display the form */
+    java.awt.EventQueue.invokeLater(() -> {
+        new Main().setVisible(true);
+    });
+}
+```
+
 
 ****
 ## Versioning Common Codebase Project Generator VSCode Extension

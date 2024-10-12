@@ -1,7 +1,7 @@
 #pragma once
 #include "base_service.hpp"
 #include "thread.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 
 namespace vcc
 {

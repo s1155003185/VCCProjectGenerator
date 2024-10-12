@@ -6,7 +6,7 @@
 
 #include "base_manager.hpp"
 #include "class_macro.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "vpg_enum_class_reader.hpp"
 #include "vpg_generation_option.hpp"
 
@@ -27,7 +27,7 @@ class VPGFileGenerationManager : public BaseManager<VPGFileGenerationManager>
         std::wstring GetConcatPath(const std::wstring &projWorkspace, const std::wstring &objWorkspace, const std::wstring &middlePath, const std::wstring &fileName) const;
 
     public:
-        VPGFileGenerationManager(std::shared_ptr<LogProperty> logProperty, std::wstring workspace) : BaseManager(logProperty) { _Workspace = workspace; }
+        VPGFileGenerationManager(std::shared_ptr<LogConfig> logProperty, std::wstring workspace) : BaseManager(logProperty) { _Workspace = workspace; }
         virtual ~VPGFileGenerationManager() {}
 
         // properties
@@ -41,5 +41,5 @@ class VPGFileGenerationManager : public BaseManager<VPGFileGenerationManager>
         bool IsClassEnumFile(const std::wstring &filename, const std::wstring &projectPrefix);
         bool IsClassEnum(const std::wstring &enumClassName, const std::wstring &projectPrefix);
         
-        void GernerateProperty(const LogProperty *logProperty, const VPGGenerationOption *option);
+        void GernerateProperty(const LogConfig *logProperty, const VPGGenerationOption *option);
 };

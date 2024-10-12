@@ -9,13 +9,13 @@ using namespace vcc;
 class ThreadManagerTest : public testing::Test 
 {
     MANAGER(ThreadManager, Manager, nullptr);
-    GETSET_SPTR_NULL(LogProperty, LogProperty)
+    GETSET_SPTR_NULL(LogConfig, LogConfig)
 
     public:
         void SetUp() override
         {
             _Manager->SetThreadManagementMode(ThreadManagementMode::Join);
-            _LogProperty = std::make_shared<LogProperty>(LogPropertyType::None);
+            _LogConfig = std::make_shared<LogConfig>(LogConfigInitialType::None);
         }
 
         void TearDown() override
@@ -27,7 +27,7 @@ TEST_F(ThreadManagerTest, SuspendAndQueue)
 {
     size_t threadCnt = 0;
     size_t callbackCnt = 0;
-    DECLARE_SPTR(Thread, thread1, GetLogProperty(), [&threadCnt, &callbackCnt](const Thread * /*thread*/){
+    DECLARE_SPTR(Thread, thread1, GetLogConfig(), [&threadCnt, &callbackCnt](const Thread * /*thread*/){
         EXPECT_EQ(threadCnt, (size_t)0);
         EXPECT_EQ(callbackCnt, (size_t)0);
         threadCnt++;
@@ -36,7 +36,7 @@ TEST_F(ThreadManagerTest, SuspendAndQueue)
         EXPECT_EQ(callbackCnt, (size_t)0);
         callbackCnt++;
     });
-    DECLARE_SPTR(Thread, thread2, GetLogProperty(), [&threadCnt, &callbackCnt](const Thread * /*thread*/){
+    DECLARE_SPTR(Thread, thread2, GetLogConfig(), [&threadCnt, &callbackCnt](const Thread * /*thread*/){
         EXPECT_EQ(threadCnt, (size_t)1);
         EXPECT_EQ(callbackCnt, (size_t)1);
         threadCnt++;
@@ -45,7 +45,7 @@ TEST_F(ThreadManagerTest, SuspendAndQueue)
         EXPECT_EQ(callbackCnt, (size_t)1);
         callbackCnt++;
     });
-    DECLARE_SPTR(Thread, thread3, GetLogProperty(), [&threadCnt, &callbackCnt](const Thread * /*thread*/){
+    DECLARE_SPTR(Thread, thread3, GetLogConfig(), [&threadCnt, &callbackCnt](const Thread * /*thread*/){
         EXPECT_EQ(threadCnt, (size_t)2);
         EXPECT_EQ(callbackCnt, (size_t)2);
         threadCnt++;
@@ -68,11 +68,11 @@ TEST_F(ThreadManagerTest, SuspendAndQueue)
 TEST_F(ThreadManagerTest, SuspendAndUrgent) 
 {
     size_t threadCnt = 0;
-    DECLARE_SPTR(Thread, thread1, GetLogProperty(), [&threadCnt](const Thread * /*thread*/){
+    DECLARE_SPTR(Thread, thread1, GetLogConfig(), [&threadCnt](const Thread * /*thread*/){
         EXPECT_EQ(threadCnt, (size_t)1);
         threadCnt++;
     }, [](const Thread * /*thread*/) {});
-    DECLARE_SPTR(Thread, thread2, GetLogProperty(), [&threadCnt](const Thread * /*thread*/){
+    DECLARE_SPTR(Thread, thread2, GetLogConfig(), [&threadCnt](const Thread * /*thread*/){
         EXPECT_EQ(threadCnt, (size_t)0);
         threadCnt++;
     }, [](const Thread * /*thread*/) {});
@@ -86,7 +86,7 @@ TEST_F(ThreadManagerTest, SuspendAndUrgent)
 
 TEST_F(ThreadManagerTest, Stop) 
 {
-    DECLARE_SPTR(Thread, thread1, GetLogProperty(), [](const Thread * /*thread*/){}, [](const Thread * /*thread*/) {});
+    DECLARE_SPTR(Thread, thread1, GetLogConfig(), [](const Thread * /*thread*/){}, [](const Thread * /*thread*/) {});
     GetManager()->Suspend();
     GetManager()->Queue(thread1);
     GetManager()->Stop();
@@ -96,7 +96,7 @@ TEST_F(ThreadManagerTest, Stop)
 
 TEST_F(ThreadManagerTest, ClearWaitingThread) 
 {
-    DECLARE_SPTR(Thread, thread1, GetLogProperty(), [](const Thread * /*thread*/){}, [](const Thread * /*thread*/) {});
+    DECLARE_SPTR(Thread, thread1, GetLogConfig(), [](const Thread * /*thread*/){}, [](const Thread * /*thread*/) {});
     GetManager()->Suspend();
     GetManager()->Queue(thread1);
     GetManager()->ClearWaitingThread();

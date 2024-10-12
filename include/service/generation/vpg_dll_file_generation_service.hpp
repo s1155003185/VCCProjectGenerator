@@ -5,7 +5,7 @@
 
 #include "base_object.hpp"
 #include "class_macro.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 
 using namespace vcc;
 
@@ -25,6 +25,6 @@ class VPGDllFileGenerationService
         ~VPGDllFileGenerationService() {}
 
     public:
-        static void GenerateHpp(const LogProperty *logProperty, const std::wstring &filePathHpp, const VPGDllFileGenerationServiceOption *option);
-        static void GenerateCpp(const LogProperty *logProperty, const std::wstring &filePathCpp, const VPGDllFileGenerationServiceOption *option);
+        static void GenerateHpp(const LogConfig *logProperty, const std::wstring &filePathHpp, const VPGDllFileGenerationServiceOption *option);
+        static void GenerateCpp(const LogConfig *logProperty, const std::wstring &filePathCpp, const VPGDllFileGenerationServiceOption *option);
 };

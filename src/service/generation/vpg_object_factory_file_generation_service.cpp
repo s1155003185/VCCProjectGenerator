@@ -12,7 +12,7 @@ using namespace vcc;
 
 #define LOG_ID L"Object Factory File Generation"
 
-void VPGObjectFactoryFileGenerationService::GenerateHpp(const LogProperty *logProperty, const std::wstring &filePathHpp)
+void VPGObjectFactoryFileGenerationService::GenerateHpp(const LogConfig *logProperty, const std::wstring &filePathHpp)
 {
     TRY
         LogService::LogInfo(logProperty, LOG_ID, L"Generate object factory file: " + filePathHpp);
@@ -41,7 +41,7 @@ void VPGObjectFactoryFileGenerationService::GenerateHpp(const LogProperty *logPr
     CATCH
 }
 
-void VPGObjectFactoryFileGenerationService::GenerateCpp(const LogProperty *logProperty, const std::wstring &projectPrefix, const std::set<std::wstring> &includeFiles,
+void VPGObjectFactoryFileGenerationService::GenerateCpp(const LogConfig *logProperty, const std::wstring &projectPrefix, const std::set<std::wstring> &includeFiles,
     const std::wstring &filePathCpp, const std::set<std::wstring> &propertyTypes)
 {
     TRY

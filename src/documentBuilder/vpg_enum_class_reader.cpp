@@ -290,6 +290,8 @@ void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &p
                 _AssignEnumClassProperty(_GetCommand(cppCode, false, pos), property);
                 GetNextCharPos(cppCode, pos, false);
             }
+            if (cppCode[pos] == L',')
+                GetNextCharPos(cppCode, pos, false);
 
             enumClass->_Properties.push_back(property);
 

@@ -259,7 +259,7 @@ std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const st
     return L"";
 }
 
-void VPGObjectFileGenerationService::GenerateHpp(const LogProperty *logProperty, const std::wstring &classPrefix, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
+void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logProperty, const std::wstring &classPrefix, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
     const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
@@ -444,7 +444,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogProperty *logProperty,
     CATCH
 }
 
-void VPGObjectFileGenerationService::GenerateCpp(const LogProperty *logProperty,
+void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logProperty,
             const std::map<std::wstring, std::wstring> &classPathMapping, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
             const std::wstring &filePathCpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {

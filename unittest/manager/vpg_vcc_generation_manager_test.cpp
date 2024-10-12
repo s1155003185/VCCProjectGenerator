@@ -7,7 +7,7 @@
 #include "file_helper.hpp"
 #include "json.hpp"
 #include "json_builder.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "process_service.hpp"
 #include "vpg_vcc_generation_manager.hpp"
 
@@ -15,7 +15,7 @@ using namespace vcc;
 
 class VPGVccGenerationManagerTest : public testing::Test 
 {
-    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET_SPTR(LogConfig, LogConfig);
     GETSET_SPTR(VPGGenerationOption, Option);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGVccGenerationManagerTest/");
     GETSET(std::wstring, WorkspaceSource, L"");
@@ -24,7 +24,7 @@ class VPGVccGenerationManagerTest : public testing::Test
     GETSET(std::wstring, TestFolder, L"../VPGVccGenerationManagerTest_VCCTestProject");
     GETSET(bool, IsCopyDebugFolderToTestFolder, false);
 
-    MANAGER(VPGVccGenerationManager, Manager, _LogProperty, L"", _Option);
+    MANAGER(VPGVccGenerationManager, Manager, _LogConfig, L"", _Option);
 
     public:
         void SetUp() override
@@ -32,7 +32,7 @@ class VPGVccGenerationManagerTest : public testing::Test
             this->_WorkspaceSource = this->_Workspace + L"Source";
             this->_WorkspaceTarget = this->_Workspace + L"Target";
 
-            this->_LogProperty->SetIsConsoleLog(false);
+            this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
             CreateDirectory(this->GetWorkspace());

@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "vpg_code_reader.hpp"
 
 enum class VPGFileContentGenerationMode

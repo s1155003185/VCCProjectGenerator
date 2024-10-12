@@ -7,7 +7,7 @@
 
 #include "base_object.hpp"
 #include "class_macro.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "process_state.hpp"
 
 namespace vcc
@@ -15,7 +15,7 @@ namespace vcc
     class ThreadManager;
     class Thread
     {
-        GETSET_SPTR_NULL(LogProperty, LogProperty)
+        GETSET_SPTR_NULL(LogConfig, LogConfig)
         GETSET(ProcessState, State, ProcessState::Idle)
 
         GETSET(int64_t, SeqNo, -1)
@@ -34,18 +34,18 @@ namespace vcc
             Thread() = default;
 
         public:
-            Thread(std::shared_ptr<LogProperty> logProperty, std::function<void(const Thread *)> action)
-                : _LogProperty(logProperty), _Action(action) {}
-            Thread(std::shared_ptr<LogProperty> logProperty, std::function<void(const Thread *)> action, std::function<void(const Thread *)> callback)
-                : _LogProperty(logProperty), _Action(action), _Callback(callback) {}
-            Thread(std::shared_ptr<LogProperty> logProperty, const std::wstring &id, const std::wstring &messageStart, const std::wstring &messageComplete, std::function<void(const Thread *)> action)
-                : _LogProperty(logProperty), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _Action(action) {}
-            Thread(std::shared_ptr<LogProperty> logProperty, const std::wstring &id, const std::wstring &messageStart, const std::wstring &messageComplete, std::function<void(const Thread *)> action, std::function<void(const Thread *)> callback)
-                : _LogProperty(logProperty), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _Action(action), _Callback(callback) {}
-            Thread(std::shared_ptr<LogProperty> logProperty, const std::wstring &id, const std::wstring &messageStart, const std::wstring &messageComplete, const std::wstring &debugMessage, std::function<void(const Thread *)> action)
-                : _LogProperty(logProperty), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _DebugMessage(debugMessage), _Action(action) {}
-            Thread(std::shared_ptr<LogProperty> logProperty, const std::wstring &id, const std::wstring &messageStart, const std::wstring &messageComplete, const std::wstring &debugMessage, std::function<void(const Thread *)> action, std::function<void(const Thread *)> callback)
-                : _LogProperty(logProperty), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _DebugMessage(debugMessage), _Action(action), _Callback(callback) {}
+            Thread(std::shared_ptr<LogConfig> logProperty, std::function<void(const Thread *)> action)
+                : _LogConfig(logProperty), _Action(action) {}
+            Thread(std::shared_ptr<LogConfig> logProperty, std::function<void(const Thread *)> action, std::function<void(const Thread *)> callback)
+                : _LogConfig(logProperty), _Action(action), _Callback(callback) {}
+            Thread(std::shared_ptr<LogConfig> logProperty, const std::wstring &id, const std::wstring &messageStart, const std::wstring &messageComplete, std::function<void(const Thread *)> action)
+                : _LogConfig(logProperty), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _Action(action) {}
+            Thread(std::shared_ptr<LogConfig> logProperty, const std::wstring &id, const std::wstring &messageStart, const std::wstring &messageComplete, std::function<void(const Thread *)> action, std::function<void(const Thread *)> callback)
+                : _LogConfig(logProperty), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _Action(action), _Callback(callback) {}
+            Thread(std::shared_ptr<LogConfig> logProperty, const std::wstring &id, const std::wstring &messageStart, const std::wstring &messageComplete, const std::wstring &debugMessage, std::function<void(const Thread *)> action)
+                : _LogConfig(logProperty), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _DebugMessage(debugMessage), _Action(action) {}
+            Thread(std::shared_ptr<LogConfig> logProperty, const std::wstring &id, const std::wstring &messageStart, const std::wstring &messageComplete, const std::wstring &debugMessage, std::function<void(const Thread *)> action, std::function<void(const Thread *)> callback)
+                : _LogConfig(logProperty), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _DebugMessage(debugMessage), _Action(action), _Callback(callback) {}
             virtual ~Thread() {}
 
             const ThreadManager *GetManager() const;

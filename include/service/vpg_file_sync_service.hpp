@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "vpg_code_reader.hpp"
 
 enum class VPGFileContentSyncMode
@@ -40,6 +40,6 @@ class VPGFileSyncService
         static std::wstring GenerateDemandCode(const VPGFileContentSyncMode srcMode, const VPGFileContentSyncMode destMode, const Xml *src, const Xml *dest);
         static std::wstring GenerateSkipCode(const std::wstring &dest);
     public:
-        static void CopyFile(const LogProperty *logProperty, const std::wstring &sourcePath, const std::wstring &destPath);
+        static void CopyFile(const LogConfig *logProperty, const std::wstring &sourcePath, const std::wstring &destPath);
         static std::wstring SyncFileContent(const std::wstring &src, const std::wstring &dest, const VPGFileContentSyncMode defaultMode, const std::wstring &commandDelimiter);
 };

@@ -30,7 +30,7 @@ namespace vcc
         mutable std::vector<std::shared_ptr<Thread>> _ActiveThreads;
 
     public:
-        ThreadManager(std::shared_ptr<LogProperty> logProperty) : BaseManager(logProperty) {}
+        ThreadManager(std::shared_ptr<LogConfig> logProperty) : BaseManager(logProperty) {}
         virtual ~ThreadManager();
 
         std::vector<std::shared_ptr<Thread>> &GetThreads() const;

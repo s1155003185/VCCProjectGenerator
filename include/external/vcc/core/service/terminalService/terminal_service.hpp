@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "log_property.hpp"
+#include "log_config.hpp"
 
 namespace vcc
 {
@@ -13,7 +13,7 @@ namespace vcc
             TerminalService() : BaseService() {}
             ~TerminalService() {}
 
-            static std::wstring Execute(const LogProperty *logProperty, std::wstring id, std::wstring cmd);
-            static std::wstring Execute(const LogProperty *logProperty, const std::wstring &id, const std::wstring &workspace, const std::wstring &cmd);
+            static std::wstring Execute(const LogConfig *logProperty, std::wstring id, std::wstring cmd);
+            static std::wstring Execute(const LogConfig *logProperty, const std::wstring &id, const std::wstring &workspace, const std::wstring &cmd);
     };
 }

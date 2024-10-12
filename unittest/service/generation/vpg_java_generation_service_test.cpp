@@ -13,7 +13,7 @@ using namespace vcc;
 
 class VPGJavaGenerationServiceTest : public testing::Test 
 {
-    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET_SPTR(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGJavaGenerationServiceTest/");
     GETSET_SPTR_NULL(VPGGenerationOptionExport, JavaOption);
     
@@ -24,7 +24,7 @@ class VPGJavaGenerationServiceTest : public testing::Test
     public:
         void SetUp() override
         {
-            this->_LogProperty->SetIsConsoleLog(false);
+            this->_LogConfig->SetIsConsoleLog(false);
 
             DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr, L"");
             manager->GetClassMacroList(L"");
@@ -108,7 +108,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "\r\n"
         "#endif\r\n", true);
 
-    VPGJavaGenerationService::GenerateJavaBridge(this->GetLogProperty().get(), L"", ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}), this->GetOption().get());
+    VPGJavaGenerationService::GenerateJavaBridge(this->GetLogConfig().get(), L"", ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}), this->GetOption().get());
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetDllBridgeDirectory(), L"VPGDllFunctions.java"})));
     EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetDllBridgeDirectory(), L"VPGDllFunctions.java"})),
         L"package com.vcc.test;\r\n"
@@ -181,8 +181,8 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
     std::wstring filePath1 = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeA.java"});
     std::wstring filePath2 = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeBProperty.java"});
     
-    VPGJavaGenerationService::GenerateEnum(this->GetLogProperty().get(), filePath1, L"", enumClassList1.at(0).get(), this->GetOption().get(), this->GetJavaOption().get());
-    VPGJavaGenerationService::GenerateEnum(this->GetLogProperty().get(), filePath2, L"", enumClassList2.at(0).get(), this->GetOption().get(), this->GetJavaOption().get());
+    VPGJavaGenerationService::GenerateEnum(this->GetLogConfig().get(), filePath1, L"", enumClassList1.at(0).get(), this->GetOption().get(), this->GetJavaOption().get());
+    VPGJavaGenerationService::GenerateEnum(this->GetLogConfig().get(), filePath2, L"", enumClassList2.at(0).get(), this->GetOption().get(), this->GetJavaOption().get());
     
     EXPECT_TRUE(IsFileExists(filePath1));
     EXPECT_EQ(ReadFile(filePath1),
@@ -276,7 +276,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMap;
     std::wstring filePath = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"});
-    VPGJavaGenerationService::GenerateObject(this->GetLogProperty().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMap, this->GetOption().get(), this->GetJavaOption().get());
+    VPGJavaGenerationService::GenerateObject(this->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMap, this->GetOption().get(), this->GetJavaOption().get());
     
     EXPECT_TRUE(IsFileExists(filePath));
     EXPECT_EQ(ReadFile(filePath),

@@ -14,7 +14,7 @@ using namespace vcc;
 
 #define LOG_ID L"Dll File Generation"
 
-void VPGDllFileGenerationService::GenerateHpp(const LogProperty *logProperty, const std::wstring &filePathHpp, const VPGDllFileGenerationServiceOption *option)
+void VPGDllFileGenerationService::GenerateHpp(const LogConfig *logProperty, const std::wstring &filePathHpp, const VPGDllFileGenerationServiceOption *option)
 {
     TRY
         assert(option != nullptr);
@@ -67,7 +67,7 @@ void VPGDllFileGenerationService::GenerateHpp(const LogProperty *logProperty, co
     CATCH
 }
 
-void VPGDllFileGenerationService::GenerateCpp(const LogProperty *logProperty, const std::wstring &filePathCpp, const VPGDllFileGenerationServiceOption *option)
+void VPGDllFileGenerationService::GenerateCpp(const LogConfig *logProperty, const std::wstring &filePathCpp, const VPGDllFileGenerationServiceOption *option)
 {
     TRY
         assert(option != nullptr);

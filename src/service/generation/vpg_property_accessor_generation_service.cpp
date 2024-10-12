@@ -185,7 +185,7 @@ std::wstring VPGPropertyAccessorGenerationService::GetIncludeFile(const std::map
     return L"";
 }
 
-void VPGPropertyAccessorGenerationService::GenerateHpp(const LogProperty *logProperty, const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+void VPGPropertyAccessorGenerationService::GenerateHpp(const LogConfig *logProperty, const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
         LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor hpp file: " + filePathHpp);
@@ -902,7 +902,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
     CATCH
 }
 
-void VPGPropertyAccessorGenerationService::GenerateCpp(const LogProperty *logProperty, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
+void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logProperty, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
             const std::wstring &filePathCpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY

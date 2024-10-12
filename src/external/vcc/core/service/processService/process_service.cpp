@@ -16,7 +16,7 @@
 
 #include "exception_macro.hpp"
 #include "exception_type.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "log_service.hpp"
 #include "string_helper.hpp"
 
@@ -144,7 +144,7 @@ namespace vcc
             return results;
         }
 
-        std::wstring ProcessService::Execute(const LogProperty *logProperty, const std::wstring &id, const std::wstring &command)
+        std::wstring ProcessService::Execute(const LogConfig *logProperty, const std::wstring &id, const std::wstring &command)
         {
             LogService::LogProcess(logProperty, id, command);
 
@@ -159,7 +159,7 @@ namespace vcc
             return result;
         }
 
-        std::wstring ProcessService::Execute(const LogProperty *logProperty, const std::wstring &id, const std::wstring &workspace, const std::wstring &command)
+        std::wstring ProcessService::Execute(const LogConfig *logProperty, const std::wstring &id, const std::wstring &workspace, const std::wstring &command)
         {
             std::wstring currentDirectory = L"";
             std::wstring result = L"";

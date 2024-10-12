@@ -5,7 +5,7 @@
 
 #include "class_macro.hpp"
 #include "memory_macro.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "vpg_global.hpp"
 #include "vpg_process_manager.hpp"
 
@@ -23,9 +23,9 @@ class VPGProcessManagerTest : public testing::Test
 
         void SetUp() override
         {
-            //DECLARE_SPTR(LogProperty, logProperty, LogPropertyType::None);
+            //DECLARE_SPTR(LogConfig, logProperty, LogConfigType::None);
             //logProperty->SetIsConsoleLog(true);
-            //this->_Manager->SetLogProperty(logProperty);
+            //this->_Manager->SetLogConfig(logProperty);
         }
 
         void TearDown() override

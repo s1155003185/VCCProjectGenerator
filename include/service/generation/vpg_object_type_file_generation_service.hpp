@@ -3,7 +3,7 @@
 #include <set>
 #include <string>
 
-#include "log_property.hpp"
+#include "log_config.hpp"
 
 using namespace vcc;
 
@@ -14,5 +14,5 @@ class VPGObjectTypeFileGenerationService
         ~VPGObjectTypeFileGenerationService() {}
 
     public:
-        static void Generate(const LogProperty *logProperty, const std::wstring &filePathHpp, const std::set<std::wstring> &propertyTypes);
+        static void Generate(const LogConfig *logProperty, const std::wstring &filePathHpp, const std::set<std::wstring> &propertyTypes);
 };

@@ -65,7 +65,7 @@ class ActionManagerTest : public testing::Test
 
 TEST_F(ActionManagerTest, EmptyTest) 
 {
-    ActionManager *manager = this->GetManager();
+    auto manager = this->GetManager().get();
     // Get
     EXPECT_EQ(manager->GetFirstSeqNo(), -1);
     EXPECT_EQ(manager->GetLastSeqNo(), -1);
@@ -87,7 +87,7 @@ TEST_F(ActionManagerTest, EmptyTest)
 
 TEST_F(ActionManagerTest, NegativeTest) 
 {
-    ActionManager *manager = this->GetManager();
+    auto manager = this->GetManager().get();
     this->ResetWithFiveActions();
     // Redo
     EXPECT_EQ(manager->Redo(-1), 4);
@@ -102,7 +102,7 @@ TEST_F(ActionManagerTest, NegativeTest)
 
 TEST_F(ActionManagerTest, ExceedTest) 
 {
-    ActionManager *manager = this->GetManager();
+    auto manager = this->GetManager().get();
     // Redo
     this->ResetWithFiveActions();
     EXPECT_EQ(manager->Redo(100), 4);
@@ -120,7 +120,7 @@ TEST_F(ActionManagerTest, ExceedTest)
 
 TEST_F(ActionManagerTest, RedoUndoTest) 
 {
-    ActionManager *manager = this->GetManager();
+    auto manager = this->GetManager().get();
     // Add
     this->ResetWithFiveActions();
     EXPECT_EQ(manager->DoAction(this->CreateAction(10)), 5);
@@ -152,7 +152,7 @@ TEST_F(ActionManagerTest, RedoUndoTest)
 
 TEST_F(ActionManagerTest, ChopTest) 
 {
-    ActionManager *manager = this->GetManager();
+    auto manager = this->GetManager().get();
     // ChopWithSize
     this->ResetWithFiveActions();
     EXPECT_EQ(manager->ChopActionListToSize(2), 4);
@@ -174,7 +174,7 @@ TEST_F(ActionManagerTest, ChopTest)
 
 TEST_F(ActionManagerTest, SeqNoContunusTest) 
 {
-    ActionManager *manager = this->GetManager();
+    auto manager = this->GetManager().get();
     // Chop All and seq no can continus
     this->ResetWithFiveActions();
     EXPECT_EQ(manager->ChopActionListToSize(0), -1);

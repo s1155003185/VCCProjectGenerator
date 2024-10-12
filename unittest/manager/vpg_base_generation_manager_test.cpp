@@ -5,7 +5,7 @@
 
 #include "class_macro.hpp"
 #include "file_helper.hpp"
-#include "log_property.hpp"
+#include "log_config.hpp"
 #include "memory_macro.hpp"
 #include "string_helper.hpp"
 
@@ -16,14 +16,14 @@ using namespace vcc;
 
 class VPGBaseGenerationManagerTest : public testing::Test 
 {
-    GETSET_SPTR(LogProperty, LogProperty);
+    GETSET_SPTR(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGBaseGenerationManagerTest/");
     GETSET(std::wstring, WorkspaceSource, L"");
     GETSET(std::wstring, WorkspaceTarget, L"");
     
     GETSET_SPTR(VPGGenerationOption, Option)
     // Cannot use VPGBaseGenerationManager directly as it needs template
-    MANAGER(VPGCppGenerationManager, Manager, _LogProperty, L"", _Option);
+    MANAGER(VPGCppGenerationManager, Manager, _LogConfig, L"", _Option);
     
     GETSET(std::wstring, FileContent, L"");
     
@@ -56,7 +56,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
     public:
         void SetUp() override
         {
-            this->_LogProperty->SetIsConsoleLog(false);
+            this->_LogConfig->SetIsConsoleLog(false);
             this->_WorkspaceSource = this->_Workspace + L"Source";
             this->_WorkspaceTarget = this->_Workspace + L"Target";
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
@@ -129,7 +129,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
             std::vector<std::wstring> includeOnly;
             std::vector<std::wstring> excludes;
             excludes.push_back(L"*FilterOut/");
-            this->GetManager()->SyncWorkspace(this->GetLogProperty().get(), 
+            this->GetManager()->SyncWorkspace(this->GetLogConfig().get(), 
                 this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
                 includeOnly, excludes);
         }
@@ -155,7 +155,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
             std::vector<std::wstring> includeOnly;
             includeOnly.push_back(L"*IncludeOnly/");
             std::vector<std::wstring> excludes;
-            this->GetManager()->SyncWorkspace(this->GetLogProperty().get(), 
+            this->GetManager()->SyncWorkspace(this->GetLogConfig().get(), 
                 this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
                 includeOnly, excludes);
         }
@@ -182,7 +182,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
             std::vector<std::wstring> includeOnly;
             std::vector<std::wstring> excludes;
             excludes.push_back(L"*FilterOut");
-            this->GetManager()->SyncWorkspace(this->GetLogProperty().get(), 
+            this->GetManager()->SyncWorkspace(this->GetLogConfig().get(), 
                 this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
                 includeOnly, excludes);
         }
@@ -208,7 +208,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
             std::vector<std::wstring> includeOnly;
             includeOnly.push_back(L"*IncludeOnly");
             std::vector<std::wstring> excludes;
-            this->GetManager()->SyncWorkspace(this->GetLogProperty().get(), 
+            this->GetManager()->SyncWorkspace(this->GetLogConfig().get(), 
                 this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
                 includeOnly, excludes);
         }
