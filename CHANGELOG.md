@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+
+### [v0.2.1] - 2024-10-12: Form - Initialize Thread
 - Rename VCCModule Folder to Camel Case to fit java naming style
 - VCCProjectGenerator Generation mode update Makefile according to vcc.json
 - Drop and Create template in Document/VCC folder if VCCProjectGenerator version not match with template instead of Git Pull
