@@ -78,8 +78,6 @@ void VPGProcessManager::VerifyLocalResponse()
                         } else {
                             isNeedToCloneGitResponse = true;
                             LogService::LogInfo(this->GetLogConfig().get(), L"", L"Outdated.");
-                            LogService::LogInfo(this->GetLogConfig().get(), L"", L"Remove current response.");
-                            RemoveDirectory(localResponseDirectoryProject);
                         }
                     }
                 }
@@ -92,14 +90,37 @@ void VPGProcessManager::VerifyLocalResponse()
             LogService::LogInfo(this->GetLogConfig().get(), L"", localResponseDirectoryProject + L" not Exists.");
         }
         if (isNeedToCloneGitResponse) {
-            LogService::LogInfo(this->GetLogConfig().get(), L"", L"Clone from " + gitUrl);
-            GitCloneOption cloneOption;
-            cloneOption.SetIsQuiet(true);
-            GitService::Clone(this->GetLogConfig().get(), localResponseDirectoryBase, gitUrl, &cloneOption);
-            LogService::LogInfo(this->GetLogConfig().get(), L"", L"Done.");
-
+            // Try to drop and create
+            // Note: Window version will hold folder for a while because of some threads of project have not been terminated. Cannot use drop create
+            try
+            {
+                if (IsDirectoryExists(localResponseDirectoryProject)) {
+                    LogService::LogInfo(this->GetLogConfig().get(), L"", L"Remove current response.");
+                    RemoveDirectory(localResponseDirectoryProject);
+                    LogService::LogInfo(this->GetLogConfig().get(), L"", L"Done.");
+                }
+            }
+            catch(const std::exception& e)
+            {
+                std::string msg(e.what());
+                LogService::LogWarning(this->GetLogConfig().get(), L"", str2wstr(msg));
+            }
+            try
+            {            
+                LogService::LogInfo(this->GetLogConfig().get(), L"", L"Clone from " + gitUrl);
+                GitCloneOption cloneOption;
+                cloneOption.SetIsQuiet(true);
+                GitService::Clone(this->GetLogConfig().get(), localResponseDirectoryBase, gitUrl, &cloneOption);
+                LogService::LogInfo(this->GetLogConfig().get(), L"", L"Done.");
+            }
+            catch(const std::exception& e)
+            {
+                std::string msg(e.what());
+                LogService::LogWarning(this->GetLogConfig().get(), L"", str2wstr(msg));
+            }
+            
             // Switch to correct version
-            LogService::LogInfo(this->GetLogConfig().get(), L"", L"Switch to current version" + VPGGlobal::GetVersion() + L".");
+            LogService::LogInfo(this->GetLogConfig().get(), L"", L"Switch to current version " + VPGGlobal::GetVersion());
             try
             {
                 GitService::Switch(this->GetLogConfig().get(), localResponseDirectoryProject, VPGGlobal::GetVersion());
@@ -108,7 +129,7 @@ void VPGProcessManager::VerifyLocalResponse()
             catch(const std::exception& e)
             {
                 try {
-                    LogService::LogError(this->GetLogConfig().get(), L"", L"VCC Project Generator version Not Exists. Switch to main.");
+                    LogService::LogError(this->GetLogConfig().get(), L"", L"VCC Project Generator version Not Exists. Switch to main");
                     GitService::Switch(this->GetLogConfig().get(), localResponseDirectoryProject, L"main");
                     GitService::Pull(this->GetLogConfig().get(), localResponseDirectoryProject);
                     LogService::LogInfo(this->GetLogConfig().get(), L"", L"Done.");

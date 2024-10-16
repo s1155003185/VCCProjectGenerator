@@ -259,11 +259,11 @@ std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const st
     return L"";
 }
 
-void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logProperty, const std::wstring &classPrefix, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
+void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig, const std::wstring &classPrefix, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
     const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate object class file: " + filePathHpp);
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file: " + filePathHpp);
 
         // TODO: need to enable to check all systemn function
         // need to skip all code in command
@@ -292,11 +292,22 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logProperty, c
                 projectFileList.insert(L"json.hpp");
                 projectFileList.insert(L"i_document.hpp");
             }
+            std::shared_ptr<Json> inheritAttributes = GetJsonAttributes(enumClass->GetCommand(), L"@@Inherit");
+            if (inheritAttributes != nullptr) {
+                std::wstring inheritClass = inheritAttributes->GetString(L"Class");
+                // remove template
+                size_t pos = Find(inheritClass, L"<");
+                if (pos != std::wstring::npos) {
+                    inheritClass = inheritClass.substr(0, pos);
+                }
+                projectFileList.insert(GetProjectClassIncludeFile(projectClassIncludeFiles, inheritClass));
+            }
             
             for (std::shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
                 // handle enum without macro case
-                if (property->GetMacro().empty())
+                if (property->GetMacro().empty() || property->GetIsInherit())
                     continue;
+
                 std::wstring type = property->GetType1();
                 if (std::iswupper(type[0])) {
                     if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
@@ -391,36 +402,62 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logProperty, c
             content += L"\r\n";
             
             std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - propertyClassNameSuffix.length());
-            content += L"class " + className + L" : public BaseObject<" + className + L">" + inheritClass + L"\r\n";
+            std::wstring baseClassName = L"BaseObject<" + className + L">";
+            std::shared_ptr<Json> inheritAttributes = GetJsonAttributes(enumClass->GetCommand(), L"@@Inherit");
+            if (inheritAttributes != nullptr) {
+                baseClassName = inheritAttributes->GetString(L"Class");
+                if (IsBlank(baseClassName)) {
+                    std::wstring errMsg = L"Enum Class " + enumClass->GetName() + L" has attribute @@Inherit but missing Attribute \"Class\"";
+                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, errMsg);
+                }
+            }   
+            std::wstring baseClassNameWithoutQuote = baseClassName;
+            if (IsContain(baseClassNameWithoutQuote, L"<"))
+                baseClassNameWithoutQuote = baseClassNameWithoutQuote.substr(0, Find(baseClassNameWithoutQuote, L"<"));
+
+            content += L"class " + className + L" : public " + baseClassName + inheritClass + L"\r\n";
             content += L"{\r\n";
             // generate properties
             for (std::shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
                 // handle enum without macro case
-                if (property->GetMacro().empty())
+                // Not generate inherited properties
+                if (property->GetMacro().empty() || property->GetIsInherit())
                     continue;
                 content += INDENT + property->GetMacro() + L"\r\n";
             }
             content += L"\r\n";
             content += INDENT + L"public:\r\n";
-            content += INDENT + INDENT + className + L"() : BaseObject(ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L") {}\r\n";
+            if (inheritAttributes != nullptr) {
+                content += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"()\r\n"
+                        + INDENT + INDENT + L"{\r\n"
+                        + INDENT + INDENT + INDENT + L"_ObjectType = ObjectType::" +  className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L";\r\n"
+                        + INDENT + INDENT + L"}\r\n";
+            } else
+                content += INDENT + INDENT + className + L"() : BaseObject(ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L") {}\r\n";
             content += INDENT + INDENT + L"virtual ~" + className + L"() {}\r\n";
 
-            bool isPtrExists = false;
-            for (auto const &property : enumClass->GetProperties()) {
-                // handle enum without macro case
-                if (property->GetMacro().empty())
-                    continue;
-                if ((!property->GetType1().empty() && std::iswupper(property->GetType1()[0])) 
-                    || (!property->GetType2().empty() && std::iswupper(property->GetType2()[0]))) {
-                    if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
-                        isPtrExists = true;
-                        break;
+            bool isCloneShow = false;
+            std::wstring cloneBaseClass = L"";
+            if (inheritAttributes != nullptr)
+                isCloneShow = true;
+            else
+                for (auto const &property : enumClass->GetProperties()) {
+                    // handle enum without macro case
+                    if (property->GetMacro().empty())
+                        continue;
+                    if ((!property->GetType1().empty() && std::iswupper(property->GetType1()[0])) 
+                        || (!property->GetType2().empty() && std::iswupper(property->GetType2()[0]))) {
+                        if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
+                            isCloneShow = true;
+                            break;
+                        }
                     }
                 }
-            }
-            if (isPtrExists) {
+            
+            if (isCloneShow) {
                 content += L"\r\n";                
-                content += INDENT + INDENT + L"virtual std::shared_ptr<IObject> Clone() const override {\r\n";
+                content += INDENT + INDENT + L"virtual std::shared_ptr<IObject> Clone() const override\r\n";
+                content += INDENT + INDENT + L"{\r\n";
                 content += INDENT + INDENT + INDENT + L"std::shared_ptr<" + className + L"> obj = std::make_shared<" + className + L">(*this);\r\n";
                 for (auto const &property : enumClass->GetProperties()) {
                     // handle enum without macro case
@@ -440,11 +477,11 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logProperty, c
             content += L"};\r\n";
         }
         WriteFile(filePathHpp, content, true);
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate object class file completed.");
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file completed.");
     CATCH
 }
 
-void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logProperty,
+void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
             const std::map<std::wstring, std::wstring> &classPathMapping, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
             const std::wstring &filePathCpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
@@ -476,7 +513,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logProperty,
         customIncludeFiles.insert(L"number_helper.hpp");
         customIncludeFiles.insert(L"string_helper.hpp");
         
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate object class file: " + filePathCpp);
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file: " + filePathCpp);
         std::wstring content = L"#include \"" + includeFileName + L"\"\r\n";
 
         for (auto const &enumClass : enumClassList) {
@@ -683,6 +720,6 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logProperty,
         }
 
         WriteFile(filePathCpp, content, true);
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate object class file completed.");
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file completed.");
     CATCH
 }

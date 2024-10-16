@@ -10,7 +10,7 @@ namespace vcc
     {
         // For Serialize Only
         GETSET(bool, IsBeautify, false);
-        GETSET(size_t, Level, 0);
+        GETSET(int64_t, Level, 0);
         GETSET(std::wstring, Indent, INDENT);
         GETSET(std::wstring, NewLineCharacter, L"\r\n");
         GETSET(std::wstring, NameColonSpace, L"");

@@ -1,11 +1,14 @@
 # Change Log
 
 ## [Unreleased]
-- Initialize Form
+
+### [v0.2.3] - 2024-10-20: Form - Generate Inherit Class
 - Initialize Application
+- Generate Inherit Class
 - Rename LogProperty to LogConfig as class suffix and Property and file suffix _property.hpp are reserved
 - Merge IProperty and BaseProperty to IObject and BaseObject. Remove i_property.hpp and base_property.hpp
 - Support Generate Form and inerted Class from Type Workspace in vcc.json
+- Fix Win Version Generator not work
 
 ### [v0.2.2] - 2024-10-12: Form - Urgent Fix
 - Fix Generator not work

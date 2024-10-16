@@ -12,7 +12,7 @@ class VPGVccGenerationManager : public VPGBaseGenerationManager<VPGVccGeneration
 {
     public:
         VPGVccGenerationManager() : VPGVccGenerationManager(nullptr, L"", nullptr) {}
-        VPGVccGenerationManager(std::shared_ptr<LogConfig> logProperty, std::wstring workspace, std::shared_ptr<VPGGenerationOption> option) : VPGBaseGenerationManager(logProperty, workspace, option) {}
+        VPGVccGenerationManager(std::shared_ptr<LogConfig> logConfig, std::wstring workspace, std::shared_ptr<VPGGenerationOption> option) : VPGBaseGenerationManager(logConfig, workspace, option) {}
         virtual ~VPGVccGenerationManager() {}
 
         std::vector<std::wstring> GetUpdateList() const;

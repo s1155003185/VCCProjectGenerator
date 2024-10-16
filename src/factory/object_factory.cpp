@@ -6,6 +6,7 @@
 #include "i_object.hpp"
 #include "object_type.hpp"
 #include "vpg_generation_option.hpp"
+#include "vpg_git_log.hpp"
 
 using namespace vcc;
 
@@ -17,6 +18,8 @@ std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType)
         return std::make_shared<VPGGenerationOption>();
     case ObjectType::GenerationOptionExport:
         return std::make_shared<VPGGenerationOptionExport>();
+    case ObjectType::GitLog:
+        return std::make_shared<VPGGitLog>();
     default:
         assert(false);
         break;

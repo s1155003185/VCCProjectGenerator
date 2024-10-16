@@ -77,7 +77,7 @@ TEST_F(GitServiceTest, ParseGitLogGraph)
     std::vector<std::shared_ptr<GitLog>> logs;
     GitService::ParseGitLogGraph(str, logs);
     EXPECT_EQ(logs.size(), (size_t)4);
-    EXPECT_EQ(logs.at(0)->GetColumnIndex(), (size_t)0);
+    EXPECT_EQ(logs.at(0)->GetColumnIndex(), 0);
     EXPECT_EQ(logs.at(0)->GetHashID(), L"A1");
     EXPECT_EQ(logs.at(0)->GetAbbreviatedHashID(), L"A1Short");
     EXPECT_EQ(logs.at(0)->GetTreeHashID(), L"A2");
@@ -87,7 +87,7 @@ TEST_F(GitServiceTest, ParseGitLogGraph)
     EXPECT_EQ(logs.at(0)->GetAbbreviatedParentHashIDs().size(), (size_t)1);
     EXPECT_EQ(logs.at(0)->GetAbbreviatedParentHashIDs().at(0), L"A3Short");
 
-    EXPECT_EQ(logs.at(1)->GetColumnIndex(), (size_t)0);
+    EXPECT_EQ(logs.at(1)->GetColumnIndex(), 0);
     EXPECT_EQ(logs.at(1)->GetHashID(), L"A3");
     EXPECT_EQ(logs.at(1)->GetAbbreviatedHashID(), L"A3Short");
     EXPECT_EQ(logs.at(1)->GetTreeHashID(), L"A4");
@@ -99,7 +99,7 @@ TEST_F(GitServiceTest, ParseGitLogGraph)
     EXPECT_EQ(logs.at(1)->GetAbbreviatedParentHashIDs().at(0), L"A5Short");
     EXPECT_EQ(logs.at(1)->GetAbbreviatedParentHashIDs().at(1), L"A6Short");
 
-    EXPECT_EQ(logs.at(2)->GetColumnIndex(), (size_t)1);
+    EXPECT_EQ(logs.at(2)->GetColumnIndex(), 1);
     EXPECT_EQ(logs.at(2)->GetHashID(), L"A6");
     EXPECT_EQ(logs.at(2)->GetAbbreviatedHashID(), L"A6Short");
     EXPECT_EQ(logs.at(2)->GetTreeHashID(), L"A7");
@@ -109,7 +109,7 @@ TEST_F(GitServiceTest, ParseGitLogGraph)
     EXPECT_EQ(logs.at(2)->GetAbbreviatedParentHashIDs().size(), (size_t)1);
     EXPECT_EQ(logs.at(2)->GetAbbreviatedParentHashIDs().at(0), L"A8Short");
 
-    EXPECT_EQ(logs.at(3)->GetColumnIndex(), (size_t)0);
+    EXPECT_EQ(logs.at(3)->GetColumnIndex(), 0);
     EXPECT_EQ(logs.at(3)->GetHashID(), L"B1");
     EXPECT_EQ(logs.at(3)->GetAbbreviatedHashID(), L"B1Short");
     EXPECT_EQ(logs.at(3)->GetTreeHashID(), L"B2");
@@ -348,7 +348,7 @@ TEST_F(GitServiceTest, Tag)
     EXPECT_EQ(tags[0], L"v0.0.1");
     GitTagCurrentTag currentTag = GitService::GetCurrentTag(this->GetLogConfig().get(), this->GetWorkspace());
     EXPECT_EQ(currentTag.GetTagName(), L"v0.0.1");
-    EXPECT_EQ(currentTag.GetNoOfCommit(), (size_t)0);
+    EXPECT_EQ(currentTag.GetNoOfCommit(), 0);
 
     // Window behavior and Linux Behavior different, Window throw exception (tag will detach branch) while Linux will not
     // Can use GitService::SwitchReverse to switch back

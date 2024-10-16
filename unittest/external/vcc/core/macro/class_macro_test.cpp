@@ -36,7 +36,8 @@ class ClassMacroTestClass : public BaseObject<ClassMacroTestClass>
         ClassMacroTestClass() : BaseObject(ObjectType::NA) {}
         virtual ~ClassMacroTestClass() {}
         
-        virtual std::shared_ptr<IObject> Clone() const override {
+        virtual std::shared_ptr<IObject> Clone() const override
+        {
             std::shared_ptr<ClassMacroTestClass> obj = std::make_shared<ClassMacroTestClass>(*this);
             obj->CloneVector(this->GetVector());
             obj->CloneVectorSPTR(this->GetVectorSPTR());

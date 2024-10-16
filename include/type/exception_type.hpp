@@ -4,30 +4,30 @@
 // TODO: need review
 enum class ExceptionType
 {
-	NoError = 0,
+	NoError = 0
 	// Coding error
-	NotSupport,
-	NotImplement,
+	, NotSupport
+	, NotImplement
 	// System
-	DllError,
+	, DllError
 
 	// Directory
-	DirectoryNotFound,
-	DirectoryCannotCreate,
+	, DirectoryNotFound
+	, DirectoryCannotCreate
     // File
-	FileNotFound,
-	FileBlocked,
-	FileAlreadyExist,
-	FileCannotOpen,
+	, FileNotFound
+	, FileBlocked
+	, FileAlreadyExist
+	, FileCannotOpen
 	// parser
-	ParserError,
+	, ParserError
 	// key
-	KeyInvalid,
-	KeyNotFound,
-	KeyDuplicated,
+	, KeyInvalid
+	, KeyNotFound
+	, KeyDuplicated
 
-	SystemError = 50000,
+	, SystemError = 50000
     // <vcc:custom sync="SKIP" gen="SKIP">
     // </vcc:custom>
-    CustomError = 99999
+    , CustomError = 99999
 };

@@ -9,8 +9,8 @@ namespace vcc
         size_t row = 0, column = 0;
         GetCharacterRowAndColumn(str, pos, row, column);
         
-        size_t lengthOfPos = std::min(pos, _NumberOfCharactersBeforePosForErrorMessage);
-        size_t lengthOfSub = std::min(str.length() - pos, _NumberOfCharactersAfterPosForErrorMessage);
+        size_t lengthOfPos = std::min((int64_t)pos, _NumberOfCharactersBeforePosForErrorMessage);
+        size_t lengthOfSub = std::min((int64_t)(str.length() - pos), _NumberOfCharactersAfterPosForErrorMessage);
 
         std::wstring preString = str.substr(pos - lengthOfPos, lengthOfPos);
         std::wstring subString = str.substr(pos + 1, lengthOfSub);

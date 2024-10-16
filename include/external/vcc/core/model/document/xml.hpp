@@ -33,7 +33,8 @@ namespace vcc
             Xml() : BaseDocument() {}
             virtual ~Xml() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override {
+            virtual std::shared_ptr<IObject> Clone() const override
+            {
                 std::shared_ptr<Xml> obj = std::make_shared<Xml>(*this);
                 obj->CloneAttributes(this->GetAttributes());
                 obj->CloneChildren(this->GetChildren());

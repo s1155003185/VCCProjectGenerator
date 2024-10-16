@@ -14,10 +14,10 @@ TEST(TerminalServiceTest, Normal)
 // Terminal cannot cap exception console log
 // TEST(CommandTest, Exception)
 // {
-//     LogConfig logProperty(LogConfigType::None);
+//     LogConfig logConfig(LogConfigType::None);
 //     bool isException = false;
 //     try {
-//         TerminalService::Execute(logProperty, L"", "git -version");
+//         TerminalService::Execute(logConfig, L"", "git -version");
 //     } catch (...) {
 //         isException = true;
 //     }

@@ -30,6 +30,7 @@ class VPGEnumClassProperty : public BaseObject<VPGEnumClassProperty>
     GETSET(std::wstring, Command, L"");
 
     GETSET(VPGEnumClassPropertyAccessMode, AccessMode, VPGEnumClassPropertyAccessMode::ReadWrite);
+    GETSET(bool, IsInherit, false);
 
     public:
         VPGEnumClassProperty() : BaseObject() {}
@@ -48,7 +49,8 @@ class VPGEnumClass : public BaseObject<VPGEnumClass>
         VPGEnumClass() : BaseObject() {}
         virtual ~VPGEnumClass() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override {
+        virtual std::shared_ptr<IObject> Clone() const override
+        {
             std::shared_ptr<VPGEnumClass> obj = std::make_shared<VPGEnumClass>(*this);
             obj->CloneProperties(this->GetProperties());
             return obj;

@@ -180,24 +180,25 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
         pos = 0;
         if (IsStartWith(property->_Macro, L"MAP", pos) || IsStartWith(property->_Macro, L"ORDERED_MAP", pos)) {
             property->_Type1 = _GetType(property->_Macro, pos);
-            if (property->_Macro[pos] != L',')
-                return;
-            pos++;
-            property->_Type2 = _GetPropertyName(property->_Macro, pos);
-            if (property->_Macro[pos] != L',')
-                return;
-            pos++;
-            property->_PropertyName = _GetDefaultValue(property->_Macro, pos);
+            if (property->_Macro[pos] == L',')  {
+                pos++;
+                property->_Type2 = _GetPropertyName(property->_Macro, pos);
+            }
+            if (property->_Macro[pos] == L',')  {
+                pos++;
+                property->_PropertyName = _GetDefaultValue(property->_Macro, pos);
+            }
         } else {
             property->_Type1 = _GetType(property->_Macro, pos);
-            if (property->_Macro[pos] != L',')
-                return;
-            pos++;
-            property->_PropertyName = _GetPropertyName(property->_Macro, pos);
-            if (property->_Macro[pos] != L',')
-                return;
-            pos++;
-            property->_DefaultValue = _GetDefaultValue(property->_Macro, pos);
+
+            if (property->_Macro[pos] == L',')  {
+                pos++;
+                property->_PropertyName = _GetPropertyName(property->_Macro, pos);
+            }
+            if (property->_Macro[pos] == L',')  {
+                pos++;
+                property->_DefaultValue = _GetDefaultValue(property->_Macro, pos);
+            }
         }
         
         // split Remain
@@ -212,6 +213,8 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::ReadWrite;
             else if (Equal(attribute, attributeToken + L"NoAccess", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::NoAccess;
+            else if (Equal(attribute, attributeToken + L"Inherit", true))
+                property->SetIsInherit(true);
         }
     CATCH
 }

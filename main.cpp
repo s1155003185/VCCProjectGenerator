@@ -16,9 +16,9 @@ int main(int argc, char **argv)
 	Application::Run();
 
 
-	DECLARE_SPTR(LogConfig, logProperty);
-	logProperty->Init(LogConfigInitialType::None);
-	logProperty->SetIsConsoleLog(true);
+	DECLARE_SPTR(LogConfig, logConfig);
+	logConfig->Init(LogConfigInitialType::None);
+	logConfig->SetIsConsoleLog(true);
 	try {
 		if (argc < 2) {
 			std::wcout << L"No Argument" << std::endl;
@@ -35,14 +35,14 @@ int main(int argc, char **argv)
 		// argList.push_back(L"vpg");
 		// argList.push_back(L"-Generate");
 
-		VPGProcessManager process(logProperty);
+		VPGProcessManager process(logConfig);
 		process.Execute(argList);
 	} catch (std::exception &ex) {
 		const IException *ie = dynamic_cast<const IException *>(&ex);
 		if (ie != nullptr)
-			LogService::LogError(logProperty.get(), L"", ie->GetErrorMessage());
+			LogService::LogError(logConfig.get(), L"", ie->GetErrorMessage());
 		else
-			LogService::LogError(logProperty.get(), L"", str2wstr(ex.what()));
+			LogService::LogError(logConfig.get(), L"", str2wstr(ex.what()));
 		return -1;
 	}
 	return 0;

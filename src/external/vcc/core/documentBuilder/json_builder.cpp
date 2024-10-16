@@ -20,7 +20,7 @@ namespace vcc
         if (!_IsBeautify)
             return L"";
         std::wstring result = L"";
-        for (size_t i = 0; i < _Level; i++) {
+        for (int64_t i = 0; i < _Level; i++) {
             result += _Indent;
         }
         return result;

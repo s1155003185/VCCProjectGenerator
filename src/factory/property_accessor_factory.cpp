@@ -7,6 +7,7 @@
 #include "i_object.hpp"
 #include "i_property_accessor.hpp"
 #include "vpg_generation_option_property_accessor.hpp"
+#include "vpg_git_log_property_accessor.hpp"
 
 using namespace vcc;
 
@@ -20,6 +21,8 @@ std::shared_ptr<IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_p
         return std::make_shared<VPGGenerationOptionPropertyAccessor>(object);
     case ObjectType::GenerationOptionExport:
         return std::make_shared<VPGGenerationOptionExportPropertyAccessor>(object);
+    case ObjectType::GitLog:
+        return std::make_shared<VPGGitLogPropertyAccessor>(object);
     default:
         assert(false);
         break;

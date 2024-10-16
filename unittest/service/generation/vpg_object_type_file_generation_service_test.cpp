@@ -63,9 +63,9 @@ TEST_F(VPGObjectTypeFileGenerationServiceTest, Normal)
         L"\r\n"
         L"enum class ObjectType\r\n"
         L"{\r\n"
-        L"    NA,\r\n"
-        L"    Abc,\r\n"
-        L"    Def\r\n"
+        L"    NA\r\n"
+        L"    , Abc\r\n"
+        L"    , Def\r\n"
         L"    // <vcc:custom sync=\"SKIP\" gen=\"SKIP\">\r\n"
         L"    // </vcc:custom>\r\n"
         L"};\r\n";

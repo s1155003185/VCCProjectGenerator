@@ -23,7 +23,7 @@ class VPGProcessManager : public BaseManager<VPGProcessManager>
         std::shared_ptr<IVPGGenerationManager> GetGenerationManager();
 
     public:
-        VPGProcessManager(std::shared_ptr<LogConfig> logProperty) : BaseManager(logProperty) {};
+        VPGProcessManager(std::shared_ptr<LogConfig> logConfig) : BaseManager(logConfig) {};
         ~VPGProcessManager() {};
 
         void InitLogConfig();

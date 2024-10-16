@@ -29,7 +29,7 @@ namespace vcc
         int64_t _Clear();
         int64_t _Truncate();
     public:
-        ActionManager(std::shared_ptr<LogConfig> logProperty) : BaseManager(logProperty, ManagerType::Action) {}
+        ActionManager(std::shared_ptr<LogConfig> logConfig) : BaseManager(logConfig, ManagerType::Action) {}
         virtual ~ActionManager() {}
 
         int64_t GetFirstSeqNo();
