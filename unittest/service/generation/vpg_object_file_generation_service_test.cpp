@@ -241,7 +241,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritClass)
     std::wstring enumClass = L""
         "#pragma once\r\n"
         "\r\n"
-        "//@@Inherit{ \"Class\": \"GitLog\" }"
+        "//@@Inherit{ \"Class\": \"GitLog\" }\r\n"
         "enum class VPGGitLogProperty\r\n"
         "{\r\n"
         "    EnumA, // GETSET(std::wstring, EnumA, L\"\") @@Inherit \r\n"
