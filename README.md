@@ -7,11 +7,6 @@ Current Stage Objective: Start VCC Project Manager (Multi Project Handling), inc
 
 Note: Still in initialize version, will have full review when official release
 
-Note: Fixed Update Function not work because of
-using // <vcc:exceptionType action:"RESERVE"> in exception_type.hpp
-Please change to 
-// <vcc:exceptionType action="RESERVE">
-
 Please go to following session to see how to create VCC Project to generate c++ dll with Java Interface
 - Tutorial for Create VCC DLL Project to generate dll with Java Interface
 
