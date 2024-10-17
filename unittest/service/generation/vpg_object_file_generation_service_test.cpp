@@ -245,7 +245,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritClass)
         "enum class VPGGitLogProperty\r\n"
         "{\r\n"
         "    EnumA, // GETSET(std::wstring, EnumA, L\"\") @@Inherit \r\n"
-        "    EnumB, // MAP(int, std::wstring, EnumB) @@Inhert \r\n"
+        "    EnumB, // MAP(int, std::wstring, EnumB) @@Inherit \r\n"
         "    EnumC  // GETSET(std::wstring, EnumC, L\"\")\r\n"
         "};\r\n"
         "\r\n";
