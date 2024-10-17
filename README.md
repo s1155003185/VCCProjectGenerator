@@ -7,11 +7,16 @@ Current Stage Objective: Start VCC Project Manager (Multi Project Handling), inc
 
 Note: Still in initialize version, will have full review when official release
 
+Note: For Generator, if version not match, it will drop the template in Document/VCC/VCCModule and clone new one.
+    But in Window version, Drop Create Method not work as Git still holds the folder a few while after executing Git Command.
+    If find that generator have generated wrong file, it may because of outdated template. Please remove the template and try again.
+    For example, if folder name has been changed from Uppercase to Lowercase in Git Response, Git may not be able to update because git is not case sensitive.
+
 Please go to following session to see how to create VCC Project to generate c++ dll with Java Interface
 - Tutorial for Create VCC DLL Project to generate dll with Java Interface
 
 ## What's new
-Changed VCCModule Foler to Camel Case to fit java naming style
+Generate Child Class (allow inherit), Initialize Application
 
 ## What's next
 Form, Action
@@ -147,6 +152,10 @@ Suitable for long term project
 - OAuth
 
 ## Known Issue
+- For Generator, if version not match, it will drop the template in Document/VCC/VCCModule and clone new one.
+    But in Window version, Drop Create Method not work as Git still holds the folder a few while after executing Git Command.
+    If find that generator have generated wrong file, it may because of outdated template. Please remove the template and try again.
+    For example, if folder name has been changed from Uppercase to Lowercase in Git Response, Git may not be able to update because git is not case sensitive.
 - Compile unit test to slow because of linkage. No solution.
 - Regex is too slow
 
