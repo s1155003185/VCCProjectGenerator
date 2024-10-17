@@ -305,8 +305,9 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logProperty, c
             
             for (std::shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
                 // handle enum without macro case
-                if (property->GetMacro().empty())
+                if (property->GetMacro().empty() || IsContain(property->GetCommand(), L"@@Inherit", 0, true))
                     continue;
+
                 std::wstring type = property->GetType1();
                 if (std::iswupper(type[0])) {
                     if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
