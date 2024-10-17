@@ -292,6 +292,16 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logProperty, c
                 projectFileList.insert(L"json.hpp");
                 projectFileList.insert(L"i_document.hpp");
             }
+            std::shared_ptr<Json> inheritAttributes = GetJsonAttributes(enumClass->GetCommand(), L"@@Inherit");
+            if (inheritAttributes != nullptr) {
+                std::wstring inheritClass = inheritAttributes->GetString(L"Class");
+                // remove template
+                size_t pos = Find(inheritClass, L"<");
+                if (pos != std::wstring::npos) {
+                    inheritClass = inheritClass.substr(0, pos);
+                }
+                projectFileList.insert(GetProjectClassIncludeFile(projectClassIncludeFiles, inheritClass));
+            }
             
             for (std::shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
                 // handle enum without macro case
@@ -391,7 +401,12 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logProperty, c
             content += L"\r\n";
             
             std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - propertyClassNameSuffix.length());
-            content += L"class " + className + L" : public BaseObject<" + className + L">" + inheritClass + L"\r\n";
+            std::wstring baseClassName = L"BaseObject<" + className + L">";
+            std::shared_ptr<Json> inheritAttributes = GetJsonAttributes(enumClass->GetCommand(), L"@@Inherit");
+            if (inheritAttributes != nullptr)
+                baseClassName = inheritAttributes->GetString(L"Class");
+
+            content += L"class " + className + L" : public " + baseClassName + inheritClass + L"\r\n";
             content += L"{\r\n";
             // generate properties
             for (std::shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {

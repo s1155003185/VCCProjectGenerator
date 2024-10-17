@@ -242,7 +242,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritClass)
         "#pragma once\r\n"
         "\r\n"
         "//@@Inherit{ \"Class\": \"GitLog\" }"
-        "enum class VPGGitLog\r\n"
+        "enum class VPGGitLogProperty\r\n"
         "{\r\n"
         "    EnumA, // GETSET(std::wstring, EnumA, L\"\") @@Inherit \r\n"
         "    EnumB, // MAP(int, std::wstring, EnumB) @@Inhert \r\n"
@@ -262,29 +262,29 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritClass)
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
 
-    std::wstring content = ReadFile(this->GetFilePathHpp());
-    std::wstring exptectedResult = L""
-        "#pragma once\r\n"
+    EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
+        L"#pragma once\r\n"
         "\r\n"
         "#include <string>\r\n"
         "\r\n"
         "#include \"base_object.hpp\"\r\n"
         "#include \"class_macro.hpp\"\r\n"
-
+        "#include \"git_service.hpp\"\r\n"
         "#include \"object_type.hpp\"\r\n"
         "\r\n"
         "using namespace vcc;\r\n"
         "\r\n"
-        "class VPGObject : public BaseObject<VPGObject>\r\n"
+        "class VPGGitLog : public GitLog\r\n"
         "{\r\n"
-        "    GETSET(std::wstring, EnumA, L\"\")\r\n"
-        "    MAP(int, std::wstring, EnumB)\r\n"
+        "    GETSET(std::wstring, EnumC, L\"\")\r\n"
         "\r\n"
         "    public:\r\n"
-        "        VPGObject() : BaseObject(ObjectType::Object) {}\r\n"
-        "        virtual ~VPGObject() {}\r\n"
-        "};\r\n";
-    EXPECT_EQ(content, exptectedResult);
+        "        VPGGitLog() : GitLog()\r\n"
+        "        {\r\n"
+        "            _ObjectType = ObjectType::GitLog;\r\n"
+        "        }\r\n"
+        "        virtual ~VPGGitLog() {}\r\n"
+        "};\r\n");
 }
 
 TEST_F(VPGObjectFileGenerationServiceTest, Json)
