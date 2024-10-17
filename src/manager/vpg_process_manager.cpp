@@ -90,8 +90,10 @@ void VPGProcessManager::VerifyLocalResponse()
             LogService::LogInfo(this->GetLogConfig().get(), L"", localResponseDirectoryProject + L" not Exists.");
         }
         if (isNeedToCloneGitResponse) {
-            LogService::LogInfo(this->GetLogConfig().get(), L"", L"Remove current response.");
-            RemoveDirectory(localResponseDirectoryProject);
+            if (IsDirectoryExists(localResponseDirectoryProject)) {
+                LogService::LogInfo(this->GetLogConfig().get(), L"", L"Remove current response.");
+                RemoveDirectory(localResponseDirectoryProject);
+            }
             
             LogService::LogInfo(this->GetLogConfig().get(), L"", L"Clone from " + gitUrl);
             GitCloneOption cloneOption;
