@@ -16,8 +16,8 @@ namespace vcc
         
     protected:
         BaseForm() = default;
-        BaseForm(std::shared_ptr<LogConfig> logProperty, ObjectType type)
-            : BaseObject<Derived>(type), _LogConfig(logProperty) {}
+        BaseForm(std::shared_ptr<LogConfig> logConfig, ObjectType type)
+            : BaseObject<Derived>(type), _LogConfig(logConfig) {}
         virtual ~BaseForm() = default;
 
     public:

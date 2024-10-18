@@ -185,10 +185,10 @@ std::wstring VPGPropertyAccessorGenerationService::GetIncludeFile(const std::map
     return L"";
 }
 
-void VPGPropertyAccessorGenerationService::GenerateHpp(const LogConfig *logProperty, const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+void VPGPropertyAccessorGenerationService::GenerateHpp(const LogConfig *logConfig, const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor hpp file: " + filePathHpp);
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor hpp file: " + filePathHpp);
 
         std::wstring result = L"#pragma once\r\n\r\n";
 
@@ -222,7 +222,7 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const LogConfig *logPrope
 
                 // property accessor not support set
                 if (IsStartWith(property->GetMacro(), L"SET")) {
-                    LogService::LogWarning(logProperty, L"Property Accessor Generation Service", L"Property Accessor not support SET: class " + enumClass->GetName() + L": " + property->GetMacro());
+                    LogService::LogWarning(logConfig, L"Property Accessor Generation Service", L"Property Accessor not support SET: class " + enumClass->GetName() + L": " + property->GetMacro());
                     continue;
                 }
                 
@@ -266,7 +266,7 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const LogConfig *logPrope
         }
 
         WriteFile(filePathHpp, result, true);
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor hpp completed.");
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor hpp completed.");
     CATCH
 }
 
@@ -902,11 +902,11 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
     CATCH
 }
 
-void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logProperty, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
+void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfig, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
             const std::wstring &filePathCpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor cpp file: " + filePathCpp);
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor cpp file: " + filePathCpp);
 
         std::set<std::wstring> systemIncludeFiles;
         std::set<std::wstring> projectIncludeFiles;
@@ -1075,13 +1075,13 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logPrope
         }
         if (count > 0) {
             WriteFile(filePathCpp, result, true);
-            LogService::LogInfo(logProperty, LOG_ID, L"Generate property accessor cpp completed.");
+            LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor cpp completed.");
         } else {
             if (IsFileExists(filePathCpp)) {
                 RemoveFile(filePathCpp);
-                LogService::LogInfo(logProperty, LOG_ID, L"Removed property accessor cpp as no properties are acceesable.");
+                LogService::LogInfo(logConfig, LOG_ID, L"Removed property accessor cpp as no properties are acceesable.");
             } else
-                LogService::LogInfo(logProperty, LOG_ID, L"No property accessor cpp need to be generated.");
+                LogService::LogInfo(logConfig, LOG_ID, L"No property accessor cpp need to be generated.");
         }
     CATCH
 }

@@ -13,10 +13,10 @@ using namespace vcc;
 
 #define LOG_ID L"Object Type File Generation"
 
-void VPGObjectTypeFileGenerationService::Generate(const LogConfig *logProperty, const std::wstring &filePathHpp, const std::set<std::wstring> &propertyTypes)
+void VPGObjectTypeFileGenerationService::Generate(const LogConfig *logConfig, const std::wstring &filePathHpp, const std::set<std::wstring> &propertyTypes)
 {
     TRY
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate object type file: " + filePathHpp);
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate object type file: " + filePathHpp);
 
         std::wstring customContent = L"";
         if (IsFileExists(filePathHpp)) {
@@ -48,6 +48,6 @@ void VPGObjectTypeFileGenerationService::Generate(const LogConfig *logProperty, 
                 + INDENT + L"// </vcc:custom>\r\n";
         content += L"};\r\n";
         WriteFile(filePathHpp, content, true);
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate object type file completed.");
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate object type file completed.");
     CATCH
 }

@@ -24,7 +24,7 @@ namespace vcc
             ~ProcessService() {}
 
             static std::vector<std::string> ParseCMDLinux(const std::string &cmd);
-            static std::wstring Execute(const LogConfig *logProperty, const std::wstring &id, const std::wstring &command);
-            static std::wstring Execute(const LogConfig *logProperty, const std::wstring &id, const std::wstring &workspace, const std::wstring &command);
+            static std::wstring Execute(const LogConfig *logConfig, const std::wstring &id, const std::wstring &command);
+            static std::wstring Execute(const LogConfig *logConfig, const std::wstring &id, const std::wstring &workspace, const std::wstring &command);
     };
 }

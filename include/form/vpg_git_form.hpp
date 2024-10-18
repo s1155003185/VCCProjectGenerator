@@ -22,7 +22,7 @@ class VPGGitForm : public BaseForm<VPGGitForm>
 {
     GETSET_SPTR_NULL(VPGGitLog, Log);
     public:
-        VPGGitForm(std::shared_ptr<LogConfig> logProperty) : BaseForm(logProperty, ObjectType::GitForm) {}
+        VPGGitForm(std::shared_ptr<LogConfig> logConfig) : BaseForm(logConfig, ObjectType::GitForm) {}
         virtual ~VPGGitForm() {}
         
         bool IsClosable() const override;

@@ -36,13 +36,13 @@ namespace vcc
         GETSET(bool, IsLogSQLResult, false);
     public:
         LogConfig() {}
-        LogConfig(const LogConfigInitialType &logPropertyType, const std::wstring &filePath = L"") {
-            Init(logPropertyType, filePath);
+        LogConfig(const LogConfigInitialType &logConfigType, const std::wstring &filePath = L"") {
+            Init(logConfigType, filePath);
         }
         virtual ~LogConfig() {}
 
-        void Init(const LogConfigInitialType &logPropertyType, const std::wstring &filePath = L"") const {
-            switch (logPropertyType)
+        void Init(const LogConfigInitialType &logConfigType, const std::wstring &filePath = L"") const {
+            switch (logConfigType)
             {
             case LogConfigInitialType::None:
                 this->SetIsConsoleLog(false);

@@ -11,8 +11,8 @@ using namespace vcc;
 
 TEST(ThreadServiceTest, Join)
 {
-    DECLARE_SPTR(LogConfig, logProperty, LogConfigInitialType::None);
-    DECLARE_SPTR(Thread, thread, logProperty, [](const Thread* /*thread*/) {
+    DECLARE_SPTR(LogConfig, logConfig, LogConfigInitialType::None);
+    DECLARE_SPTR(Thread, thread, logConfig, [](const Thread* /*thread*/) {
         std::wcout << L"ThreadServiceTest::Join Execute!" << std::endl;
     }, [](const Thread* /*thread*/) {
         std::wcout << L"ThreadServiceTest::Join Complete!" << std::endl;
@@ -22,8 +22,8 @@ TEST(ThreadServiceTest, Join)
 
 TEST(ThreadServiceTest, Detach)
 {
-    DECLARE_SPTR(LogConfig, logProperty, LogConfigInitialType::None);
-    DECLARE_SPTR(Thread, thread, logProperty, [](const Thread* /*thread*/) {
+    DECLARE_SPTR(LogConfig, logConfig, LogConfigInitialType::None);
+    DECLARE_SPTR(Thread, thread, logConfig, [](const Thread* /*thread*/) {
         std::wcout << L"ThreadServiceTest::Detach Execute!" << std::endl;
     }, [](const Thread* /*thread*/) {
         std::wcout << L"ThreadServiceTest::Detach Complete!" << std::endl;

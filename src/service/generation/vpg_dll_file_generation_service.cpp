@@ -14,14 +14,14 @@ using namespace vcc;
 
 #define LOG_ID L"Dll File Generation"
 
-void VPGDllFileGenerationService::GenerateHpp(const LogConfig *logProperty, const std::wstring &filePathHpp, const VPGDllFileGenerationServiceOption *option)
+void VPGDllFileGenerationService::GenerateHpp(const LogConfig *logConfig, const std::wstring &filePathHpp, const VPGDllFileGenerationServiceOption *option)
 {
     TRY
         assert(option != nullptr);
         if (!IsFileExists(filePathHpp))
             return;
         
-        LogService::LogInfo(logProperty, LOG_ID, L"Modify DllFunctions.hpp file: " + filePathHpp);
+        LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file: " + filePathHpp);
 
         // header
         std::wstring content = L"";
@@ -63,18 +63,18 @@ void VPGDllFileGenerationService::GenerateHpp(const LogConfig *logProperty, cons
         }
 
         WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathHpp), L"vcc:dllInterface", content, L"//"), true);
-        LogService::LogInfo(logProperty, LOG_ID, L"Modify DllFunctions.hpp file completed.");
+        LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file completed.");
     CATCH
 }
 
-void VPGDllFileGenerationService::GenerateCpp(const LogConfig *logProperty, const std::wstring &filePathCpp, const VPGDllFileGenerationServiceOption *option)
+void VPGDllFileGenerationService::GenerateCpp(const LogConfig *logConfig, const std::wstring &filePathCpp, const VPGDllFileGenerationServiceOption *option)
 {
     TRY
         assert(option != nullptr);
         if (!IsFileExists(filePathCpp))
             return;
 
-        LogService::LogInfo(logProperty, LOG_ID, L"Modify DllFunctions.cpp file: " + filePathCpp);
+        LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp file: " + filePathCpp);
         // header
         std::wstring content = L"";
         std::set<std::wstring> customIncludeFiles;
@@ -117,6 +117,6 @@ void VPGDllFileGenerationService::GenerateCpp(const LogConfig *logProperty, cons
         }
         WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathCpp), L"vcc:dllInterface", content, L"//"), true);
 
-        LogService::LogInfo(logProperty, LOG_ID, L"Modify DllFunctions.cpp completed.");
+        LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp completed.");
     CATCH
 }

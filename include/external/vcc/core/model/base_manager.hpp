@@ -19,8 +19,8 @@ namespace vcc
         
     protected:
         BaseManager() = default;
-        BaseManager(std::shared_ptr<LogConfig> logProperty) { this->_LogConfig = logProperty; }
-        BaseManager(std::shared_ptr<LogConfig> logProperty, ManagerType type) : BaseManager(logProperty) { this->_Type = type; }
+        BaseManager(std::shared_ptr<LogConfig> logConfig) { this->_LogConfig = logConfig; }
+        BaseManager(std::shared_ptr<LogConfig> logConfig, ManagerType type) : BaseManager(logConfig) { this->_Type = type; }
         virtual ~BaseManager() {}
     };
 }

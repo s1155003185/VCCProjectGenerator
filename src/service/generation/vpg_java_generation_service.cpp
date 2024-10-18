@@ -333,7 +333,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
     return result;
 }
 
-void VPGJavaGenerationService::GenerateJavaBridge(const LogConfig *logProperty, const std::wstring &targetWorkspace, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option)
+void VPGJavaGenerationService::GenerateJavaBridge(const LogConfig *logConfig, const std::wstring &targetWorkspace, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option)
 {
     TRY
         assert(option != nullptr);
@@ -350,9 +350,9 @@ void VPGJavaGenerationService::GenerateJavaBridge(const LogConfig *logProperty, 
         std::wstring javaFileName = filePrefix + JAVA_BRIDGE_FILE_NAME;
         std::wstring workspace = IsAbsolutePath(javaOption->GetWorkspace()) ? javaOption->GetWorkspace() : ConcatPaths({ targetWorkspace, javaOption->GetWorkspace() });
         std::wstring filePath = ConcatPaths({ workspace, javaOption->GetDllBridgeDirectory(), javaFileName });
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Bridge: " + filePath);
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Bridge: " + filePath);
         WriteFile(filePath, VPGJavaGenerationService::GenerateJavaBridgeContent(ReadFile(dllInterfacehppFilePath), option), true);
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Bridge completed.");
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Bridge completed.");
     CATCH
 }
 
@@ -898,7 +898,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
     return result;
 }
 
-void VPGJavaGenerationService::GenerateEnum(const LogConfig *logProperty, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass, const VPGGenerationOption *option, const VPGGenerationOptionExport *javaOption)
+void VPGJavaGenerationService::GenerateEnum(const LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass, const VPGGenerationOption *option, const VPGGenerationOptionExport *javaOption)
 {
     TRY
         assert(option != nullptr);
@@ -909,13 +909,13 @@ void VPGJavaGenerationService::GenerateEnum(const LogConfig *logProperty, const 
         std::wstring tmpFilePath = GetParentPath(filePath);
         tmpFilePath = ConcatPaths({ tmpFilePath, GetFileName(filePath) });
 
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Enum: " + tmpFilePath);
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Enum: " + tmpFilePath);
         WriteFile(tmpFilePath, VPGJavaGenerationService::GenerateEnumContent(option->GetProjectPrefix(), enumClass, cppMiddlePath, javaOption), true);
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Enum completed.");
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Enum completed.");
     CATCH
 }
 
-void VPGJavaGenerationService::GenerateObject(const LogConfig *logProperty, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass,
+void VPGJavaGenerationService::GenerateObject(const LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass,
     const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMap,
     const VPGGenerationOption *option, const VPGGenerationOptionExport *javaOption)
 {
@@ -943,8 +943,8 @@ void VPGJavaGenerationService::GenerateObject(const LogConfig *logProperty, cons
                 importFileMap.insert(std::make_pair(tmpObjectName, GetJavaPactkage(javaOption->GetObjectDirectory(), relativePath.second, L"Object Directory")));
             }
         }
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Class: " + tmpFilePath);
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class: " + tmpFilePath);
         WriteFile(tmpFilePath, VPGJavaGenerationService::GenerateObjectContent(option->GetProjectPrefix(), enumClass, cppMiddlePath, importFileMap, javaOption), true);
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate Java Class completed.");
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class completed.");
     CATCH
 }

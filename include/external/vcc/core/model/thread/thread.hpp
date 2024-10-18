@@ -34,18 +34,18 @@ namespace vcc
             Thread() = default;
 
         public:
-            Thread(std::shared_ptr<LogConfig> logProperty, std::function<void(const Thread *)> action)
-                : _LogConfig(logProperty), _Action(action) {}
-            Thread(std::shared_ptr<LogConfig> logProperty, std::function<void(const Thread *)> action, std::function<void(const Thread *)> callback)
-                : _LogConfig(logProperty), _Action(action), _Callback(callback) {}
-            Thread(std::shared_ptr<LogConfig> logProperty, const std::wstring &id, const std::wstring &messageStart, const std::wstring &messageComplete, std::function<void(const Thread *)> action)
-                : _LogConfig(logProperty), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _Action(action) {}
-            Thread(std::shared_ptr<LogConfig> logProperty, const std::wstring &id, const std::wstring &messageStart, const std::wstring &messageComplete, std::function<void(const Thread *)> action, std::function<void(const Thread *)> callback)
-                : _LogConfig(logProperty), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _Action(action), _Callback(callback) {}
-            Thread(std::shared_ptr<LogConfig> logProperty, const std::wstring &id, const std::wstring &messageStart, const std::wstring &messageComplete, const std::wstring &debugMessage, std::function<void(const Thread *)> action)
-                : _LogConfig(logProperty), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _DebugMessage(debugMessage), _Action(action) {}
-            Thread(std::shared_ptr<LogConfig> logProperty, const std::wstring &id, const std::wstring &messageStart, const std::wstring &messageComplete, const std::wstring &debugMessage, std::function<void(const Thread *)> action, std::function<void(const Thread *)> callback)
-                : _LogConfig(logProperty), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _DebugMessage(debugMessage), _Action(action), _Callback(callback) {}
+            Thread(std::shared_ptr<LogConfig> logConfig, std::function<void(const Thread *)> action)
+                : _LogConfig(logConfig), _Action(action) {}
+            Thread(std::shared_ptr<LogConfig> logConfig, std::function<void(const Thread *)> action, std::function<void(const Thread *)> callback)
+                : _LogConfig(logConfig), _Action(action), _Callback(callback) {}
+            Thread(std::shared_ptr<LogConfig> logConfig, const std::wstring &id, const std::wstring &messageStart, const std::wstring &messageComplete, std::function<void(const Thread *)> action)
+                : _LogConfig(logConfig), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _Action(action) {}
+            Thread(std::shared_ptr<LogConfig> logConfig, const std::wstring &id, const std::wstring &messageStart, const std::wstring &messageComplete, std::function<void(const Thread *)> action, std::function<void(const Thread *)> callback)
+                : _LogConfig(logConfig), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _Action(action), _Callback(callback) {}
+            Thread(std::shared_ptr<LogConfig> logConfig, const std::wstring &id, const std::wstring &messageStart, const std::wstring &messageComplete, const std::wstring &debugMessage, std::function<void(const Thread *)> action)
+                : _LogConfig(logConfig), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _DebugMessage(debugMessage), _Action(action) {}
+            Thread(std::shared_ptr<LogConfig> logConfig, const std::wstring &id, const std::wstring &messageStart, const std::wstring &messageComplete, const std::wstring &debugMessage, std::function<void(const Thread *)> action, std::function<void(const Thread *)> callback)
+                : _LogConfig(logConfig), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _DebugMessage(debugMessage), _Action(action), _Callback(callback) {}
             virtual ~Thread() {}
 
             const ThreadManager *GetManager() const;

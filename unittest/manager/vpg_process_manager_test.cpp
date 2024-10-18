@@ -23,9 +23,9 @@ class VPGProcessManagerTest : public testing::Test
 
         void SetUp() override
         {
-            //DECLARE_SPTR(LogConfig, logProperty, LogConfigType::None);
-            //logProperty->SetIsConsoleLog(true);
-            //this->_Manager->SetLogConfig(logProperty);
+            //DECLARE_SPTR(LogConfig, logConfig, LogConfigType::None);
+            //logConfig->SetIsConsoleLog(true);
+            //this->_Manager->SetLogConfig(logConfig);
         }
 
         void TearDown() override

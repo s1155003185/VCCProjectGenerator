@@ -11,7 +11,7 @@ using namespace vcc;
 class VPGCppGenerationManager : public VPGBaseGenerationManager<VPGCppGenerationManager>
 {
     public:
-        VPGCppGenerationManager(std::shared_ptr<LogConfig> logProperty, std::wstring workspace, std::shared_ptr<VPGGenerationOption> option) : VPGBaseGenerationManager(logProperty, workspace, option) {}
+        VPGCppGenerationManager(std::shared_ptr<LogConfig> logConfig, std::wstring workspace, std::shared_ptr<VPGGenerationOption> option) : VPGBaseGenerationManager(logConfig, workspace, option) {}
         virtual ~VPGCppGenerationManager() {}
 
         virtual void Add() const override;

@@ -259,11 +259,11 @@ std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const st
     return L"";
 }
 
-void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logProperty, const std::wstring &classPrefix, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
+void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig, const std::wstring &classPrefix, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
     const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate object class file: " + filePathHpp);
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file: " + filePathHpp);
 
         // TODO: need to enable to check all systemn function
         // need to skip all code in command
@@ -471,11 +471,11 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logProperty, c
             content += L"};\r\n";
         }
         WriteFile(filePathHpp, content, true);
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate object class file completed.");
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file completed.");
     CATCH
 }
 
-void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logProperty,
+void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
             const std::map<std::wstring, std::wstring> &classPathMapping, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
             const std::wstring &filePathCpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
@@ -507,7 +507,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logProperty,
         customIncludeFiles.insert(L"number_helper.hpp");
         customIncludeFiles.insert(L"string_helper.hpp");
         
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate object class file: " + filePathCpp);
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file: " + filePathCpp);
         std::wstring content = L"#include \"" + includeFileName + L"\"\r\n";
 
         for (auto const &enumClass : enumClassList) {
@@ -714,6 +714,6 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logProperty,
         }
 
         WriteFile(filePathCpp, content, true);
-        LogService::LogInfo(logProperty, LOG_ID, L"Generate object class file completed.");
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file completed.");
     CATCH
 }

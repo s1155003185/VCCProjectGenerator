@@ -35,7 +35,7 @@ class VPGBaseGenerationManager : public BaseManager<Derived>, public IVPGGenerat
     protected:
         void ValidateOption() const;
     public:
-        VPGBaseGenerationManager(std::shared_ptr<LogConfig> logProperty, std::wstring &workspace, std::shared_ptr<VPGGenerationOption> option) : BaseManager<Derived>(logProperty)
+        VPGBaseGenerationManager(std::shared_ptr<LogConfig> logConfig, std::wstring &workspace, std::shared_ptr<VPGGenerationOption> option) : BaseManager<Derived>(logConfig)
         { 
             this->_Workspace = workspace;
             assert(option != nullptr);
@@ -51,7 +51,7 @@ class VPGBaseGenerationManager : public BaseManager<Derived>, public IVPGGenerat
         std::wstring AdjustMakefile(const std::wstring &fileContent) const;
         std::wstring AdjustVSCodeLaunchJson(const std::wstring &fileContent) const;
 
-        void SyncWorkspace(const LogConfig *logProperty, const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
+        void SyncWorkspace(const LogConfig *logConfig, const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
             const std::vector<std::wstring> &includeFileFilters, const std::vector<std::wstring> &excludeFileFilters) const;
         
         virtual void Add() const override = 0;
@@ -176,7 +176,7 @@ void VPGBaseGenerationManager<Derived>::CreateBasicProject() const
 }
 
 template <typename Derived>
-void VPGBaseGenerationManager<Derived>::SyncWorkspace(const LogConfig *logProperty, const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
+void VPGBaseGenerationManager<Derived>::SyncWorkspace(const LogConfig *logConfig, const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
             const std::vector<std::wstring> &includeFileFilters, const std::vector<std::wstring> &excludeFileFilters) const
 {
     TRY
@@ -205,10 +205,10 @@ void VPGBaseGenerationManager<Derived>::SyncWorkspace(const LogConfig *logProper
 
             if (IsFile(targetPath)) {
                 remove(PATH(targetPath));
-                LogService::LogInfo(logProperty, L"", L"Removed Directory: " + targetPath);
+                LogService::LogInfo(logConfig, L"", L"Removed Directory: " + targetPath);
             } else {
                 std::filesystem::remove_all(PATH(targetPath));
-                LogService::LogInfo(logProperty, L"", L"Removed File: " + targetPath);
+                LogService::LogInfo(logConfig, L"", L"Removed File: " + targetPath);
             }
         }
 
@@ -234,10 +234,10 @@ void VPGBaseGenerationManager<Derived>::SyncWorkspace(const LogConfig *logProper
                 continue;
 
             if (IsFile(sourcePath)) {
-                VPGFileSyncService::CopyFile(logProperty, sourcePath, targetPath);
+                VPGFileSyncService::CopyFile(logConfig, sourcePath, targetPath);
             } else {
                 CreateDirectory(targetPath);
-                LogService::LogInfo(logProperty, L"", L"Added Directory: " + targetPath);
+                LogService::LogInfo(logConfig, L"", L"Added Directory: " + targetPath);
             }
         }
 
@@ -254,7 +254,7 @@ void VPGBaseGenerationManager<Derived>::SyncWorkspace(const LogConfig *logProper
                 continue;
             
             // modify file
-            VPGFileSyncService::CopyFile(logProperty, sourcePath, targetPath);
+            VPGFileSyncService::CopyFile(logConfig, sourcePath, targetPath);
         }
     CATCH
 }

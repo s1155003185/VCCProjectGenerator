@@ -144,9 +144,9 @@ namespace vcc
             return results;
         }
 
-        std::wstring ProcessService::Execute(const LogConfig *logProperty, const std::wstring &id, const std::wstring &command)
+        std::wstring ProcessService::Execute(const LogConfig *logConfig, const std::wstring &id, const std::wstring &command)
         {
-            LogService::LogProcess(logProperty, id, command);
+            LogService::LogProcess(logConfig, id, command);
 
             std::wstring result = L"";
             try {
@@ -154,12 +154,12 @@ namespace vcc
             } catch (std::exception &e) {
                 THROW_EXCEPTION(e);
             }
-            LogService::LogProcessResult(logProperty, id, result);
+            LogService::LogProcessResult(logConfig, id, result);
             Trim(result);
             return result;
         }
 
-        std::wstring ProcessService::Execute(const LogConfig *logProperty, const std::wstring &id, const std::wstring &workspace, const std::wstring &command)
+        std::wstring ProcessService::Execute(const LogConfig *logConfig, const std::wstring &id, const std::wstring &workspace, const std::wstring &command)
         {
             std::wstring currentDirectory = L"";
             std::wstring result = L"";
@@ -174,7 +174,7 @@ namespace vcc
                 return result;
             }
             try {
-                result = ProcessService::Execute(logProperty, id, command);
+                result = ProcessService::Execute(logConfig, id, command);
             } catch (std::exception &e) {
                 if (!IsBlank(workspace))
                     std::filesystem::current_path(currentDirectory);

@@ -104,7 +104,7 @@ bool VPGFileSyncService::IsTagReserve(const Xml *child)
     return false;
 }
 
-void VPGFileSyncService::CopyFile(const LogConfig *logProperty, const std::wstring &sourcePath, const std::wstring &destPath)
+void VPGFileSyncService::CopyFile(const LogConfig *logConfig, const std::wstring &sourcePath, const std::wstring &destPath)
 {
     TRY
         if (!IsFileExists(sourcePath))
@@ -114,10 +114,10 @@ void VPGFileSyncService::CopyFile(const LogConfig *logProperty, const std::wstri
             std::wstring commandDelimiter = GetFileName(sourcePath) == L"Makefile" ? L"#" : L"//";
             std::wstring fileContent = VPGFileSyncService::SyncFileContent(ReadFile(sourcePath), ReadFile(destPath), VPGFileContentSyncMode::Demand, commandDelimiter);
             WriteFile(destPath, fileContent, true);
-            LogService::LogInfo(logProperty, L"", L"Updated File: " + destPath);
+            LogService::LogInfo(logConfig, L"", L"Updated File: " + destPath);
         } else {
             std::filesystem::copy_file(PATH(sourcePath), PATH(destPath), std::filesystem::copy_options::overwrite_existing);
-            LogService::LogInfo(logProperty, L"", L"Added File: " + destPath);
+            LogService::LogInfo(logConfig, L"", L"Added File: " + destPath);
         }
     CATCH
 }
