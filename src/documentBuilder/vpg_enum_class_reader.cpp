@@ -212,6 +212,8 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::ReadWrite;
             else if (Equal(attribute, attributeToken + L"NoAccess", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::NoAccess;
+            else if (Equal(attribute, attributeToken + L"Inherit", true))
+                property->SetIsInherit(true);
         }
     CATCH
 }

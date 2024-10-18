@@ -305,7 +305,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logProperty, c
             
             for (std::shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
                 // handle enum without macro case
-                if (property->GetMacro().empty() || IsContain(property->GetCommand(), L"@@Inherit", 0, true))
+                if (property->GetMacro().empty() || property->GetIsInherit())
                     continue;
 
                 std::wstring type = property->GetType1();
@@ -404,21 +404,36 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logProperty, c
             std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - propertyClassNameSuffix.length());
             std::wstring baseClassName = L"BaseObject<" + className + L">";
             std::shared_ptr<Json> inheritAttributes = GetJsonAttributes(enumClass->GetCommand(), L"@@Inherit");
-            if (inheritAttributes != nullptr)
+            if (inheritAttributes != nullptr) {
                 baseClassName = inheritAttributes->GetString(L"Class");
+                if (IsBlank(baseClassName)) {
+                    std::wstring errMsg = L"Enum Class " + enumClass->GetName() + L" has attribute @@Inherit but missing Attribute \"Class\"";
+                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, errMsg);
+                }
+            }   
+            std::wstring baseClassNameWithoutQuote = baseClassName;
+            if (IsContain(baseClassNameWithoutQuote, L"<"))
+                baseClassNameWithoutQuote = baseClassNameWithoutQuote.substr(0, Find(baseClassNameWithoutQuote, L"<"));
 
             content += L"class " + className + L" : public " + baseClassName + inheritClass + L"\r\n";
             content += L"{\r\n";
             // generate properties
             for (std::shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
                 // handle enum without macro case
-                if (property->GetMacro().empty())
+                // Not generate inherited properties
+                if (property->GetMacro().empty() || property->GetIsInherit())
                     continue;
                 content += INDENT + property->GetMacro() + L"\r\n";
             }
             content += L"\r\n";
             content += INDENT + L"public:\r\n";
-            content += INDENT + INDENT + className + L"() : BaseObject(ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L") {}\r\n";
+            if (inheritAttributes != nullptr) {
+                content += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"()\r\n"
+                        + INDENT + INDENT + L"{\r\n"
+                        + INDENT + INDENT + INDENT + L"_ObjectType = ObjectType::" +  className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L";\r\n"
+                        + INDENT + INDENT + L"}\r\n";
+            } else
+                content += INDENT + INDENT + className + L"() : BaseObject(ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L") {}\r\n";
             content += INDENT + INDENT + L"virtual ~" + className + L"() {}\r\n";
 
             bool isPtrExists = false;

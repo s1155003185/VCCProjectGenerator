@@ -30,6 +30,7 @@ class VPGEnumClassProperty : public BaseObject<VPGEnumClassProperty>
     GETSET(std::wstring, Command, L"");
 
     GETSET(VPGEnumClassPropertyAccessMode, AccessMode, VPGEnumClassPropertyAccessMode::ReadWrite);
+    GETSET(bool, IsInherit, false);
 
     public:
         VPGEnumClassProperty() : BaseObject() {}
