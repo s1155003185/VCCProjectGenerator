@@ -3,12 +3,11 @@
 
 enum class ObjectType
 {
-    NA,
-    GenerationOption,
-    GenerationOptionExport
+    NA
+    , GenerationOption
+    , GenerationOptionExport
     // <vcc:custom sync="SKIP" gen="SKIP">
-    ,
-    GitForm,
-    GitLog
+    , GitForm
+    , GitLog
     // </vcc:custom>
 };

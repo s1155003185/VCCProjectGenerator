@@ -37,9 +37,9 @@ void VPGObjectTypeFileGenerationService::Generate(const LogConfig *logConfig, co
             "\r\n"
             "enum class ObjectType\r\n"
             "{\r\n"
-            + INDENT + L"NA" + (!propertyTypes.empty() ? L"," : L"") + L"\r\n";
+            + INDENT + L"NA\r\n";
         if (!propertyTypes.empty())
-            content += INDENT + Concat(propertyTypes, L",\r\n" + INDENT) + L"\r\n";
+            content += INDENT + L", " + Concat(propertyTypes, L"\r\n" + INDENT + L", ") + L"\r\n";
         
         if (!IsBlank(customContent))
             content += INDENT + customContent + L"\r\n";

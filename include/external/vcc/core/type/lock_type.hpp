@@ -4,9 +4,9 @@ namespace vcc
 {
     enum class LockType
     {
-        NoLock,
-        ReadLock,
-        WriteLock,
-        ReadWriteLock
+        NoLock
+        , ReadLock
+        , WriteLock
+        , ReadWriteLock
     };
 };

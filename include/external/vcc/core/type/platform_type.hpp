@@ -4,13 +4,13 @@ namespace vcc
 {
     enum class PlatformType
     {
-        NA,
-        All,
-        Android,
-        IOs,
-        IPadOs,
-        Linux,
-        MacOs,
-        Window
+        NA
+        , All
+        , Android
+        , IOs
+        , IPadOs
+        , Linux
+        , MacOs
+        , Window
     };
 }

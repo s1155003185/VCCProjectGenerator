@@ -2,13 +2,13 @@
 
 enum class VPGProjectType
 {
-    VccModule, // by Default
-    VccComplex,
-    VccDll,
-    VccExe,
-    CppComplex,
-    CppDll,
-    CppExe
-    // JAVA,
+    VccModule // by Default
+    , VccComplex
+    , VccDll
+    , VccExe
+    , CppComplex
+    , CppDll
+    , CppExe
+    // , JAVA
     // SWIFT
 };
