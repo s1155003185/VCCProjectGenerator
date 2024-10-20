@@ -361,6 +361,14 @@ std::wstring VPGGenerationOptionPropertyAccessor::_ReadString(const int64_t &obj
             return obj->GetManagerTypeDirectory();
         case VPGGenerationOptionProperty::ObjectTypeDirectory:
             return obj->GetObjectTypeDirectory();
+        case VPGGenerationOptionProperty::ApplicationDirectoryHpp:
+            return obj->GetApplicationDirectoryHpp();
+        case VPGGenerationOptionProperty::ApplicationDirectoryCpp:
+            return obj->GetApplicationDirectoryCpp();
+        case VPGGenerationOptionProperty::FormDirectoryHpp:
+            return obj->GetFormDirectoryHpp();
+        case VPGGenerationOptionProperty::FormDirectoryCpp:
+            return obj->GetFormDirectoryCpp();
         case VPGGenerationOptionProperty::ObjectDirectoryHpp:
             return obj->GetObjectDirectoryHpp();
         case VPGGenerationOptionProperty::ObjectDirectoryCpp:
@@ -437,6 +445,18 @@ void VPGGenerationOptionPropertyAccessor::_WriteString(const int64_t &objectProp
             break;
         case VPGGenerationOptionProperty::ObjectTypeDirectory:
             obj->SetObjectTypeDirectory(value);
+            break;
+        case VPGGenerationOptionProperty::ApplicationDirectoryHpp:
+            obj->SetApplicationDirectoryHpp(value);
+            break;
+        case VPGGenerationOptionProperty::ApplicationDirectoryCpp:
+            obj->SetApplicationDirectoryCpp(value);
+            break;
+        case VPGGenerationOptionProperty::FormDirectoryHpp:
+            obj->SetFormDirectoryHpp(value);
+            break;
+        case VPGGenerationOptionProperty::FormDirectoryCpp:
+            obj->SetFormDirectoryCpp(value);
             break;
         case VPGGenerationOptionProperty::ObjectDirectoryHpp:
             obj->SetObjectDirectoryHpp(value);

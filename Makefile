@@ -46,7 +46,7 @@
 #------------------------------------------------------------------------------------------------------#
 #------------------------------------------ Customize Begin  ------------------------------------------#
 #------------------------------------------------------------------------------------------------------#
-# <vcc:name sync="ALERT">
+# <vcc:name sync="ALERT" gen="ALERT">
 #----------------------------------#
 #---------- Project Name ----------#
 #----------------------------------#
@@ -55,7 +55,7 @@ PROJ_NAME_DLL := libvpg
 PROJ_NAME_EXE := vpg
 IS_EXCLUDE_UNITTEST := N
 # </vcc:name>
-# <vcc:export sync="ALERT">
+# <vcc:export sync="ALERT" gen="ALERT">
 #----------------------------------#
 #---------- Export ----------------#
 #----------------------------------#
@@ -69,7 +69,7 @@ EXPORT_EXE_DIR :=
 EXPORT_EXTERNAL_LIB :=  ../VCCProjectManagerBasic/src/main/resources
 endif
 # </vcc:export>
-# <vcc:property sync="ALERT">
+# <vcc:property sync="ALERT" gen="ALERT">
 #----------------------------------#
 #---------- Project Info ----------#
 #----------------------------------#

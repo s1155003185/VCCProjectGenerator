@@ -147,6 +147,40 @@ namespace vcc
 		}
 		return result;
 	}
+	
+	bool IsStartWithCaseInsensitive(const std::wstring &str, const std::wstring &prefix, const size_t &pos)
+	{
+		TRY
+		 	if (str.length() - pos < prefix.size())
+		 		return false;
+
+			std::wstring prefixLower = prefix;
+			std::wstring strLower = str;
+			ToLower(prefixLower);
+			ToLower(strLower);
+
+		 	size_t cnt = 0;
+		 	for (auto const &c : prefixLower) {
+				if (strLower[pos + cnt] != c)
+					return false;
+				cnt++;
+			}
+			return true;
+		CATCH
+		return false;
+	}
+	
+	bool IsStartWithCaseInsensitive(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &pos)
+	{
+		bool result = false;
+		for (auto const &prefix : prefixes) {
+			if (IsStartWithCaseInsensitive(str, prefix, pos)) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
 
 	bool IsStartWithTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &pos)
 	{

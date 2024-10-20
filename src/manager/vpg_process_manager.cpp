@@ -197,7 +197,8 @@ void VPGProcessManager::Generate()
     TRY
         if (!IsUpdateAvaliable())
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Only VCC Module can be updated.");
-        this->VerifyLocalResponse();
+        // No need to varify response for generate
+        // this->VerifyLocalResponse();
         GetGenerationManager()->Generate();
     CATCH
 }

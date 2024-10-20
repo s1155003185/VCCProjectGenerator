@@ -20,17 +20,37 @@ using namespace vcc;
 std::vector<std::wstring> VPGVccGenerationManager::GetUpdateList() const
 {
     std::vector<std::wstring> result;
-    // basic file
-    result.push_back(ConcatPaths({_Option->GetActionTypeDirectory(), L"action_type.hpp"}));
-    result.push_back(ConcatPaths({_Option->GetExceptionTypeDirectory(), L"exception_type.hpp"}));
-    result.push_back(ConcatPaths({_Option->GetManagerTypeDirectory(), L"manager_type.hpp"}));
-    result.push_back(ConcatPaths({_Option->GetObjectTypeDirectory(), L"object_type.hpp"}));
-    
     // VCC Core
     result.push_back(L"include/external/vcc/LICENSE");
     result.push_back(L"include/external/vcc/core/*");
     result.push_back(L"src/external/vcc/core/*");
     
+    // Need to tmp create first, then override by Generate Mode
+    // Otherwise, cannot be compiled
+    // application
+    
+    // type
+    result.push_back(ConcatPaths({_Option->GetActionTypeDirectory(), L"action_type.hpp"}));
+    result.push_back(ConcatPaths({_Option->GetExceptionTypeDirectory(), L"exception_type.hpp"}));
+    result.push_back(ConcatPaths({_Option->GetManagerTypeDirectory(), L"manager_type.hpp"}));
+    result.push_back(ConcatPaths({_Option->GetObjectTypeDirectory(), L"object_type.hpp"}));
+    
+    // application
+    if (!IsBlank(_Option->GetApplicationDirectoryHpp()))
+        result.push_back(ConcatPaths({_Option->GetApplicationDirectoryHpp(), L"application.hpp"}));
+    if (!IsBlank(_Option->GetApplicationDirectoryCpp()))
+        result.push_back(ConcatPaths({_Option->GetApplicationDirectoryCpp(), L"application.cpp"}));
+
+    // factory
+    if (!IsBlank(_Option->GetObjectFactoryDirectoryHpp()))
+        result.push_back(ConcatPaths({_Option->GetObjectFactoryDirectoryHpp(), L"object_factory.hpp"}));
+    if (!IsBlank(_Option->GetObjectFactoryDirectoryCpp()))
+        result.push_back(ConcatPaths({_Option->GetObjectFactoryDirectoryCpp(), L"object_factory.cpp"}));
+    if (!IsBlank(_Option->GetPropertyAccessorFactoryDirectoryHpp()))
+        result.push_back(ConcatPaths({_Option->GetPropertyAccessorFactoryDirectoryHpp(), L"property_accessor_factory.hpp"}));
+    if (!IsBlank(_Option->GetPropertyAccessorFactoryDirectoryCpp()))
+        result.push_back(ConcatPaths({_Option->GetPropertyAccessorFactoryDirectoryCpp(), L"property_accessor_factory.cpp"}));
+
     // plugins
     for (auto const &str : _Option->GetPlugins()) {
         result.push_back(ConcatPaths({L"include/external/", str, L"*"}));

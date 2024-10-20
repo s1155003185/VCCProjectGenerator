@@ -17,6 +17,12 @@ enum class VPGEnumClassPropertyAccessMode
     NoAccess
 };
 
+enum class VPGEnumClassType
+{
+    Object
+    , Form
+};
+
 class VPGEnumClassProperty : public BaseObject<VPGEnumClassProperty>
 {
     friend class VPGEnumClassReader;
@@ -40,10 +46,16 @@ class VPGEnumClassProperty : public BaseObject<VPGEnumClassProperty>
 class VPGEnumClass : public BaseObject<VPGEnumClass>
 {
     friend class VPGEnumClassReader;
-    GETSET(std::wstring, Namespace, L"");
-    GETSET(std::wstring, Name, L"");
-    GETSET(std::wstring, Command, L"");
-    VECTOR_SPTR(VPGEnumClassProperty, Properties);
+    GETSET(std::wstring, Namespace, L"")
+    GETSET(VPGEnumClassType, Type, VPGEnumClassType::Object)
+    GETSET(std::wstring, Name, L"")
+    GETSET(std::wstring, Command, L"")
+    VECTOR_SPTR(VPGEnumClassProperty, Properties)
+
+    GETSET(bool, IsJson, false)
+    MAP(std::wstring, std::wstring, JsonAttributes)
+    GETSET(std::wstring, InheritClass, L"")
+    MAP(std::wstring, std::wstring, InheritClassAttributes)
 
     public:
         VPGEnumClass() : BaseObject() {}

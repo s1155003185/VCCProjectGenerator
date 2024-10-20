@@ -48,6 +48,10 @@ enum class VPGGenerationOptionProperty
     ManagerTypeDirectory, // GETSET(std::wstring, ManagerTypeDirectory, L"include/type")
     ObjectTypeDirectory, // GETSET(std::wstring, ObjectTypeDirectory, L"include/type")
 
+    ApplicationDirectoryHpp, // GETSET(std::wstring, ApplicationDirectoryHpp, L"include")
+    ApplicationDirectoryCpp, // GETSET(std::wstring, ApplicationDirectoryCpp, L"src")
+    FormDirectoryHpp, // GETSET(std::wstring, FormDirectoryHpp, L"include/form")
+    FormDirectoryCpp, // GETSET(std::wstring, FormDirectoryCpp, L"src/form")
     ObjectDirectoryHpp, // GETSET(std::wstring, ObjectDirectoryHpp, L"include/model")
     ObjectDirectoryCpp, // GETSET(std::wstring, ObjectDirectoryCpp, L"src/model")
     PropertyAccessorDirectoryHpp, // GETSET(std::wstring, PropertyAccessorDirectoryHpp, L"include/propertyAccessor")

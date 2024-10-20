@@ -5,48 +5,18 @@
 
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
-#include "json.hpp"
-#include "json_builder.hpp"
 #include "log_service.hpp"
 #include "memory_macro.hpp"
 #include "set_helper.hpp"
 
 #include "vpg_enum_class.hpp"
+#include "vpg_file_sync_service.hpp"
 #include "vpg_include_path_service.hpp"
 
 using namespace vcc;
 
 #define LOG_ID L"Object File Generation"
 const std::wstring propertyClassNameSuffix = L"Property";
-
-std::shared_ptr<Json> VPGObjectFileGenerationService::GetJsonAttributes(const std::wstring &command, const std::wstring &attributeName)
-{
-    TRY
-        size_t pos = Find(command, attributeName, 0, true);
-        if (pos == std::wstring::npos)
-            return nullptr;
-        pos += attributeName.length();
-        GetNextCharPos(command, pos, true);
-        if (command[pos] == L'{') {
-            std::wstring jsonStr = GetNextQuotedString(command, pos, { L" ", L"\t", L"\n" }, { L"{", L"[", L"\"", L"'" }, { L"}", L"]", L"\"", L"'" }, { L"", L"", L"\\", L"\\" });
-            TRY
-                DECLARE_SPTR(Json, json);
-                JsonBuilder builder;
-                builder.Deserialize(jsonStr, json);
-                return json;
-            CATCH
-        }
-    CATCH
-    return nullptr;
-}
-
-bool VPGObjectFileGenerationService::IsJsonObject(const VPGEnumClass* enumClass)
-{
-    TRY
-        return IsContain(enumClass->GetCommand(), L"@@Json", 0, true);
-    CATCH
-    return false;
-}
 
 std::vector<std::wstring> VPGObjectFileGenerationService::GetObjectToJsonEnumSwitch(const std::wstring &switchVariable, const std::wstring &returnVariable,
     const std::wstring &type, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping)
@@ -259,102 +229,149 @@ std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const st
     return L"";
 }
 
-void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig, const std::wstring &classPrefix, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
-    const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
+    const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList,
+    bool &isContainForm,
+    std::set<std::wstring> &systemFileList,
+    std::set<std::wstring> &projectFileList,
+    std::set<std::wstring> &abstractClassList,
+    std::set<std::wstring> &abstractEnumClassList,
+    std::set<std::wstring> &classInCurrentFileList)
+{ 
+    // TODO: need to enable to check all systemn function
+    // need to skip all code in command
+    // Mac: all next tokens after class _LIBCPP_TEMPLATE_VIS under path /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/V1
+    // Window: C:\msys64\mingw64\include\c++\12.2.0
+
+    projectFileList.insert(L"class_macro.hpp");
+    projectFileList.insert(L"object_type.hpp");
+
+    for (auto const &enumClass : enumClassList) {
+        if (!IsEndWith(enumClass->GetName(), propertyClassNameSuffix))
+            continue;
+
+        std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - propertyClassNameSuffix.length());
+        classInCurrentFileList.insert(className);
+        // ------------------------------------------------------------------------------------------ //
+        //                               Class Level                                                  //
+        // ------------------------------------------------------------------------------------------ //
+        switch (enumClass->GetType())
+        {
+        case VPGEnumClassType::Object:
+            projectFileList.insert(L"base_object.hpp");
+            break;
+        case VPGEnumClassType::Form:
+            projectFileList.insert(L"base_form.hpp");
+            isContainForm = true;
+            break;
+        default:
+            break;
+        }
+
+        // Json
+        if (enumClass->GetIsJson()) {
+            projectFileList.insert(L"base_json_object.hpp");
+            projectFileList.insert(L"json.hpp");
+            projectFileList.insert(L"i_document.hpp");
+        }
+        if (!IsBlank(enumClass->GetInheritClass())) {
+            std::wstring inheritClass = enumClass->GetInheritClass();
+            // remove template
+            size_t pos = Find(inheritClass, L"<");
+            if (pos != std::wstring::npos) {
+                inheritClass = inheritClass.substr(0, pos);
+            }
+            projectFileList.insert(GetProjectClassIncludeFile(projectClassIncludeFiles, inheritClass));
+        }
+        
+        // ------------------------------------------------------------------------------------------ //
+        //                               Property Level                                               //
+        // ------------------------------------------------------------------------------------------ //
+        for (std::shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
+            // handle enum without macro case
+            if (property->GetMacro().empty() || property->GetIsInherit())
+                continue;
+
+            std::wstring type = property->GetType1();
+            if (std::iswupper(type[0])) {
+                if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
+
+                    std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
+                    if (!includeFile.empty())
+                        projectFileList.insert(includeFile);
+                    else
+                        abstractClassList.insert(type);
+                } else {
+                    std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
+                    if (!includeFile.empty())
+                        projectFileList.insert(includeFile);
+                    else
+                        abstractEnumClassList.insert(type);
+                }
+            } else {
+                // TODO: need to enable to check all systemn function
+                // system type
+                if (CountSubstring(type, L"string") > 0)
+                    systemFileList.insert(L"string");
+            }
+
+            type = property->GetType2();
+            if (!type.empty() && std::iswupper(type[0])) {
+                if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
+
+                    std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
+                    if (!includeFile.empty())
+                        projectFileList.insert(includeFile);
+                    else
+                        abstractClassList.insert(type);
+                } else {
+                    std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
+                    if (!includeFile.empty())
+                        projectFileList.insert(includeFile);
+                    else
+                        abstractEnumClassList.insert(type);
+                }
+            } else {
+                // only suuport string
+                // system type
+                if (CountSubstring(type, L"string") > 0)
+                    systemFileList.insert(L"string");
+            }
+        }
+    }
+}
+
+void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
+    const std::wstring &classPrefix,
+    const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
+    const std::wstring &objectFilePathHpp,
+    const std::wstring &formFilePathHpp,
+    const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
-        LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file: " + filePathHpp);
-
-        // TODO: need to enable to check all systemn function
-        // need to skip all code in command
-        // Mac: all next tokens after class _LIBCPP_TEMPLATE_VIS under path /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/V1
-        // Window: C:\msys64\mingw64\include\c++\12.2.0
-
+        if (objectFilePathHpp.empty() && formFilePathHpp.empty())
+            return;
         std::set<std::wstring> systemFileList;
         std::set<std::wstring> projectFileList;
         std::set<std::wstring> abstractClassList;
         std::set<std::wstring> abstractEnumClassList;
         std::set<std::wstring> classInCurrentFileList;
+        bool isContainForm = false;
+        GetHppIncludeFiles(projectClassIncludeFiles,
+            enumClassList,
+            isContainForm,
+            systemFileList,
+            projectFileList,
+            abstractClassList,
+            abstractEnumClassList,
+            classInCurrentFileList);
+        
+        std::wstring filePathHpp = isContainForm && !formFilePathHpp.empty() ? formFilePathHpp : objectFilePathHpp;
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file: " + filePathHpp);
 
-        projectFileList.insert(L"base_object.hpp");
-        projectFileList.insert(L"class_macro.hpp");
-        projectFileList.insert(L"object_type.hpp");
-        // generate external class
-        for (auto const &enumClass : enumClassList) {
-            if (!IsEndWith(enumClass->GetName(), propertyClassNameSuffix))
-                continue;
-            std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - propertyClassNameSuffix.length());
-            classInCurrentFileList.insert(className);
-            // Json
-            bool isJsonObject = VPGObjectFileGenerationService::IsJsonObject(enumClass.get());
-            if (isJsonObject) {
-                projectFileList.insert(L"base_json_object.hpp");
-                projectFileList.insert(L"json.hpp");
-                projectFileList.insert(L"i_document.hpp");
-            }
-            std::shared_ptr<Json> inheritAttributes = GetJsonAttributes(enumClass->GetCommand(), L"@@Inherit");
-            if (inheritAttributes != nullptr) {
-                std::wstring inheritClass = inheritAttributes->GetString(L"Class");
-                // remove template
-                size_t pos = Find(inheritClass, L"<");
-                if (pos != std::wstring::npos) {
-                    inheritClass = inheritClass.substr(0, pos);
-                }
-                projectFileList.insert(GetProjectClassIncludeFile(projectClassIncludeFiles, inheritClass));
-            }
-            
-            for (std::shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
-                // handle enum without macro case
-                if (property->GetMacro().empty() || property->GetIsInherit())
-                    continue;
-
-                std::wstring type = property->GetType1();
-                if (std::iswupper(type[0])) {
-                    if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
-
-                        std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
-                        if (!includeFile.empty())
-                            projectFileList.insert(includeFile);
-                        else
-                            abstractClassList.insert(type);
-                    } else {
-                        std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
-                        if (!includeFile.empty())
-                            projectFileList.insert(includeFile);
-                        else
-                            abstractEnumClassList.insert(type);
-                    }
-                } else {
-                    // TODO: need to enable to check all systemn function
-                    // system type
-                    if (CountSubstring(type, L"string") > 0)
-                        systemFileList.insert(L"string");
-                }
-
-                type = property->GetType2();
-                if (!type.empty() && std::iswupper(type[0])) {
-                    if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
-
-                        std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
-                        if (!includeFile.empty())
-                            projectFileList.insert(includeFile);
-                        else
-                            abstractClassList.insert(type);
-                    } else {
-                        std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
-                        if (!includeFile.empty())
-                            projectFileList.insert(includeFile);
-                        else
-                            abstractEnumClassList.insert(type);
-                    }
-                } else {
-                    // only suuport string
-                    // system type
-                    if (CountSubstring(type, L"string") > 0)
-                        systemFileList.insert(L"string");
-                }
-            }
-        }
+        // ------------------------------------------------------------------------------------------ //
+        //                               Generate Script                                              //
+        // ------------------------------------------------------------------------------------------ //
         std::wstring systemFileListStr = L"";
         std::wstring projectFileListStr = L"";
         for (auto const &str : systemFileList)
@@ -366,11 +383,18 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig, con
                 continue;
             projectFileListStr +=  L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, str) + L"\r\n";
         }
-        std::wstring content = L"#pragma once\r\n";
+        std::wstring content = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+            "#pragma once\r\n";
         content += L"\r\n";
         content += !systemFileListStr.empty() ? (systemFileListStr + L"\r\n") : L"";
         content += !projectFileListStr.empty() ? (projectFileListStr + L"\r\n") : L"";
         
+        if (isContainForm) {
+            content += L"// <vcc:customHeader sync=\"SKIP\" gen=\"SKIP\">\r\n"
+                "// </vcc:customHeader>\r\n"
+                "\r\n";
+        }
+
         // as using base_object and macro, must have namespace vcc
         content += L"using namespace vcc;\r\n";
         // for those class that cannot be found in file list
@@ -391,8 +415,18 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig, con
                 continue;
             std::wstring inheritClass = L"";
             std::wstring extraFunction = L"";
+            // Form
+            if (enumClass->GetType() == VPGEnumClassType::Form) {
+                extraFunction += L"\r\n"
+                    + INDENT + INDENT + L"// <vcc:custom sync=\"SKIP\" gen=\"SKIP\">\r\n"
+                    + INDENT + INDENT + L"// Initialize\r\n"
+                    + INDENT + INDENT + L"void OnInitialize() const override;\r\n"
+                    + INDENT + INDENT + L"// Close\r\n"
+                    + INDENT + INDENT + L"bool IsClosable() const override;\r\n"
+                    + INDENT + INDENT + L"// </vcc:custom>\r\n";
+            }
             // Json
-            if (VPGObjectFileGenerationService::IsJsonObject(enumClass.get())) {
+            if (enumClass->GetIsJson()) {
                 inheritClass += L", public BaseJsonObject";
                 extraFunction += L"\r\n"
                     + INDENT + INDENT + L"virtual std::shared_ptr<Json> ToJson() const override;\r\n"
@@ -402,15 +436,10 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig, con
             content += L"\r\n";
             
             std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - propertyClassNameSuffix.length());
-            std::wstring baseClassName = L"BaseObject<" + className + L">";
-            std::shared_ptr<Json> inheritAttributes = GetJsonAttributes(enumClass->GetCommand(), L"@@Inherit");
-            if (inheritAttributes != nullptr) {
-                baseClassName = inheritAttributes->GetString(L"Class");
-                if (IsBlank(baseClassName)) {
-                    std::wstring errMsg = L"Enum Class " + enumClass->GetName() + L" has attribute @@Inherit but missing Attribute \"Class\"";
-                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, errMsg);
-                }
-            }   
+            std::wstring baseClassName = (enumClass->GetType() == VPGEnumClassType::Form ? L"BaseForm" : L"BaseObject");
+            baseClassName += L"<" + className + L">";
+            if (!IsBlank(enumClass->GetInheritClass()))
+                baseClassName = enumClass->GetInheritClass();                
             std::wstring baseClassNameWithoutQuote = baseClassName;
             if (IsContain(baseClassNameWithoutQuote, L"<"))
                 baseClassNameWithoutQuote = baseClassNameWithoutQuote.substr(0, Find(baseClassNameWithoutQuote, L"<"));
@@ -427,18 +456,20 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig, con
             }
             content += L"\r\n";
             content += INDENT + L"public:\r\n";
-            if (inheritAttributes != nullptr) {
+            if (!IsBlank(enumClass->GetInheritClass())) {
                 content += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"()\r\n"
                         + INDENT + INDENT + L"{\r\n"
                         + INDENT + INDENT + INDENT + L"_ObjectType = ObjectType::" +  className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L";\r\n"
                         + INDENT + INDENT + L"}\r\n";
-            } else
-                content += INDENT + INDENT + className + L"() : BaseObject(ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L") {}\r\n";
+            } else if (enumClass->GetType() == VPGEnumClassType::Form)
+                content += INDENT + INDENT + className + L"(std::shared_ptr<LogConfig> logConfig = nullptr) : " + baseClassNameWithoutQuote + L"(logConfig, ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L") {}\r\n";
+            else
+                content += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"(ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L") {}\r\n";
             content += INDENT + INDENT + L"virtual ~" + className + L"() {}\r\n";
 
             bool isCloneShow = false;
             std::wstring cloneBaseClass = L"";
-            if (inheritAttributes != nullptr)
+            if (!IsBlank(enumClass->GetInheritClass()))
                 isCloneShow = true;
             else
                 for (auto const &property : enumClass->GetProperties()) {
@@ -476,35 +507,35 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig, con
             content += extraFunction;
             content += L"};\r\n";
         }
+        
+        // ------------------------------------------------------------------------------------------ //
+        //                               Handle VCC Tag                                               //
+        // ------------------------------------------------------------------------------------------ //
+        if (IsFileExists(filePathHpp))
+            content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, ReadFile(filePathHpp), VPGFileContentSyncMode::Full, L"//");
+        
+        LTrim(content);
         WriteFile(filePathHpp, content, true);
         LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file completed.");
     CATCH
 }
 
-void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
-            const std::map<std::wstring, std::wstring> &classPathMapping, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
-            const std::wstring &filePathCpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+void VPGObjectFileGenerationService::GetCppIncludeFiles(
+    const std::map<std::wstring, std::wstring> &classPathMapping, 
+    const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList,
+    const bool &isContainForm,
+    const bool &isContainJson,
+    std::set<std::wstring> &systemIncludeFiles,
+    std::set<std::wstring> &customIncludeFiles)
 {
-    TRY
-        bool isContainJsonObject = false;
-        for (auto const &enumClass : enumClassList) {
-            isContainJsonObject = VPGObjectFileGenerationService::IsJsonObject(enumClass.get());
-            if (isContainJsonObject)
-                break;
-        }
-        if (!isContainJsonObject)
-            return;
-        
-        std::wstring includeFileName = GetFileName(filePathCpp);
-        Replace(includeFileName, L".cpp", L".hpp");
+    // if (isIncludeForm) {
 
-        std::set<std::wstring> systemIncludeFiles;
-        std::set<std::wstring> customIncludeFiles;
-
+    // }
+    if (isContainJson) {
         systemIncludeFiles.insert(L"assert.h");
         systemIncludeFiles.insert(L"memory");
         systemIncludeFiles.insert(L"string");
-        
+
         customIncludeFiles.insert(L"exception_macro.hpp");
         customIncludeFiles.insert(L"i_document.hpp");
         customIncludeFiles.insert(L"i_document_builder.hpp");
@@ -512,10 +543,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
         customIncludeFiles.insert(L"memory_macro.hpp");
         customIncludeFiles.insert(L"number_helper.hpp");
         customIncludeFiles.insert(L"string_helper.hpp");
-        
-        LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file: " + filePathCpp);
-        std::wstring content = L"#include \"" + includeFileName + L"\"\r\n";
-
+    
         for (auto const &enumClass : enumClassList) {
             if (!IsEndWith(enumClass->GetName(), propertyClassNameSuffix))
                 continue;
@@ -534,6 +562,53 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 }
             }
         }
+    }
+}
+
+void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
+    const std::map<std::wstring, std::wstring> &classPathMapping,
+    const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
+    const std::wstring &objectFilePathCpp,
+    const std::wstring &formFilePathCpp,
+    const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+{
+    TRY
+        if (objectFilePathCpp.empty() && formFilePathCpp.empty())
+            return;
+
+        bool isIncludeJson = false;
+        bool isIncludeForm = false;
+        for (auto const &enumClass : enumClassList) {
+            isIncludeJson |= enumClass->GetIsJson();
+            isIncludeForm |= enumClass->GetType() == VPGEnumClassType::Form;
+        }
+        if (!isIncludeJson && !isIncludeForm)
+            return;
+        
+        std::wstring filePathCpp = isIncludeForm && !formFilePathCpp.empty() ? formFilePathCpp : objectFilePathCpp;
+        std::wstring includeFileName = GetFileName(filePathCpp);
+        Replace(includeFileName, L".cpp", L".hpp");
+
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file: " + filePathCpp);
+        
+        bool isCustomNeeded = isIncludeForm;
+        // ------------------------------------------------------------------------------------------ //
+        //                               Include Files                                                //
+        // ------------------------------------------------------------------------------------------ //
+        std::set<std::wstring> systemIncludeFiles;
+        std::set<std::wstring> customIncludeFiles;
+        GetCppIncludeFiles(classPathMapping,
+            enumClassList,
+            isIncludeForm,
+            isIncludeJson,
+            systemIncludeFiles,
+            customIncludeFiles);
+
+        // ------------------------------------------------------------------------------------------ //
+        //                               Generate Script                                              //
+        // ------------------------------------------------------------------------------------------ //
+        std::wstring content = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+            "#include \"" + includeFileName + L"\"\r\n";
 
         if (!systemIncludeFiles.empty()) {
             content += L"\r\n";
@@ -548,178 +623,239 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 content += L"#include \"" + str + L"\"\r\n";
             }
         }
+        
+        if (isCustomNeeded)
+            content += L"\r\n"
+                "// <vcc:customHeader sync=\"SKIP\" gen=\"SKIP\">\r\n"
+                "// </vcc:customHeader>\r\n";
+        
         content += L"\r\n"
             "using namespace vcc;\r\n";
 
+        // Generate Part
         for (auto const &enumClass : enumClassList) {
             if (!IsEndWith(enumClass->GetName(), propertyClassNameSuffix))
                 continue;
                 
-            if (!VPGObjectFileGenerationService::IsJsonObject(enumClass.get()))
-                continue;
-
             std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - propertyClassNameSuffix.length());
-            
-            std::wstring toJsonVarable = L"";
-            std::wstring deserializeVariable = L"";
-            //json
-            std::shared_ptr<Json> jsonAttribute = GetJsonAttributes(enumClass->GetCommand(), L"@@Json");
-            std::wstring namingStyleStr = L"NamingStyle namestyle = NamingStyle::" + (jsonAttribute != nullptr && jsonAttribute->IsContainKey(L"Key.NamingStyle") ? jsonAttribute->GetString(L"Key.NamingStyle") : L"PascalCase") + L";";
-            toJsonVarable += INDENT + INDENT + namingStyleStr + L"\r\n";
-            deserializeVariable += INDENT + INDENT + namingStyleStr + L"\r\n";
-            bool isHavingDecimal = false;
-            for (auto const &property : enumClass->GetProperties()) {
-                isHavingDecimal = (Find(property->GetMacro(), L"MAP") != std::wstring::npos && (property->GetType2() == L"float" || property->GetType2() == L"double"))
-                    || (Find(property->GetMacro(), L"MAP") == std::wstring::npos && (property->GetType1() == L"float" || property->GetType1() == L"double"));
-                if (isHavingDecimal)
-                    break;
-            }
-            
-            std::wstring decimalPlaces = (jsonAttribute != nullptr && jsonAttribute->IsContainKey(L"Value.DecimalPlaces") ? jsonAttribute->GetString(L"Value.DecimalPlaces") : L"-1");
-            if (isHavingDecimal)
-                toJsonVarable += INDENT + INDENT + L"int64_t decimalPlaces = " + decimalPlaces + L";\r\n";
-            
-            // content
-            std::wstring toJsonStr = L"";
-            std::wstring deserializeStr = L"";
-            for (auto const &property : enumClass->GetProperties()) {
-                std::wstring propertyName = property->GetPropertyName();
-                std::wstring convertedPropertyName = GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, property->GetPropertyName());
-                std::wstring originalType = property->GetType1();
-                std::wstring originalMacro = Find(property->GetMacro(), L"(") != std::wstring::npos ? property->GetMacro().substr(0, Find(property->GetMacro(), L"(")) : L"";
-                if (originalMacro.empty() || originalType.empty())
-                    continue;
-
-                std::wstring prefix = INDENT + INDENT + L"// " + property->GetPropertyName() + L"\r\n";
-                toJsonStr += prefix;
-                deserializeStr += prefix;
-
-                if (IsStartWith(originalMacro, L"VECTOR")
-                    || IsStartWith(originalMacro, L"SET")) {
-                    // To Json
-                    toJsonStr += INDENT + INDENT + L"DECLARE_SPTR(Json, tmp" + propertyName + L");\r\n"
-                        + INDENT + INDENT + L"json->AddArray(ConvertNamingStyle(L" + convertedPropertyName + L", NamingStyle::PascalCase, namestyle), tmp" + propertyName + L");\r\n"
-                        + INDENT + INDENT + L"for (auto const &element : _" + propertyName + L") {\r\n";
-                    
-                    deserializeStr += INDENT + INDENT + L"Clear" + propertyName + L"();\r\n"
-                        + INDENT + INDENT + L"if (json->IsContainKey(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase))) {\r\n"
-                        + INDENT + INDENT + INDENT + L"for (auto const &element : json->GetArray(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase))) {\r\n";
-                    if (IsContain(originalMacro, L"SPTR")) {
-                        // Object
-                        toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->AddArrayObject(element->ToJson());\r\n";
-
-                        deserializeStr += INDENT + INDENT + INDENT + INDENT + L"DECLARE_SPTR(" + originalType + L", tmp" + propertyName + L");\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->DeserializeJson(element->GetArrayElementObject());\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"Insert" + propertyName + L"(tmp" + propertyName + L");\r\n";
-                    } else {
-                        std::vector<std::wstring> jsonStrings = GetObjectToJson(enumClassMapping, L"tmp" + propertyName, originalMacro, originalType, L"element", true, false);
-                        for (auto const &str : jsonStrings)
-                            toJsonStr += INDENT + INDENT + INDENT + str + L"\r\n";
-
-                        std::vector<std::wstring> objectStrings = GetJsonToObject(enumClassMapping, L"element", originalMacro, originalType, L"", propertyName, true, false);
-                        for (auto const &str : objectStrings)
-                            deserializeStr += INDENT + INDENT + INDENT + str + L"\r\n";
-                    }
-                    toJsonStr += INDENT + INDENT + L"}\r\n";
-                    deserializeStr += INDENT + INDENT + INDENT + L"}\r\n"
-                        + INDENT + INDENT + L"}\r\n";
-
-                } else if (IsStartWith(originalMacro, L"MAP") || IsStartWith(originalMacro, L"ORDERED_MAP")) {
-                    toJsonStr += INDENT + INDENT + L"DECLARE_SPTR(Json, tmp" + propertyName + L");\r\n"
-                        + INDENT + INDENT + L"json->AddObject(ConvertNamingStyle(L" + convertedPropertyName + L", NamingStyle::PascalCase, namestyle), tmp" + propertyName + L");\r\n"
-                        + INDENT + INDENT + L"for (auto const &element : _" + propertyName + L") {\r\n";
-                    
-                    deserializeStr += INDENT + INDENT + L"Clear" + propertyName + L"();\r\n"
-                        + INDENT + INDENT + L"if (json->IsContainKey(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) && json->GetObject(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) != nullptr) {\r\n"
-                        + INDENT + INDENT + INDENT + L"std::shared_ptr<Json> tmpObject = json->GetObject(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase));\r\n"
-                        + INDENT + INDENT + INDENT + L"std::vector<std::wstring> tmpKeys = tmpObject->GetKeys();\r\n"
-                        + INDENT + INDENT + INDENT + L"for (auto const &key : tmpKeys) {\r\n";
-                        
-                    std::wstring toJsonStrKeyStr = L"";
-                    if (IsCaptial(originalType)) {
-                        std::vector<std::wstring> objectToJsonEnumKeySwitchStrings = GetObjectToJsonEnumSwitch(L"element.first", L"keyStr", originalType, enumClassMapping);
-                        for (auto const &str : objectToJsonEnumKeySwitchStrings)
-                            toJsonStr += INDENT + INDENT + INDENT + str + L"\r\n";
-
-                        toJsonStrKeyStr = L"keyStr";
-
-                        std::vector<std::wstring> jsonToObjectEnumkeySwtichStrings = GetJsonToObjectEnumSwitch(L"key", true, originalType, enumClassMapping);
-                        for (auto const &str : jsonToObjectEnumkeySwtichStrings)
-                            deserializeStr += INDENT + INDENT + INDENT + str + L"\r\n";
-                    } else if (originalType == L"std::wstring")
-                        toJsonStrKeyStr = L"element.first";
-                    else
-                        toJsonStrKeyStr = L"std::to_wstring(element.first)";
-                    if (IsContain(originalMacro, L"SPTR")) {
-                        // Object
-                        toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->AddObject(" + toJsonStrKeyStr + L", element.second->ToJson());\r\n";
-                    
-                        deserializeStr += INDENT + INDENT + INDENT + INDENT + L"if (tmpObject->GetObject(key) != nullptr) {\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + INDENT + L"DECLARE_SPTR(" + property->GetType2() + L", tmpElementObject);\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + INDENT + L"tmpElementObject->DeserializeJson(tmpObject->GetObject(key));\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + INDENT + L"Insert" + propertyName + L"(" + GetJsonToObjectMapKey(originalType) + L", tmpElementObject);\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"} else\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + INDENT + L"Insert" + propertyName + L"(" + GetJsonToObjectMapKey(originalType) + L", nullptr);\r\n";
-                    } else {
-                        std::vector<std::wstring> jsonStrings = GetObjectToJson(enumClassMapping, L"tmp" + propertyName, originalMacro, property->GetType2(), toJsonStrKeyStr, false, true);
-                        for (auto const &str : jsonStrings)
-                            toJsonStr += INDENT + INDENT + INDENT + str + L"\r\n";
-
-                        std::vector<std::wstring> objectStrings = GetJsonToObject(enumClassMapping, L"tmpObject", originalMacro, property->GetType2(), property->GetType1(), propertyName, false, true);
-                        for (auto const &str : objectStrings)
-                            deserializeStr += INDENT + INDENT + INDENT + str + L"\r\n";
-                    }
-                    toJsonStr += INDENT + INDENT + L"}\r\n";
-                    deserializeStr += INDENT + INDENT + INDENT + L"}\r\n"
-                        + INDENT + INDENT + L"}\r\n";
-
-                } else {
-                    // Object To Json
-                    for (auto const &str : GetObjectToJson(enumClassMapping, L"json", originalMacro, originalType, propertyName, false, false))
-                        toJsonStr += INDENT + INDENT + str + L"\r\n";
-
-                    // Json To Object
-                    if (IsContain(originalMacro, L"SPTR")) {
-                        // Object
-                        deserializeStr += INDENT + INDENT + L"_" + propertyName + L" = nullptr;\r\n"
-                            + INDENT + INDENT + L"if (json->IsContainKey(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) && json->GetObject(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) != nullptr)\r\n";
-                    } else if (std::iswupper(originalType[0])) {
-                        // Enum
-                        deserializeStr += INDENT + INDENT + L"if (json->IsContainKey(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase))) {\r\n";
-                    } else {
-                        deserializeStr += INDENT + INDENT + L"if (json->IsContainKey(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)))\r\n";
-                    }
-                    for (auto const &str : GetJsonToObject(enumClassMapping, L"json", originalMacro, originalType, L"", propertyName, false, false))
-                        deserializeStr += INDENT + INDENT + str + L"\r\n";
-                    if (!IsContain(originalMacro, L"SPTR") && std::iswupper(originalType[0]))
-                        deserializeStr += INDENT + INDENT + L"}\r\n";
-                }
-            }
-            
-            content += L"\r\n"
-                "std::shared_ptr<Json> " + className + L"::ToJson() const\r\n"
-                "{\r\n"
-                + INDENT + L"TRY\r\n"
-                + toJsonVarable
-                + INDENT + INDENT + L"DECLARE_UPTR(Json, json);\r\n"
-                + toJsonStr
-                + INDENT + INDENT + L"return json;\r\n"
-                + INDENT + L"CATCH\r\n"
-                + INDENT + L"return nullptr;\r\n"
-                "}\r\n"
-                "\r\n"
-                "void " + className + L"::DeserializeJson(std::shared_ptr<IDocument> document) const\r\n"
-                "{\r\n"
-                + INDENT + L"TRY\r\n"
-                + deserializeVariable
-                + INDENT + INDENT + L"std::shared_ptr<Json> json = std::dynamic_pointer_cast<Json>(document);\r\n"
-                + INDENT + INDENT + L"assert(json != nullptr);\r\n"
-                + deserializeStr
-                + INDENT + L"CATCH\r\n"
-                "}\r\n";
+        
+            content += GetCppExternalFunctionJson(className, enumClassMapping, enumClass);
         }
 
+        if (isCustomNeeded) {
+            content += L"\r\n"
+                "// <vcc:custom sync=\"SKIP\" gen=\"SKIP\">";
+
+            // Custom Part
+            for (auto const &enumClass : enumClassList) {
+                if (!IsEndWith(enumClass->GetName(), propertyClassNameSuffix))
+                    continue;
+                    
+                std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - propertyClassNameSuffix.length());
+                content += GetCppExternalFunctionForm(className, enumClassMapping, enumClass);
+            }
+            
+            content += L"// </vcc:custom>\r\n";
+        }
+        // ------------------------------------------------------------------------------------------ //
+        //                               Handle VCC Tag                                               //
+        // ------------------------------------------------------------------------------------------ //
+        if (IsFileExists(filePathCpp))
+            content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, ReadFile(filePathCpp), VPGFileContentSyncMode::Full, L"//");
+        
+        LTrim(content);
         WriteFile(filePathCpp, content, true);
         LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file completed.");
     CATCH
+}
+
+std::wstring VPGObjectFileGenerationService::GetCppExternalFunctionForm(const std::wstring &className,
+    const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
+    const std::shared_ptr<VPGEnumClass> enumClass)
+{
+    if (enumClass->GetType() != VPGEnumClassType::Form)
+        return L"";
+    
+    std::wstring content = L"";
+    TRY
+        content += L"\r\n"
+            "void " + className + L"::OnInitialize() const\r\n"
+            "{\r\n"
+            "}\r\n"
+            "\r\n"
+            "bool " + className + L"::IsClosable() const\r\n"
+            "{\r\n"
+            + INDENT + L"return true;\r\n"
+            "}\r\n";
+    CATCH
+    return content;
+}
+
+std::wstring VPGObjectFileGenerationService::GetCppExternalFunctionJson(const std::wstring &className,
+    const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
+    const std::shared_ptr<VPGEnumClass> enumClass)
+{
+    if (!enumClass->GetIsJson())
+        return L"";
+    
+    std::wstring content = L"";
+    TRY
+        std::wstring toJsonVarable = L"";
+        std::wstring deserializeVariable = L"";
+        //json
+        std::wstring namingStyleStr = L"NamingStyle namestyle = NamingStyle::" + (enumClass->IsJsonAttributesContainKey(L"Key.NamingStyle") ? enumClass->GetJsonAttributes(L"Key.NamingStyle") : L"PascalCase") + L";";
+        toJsonVarable += INDENT + INDENT + namingStyleStr + L"\r\n";
+        deserializeVariable += INDENT + INDENT + namingStyleStr + L"\r\n";
+        bool isHavingDecimal = false;
+        for (auto const &property : enumClass->GetProperties()) {
+            isHavingDecimal = (Find(property->GetMacro(), L"MAP") != std::wstring::npos && (property->GetType2() == L"float" || property->GetType2() == L"double"))
+                || (Find(property->GetMacro(), L"MAP") == std::wstring::npos && (property->GetType1() == L"float" || property->GetType1() == L"double"));
+            if (isHavingDecimal)
+                break;
+        }
+        
+        std::wstring decimalPlaces = (enumClass->IsJsonAttributesContainKey(L"Value.DecimalPlaces") ? enumClass->GetJsonAttributes(L"Value.DecimalPlaces") : L"-1");
+        if (isHavingDecimal)
+            toJsonVarable += INDENT + INDENT + L"int64_t decimalPlaces = " + decimalPlaces + L";\r\n";
+        
+        // content
+        std::wstring toJsonStr = L"";
+        std::wstring deserializeStr = L"";
+        for (auto const &property : enumClass->GetProperties()) {
+            std::wstring propertyName = property->GetPropertyName();
+            std::wstring convertedPropertyName = GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, property->GetPropertyName());
+            std::wstring originalType = property->GetType1();
+            std::wstring originalMacro = Find(property->GetMacro(), L"(") != std::wstring::npos ? property->GetMacro().substr(0, Find(property->GetMacro(), L"(")) : L"";
+            if (originalMacro.empty() || originalType.empty())
+                continue;
+
+            std::wstring prefix = INDENT + INDENT + L"// " + property->GetPropertyName() + L"\r\n";
+            toJsonStr += prefix;
+            deserializeStr += prefix;
+
+            if (IsStartWith(originalMacro, L"VECTOR")
+                || IsStartWith(originalMacro, L"SET")) {
+                // To Json
+                toJsonStr += INDENT + INDENT + L"DECLARE_SPTR(Json, tmp" + propertyName + L");\r\n"
+                    + INDENT + INDENT + L"json->AddArray(ConvertNamingStyle(L" + convertedPropertyName + L", NamingStyle::PascalCase, namestyle), tmp" + propertyName + L");\r\n"
+                    + INDENT + INDENT + L"for (auto const &element : _" + propertyName + L") {\r\n";
+                
+                deserializeStr += INDENT + INDENT + L"Clear" + propertyName + L"();\r\n"
+                    + INDENT + INDENT + L"if (json->IsContainKey(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase))) {\r\n"
+                    + INDENT + INDENT + INDENT + L"for (auto const &element : json->GetArray(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase))) {\r\n";
+                if (IsContain(originalMacro, L"SPTR")) {
+                    // Object
+                    toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->AddArrayObject(element->ToJson());\r\n";
+
+                    deserializeStr += INDENT + INDENT + INDENT + INDENT + L"DECLARE_SPTR(" + originalType + L", tmp" + propertyName + L");\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->DeserializeJson(element->GetArrayElementObject());\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + L"Insert" + propertyName + L"(tmp" + propertyName + L");\r\n";
+                } else {
+                    std::vector<std::wstring> jsonStrings = GetObjectToJson(enumClassMapping, L"tmp" + propertyName, originalMacro, originalType, L"element", true, false);
+                    for (auto const &str : jsonStrings)
+                        toJsonStr += INDENT + INDENT + INDENT + str + L"\r\n";
+
+                    std::vector<std::wstring> objectStrings = GetJsonToObject(enumClassMapping, L"element", originalMacro, originalType, L"", propertyName, true, false);
+                    for (auto const &str : objectStrings)
+                        deserializeStr += INDENT + INDENT + INDENT + str + L"\r\n";
+                }
+                toJsonStr += INDENT + INDENT + L"}\r\n";
+                deserializeStr += INDENT + INDENT + INDENT + L"}\r\n"
+                    + INDENT + INDENT + L"}\r\n";
+
+            } else if (IsStartWith(originalMacro, L"MAP") || IsStartWith(originalMacro, L"ORDERED_MAP")) {
+                toJsonStr += INDENT + INDENT + L"DECLARE_SPTR(Json, tmp" + propertyName + L");\r\n"
+                    + INDENT + INDENT + L"json->AddObject(ConvertNamingStyle(L" + convertedPropertyName + L", NamingStyle::PascalCase, namestyle), tmp" + propertyName + L");\r\n"
+                    + INDENT + INDENT + L"for (auto const &element : _" + propertyName + L") {\r\n";
+                
+                deserializeStr += INDENT + INDENT + L"Clear" + propertyName + L"();\r\n"
+                    + INDENT + INDENT + L"if (json->IsContainKey(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) && json->GetObject(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) != nullptr) {\r\n"
+                    + INDENT + INDENT + INDENT + L"std::shared_ptr<Json> tmpObject = json->GetObject(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase));\r\n"
+                    + INDENT + INDENT + INDENT + L"std::vector<std::wstring> tmpKeys = tmpObject->GetKeys();\r\n"
+                    + INDENT + INDENT + INDENT + L"for (auto const &key : tmpKeys) {\r\n";
+                    
+                std::wstring toJsonStrKeyStr = L"";
+                if (IsCaptial(originalType)) {
+                    std::vector<std::wstring> objectToJsonEnumKeySwitchStrings = GetObjectToJsonEnumSwitch(L"element.first", L"keyStr", originalType, enumClassMapping);
+                    for (auto const &str : objectToJsonEnumKeySwitchStrings)
+                        toJsonStr += INDENT + INDENT + INDENT + str + L"\r\n";
+
+                    toJsonStrKeyStr = L"keyStr";
+
+                    std::vector<std::wstring> jsonToObjectEnumkeySwtichStrings = GetJsonToObjectEnumSwitch(L"key", true, originalType, enumClassMapping);
+                    for (auto const &str : jsonToObjectEnumkeySwtichStrings)
+                        deserializeStr += INDENT + INDENT + INDENT + str + L"\r\n";
+                } else if (originalType == L"std::wstring")
+                    toJsonStrKeyStr = L"element.first";
+                else
+                    toJsonStrKeyStr = L"std::to_wstring(element.first)";
+                if (IsContain(originalMacro, L"SPTR")) {
+                    // Object
+                    toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->AddObject(" + toJsonStrKeyStr + L", element.second->ToJson());\r\n";
+                
+                    deserializeStr += INDENT + INDENT + INDENT + INDENT + L"if (tmpObject->GetObject(key) != nullptr) {\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + INDENT + L"DECLARE_SPTR(" + property->GetType2() + L", tmpElementObject);\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + INDENT + L"tmpElementObject->DeserializeJson(tmpObject->GetObject(key));\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + INDENT + L"Insert" + propertyName + L"(" + GetJsonToObjectMapKey(originalType) + L", tmpElementObject);\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + L"} else\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + INDENT + L"Insert" + propertyName + L"(" + GetJsonToObjectMapKey(originalType) + L", nullptr);\r\n";
+                } else {
+                    std::vector<std::wstring> jsonStrings = GetObjectToJson(enumClassMapping, L"tmp" + propertyName, originalMacro, property->GetType2(), toJsonStrKeyStr, false, true);
+                    for (auto const &str : jsonStrings)
+                        toJsonStr += INDENT + INDENT + INDENT + str + L"\r\n";
+
+                    std::vector<std::wstring> objectStrings = GetJsonToObject(enumClassMapping, L"tmpObject", originalMacro, property->GetType2(), property->GetType1(), propertyName, false, true);
+                    for (auto const &str : objectStrings)
+                        deserializeStr += INDENT + INDENT + INDENT + str + L"\r\n";
+                }
+                toJsonStr += INDENT + INDENT + L"}\r\n";
+                deserializeStr += INDENT + INDENT + INDENT + L"}\r\n"
+                    + INDENT + INDENT + L"}\r\n";
+
+            } else {
+                // Object To Json
+                for (auto const &str : GetObjectToJson(enumClassMapping, L"json", originalMacro, originalType, propertyName, false, false))
+                    toJsonStr += INDENT + INDENT + str + L"\r\n";
+
+                // Json To Object
+                if (IsContain(originalMacro, L"SPTR")) {
+                    // Object
+                    deserializeStr += INDENT + INDENT + L"_" + propertyName + L" = nullptr;\r\n"
+                        + INDENT + INDENT + L"if (json->IsContainKey(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) && json->GetObject(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) != nullptr)\r\n";
+                } else if (IsCaptial(originalType)) {
+                    // Enum
+                    deserializeStr += INDENT + INDENT + L"if (json->IsContainKey(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase))) {\r\n";
+                } else {
+                    deserializeStr += INDENT + INDENT + L"if (json->IsContainKey(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)))\r\n";
+                }
+                for (auto const &str : GetJsonToObject(enumClassMapping, L"json", originalMacro, originalType, L"", propertyName, false, false))
+                    deserializeStr += INDENT + INDENT + str + L"\r\n";
+                if (!IsContain(originalMacro, L"SPTR") && std::iswupper(originalType[0]))
+                    deserializeStr += INDENT + INDENT + L"}\r\n";
+            }
+        }
+        
+        content += L"\r\n"
+            "std::shared_ptr<Json> " + className + L"::ToJson() const\r\n"
+            "{\r\n"
+            + INDENT + L"TRY\r\n"
+            + toJsonVarable
+            + INDENT + INDENT + L"DECLARE_UPTR(Json, json);\r\n"
+            + toJsonStr
+            + INDENT + INDENT + L"return json;\r\n"
+            + INDENT + L"CATCH\r\n"
+            + INDENT + L"return nullptr;\r\n"
+            "}\r\n"
+            "\r\n"
+            "void " + className + L"::DeserializeJson(std::shared_ptr<IDocument> document) const\r\n"
+            "{\r\n"
+            + INDENT + L"TRY\r\n"
+            + deserializeVariable
+            + INDENT + INDENT + L"std::shared_ptr<Json> json = std::dynamic_pointer_cast<Json>(document);\r\n"
+            + INDENT + INDENT + L"assert(json != nullptr);\r\n"
+            + deserializeStr
+            + INDENT + L"CATCH\r\n"
+            "}\r\n";
+    CATCH
+    return content;
 }

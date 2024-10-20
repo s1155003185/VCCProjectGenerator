@@ -50,22 +50,13 @@ class VPGObjectFileGenerationServiceTest : public testing::Test
         }
 };
 
-TEST_F(VPGObjectFileGenerationServiceTest, GetJsonAttributes)
-{
-    EXPECT_EQ(VPGObjectFileGenerationService::GetJsonAttributes(L"@@A@@Json@@B", L"@@Json"), nullptr);
-
-    std::vector<std::wstring> keys = { L"Number", L"String" };
-    EXPECT_EQ(VPGObjectFileGenerationService::GetJsonAttributes(L"@@A@@Json { \"Number\" : 12, \"String\":\"abc\" } @@B { \"B\" : 123}", L"@@Json")->GetKeys(), keys);
-    EXPECT_EQ(VPGObjectFileGenerationService::GetJsonAttributes(L"@@A@@Json{\"Number\":12,\"String\":\"abc\"}@@B{\"B\":123}", L"@@Json")->GetKeys(), keys);
-}
-
 TEST_F(VPGObjectFileGenerationServiceTest, Empty)
 {
     std::wstring classPrefix = L"";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), enumClassList);    
+        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);    
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
 }
@@ -91,12 +82,12 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
 
-    std::wstring content = ReadFile(this->GetFilePathHpp());
-    std::wstring exptectedResult = L"#pragma once\r\n"
+    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#pragma once\r\n"
         "\r\n"
         "#include <string>\r\n"
         "\r\n"
@@ -114,8 +105,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
         "    public:\r\n"
         "        VPGObject() : BaseObject(ObjectType::Object) {}\r\n"
         "        virtual ~VPGObject() {}\r\n"
-        "};\r\n";
-    EXPECT_EQ(content, exptectedResult);
+        "};\r\n");
 }
 
 TEST_F(VPGObjectFileGenerationServiceTest, Object)
@@ -139,12 +129,13 @@ TEST_F(VPGObjectFileGenerationServiceTest, Object)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
 
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
 
-    std::wstring content = ReadFile(this->GetFilePathHpp());
-    std::wstring exptectedResult = L"#pragma once\r\n"
+    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), 
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#pragma once\r\n"
         "\r\n"
         "#include <string>\r\n"
         "\r\n"
@@ -172,69 +163,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Object)
         "            obj->CloneEnumB(this->_EnumB);\r\n"
         "            return obj;\r\n"
         "        }\r\n"
-        "};\r\n";
-    EXPECT_EQ(content, exptectedResult);
-}
-
-TEST_F(VPGObjectFileGenerationServiceTest, Multi)
-{
-    std::wstring enumClass =
-        L"#pragma once\r\n"
-        "\r\n"
-        "enum class VPGObjectAProperty\r\n"
-        "{\r\n"
-        "    EnumA // GETSET(std::wstring, EnumA, L\"\")\r\n"
-        "};\r\n"
-        "\r\n"
-        "enum class VPGObjectBProperty\r\n"
-        "{\r\n"
-        "    EnumA // GETSET(std::wstring, EnumA, L\"\")\r\n"
-        "};\r\n";
-    WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
-
-    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
-
-    std::wstring classPrefix = L"VPG";
-    std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
-
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
-
-    std::wstring content = ReadFile(this->GetFilePathHpp());
-    std::wstring exptectedResult = L"#pragma once\r\n"
-        "\r\n"
-        "#include <string>\r\n"
-        "\r\n"
-        "#include \"base_object.hpp\"\r\n"
-        "#include \"class_macro.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
-        "class VPGObjectA : public BaseObject<VPGObjectA>\r\n"
-        "{\r\n"
-        "    GETSET(std::wstring, EnumA, L\"\")\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGObjectA() : BaseObject(ObjectType::ObjectA) {}\r\n"
-        "        virtual ~VPGObjectA() {}\r\n"
-        "};\r\n"
-        "\r\n"
-        "class VPGObjectB : public BaseObject<VPGObjectB>\r\n"
-        "{\r\n"
-        "    GETSET(std::wstring, EnumA, L\"\")\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGObjectB() : BaseObject(ObjectType::ObjectB) {}\r\n"
-        "        virtual ~VPGObjectB() {}\r\n"
-        "};\r\n";
-    EXPECT_EQ(content, exptectedResult);
+        "};\r\n");
 }
 
 TEST_F(VPGObjectFileGenerationServiceTest, InheritClass)
@@ -265,12 +194,13 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritClass)
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"GitLog", L"git_service.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
-        L"#pragma once\r\n"
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#pragma once\r\n"
         "\r\n"
         "#include <string>\r\n"
         "\r\n"
@@ -301,6 +231,208 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritClass)
         "            obj->CloneEnumD1(this->_EnumD1);\r\n"
         "            return obj;\r\n"
         "        }\r\n"
+        "};\r\n");
+}
+
+TEST_F(VPGObjectFileGenerationServiceTest, Form)
+{
+    std::wstring enumClass = L""
+        "#pragma once\r\n"
+        "\r\n"
+        "//@@Form\r\n"
+        "enum class VPGGitFormProperty\r\n"
+        "{\r\n"
+        "    String // GETSET(std::wstring, String, L\"\")\r\n"
+        "};\r\n"
+        "\r\n";
+    WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    this->GetReader()->Parse(enumClass, enumClassList);
+
+    std::wstring classPrefix = L"VPG";
+    std::map<std::wstring, std::wstring> projectClassIncludeFiles;
+    //projectClassIncludeFiles.insert(std::make_pair(L"GitLog", L"git_service.hpp"));
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
+        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetIncludeFiles(), this->GetEnumClasses(),
+        this->GetFilePathCpp(), this->GetFilePathCpp(), enumClassList);
+
+    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+
+    EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#pragma once\r\n"
+        "\r\n"
+        "#include <string>\r\n"
+        "\r\n"
+        "#include \"base_form.hpp\"\r\n"
+        "#include \"class_macro.hpp\"\r\n"
+        "#include \"object_type.hpp\"\r\n"
+        "\r\n"
+        "// <vcc:customHeader sync=\"SKIP\" gen=\"SKIP\">\r\n"
+        "// </vcc:customHeader>\r\n"
+        "\r\n"
+        "using namespace vcc;\r\n"
+        "\r\n"
+        "class VPGGitForm : public BaseForm<VPGGitForm>\r\n"
+        "{\r\n"
+        "    GETSET(std::wstring, String, L\"\")\r\n"
+        "\r\n"
+        "    public:\r\n"
+        "        VPGGitForm(std::shared_ptr<LogConfig> logConfig = nullptr) : BaseForm(logConfig, ObjectType::GitForm) {}\r\n"
+        "        virtual ~VPGGitForm() {}\r\n"
+        "\r\n"
+        "        // <vcc:custom sync=\"SKIP\" gen=\"SKIP\">\r\n"
+        "        // Initialize\r\n"
+        "        void OnInitialize() const override;\r\n"
+        "        // Close\r\n"
+        "        bool IsClosable() const override;\r\n"
+        "        // </vcc:custom>\r\n"
+        "};\r\n");
+
+    EXPECT_EQ(ReadFile(this->GetFilePathCpp()),
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        L"#include \"vcc_object.hpp\"\r\n"
+        "\r\n"
+        "// <vcc:customHeader sync=\"SKIP\" gen=\"SKIP\">\r\n"
+        "// </vcc:customHeader>\r\n"
+        "\r\n"
+        "using namespace vcc;\r\n"
+        "\r\n"
+        "// <vcc:custom sync=\"SKIP\" gen=\"SKIP\">\r\n"
+        "void VPGGitForm::OnInitialize() const\r\n"
+        "{\r\n"
+        "}\r\n"
+        "\r\n"
+        "bool VPGGitForm::IsClosable() const\r\n"
+        "{\r\n"
+        "    return true;\r\n"
+        "}\r\n"
+        "// </vcc:custom>\r\n");
+}
+
+// TEST_F(VPGObjectFileGenerationServiceTest, InheritForm)
+// {
+//     std::wstring enumClass = L""
+//         "#pragma once\r\n"
+//         "\r\n"
+//         "//@@Form \r\n"
+//         "//@@Inherit{ \"Class\": \"GitBaseForm\" }\r\n"
+//         "enum class VPGGitFormProperty\r\n"
+//         "{\r\n"
+//         "    String // GETSET(std::wstring, String, L\"\") @@Inherit\r\n"
+//         "    , String1 // GETSET(std::wstring, String1, L\"\") @@Inherit\r\n"
+//         "};\r\n"
+//         "\r\n";
+//     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+
+//     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+//     this->GetReader()->Parse(enumClass, enumClassList);
+
+//     std::wstring classPrefix = L"VPG";
+//     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
+//     projectClassIncludeFiles.insert(std::make_pair(L"GitBaseForm", L"git_form.hpp"));
+//     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
+//         this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+//     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetIncludeFiles(), this->GetEnumClasses(),
+//         this->GetFilePathCpp(), this->GetFilePathCpp(), enumClassList);
+//     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
+//     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+        
+//     EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
+//         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+//         L"#pragma once\r\n"
+//         "\r\n"
+//         "#include <string>\r\n"
+//         "\r\n"
+//         "#include \"base_object.hpp\"\r\n"
+//         "#include \"class_macro.hpp\"\r\n"
+//         "#include \"git_form.hpp\"\r\n"
+//         "#include \"object_type.hpp\"\r\n"
+//         "\r\n"
+//         "using namespace vcc;\r\n"
+//         "\r\n"
+//         "class VPGGitForm : public GitBaseForm\r\n"
+//         "{\r\n"
+//         "    GETSET(std::wstring, String1, L\"\")\r\n"
+//         "\r\n"
+//         "    public:\r\n"
+//         "        VPGGitForm() : GitBaseForm()\r\n"
+//         "        {\r\n"
+//         "            _ObjectType = ObjectType::GitForm;\r\n"
+//         "        }\r\n"
+//         "        virtual ~VPGGitForm() {}\r\n"
+//         "\r\n"
+//         "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
+//         "        {\r\n"
+//         "            std::shared_ptr<VPGGitForm> obj = std::make_shared<VPGGitForm>(*this);\r\n"
+//         "            return obj;\r\n"
+//         "        }\r\n"
+//         "};\r\n");
+//     EXPECT_EQ(ReadFile(this->GetFilePathCpp()),
+//         L"");
+// }
+
+TEST_F(VPGObjectFileGenerationServiceTest, Multi)
+{
+    std::wstring enumClass =
+        L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectAProperty\r\n"
+        "{\r\n"
+        "    EnumA // GETSET(std::wstring, EnumA, L\"\")\r\n"
+        "};\r\n"
+        "\r\n"
+        "enum class VPGObjectBProperty\r\n"
+        "{\r\n"
+        "    EnumA // GETSET(std::wstring, EnumA, L\"\")\r\n"
+        "};\r\n";
+    WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    this->GetReader()->Parse(enumClass, enumClassList);
+
+    std::wstring classPrefix = L"VPG";
+    std::map<std::wstring, std::wstring> projectClassIncludeFiles;
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
+
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
+        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
+    EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
+
+    EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#pragma once\r\n"
+        "\r\n"
+        "#include <string>\r\n"
+        "\r\n"
+        "#include \"base_object.hpp\"\r\n"
+        "#include \"class_macro.hpp\"\r\n"
+        "#include \"object_type.hpp\"\r\n"
+        "\r\n"
+        "using namespace vcc;\r\n"
+        "\r\n"
+        "class VPGObjectA : public BaseObject<VPGObjectA>\r\n"
+        "{\r\n"
+        "    GETSET(std::wstring, EnumA, L\"\")\r\n"
+        "\r\n"
+        "    public:\r\n"
+        "        VPGObjectA() : BaseObject(ObjectType::ObjectA) {}\r\n"
+        "        virtual ~VPGObjectA() {}\r\n"
+        "};\r\n"
+        "\r\n"
+        "class VPGObjectB : public BaseObject<VPGObjectB>\r\n"
+        "{\r\n"
+        "    GETSET(std::wstring, EnumA, L\"\")\r\n"
+        "\r\n"
+        "    public:\r\n"
+        "        VPGObjectB() : BaseObject(ObjectType::ObjectB) {}\r\n"
+        "        virtual ~VPGObjectB() {}\r\n"
         "};\r\n");
 }
 
@@ -341,14 +473,15 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
     projectClassIncludeFiles.insert(std::make_pair(L"JsonInternalType", L"json.hpp"));
 
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetIncludeFiles(), this->GetEnumClasses(),
-        this->GetFilePathCpp(), enumClassList);
+        this->GetFilePathCpp(), this->GetFilePathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
-        L"#pragma once\r\n"
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#pragma once\r\n"
         "\r\n"
         "#include <string>\r\n"
         "\r\n"
@@ -401,7 +534,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "};\r\n");
 
     EXPECT_EQ(ReadFile(this->GetFilePathCpp()),
-        L"#include \"vcc_object.hpp\"\r\n"
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#include \"vcc_object.hpp\"\r\n"
         "\r\n"
         "#include <assert.h>\r\n"
         "#include <memory>\r\n"
@@ -800,14 +934,15 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
     projectClassIncludeFiles.insert(std::make_pair(L"JsonInternalType", L"json.hpp"));
 
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetIncludeFiles(), this->GetEnumClasses(),
-        this->GetFilePathCpp(), enumClassList);
+        this->GetFilePathCpp(), this->GetFilePathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
-        L"#pragma once\r\n"
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#pragma once\r\n"
         "\r\n"
         "#include \"base_json_object.hpp\"\r\n"
         "#include \"base_object.hpp\"\r\n"
@@ -850,7 +985,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
         "};\r\n");
 
     EXPECT_EQ(ReadFile(this->GetFilePathCpp()),
-        L"#include \"vcc_object.hpp\"\r\n"
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#include \"vcc_object.hpp\"\r\n"
         "\r\n"
         "#include <assert.h>\r\n"
         "#include <memory>\r\n"
@@ -959,14 +1095,15 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
     projectClassIncludeFiles.insert(std::make_pair(L"JsonInternalType", L"json.hpp"));
 
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetIncludeFiles(), this->GetEnumClasses(),
-        this->GetFilePathCpp(), enumClassList);
+        this->GetFilePathCpp(), this->GetFilePathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
-        L"#pragma once\r\n"
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#pragma once\r\n"
         "\r\n"
         "#include <string>\r\n"
         "\r\n"
@@ -1017,7 +1154,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
         "};\r\n");
 
     EXPECT_EQ(ReadFile(this->GetFilePathCpp()),
-        L"#include \"vcc_object.hpp\"\r\n"
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#include \"vcc_object.hpp\"\r\n"
         "\r\n"
         "#include <assert.h>\r\n"
         "#include <memory>\r\n"

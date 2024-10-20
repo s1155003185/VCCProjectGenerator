@@ -76,5 +76,5 @@ bool Application::CloseForm(int64_t formId, bool isForce)
     return false;
 }
 
-// <vcc:custom sync="SKIP" gen="SKIP">
+// <vcc:custom sync="RESERVE" gen="RESERVE">
 // </vcc:custom>

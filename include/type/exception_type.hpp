@@ -27,7 +27,7 @@ enum class ExceptionType
 	, KeyDuplicated
 
 	, SystemError = 50000
-    // <vcc:custom sync="SKIP" gen="SKIP">
+    // <vcc:custom sync="RESERVE" gen="RESERVE">
     // </vcc:custom>
     , CustomError = 99999
 };

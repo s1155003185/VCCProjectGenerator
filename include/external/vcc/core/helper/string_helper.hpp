@@ -48,6 +48,8 @@ namespace vcc
 
 	bool IsStartWith(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
 	bool IsStartWith(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &pos = 0);
+	bool IsStartWithCaseInsensitive(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
+	bool IsStartWithCaseInsensitive(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &pos = 0);
 	bool IsStartWithTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
 	bool IsEndWith(const std::wstring &str, const std::wstring &suffix);
 

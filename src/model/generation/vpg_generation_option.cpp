@@ -158,6 +158,14 @@ std::shared_ptr<Json> VPGGenerationOption::ToJson() const
         json->AddString(ConvertNamingStyle(L"ManagerTypeDirectory", NamingStyle::PascalCase, namestyle), _ManagerTypeDirectory);
         // ObjectTypeDirectory
         json->AddString(ConvertNamingStyle(L"ObjectTypeDirectory", NamingStyle::PascalCase, namestyle), _ObjectTypeDirectory);
+        // ApplicationDirectoryHpp
+        json->AddString(ConvertNamingStyle(L"ApplicationDirectoryHpp", NamingStyle::PascalCase, namestyle), _ApplicationDirectoryHpp);
+        // ApplicationDirectoryCpp
+        json->AddString(ConvertNamingStyle(L"ApplicationDirectoryCpp", NamingStyle::PascalCase, namestyle), _ApplicationDirectoryCpp);
+        // FormDirectoryHpp
+        json->AddString(ConvertNamingStyle(L"FormDirectoryHpp", NamingStyle::PascalCase, namestyle), _FormDirectoryHpp);
+        // FormDirectoryCpp
+        json->AddString(ConvertNamingStyle(L"FormDirectoryCpp", NamingStyle::PascalCase, namestyle), _FormDirectoryCpp);
         // ObjectDirectoryHpp
         json->AddString(ConvertNamingStyle(L"ObjectDirectoryHpp", NamingStyle::PascalCase, namestyle), _ObjectDirectoryHpp);
         // ObjectDirectoryCpp
@@ -265,6 +273,18 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
         // ObjectTypeDirectory
         if (json->IsContainKey(ConvertNamingStyle(L"ObjectTypeDirectory", namestyle, NamingStyle::PascalCase)))
             _ObjectTypeDirectory = json->GetString(ConvertNamingStyle(L"ObjectTypeDirectory", namestyle, NamingStyle::PascalCase));
+        // ApplicationDirectoryHpp
+        if (json->IsContainKey(ConvertNamingStyle(L"ApplicationDirectoryHpp", namestyle, NamingStyle::PascalCase)))
+            _ApplicationDirectoryHpp = json->GetString(ConvertNamingStyle(L"ApplicationDirectoryHpp", namestyle, NamingStyle::PascalCase));
+        // ApplicationDirectoryCpp
+        if (json->IsContainKey(ConvertNamingStyle(L"ApplicationDirectoryCpp", namestyle, NamingStyle::PascalCase)))
+            _ApplicationDirectoryCpp = json->GetString(ConvertNamingStyle(L"ApplicationDirectoryCpp", namestyle, NamingStyle::PascalCase));
+        // FormDirectoryHpp
+        if (json->IsContainKey(ConvertNamingStyle(L"FormDirectoryHpp", namestyle, NamingStyle::PascalCase)))
+            _FormDirectoryHpp = json->GetString(ConvertNamingStyle(L"FormDirectoryHpp", namestyle, NamingStyle::PascalCase));
+        // FormDirectoryCpp
+        if (json->IsContainKey(ConvertNamingStyle(L"FormDirectoryCpp", namestyle, NamingStyle::PascalCase)))
+            _FormDirectoryCpp = json->GetString(ConvertNamingStyle(L"FormDirectoryCpp", namestyle, NamingStyle::PascalCase));
         // ObjectDirectoryHpp
         if (json->IsContainKey(ConvertNamingStyle(L"ObjectDirectoryHpp", namestyle, NamingStyle::PascalCase)))
             _ObjectDirectoryHpp = json->GetString(ConvertNamingStyle(L"ObjectDirectoryHpp", namestyle, NamingStyle::PascalCase));

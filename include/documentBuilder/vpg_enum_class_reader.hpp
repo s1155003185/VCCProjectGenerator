@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "class_macro.hpp"
+#include "json.hpp"
 #include "vpg_enum_class.hpp"
 
 using namespace vcc;
@@ -34,6 +35,7 @@ class VPGEnumClassReader
         ~VPGEnumClassReader() {}
 
         std::wstring GetCppCodeLine(const std::wstring &str, size_t &pos, bool fromCurrentPos) const;
+        std::shared_ptr<Json> GetJsonAttributes(const std::wstring &command, const std::wstring &attributeName) const;
 
         // all attribute start with @@
         std::vector<std::wstring> GetAttribute(const std::wstring &str) const;

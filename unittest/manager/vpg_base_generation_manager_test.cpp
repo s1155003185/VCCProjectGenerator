@@ -65,7 +65,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
             _Manager->SetWorkspace(L"B");
 
             std::wstring makeFileStr = L"hi\r\n";
-            makeFileStr += L"# <vcc:name sync=\"ALERT\">\r\n";
+            makeFileStr += L"# <vcc:name sync=\"ALERT\" gen=\"ALERT\">\r\n";
             makeFileStr += L"#----------------------------------#\r\n";
             makeFileStr += L"#---------- Project Name ----------#\r\n";
             makeFileStr += L"#----------------------------------#\r\n";
@@ -89,7 +89,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
             std::wstring exeName = !IsBlank(_Option->GetProjectNameExe()) ? (L" " + _Option->GetProjectNameExe()) : L"";
             std::wstring IsExcludeUnittest = _Option->GetIsExcludeUnittest() ? L" Y" : L" N";
             std::wstring makeFileStr = L"hi\r\n";
-            makeFileStr += L"# <vcc:name sync=\"ALERT\">\r\n";
+            makeFileStr += L"# <vcc:name sync=\"ALERT\" gen=\"ALERT\">\r\n";
             makeFileStr += L"#----------------------------------#\r\n";
             makeFileStr += L"#---------- Project Name ----------#\r\n";
             makeFileStr += L"#----------------------------------#\r\n";

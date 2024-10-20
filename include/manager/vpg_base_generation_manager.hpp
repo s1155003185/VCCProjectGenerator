@@ -234,7 +234,7 @@ void VPGBaseGenerationManager<Derived>::SyncWorkspace(const LogConfig *logConfig
                 continue;
 
             if (IsFile(sourcePath)) {
-                VPGFileSyncService::CopyFile(logConfig, sourcePath, targetPath);
+                VPGFileSyncService::CopyFile(logConfig, VPGFileContentSyncTagMode::Synchronization, sourcePath, targetPath);
             } else {
                 CreateDirectory(targetPath);
                 LogService::LogInfo(logConfig, L"", L"Added Directory: " + targetPath);
@@ -254,7 +254,7 @@ void VPGBaseGenerationManager<Derived>::SyncWorkspace(const LogConfig *logConfig
                 continue;
             
             // modify file
-            VPGFileSyncService::CopyFile(logConfig, sourcePath, targetPath);
+            VPGFileSyncService::CopyFile(logConfig, VPGFileContentSyncTagMode::Synchronization, sourcePath, targetPath);
         }
     CATCH
 }
@@ -275,7 +275,7 @@ std::wstring VPGBaseGenerationManager<Derived>::AdjustMakefile(const std::wstrin
                 std::wstring exeName = !IsBlank(_Option->GetProjectNameExe()) ? (L" " + _Option->GetProjectNameExe()) : L"";
                 std::wstring IsExcludeUnittest = _Option->GetIsExcludeUnittest() ? L" Y" : L" N";
         
-                result += L"# <vcc:name sync=\"ALERT\">\r\n";
+                result += L"# <vcc:name sync=\"ALERT\" gen=\"ALERT\">\r\n";
                 result += L"#----------------------------------#\r\n";
                 result += L"#---------- Project Name ----------#\r\n";
                 result += L"#----------------------------------#\r\n";
@@ -318,7 +318,7 @@ std::wstring VPGBaseGenerationManager<Derived>::AdjustMakefile(const std::wstrin
                 ReplaceAll(exportExeDirWindow, L"\\", L"\\\\");
                 ReplaceAll(exportExternalLibDirWindow, L"\\", L"\\\\");
 
-                result += L"# <vcc:export sync=\"ALERT\">\r\n"
+                result += L"# <vcc:export sync=\"ALERT\" gen=\"ALERT\">\r\n"
                     "#----------------------------------#\r\n"
                     "#---------- Export ----------------#\r\n"
                     "#----------------------------------#\r\n"                

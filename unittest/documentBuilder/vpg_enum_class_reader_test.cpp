@@ -78,6 +78,14 @@ TEST_F(VPGEnumClassReaderTest, GetAttribute)
     EXPECT_EQ(result, expectedResult);
 }
 
+TEST_F(VPGEnumClassReaderTest, GetJsonAttributes)
+{
+    EXPECT_EQ(this->GetReader()->GetJsonAttributes(L"@@A@@Json@@B", L"@@Json"), nullptr);
+
+    std::vector<std::wstring> keys = { L"Number", L"String" };
+    EXPECT_EQ(this->GetReader()->GetJsonAttributes(L"@@A@@Json { \"Number\" : 12, \"String\":\"abc\" } @@B { \"B\" : 123}", L"@@Json")->GetKeys(), keys);
+    EXPECT_EQ(this->GetReader()->GetJsonAttributes(L"@@A@@Json{\"Number\":12,\"String\":\"abc\"}@@B{\"B\":123}", L"@@Json")->GetKeys(), keys);
+}
 
 TEST_F(VPGEnumClassReaderTest, TableCommand)
 {
@@ -122,6 +130,50 @@ TEST_F(VPGEnumClassReaderTest, TableCommand)
     EXPECT_EQ(element->GetCommand(), L"table command 1\r\ntable command 2");
 }
 
+TEST_F(VPGEnumClassReaderTest, TableAttribute)
+{
+    std::wstring code = L"#pragma once\r\n"
+        "\r\n"
+        "#include <string>\r\n"
+        "#include <vector>\r\n"
+        "\r\n"
+        "// @@Json\r\n"
+        "enum class VCCObjectProperty\r\n"
+        "{\r\n"
+        "    EnumA // GETSET(EnumTypeA, EnumA, L\"Default\") CommandA\r\n"
+        "};\r\n";
+
+    std::vector<std::shared_ptr<VPGEnumClass>> results;
+    this->GetReader()->Parse(code, results);
+    EXPECT_EQ(results.size(), (size_t)1);
+    // first
+    std::shared_ptr<VPGEnumClass> element = results.at(0);
+    EXPECT_EQ(element->GetName(), L"VCCObjectProperty");
+    EXPECT_EQ(element->GetCommand(), L"");
+    EXPECT_TRUE(element->GetIsJson());
+    EXPECT_EQ(element->GetInheritClass(), L"");
+
+    code = L"#pragma once\r\n"
+        "\r\n"
+        "#include <string>\r\n"
+        "#include <vector>\r\n"
+        "\r\n"
+        "// @@Inherit{\"Class\":\"BaseObject\"}\r\n"
+        "enum class VCCObjectProperty\r\n"
+        "{\r\n"
+        "    EnumA // GETSET(EnumTypeA, EnumA, L\"Default\") CommandA\r\n"
+        "};\r\n";
+
+    results.clear();
+    this->GetReader()->Parse(code, results);
+    EXPECT_EQ(results.size(), (size_t)1);
+    // first
+    element = results.at(0);
+    EXPECT_EQ(element->GetName(), L"VCCObjectProperty");
+    EXPECT_EQ(element->GetCommand(), L"");
+    EXPECT_FALSE(element->GetIsJson());
+    EXPECT_EQ(element->GetInheritClass(), L"BaseObject");
+}
 
 void CheckVPGEnumClassReaderTestNormalEnumClassResult(const VPGEnumClassReader *reader, const std::wstring &code)
 {

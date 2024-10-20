@@ -154,7 +154,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     // ------------------------------------------------------------------------------------------ //
     EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a.hpp"})));    
     EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a.hpp"})),
-        L"#pragma once\r\n"
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#pragma once\r\n"
         "\r\n"
         "#include <string>\r\n"
         "\r\n"

@@ -22,24 +22,31 @@ enum class VPGFileContentSyncTag
     Reserve
 };
 
+enum class VPGFileContentSyncTagMode
+{
+    Synchronization,
+    Generation
+};
+
+
 class VPGFileSyncService
 {
     private:
         VPGFileSyncService() = default;
         virtual ~VPGFileSyncService() {}
 
-        static bool IsSyncTag(const std::wstring &tag);
+        static bool IsSyncTag(const VPGFileContentSyncTagMode &mode, const std::wstring &tag);
 
-        static VPGFileContentSyncMode GetSyncMode(const Xml *codeElemet);
+        static VPGFileContentSyncMode GetSyncMode(const VPGFileContentSyncTagMode &mode, const Xml *codeElemet);
         static const Xml *GetTagFromCode(const Xml *code, const std::wstring tagName);
-        static bool IsTagReplace(const Xml *child);
-        static bool IsTagReserve(const Xml *child);
+        static bool IsTagReplace(const VPGFileContentSyncTagMode &mode, const Xml *child);
+        static bool IsTagReserve(const VPGFileContentSyncTagMode &mode, const Xml *child);
 
-        static std::wstring GenerateForceCode(const VPGFileContentSyncMode srcMode, const VPGFileContentSyncMode destMode, const Xml *src, const Xml *dest);
-        static std::wstring GenerateFullCode(const VPGFileContentSyncMode srcMode, const VPGFileContentSyncMode destMode, const Xml *src, const Xml *dest);
-        static std::wstring GenerateDemandCode(const VPGFileContentSyncMode srcMode, const VPGFileContentSyncMode destMode, const Xml *src, const Xml *dest);
-        static std::wstring GenerateSkipCode(const std::wstring &dest);
+        static std::wstring GenerateForceCode(const VPGFileContentSyncMode updatedCodeMode, const VPGFileContentSyncMode originalCodeMode, const Xml *updatedCode, const Xml *originalCode);
+        static std::wstring GenerateFullCode(const VPGFileContentSyncTagMode &mode, const VPGFileContentSyncMode updatedCodeMode, const VPGFileContentSyncMode originalCodeMode, const Xml *updatedCode, const Xml *originalCode);
+        static std::wstring GenerateDemandCode(const VPGFileContentSyncTagMode &mode, const VPGFileContentSyncMode updatedCodeMode, const VPGFileContentSyncMode originalCodeMode, const Xml *updatedCode, const Xml *originalCode);
+        static std::wstring GenerateSkipCode(const std::wstring &originalCode);
     public:
-        static void CopyFile(const LogConfig *logConfig, const std::wstring &sourcePath, const std::wstring &destPath);
-        static std::wstring SyncFileContent(const std::wstring &src, const std::wstring &dest, const VPGFileContentSyncMode defaultMode, const std::wstring &commandDelimiter);
+        static void CopyFile(const LogConfig *logConfig, const VPGFileContentSyncTagMode &mode, const std::wstring &sourcePath, const std::wstring &originalCodePath);
+        static std::wstring SyncFileContent(const VPGFileContentSyncTagMode &mode, const std::wstring &updatedCode, const std::wstring &originalCode, const VPGFileContentSyncMode defaultMode, const std::wstring &commandDelimiter);
 };

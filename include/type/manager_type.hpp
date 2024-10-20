@@ -6,6 +6,6 @@ enum class ManagerType
     NA = 0
     , Action
     , Git
-    // <vcc:custom sync="SKIP" gen="SKIP">
+    // <vcc:custom sync="RESERVE" gen="RESERVE">
     // </vcc:custom>
 };

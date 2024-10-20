@@ -30,7 +30,7 @@ class Application
         bool IsFormClosable(int64_t formId);
         bool CloseForm(int64_t formId, bool isForce = false);
 
-        // <vcc:custom sync="SKIP" gen="SKIP">
+        // <vcc:custom sync="RESERVE" gen="RESERVE">
         // </vcc:custom>
 };
 

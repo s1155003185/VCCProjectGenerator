@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+- Initialize Form
+- Fix vcc tag using wrong Key "SKIP" instead of "RESERVE"
 
 ### [v0.2.3] - 2024-10-20: Form - Generate Inherit Class
 - Initialize Application

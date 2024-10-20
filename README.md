@@ -16,10 +16,10 @@ Please go to following session to see how to create VCC Project to generate c++ 
 - Tutorial for Create VCC DLL Project to generate dll with Java Interface
 
 ## What's new
-Generate Child Class (allow inherit)
+Generate Form
 
 ## What's next
-Form, Action
+Action
 
 ## Features
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
@@ -311,7 +311,7 @@ Path in the project is recommaneded to be in Camel Case. So, when export to java
 Sample
 ```
 {
-    "Version": "v0.2.1",
+    "Version": "v0.2.4",
     "ProjectType": "VccModule",
     "TemplateGitUrl": "https://github.com/s1155003185/VCCModule.git",
     "TemplateWorkspace": "${userHome}/Documents/vcc/VCCModule",
@@ -327,6 +327,10 @@ Sample
     "ExceptionTypeDirectory": "include/type",
     "ManagerTypeDirectory": "include/type",
     "ObjectTypeDirectory": "include/type",
+    "ApplicationDirectoryHpp": "include",
+    "ApplicationDirectoryCpp": "src",
+    "FormDirectoryHpp": "include/form",
+    "FormDirectoryCpp": "src/form",
     "ObjectDirectoryHpp": "include/model",
     "ObjectDirectoryCpp": "src/model",
     "PropertyAccessorDirectoryHpp": "include/propertyAccessor",
@@ -398,19 +402,32 @@ TypeWorkspace
     In Generation mode, Generator will search files with suffix *_property.hpp to create Class, Property Accessor etc. Detail: Generation Rule.
 
 ActionTypeDirectory, ExceptionTypeDirectory, ManagerTypeDirectory, ObjectTypeDirectory
+    Mandatory.
     The location to export action_type.hpp, exception_type.hpp, manager_type.hpp, object_type.hpp
     All are used to export to interface. Cannot delete those files. action_type may be moved to External/VCC/Form/Action/ in the future such that action can be optional.
 
+ApplicationDirectoryHpp, ApplicationDirectoryCpp
+    Optional. Empty for no generation.
+    In Generation mode, application.hpp and application.cpp are generated here.
+
+FormDirectoryHpp, FormDirectoryCpp
+    Optional. Empty then follow ObjectDirectoryHpp, ObjectDirectoryCpp.
+    In Generation mode, form files are generated here.
+
 ObjectDirectoryHpp, ObjectDirectoryCpp
+    Optional. Empty for no generation.
     In Generation mode, class files are generated here.
     
 PropertyAccessorDirectoryHpp, PropertyAccessorDirectoryCpp
+    Optional. Empty for no generation.
     In Generation mode, Property Accessor files are generated here.
 
 ObjectFactoryDirectoryHpp, ObjectFactoryDirectoryCpp
+    Optional. Empty for no generation.
     In Generation mode, Object Factory file is generated here.
 
 PropertyAccessorFactoryDirectoryHpp, PropertyAccessorFactoryDirectoryCpp
+    Optional. Empty for no generation.
     In Generation mode, Property Accessor Factory file is generated here.
 
 Plugins
@@ -675,11 +692,21 @@ Note:
     e.g. VPGPersionProperty
 
 #### Class Attribute
-// [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Inherit { "Class": "ClassName" }]
+// [@@Form] [@@Inherit { "Class": "ClassName" }] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Command xxx]
 
 []: Optional
 @@: Key for attributes. Need to state for attribute
 {}: Json format to describe Json file
+
+[@@Form]
+    This Class is a form.
+    If hpp file contains both object and form, generator will generate files under Form Directory instead of Object Directory.
+
+[@@Inherit { "Class": "ClassName" }]
+    Generate Class that inherit ClassName
+    Attribute:
+        Class
+            Value is Parent Class
 
 [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }]
     Generate Class as Json Object. Class will have attribute ToJson, SerializeJson and DeserializeJson
@@ -701,14 +728,11 @@ Note:
         Value.DecimalPlaces
             value is number. Declare for decimal places for double and float. If not declare, Json number will be trim tailing 0s.
 
-[@@Inherit { "Class": "ClassName" }]
-    Generate Class that inherit ClassName
-    Attribute:
-        Class
-            Value is Parent Class,
+[@@Command xxx]
+    Command used in VCC generator, can be any text in xxx without @@
 
 #### Field Attribute
-Enum // {ClassMacro} [@@AccessMode] [@@Inherit]
+Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Command xxx]
 
 {...}: Compulsory
 []: Optional
@@ -735,6 +759,9 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit]
 [@@Inherit]
     If stated, generate will not generate Getter and Setter.
 
+[@@Command xxx]
+    Command used in VCC generator, can be any text in xxx without @@
+    
 #### Example
     There is TypeWorkspace in vcc.json
     "TypeWorkspace": "include/Type"

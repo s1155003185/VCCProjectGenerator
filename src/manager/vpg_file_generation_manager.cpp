@@ -282,9 +282,14 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
                     objectFileName.pop_back();
 
                 std::wstring propertyAccessorFileName = objectFileName + L"_" + propertyAccessorFileSuffixWithoutExtention;
-                objectFileNames.insert(objectFileName + L".hpp");
-                VPGObjectFileGenerationService::GenerateHpp(logConfig, projPrefix, _IncludeFiles, GetConcatPath(projWorkspace, option->GetObjectDirectoryHpp(), middlePath, objectFileName + L".hpp"), objectEnumClassList);
-                VPGObjectFileGenerationService::GenerateCpp(logConfig, _IncludeFiles, _EnumClasses, GetConcatPath(projWorkspace, option->GetObjectDirectoryCpp(), middlePath, objectFileName + L".cpp"), objectEnumClassList);
+                
+                if (!option->GetObjectDirectoryHpp().empty() && !option->GetObjectDirectoryCpp().empty()) {
+                    objectFileNames.insert(objectFileName + L".hpp");
+                    std::wstring fileObjectDirectoryHpp = !option->GetFormDirectoryHpp().empty() ? GetConcatPath(projWorkspace, option->GetFormDirectoryHpp(), middlePath, objectFileName + L".hpp") : L"";
+                    std::wstring fileObjectDirectoryCpp = !option->GetFormDirectoryCpp().empty() ? GetConcatPath(projWorkspace, option->GetFormDirectoryCpp(), middlePath, objectFileName + L".cpp") : L"";
+                    VPGObjectFileGenerationService::GenerateHpp(logConfig, projPrefix, _IncludeFiles, GetConcatPath(projWorkspace, option->GetObjectDirectoryHpp(), middlePath, objectFileName + L".hpp"), fileObjectDirectoryHpp, objectEnumClassList);
+                    VPGObjectFileGenerationService::GenerateCpp(logConfig, _IncludeFiles, _EnumClasses, GetConcatPath(projWorkspace, option->GetObjectDirectoryCpp(), middlePath, objectFileName + L".cpp"), fileObjectDirectoryCpp, objectEnumClassList);
+                }
                 if (!propertyAccessorDirectoryHpp.empty() && !propertyAccessorDirectoryCpp.empty()) {
                     propertyAccessorFileNames.insert(propertyAccessorFileName + L".hpp");
                     VPGPropertyAccessorGenerationService::GenerateHpp(logConfig, GetConcatPath(projWorkspace, propertyAccessorDirectoryHpp, middlePath, propertyAccessorFileName + L".hpp"), objectEnumClassList);

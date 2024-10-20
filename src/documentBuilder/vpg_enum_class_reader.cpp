@@ -1,10 +1,13 @@
 #include "vpg_enum_class_reader.hpp"
 
+#include <assert.h>
 #include <math.h>
 #include <string>
 #include <vector>
 
 #include "exception_macro.hpp"
+#include "json.hpp"
+#include "json_builder.hpp"
 #include "memory_macro.hpp"
 #include "string_helper.hpp"
 #include "vpg_enum_class.hpp"
@@ -138,6 +141,26 @@ std::wstring VPGEnumClassReader::_GetDefaultValue(const std::wstring &macroStr, 
     return result;
 }
 
+std::shared_ptr<Json> VPGEnumClassReader::GetJsonAttributes(const std::wstring &command, const std::wstring &attributeName) const
+{
+    TRY
+        size_t pos = Find(command, attributeName, 0, true);
+        if (pos == std::wstring::npos)
+            return nullptr;
+        pos += attributeName.length();
+        GetNextCharPos(command, pos, true);
+        if (command[pos] == L'{') {
+            std::wstring jsonStr = GetNextQuotedString(command, pos, { L" ", L"\t", L"\n" }, { L"{", L"[", L"\"", L"'" }, { L"}", L"]", L"\"", L"'" }, { L"", L"", L"\\", L"\\" });
+            TRY
+                DECLARE_SPTR(Json, json);
+                JsonBuilder builder;
+                builder.Deserialize(jsonStr, json);
+                return json;
+            CATCH
+        }
+    CATCH
+    return nullptr;
+}
 
 std::vector<std::wstring> VPGEnumClassReader::GetAttribute(const std::wstring &str) const
 {
@@ -202,7 +225,6 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
         }
         
         // split Remain
-        pos = 0;
         std::vector<std::wstring> attributes = GetAttribute(remainStr);
         for (auto const &attribute : attributes) {
             if (Equal(attribute, attributeToken + L"ReadOnly", true))
@@ -215,6 +237,12 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::NoAccess;
             else if (Equal(attribute, attributeToken + L"Inherit", true))
                 property->SetIsInherit(true);
+            else if (Equal(attribute, attributeToken + L"Command", true)) {
+                std::wstring commandToken = attributeToken + L"Command";
+                commandToken = attribute.substr(commandToken.length());
+                Trim(commandToken);
+                property->SetCommand(commandToken);
+            }
         }
     CATCH
 }
@@ -330,6 +358,42 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
         } else if (IsStartWith(cppCode, L"/*", pos)) {
             enumClass->_Command =_GetCommand(cppCode, false, pos);
             GetNextCharPos(cppCode, pos, false);
+        }
+        if (!enumClass->_Command.empty()) {
+            std::vector<std::wstring> attributes = GetAttribute(enumClass->_Command);
+            std::wstring command = L"";
+            for (auto const &attribute : attributes) {
+                std::shared_ptr<Json> attributes = nullptr;
+                if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Form")) {
+                    enumClass->_Type = VPGEnumClassType::Form;
+                    command = L"";
+                } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Inherit")) {
+                    attributes = GetJsonAttributes(attribute, attributeToken + L"Inherit");
+                    assert(attributes != nullptr);
+                    std::wstring className = attributes->GetString(L"Class");
+                    if (IsBlank(className))
+                        THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Enum Class " + enumClass->_Name + L" has attribute @@Inherit but missing Attribute \"Class\"");
+                    enumClass->_InheritClass = className;
+                
+                    command = L"";
+                } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Json")) {
+                    enumClass->_IsJson = true;
+                    attributes = GetJsonAttributes(attribute, attributeToken + L"Json");
+
+                    command = L"";
+                } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Command")) {
+                    std::wstring commandToken = attributeToken + L"Command";
+                    commandToken = attribute.substr(commandToken.length());
+                    Trim(commandToken);
+                    command = commandToken;
+                }
+                
+                if (attributes != nullptr) {
+                    for (auto const &key : attributes->GetKeys())
+                        enumClass->InsertJsonAttributes(key, attributes->GetString(key));
+                }
+                enumClass->_Command = command;
+            }
         }
         if (cppCode[pos] == L';') {
             return false;
