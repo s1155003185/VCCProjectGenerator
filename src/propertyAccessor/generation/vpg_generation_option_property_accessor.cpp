@@ -142,6 +142,8 @@ std::wstring VPGGenerationOptionExportPropertyAccessor::_ReadString(const int64_
             return obj->GetExportDirectoryExe();
         case VPGGenerationOptionExportProperty::DllBridgeDirectory:
             return obj->GetDllBridgeDirectory();
+        case VPGGenerationOptionExportProperty::FormDirectory:
+            return obj->GetFormDirectory();
         case VPGGenerationOptionExportProperty::ObjectDirectory:
             return obj->GetObjectDirectory();
         case VPGGenerationOptionExportProperty::TypeDirectory:
@@ -180,6 +182,9 @@ void VPGGenerationOptionExportPropertyAccessor::_WriteString(const int64_t &obje
             break;
         case VPGGenerationOptionExportProperty::DllBridgeDirectory:
             obj->SetDllBridgeDirectory(value);
+            break;
+        case VPGGenerationOptionExportProperty::FormDirectory:
+            obj->SetFormDirectory(value);
             break;
         case VPGGenerationOptionExportProperty::ObjectDirectory:
             obj->SetObjectDirectory(value);

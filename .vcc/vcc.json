@@ -36,6 +36,7 @@
             "ExportDirectoryDll": "src/main/resources",
             "ExportDirectoryExe": "",
             "DllBridgeDirectory": "src/main/java/com/vcc",
+            "FormDirectory": "src/main/java/com/vcc/form",
             "ObjectDirectory": "src/main/java/com/vcc/model",
             "TypeDirectory": "src/main/java/com/vcc/type"
         }

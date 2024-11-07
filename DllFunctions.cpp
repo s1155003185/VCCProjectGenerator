@@ -6,7 +6,7 @@
 #include <wchar.h>
 
 
-// <vcc:dllInterfaceHeader gen="FORCE">
+// <vcc:dllInterfaceHeader gen="REPLACE">
 #include "exception_macro.hpp"
 #include "i_object.hpp"
 #include "lock_type.hpp"
@@ -38,7 +38,7 @@ void *CreateObject(int64_t objectType)
     return obj.get();
 }
 
-// <vcc:dllInterface gen="FORCE">
+// <vcc:dllInterface gen="REPLACE">
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(bool, Bool, false)
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(char, Char, L'\0')
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(wchar_t, Wchar, L'\0')

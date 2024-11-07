@@ -390,7 +390,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
         content += !projectFileListStr.empty() ? (projectFileListStr + L"\r\n") : L"";
         
         if (isContainForm) {
-            content += L"// <vcc:customHeader sync=\"SKIP\" gen=\"SKIP\">\r\n"
+            content += L"// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
                 "// </vcc:customHeader>\r\n"
                 "\r\n";
         }
@@ -418,7 +418,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
             // Form
             if (enumClass->GetType() == VPGEnumClassType::Form) {
                 extraFunction += L"\r\n"
-                    + INDENT + INDENT + L"// <vcc:custom sync=\"SKIP\" gen=\"SKIP\">\r\n"
+                    + INDENT + INDENT + L"// <vcc:custom sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
                     + INDENT + INDENT + L"// Initialize\r\n"
                     + INDENT + INDENT + L"void OnInitialize() const override;\r\n"
                     + INDENT + INDENT + L"// Close\r\n"
@@ -626,7 +626,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
         
         if (isCustomNeeded)
             content += L"\r\n"
-                "// <vcc:customHeader sync=\"SKIP\" gen=\"SKIP\">\r\n"
+                "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
                 "// </vcc:customHeader>\r\n";
         
         content += L"\r\n"
@@ -644,7 +644,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
 
         if (isCustomNeeded) {
             content += L"\r\n"
-                "// <vcc:custom sync=\"SKIP\" gen=\"SKIP\">";
+                "// <vcc:custom sync=\"RESERVE\" gen=\"RESERVE\">";
 
             // Custom Part
             for (auto const &enumClass : enumClassList) {

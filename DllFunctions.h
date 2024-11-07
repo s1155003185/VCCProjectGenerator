@@ -10,7 +10,7 @@
 #define DLLEXPORT extern 
 #endif
 
-// <vcc:dllInterfaceHeader gen="FORCE">
+// <vcc:dllInterfaceHeader gen="REPLACE">
 #include "object_factory.hpp"
 #include "property_accessor_factory.hpp"
 #include "property_accessor_macro.hpp"
@@ -25,7 +25,7 @@ DLLEXPORT int GetVersion(wchar_t **str);
 
 DLLEXPORT void *CreateObject(int64_t objectType);
 
-// <vcc:dllInterface gen="FORCE">
+// <vcc:dllInterface gen="REPLACE">
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(bool, Bool)
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(char, Char)
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(wchar_t, Wchar)

@@ -175,7 +175,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
 
         // get all enum and enum class under typeWorkspace to get java import map
         // only contain 
-        std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMap;
+        std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
         std::map<std::wstring, std::vector<std::wstring>> includeFileEnumClassMap;
         for (auto const &enumClassIncludeFilePair : _IncludeFiles) {
             if (includeFileEnumClassMap.find(enumClassIncludeFilePair.second) == includeFileEnumClassMap.end()) {
@@ -200,7 +200,10 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
             for (auto const &enumClassName : includeFileEnumClassMap.find(fileName)->second) {
                 if (_EnumClasses.find(enumClassName) == _EnumClasses.end())
                     continue;
-                typeWorkspaceClassRelativePathMap.insert(std::make_pair(enumClassName, relativePath));
+                if (_EnumClasses.at(enumClassName)->GetType() == VPGEnumClassType::Form)
+                    typeWorkspaceClassRelativePathMapForm.insert(std::make_pair(enumClassName, relativePath));
+                else
+                    typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(enumClassName, relativePath));
             }
         }
 
@@ -268,8 +271,15 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
                     if (!IsBlank(javaOption->GetTypeDirectory()))
                         VPGJavaGenerationService::GenerateEnum(logConfig, GetConcatPath(workspace, javaOption->GetTypeDirectory(), middlePath, javaEnumClassName + L".java"), middlePath, enumClass.get(), option, javaOption.get());
                     
-                    if (IsClassEnum(enumClass->GetName(), projPrefix) && !IsBlank(javaOption->GetObjectDirectory()))
-                        VPGJavaGenerationService::GenerateObject(logConfig, GetConcatPath(workspace, javaOption->GetObjectDirectory(), middlePath, className + L".java"), middlePath, enumClass.get(), typeWorkspaceClassRelativePathMap, option, javaOption.get());
+                    if (IsClassEnum(enumClass->GetName(), projPrefix)) {
+                        std::wstring objectDirectory = javaOption->GetObjectDirectory();
+                        if (enumClass->GetType() == VPGEnumClassType::Form && !IsBlank(javaOption->GetFormDirectory()))
+                            objectDirectory = javaOption->GetFormDirectory();
+                        if (!IsBlank(objectDirectory))
+                            VPGJavaGenerationService::GenerateObject(logConfig, GetConcatPath(workspace, objectDirectory, middlePath, className + L".java"), middlePath, enumClass.get(),
+                                typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm,
+                                option, javaOption.get());
+                    }
                 }
             }
             

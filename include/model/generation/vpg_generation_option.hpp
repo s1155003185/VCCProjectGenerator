@@ -21,6 +21,7 @@ class VPGGenerationOptionExport : public BaseObject<VPGGenerationOptionExport>, 
     GETSET(std::wstring, ExportDirectoryDll, L"")
     GETSET(std::wstring, ExportDirectoryExe, L"")
     GETSET(std::wstring, DllBridgeDirectory, L"")
+    GETSET(std::wstring, FormDirectory, L"")
     GETSET(std::wstring, ObjectDirectory, L"")
     GETSET(std::wstring, TypeDirectory, L"")
 

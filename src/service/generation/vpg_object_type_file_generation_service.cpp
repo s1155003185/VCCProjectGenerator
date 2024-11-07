@@ -44,7 +44,7 @@ void VPGObjectTypeFileGenerationService::Generate(const LogConfig *logConfig, co
         if (!IsBlank(customContent))
             content += INDENT + customContent + L"\r\n";
         else
-            content += INDENT + L"// <vcc:custom sync=\"SKIP\" gen=\"SKIP\">\r\n"
+            content += INDENT + L"// <vcc:custom sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
                 + INDENT + L"// </vcc:custom>\r\n";
         content += L"};\r\n";
         WriteFile(filePathHpp, content, true);

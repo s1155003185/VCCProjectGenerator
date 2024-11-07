@@ -6,7 +6,7 @@
 #include "object_type.hpp"
 #include "vpg_git_log.hpp"
 
-// <vcc:customHeader sync="SKIP" gen="SKIP">
+// <vcc:customHeader sync="RESERVE" gen="RESERVE">
 // </vcc:customHeader>
 
 using namespace vcc;

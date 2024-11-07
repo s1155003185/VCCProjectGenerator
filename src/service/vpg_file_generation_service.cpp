@@ -21,8 +21,8 @@ constexpr auto SKIP_MODE = L"SKIP";
 constexpr auto FORCE_MODE = L"FORCE";
 
 // tag
-constexpr auto SKIP_TAG = L"SKIP";
-constexpr auto FORCE_TAG = L"FORCE";
+constexpr auto RESERVE_TAG = L"RESERVE";
+constexpr auto REPLACE_TAG = L"REPLACE";
 
 
 std::wstring VPGFileGenerationService::GetIndent(const std::wstring &str)
@@ -78,7 +78,7 @@ bool VPGFileGenerationService::IsTagForce(const Xml *child)
             if (IsGeneartionTag(attr->GetName())) {
                 std::wstring value = attr->GetValue();
                 ToUpper(value);
-                return value == FORCE_TAG;
+                return value == REPLACE_TAG;
             }
         }
     CATCH
@@ -92,7 +92,7 @@ bool VPGFileGenerationService::IsTagSkip(const Xml *child)
             if (IsGeneartionTag(attr->GetName())) {
                 std::wstring value = attr->GetValue();
                 ToUpper(value);
-                return value == SKIP_TAG;
+                return value == RESERVE_TAG;
             }
         }
     CATCH
@@ -147,7 +147,7 @@ std::wstring VPGFileGenerationService::GenerateForceCode(const Xml *src, const s
             }
         }
         if (!isFound) {
-            result += L"\r\n" + indent + commandDelimiter + L" <" + tagName + L" gen=\"FORCE\">\r\n";
+            result += L"\r\n" + indent + commandDelimiter + L" <" + tagName + L" gen=\"REPLACE\">\r\n";
             for (auto line : lines) {
                 Trim(line);
                 result += indent + line + L"\r\n";

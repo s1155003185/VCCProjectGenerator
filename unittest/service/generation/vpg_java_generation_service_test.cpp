@@ -43,6 +43,7 @@ class VPGJavaGenerationServiceTest : public testing::Test
             _JavaOption->SetDllBridgeDirectory(L"src/main/java/com/vcc/test/");
             _JavaOption->SetTypeDirectory(L"src/main/java/com/vcc/type");
             _JavaOption->SetObjectDirectory(L"src/main/java/com/vcc/module");
+            _JavaOption->SetFormDirectory(L"src/main/java/com/vcc/form");
         }
 
         void TearDown() override
@@ -66,7 +67,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "#define DLLEXPORT extern\r\n"
         "#endif\r\n"
         "\r\n"
-        "// <vcc:dllInterfaceHeader gen=\"FORCE\">\r\n"
+        "// <vcc:dllInterfaceHeader gen=\"REPLACE\">\r\n"
         "#include \"property_accessor_macro.hpp\"\r\n"
         "#include \"memory_macro.hpp\"\r\n"
         "#include \"exception_macro.hpp\"\r\n"
@@ -87,7 +88,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "    return tmpObj.get();\r\n"
         "}\r\n"
         "\r\n"
-        "// <vcc:dllInterface gen=\"FORCE\">\r\n"
+        "// <vcc:dllInterface gen=\"REPLACE\">\r\n"
         "DLLEXPORT bool ReadBool(void *ref, int64_t property, int64_t index)\r\n"
         "{\r\n"
         "    TRY\r\n"
@@ -276,7 +277,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMap;
     std::wstring filePath = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"});
-    VPGJavaGenerationService::GenerateObject(this->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMap, this->GetOption().get(), this->GetJavaOption().get());
+    VPGJavaGenerationService::GenerateObject(this->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMap, typeWorkspaceClassRelativePathMap, this->GetOption().get(), this->GetJavaOption().get());
     
     EXPECT_TRUE(IsFileExists(filePath));
     EXPECT_EQ(ReadFile(filePath),
@@ -640,6 +641,49 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
         "\r\n"
         "    public void clearOrderedMapObject() {\r\n"
         "        VPGDllFunctions.Instance.ClearContainer(Handle, VPGTypeBProperty.OrderedMapObject.getValue());\r\n"
+        "    }\r\n"
+        "}\r\n");
+}
+
+TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
+{
+    std::wstring enumClass =
+        L"#param once\r\n"
+        "// @@Form\r\n"
+        "enum class VPGGitFormProperty {\r\n"
+        "    Log // GETSET_SPTR_NULL(VPGGitLog, Log)\r\n"
+        "};\r\n";
+
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    this->GetReader()->Parse(enumClass, enumClassList);
+
+    std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
+    typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));
+    std::wstring filePath = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGGitLog.java"});
+    VPGJavaGenerationService::GenerateObject(this->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm, this->GetOption().get(), this->GetJavaOption().get());
+    
+    EXPECT_TRUE(IsFileExists(filePath));
+    EXPECT_EQ(ReadFile(filePath),
+        L"package com.vcc.form;\r\n"
+        "\r\n"
+        "import com.sun.jna.Pointer;\r\n"
+        "import com.vcc.test.VPGDllFunctions;\r\n"
+        //"import com.vcc.object.VPGGit;\r\n"
+        "import com.vcc.type.VPGGitFormProperty;\r\n"
+        "\r\n"
+        "public class VPGGitForm {\r\n"
+        "    public Pointer Handle = null;\r\n"
+        "\r\n"
+        "    public VPGGitForm(Pointer handle) {\r\n"
+        "        this.Handle = handle;\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public VPGGitLog getLog() {\r\n"
+        "        return new VPGGitLog(VPGDllFunctions.Instance.ReadObject(Handle, VPGGitFormProperty.Log.getValue(), -1));\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public void setLog(VPGGitLog value) {\r\n"
+        "        VPGDllFunctions.Instance.WriteObject(Handle, VPGGitFormProperty.Log.getValue(), value.Handle, -1);\r\n"
         "    }\r\n"
         "}\r\n");
 }

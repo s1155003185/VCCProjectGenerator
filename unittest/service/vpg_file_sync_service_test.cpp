@@ -205,13 +205,13 @@ TEST_F(VPGFileSyncServiceTest, DEMAND_TAG)
                 result);
 }
 
-TEST_F(VPGFileSyncServiceTest, SKIP_TAG)
+TEST_F(VPGFileSyncServiceTest, RESERVE_TAG)
 {
     EXPECT_EQ(VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Synchronization, this->GetSkipHeader() + this->GetCodeA(), this->GetSkipHeader() + this->GetCodeB(), VPGFileContentSyncMode::Skip, L"//"),
                 this->GetSkipHeader() + this->GetCodeB());
 }
 
-TEST_F(VPGFileSyncServiceTest, FORCE_TAG)
+TEST_F(VPGFileSyncServiceTest, REPLACE_TAG)
 {
     EXPECT_EQ(VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Synchronization, this->GetForceHeader() + this->GetCodeA(), this->GetForceHeader() + this->GetCodeB(), VPGFileContentSyncMode::Skip, L"//"),
                 this->GetForceHeader() + this->GetCodeA());

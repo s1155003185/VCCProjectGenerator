@@ -145,7 +145,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    NA\r\n"
         "    , Object\r\n"
         "    , ObjectPtr\r\n"
-        L"    // <vcc:custom sync=\"SKIP\" gen=\"SKIP\">\r\n"
+        L"    // <vcc:custom sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         L"    // </vcc:custom>\r\n"
         "};\r\n");
 

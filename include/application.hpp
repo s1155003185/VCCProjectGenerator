@@ -7,7 +7,7 @@
 #include "i_form.hpp"
 #include "object_type.hpp"
 
-// <vcc:customHeader sync="SKIP" gen="SKIP">
+// <vcc:customHeader sync="RESERVE" gen="RESERVE">
 // </vcc:customHeader>
 
 using namespace vcc;

@@ -61,6 +61,22 @@ std::wstring VPGJavaGenerationService::GetJavaPactkage(const std::wstring &path,
     return result;
 }
 
+std::wstring VPGJavaGenerationService::GetJavaPactkageObject(const VPGEnumClass *enumClass, const VPGGenerationOptionExport *option, const std::wstring &middlePath)
+{
+    std::wstring result = L"";
+    TRY
+        std::wstring parentPath = option->GetObjectDirectory();
+        std::wstring filePathName = L"Object Directory";
+        if (enumClass->GetType() == VPGEnumClassType::Form) {
+            if (!IsBlank(option->GetFormDirectory()))
+                parentPath = option->GetFormDirectory();
+            filePathName = L"File Directory";
+        }
+        result = GetJavaPactkage(parentPath, middlePath, filePathName);
+    CATCH
+    return result;
+}
+
 std::wstring VPGJavaGenerationService::GetPropertyAccessorCppToJavaConvertedType(const std::wstring &cppType)
 {
     std::wstring result = L"";
@@ -668,6 +684,8 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterWrite(const VPG
             }
         }
         if (javaType == L"String") {
+            importFiles.insert(L"com.sun.jna.ptr.PointerByReference");
+
             result += INDENT + INDENT + L"Pointer valuePtr = new Memory(Native.WCHAR_SIZE * (value.length() + 1));\r\n"
                 + INDENT + INDENT + L"valuePtr.setWideString(0, value);\r\n"
                 + INDENT + INDENT + L"PointerByReference valueReference = new PointerByReference();\r\n"
@@ -687,8 +705,8 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterWrite(const VPG
         if (isVector) {
             if ((IsContain(macro, L"SPTR"))) {
                 std::wstring objectTypeClass = projectPrefix + L"ObjectType";
-                if (importFileMap.find(L"ObjectType") != importFileMap.end())
-                    importFiles.insert(importFileMap.find(L"ObjectType")->second + L"." + objectTypeClass);
+                if (importFileMap.find(objectTypeClass) != importFileMap.end())
+                    importFiles.insert(importFileMap.find(objectTypeClass)->second + L"." + objectTypeClass);
 
                 std::wstring objectType = cppType1;
                 if (IsStartWith(cppType1, projectPrefix))
@@ -863,12 +881,12 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
 {
     std::wstring result = L"";
     TRY
-        std::wstring packageFolder = GetJavaPactkage(option->GetObjectDirectory(), middlePath, L"Object Directory");
+        std::wstring packageFolder = GetJavaPactkageObject(enumClass, option, middlePath);
         std::wstring objectName = enumClass->GetName();
         objectName = (!IsStartWith(objectName, projectPrefix) ? projectPrefix : L"") + objectName.substr(0, objectName.size() - propertyClassNameSuffix.size());
         
         std::set<std::wstring> importFiles;
-        importFiles.insert(L"com.sun.jna.ptr.PointerByReference");
+        importFiles.insert(L"com.sun.jna.Pointer");
         importFiles.insert(GetJavaPactkage(option->GetDllBridgeDirectory(), L"", L"DLL Interface Directory") + L"." + (!projectPrefix.empty() ? projectPrefix : L"") + L"DllFunctions");
         importFiles.insert(GetJavaPactkage(option->GetTypeDirectory(), middlePath, L"Type Directory") + L"." + enumClass->GetName());
 
@@ -916,7 +934,7 @@ void VPGJavaGenerationService::GenerateEnum(const LogConfig *logConfig, const st
 }
 
 void VPGJavaGenerationService::GenerateObject(const LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass,
-    const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMap,
+    const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapObject, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapForm,
     const VPGGenerationOption *option, const VPGGenerationOptionExport *javaOption)
 {
     TRY
@@ -933,14 +951,25 @@ void VPGJavaGenerationService::GenerateObject(const LogConfig *logConfig, const 
             return;
 
         std::map<std::wstring, std::wstring> importFileMap;
-        for (auto const &relativePath : typeWorkspaceClassRelativePathMap) {
+        for (auto const &relativePath : typeWorkspaceClassRelativePathMapObject) {
             std::wstring enumClassName = relativePath.first;
-            if (!option->GetProjectPrefix().empty() && !IsStartWith(enumClassName, enumClassName))
+            if (!option->GetProjectPrefix().empty() && !IsStartWith(enumClassName, option->GetProjectPrefix()))
                 enumClassName = option->GetProjectPrefix() + enumClassName;
             importFileMap.insert(std::make_pair(enumClassName, GetJavaPactkage(javaOption->GetTypeDirectory(), relativePath.second, L"Type Directory")));
             if (IsEndWith(enumClassName, propertyClassNameSuffix)) {
                 std::wstring tmpObjectName = enumClassName.substr(0, enumClassName.size() - propertyClassNameSuffix.size());
                 importFileMap.insert(std::make_pair(tmpObjectName, GetJavaPactkage(javaOption->GetObjectDirectory(), relativePath.second, L"Object Directory")));
+            }
+        }
+        for (auto const &relativePath : typeWorkspaceClassRelativePathMapForm) {
+            std::wstring enumClassName = relativePath.first;
+            if (!option->GetProjectPrefix().empty() && !IsStartWith(enumClassName, option->GetProjectPrefix()))
+                enumClassName = option->GetProjectPrefix() + enumClassName;
+            importFileMap.insert(std::make_pair(enumClassName, GetJavaPactkage(javaOption->GetTypeDirectory(), relativePath.second, L"Type Directory")));
+            if (IsEndWith(enumClassName, propertyClassNameSuffix)) {
+                std::wstring tmpObjectName = enumClassName.substr(0, enumClassName.size() - propertyClassNameSuffix.size());
+                std::wstring directory = !IsBlank(javaOption->GetFormDirectory()) ? javaOption->GetFormDirectory() : javaOption->GetObjectDirectory();
+                importFileMap.insert(std::make_pair(tmpObjectName, GetJavaPactkage(directory, relativePath.second, L"Form Directory")));
             }
         }
         LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class: " + tmpFilePath);

@@ -350,6 +350,7 @@ Sample
             "ExportDirectoryDll": "src/main/resources",
             "ExportDirectoryExe": "",
             "DllBridgeDirectory": "src/main/java/com/vcc",
+            "FormDirectory": "src/main/java/com/vcc/form",
             "ObjectDirectory": "src/main/java/com/vcc/model",
             "TypeDirectory": "src/main/java/com/vcc/type"
         }
@@ -463,6 +464,11 @@ Exports
     DllBridgeDirectory
         Relative path based on Workspace.
         In Generation Mode, Dll bridge will be generated in path specified.
+        In Java, it must have prefix src/main/java
+
+    FormDirectory
+        Relative path based on Workspace. If empty, then use ObjectDirectory
+        In Generation Mode, Java class file will be generated in path specified.
         In Java, it must have prefix src/main/java
 
     ObjectDirectory

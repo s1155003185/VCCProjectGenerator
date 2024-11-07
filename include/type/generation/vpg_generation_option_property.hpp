@@ -14,6 +14,7 @@ enum class VPGGenerationOptionExportProperty
     DllBridgeDirectory, // GETSET(std::wstring, DllBridgeDirectory, L"")
 
     // Export Location
+    FormDirectory, // GETSET(std::wstring, FormDirectory, L"")
     ObjectDirectory, // GETSET(std::wstring, ObjectDirectory, L"")
     TypeDirectory // GETSET(std::wstring, TypeDirectory, L"")
 };

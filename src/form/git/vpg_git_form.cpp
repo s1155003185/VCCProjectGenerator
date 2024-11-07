@@ -1,12 +1,12 @@
 // <vcc:vccproj sync="FULL" gen="FULL"/>
 #include "vpg_git_form.hpp"
 
-// <vcc:customHeader sync="SKIP" gen="SKIP">
+// <vcc:customHeader sync="RESERVE" gen="RESERVE">
 // </vcc:customHeader>
 
 using namespace vcc;
 
-// <vcc:custom sync="SKIP" gen="SKIP">
+// <vcc:custom sync="RESERVE" gen="RESERVE">
 void VPGGitForm::OnInitialize() const
 {
 }

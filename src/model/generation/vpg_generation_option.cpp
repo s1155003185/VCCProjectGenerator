@@ -43,6 +43,8 @@ std::shared_ptr<Json> VPGGenerationOptionExport::ToJson() const
         json->AddString(ConvertNamingStyle(L"ExportDirectoryExe", NamingStyle::PascalCase, namestyle), _ExportDirectoryExe);
         // DllBridgeDirectory
         json->AddString(ConvertNamingStyle(L"DllBridgeDirectory", NamingStyle::PascalCase, namestyle), _DllBridgeDirectory);
+        // FormDirectory
+        json->AddString(ConvertNamingStyle(L"FormDirectory", NamingStyle::PascalCase, namestyle), _FormDirectory);
         // ObjectDirectory
         json->AddString(ConvertNamingStyle(L"ObjectDirectory", NamingStyle::PascalCase, namestyle), _ObjectDirectory);
         // TypeDirectory
@@ -84,6 +86,9 @@ void VPGGenerationOptionExport::DeserializeJson(std::shared_ptr<IDocument> docum
         // DllBridgeDirectory
         if (json->IsContainKey(ConvertNamingStyle(L"DllBridgeDirectory", namestyle, NamingStyle::PascalCase)))
             _DllBridgeDirectory = json->GetString(ConvertNamingStyle(L"DllBridgeDirectory", namestyle, NamingStyle::PascalCase));
+        // FormDirectory
+        if (json->IsContainKey(ConvertNamingStyle(L"FormDirectory", namestyle, NamingStyle::PascalCase)))
+            _FormDirectory = json->GetString(ConvertNamingStyle(L"FormDirectory", namestyle, NamingStyle::PascalCase));
         // ObjectDirectory
         if (json->IsContainKey(ConvertNamingStyle(L"ObjectDirectory", namestyle, NamingStyle::PascalCase)))
             _ObjectDirectory = json->GetString(ConvertNamingStyle(L"ObjectDirectory", namestyle, NamingStyle::PascalCase));

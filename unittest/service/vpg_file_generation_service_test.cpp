@@ -19,11 +19,11 @@ class VPGFileGenerationServiceTest : public testing::Test
         void SetUp() override
         {
             this->_CodeA = L"    a\r\n"
-                "    // <vcc:tagA gen=\"FORCE\">\r\n"
+                "    // <vcc:tagA gen=\"REPLACE\">\r\n"
                 "    BLOCK A\r\n"
                 "    // </vcc:tagA>\r\n"
                 "    b\r\n"
-                "    // <vcc:tagB sync=\"SKIP\">\r\n"
+                "    // <vcc:tagB sync=\"RESERVE\">\r\n"
                 "    BLOCK B\r\n"
                 "    // </vcc:tagB>\r\n"
                 "    c\r\n"
@@ -71,12 +71,12 @@ TEST_F(VPGFileGenerationServiceTest, DEMAND_MODE_FORCE)
 {
     EXPECT_EQ(VPGFileGenerationService::GenerateFileContent(this->GetDemandHeader() + this->GetCodeA(), L"vcc:tagA", this->GetReplaceCode(), L"//"),
         this->GetDemandHeader() + L"    a\r\n"
-            "    // <vcc:tagA gen=\"FORCE\">\r\n"
+            "    // <vcc:tagA gen=\"REPLACE\">\r\n"
             "    line A\r\n"
             "    line B\r\n"
             "    // </vcc:tagA>\r\n"
             "    b\r\n"
-            "    // <vcc:tagB sync=\"SKIP\">\r\n"
+            "    // <vcc:tagB sync=\"RESERVE\">\r\n"
             "    BLOCK B\r\n"
             "    // </vcc:tagB>\r\n"
             "    c\r\n"
@@ -96,16 +96,16 @@ TEST_F(VPGFileGenerationServiceTest, DEMAND_MODE_SKIP)
         this->GetDemandHeader() + this->GetCodeA());
 }
 
-TEST_F(VPGFileGenerationServiceTest, FORCE_MODE_FORCE)
+TEST_F(VPGFileGenerationServiceTest, REPLACE_MODE_FORCE)
 {
     EXPECT_EQ(VPGFileGenerationService::GenerateFileContent(this->GetForceHeader() + this->GetCodeA(), L"vcc:tagA", this->GetReplaceCode(), L"//"),
         this->GetForceHeader() + L"    a\r\n"
-            "    // <vcc:tagA gen=\"FORCE\">\r\n"
+            "    // <vcc:tagA gen=\"REPLACE\">\r\n"
             "    line A\r\n"
             "    line B\r\n"
             "    // </vcc:tagA>\r\n"
             "    b\r\n"
-            "    // <vcc:tagB sync=\"SKIP\">\r\n"
+            "    // <vcc:tagB sync=\"RESERVE\">\r\n"
             "    BLOCK B\r\n"
             "    // </vcc:tagB>\r\n"
             "    c\r\n"
@@ -119,15 +119,15 @@ TEST_F(VPGFileGenerationServiceTest, FORCE_MODE_FORCE)
             "    e\r\n");
 }
 
-TEST_F(VPGFileGenerationServiceTest, FORCE_MODE_SKIP)
+TEST_F(VPGFileGenerationServiceTest, REPLACE_MODE_SKIP)
 {
     EXPECT_EQ(VPGFileGenerationService::GenerateFileContent(this->GetForceHeader() + this->GetCodeA(), L"vcc:tagB", this->GetReplaceCode(), L"//"),
         this->GetForceHeader() + L"    a\r\n"
-            "    // <vcc:tagA gen=\"FORCE\">\r\n"
+            "    // <vcc:tagA gen=\"REPLACE\">\r\n"
             "    BLOCK A\r\n"
             "    // </vcc:tagA>\r\n"
             "    b\r\n"
-            "    // <vcc:tagB sync=\"SKIP\">\r\n"
+            "    // <vcc:tagB sync=\"RESERVE\">\r\n"
             "    line A\r\n"
             "    line B\r\n"
             "    // </vcc:tagB>\r\n"
@@ -142,23 +142,23 @@ TEST_F(VPGFileGenerationServiceTest, FORCE_MODE_SKIP)
             "    e\r\n");
 }
 
-TEST_F(VPGFileGenerationServiceTest, FORCE_MODE_NONE)
+TEST_F(VPGFileGenerationServiceTest, REPLACE_MODE_NONE)
 {
     EXPECT_EQ(VPGFileGenerationService::GenerateFileContent(this->GetForceHeader() + this->GetCodeA(), L"vcc:tagNone", this->GetReplaceCode(), L"//"),
         this->GetForceHeader() + this->GetCodeA() + L"\r\n"
-            "    // <vcc:tagNone gen=\"FORCE\">\r\n"
+            "    // <vcc:tagNone gen=\"REPLACE\">\r\n"
             "    line A\r\n"
             "    line B\r\n"
             "    // </vcc:tagNone>\r\n");
 }
 
-TEST_F(VPGFileGenerationServiceTest, SKIP_MODE_FORCE)
+TEST_F(VPGFileGenerationServiceTest, RESERVE_MODE_FORCE)
 {
     EXPECT_EQ(VPGFileGenerationService::GenerateFileContent(this->GetSkipHeader() + this->GetCodeA(), L"vcc:tagA", this->GetReplaceCode(), L"//"),
         this->GetSkipHeader() + this->GetCodeA());
 }
 
-TEST_F(VPGFileGenerationServiceTest, SKIP_MODE_SKIP)
+TEST_F(VPGFileGenerationServiceTest, RESERVE_MODE_SKIP)
 {
     EXPECT_EQ(VPGFileGenerationService::GenerateFileContent(this->GetSkipHeader() + this->GetCodeA(), L"vcc:tagB", this->GetReplaceCode(), L"//"),
         this->GetSkipHeader() + this->GetCodeA());
