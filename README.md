@@ -1067,6 +1067,11 @@ X(Twitter) @VCCProject
 ****
 ## Release Log
 
+### [v0.2.4] - 2024-11-13: Form - Generate Form
+- Initialize Form
+- Generate Form
+- Fix vcc tag using wrong Key "SKIP" instead of "RESERVE"
+
 ### [v0.2.3] - 2024-10-20: Form - Generate Inherit Class
 - Initialize Application
 - Generate Inherit Class
