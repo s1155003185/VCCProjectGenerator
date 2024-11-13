@@ -19,6 +19,8 @@ class VPGFileGenerationService
         VPGFileGenerationService() = default;
         virtual ~VPGFileGenerationService() {}
     
+        static size_t GetLeadingSpace(const std::wstring &line);
+        static size_t GetMinimumLeadingSpace(const std::vector<std::wstring> &lines);
         static const Xml *GetTagFromCode(const Xml *code, const std::wstring &tagName);
 
         static bool IsGeneartionTag(const std::wstring &tag);

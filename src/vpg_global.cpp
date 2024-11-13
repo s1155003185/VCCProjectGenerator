@@ -21,7 +21,7 @@ using namespace vcc;
 
 std::wstring VPGGlobal::GetVersion()
 {
-    return L"v0.2.4";
+    return L"v0.2.5";
 }
 
 std::wstring VPGGlobal::GetVccLocalResponseFolder()

@@ -25,6 +25,37 @@ constexpr auto RESERVE_TAG = L"RESERVE";
 constexpr auto REPLACE_TAG = L"REPLACE";
 
 
+size_t VPGFileGenerationService::GetLeadingSpace(const std::wstring &line)
+{
+    TRY
+        for (size_t i = 0; i < line.size(); i++) {
+            if (!std::iswspace(line.at(i)))
+                return i;
+        }
+    CATCH
+    return 0;
+}
+
+size_t VPGFileGenerationService::GetMinimumLeadingSpace(const std::vector<std::wstring> &lines)
+{
+    size_t result = 0;
+    TRY
+        bool isFirstLine = true;
+        for (auto const &line : lines) {
+            if (!IsBlank(line)) {
+                size_t noOfSpace = GetLeadingSpace(line);
+                if (isFirstLine) {
+                    result = noOfSpace;
+                    isFirstLine = false;
+                } else {
+                    result = std::min(result, noOfSpace);
+                }
+            }
+        }
+    CATCH
+    return result;
+}
+
 std::wstring VPGFileGenerationService::GetIndent(const std::wstring &str)
 {
     std::wstring result = L"";
@@ -135,9 +166,10 @@ std::wstring VPGFileGenerationService::GenerateForceCode(const Xml *src, const s
         for (const auto &child : src->GetChildren()) {
             if (IsStartWith(child->GetName(), L"vcc:") && child->GetName() == tagName) {
                 result += commandDelimiter + L" " + child->GetOpeningTag() + L"\r\n";
+                size_t noOfSpace = GetMinimumLeadingSpace(lines);
                 for (auto line : lines) {
-                    Trim(line);
-                    result += indent + line + L"\r\n";
+                    RTrim(line);
+                    result += indent + line.substr(noOfSpace) + L"\r\n";
                 }
                 result += indent + commandDelimiter + L" " + child->GetClosingTag();
                 isFound = true;
@@ -170,9 +202,13 @@ std::wstring VPGFileGenerationService::GenerateDemandCode(const Xml *src, const 
                 const Xml *srcTag = VPGFileGenerationService::GetTagFromCode(src, child->GetName());
                 if (srcTag != nullptr && VPGFileGenerationService::IsTagForce(child.get())) {
                     result += commandDelimiter + L" " + child->GetOpeningTag() + L"\r\n";
+                    size_t noOfSpace = GetMinimumLeadingSpace(lines);
                     for (auto line : lines) {
-                        Trim(line);
-                        result += indent + line + L"\r\n";
+                        if (!IsBlank(line)) {
+                            RTrim(line);
+                            result += indent + line.substr(noOfSpace) + L"\r\n";
+                        } else
+                            result += L"\r\n";
                     }
                     result += indent + commandDelimiter + L" " + child->GetClosingTag();
                 } else

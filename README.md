@@ -929,6 +929,24 @@ public static void main(String args[]) {
 }
 ```
 
+## Using VCCModule Dll in Java
+After Generation, there are some API in DllFunctions.hpp with Prefix "Application".
+
+For example,
+```
+DLLEXPORT void ApplicationStart();
+DLLEXPORT int64_t ApplicationCreateForm(int64_t formType);
+DLLEXPORT bool ApplicationIsFormPresent(int64_t formId);
+DLLEXPORT bool ApplicationIsFormClosable(int64_t formId);
+DLLEXPORT bool ApplicationCloseForm(int64_t formId, bool isForce);
+```
+
+Step to run the program
+1. Execute ApplicationStart() in Java Main()
+It is used to create global pointer in dll to store data.
+2. When Create Form execute ApplicationCreateForm
+Then it wll return form Id.
+3. When Close Form, execute ApplicationCloseForm
 
 ****
 ## Versioning Common Codebase Project Generator VSCode Extension

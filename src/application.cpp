@@ -21,55 +21,62 @@ void Application::Run()
     CATCH
 }
 
-int64_t Application::Run(std::shared_ptr<IForm> form)
+std::shared_ptr<IForm> Application::CreateForm(const ObjectType &objectType)
 {
     TRY
-        Run();
-
-        application->_Forms.insert(std::make_pair(application->_NextFormId, form));
-        application->_NextFormId++;
-        return application->_NextFormId - 1;
-    CATCH
-    return -1;
-}
-
-int64_t Application::NewForm(ObjectType formType)
-{
-    TRY
-        auto form = std::dynamic_pointer_cast<IForm>(ObjectFactory::Create(formType));
+        auto form = std::dynamic_pointer_cast<IForm>(ObjectFactory::Create(objectType));
         assert(form != nullptr);
-        _Forms.insert(std::make_pair(_NextFormId, form));
-        _NextFormId++;
-        return _NextFormId - 1;
+        application->_Forms.insert(form);
+        return form;
     CATCH
-    return -1;
+    return nullptr;
 }
 
-bool Application::IsFormPresent(int64_t formId)
+std::shared_ptr<IForm> Application::GetFormSharedPtr(const IForm *form)
 {
     TRY
-        return _Forms.find(formId) != _Forms.end();
+        for (auto tmpForm : application->_Forms) {
+            if (tmpForm.get() == form)
+                return tmpForm;
+        }
     CATCH
-    return -1;
+    return nullptr;
 }
 
-bool Application::IsFormClosable(int64_t formId)
+bool Application::IsFormPresent(const IForm *form)
 {
+    if (form == nullptr)
+        return false;
+    
     TRY
-        if (!IsFormPresent(formId))
-            return true;
-        return _Forms[formId]->IsClosable();
+        return GetFormSharedPtr(form) != nullptr;
     CATCH
     return false;
 }
 
-bool Application::CloseForm(int64_t formId, bool isForce)
+bool Application::IsFormClosable(const IForm *form)
 {
+    if (form == nullptr)
+        return true;
+    
     TRY
-        if (!IsFormPresent(formId))
+        if (!IsFormPresent(form))
             return true;
-        if (_Forms[formId]->OnClose(isForce)) {
-            _Forms.erase(formId);
+        return form->IsClosable();
+    CATCH
+    return false;
+}
+
+bool Application::CloseForm(const IForm *form, const bool &isForce)
+{
+    if (form == nullptr)
+        return true;
+    
+    TRY
+        if (!IsFormPresent(form))
+            return true;
+        if (form->OnClose(isForce)) {            
+            application->_Forms.erase(GetFormSharedPtr(form));
             return true;
         }
     CATCH

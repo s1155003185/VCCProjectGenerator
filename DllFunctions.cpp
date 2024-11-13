@@ -7,9 +7,12 @@
 
 
 // <vcc:dllInterfaceHeader gen="REPLACE">
+#include "application.hpp"
 #include "exception_macro.hpp"
+#include "i_form.hpp"
 #include "i_object.hpp"
 #include "lock_type.hpp"
+#include "object_type.hpp"
 #include "property_accessor_factory.hpp"
 #include "property_accessor_macro.hpp"
 
@@ -29,7 +32,6 @@ int GetVersion(wchar_t **str)
 }
 
 #include "object_factory.hpp"
-#include "object_type.hpp"
 std::shared_ptr<IObject> obj = nullptr;
 void *CreateObject(int64_t objectType)
 {
@@ -39,6 +41,44 @@ void *CreateObject(int64_t objectType)
 }
 
 // <vcc:dllInterface gen="REPLACE">
+void ApplicationStart()
+{
+    TRY
+        Application::Run();
+    CATCH
+}
+
+void *ApplicationCreateForm(int64_t objectType)
+{
+    TRY
+        return Application::CreateForm(static_cast<ObjectType>(objectType)).get();
+    CATCH
+    return nullptr;
+}
+
+bool ApplicationIsFormPresent(void *form)
+{
+    TRY
+        return Application::IsFormPresent(static_cast<IForm *>(form));
+    CATCH
+    return false;
+}
+
+bool ApplicationIsFormClosable(void *form)
+{
+    TRY
+        return Application::IsFormClosable(static_cast<IForm *>(form));
+    CATCH
+    return false;
+}
+
+bool ApplicationCloseForm(void *form, bool isForce)
+{
+    TRY
+        return Application::CloseForm(static_cast<IForm *>(form), isForce);
+    CATCH
+    return false;
+}
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(bool, Bool, false)
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(char, Char, L'\0')
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(wchar_t, Wchar, L'\0')

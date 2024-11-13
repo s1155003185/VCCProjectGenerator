@@ -16,6 +16,12 @@ class VPGDllFileGenerationServiceOption : public BaseObject<VPGDllFileGeneration
     public:
         VPGDllFileGenerationServiceOption() = default;
         virtual ~VPGDllFileGenerationServiceOption() {}
+
+        bool GetIsGenerateApplication() const
+        {
+            // Generate if one of flags is true
+            return _IsGeneratePropertyAccessor;
+        }
 };
 
 class VPGDllFileGenerationService
@@ -23,6 +29,12 @@ class VPGDllFileGenerationService
     private:
         VPGDllFileGenerationService() = default;
         ~VPGDllFileGenerationService() {}
+
+        static std::wstring GenerateApplicationHpp(const VPGDllFileGenerationServiceOption *option);
+        static std::wstring GenerateApplicationCpp(const VPGDllFileGenerationServiceOption *option, std::set<std::wstring> &customIncludeFiles);
+
+        static std::wstring GeneratePropertyAccessorHpp(const VPGDllFileGenerationServiceOption *option, std::set<std::wstring> &customIncludeFiles);
+        static std::wstring GeneratePropertyAccessorCpp(const VPGDllFileGenerationServiceOption *option, std::set<std::wstring> &customIncludeFiles);
 
     public:
         static void GenerateHpp(const LogConfig *logConfig, const std::wstring &filePathHpp, const VPGDllFileGenerationServiceOption *option);

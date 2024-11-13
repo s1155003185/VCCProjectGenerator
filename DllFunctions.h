@@ -26,6 +26,11 @@ DLLEXPORT int GetVersion(wchar_t **str);
 DLLEXPORT void *CreateObject(int64_t objectType);
 
 // <vcc:dllInterface gen="REPLACE">
+DLLEXPORT void ApplicationStart();
+DLLEXPORT void *ApplicationCreateForm(int64_t formType);
+DLLEXPORT bool ApplicationIsFormPresent(void *form);
+DLLEXPORT bool ApplicationIsFormClosable(void *form);
+DLLEXPORT bool ApplicationCloseForm(void *form, bool isForce);
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(bool, Bool)
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(char, Char)
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(wchar_t, Wchar)

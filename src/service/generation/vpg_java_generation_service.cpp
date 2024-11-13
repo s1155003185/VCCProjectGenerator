@@ -340,7 +340,9 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
             "\r\n"
             + INDENT + L"static private " + filePrefix + L"DllFunctions loadLibrary() {\r\n"
             + INDENT + INDENT + L"String prefix = System.getProperty(\"os.name\").startsWith(\"Windows\") ? \"lib\" : \"\";\r\n"
-            + INDENT + INDENT + L"return (" + filePrefix + L"DllFunctions)Native.load(prefix + \"vpg\", " + filePrefix + L"DllFunctions.class);\r\n"
+            + INDENT + INDENT + L"var lib = (" + filePrefix + L"DllFunctions)Native.load(prefix + \"vpg\", " + filePrefix + L"DllFunctions.class);\r\n"
+            + INDENT + INDENT + L"lib.ApplicationStart();\r\n"
+            + INDENT + INDENT + L"return lib;\r\n"
             + INDENT + L"}\r\n"
             "\r\n"
             + result
@@ -890,6 +892,12 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
         importFiles.insert(GetJavaPactkage(option->GetDllBridgeDirectory(), L"", L"DLL Interface Directory") + L"." + (!projectPrefix.empty() ? projectPrefix : L"") + L"DllFunctions");
         importFiles.insert(GetJavaPactkage(option->GetTypeDirectory(), middlePath, L"Type Directory") + L"." + enumClass->GetName());
 
+        if (enumClass->GetType() == VPGEnumClassType::Form) {
+            std::wstring objectTypeClass = projectPrefix + L"ObjectType";
+            if (importFileMap.find(objectTypeClass) != importFileMap.end())
+                importFiles.insert(importFileMap.find(objectTypeClass)->second + L"." + objectTypeClass);
+        }
+
         std::wstring getterSetterStr = L"";
         for (auto const &property : enumClass->GetProperties())
             getterSetterStr += VPGJavaGenerationService::GenerateObjectGetterSetter(projectPrefix, enumClass->GetName(), property.get(), importFileMap, importFiles);
@@ -909,8 +917,14 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
             "\r\n"
             + INDENT + L"public " + objectName + L"(Pointer handle) {\r\n"
             + INDENT + INDENT + L"this.Handle = handle;\r\n"
-            + INDENT + L"}\r\n"
-            + getterSetterStr
+            + INDENT + L"}\r\n";
+        if (enumClass->GetType() == VPGEnumClassType::Form) {
+            result += L"\r\n"
+                + INDENT + L"public " + objectName + L"() {\r\n"
+                + INDENT + INDENT + L"this.Handle = " + projectPrefix + L"DllFunctions.Instance.ApplicationCreateForm(" + projectPrefix + L"ObjectType.GitForm.getValue());\r\n"
+                + INDENT + L"}\r\n";
+        }
+        result += getterSetterStr
             + L"}\r\n";
     CATCH
     return result;
