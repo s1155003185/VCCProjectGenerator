@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 - Form Action
+- Remove BaseObject template (No method to convert IObject and IForm if there is template)
 
 ### [v0.2.4] - 2024-11-13: Form - Generate Form
 - Initialize Form

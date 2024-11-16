@@ -18,7 +18,7 @@ namespace vcc
         String
     };
 
-    class Json : public BaseDocument<Json>
+    class Json : public BaseDocument
     {
         GETSET(JsonInternalType, JsonInternalType, JsonInternalType::Json);
         // Json

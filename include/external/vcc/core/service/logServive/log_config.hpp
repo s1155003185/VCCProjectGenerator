@@ -14,7 +14,7 @@ namespace vcc
         All
     };
 
-    class LogConfig : public BaseObject<LogConfig>
+    class LogConfig : public BaseObject
     {
         // General
         GETSET(std::wstring, UserID, L"");
@@ -37,11 +37,16 @@ namespace vcc
     public:
         LogConfig() {}
         LogConfig(const LogConfigInitialType &logConfigType, const std::wstring &filePath = L"") {
-            Init(logConfigType, filePath);
+            Initialize(logConfigType, filePath);
         }
         virtual ~LogConfig() {}
 
-        void Init(const LogConfigInitialType &logConfigType, const std::wstring &filePath = L"") const {
+        virtual std::shared_ptr<IObject> Clone() const override
+        {
+            return std::make_shared<LogConfig>(*this);
+        }
+
+        void Initialize(const LogConfigInitialType &logConfigType, const std::wstring &filePath = L"") const {
             switch (logConfigType)
             {
             case LogConfigInitialType::None:

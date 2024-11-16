@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "application.hpp"
-//#include "DllFunctions.h"
+#include "base_form.hpp"
 #include "i_object.hpp"
 #include "i_property_accessor.hpp"
 #include "lock_type.hpp"
@@ -19,7 +19,7 @@ TEST(ApplicationTest, CreateForm)
     // ReadObject(form, (int64_t)VPGGitFormProperty::Log, -1);
 
     auto form = Application::CreateForm(ObjectType::GitForm);
-    VPGGitForm *gitform = static_cast<VPGGitForm *>(form.get());
+    auto gitform = static_cast<BaseForm *>(form.get());
     IObject *object = static_cast<IObject *>((gitform));
     //IObject *object =  form.get();
     std::shared_ptr<IObject> ptr(object, [](IObject*){});

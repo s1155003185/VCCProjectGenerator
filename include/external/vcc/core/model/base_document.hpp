@@ -7,8 +7,7 @@
 
 namespace vcc
 {
-    template <typename Derived>
-    class BaseDocument : public IDocument, public BaseObject<Derived>
+    class BaseDocument : public IDocument, public BaseObject
     {
         protected:
             BaseDocument() {}

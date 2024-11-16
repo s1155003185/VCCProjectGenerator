@@ -1,9 +1,11 @@
 #include <gtest/gtest.h>
 
+#include <filesystem>
 #include <string>
 #include <vector>
 
 #include "class_macro.hpp"
+#include "file_helper.hpp"
 #include "memory_macro.hpp"
 #include "log_config.hpp"
 #include "vpg_global.hpp"

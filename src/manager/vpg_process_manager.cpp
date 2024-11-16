@@ -13,8 +13,8 @@
 #include "string_helper.hpp"
 #include "vector_helper.hpp"
 #include "vpg_global.hpp"
-#include "vpg_base_generation_manager.hpp"
 #include "vpg_cpp_generation_manager.hpp"
+#include "vpg_generation_option.hpp"
 #include "vpg_project_type.hpp"
 #include "vpg_vcc_generation_manager.hpp"
 

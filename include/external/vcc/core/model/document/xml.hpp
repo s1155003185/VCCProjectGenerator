@@ -6,7 +6,7 @@
 
 namespace vcc
 {
-    class XmlAttribute : public BaseObject<XmlAttribute>
+    class XmlAttribute : public BaseObject
     {
         friend class XmlBuilder;
         GETSET(std::wstring, Name, L"");
@@ -15,9 +15,14 @@ namespace vcc
         public:
             XmlAttribute() : BaseObject() {}
             virtual ~XmlAttribute() {}
+
+            virtual std::shared_ptr<IObject> Clone() const override
+            {
+                return std::make_shared<XmlAttribute>(*this);
+            }
     };
 
-    class Xml : public BaseDocument<Xml>
+    class Xml : public BaseDocument
     {
         friend class XmlBuilder;
 

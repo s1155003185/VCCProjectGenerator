@@ -11,7 +11,7 @@
 
 using namespace vcc;
 
-class BasePropertyAccessorTestObject : public BaseObject<BasePropertyAccessorTestObject>
+class BasePropertyAccessorTestObject : public BaseObject
 {
     GETSET(std::wstring, String, L"Test")
     GETSET(int, Integer, 1);
@@ -23,6 +23,11 @@ class BasePropertyAccessorTestObject : public BaseObject<BasePropertyAccessorTes
     public:
         BasePropertyAccessorTestObject() : BaseObject() {}
         virtual ~BasePropertyAccessorTestObject() {}
+
+        virtual std::shared_ptr<IObject> Clone() const override
+        {
+            return std::make_shared<BasePropertyAccessorTestObject>(*this);
+        }
 };
 
 class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccessor

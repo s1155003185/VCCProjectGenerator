@@ -9,7 +9,7 @@
 
 using namespace vcc;
 
-class VPGDllFileGenerationServiceOption : public BaseObject<VPGDllFileGenerationServiceOption>
+class VPGDllFileGenerationServiceOption : public BaseObject
 {
     GETSET(bool, IsGeneratePropertyAccessor, false);
 
@@ -21,6 +21,11 @@ class VPGDllFileGenerationServiceOption : public BaseObject<VPGDllFileGeneration
         {
             // Generate if one of flags is true
             return _IsGeneratePropertyAccessor;
+        }
+        
+        virtual std::shared_ptr<IObject> Clone() const override
+        {
+            return std::make_shared<VPGDllFileGenerationServiceOption>(*this);
         }
 };
 

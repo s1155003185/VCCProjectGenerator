@@ -21,10 +21,10 @@ void Application::Run()
     CATCH
 }
 
-std::shared_ptr<IForm> Application::CreateForm(const ObjectType &objectType)
+std::shared_ptr<IObject> Application::CreateForm(const ObjectType &objectType)
 {
     TRY
-        auto form = std::dynamic_pointer_cast<IForm>(ObjectFactory::Create(objectType));
+        auto form = ObjectFactory::Create(objectType);
         assert(form != nullptr);
         application->_Forms.insert(form);
         return form;
@@ -32,7 +32,7 @@ std::shared_ptr<IForm> Application::CreateForm(const ObjectType &objectType)
     return nullptr;
 }
 
-std::shared_ptr<IForm> Application::GetFormSharedPtr(const IForm *form)
+std::shared_ptr<IObject> Application::GetFormSharedPtr(IObject *form)
 {
     TRY
         for (auto tmpForm : application->_Forms) {
@@ -43,7 +43,15 @@ std::shared_ptr<IForm> Application::GetFormSharedPtr(const IForm *form)
     return nullptr;
 }
 
-bool Application::IsFormPresent(const IForm *form)
+const IForm *Application::GetIFormPtrFromIObject(IObject *obj)
+{
+    TRY
+        return static_cast<BaseForm *>(obj);
+    CATCH
+    return nullptr;
+}
+
+bool Application::IsFormPresent(IObject *form)
 {
     if (form == nullptr)
         return false;
@@ -54,7 +62,7 @@ bool Application::IsFormPresent(const IForm *form)
     return false;
 }
 
-bool Application::IsFormClosable(const IForm *form)
+bool Application::IsFormClosable(IObject *form)
 {
     if (form == nullptr)
         return true;
@@ -62,12 +70,12 @@ bool Application::IsFormClosable(const IForm *form)
     TRY
         if (!IsFormPresent(form))
             return true;
-        return form->IsClosable();
+        return GetIFormPtrFromIObject(form)->IsClosable();
     CATCH
     return false;
 }
 
-bool Application::CloseForm(const IForm *form, const bool &isForce)
+bool Application::CloseForm(IObject *form, const bool &isForce)
 {
     if (form == nullptr)
         return true;
@@ -75,7 +83,7 @@ bool Application::CloseForm(const IForm *form, const bool &isForce)
     TRY
         if (!IsFormPresent(form))
             return true;
-        if (form->OnClose(isForce)) {            
+        if (GetIFormPtrFromIObject(form)->OnClose(isForce)) {            
             application->_Forms.erase(GetFormSharedPtr(form));
             return true;
         }

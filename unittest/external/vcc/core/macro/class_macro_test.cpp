@@ -10,15 +10,20 @@
 
 using namespace vcc;
 
-class ClassMacroTestClassElement : public BaseObject<ClassMacroTestClassElement>
+class ClassMacroTestClassElement : public BaseObject
 {
     GETSET(int, Index, 0);
     public:
         ClassMacroTestClassElement(int i) : BaseObject(ObjectType::NA) { this->_Index = i; }
         virtual ~ClassMacroTestClassElement() {}
+        
+    virtual std::shared_ptr<IObject> Clone() const override
+    {
+        return std::make_shared<ClassMacroTestClassElement>(*this);
+    }
 };
 
-class ClassMacroTestClass : public BaseObject<ClassMacroTestClass>
+class ClassMacroTestClass : public BaseObject
 {
     GETSET(int, Number, 0)
     VECTOR(int, Vector)

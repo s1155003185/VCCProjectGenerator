@@ -6,7 +6,6 @@
 
 namespace vcc
 {
-    template <typename Derived>
     class BaseObject : public IObject
     {
         protected:
@@ -25,11 +24,6 @@ namespace vcc
             void SetObjectType(ObjectType value) const
             {
                 _ObjectType = value;
-            }
-
-            virtual std::shared_ptr<IObject> Clone() const override
-            {
-                return std::make_shared<Derived>(static_cast<const Derived&>(*this));
             }
     };
 }

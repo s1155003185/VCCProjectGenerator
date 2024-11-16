@@ -437,7 +437,6 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
             
             std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().length() - propertyClassNameSuffix.length());
             std::wstring baseClassName = (enumClass->GetType() == VPGEnumClassType::Form ? L"BaseForm" : L"BaseObject");
-            baseClassName += L"<" + className + L">";
             if (!IsBlank(enumClass->GetInheritClass()))
                 baseClassName = enumClass->GetInheritClass();                
             std::wstring baseClassNameWithoutQuote = baseClassName;
@@ -467,45 +466,33 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
                 content += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"(ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L") {}\r\n";
             content += INDENT + INDENT + L"virtual ~" + className + L"() {}\r\n";
 
-            bool isCloneShow = false;
-            std::wstring cloneBaseClass = L"";
-            if (!IsBlank(enumClass->GetInheritClass()))
-                isCloneShow = true;
-            else
-                for (auto const &property : enumClass->GetProperties()) {
-                    // handle enum without macro case
-                    if (property->GetMacro().empty())
-                        continue;
-                    if ((!property->GetType1().empty() && std::iswupper(property->GetType1()[0])) 
-                        || (!property->GetType2().empty() && std::iswupper(property->GetType2()[0]))) {
-                        if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
-                            isCloneShow = true;
-                            break;
-                        }
+            // Clone
+            content += L"\r\n"
+                + INDENT + INDENT + L"virtual std::shared_ptr<IObject> Clone() const override\r\n"
+                + INDENT + INDENT + L"{\r\n";
+            std::wstring cloneContent = L"";
+            for (auto const &property : enumClass->GetProperties()) {
+                // handle enum without macro case
+                if (property->GetMacro().empty())
+                    continue;
+                if ((!property->GetType1().empty() && std::iswupper(property->GetType1()[0])) 
+                    || (!property->GetType2().empty() && std::iswupper(property->GetType2()[0]))) {
+                    if (Find(property->GetMacro(), L"SPTR") != std::wstring::npos) {
+                        cloneContent += INDENT + INDENT + INDENT + L"obj->Clone" + property->GetPropertyName() + L"(this->_" + property->GetPropertyName() + L");\r\n";
                     }
                 }
-            
-            if (isCloneShow) {
-                content += L"\r\n";                
-                content += INDENT + INDENT + L"virtual std::shared_ptr<IObject> Clone() const override\r\n";
-                content += INDENT + INDENT + L"{\r\n";
-                content += INDENT + INDENT + INDENT + L"std::shared_ptr<" + className + L"> obj = std::make_shared<" + className + L">(*this);\r\n";
-                for (auto const &property : enumClass->GetProperties()) {
-                    // handle enum without macro case
-                    if (property->GetMacro().empty())
-                        continue;
-                    if ((!property->GetType1().empty() && std::iswupper(property->GetType1()[0])) 
-                        || (!property->GetType2().empty() && std::iswupper(property->GetType2()[0]))) {
-                        if (Find(property->GetMacro(), L"SPTR") != std::wstring::npos) {
-                            content += INDENT + INDENT + INDENT + L"obj->Clone" + property->GetPropertyName() + L"(this->_" + property->GetPropertyName() + L");\r\n";
-                        }
-                    }
-                }
-                content += INDENT + INDENT + INDENT + L"return obj;\r\n";
-                content += INDENT + INDENT + L"}\r\n";
             }
-            content += extraFunction;
-            content += L"};\r\n";
+            if (!cloneContent.empty()) {
+                content += INDENT + INDENT + INDENT + L"std::shared_ptr<" + className + L"> obj = std::make_shared<" + className + L">(*this);\r\n"
+                    + cloneContent
+                    + INDENT + INDENT + INDENT + L"return obj;\r\n";
+            } else
+                content += INDENT + INDENT + INDENT + L"return std::make_shared<" + className + L">(*this);\r\n";
+            content += INDENT + INDENT + L"}\r\n";
+
+            // extra function
+            content += extraFunction
+                + L"};\r\n";
         }
         
         // ------------------------------------------------------------------------------------------ //

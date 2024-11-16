@@ -11,7 +11,7 @@
 
 using namespace vcc;
 
-class VPGGitForm : public BaseForm<VPGGitForm>
+class VPGGitForm : public BaseForm
 {
     GETSET_SPTR_NULL(VPGGitLog, Log)
 

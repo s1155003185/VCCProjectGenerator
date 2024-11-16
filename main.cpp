@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 
 
 	DECLARE_SPTR(LogConfig, logConfig);
-	logConfig->Init(LogConfigInitialType::None);
+	logConfig->Initialize(LogConfigInitialType::None);
 	logConfig->SetIsConsoleLog(true);
 	try {
 		if (argc < 2) {

@@ -11,8 +11,7 @@
 
 namespace vcc
 {
-    template <typename Derived>
-    class BaseManager : public IManager, public BaseObject<Derived>
+    class BaseManager : public IManager, public BaseObject
     {
         GETSET_SPTR_NULL(LogConfig, LogConfig);
         GETSET(ManagerType, Type, ManagerType::NA);

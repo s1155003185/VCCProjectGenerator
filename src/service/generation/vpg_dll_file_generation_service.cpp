@@ -39,7 +39,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             return result;
 
         customIncludeFiles.insert(L"application.hpp");
-        customIncludeFiles.insert(L"i_form.hpp");
+        customIncludeFiles.insert(L"i_object.hpp");
         customIncludeFiles.insert(L"object_type.hpp");
 
         result += 
@@ -61,7 +61,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             "bool ApplicationIsFormPresent(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::IsFormPresent(static_cast<IForm *>(form));\r\n"
+            "        return Application::IsFormPresent(static_cast<IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return false;\r\n"
             "}\r\n"
@@ -69,7 +69,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             "bool ApplicationIsFormClosable(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::IsFormClosable(static_cast<IForm *>(form));\r\n"
+            "        return Application::IsFormClosable(static_cast<IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return false;\r\n"
             "}\r\n"
@@ -77,7 +77,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             "bool ApplicationCloseForm(void *form, bool isForce)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::CloseForm(static_cast<IForm *>(form), isForce);\r\n"
+            "        return Application::CloseForm(static_cast<IObject *>(form), isForce);\r\n"
             "    CATCH\r\n"
             "    return false;\r\n"
             "}\r\n";

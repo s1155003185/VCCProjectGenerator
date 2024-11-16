@@ -9,15 +9,14 @@
 
 namespace vcc
 {
-    template <typename Derived>
-    class BaseForm : public IForm, public BaseObject<Derived>
+    class BaseForm : public IForm, public BaseObject
     {
         GETSET_SPTR_NULL(LogConfig, LogConfig);
         
     protected:
         BaseForm() = default;
         BaseForm(std::shared_ptr<LogConfig> logConfig, ObjectType type)
-            : BaseObject<Derived>(type), _LogConfig(logConfig) {}
+            : BaseObject(type), _LogConfig(logConfig) {}
         virtual ~BaseForm() = default;
 
     public:

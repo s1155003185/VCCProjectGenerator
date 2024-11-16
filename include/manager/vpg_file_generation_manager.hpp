@@ -16,7 +16,7 @@ using namespace vcc;
 // Type: Generate Interface // TODO: Interface
 
 class VPGEnumClass;
-class VPGFileGenerationManager : public BaseManager<VPGFileGenerationManager>
+class VPGFileGenerationManager : public BaseManager
 {
     GETSET(std::wstring, Workspace, L"");
     SET(std::wstring, ClassMacros);
@@ -29,6 +29,11 @@ class VPGFileGenerationManager : public BaseManager<VPGFileGenerationManager>
     public:
         VPGFileGenerationManager(std::shared_ptr<LogConfig> logConfig, std::wstring workspace) : BaseManager(logConfig) { _Workspace = workspace; }
         virtual ~VPGFileGenerationManager() {}
+
+        virtual std::shared_ptr<IObject> Clone() const override
+        {
+            return std::make_shared<VPGFileGenerationManager>(*this);
+        }
 
         // properties
         void GetClassMacroList(const std::wstring &projWorkspace);

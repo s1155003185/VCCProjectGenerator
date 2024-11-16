@@ -23,7 +23,7 @@ enum class VPGEnumClassType
     , Form
 };
 
-class VPGEnumClassProperty : public BaseObject<VPGEnumClassProperty>
+class VPGEnumClassProperty : public BaseObject
 {
     friend class VPGEnumClassReader;
     GETSET(std::wstring, Enum, L"");
@@ -41,9 +41,14 @@ class VPGEnumClassProperty : public BaseObject<VPGEnumClassProperty>
     public:
         VPGEnumClassProperty() : BaseObject() {}
         virtual ~VPGEnumClassProperty() {}
+
+        virtual std::shared_ptr<IObject> Clone() const override
+        {
+            return std::make_shared<VPGEnumClassProperty>(*this);
+        }
 };
 
-class VPGEnumClass : public BaseObject<VPGEnumClass>
+class VPGEnumClass : public BaseObject
 {
     friend class VPGEnumClassReader;
     GETSET(std::wstring, Namespace, L"")

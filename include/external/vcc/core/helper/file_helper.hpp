@@ -34,7 +34,7 @@ namespace vcc
 		// Windows
 	};
 
-	class CopyDirectoryOption : public BaseObject<CopyDirectoryOption>
+	class CopyDirectoryOption : public BaseObject
 	{
 		VECTOR(std::wstring, IncludeFileFilters);
 		VECTOR(std::wstring, ExcludeFileFilters);
@@ -44,6 +44,11 @@ namespace vcc
 		public:
 			CopyDirectoryOption() = default;
 			virtual ~CopyDirectoryOption() {}
+
+			virtual std::shared_ptr<IObject> Clone() const override
+            {
+                return std::make_shared<CopyDirectoryOption>(static_cast<const CopyDirectoryOption&>(*this));
+            }
 	};
 
 	// system

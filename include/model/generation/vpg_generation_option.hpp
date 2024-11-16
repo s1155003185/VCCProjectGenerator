@@ -13,7 +13,7 @@
 
 using namespace vcc;
 
-class VPGGenerationOptionExport : public BaseObject<VPGGenerationOptionExport>, public BaseJsonObject
+class VPGGenerationOptionExport : public BaseObject, public BaseJsonObject
 {
     GETSET(VPGGenerationOptionInterfaceType, Interface, VPGGenerationOptionInterfaceType::Java)
     GETSET(std::wstring, Workspace, L"")
@@ -29,11 +29,16 @@ class VPGGenerationOptionExport : public BaseObject<VPGGenerationOptionExport>, 
         VPGGenerationOptionExport() : BaseObject(ObjectType::GenerationOptionExport) {}
         virtual ~VPGGenerationOptionExport() {}
 
+        virtual std::shared_ptr<IObject> Clone() const override
+        {
+            return std::make_shared<VPGGenerationOptionExport>(*this);
+        }
+
         virtual std::shared_ptr<Json> ToJson() const override;
         virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;
 };
 
-class VPGGenerationOption : public BaseObject<VPGGenerationOption>, public BaseJsonObject
+class VPGGenerationOption : public BaseObject, public BaseJsonObject
 {
     GETSET(std::wstring, Version, L"v0.0.1")
     GETSET(VPGProjectType, ProjectType, VPGProjectType::VccModule)

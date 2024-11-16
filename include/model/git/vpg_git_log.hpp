@@ -19,7 +19,6 @@ class VPGGitLog : public GitLog
 
         virtual std::shared_ptr<IObject> Clone() const override
         {
-            std::shared_ptr<VPGGitLog> obj = std::make_shared<VPGGitLog>(*this);
-            return obj;
+            return std::make_shared<VPGGitLog>(*this);
         }
 };

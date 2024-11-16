@@ -11,7 +11,7 @@
 
 namespace vcc
 {
-    class ActionManager : public BaseManager<ActionManager>
+    class ActionManager : public BaseManager
     {
         GETSET(int64_t, MaxActionListSize, 100)
         MAP_SPTR_R(int64_t, IAction, Actions)
@@ -31,6 +31,11 @@ namespace vcc
     public:
         ActionManager(std::shared_ptr<LogConfig> logConfig) : BaseManager(logConfig, ManagerType::Action) {}
         virtual ~ActionManager() {}
+
+        virtual std::shared_ptr<IObject> Clone() const override
+        {
+            return std::make_shared<ActionManager>(*this);
+        }
 
         int64_t GetFirstSeqNo();
         int64_t GetLastSeqNo();

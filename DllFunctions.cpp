@@ -9,7 +9,6 @@
 // <vcc:dllInterfaceHeader gen="REPLACE">
 #include "application.hpp"
 #include "exception_macro.hpp"
-#include "i_form.hpp"
 #include "i_object.hpp"
 #include "lock_type.hpp"
 #include "object_type.hpp"
@@ -59,7 +58,7 @@ void *ApplicationCreateForm(int64_t objectType)
 bool ApplicationIsFormPresent(void *form)
 {
     TRY
-        return Application::IsFormPresent(static_cast<IForm *>(form));
+        return Application::IsFormPresent(static_cast<IObject *>(form));
     CATCH
     return false;
 }
@@ -67,7 +66,7 @@ bool ApplicationIsFormPresent(void *form)
 bool ApplicationIsFormClosable(void *form)
 {
     TRY
-        return Application::IsFormClosable(static_cast<IForm *>(form));
+        return Application::IsFormClosable(static_cast<IObject *>(form));
     CATCH
     return false;
 }
@@ -75,7 +74,7 @@ bool ApplicationIsFormClosable(void *form)
 bool ApplicationCloseForm(void *form, bool isForce)
 {
     TRY
-        return Application::CloseForm(static_cast<IForm *>(form), isForce);
+        return Application::CloseForm(static_cast<IObject *>(form), isForce);
     CATCH
     return false;
 }

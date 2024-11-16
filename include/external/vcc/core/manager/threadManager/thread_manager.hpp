@@ -18,7 +18,7 @@ namespace vcc
         Wait
     };
 
-    class ThreadManager : public BaseManager<ThreadManager>
+    class ThreadManager : public BaseManager
     {
         GETSET(ThreadManagementMode, ThreadManagementMode, ThreadManagementMode::Detach)
         GETSET(ProcessState, State, ProcessState::Idle)
@@ -33,6 +33,11 @@ namespace vcc
         ThreadManager(std::shared_ptr<LogConfig> logConfig) : BaseManager(logConfig) {}
         virtual ~ThreadManager();
 
+        virtual std::shared_ptr<IObject> Clone() const override
+        {
+            return std::make_shared<ThreadManager>(*this);
+        }
+        
         std::vector<std::shared_ptr<Thread>> &GetThreads() const;
         std::vector<std::shared_ptr<Thread>> &GetActiveThreads() const;
 

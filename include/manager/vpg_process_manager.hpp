@@ -8,12 +8,12 @@
 #include "class_macro.hpp"
 #include "i_vpg_generation_manager.hpp"
 #include "log_config.hpp"
-#include "vpg_base_generation_manager.hpp"
+#include "vpg_generation_option.hpp"
 #include "vpg_project_type.hpp"
 
 using namespace vcc;
 
-class VPGProcessManager : public BaseManager<VPGProcessManager>
+class VPGProcessManager : public BaseManager
 {
     // project
     GETSET(std::wstring, Workspace, L"");
@@ -25,6 +25,11 @@ class VPGProcessManager : public BaseManager<VPGProcessManager>
     public:
         VPGProcessManager(std::shared_ptr<LogConfig> logConfig) : BaseManager(logConfig) {};
         ~VPGProcessManager() {};
+
+        virtual std::shared_ptr<IObject> Clone() const override
+        {
+            return std::make_shared<VPGProcessManager>(*this);
+        }
 
         void InitLogConfig();
         // Ensure VPG Generator have same version as Versioning Commond Codebase Response
