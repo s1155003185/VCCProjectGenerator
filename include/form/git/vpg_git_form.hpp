@@ -16,7 +16,7 @@ class VPGGitForm : public BaseForm
     GETSET_SPTR_NULL(VPGGitLog, Log)
 
     public:
-        VPGGitForm(std::shared_ptr<LogConfig> logConfig = nullptr) : BaseForm(logConfig, ObjectType::GitForm) {}
+        VPGGitForm() : BaseForm(ObjectType::GitForm) {}
         virtual ~VPGGitForm() {}
 
         virtual std::shared_ptr<IObject> Clone() const override

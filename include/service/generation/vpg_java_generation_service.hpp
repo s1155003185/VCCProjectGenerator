@@ -30,6 +30,7 @@ class VPGJavaGenerationService
 
         static std::wstring GenerateEnumContent(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &middlePath, const VPGGenerationOptionExport *option);
         
+        // Property
         static std::wstring GetGetterSetterMapKeyContent(const std::wstring &classPropertyEnum, const std::wstring &dllInstantPrefix, const std::wstring &javaType1,
             const std::wstring &orginalFunction, const bool &isReturnNeeded);
         static std::wstring GenerateObjectGetterSetterContainerCount(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty, bool isVector, bool isMap, bool isSet);
@@ -50,6 +51,9 @@ class VPGJavaGenerationService
         
         static std::wstring GenerateObjectGetterSetter(const std::wstring &projectPrefix, const std::wstring &objectProperty, const VPGEnumClassProperty *property, const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles);
         static std::wstring GenerateObjectContent(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &middlePath, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMap, const VPGGenerationOptionExport *option);
+    
+        // Form Action
+        static std::wstring GenerateFormAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass);
     public:
         static void GenerateJavaBridge(const LogConfig *logConfig, const std::wstring &targetWorkspace, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option);
         

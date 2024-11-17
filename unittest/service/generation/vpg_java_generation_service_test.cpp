@@ -301,6 +301,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
         "        this.Handle = handle;\r\n"
         "    }\r\n"
         "\r\n"
+        "    // <editor-fold defaultstate=\"collapsed\" desc=\"Generated Properties\">\r\n"
         "    public boolean getBool() {\r\n"
         "        return VPGDllFunctions.Instance.ReadBool(Handle, VPGTypeBProperty.Bool.getValue(), -1);\r\n"
         "    }\r\n"
@@ -644,6 +645,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
         "    public void clearOrderedMapObject() {\r\n"
         "        VPGDllFunctions.Instance.ClearContainer(Handle, VPGTypeBProperty.OrderedMapObject.getValue());\r\n"
         "    }\r\n"
+        "    // </editor-fold>\r\n"
         "}\r\n");
 }
 
@@ -684,6 +686,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
         "        this.Handle = VPGDllFunctions.Instance.ApplicationCreateForm(VPGObjectType.GitForm.getValue());\r\n"
         "    }\r\n"
         "\r\n"
+        "    // <editor-fold defaultstate=\"collapsed\" desc=\"Generated Properties\">\r\n"
         "    public VPGGitLog getLog() {\r\n"
         "        return new VPGGitLog(VPGDllFunctions.Instance.ReadObject(Handle, VPGGitFormProperty.Log.getValue(), -1));\r\n"
         "    }\r\n"
@@ -691,5 +694,20 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
         "    public void setLog(VPGGitLog value) {\r\n"
         "        VPGDllFunctions.Instance.WriteObject(Handle, VPGGitFormProperty.Log.getValue(), value.Handle, -1);\r\n"
         "    }\r\n"
+        "    // </editor-fold>\r\n"
+        "\r\n"
+        "    // <editor-fold defaultstate=\"collapsed\" desc=\"Generated Form Actions\">\r\n"
+        "    public boolean isClosable() {\r\n"
+        "        return VPGDllFunctions.Instance.ApplicationIsFormClosable(Handle);\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public boolean isClosed() {\r\n"
+        "        return VPGDllFunctions.Instance.ApplicationIsFormClosed(Handle);\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public void onClose(boolean isForce) {\r\n"
+        "        VPGDllFunctions.Instance.ApplicationCloseForm(Handle, isForce);\r\n"
+        "    }\r\n"
+        "    // </editor-fold>\r\n"
         "}\r\n");
 }

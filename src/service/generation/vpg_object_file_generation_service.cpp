@@ -455,17 +455,15 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
             }
             content += L"\r\n";
             content += INDENT + L"public:\r\n";
-            if (!IsBlank(enumClass->GetInheritClass())) {
+            if (!IsBlank(enumClass->GetInheritClass()))
                 content += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"()\r\n"
-                        + INDENT + INDENT + L"{\r\n"
-                        + INDENT + INDENT + INDENT + L"_ObjectType = ObjectType::" +  className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L";\r\n"
-                        + INDENT + INDENT + L"}\r\n";
-            } else if (enumClass->GetType() == VPGEnumClassType::Form)
-                content += INDENT + INDENT + className + L"(std::shared_ptr<LogConfig> logConfig = nullptr) : " + baseClassNameWithoutQuote + L"(logConfig, ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L") {}\r\n";
+                    + INDENT + INDENT + L"{\r\n"
+                    + INDENT + INDENT + INDENT + L"_ObjectType = ObjectType::" +  className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L";\r\n"
+                    + INDENT + INDENT + L"}\r\n";
             else
                 content += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"(ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L") {}\r\n";
             content += INDENT + INDENT + L"virtual ~" + className + L"() {}\r\n";
-
+   
             // Clone
             content += L"\r\n"
                 + INDENT + INDENT + L"virtual std::shared_ptr<IObject> Clone() const override\r\n"

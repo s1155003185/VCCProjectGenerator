@@ -9,9 +9,9 @@
 
 namespace vcc
 {
-    inline void ____HandleException(const std::exception &e, std::wstring file, std::wstring line)
+    inline void ____HandleException(const std::exception &e, const std::wstring &file, const std::wstring &line)
     {
-        std::wstring prefix = file + L":" + line + L":\r\n"; 
+        std::wstring prefix = !IsBlank(file) && !IsBlank(line) ? (file + L":" + line + L":\r\n") : L"";
         const IException *ie = dynamic_cast<const IException *>(&e); 
         if (ie != nullptr)
             throw Exception(ie->GetErrorType(), prefix + ie->GetErrorMessage());
@@ -23,7 +23,7 @@ namespace vcc
     #define THROW_EXCEPTION(e) THROW_EXCEPTION_DEBUG(e)
     #define THROW_EXCEPTION_MSG(exceptionType, message) THROW_EXCEPTION_STACK_TRACE(exceptionType, message)
     #else
-    #define THROW_EXCEPTION(e) throw e
+    #define THROW_EXCEPTION(e) ____HandleException(e, L"", L"")
     #define THROW_EXCEPTION_MSG(exceptionType, message) throw Exception(exceptionType, message)
     #endif
 

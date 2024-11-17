@@ -13,25 +13,6 @@
 
 using namespace vcc;
 
-void Application::Run()
-{
-    TRY
-        if (application == nullptr)
-            application = std::make_unique<Application>();
-    CATCH
-}
-
-std::shared_ptr<IObject> Application::CreateForm(const ObjectType &objectType)
-{
-    TRY
-        auto form = ObjectFactory::Create(objectType);
-        assert(form != nullptr);
-        application->_Forms.insert(form);
-        return form;
-    CATCH
-    return nullptr;
-}
-
 std::shared_ptr<IObject> Application::GetFormSharedPtr(IObject *form)
 {
     TRY
@@ -51,15 +32,41 @@ const IForm *Application::GetIFormPtrFromIObject(IObject *obj)
     return nullptr;
 }
 
-bool Application::IsFormPresent(IObject *form)
+void Application::Run()
 {
-    if (form == nullptr)
-        return false;
-    
     TRY
-        return GetFormSharedPtr(form) != nullptr;
+        if (application == nullptr)
+            application = std::make_unique<Application>();
     CATCH
-    return false;
+}
+
+std::shared_ptr<IObject> Application::CreateForm(const ObjectType &objectType)
+{
+    TRY
+        auto form = ObjectFactory::Create(objectType);
+        assert(form != nullptr);
+        application->_Forms.insert(form);
+        return form;
+    CATCH
+    return nullptr;
+}
+
+void Application::InitializeForm(IObject *form)
+{
+    TRY
+        if (form == nullptr)
+            return;
+        GetIFormPtrFromIObject(form)->Initialize();
+    CATCH
+}
+
+void Application::ReloadForm(IObject *form)
+{
+    TRY
+        if (form == nullptr)
+            return;
+        GetIFormPtrFromIObject(form)->Reload();
+    CATCH
 }
 
 bool Application::IsFormClosable(IObject *form)
@@ -68,11 +75,19 @@ bool Application::IsFormClosable(IObject *form)
         return true;
     
     TRY
-        if (!IsFormPresent(form))
-            return true;
         return GetIFormPtrFromIObject(form)->IsClosable();
     CATCH
     return false;
+}
+
+bool Application::IsFormClosed(IObject *form)
+{
+    TRY
+        if (form == nullptr)
+            return true;
+        return GetIFormPtrFromIObject(form)->IsClosed();
+    CATCH
+    return true;
 }
 
 bool Application::CloseForm(IObject *form, const bool &isForce)
@@ -81,10 +96,9 @@ bool Application::CloseForm(IObject *form, const bool &isForce)
         return true;
     
     TRY
-        if (!IsFormPresent(form))
-            return true;
-        if (GetIFormPtrFromIObject(form)->OnClose(isForce)) {            
-            application->_Forms.erase(GetFormSharedPtr(form));
+        if (GetIFormPtrFromIObject(form)->Close(isForce)) {
+            if (GetFormSharedPtr(form) != nullptr)
+                application->_Forms.erase(GetFormSharedPtr(form));
             return true;
         }
     CATCH

@@ -288,6 +288,10 @@ void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &p
     TRY
         _EnumValue = -1;
         while (pos < cppCode.size()) {
+            if (IsStartWith(cppCode, L"//", pos) || IsStartWith(cppCode, L"/*", pos)) {
+                _GetCommand(cppCode, false, pos);
+                continue;
+            }
             std::wstring name = _GetEnum(cppCode, pos);
             Trim(name);
             if (name.empty())

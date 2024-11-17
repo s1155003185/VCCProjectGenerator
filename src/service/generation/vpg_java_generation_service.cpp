@@ -1,5 +1,6 @@
 #include "vpg_java_generation_service.hpp"
 
+#include <assert.h>
 #include <filesystem>
 #include <fstream>
 
@@ -800,20 +801,20 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetter(const std::wst
         if (IsBlank(cppType1))
             return result;
 
-        std::wstring javaType1 = std::iswupper(cppType1[0]) ? cppType1 : GetJavaGetterSetterCppToJavaConvertedType(cppType1);
+        std::wstring javaType1 = IsCaptial(cppType1) ? cppType1 : GetJavaGetterSetterCppToJavaConvertedType(cppType1);
         std::wstring cppType2 = property->GetType2();
-        std::wstring javaType2 = !IsBlank(cppType2) ? (std::iswupper(cppType2[0]) ? cppType2 : GetJavaGetterSetterCppToJavaConvertedType(cppType2)) : cppType2;
-        if (!IsBlank(cppType1) && std::iswupper(cppType1[0]) && importFileMap.find(javaType1) != importFileMap.end())
+        std::wstring javaType2 = !IsBlank(cppType2) ? (IsCaptial(cppType2) ? cppType2 : GetJavaGetterSetterCppToJavaConvertedType(cppType2)) : cppType2;
+        if (!IsBlank(cppType1) && IsCaptial(cppType1) && importFileMap.find(javaType1) != importFileMap.end())
             importFiles.insert(importFileMap.find(javaType1)->second + L"." + javaType1);
-        if (!IsBlank(cppType2) && std::iswupper(cppType2[0]) && importFileMap.find(javaType2) != importFileMap.end())
+        if (!IsBlank(cppType2) && IsCaptial(cppType2) && importFileMap.find(javaType2) != importFileMap.end())
             importFiles.insert(importFileMap.find(javaType2)->second + L"." + javaType2);
         
         // add import file
-        if (!javaType1.empty() && std::iswupper(javaType1[0])) {
+        if (!javaType1.empty() && IsCaptial(javaType1)) {
             if (importFileMap.find(javaType1) != importFileMap.end())
                 importFiles.insert(importFileMap.find(javaType1)->second + L"." + javaType1);
         }
-        if (!javaType2.empty() && std::iswupper(javaType2[0])) {
+        if (!javaType2.empty() && IsCaptial(javaType2)) {
             if (importFileMap.find(javaType2) != importFileMap.end())
                 importFiles.insert(importFileMap.find(javaType2)->second + L"." + javaType2);
         }
@@ -898,9 +899,28 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
                 importFiles.insert(importFileMap.find(objectTypeClass)->second + L"." + objectTypeClass);
         }
 
+        // Property
         std::wstring getterSetterStr = L"";
         for (auto const &property : enumClass->GetProperties())
             getterSetterStr += VPGJavaGenerationService::GenerateObjectGetterSetter(projectPrefix, enumClass->GetName(), property.get(), importFileMap, importFiles);
+        if (!getterSetterStr.empty()) {
+            LTrim(getterSetterStr);
+
+            getterSetterStr = L"\r\n"
+                + INDENT + L"// <editor-fold defaultstate=\"collapsed\" desc=\"Generated Properties\">\r\n"
+                + INDENT + getterSetterStr
+                + INDENT + L"// </editor-fold>\r\n";
+        }
+        
+        // Form Action
+        std::wstring  formActionStr = VPGJavaGenerationService::GenerateFormAction(projectPrefix, enumClass);
+        if (!formActionStr.empty()) {
+            LTrim(formActionStr);
+            formActionStr = L"\r\n"
+                + INDENT + L"// <editor-fold defaultstate=\"collapsed\" desc=\"Generated Form Actions\">\r\n"
+                + INDENT + formActionStr
+                + INDENT + L"// </editor-fold>\r\n";
+        }
         
         result += L"package " + packageFolder + L";\r\n"
             "\r\n";
@@ -925,10 +945,65 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
                 + INDENT + L"}\r\n";
         }
         result += getterSetterStr
+            + formActionStr
             + L"}\r\n";
     CATCH
     return result;
 }
+
+std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass)
+{
+    assert(enumClass != nullptr);
+    if (enumClass->GetType() != VPGEnumClassType::Form)
+        return L"";
+    
+    std::wstring result = L"";
+    TRY
+        std::map<std::wstring, std::wstring> formActions;
+        // General
+        // Initialize
+        formActions.insert(std::make_pair(L"initialize",
+            L"public void initialize() {\r\n"
+            + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationInitializeForm(Handle);\r\n"
+            "}\r\n"));
+
+        formActions.insert(std::make_pair(L"reload",
+            L"public void reload() {\r\n"
+            + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationReloadForm(Handle);\r\n"
+            "}\r\n"));
+
+        // Process
+
+        // Close
+        formActions.insert(std::make_pair(L"isClosable",
+            L"public boolean isClosable() {\r\n"
+            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationIsFormClosable(Handle);\r\n"
+            "}\r\n"));
+
+        formActions.insert(std::make_pair(L"isClosed",
+            L"public boolean isClosed() {\r\n"
+            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationIsFormClosed(Handle);\r\n"
+            "}\r\n"));
+
+        formActions.insert(std::make_pair(L"close",
+            L"public void close(boolean isForce) {\r\n"
+            + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationCloseForm(Handle, isForce);\r\n"
+            "}\r\n"));
+        
+        // TODO: Custom
+
+        for (auto const &action : formActions) {
+            std::vector<std::wstring> lines = SplitStringByLine(action.second);
+            result += L"\r\n";
+            for (auto &line : lines) {
+                RTrim(line);
+                result += INDENT + line + L"\r\n";
+            }
+        }
+    CATCH
+    return result;
+}
+
 
 void VPGJavaGenerationService::GenerateEnum(const LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass, const VPGGenerationOption *option, const VPGGenerationOptionExport *javaOption)
 {

@@ -8,6 +8,8 @@ enum class ObjectType
     , GenerationOptionExport
     , GitForm
     , GitLog
+    , MainForm
+    , WorkspaceForm
     // <vcc:custom sync="RESERVE" gen="RESERVE">
     // </vcc:custom>
 };

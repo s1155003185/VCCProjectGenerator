@@ -18,17 +18,23 @@ class Application
     private:
         std::set<std::shared_ptr<IObject>> _Forms;
 
+        static std::shared_ptr<IObject> GetFormSharedPtr(IObject *IObject);
+        static const IForm *GetIFormPtrFromIObject(IObject *obj);
+
     public:
         Application() = default;
         ~Application() {}
  
         static void Run();
 
+        // Create Form
         static std::shared_ptr<IObject> CreateForm(const ObjectType &objectType);
-        static std::shared_ptr<IObject> GetFormSharedPtr(IObject *IObject);
-        static const IForm *GetIFormPtrFromIObject(IObject *obj);
-        static bool IsFormPresent(IObject *form);
+        static void InitializeForm(IObject *form);
+        static void ReloadForm(IObject *form);
+
+        // Close Form
         static bool IsFormClosable(IObject *form);
+        static bool IsFormClosed(IObject *form);
         static bool CloseForm(IObject *form, const bool &isForce = false);
 
         // <vcc:custom sync="RESERVE" gen="RESERVE">

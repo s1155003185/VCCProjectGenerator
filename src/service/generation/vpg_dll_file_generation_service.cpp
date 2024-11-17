@@ -21,12 +21,27 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFil
         if (!option->GetIsGenerateApplication())
             return result;
 
-        result += 
-            L"DLLEXPORT void ApplicationStart();\r\n"
-            "DLLEXPORT void *ApplicationCreateForm(int64_t formType);\r\n"
-            "DLLEXPORT bool ApplicationIsFormPresent(void *form);\r\n"
-            "DLLEXPORT bool ApplicationIsFormClosable(void *form);\r\n"
-            "DLLEXPORT bool ApplicationCloseForm(void *form, bool isForce);\r\n";
+        std::map<std::wstring, std::wstring> functionMap;
+        functionMap.insert(std::make_pair(L"ApplicationStart", L"DLLEXPORT void ApplicationStart();\r\n"));
+
+        // Initialize Form
+        functionMap.insert(std::make_pair(L"ApplicationCreateForm", L"DLLEXPORT void *ApplicationCreateForm(int64_t formType);\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationInitializeForm", L"DLLEXPORT void ApplicationInitializeForm(void *form);\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationReloadForm", L"DLLEXPORT void ApplicationReloadForm(void *form);\r\n"));
+        
+        // Close Form
+        functionMap.insert(std::make_pair(L"ApplicationIsFormClosable", L"DLLEXPORT bool ApplicationIsFormClosable(void *form);\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationIsFormClosed", L"DLLEXPORT bool ApplicationIsFormClosed(void *form);\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationCloseForm", L"DLLEXPORT bool ApplicationCloseForm(void *form, bool isForce);\r\n"));
+                    
+        for (auto const &action : functionMap) {
+            std::vector<std::wstring> lines = SplitStringByLine(action.second);
+            result += L"\r\n";
+            for (auto &line : lines) {
+                RTrim(line);
+                result += INDENT + line + L"\r\n";
+            }
+        }
     CATCH
     return result;
 }
@@ -42,45 +57,73 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
         customIncludeFiles.insert(L"i_object.hpp");
         customIncludeFiles.insert(L"object_type.hpp");
 
-        result += 
+        std::map<std::wstring, std::wstring> functionMap;
+        functionMap.insert(std::make_pair(L"ApplicationStart",
             L"void ApplicationStart()\r\n"
             "{\r\n"
             "    TRY\r\n"
             "        Application::Run();\r\n"
             "    CATCH\r\n"
-            "}\r\n"
-            "\r\n"
-            "void *ApplicationCreateForm(int64_t objectType)\r\n"
+            "}\r\n"));
+
+        // Initialize Form
+        functionMap.insert(std::make_pair(L"ApplicationCreateForm",
+            L"void *ApplicationCreateForm(int64_t objectType)\r\n"
             "{\r\n"
             "    TRY\r\n"
             "        return Application::CreateForm(static_cast<ObjectType>(objectType)).get();\r\n"
             "    CATCH\r\n"
             "    return nullptr;\r\n"
-            "}\r\n"
-            "\r\n"
-            "bool ApplicationIsFormPresent(void *form)\r\n"
+            "}\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationInitializeForm",
+            L"void ApplicationInitializeForm(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::IsFormPresent(static_cast<IObject *>(form));\r\n"
+            "        return Application::InitializeForm(static_cast<IObject *>(form));\r\n"
+            "    CATCH\r\n"
+            "}\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationReloadForm",
+            L"void ApplicationReloadForm(void *form)\r\n"
+            "{\r\n"
+            "    TRY\r\n"
+            "        return Application::ReloadForm(static_cast<IObject *>(form));\r\n"
+            "    CATCH\r\n"
+            "}\r\n"));
+
+        // Close Form
+        functionMap.insert(std::make_pair(L"ApplicationIsFormClosable",
+            L"bool ApplicationIsFormClosed(void *form)\r\n"
+            "{\r\n"
+            "    TRY\r\n"
+            "        return Application::IsFormClosed(static_cast<IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return false;\r\n"
-            "}\r\n"
-            "\r\n"
-            "bool ApplicationIsFormClosable(void *form)\r\n"
+            "}\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationIsFormClosed",
+            L"bool ApplicationIsFormClosable(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
             "        return Application::IsFormClosable(static_cast<IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return false;\r\n"
-            "}\r\n"
-            "\r\n"
-            "bool ApplicationCloseForm(void *form, bool isForce)\r\n"
+            "}\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationCloseForm",
+            L"bool ApplicationCloseForm(void *form, bool isForce)\r\n"
             "{\r\n"
             "    TRY\r\n"
             "        return Application::CloseForm(static_cast<IObject *>(form), isForce);\r\n"
             "    CATCH\r\n"
             "    return false;\r\n"
-            "}\r\n";
+            "}\r\n"));
+
+        for (auto const &action : functionMap) {
+            std::vector<std::wstring> lines = SplitStringByLine(action.second);
+            result += L"\r\n";
+            for (auto &line : lines) {
+                RTrim(line);
+                result += INDENT + line + L"\r\n";
+            }
+        }
     CATCH
     return result;
 }

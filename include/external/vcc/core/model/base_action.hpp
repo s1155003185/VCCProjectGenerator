@@ -30,6 +30,9 @@ namespace vcc
             BaseAction(ActionType type) : IAction() { this->_Type = type; }
             virtual ~BaseAction() {}
 
+            std::shared_ptr<IObject> GetParentObject() const override { return nullptr; }
+            void SetParentObject(std::shared_ptr<IObject> /*parentObject*/) const override {}
+
             virtual void _LogRedo() 
             { 
                 std::wstring message = this->_GetRedoMessage();

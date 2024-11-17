@@ -1,8 +1,9 @@
 # Change Log
 
 ## [Unreleased]
-- Form Action
+- Form Action - Create, Reload, Close
 - Remove BaseObject template (No method to convert IObject and IForm if there is template)
+- Fix cannot throw exception when excuting release exe
 
 ### [v0.2.4] - 2024-11-13: Form - Generate Form
 - Initialize Form

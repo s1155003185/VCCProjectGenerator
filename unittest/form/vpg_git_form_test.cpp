@@ -12,7 +12,7 @@ class VPGGitFormTest : public testing::Test
 
         void SetUp() override
         {
-            _Form = std::make_shared<VPGGitForm>(_LogConfig);
+            _Form = std::make_shared<VPGGitForm>();
         }
 
         void TearDown() override

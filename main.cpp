@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 
 	DECLARE_SPTR(LogConfig, logConfig);
 	logConfig->Initialize(LogConfigInitialType::None);
-	logConfig->SetIsConsoleLog(true);
+	logConfig->SetIsConsoleLog(false);
 	try {
 		if (argc < 2) {
 			std::wcout << L"No Argument" << std::endl;

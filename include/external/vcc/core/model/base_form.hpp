@@ -6,6 +6,7 @@
 #include "class_macro.hpp"
 #include "log_config.hpp"
 #include "object_type.hpp"
+#include "state.hpp"
 
 namespace vcc
 {
@@ -14,17 +15,24 @@ namespace vcc
         GETSET_SPTR_NULL(LogConfig, LogConfig);
         
     protected:
-        BaseForm() = default;
-        BaseForm(std::shared_ptr<LogConfig> logConfig, ObjectType type)
-            : BaseObject(type), _LogConfig(logConfig) {}
+        mutable State _State = State::Active;
+
+        BaseForm() : BaseForm(ObjectType::NA) {}
+        BaseForm(const ObjectType &type) : BaseObject(type) { Initialize(); }
         virtual ~BaseForm() = default;
 
+        virtual void OnInitialize() const override {}
+        virtual void OnReload() const override {}
+        virtual bool OnIsClosable() const override { return true; }
+        virtual bool OnClose() const override { return true; }
     public:
-        bool OnClose(bool isForce = false) const override
-        {
-            if (!isForce && !IsClosable())
-                return false;
-            return true;
-        }
+        State GetState() const override;
+        bool IsClosable() const override;
+        bool IsClosed() const override;
+
+        void Initialize() const override;
+        void Reload() const override;
+
+        bool Close(bool isForce = false) const override;
     };
 }

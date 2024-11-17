@@ -40,44 +40,59 @@ void *CreateObject(int64_t objectType)
 }
 
 // <vcc:dllInterface gen="REPLACE">
-void ApplicationStart()
-{
-    TRY
-        Application::Run();
-    CATCH
-}
 
-void *ApplicationCreateForm(int64_t objectType)
-{
-    TRY
-        return Application::CreateForm(static_cast<ObjectType>(objectType)).get();
-    CATCH
-    return nullptr;
-}
+    bool ApplicationCloseForm(void *form, bool isForce)
+    {
+        TRY
+            return Application::CloseForm(static_cast<IObject *>(form), isForce);
+        CATCH
+        return false;
+    }
 
-bool ApplicationIsFormPresent(void *form)
-{
-    TRY
-        return Application::IsFormPresent(static_cast<IObject *>(form));
-    CATCH
-    return false;
-}
+    void *ApplicationCreateForm(int64_t objectType)
+    {
+        TRY
+            return Application::CreateForm(static_cast<ObjectType>(objectType)).get();
+        CATCH
+        return nullptr;
+    }
 
-bool ApplicationIsFormClosable(void *form)
-{
-    TRY
-        return Application::IsFormClosable(static_cast<IObject *>(form));
-    CATCH
-    return false;
-}
+    void ApplicationInitializeForm(void *form)
+    {
+        TRY
+            return Application::InitializeForm(static_cast<IObject *>(form));
+        CATCH
+    }
 
-bool ApplicationCloseForm(void *form, bool isForce)
-{
-    TRY
-        return Application::CloseForm(static_cast<IObject *>(form), isForce);
-    CATCH
-    return false;
-}
+    bool ApplicationIsFormClosed(void *form)
+    {
+        TRY
+            return Application::IsFormClosed(static_cast<IObject *>(form));
+        CATCH
+        return false;
+    }
+
+    bool ApplicationIsFormClosable(void *form)
+    {
+        TRY
+            return Application::IsFormClosable(static_cast<IObject *>(form));
+        CATCH
+        return false;
+    }
+
+    void ApplicationReloadForm(void *form)
+    {
+        TRY
+            return Application::ReloadForm(static_cast<IObject *>(form));
+        CATCH
+    }
+
+    void ApplicationStart()
+    {
+        TRY
+            Application::Run();
+        CATCH
+    }
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(bool, Bool, false)
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(char, Char, L'\0')
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(wchar_t, Wchar, L'\0')
