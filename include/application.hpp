@@ -21,6 +21,17 @@ class Application
         static std::shared_ptr<IObject> GetFormSharedPtr(IObject *IObject);
         static const IForm *GetIFormPtrFromIObject(IObject *obj);
 
+        // <vcc:customApplicationProperties sync="RESERVE" gen="RESERVE">
+        // </vcc:customApplicationProperties>
+        
+    private:
+        // <vcc:customApplicationPrivateFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customApplicationPrivateFunctions>
+
+    protected:
+        // <vcc:customApplicationProtectedFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customApplicationProtectedFunctions>
+
     public:
         Application() = default;
         ~Application() {}
@@ -37,8 +48,8 @@ class Application
         static bool IsFormClosed(IObject *form);
         static bool CloseForm(IObject *form, const bool &isForce = false);
 
-        // <vcc:custom sync="RESERVE" gen="RESERVE">
-        // </vcc:custom>
+        // <vcc:customApplicationPublicFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customApplicationPublicFunctions>
 };
 
 static std::unique_ptr<Application> application = nullptr;

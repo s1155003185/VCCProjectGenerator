@@ -15,7 +15,7 @@ using namespace vcc;
 
 class VPGProcessManagerTest : public testing::Test 
 {
-    MANAGER(VPGProcessManager, Manager, nullptr);
+    MANAGER_SPTR(VPGProcessManager, Manager, nullptr);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGProcessManagerTest/");
 
     GETSET(std::wstring, TestFolder, L"../VPGProcessManagerTest_VCCTestProject");

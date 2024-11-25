@@ -23,7 +23,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
     
     GETSET_SPTR(VPGGenerationOption, Option)
     // Cannot use VPGBaseGenerationManager directly as it needs template
-    MANAGER(VPGCppGenerationManager, Manager, _LogConfig, L"", _Option);
+    MANAGER_SPTR(VPGCppGenerationManager, Manager, _LogConfig, L"", _Option);
     
     GETSET(std::wstring, FileContent, L"");
     

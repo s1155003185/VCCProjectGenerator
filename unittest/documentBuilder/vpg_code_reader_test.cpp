@@ -9,7 +9,7 @@
 
 class VPGCodeReaderTest : public testing::Test 
 {
-    MANAGER(VPGCodeReader, Reader, L"//")
+    MANAGER_SPTR(VPGCodeReader, Reader, L"//")
     public:
 
         void SetUp() override

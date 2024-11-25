@@ -16,7 +16,7 @@
 class VPGFileGenerationManagerTest : public testing::Test 
 {
     GETSET_SPTR(LogConfig, LogConfig, LogConfigInitialType::None);
-    MANAGER(VPGFileGenerationManager, Manager, _LogConfig, L"");
+    MANAGER_SPTR(VPGFileGenerationManager, Manager, _LogConfig, L"");
 
     GETSET(std::wstring, Workspace, L"bin/Debug/FileGenerationServiceTest");
     GETSET(std::wstring, WorkspaceSource, L"");
@@ -145,8 +145,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    NA\r\n"
         "    , Object\r\n"
         "    , ObjectPtr\r\n"
-        L"    // <vcc:custom sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        L"    // </vcc:custom>\r\n"
+        L"    // <vcc:customObjectTypes sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        L"    // </vcc:customObjectTypes>\r\n"
         "};\r\n");
 
     // ------------------------------------------------------------------------------------------ //

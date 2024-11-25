@@ -8,7 +8,7 @@ using namespace vcc;
 
 class ThreadManagerTest : public testing::Test 
 {
-    MANAGER(ThreadManager, Manager, nullptr);
+    MANAGER_SPTR(ThreadManager, Manager, nullptr);
     GETSET_SPTR_NULL(LogConfig, LogConfig)
 
     public:

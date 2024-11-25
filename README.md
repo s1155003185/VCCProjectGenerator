@@ -119,6 +119,7 @@ Suitable for long term project
 ### Core
 -	Action Manager (Pending)
 -	Exception
+-	Form
 -	Helper (Keep update)
 -	Log Service
 -   Process Service
@@ -698,7 +699,7 @@ Note:
     e.g. VPGPersionProperty
 
 #### Class Attribute
-// [@@Form] [@@Inherit { "Class": "ClassName" }] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Command xxx]
+// [@@Form] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsInheritedFromParentObject": true }] [@@Action { "IsInheritedFromParentObject": true }] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Command xxx]
 
 []: Optional
 @@: Key for attributes. Need to state for attribute
@@ -714,6 +715,20 @@ Note:
         Class
             Value is Parent Class
 
+[@@Log { "IsInheritedFromParentObject": true }]
+    Form Only
+    Attribute:
+        IsInheritedFromParentObject
+            Value is true or false. Default: false
+            If Value is true, Form will follow Parent Object Log Setting
+
+[@@Action { "IsInheritedFromParentObject": true }]
+    Form Only
+    Attribute:
+        IsInheritedFromParentObject
+            Value is true or false. Default: false
+            If Value is true, Form will add action to Parent Action Manager. When Undo Action, may affect other object that sharing same Action Manager. ie. Parent Form and other inheriting child Form
+            
 [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }]
     Generate Class as Json Object. Class will have attribute ToJson, SerializeJson and DeserializeJson
     Attribute:
@@ -749,6 +764,15 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Command xxx]
 
 {ClassMacro}
     Getter, Setter stated in class_macro.hpp. If it is not match with any class macro in class_macro.hpp, the rest will be ignored
+    Current Options:
+        GETSET(type, name, defaultValue)
+        GETSET_SPTR_NULL(type, name)
+        VECTOR(type, name)
+        VECTOR_SPTR(type, name)
+        MAP(type, name)
+        MAP_SPTR_R(type1, type2, name)
+        ORDERED_MAP(type1, type2, name)
+        ORDERED_MAP_SPTR_R(type1, type2, name)
 
 [@@AccessMode]
     Default is @@ReadWrite.
@@ -928,25 +952,6 @@ public static void main(String args[]) {
     });
 }
 ```
-
-## Using VCCModule Dll in Java
-After Generation, there are some API in DllFunctions.hpp with Prefix "Application".
-
-For example,
-```
-DLLEXPORT void ApplicationStart();
-DLLEXPORT int64_t ApplicationCreateForm(int64_t formType);
-DLLEXPORT bool ApplicationIsFormPresent(int64_t formId);
-DLLEXPORT bool ApplicationIsFormClosable(int64_t formId);
-DLLEXPORT bool ApplicationCloseForm(int64_t formId, bool isForce);
-```
-
-Step to run the program
-1. Execute ApplicationStart() in Java Main()
-It is used to create global pointer in dll to store data.
-2. When Create Form execute ApplicationCreateForm
-Then it wll return form Id.
-3. When Close Form, execute ApplicationCloseForm
 
 ****
 ## Versioning Common Codebase Project Generator VSCode Extension

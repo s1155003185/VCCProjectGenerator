@@ -367,23 +367,35 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
             std::vector<std::wstring> attributes = GetAttribute(enumClass->_Command);
             std::wstring command = L"";
             for (auto const &attribute : attributes) {
-                std::shared_ptr<Json> attributes = nullptr;
                 if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Form")) {
                     enumClass->_Type = VPGEnumClassType::Form;
                     command = L"";
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Inherit")) {
-                    attributes = GetJsonAttributes(attribute, attributeToken + L"Inherit");
-                    assert(attributes != nullptr);
-                    std::wstring className = attributes->GetString(L"Class");
+                    std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Inherit");
+                    assert(jsonAttributes != nullptr);
+                    std::wstring className = jsonAttributes->GetString(L"Class");
                     if (IsBlank(className))
                         THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Enum Class " + enumClass->_Name + L" has attribute @@Inherit but missing Attribute \"Class\"");
                     enumClass->_InheritClass = className;
                 
                     command = L"";
+                } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Log")) {
+                    std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Log");
+                    if (jsonAttributes != nullptr)
+                        enumClass->_IsLogConfigInheritedFromParentObject = jsonAttributes->GetBool(L"IsInheritedFromParentObject");
+                    command = L"";
+                } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Action")) {
+                    std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Action");
+                    if (jsonAttributes != nullptr)
+                        enumClass->_IsActionManagerInheritedFromParentObject = jsonAttributes->GetBool(L"IsInheritedFromParentObject");
+                    command = L"";
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Json")) {
                     enumClass->_IsJson = true;
-                    attributes = GetJsonAttributes(attribute, attributeToken + L"Json");
-
+                    std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Json");
+                    if (jsonAttributes != nullptr) {
+                        for (auto const &key : jsonAttributes->GetKeys())
+                            enumClass->InsertJsonAttributes(key, jsonAttributes->GetString(key));
+                    }
                     command = L"";
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Command")) {
                     std::wstring commandToken = attributeToken + L"Command";
@@ -392,10 +404,6 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
                     command = commandToken;
                 }
                 
-                if (attributes != nullptr) {
-                    for (auto const &key : attributes->GetKeys())
-                        enumClass->InsertJsonAttributes(key, attributes->GetString(key));
-                }
                 enumClass->_Command = command;
             }
         }

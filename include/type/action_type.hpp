@@ -4,6 +4,6 @@
 enum class ActionType
 {
     NA = 0
-    // <vcc:custom sync="RESERVE" gen="RESERVE">
-    // </vcc:custom>
+    // <vcc:customActionTypes sync="RESERVE" gen="RESERVE">
+    // </vcc:customActionTypes>
 };

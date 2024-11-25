@@ -24,7 +24,7 @@ class VPGVccGenerationManagerTest : public testing::Test
     GETSET(std::wstring, TestFolder, L"../VPGVccGenerationManagerTest_VCCTestProject");
     GETSET(bool, IsCopyDebugFolderToTestFolder, false);
 
-    MANAGER(VPGVccGenerationManager, Manager, _LogConfig, L"", _Option);
+    MANAGER_SPTR(VPGVccGenerationManager, Manager, _LogConfig, L"", _Option);
 
     public:
         void SetUp() override

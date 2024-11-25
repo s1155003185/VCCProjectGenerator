@@ -15,21 +15,25 @@ class VPGMainForm : public BaseForm
 {
     VECTOR_SPTR(VPGWorkspaceForm, WorkspaceForms)
 
+    // <vcc:customVPGMainFormProperties sync="RESERVE" gen="RESERVE">
+    // </vcc:customVPGMainFormProperties>
+
+    private:
+        // <vcc:customVPGMainFormPrivateFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGMainFormPrivateFunctions>
+
+    protected:
+        // <vcc:customVPGMainFormProtectedFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGMainFormProtectedFunctions>
+
     public:
-        VPGMainForm() : BaseForm(ObjectType::MainForm) {}
+        VPGMainForm();
         virtual ~VPGMainForm() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
-        {
-            std::shared_ptr<VPGMainForm> obj = std::make_shared<VPGMainForm>(*this);
-            obj->CloneWorkspaceForms(this->_WorkspaceForms);
-            return obj;
-        }
+        virtual std::shared_ptr<IObject> Clone() const override;
 
-        // <vcc:custom sync="RESERVE" gen="RESERVE">
-        // Initialize
-        void OnInitialize() const override;
-        // Close
-        bool IsClosable() const override;
-        // </vcc:custom>
+        virtual void Initialize() const override;
+
+        // <vcc:customVPGMainFormPublicFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGMainFormPublicFunctions>
 };

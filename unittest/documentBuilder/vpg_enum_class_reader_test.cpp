@@ -6,7 +6,7 @@
 
 class VPGEnumClassReaderTest : public testing::Test 
 {
-    MANAGER(VPGEnumClassReader, Reader);
+    MANAGER_SPTR(VPGEnumClassReader, Reader);
     public:
         void SetUp() override
         {

@@ -57,10 +57,18 @@ class VPGEnumClass : public BaseObject
     GETSET(std::wstring, Command, L"")
     VECTOR_SPTR(VPGEnumClassProperty, Properties)
 
+    // Log
+    GETSET(bool, IsLogConfigInheritedFromParentObject, false)
+
+    // Action
+    GETSET(bool, IsActionManagerInheritedFromParentObject, false)
+
+    // Json
     GETSET(bool, IsJson, false)
     MAP(std::wstring, std::wstring, JsonAttributes)
     GETSET(std::wstring, InheritClass, L"")
     MAP(std::wstring, std::wstring, InheritClassAttributes)
+
 
     public:
         VPGEnumClass() : BaseObject() {}

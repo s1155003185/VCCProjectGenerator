@@ -36,10 +36,9 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFil
                     
         for (auto const &action : functionMap) {
             std::vector<std::wstring> lines = SplitStringByLine(action.second);
-            result += L"\r\n";
             for (auto &line : lines) {
                 RTrim(line);
-                result += INDENT + line + L"\r\n";
+                result += line + L"\r\n";
             }
         }
     CATCH
@@ -121,7 +120,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             result += L"\r\n";
             for (auto &line : lines) {
                 RTrim(line);
-                result += INDENT + line + L"\r\n";
+                result += line + L"\r\n";
             }
         }
     CATCH

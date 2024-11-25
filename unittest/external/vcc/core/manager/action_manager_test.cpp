@@ -34,7 +34,7 @@ class ActionManagerTestClass final : public BaseAction<ActionManagerTestClass>
 class ActionManagerTest : public testing::Test 
 {
     private:
-        MANAGER(ActionManager, Manager, nullptr);
+        MANAGER_SPTR(ActionManager, Manager, nullptr);
 
     public:
         std::shared_ptr<IAction> CreateAction(int index)

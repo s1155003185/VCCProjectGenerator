@@ -15,21 +15,25 @@ class VPGWorkspaceForm : public BaseForm
 {
     VECTOR_SPTR(VPGGitForm, GitForms)
 
+    // <vcc:customVPGWorkspaceFormProperties sync="RESERVE" gen="RESERVE">
+    // </vcc:customVPGWorkspaceFormProperties>
+
+    private:
+        // <vcc:customVPGWorkspaceFormPrivateFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGWorkspaceFormPrivateFunctions>
+
+    protected:
+        // <vcc:customVPGWorkspaceFormProtectedFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGWorkspaceFormProtectedFunctions>
+
     public:
-        VPGWorkspaceForm() : BaseForm(ObjectType::WorkspaceForm) {}
+        VPGWorkspaceForm();
         virtual ~VPGWorkspaceForm() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
-        {
-            std::shared_ptr<VPGWorkspaceForm> obj = std::make_shared<VPGWorkspaceForm>(*this);
-            obj->CloneGitForms(this->_GitForms);
-            return obj;
-        }
+        virtual std::shared_ptr<IObject> Clone() const override;
 
-        // <vcc:custom sync="RESERVE" gen="RESERVE">
-        // Initialize
-        void OnInitialize() const override;
-        // Close
-        bool IsClosable() const override;
-        // </vcc:custom>
+        virtual void Initialize() const override;
+
+        // <vcc:customVPGWorkspaceFormPublicFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGWorkspaceFormPublicFunctions>
 };

@@ -19,17 +19,17 @@ namespace vcc
             virtual ~BaseObject() {}
 
         public:
-            const ObjectType& GetObjectType() const override
+            virtual const ObjectType& GetObjectType() const override
             { 
                 return _ObjectType;
             }
 
-            std::shared_ptr<IObject> GetParentObject() const override
+            virtual std::shared_ptr<IObject> GetParentObject() const override
             {
                 return _ParentObject;
             }
 
-            void SetParentObject(std::shared_ptr<IObject> parentObject) const override
+            virtual void SetParentObject(std::shared_ptr<IObject> parentObject) const override
             {
                 _ParentObject = parentObject;
             }

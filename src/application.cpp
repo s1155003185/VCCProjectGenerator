@@ -105,5 +105,5 @@ bool Application::CloseForm(IObject *form, const bool &isForce)
     return false;
 }
 
-// <vcc:custom sync="RESERVE" gen="RESERVE">
-// </vcc:custom>
+// <vcc:customApplicationFunctions sync="RESERVE" gen="RESERVE">
+// </vcc:customApplicationFunctions>

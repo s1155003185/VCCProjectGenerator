@@ -15,21 +15,25 @@ class VPGGitForm : public BaseForm
 {
     GETSET_SPTR_NULL(VPGGitLog, Log)
 
+    // <vcc:customVPGGitFormProperties sync="RESERVE" gen="RESERVE">
+    // </vcc:customVPGGitFormProperties>
+
+    private:
+        // <vcc:customVPGGitFormPrivateFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGGitFormPrivateFunctions>
+
+    protected:
+        // <vcc:customVPGGitFormProtectedFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGGitFormProtectedFunctions>
+
     public:
-        VPGGitForm() : BaseForm(ObjectType::GitForm) {}
+        VPGGitForm();
         virtual ~VPGGitForm() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
-        {
-            std::shared_ptr<VPGGitForm> obj = std::make_shared<VPGGitForm>(*this);
-            obj->CloneLog(this->_Log);
-            return obj;
-        }
+        virtual std::shared_ptr<IObject> Clone() const override;
 
-        // <vcc:custom sync="RESERVE" gen="RESERVE">
-        // Initialize
-        void OnInitialize() const override;
-        // Close
-        bool IsClosable() const override;
-        // </vcc:custom>
+        virtual void Initialize() const override;
+
+        // <vcc:customVPGGitFormPublicFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGGitFormPublicFunctions>
 };

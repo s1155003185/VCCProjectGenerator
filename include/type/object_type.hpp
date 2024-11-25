@@ -10,6 +10,6 @@ enum class ObjectType
     , GitLog
     , MainForm
     , WorkspaceForm
-    // <vcc:custom sync="RESERVE" gen="RESERVE">
-    // </vcc:custom>
+    // <vcc:customObjectTypes sync="RESERVE" gen="RESERVE">
+    // </vcc:customObjectTypes>
 };

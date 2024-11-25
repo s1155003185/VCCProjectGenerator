@@ -19,7 +19,7 @@ class VPGJavaGenerationServiceTest : public testing::Test
     
     GETSET_SPTR_NULL(VPGGenerationOption, Option);
     
-    MANAGER(VPGEnumClassReader, Reader);
+    MANAGER_SPTR(VPGEnumClassReader, Reader);
 
     public:
         void SetUp() override
@@ -697,6 +697,14 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
         "    // </editor-fold>\r\n"
         "\r\n"
         "    // <editor-fold defaultstate=\"collapsed\" desc=\"Generated Form Actions\">\r\n"
+        "    public void close(boolean isForce) {\r\n"
+        "        VPGDllFunctions.Instance.ApplicationCloseForm(Handle, isForce);\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public void initialize() {\r\n"
+        "        VPGDllFunctions.Instance.ApplicationInitializeForm(Handle);\r\n"
+        "    }\r\n"
+        "\r\n"
         "    public boolean isClosable() {\r\n"
         "        return VPGDllFunctions.Instance.ApplicationIsFormClosable(Handle);\r\n"
         "    }\r\n"
@@ -705,8 +713,8 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
         "        return VPGDllFunctions.Instance.ApplicationIsFormClosed(Handle);\r\n"
         "    }\r\n"
         "\r\n"
-        "    public void onClose(boolean isForce) {\r\n"
-        "        VPGDllFunctions.Instance.ApplicationCloseForm(Handle, isForce);\r\n"
+        "    public void reload() {\r\n"
+        "        VPGDllFunctions.Instance.ApplicationReloadForm(Handle);\r\n"
         "    }\r\n"
         "    // </editor-fold>\r\n"
         "}\r\n");

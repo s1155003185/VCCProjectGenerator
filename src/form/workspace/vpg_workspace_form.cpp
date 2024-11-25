@@ -1,18 +1,42 @@
 // <vcc:vccproj sync="FULL" gen="FULL"/>
 #include "vpg_workspace_form.hpp"
 
+#include <memory>
+
+#include "action_manager.hpp"
+#include "base_form.hpp"
+#include "exception_macro.hpp"
+#include "log_config.hpp"
+
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
 // </vcc:customHeader>
 
 using namespace vcc;
 
-// <vcc:custom sync="RESERVE" gen="RESERVE">
-void VPGWorkspaceForm::OnInitialize() const
+VPGWorkspaceForm::VPGWorkspaceForm() : BaseForm()
 {
+    TRY
+        _ObjectType = ObjectType::WorkspaceForm;
+        Initialize();
+    CATCH
 }
 
-bool VPGWorkspaceForm::IsClosable() const
+std::shared_ptr<IObject> VPGWorkspaceForm::Clone() const
 {
-    return true;
+    std::shared_ptr<VPGWorkspaceForm> obj = std::make_shared<VPGWorkspaceForm>(*this);
+    obj->CloneGitForms(this->_GitForms);
+    return obj;
 }
-// </vcc:custom>
+
+void VPGWorkspaceForm::Initialize() const
+{
+    TRY
+        BaseForm::Initialize();
+        _LogConfig = std::make_shared<LogConfig>();
+        _ActionManager = std::make_shared<ActionManager>(_LogConfig);
+        OnInitialize();
+    CATCH
+}
+
+// <vcc:customFunctions sync="RESERVE" gen="RESERVE">
+// </vcc:customFunctions>

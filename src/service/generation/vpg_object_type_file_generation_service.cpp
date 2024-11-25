@@ -8,6 +8,7 @@
 #include "xml.hpp"
 
 #include "vpg_code_reader.hpp"
+#include "vpg_tag_helper.hpp"
 
 using namespace vcc;
 
@@ -44,8 +45,8 @@ void VPGObjectTypeFileGenerationService::Generate(const LogConfig *logConfig, co
         if (!IsBlank(customContent))
             content += INDENT + customContent + L"\r\n";
         else
-            content += INDENT + L"// <vcc:custom sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-                + INDENT + L"// </vcc:custom>\r\n";
+            content += INDENT + GetVccTagHeaderCustomTypes(VPGCodeType::Cpp, L"ObjectType") + L"\r\n"
+                + INDENT + GetVccTagTailerCustomTypes(VPGCodeType::Cpp, L"ObjectType") + L"\r\n";
         content += L"};\r\n";
         WriteFile(filePathHpp, content, true);
         LogService::LogInfo(logConfig, LOG_ID, L"Generate object type file completed.");
