@@ -7,6 +7,7 @@
 - Generator Support Action
 - Review VCC Tag
 - Class Attributes support @@Log and @@Action
+- Remove ManagerType and ActionType
 
 ### [v0.2.4] - 2024-11-13: Form - Generate Form
 - Initialize Form

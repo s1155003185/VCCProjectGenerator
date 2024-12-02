@@ -75,6 +75,86 @@ namespace vcc
         CATCH
     }
 
+    int64_t BaseForm::GetActionFirstSeqNo() const
+    {
+        TRY
+            auto actionManager = GetActionManager();
+            if (actionManager != nullptr)
+                return actionManager->GetFirstSeqNo();
+        CATCH
+        return -1;
+    }
+    
+    int64_t BaseForm::GetActionLastSeqNo() const
+    {
+        TRY
+            auto actionManager = GetActionManager();
+            if (actionManager != nullptr)
+                return actionManager->GetLastSeqNo();
+        CATCH
+        return -1;
+    }
+    
+    int64_t BaseForm::RedoAction(const int64_t &noOfStep) const
+    {
+        TRY
+            auto actionManager = GetActionManager();
+            if (actionManager != nullptr)
+                return actionManager->Redo(noOfStep);
+        CATCH
+        return -1;
+    }
+
+    int64_t BaseForm::RedoActionToSeqNo(const int64_t &seqNo) const
+    {
+        TRY
+            auto actionManager = GetActionManager();
+            if (actionManager != nullptr)
+                return actionManager->RedoToSeqNo(seqNo);
+        CATCH
+        return -1;
+    }
+
+    int64_t BaseForm::UndoAction(const int64_t &noOfStep) const
+    {
+        TRY
+            auto actionManager = GetActionManager();
+            if (actionManager != nullptr)
+                return actionManager->Undo(noOfStep);
+        CATCH
+        return -1;
+    }
+
+    int64_t BaseForm::UndoActionToSeqNo(const int64_t &seqNo) const
+    {
+        TRY
+            auto actionManager = GetActionManager();
+            if (actionManager != nullptr)
+                return actionManager->UndoToSeqNo(seqNo);
+        CATCH
+        return -1;
+    }
+
+    int64_t BaseForm::ClearAction() const
+    {
+        TRY
+            auto actionManager = GetActionManager();
+            if (actionManager != nullptr)
+                return actionManager->GetFirstSeqNo();
+        CATCH
+        return -1;
+    }
+
+    int64_t BaseForm::TruncateAction() const
+    {
+        TRY
+            auto actionManager = GetActionManager();
+            if (actionManager != nullptr)
+                return actionManager->GetFirstSeqNo();
+        CATCH
+        return -1;
+    }
+
     bool BaseForm::Close(bool isForce) const
     {
         TRY

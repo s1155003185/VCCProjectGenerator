@@ -26,13 +26,22 @@ DLLEXPORT int GetVersion(wchar_t **str);
 DLLEXPORT void *CreateObject(int64_t objectType);
 
 // <vcc:dllInterface gen="REPLACE">
+DLLEXPORT int64_t ApplicationClearFormAction(void *form);
 DLLEXPORT bool ApplicationCloseForm(void *form, bool isForce);
 DLLEXPORT void *ApplicationCreateForm(int64_t formType);
+DLLEXPORT void ApplicationDoFormAction(void *form, int64_t formProperty);
+DLLEXPORT int64_t ApplicationGetFormActionFirstSeqNo(void *form);
+DLLEXPORT int64_t ApplicationGetFormActionLastSeqNo(void *form);
 DLLEXPORT void ApplicationInitializeForm(void *form);
 DLLEXPORT bool ApplicationIsFormClosable(void *form);
 DLLEXPORT bool ApplicationIsFormClosed(void *form);
+DLLEXPORT int64_t ApplicationRedoFormAction(void *form, int64_t noOfStep);
+DLLEXPORT int64_t ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo);
 DLLEXPORT void ApplicationReloadForm(void *form);
 DLLEXPORT void ApplicationStart();
+DLLEXPORT int64_t ApplicationTruncateFormAction(void *form);
+DLLEXPORT int64_t ApplicationUndoFormAction(void *form, int64_t noOfStep);
+DLLEXPORT int64_t ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo);
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(bool, Bool)
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(char, Char)
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(wchar_t, Wchar)

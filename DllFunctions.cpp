@@ -41,6 +41,14 @@ void *CreateObject(int64_t objectType)
 
 // <vcc:dllInterface gen="REPLACE">
 
+int64_t ApplicationClearFormAction(void *form)
+{
+    TRY
+        return Application::ClearFormAction(static_cast<IObject *>(form));
+    CATCH
+    return -1;
+}
+
 bool ApplicationCloseForm(void *form, bool isForce)
 {
     TRY
@@ -55,6 +63,29 @@ void *ApplicationCreateForm(int64_t objectType)
         return Application::CreateForm(static_cast<ObjectType>(objectType)).get();
     CATCH
     return nullptr;
+}
+
+void ApplicationDoFormAction(void *form, int64_t formProperty)
+{
+    TRY
+        Application::DoFormAction(static_cast<IObject *>(form), formProperty);
+    CATCH
+}
+
+int64_t ApplicationGetFormActionFirstSeqNo(void *form)
+{
+    TRY
+        return Application::GetFormActionFirstSeqNo(static_cast<IObject *>(form));
+    CATCH
+    return -1;
+}
+
+int64_t ApplicationGetFormActionLastSeqNo(void *form)
+{
+    TRY
+        return Application::GetFormActionLastSeqNo(static_cast<IObject *>(form));
+    CATCH
+    return -1;
 }
 
 void ApplicationInitializeForm(void *form)
@@ -80,6 +111,22 @@ bool ApplicationIsFormClosable(void *form)
     return false;
 }
 
+int64_t ApplicationRedoFormAction(void *form, int64_t noOfStep)
+{
+    TRY
+        return Application::RedoFormAction(static_cast<IObject *>(form), noOfStep);
+    CATCH
+    return -1;
+}
+
+int64_t ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo)
+{
+    TRY
+        return Application::RedoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);
+    CATCH
+    return -1;
+}
+
 void ApplicationReloadForm(void *form)
 {
     TRY
@@ -92,6 +139,30 @@ void ApplicationStart()
     TRY
         Application::Run();
     CATCH
+}
+
+int64_t ApplicationTruncateFormAction(void *form)
+{
+    TRY
+        return Application::TruncateFormAction(static_cast<IObject *>(form));
+    CATCH
+    return -1;
+}
+
+int64_t ApplicationUndoFormAction(void *form, int64_t noOfStep)
+{
+    TRY
+        return Application::UndoFormAction(static_cast<IObject *>(form), noOfStep);
+    CATCH
+    return -1;
+}
+
+int64_t ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo)
+{
+    TRY
+        return Application::UndoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);
+    CATCH
+    return -1;
 }
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(bool, Bool, false)
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(char, Char, L'\0')

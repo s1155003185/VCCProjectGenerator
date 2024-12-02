@@ -972,8 +972,44 @@ std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &pr
             + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationReloadForm(Handle);\r\n"
             "}\r\n"));
 
-        // Process
+        // Form Action
+        // formActions.insert(std::make_pair(L"doAction", L"DLLEXPORT void ApplicationDoFormAction(void *form, int64_t formProperty);\r\n"));
+        formActions.insert(std::make_pair(L"getActionFirstSeqNo",
+            L"public long getActionFirstSeqNo() {\r\n"
+            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationGetFormActionFirstSeqNo(Handle);\r\n"
+            "}\r\n"));
+        formActions.insert(std::make_pair(L"getActionLastSeqNo",
+            L"public long getActionLastSeqNo() {\r\n"
+            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationGetFormActionLastSeqNo(Handle);\r\n"
+            "}\r\n"));
 
+        formActions.insert(std::make_pair(L"redo", 
+            L"public long redo(long noOfStep) {\r\n"
+            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationRedoFormAction(Handle, noOfStep);\r\n"
+            "}\r\n"));
+        formActions.insert(std::make_pair(L"redoToSeqNo",
+            L"public long redoToSeqNo(long seqNo) {\r\n"
+            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationRedoFormActionToSeqNo(Handle, seqNo);\r\n"
+            "}\r\n"));
+    
+        formActions.insert(std::make_pair(L"undo", 
+            L"public long undo(long noOfStep) {\r\n"
+            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationUndoFormAction(Handle, noOfStep);\r\n"
+            "}\r\n"));
+        formActions.insert(std::make_pair(L"undoToSeqNo",
+            L"public long undoToSeqNo(long seqNo) {\r\n"
+            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationUndoFormActionToSeqNo(Handle, seqNo);\r\n"
+            "}\r\n"));
+            
+        formActions.insert(std::make_pair(L"clearAction", 
+            L"public long clearAction() {\r\n"
+            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationClearFormAction(Handle);\r\n"
+            "}\r\n"));
+        formActions.insert(std::make_pair(L"truncateAction",
+            L"public long truncateAction() {\r\n"
+            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationTruncateFormAction(Handle);\r\n"
+            "}\r\n"));
+        
         // Close
         formActions.insert(std::make_pair(L"isClosable",
             L"public boolean isClosable() {\r\n"

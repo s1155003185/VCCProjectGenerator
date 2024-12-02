@@ -69,6 +69,95 @@ void Application::ReloadForm(IObject *form)
     CATCH
 }
 
+void Application::DoFormAction(IObject *form, const int64_t &formProperty)
+{
+    TRY
+        if (form == nullptr)
+            return;
+        GetIFormPtrFromIObject(form)->DoAction(formProperty);
+    CATCH
+}
+
+int64_t Application::GetFormActionFirstSeqNo(IObject *form)
+{
+    TRY
+        if (form == nullptr)
+            return -1;
+        return GetIFormPtrFromIObject(form)->GetActionFirstSeqNo();
+    CATCH
+    return -1;
+}
+
+int64_t Application::GetFormActionLastSeqNo(IObject *form)
+{
+    TRY
+        if (form == nullptr)
+            return -1;
+        return GetIFormPtrFromIObject(form)->GetActionLastSeqNo();
+    CATCH
+    return -1;
+}
+
+int64_t Application::RedoFormAction(IObject *form, const int64_t &noOfStep)
+{
+    TRY
+        if (form == nullptr)
+            return -1;
+        return GetIFormPtrFromIObject(form)->RedoAction(noOfStep);
+    CATCH
+    return -1;
+}
+
+int64_t Application::RedoFormActionToSeqNo(IObject *form, const int64_t &seqNo)
+{
+    TRY
+        if (form == nullptr)
+            return -1;
+        return GetIFormPtrFromIObject(form)->RedoActionToSeqNo(seqNo);
+    CATCH
+    return -1;
+}
+
+int64_t Application::UndoFormAction(IObject *form, const int64_t &noOfStep)
+{
+    TRY
+        if (form == nullptr)
+            return -1;
+        return GetIFormPtrFromIObject(form)->UndoAction(noOfStep);
+    CATCH
+    return -1;
+}
+
+int64_t Application::UndoFormActionToSeqNo(IObject *form, const int64_t &seqNo)
+{
+    TRY
+        if (form == nullptr)
+            return -1;
+        return GetIFormPtrFromIObject(form)->UndoActionToSeqNo(seqNo);
+    CATCH
+    return -1;
+}
+
+int64_t Application::ClearFormAction(IObject *form)
+{
+    TRY
+        if (form == nullptr)
+            return -1;
+        return GetIFormPtrFromIObject(form)->ClearAction();
+    CATCH
+    return -1;
+}
+
+int64_t Application::TruncateFormAction(IObject *form)
+{
+    TRY
+        if (form == nullptr)
+            return -1;
+        return GetIFormPtrFromIObject(form)->TruncateAction();
+    CATCH
+    return -1;
+}
+
 bool Application::IsFormClosable(IObject *form)
 {
     if (form == nullptr)

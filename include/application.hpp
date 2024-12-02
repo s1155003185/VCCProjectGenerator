@@ -43,6 +43,20 @@ class Application
         static void InitializeForm(IObject *form);
         static void ReloadForm(IObject *form);
 
+        // Form Action
+        static void DoFormAction(IObject *form, const int64_t &formProperty);
+        static int64_t GetFormActionFirstSeqNo(IObject *form);
+        static int64_t GetFormActionLastSeqNo(IObject *form);
+        
+        static int64_t RedoFormAction(IObject *form, const int64_t &noOfStep = 1);
+        static int64_t RedoFormActionToSeqNo(IObject *form, const int64_t &seqNo);
+
+        static int64_t UndoFormAction(IObject *form, const int64_t &noOfStep = 1);
+        static int64_t UndoFormActionToSeqNo(IObject *form, const int64_t &seqNo);
+
+        static int64_t ClearFormAction(IObject *form);
+        static int64_t TruncateFormAction(IObject *form);
+
         // Close Form
         static bool IsFormClosable(IObject *form);
         static bool IsFormClosed(IObject *form);

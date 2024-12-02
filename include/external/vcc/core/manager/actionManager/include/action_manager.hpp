@@ -21,36 +21,31 @@ namespace vcc
     private:
         //mutable std::shared_mutex _mutex;
 
-        int64_t _GetFirstSeqNo(bool fromBeginning);
-        int64_t _Redo(int64_t noOfStep);
-        int64_t _Undo(int64_t noOfStep);
-        int64_t _RemoveAction(int64_t noOfAction, bool fromBeginning);
-        int64_t _ChopActionListToSize(int64_t size, bool fromBeginning);
-        int64_t _Clear();
-        int64_t _Truncate();
+        int64_t _GetFirstSeqNo(const bool &fromBeginning) const;
+        int64_t _Redo(const int64_t &noOfStep) const;
+        int64_t _Undo(const int64_t &noOfStep) const;
+        int64_t _RemoveAction(const int64_t &noOfAction, const bool &fromBeginning) const;
+        int64_t _ChopActionListToSize(const int64_t &size, const bool &fromBeginning) const;
+        int64_t _Clear() const;
+        int64_t _Truncate() const;
     public:
-        ActionManager(std::shared_ptr<LogConfig> logConfig) : BaseManager(logConfig, ManagerType::Action) {}
+        ActionManager(std::shared_ptr<LogConfig> logConfig) : BaseManager(logConfig) {}
         virtual ~ActionManager() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
-        {
-            return std::make_shared<ActionManager>(*this);
-        }
+        int64_t GetFirstSeqNo() const;
+        int64_t GetLastSeqNo() const;
 
-        int64_t GetFirstSeqNo();
-        int64_t GetLastSeqNo();
-
-        int64_t DoAction(std::shared_ptr<IAction> action);
+        int64_t DoAction(std::shared_ptr<IAction> action) const;
         
-        int64_t Redo(int64_t noOfStep = 1);
-        int64_t RedoToSeqNo(int64_t seqNo);
+        int64_t Redo(const int64_t &noOfStep = 1) const;
+        int64_t RedoToSeqNo(const int64_t &seqNo) const;
 
-        int64_t Undo(int64_t noOfStep = 1);
-        int64_t UndoToSeqNo(int64_t seqNo);
+        int64_t Undo(const int64_t &noOfStep = 1) const;
+        int64_t UndoToSeqNo(const int64_t &seqNo) const;
         
-        int64_t ChopActionListToSize(int64_t size);
+        int64_t ChopActionListToSize(const int64_t &size) const;
 
-        int64_t Clear();
-        int64_t Truncate();
+        int64_t Clear() const;
+        int64_t Truncate() const;
     };
 }

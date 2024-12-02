@@ -65,6 +65,7 @@ class VPGObjectFileGenerationService
             const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
             const std::shared_ptr<VPGEnumClass> enumClass);
         static std::wstring GetCppInitialize(const VPGEnumClass *enumClass, const std::wstring &className, const std::wstring &baseClassName);
+        static std::wstring GetCppAction(const VPGEnumClass *enumClass, const std::wstring &className);
         static std::wstring GetCppCustomFunction(const bool &isContainForm);
 
     public:

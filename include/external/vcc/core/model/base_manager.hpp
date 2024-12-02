@@ -7,19 +7,18 @@
 #include "class_macro.hpp"
 #include "log_config.hpp"
 
-#include "manager_type.hpp"
-
 namespace vcc
 {
     class BaseManager : public IManager, public BaseObject
     {
         GETSET_SPTR_NULL(LogConfig, LogConfig);
-        GETSET(ManagerType, Type, ManagerType::NA);
         
     protected:
         BaseManager() = default;
         BaseManager(std::shared_ptr<LogConfig> logConfig) { this->_LogConfig = logConfig; }
-        BaseManager(std::shared_ptr<LogConfig> logConfig, ManagerType type) : BaseManager(logConfig) { this->_Type = type; }
         virtual ~BaseManager() {}
+        
+        // No Clone for Manager
+        virtual std::shared_ptr<IObject> Clone() const override { return nullptr; }
     };
 }

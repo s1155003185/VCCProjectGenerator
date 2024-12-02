@@ -1,12 +1,14 @@
 // <vcc:vccproj sync="FULL" gen="FULL"/>
 #include "vpg_main_form.hpp"
 
+#include <assert.h>
 #include <memory>
 
 #include "action_manager.hpp"
 #include "base_form.hpp"
 #include "exception_macro.hpp"
 #include "log_config.hpp"
+#include "vpg_main_form_property.hpp"
 
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
 // </vcc:customHeader>
@@ -35,6 +37,18 @@ void VPGMainForm::Initialize() const
         _LogConfig = std::make_shared<LogConfig>();
         _ActionManager = std::make_shared<ActionManager>(_LogConfig);
         OnInitialize();
+    CATCH
+}
+
+void VPGMainForm::DoAction(const int64_t &formProperty) const
+{
+    TRY
+        switch(static_cast<VPGMainFormProperty>(formProperty))
+        {
+        default:
+            assert(false);
+            break;
+        }
     CATCH
 }
 
