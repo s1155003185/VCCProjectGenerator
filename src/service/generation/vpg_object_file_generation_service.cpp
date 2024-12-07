@@ -20,14 +20,6 @@ using namespace vcc;
 #define LOG_ID L"Object File Generation"
 const std::wstring propertyClassNameSuffix = L"Property";
 
-bool VPGObjectFileGenerationService::GetCppIsInitializeNeeded(const VPGEnumClass *enumClass)
-{
-    TRY
-        return !enumClass->GetIsLogConfigInheritedFromParentObject() || !enumClass->GetIsActionManagerInheritedFromParentObject();
-    CATCH
-    return false;
-}
-
 std::wstring VPGObjectFileGenerationService::GetCloneFunction(const VPGEnumClass *enumClass, const std::wstring &className, const bool &isCpp)
 {
     std::wstring result = L"";
@@ -497,10 +489,9 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnum
     std::wstring result = L"";
     TRY
         if (enumClass->GetType() == VPGEnumClassType::Form) {
-            if (GetCppIsInitializeNeeded(enumClass))
-                result += L"\r\n"
-                    + INDENT + INDENT + L"virtual void Initialize() const override;\r\n";
             result += L"\r\n"
+                + INDENT + INDENT + L"virtual void Initialize() const override;\r\n"
+                "\r\n"
                 + INDENT + INDENT + L"virtual void DoAction(const int64_t &formProperty) const override;\r\n";
         }
     CATCH
@@ -927,17 +918,20 @@ std::wstring VPGObjectFileGenerationService::GetCppInitialize(const VPGEnumClass
 {
     std::wstring result = L"";
     TRY
-        if (enumClass->GetType() == VPGEnumClassType::Form && GetCppIsInitializeNeeded(enumClass)) {
+        if (enumClass->GetType() == VPGEnumClassType::Form) {
             result += L"\r\n"
                 "void " + className + L"::Initialize() const\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + baseClassName + L"::Initialize();\r\n";
-            if (!enumClass->GetIsLogConfigInheritedFromParentObject())
+            if (enumClass->GetIsLogConfigInheritedFromParentObject())
+                result += INDENT + INDENT + L"_LogConfig = nullptr;\r\n";
+            else
                 result += INDENT + INDENT + L"_LogConfig = std::make_shared<LogConfig>();\r\n";
-            if (!enumClass->GetIsActionManagerInheritedFromParentObject()) {
+            if (enumClass->GetIsActionManagerInheritedFromParentObject())
+                result += INDENT + INDENT + L"_ActionManager = nullptr;\r\n";
+            else
                 result += INDENT + INDENT + L"_ActionManager = std::make_shared<ActionManager>(_LogConfig);\r\n";
-            }
             result += INDENT + INDENT + L"OnInitialize();\r\n"
                 + INDENT + L"CATCH\r\n"
                 "}\r\n";

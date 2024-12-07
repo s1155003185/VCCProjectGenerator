@@ -44,9 +44,7 @@ enum class VPGGenerationOptionProperty
     // Files
     TypeWorkspace, // GETSET(std::wstring, TypeWorkspace, L"include/type")
 
-    ActionTypeDirectory, // GETSET(std::wstring, ActionTypeDirectory, L"include/type")
     ExceptionTypeDirectory, // GETSET(std::wstring, ExceptionTypeDirectory, L"include/type")
-    ManagerTypeDirectory, // GETSET(std::wstring, ManagerTypeDirectory, L"include/type")
     ObjectTypeDirectory, // GETSET(std::wstring, ObjectTypeDirectory, L"include/type")
 
     ApplicationDirectoryHpp, // GETSET(std::wstring, ApplicationDirectoryHpp, L"include")

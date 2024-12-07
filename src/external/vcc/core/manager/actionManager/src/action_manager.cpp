@@ -99,7 +99,7 @@ namespace vcc
         return _CurrentSeqNo;
     }
 
-    int64_t ActionManager::DoAction(std::shared_ptr<IAction> action) const
+    int64_t ActionManager::DoAction(std::shared_ptr<BaseAction> action) const
     {
         TRY
             //std::unique_lock lock(_mutex);

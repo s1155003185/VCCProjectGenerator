@@ -1,5 +1,6 @@
 #pragma once
 
+#include <assert.h>
 #include <memory>
 
 #include "i_manager.hpp"
@@ -19,6 +20,6 @@ namespace vcc
         virtual ~BaseManager() {}
         
         // No Clone for Manager
-        virtual std::shared_ptr<IObject> Clone() const override { return nullptr; }
+        virtual std::shared_ptr<IObject> Clone() const override { assert(false);  return nullptr; }
     };
 }

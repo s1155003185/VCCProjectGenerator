@@ -324,9 +324,7 @@ Sample
     "IsExcludeUnittest": false,
     "IsExcludeVCCUnitTest": false,
     "TypeWorkspace": "include/type",
-    "ActionTypeDirectory": "include/type",
     "ExceptionTypeDirectory": "include/type",
-    "ManagerTypeDirectory": "include/type",
     "ObjectTypeDirectory": "include/type",
     "ApplicationDirectoryHpp": "include",
     "ApplicationDirectoryCpp": "src",
@@ -403,10 +401,10 @@ IsExcludeVCCUnitTest
 TypeWorkspace
     In Generation mode, Generator will search files with suffix *_property.hpp to create Class, Property Accessor etc. Detail: Generation Rule.
 
-ActionTypeDirectory, ExceptionTypeDirectory, ManagerTypeDirectory, ObjectTypeDirectory
+ExceptionTypeDirectory, ObjectTypeDirectory
     Mandatory.
-    The location to export action_type.hpp, exception_type.hpp, manager_type.hpp, object_type.hpp
-    All are used to export to interface. Cannot delete those files. action_type may be moved to External/VCC/Form/Action/ in the future such that action can be optional.
+    The location to export exception_type.hpp, object_type.hpp
+    All are used to export to interface. Cannot delete those files.
 
 ApplicationDirectoryHpp, ApplicationDirectoryCpp
     Optional. Empty for no generation.
@@ -832,9 +830,7 @@ enum class VPGGenerationOptionProperty
     // Files
     TypeWorkspace, // GETSET(std::wstring, TypeWorkspace, L"include/Type");
 
-    ActionTypeDirectory, // GETSET(std::wstring, ActionTypeDirectory, L"include/Type");
     ExceptionTypeDirectory, // GETSET(std::wstring, ExceptionTypeDirectory, L"include/Type");
-    ManagerTypeDirectory, // GETSET(std::wstring, ManagerTypeDirectory, L"include/Type");
     ObjectTypeDirectory, // GETSET(std::wstring, ObjectTypeDirectory, L"include/Type");
 
     ObjectDirectoryHpp, // GETSET(std::wstring, ObjectDirectoryHpp, L"include/Model");

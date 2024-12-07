@@ -16,7 +16,6 @@ class VPGObjectFileGenerationService
         VPGObjectFileGenerationService() = default;
         ~VPGObjectFileGenerationService() {}
 
-        static bool GetCppIsInitializeNeeded(const VPGEnumClass *enumClass);
         static std::wstring GetCloneFunction(const VPGEnumClass *enumClass, const std::wstring &className, const bool &isCpp);
 
         // Json

@@ -6,10 +6,10 @@
 
 namespace vcc
 {
-    class GitManager : public BaseManager<GitManager>
+    class GitManager : public BaseManager
     {
         public:
-            GitManager(std::shared_ptr<LogConfig> logConfig) : BaseManager(logConfig, ManagerType::Git) {}
+            GitManager(std::shared_ptr<LogConfig> logConfig) : BaseManager(logConfig) {}
             ~GitManager() {}
     };
 }

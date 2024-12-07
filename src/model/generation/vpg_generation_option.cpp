@@ -155,12 +155,8 @@ std::shared_ptr<Json> VPGGenerationOption::ToJson() const
         json->AddBool(ConvertNamingStyle(L"IsExcludeVCCUnitTest", NamingStyle::PascalCase, namestyle), _IsExcludeVCCUnitTest);
         // TypeWorkspace
         json->AddString(ConvertNamingStyle(L"TypeWorkspace", NamingStyle::PascalCase, namestyle), _TypeWorkspace);
-        // ActionTypeDirectory
-        json->AddString(ConvertNamingStyle(L"ActionTypeDirectory", NamingStyle::PascalCase, namestyle), _ActionTypeDirectory);
         // ExceptionTypeDirectory
         json->AddString(ConvertNamingStyle(L"ExceptionTypeDirectory", NamingStyle::PascalCase, namestyle), _ExceptionTypeDirectory);
-        // ManagerTypeDirectory
-        json->AddString(ConvertNamingStyle(L"ManagerTypeDirectory", NamingStyle::PascalCase, namestyle), _ManagerTypeDirectory);
         // ObjectTypeDirectory
         json->AddString(ConvertNamingStyle(L"ObjectTypeDirectory", NamingStyle::PascalCase, namestyle), _ObjectTypeDirectory);
         // ApplicationDirectoryHpp
@@ -266,15 +262,9 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
         // TypeWorkspace
         if (json->IsContainKey(ConvertNamingStyle(L"TypeWorkspace", namestyle, NamingStyle::PascalCase)))
             _TypeWorkspace = json->GetString(ConvertNamingStyle(L"TypeWorkspace", namestyle, NamingStyle::PascalCase));
-        // ActionTypeDirectory
-        if (json->IsContainKey(ConvertNamingStyle(L"ActionTypeDirectory", namestyle, NamingStyle::PascalCase)))
-            _ActionTypeDirectory = json->GetString(ConvertNamingStyle(L"ActionTypeDirectory", namestyle, NamingStyle::PascalCase));
         // ExceptionTypeDirectory
         if (json->IsContainKey(ConvertNamingStyle(L"ExceptionTypeDirectory", namestyle, NamingStyle::PascalCase)))
             _ExceptionTypeDirectory = json->GetString(ConvertNamingStyle(L"ExceptionTypeDirectory", namestyle, NamingStyle::PascalCase));
-        // ManagerTypeDirectory
-        if (json->IsContainKey(ConvertNamingStyle(L"ManagerTypeDirectory", namestyle, NamingStyle::PascalCase)))
-            _ManagerTypeDirectory = json->GetString(ConvertNamingStyle(L"ManagerTypeDirectory", namestyle, NamingStyle::PascalCase));
         // ObjectTypeDirectory
         if (json->IsContainKey(ConvertNamingStyle(L"ObjectTypeDirectory", namestyle, NamingStyle::PascalCase)))
             _ObjectTypeDirectory = json->GetString(ConvertNamingStyle(L"ObjectTypeDirectory", namestyle, NamingStyle::PascalCase));

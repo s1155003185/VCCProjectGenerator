@@ -358,12 +358,8 @@ std::wstring VPGGenerationOptionPropertyAccessor::_ReadString(const int64_t &obj
             return obj->GetProjectNameExe();
         case VPGGenerationOptionProperty::TypeWorkspace:
             return obj->GetTypeWorkspace();
-        case VPGGenerationOptionProperty::ActionTypeDirectory:
-            return obj->GetActionTypeDirectory();
         case VPGGenerationOptionProperty::ExceptionTypeDirectory:
             return obj->GetExceptionTypeDirectory();
-        case VPGGenerationOptionProperty::ManagerTypeDirectory:
-            return obj->GetManagerTypeDirectory();
         case VPGGenerationOptionProperty::ObjectTypeDirectory:
             return obj->GetObjectTypeDirectory();
         case VPGGenerationOptionProperty::ApplicationDirectoryHpp:
@@ -439,14 +435,8 @@ void VPGGenerationOptionPropertyAccessor::_WriteString(const int64_t &objectProp
         case VPGGenerationOptionProperty::TypeWorkspace:
             obj->SetTypeWorkspace(value);
             break;
-        case VPGGenerationOptionProperty::ActionTypeDirectory:
-            obj->SetActionTypeDirectory(value);
-            break;
         case VPGGenerationOptionProperty::ExceptionTypeDirectory:
             obj->SetExceptionTypeDirectory(value);
-            break;
-        case VPGGenerationOptionProperty::ManagerTypeDirectory:
-            obj->SetManagerTypeDirectory(value);
             break;
         case VPGGenerationOptionProperty::ObjectTypeDirectory:
             obj->SetObjectTypeDirectory(value);

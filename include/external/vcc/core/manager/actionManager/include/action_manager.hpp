@@ -1,8 +1,8 @@
 #pragma once
 #include "base_manager.hpp"
 
+#include "base_action.hpp"
 #include "class_macro.hpp"
-#include "i_action.hpp"
 
 #include <memory>
 #include <mutex>
@@ -14,7 +14,7 @@ namespace vcc
     class ActionManager : public BaseManager
     {
         GETSET(int64_t, MaxActionListSize, 100)
-        MAP_SPTR_R(int64_t, IAction, Actions)
+        MAP_SPTR_R(int64_t, BaseAction, Actions)
         GETSET(int64_t, CurrentSeqNo, -1)
         GETSET(int64_t, MaxSeqNo, -1)
 
@@ -35,7 +35,7 @@ namespace vcc
         int64_t GetFirstSeqNo() const;
         int64_t GetLastSeqNo() const;
 
-        int64_t DoAction(std::shared_ptr<IAction> action) const;
+        int64_t DoAction(std::shared_ptr<BaseAction> action) const;
         
         int64_t Redo(const int64_t &noOfStep = 1) const;
         int64_t RedoToSeqNo(const int64_t &seqNo) const;

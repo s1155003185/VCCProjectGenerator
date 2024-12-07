@@ -1,10 +1,9 @@
 #pragma once
 #include <string>
-#include "i_object.hpp"
 
 namespace vcc
 {
-    class IAction : public IObject
+    class IAction
     {
     protected:
         IAction() {}
@@ -17,7 +16,7 @@ namespace vcc
         virtual std::wstring _GetUndoMessage() = 0;
 
     public:
-        virtual void SetSeqNo(size_t seqNo) = 0;
+        virtual void SetSeqNo(const size_t &seqNo) = 0;
         virtual size_t GetSeqNo() = 0;
         virtual std::wstring GetMessage() = 0;
         
