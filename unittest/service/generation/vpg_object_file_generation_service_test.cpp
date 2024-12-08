@@ -625,6 +625,37 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritForm)
         "// </vcc:customFunctions>\r\n");
 }
 
+TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
+{
+    std::wstring enumClass = L""
+        "#pragma once\r\n"
+        "\r\n"
+        "//@@Form\r\n"
+        "enum class VPGGitFormProperty\r\n"
+        "{\r\n"
+        "    String // GETSET(std::wstring, String, L\"\")\r\n"
+        "   , AddWorkspace"
+        "};\r\n"
+        "\r\n";
+    WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    this->GetReader()->Parse(enumClass, enumClassList);
+
+    std::wstring classPrefix = L"VPG";
+    std::map<std::wstring, std::wstring> projectClassIncludeFiles;
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
+        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, this->GetEnumClasses(),
+        this->GetFilePathCpp(), this->GetFilePathCpp(), enumClassList);
+
+    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+
+    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), L"");
+    EXPECT_EQ(ReadFile(this->GetFilePathCpp()), L"");
+}
+
 TEST_F(VPGObjectFileGenerationServiceTest, Multi)
 {
     std::wstring enumClass =
