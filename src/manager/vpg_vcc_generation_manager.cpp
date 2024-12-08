@@ -78,6 +78,7 @@ void VPGVccGenerationManager::CreateVccJson() const
         DECLARE_UPTR(JsonBuilder, jsonBuilder);
         jsonBuilder->SetIsBeautify(true);
         _Option->SetVersion(VPGGlobal::GetVersion());
+        _Option->InsertExports(std::make_shared<VPGGenerationOptionExport>());
         WriteFile(ConcatPaths({_Workspace, VPGGlobal::GetVccJsonFileName()}), _Option->SerializeJson(jsonBuilder.get()), true);
     CATCH
 }
