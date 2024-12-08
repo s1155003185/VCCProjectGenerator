@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+
+### [v0.2.5] - 2024-12-08: Form - Generate Java Form
 - Form Action - Create, Reload, Close
 - Remove BaseObject template (No method to convert IObject and IForm if there is template)
 - Fix cannot throw exception when excuting release exe
