@@ -662,14 +662,16 @@ void VPGObjectFileGenerationService::GetCppIncludeFiles(
             }
 
             // log
-            if (!enumClass->GetIsLogConfigInheritedFromParentObject()) {
+            if (enumClass->GetIsLogConfigIndependent())
                 customIncludeFiles.insert(L"log_config.hpp");
-            }
             
             // action
-            if (!enumClass->GetIsActionManagerInheritedFromParentObject()) {        
+            if (enumClass->GetIsActionManagerIndependent())
                 customIncludeFiles.insert(L"action_manager.hpp");
-            }
+
+            // thread
+            if (enumClass->GetIsThreadManagerIndependent())
+                customIncludeFiles.insert(L"thread_manager.hpp");
         }
     }
     if (isContainJson) {
@@ -924,14 +926,18 @@ std::wstring VPGObjectFileGenerationService::GetCppInitialize(const VPGEnumClass
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + baseClassName + L"::Initialize();\r\n";
-            if (enumClass->GetIsLogConfigInheritedFromParentObject())
-                result += INDENT + INDENT + L"_LogConfig = nullptr;\r\n";
-            else
+            if (enumClass->GetIsLogConfigIndependent())
                 result += INDENT + INDENT + L"_LogConfig = std::make_shared<LogConfig>();\r\n";
-            if (enumClass->GetIsActionManagerInheritedFromParentObject())
-                result += INDENT + INDENT + L"_ActionManager = nullptr;\r\n";
             else
+                result += INDENT + INDENT + L"_LogConfig = nullptr;\r\n";
+            if (enumClass->GetIsActionManagerIndependent())
                 result += INDENT + INDENT + L"_ActionManager = std::make_shared<ActionManager>(_LogConfig);\r\n";
+            else
+                result += INDENT + INDENT + L"_ActionManager = nullptr;\r\n";
+            if (enumClass->GetIsThreadManagerIndependent())
+                result += INDENT + INDENT + L"_ThreadManager = std::make_shared<ThreadManager>(_LogConfig);\r\n";
+            else
+                result += INDENT + INDENT + L"_ThreadManager = nullptr;\r\n";
             result += INDENT + INDENT + L"OnInitialize();\r\n"
                 + INDENT + L"CATCH\r\n"
                 "}\r\n";

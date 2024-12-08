@@ -697,7 +697,7 @@ Note:
     e.g. VPGPersionProperty
 
 #### Class Attribute
-// [@@Form] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsInheritedFromParentObject": true }] [@@Action { "IsInheritedFromParentObject": true }] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Command xxx]
+// [@@Form] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsIndependent": true }] [@@Action { "IsIndependent": true }] [@@Thread { "IsIndependent": true } ] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Command xxx]
 
 []: Optional
 @@: Key for attributes. Need to state for attribute
@@ -713,20 +713,30 @@ Note:
         Class
             Value is Parent Class
 
-[@@Log { "IsInheritedFromParentObject": true }]
+[@@Log { "IsIndependent": true }]
     Form Only
     Attribute:
-        IsInheritedFromParentObject
+        IsIndependent
             Value is true or false. Default: false
-            If Value is true, Form will follow Parent Object Log Setting
+            If value is false, Form will follow Parent Object Log Setting
+            If Value is true, Form will have new Log config
 
-[@@Action { "IsInheritedFromParentObject": true }]
+[@@Action { "IsIndependent": true }]
     Form Only
     Attribute:
-        IsInheritedFromParentObject
+        IsIndependent
             Value is true or false. Default: false
-            If Value is true, Form will add action to Parent Action Manager. When Undo Action, may affect other object that sharing same Action Manager. ie. Parent Form and other inheriting child Form
-            
+            If value is false, Form will follow Parent Object Action Manager (share same history)
+            If Value is true, Form will have new Action History (independent history)
+
+[@@Action { "IsIndependent": true }]
+    Form Only
+    Attribute:
+        IsIndependent
+            Value is true or false. Default: false
+            If value is false, Form will follow Parent Object Thead Manager (share same thread pool)
+            If Value is true, Form will have independent Thread Mamanger (independent thread pool)
+
 [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }]
     Generate Class as Json Object. Class will have attribute ToJson, SerializeJson and DeserializeJson
     Attribute:

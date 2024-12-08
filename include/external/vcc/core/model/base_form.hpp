@@ -8,6 +8,7 @@
 #include "log_config.hpp"
 #include "object_type.hpp"
 #include "state.hpp"
+#include "thread_manager.hpp"
 
 namespace vcc
 {
@@ -16,6 +17,7 @@ namespace vcc
     protected:
         mutable std::shared_ptr<LogConfig> _LogConfig = nullptr;
         mutable std::shared_ptr<ActionManager> _ActionManager = nullptr;
+        mutable std::shared_ptr<ThreadManager> _ThreadManager = nullptr;
 
         mutable State _State = State::Active;
         
@@ -35,6 +37,10 @@ namespace vcc
         // Action
         virtual std::shared_ptr<ActionManager> GetActionManager() const override;
         virtual void SetActionManager(std::shared_ptr<ActionManager> actionManager) const override;
+
+        // Thead
+        virtual std::shared_ptr<ThreadManager> GetThreadManager() const override;
+        virtual void SetThreadManager(std::shared_ptr<ThreadManager> threadManager) const override;
 
         // State
         virtual State GetState() const override;

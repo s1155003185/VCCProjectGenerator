@@ -58,10 +58,13 @@ class VPGEnumClass : public BaseObject
     VECTOR_SPTR(VPGEnumClassProperty, Properties)
 
     // Log
-    GETSET(bool, IsLogConfigInheritedFromParentObject, false)
+    GETSET(bool, IsLogConfigIndependent, false)
 
     // Action
-    GETSET(bool, IsActionManagerInheritedFromParentObject, false)
+    GETSET(bool, IsActionManagerIndependent, false)
+
+    // Thread
+    GETSET(bool, IsThreadManagerIndependent, false)
 
     // Json
     GETSET(bool, IsJson, false)

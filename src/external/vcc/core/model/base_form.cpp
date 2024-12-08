@@ -37,6 +37,20 @@ namespace vcc
         _ActionManager = actionManager;
     }
 
+    std::shared_ptr<ThreadManager> BaseForm::GetThreadManager() const
+    {
+        TRY
+            auto baseForm = std::dynamic_pointer_cast<BaseForm>(_ParentObject);
+            return (baseForm != nullptr && _ThreadManager == nullptr) ? baseForm->GetThreadManager() : _ThreadManager;
+        CATCH
+        return nullptr;
+    }
+
+    void BaseForm::SetThreadManager(std::shared_ptr<ThreadManager> threadManager) const
+    {
+        _ThreadManager = threadManager;
+    }
+
     State BaseForm::GetState() const
     {
         TRY

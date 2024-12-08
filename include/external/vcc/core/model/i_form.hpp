@@ -3,6 +3,7 @@
 #include "action_manager.hpp"
 #include "log_config.hpp"
 #include "state.hpp"
+#include "thread_manager.hpp"
 
 namespace vcc
 {
@@ -26,7 +27,11 @@ namespace vcc
             
             // Action
             virtual std::shared_ptr<ActionManager> GetActionManager() const = 0;
-            virtual void SetActionManager(std::shared_ptr<ActionManager> actionManager) const =0;
+            virtual void SetActionManager(std::shared_ptr<ActionManager> actionManager) const = 0;
+
+            // Thead
+            virtual std::shared_ptr<ThreadManager> GetThreadManager() const = 0;
+            virtual void SetThreadManager(std::shared_ptr<ThreadManager> threadManager) const = 0;
 
             // State
             virtual State GetState() const = 0;

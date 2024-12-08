@@ -1,6 +1,9 @@
 # Change Log
 
 ## [Unreleased]
+- Support @@Thread
+- @@Log, @@Action, @@Thread use IsIndependent insead of IsInheritFromParent
+
 
 ### [v0.2.5] - 2024-12-08: Form - Generate Java Form
 - Form Action - Create, Reload, Close

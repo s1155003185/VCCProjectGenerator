@@ -239,6 +239,77 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritClass)
         "};\r\n");
 }
 
+TEST_F(VPGObjectFileGenerationServiceTest, Multi)
+{
+    std::wstring enumClass =
+        L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectAProperty\r\n"
+        "{\r\n"
+        "    EnumA // GETSET(std::wstring, EnumA, L\"\")\r\n"
+        "};\r\n"
+        "\r\n"
+        "enum class VPGObjectBProperty\r\n"
+        "{\r\n"
+        "    EnumA // GETSET(std::wstring, EnumA, L\"\")\r\n"
+        "};\r\n";
+    WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    this->GetReader()->Parse(enumClass, enumClassList);
+
+    std::wstring classPrefix = L"VPG";
+    std::map<std::wstring, std::wstring> projectClassIncludeFiles;
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
+
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
+        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
+    EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
+
+    EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#pragma once\r\n"
+        "\r\n"
+        "#include <string>\r\n"
+        "\r\n"
+        "#include \"base_object.hpp\"\r\n"
+        "#include \"class_macro.hpp\"\r\n"
+        "#include \"object_type.hpp\"\r\n"
+        "\r\n"
+        "using namespace vcc;\r\n"
+        "\r\n"
+        "class VPGObjectA : public BaseObject\r\n"
+        "{\r\n"
+        "    GETSET(std::wstring, EnumA, L\"\")\r\n"
+        "\r\n"
+        "    public:\r\n"
+        "        VPGObjectA() : BaseObject(ObjectType::ObjectA) {}\r\n"
+        "        virtual ~VPGObjectA() {}\r\n"
+        "\r\n"
+        "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
+        "        {\r\n"
+        "            return std::make_shared<VPGObjectA>(*this);\r\n"
+        "        }\r\n"
+        "};\r\n"
+        "\r\n"
+        "class VPGObjectB : public BaseObject\r\n"
+        "{\r\n"
+        "    GETSET(std::wstring, EnumA, L\"\")\r\n"
+        "\r\n"
+        "    public:\r\n"
+        "        VPGObjectB() : BaseObject(ObjectType::ObjectB) {}\r\n"
+        "        virtual ~VPGObjectB() {}\r\n"
+        "\r\n"
+        "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
+        "        {\r\n"
+        "            return std::make_shared<VPGObjectB>(*this);\r\n"
+        "        }\r\n"
+        "};\r\n");
+}
+
 TEST_F(VPGObjectFileGenerationServiceTest, Form)
 {
     std::wstring enumClass = L""
@@ -258,135 +329,6 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form)
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     //projectClassIncludeFiles.insert(std::make_pair(L"GitLog", L"git_service.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
-    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, this->GetEnumClasses(),
-        this->GetFilePathCpp(), this->GetFilePathCpp(), enumClassList);
-
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
-
-    EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#pragma once\r\n"
-        "\r\n"
-        "#include <string>\r\n"
-        "\r\n"
-        "#include \"base_form.hpp\"\r\n"
-        "#include \"class_macro.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "\r\n"
-        "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "// </vcc:customHeader>\r\n"
-        "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
-        "class VPGGitForm : public BaseForm\r\n"
-        "{\r\n"
-        "    GETSET(std::wstring, String, L\"\")\r\n"
-        "\r\n"
-        "    // <vcc:customVPGGitFormProperties sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "    // </vcc:customVPGGitFormProperties>\r\n"
-        "\r\n"
-        "    private:\r\n"
-        "        // <vcc:customVPGGitFormPrivateFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "        // </vcc:customVPGGitFormPrivateFunctions>\r\n"
-        "\r\n"
-        "    protected:\r\n"
-        "        // <vcc:customVPGGitFormProtectedFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "        // </vcc:customVPGGitFormProtectedFunctions>\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGGitForm();\r\n"
-        "        virtual ~VPGGitForm() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<IObject> Clone() const override;\r\n"
-        "\r\n"
-        "        virtual void Initialize() const override;\r\n"
-        "\r\n"
-        "        virtual void DoAction(const int64_t &formProperty) const override;\r\n"
-        "\r\n"
-        "        // <vcc:customVPGGitFormPublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "        // </vcc:customVPGGitFormPublicFunctions>\r\n"
-        "};\r\n");
-
-    EXPECT_EQ(ReadFile(this->GetFilePathCpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#include \"vcc_object.hpp\"\r\n"
-        "\r\n"
-        "#include <assert.h>\r\n"
-        "#include <memory>\r\n"
-        "\r\n"
-        "#include \"action_manager.hpp\"\r\n"
-        "#include \"base_form.hpp\"\r\n"
-        "#include \"exception_macro.hpp\"\r\n"
-        "#include \"git_form_property.hpp\"\r\n"
-        "#include \"log_config.hpp\"\r\n"
-        "\r\n"
-        "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "// </vcc:customHeader>\r\n"
-        "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
-        "VPGGitForm::VPGGitForm() : BaseForm()\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        _ObjectType = ObjectType::GitForm;\r\n"
-        "        Initialize();\r\n"
-        "    CATCH\r\n"
-        "}\r\n"
-        "\r\n"
-        "std::shared_ptr<IObject> VPGGitForm::Clone() const\r\n"
-        "{\r\n"
-        "    return std::make_shared<VPGGitForm>(*this);\r\n"
-        "}\r\n"
-        "\r\n"
-        "void VPGGitForm::Initialize() const\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        BaseForm::Initialize();\r\n"
-        "        _LogConfig = std::make_shared<LogConfig>();\r\n"
-        "        _ActionManager = std::make_shared<ActionManager>(_LogConfig);\r\n"
-        "        OnInitialize();\r\n"
-        "    CATCH\r\n"
-        "}\r\n"
-        "\r\n"
-        "void VPGGitForm::DoAction(const int64_t &formProperty) const\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        switch(static_cast<VPGGitFormProperty>(formProperty))\r\n"
-        "        {\r\n"
-        "        default:\r\n"
-        "            assert(false);\r\n"
-        "            break;\r\n"
-        "        }\r\n"
-        "    CATCH\r\n"
-        "}\r\n"
-        "\r\n"
-        "// <vcc:customFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "// </vcc:customFunctions>\r\n");
-}
-
-TEST_F(VPGObjectFileGenerationServiceTest, FormWithInheritedProperties)
-{
-    // If there is inherited properties, please add all properties here so that Initiailize() is hidden
-    std::wstring enumClass = L""
-        "#pragma once\r\n"
-        "\r\n"
-        "//@@Form @@Log { \"IsInheritedFromParentObject\": true } @@Action { \"IsInheritedFromParentObject\": true }\r\n"
-        "enum class VPGGitFormProperty\r\n"
-        "{\r\n"
-        "    String // GETSET(std::wstring, String, L\"\")\r\n"
-        "};\r\n"
-        "\r\n";
-    WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
-
-    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
-
-    std::wstring classPrefix = L"VPG";
-    std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
@@ -475,6 +417,138 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormWithInheritedProperties)
         "        BaseForm::Initialize();\r\n"
         "        _LogConfig = nullptr;\r\n"
         "        _ActionManager = nullptr;\r\n"
+        "        _ThreadManager = nullptr;\r\n"
+        "        OnInitialize();\r\n"
+        "    CATCH\r\n"
+        "}\r\n"
+        "\r\n"
+        "void VPGGitForm::DoAction(const int64_t &formProperty) const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        switch(static_cast<VPGGitFormProperty>(formProperty))\r\n"
+        "        {\r\n"
+        "        default:\r\n"
+        "            assert(false);\r\n"
+        "            break;\r\n"
+        "        }\r\n"
+        "    CATCH\r\n"
+        "}\r\n"
+        "\r\n"
+        "// <vcc:customFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "// </vcc:customFunctions>\r\n");
+}
+
+TEST_F(VPGObjectFileGenerationServiceTest, FormWithIndependentManager)
+{
+    // If there is inherited properties, please add all properties here so that Initiailize() is hidden
+    std::wstring enumClass = L""
+        "#pragma once\r\n"
+        "\r\n"
+        "//@@Form @@Log { \"IsIndependent\": true } @@Action { \"IsIndependent\": true } @@Thread { \"IsIndependent\": true } \r\n"
+        "enum class VPGGitFormProperty\r\n"
+        "{\r\n"
+        "    String // GETSET(std::wstring, String, L\"\")\r\n"
+        "};\r\n"
+        "\r\n";
+    WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    this->GetReader()->Parse(enumClass, enumClassList);
+
+    std::wstring classPrefix = L"VPG";
+    std::map<std::wstring, std::wstring> projectClassIncludeFiles;
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
+        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, this->GetEnumClasses(),
+        this->GetFilePathCpp(), this->GetFilePathCpp(), enumClassList);
+
+    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+
+    EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#pragma once\r\n"
+        "\r\n"
+        "#include <string>\r\n"
+        "\r\n"
+        "#include \"base_form.hpp\"\r\n"
+        "#include \"class_macro.hpp\"\r\n"
+        "#include \"object_type.hpp\"\r\n"
+        "\r\n"
+        "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "// </vcc:customHeader>\r\n"
+        "\r\n"
+        "using namespace vcc;\r\n"
+        "\r\n"
+        "class VPGGitForm : public BaseForm\r\n"
+        "{\r\n"
+        "    GETSET(std::wstring, String, L\"\")\r\n"
+        "\r\n"
+        "    // <vcc:customVPGGitFormProperties sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "    // </vcc:customVPGGitFormProperties>\r\n"
+        "\r\n"
+        "    private:\r\n"
+        "        // <vcc:customVPGGitFormPrivateFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:customVPGGitFormPrivateFunctions>\r\n"
+        "\r\n"
+        "    protected:\r\n"
+        "        // <vcc:customVPGGitFormProtectedFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:customVPGGitFormProtectedFunctions>\r\n"
+        "\r\n"
+        "    public:\r\n"
+        "        VPGGitForm();\r\n"
+        "        virtual ~VPGGitForm() {}\r\n"
+        "\r\n"
+        "        virtual std::shared_ptr<IObject> Clone() const override;\r\n"
+        "\r\n"
+        "        virtual void Initialize() const override;\r\n"
+        "\r\n"
+        "        virtual void DoAction(const int64_t &formProperty) const override;\r\n"
+        "\r\n"
+        "        // <vcc:customVPGGitFormPublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:customVPGGitFormPublicFunctions>\r\n"
+        "};\r\n");
+
+    EXPECT_EQ(ReadFile(this->GetFilePathCpp()),
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#include \"vcc_object.hpp\"\r\n"
+        "\r\n"
+        "#include <assert.h>\r\n"
+        "#include <memory>\r\n"
+        "\r\n"
+        "#include \"action_manager.hpp\"\r\n"
+        "#include \"base_form.hpp\"\r\n"
+        "#include \"exception_macro.hpp\"\r\n"
+        "#include \"git_form_property.hpp\"\r\n"
+        "#include \"log_config.hpp\"\r\n"
+        "#include \"thread_manager.hpp\"\r\n"
+        "\r\n"
+        "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "// </vcc:customHeader>\r\n"
+        "\r\n"
+        "using namespace vcc;\r\n"
+        "\r\n"
+        "VPGGitForm::VPGGitForm() : BaseForm()\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        _ObjectType = ObjectType::GitForm;\r\n"
+        "        Initialize();\r\n"
+        "    CATCH\r\n"
+        "}\r\n"
+        "\r\n"
+        "std::shared_ptr<IObject> VPGGitForm::Clone() const\r\n"
+        "{\r\n"
+        "    return std::make_shared<VPGGitForm>(*this);\r\n"
+        "}\r\n"
+        "\r\n"
+        "void VPGGitForm::Initialize() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        BaseForm::Initialize();\r\n"
+        "        _LogConfig = std::make_shared<LogConfig>();\r\n"
+        "        _ActionManager = std::make_shared<ActionManager>(_LogConfig);\r\n"
+        "        _ThreadManager = std::make_shared<ThreadManager>(_LogConfig);\r\n"
         "        OnInitialize();\r\n"
         "    CATCH\r\n"
         "}\r\n"
@@ -575,11 +649,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritForm)
         "#include <assert.h>\r\n"
         "#include <memory>\r\n"
         "\r\n"
-        "#include \"action_manager.hpp\"\r\n"
         "#include \"exception_macro.hpp\"\r\n"
         "#include \"git_form.hpp\"\r\n"
         "#include \"git_form_property.hpp\"\r\n"
-        "#include \"log_config.hpp\"\r\n"
         "\r\n"
         "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "// </vcc:customHeader>\r\n"
@@ -603,8 +675,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritForm)
         "{\r\n"
         "    TRY\r\n"
         "        GitBaseForm::Initialize();\r\n"
-        "        _LogConfig = std::make_shared<LogConfig>();\r\n"
-        "        _ActionManager = std::make_shared<ActionManager>(_LogConfig);\r\n"
+        "        _LogConfig = nullptr;\r\n"
+        "        _ActionManager = nullptr;\r\n"
+        "        _ThreadManager = nullptr;\r\n"
         "        OnInitialize();\r\n"
         "    CATCH\r\n"
         "}\r\n"
@@ -625,20 +698,18 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritForm)
         "// </vcc:customFunctions>\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, Multi)
+TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
 {
-    std::wstring enumClass =
-        L"#pragma once\r\n"
+    std::wstring enumClass = L""
+        "#pragma once\r\n"
         "\r\n"
-        "enum class VPGObjectAProperty\r\n"
+        "//@@Form\r\n"
+        "enum class VPGGitFormProperty\r\n"
         "{\r\n"
-        "    EnumA // GETSET(std::wstring, EnumA, L\"\")\r\n"
+        "    String // GETSET(std::wstring, String, L\"\")\r\n"
+        "   , AddWorkspace"
         "};\r\n"
-        "\r\n"
-        "enum class VPGObjectBProperty\r\n"
-        "{\r\n"
-        "    EnumA // GETSET(std::wstring, EnumA, L\"\")\r\n"
-        "};\r\n";
+        "\r\n";
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
@@ -646,54 +717,16 @@ TEST_F(VPGObjectFileGenerationServiceTest, Multi)
 
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
-
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, this->GetEnumClasses(),
+        this->GetFilePathCpp(), this->GetFilePathCpp(), enumClassList);
 
-    EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#pragma once\r\n"
-        "\r\n"
-        "#include <string>\r\n"
-        "\r\n"
-        "#include \"base_object.hpp\"\r\n"
-        "#include \"class_macro.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
-        "class VPGObjectA : public BaseObject\r\n"
-        "{\r\n"
-        "    GETSET(std::wstring, EnumA, L\"\")\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGObjectA() : BaseObject(ObjectType::ObjectA) {}\r\n"
-        "        virtual ~VPGObjectA() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
-        "        {\r\n"
-        "            return std::make_shared<VPGObjectA>(*this);\r\n"
-        "        }\r\n"
-        "};\r\n"
-        "\r\n"
-        "class VPGObjectB : public BaseObject\r\n"
-        "{\r\n"
-        "    GETSET(std::wstring, EnumA, L\"\")\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGObjectB() : BaseObject(ObjectType::ObjectB) {}\r\n"
-        "        virtual ~VPGObjectB() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
-        "        {\r\n"
-        "            return std::make_shared<VPGObjectB>(*this);\r\n"
-        "        }\r\n"
-        "};\r\n");
+    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+
+    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), L"");
+    EXPECT_EQ(ReadFile(this->GetFilePathCpp()), L"");
 }
 
 TEST_F(VPGObjectFileGenerationServiceTest, Json)

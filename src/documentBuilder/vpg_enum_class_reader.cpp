@@ -382,12 +382,17 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Log")) {
                     std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Log");
                     if (jsonAttributes != nullptr)
-                        enumClass->_IsLogConfigInheritedFromParentObject = jsonAttributes->GetBool(L"IsInheritedFromParentObject");
+                        enumClass->_IsLogConfigIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Action")) {
                     std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Action");
                     if (jsonAttributes != nullptr)
-                        enumClass->_IsActionManagerInheritedFromParentObject = jsonAttributes->GetBool(L"IsInheritedFromParentObject");
+                        enumClass->_IsActionManagerIndependent = jsonAttributes->GetBool(L"IsIndependent");
+                    command = L"";
+                } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Thread")) {
+                    std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Thread");
+                    if (jsonAttributes != nullptr)
+                        enumClass->_IsThreadManagerIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Json")) {
                     enumClass->_IsJson = true;
