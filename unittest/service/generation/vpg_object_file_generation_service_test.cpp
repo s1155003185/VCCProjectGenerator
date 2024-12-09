@@ -698,7 +698,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritForm)
         "// </vcc:customFunctions>\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
+TEST_F(VPGObjectFileGenerationServiceTest, FormManagerAndAction)
 {
     std::wstring enumClass = L""
         "#pragma once\r\n"
@@ -707,7 +707,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "enum class VPGGitFormProperty\r\n"
         "{\r\n"
         "    String // GETSET(std::wstring, String, L\"\")\r\n"
-        "   , AddWorkspace"
+        "    , GitManager MANAGER_SPTR_NULL(GitManager, GitManager)\r\n"
+        "    , AddWorkspace // ACTION()\r\n"
+        "    , DeleteAction // ACTION()\r\n"
         "};\r\n"
         "\r\n";
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
