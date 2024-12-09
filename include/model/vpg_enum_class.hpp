@@ -23,9 +23,19 @@ enum class VPGEnumClassType
     , Form
 };
 
+enum class VPGEnumClassPropertyType
+{
+    NA
+    , Property
+    , Manager
+    , Action
+};
+
 class VPGEnumClassProperty : public BaseObject
 {
     friend class VPGEnumClassReader;
+
+    GETSET(VPGEnumClassPropertyType, PropertyType, VPGEnumClassPropertyType::NA)
     GETSET(std::wstring, Enum, L"");
     GETSET(int64_t, EnumValue, 0);
     GETSET(std::wstring, Macro, L"");

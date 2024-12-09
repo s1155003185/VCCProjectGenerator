@@ -4,10 +4,8 @@
 #include <assert.h>
 #include <memory>
 
-#include "action_manager.hpp"
 #include "base_form.hpp"
 #include "exception_macro.hpp"
-#include "log_config.hpp"
 #include "vpg_git_form_property.hpp"
 
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
@@ -25,18 +23,21 @@ VPGGitForm::VPGGitForm() : BaseForm()
 
 std::shared_ptr<IObject> VPGGitForm::Clone() const
 {
-    std::shared_ptr<VPGGitForm> obj = std::make_shared<VPGGitForm>(*this);
+    auto obj = std::make_shared<VPGGitForm>(*this);
     obj->CloneLog(this->_Log);
     return obj;
 }
 
-void VPGGitForm::Initialize() const
+void VPGGitForm::InitializeComponents() const
 {
     TRY
-        BaseForm::Initialize();
-        _LogConfig = std::make_shared<LogConfig>();
-        _ActionManager = std::make_shared<ActionManager>(_LogConfig);
-        OnInitialize();
+        BaseForm::InitializeComponents();
+        _LogConfig = nullptr;
+        _ActionManager = nullptr;
+        _ThreadManager = nullptr;
+        // Custom Managers
+        _GitManager = std::make_shared<GitManager>(_LogConfig);
+        OnInitializeComponents();
     CATCH
 }
 

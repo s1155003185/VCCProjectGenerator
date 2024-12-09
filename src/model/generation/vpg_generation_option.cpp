@@ -58,7 +58,7 @@ void VPGGenerationOptionExport::DeserializeJson(std::shared_ptr<IDocument> docum
 {
     TRY
         NamingStyle namestyle = NamingStyle::PascalCase;
-        std::shared_ptr<Json> json = std::dynamic_pointer_cast<Json>(document);
+        auto json = std::dynamic_pointer_cast<Json>(document);
         assert(json != nullptr);
         // Interface
         if (json->IsContainKey(ConvertNamingStyle(L"Interface", namestyle, NamingStyle::PascalCase))) {
@@ -204,7 +204,7 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
 {
     TRY
         NamingStyle namestyle = NamingStyle::PascalCase;
-        std::shared_ptr<Json> json = std::dynamic_pointer_cast<Json>(document);
+        auto json = std::dynamic_pointer_cast<Json>(document);
         assert(json != nullptr);
         // Version
         if (json->IsContainKey(ConvertNamingStyle(L"Version", namestyle, NamingStyle::PascalCase)))

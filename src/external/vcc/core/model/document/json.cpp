@@ -16,7 +16,7 @@ namespace vcc
 {
     std::shared_ptr<IObject> Json::Clone() const
     {
-        std::shared_ptr<Json> obj = std::make_shared<Json>(*this);
+        auto obj = std::make_shared<Json>(*this);
         obj->CloneJsonInternalNameValuePairs(this->GetJsonInternalNameValuePairs());
         obj->CloneJsonInternalArray(this->GetJsonInternalArray());
         return obj;

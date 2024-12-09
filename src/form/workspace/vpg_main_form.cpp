@@ -4,10 +4,8 @@
 #include <assert.h>
 #include <memory>
 
-#include "action_manager.hpp"
 #include "base_form.hpp"
 #include "exception_macro.hpp"
-#include "log_config.hpp"
 #include "vpg_main_form_property.hpp"
 
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
@@ -25,18 +23,19 @@ VPGMainForm::VPGMainForm() : BaseForm()
 
 std::shared_ptr<IObject> VPGMainForm::Clone() const
 {
-    std::shared_ptr<VPGMainForm> obj = std::make_shared<VPGMainForm>(*this);
+    auto obj = std::make_shared<VPGMainForm>(*this);
     obj->CloneWorkspaceForms(this->_WorkspaceForms);
     return obj;
 }
 
-void VPGMainForm::Initialize() const
+void VPGMainForm::InitializeComponents() const
 {
     TRY
-        BaseForm::Initialize();
-        _LogConfig = std::make_shared<LogConfig>();
-        _ActionManager = std::make_shared<ActionManager>(_LogConfig);
-        OnInitialize();
+        BaseForm::InitializeComponents();
+        _LogConfig = nullptr;
+        _ActionManager = nullptr;
+        _ThreadManager = nullptr;
+        OnInitializeComponents();
     CATCH
 }
 

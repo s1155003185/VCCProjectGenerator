@@ -26,8 +26,6 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFil
 
         // Initialize Form
         functionMap.insert(std::make_pair(L"ApplicationCreateForm", L"DLLEXPORT void *ApplicationCreateForm(int64_t formType);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationInitializeForm", L"DLLEXPORT void ApplicationInitializeForm(void *form);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationReloadForm", L"DLLEXPORT void ApplicationReloadForm(void *form);\r\n"));
         
         // Form Action
         functionMap.insert(std::make_pair(L"ApplicationDoFormAction", L"DLLEXPORT void ApplicationDoFormAction(void *form, int64_t formProperty);\r\n"));
@@ -88,21 +86,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             "    CATCH\r\n"
             "    return nullptr;\r\n"
             "}\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationInitializeForm",
-            L"void ApplicationInitializeForm(void *form)\r\n"
-            "{\r\n"
-            "    TRY\r\n"
-            "        return Application::InitializeForm(static_cast<IObject *>(form));\r\n"
-            "    CATCH\r\n"
-            "}\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationReloadForm",
-            L"void ApplicationReloadForm(void *form)\r\n"
-            "{\r\n"
-            "    TRY\r\n"
-            "        return Application::ReloadForm(static_cast<IObject *>(form));\r\n"
-            "    CATCH\r\n"
-            "}\r\n"));
-
+            
         // Form Action
         functionMap.insert(std::make_pair(L"ApplicationDoFormAction", 
             L"void ApplicationDoFormAction(void *form, int64_t formProperty)\r\n"

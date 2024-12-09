@@ -15,7 +15,7 @@ std::shared_ptr<IObject> VPGGitFormPropertyAccessor::_ReadObject(const int64_t &
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGitForm> obj = std::static_pointer_cast<VPGGitForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGGitForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitFormProperty>(objectProperty))
         {
@@ -40,7 +40,7 @@ void VPGGitFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGitForm> obj = std::static_pointer_cast<VPGGitForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGGitForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitFormProperty>(objectProperty))
         {
@@ -71,7 +71,7 @@ std::shared_ptr<IObject> VPGGitFormPropertyAccessor::_CloneObject(const int64_t 
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGitForm> obj = std::static_pointer_cast<VPGGitForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGGitForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitFormProperty>(objectProperty))
         {

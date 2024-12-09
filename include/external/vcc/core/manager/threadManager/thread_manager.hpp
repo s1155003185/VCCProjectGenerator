@@ -32,11 +32,6 @@ namespace vcc
     public:
         ThreadManager(std::shared_ptr<LogConfig> logConfig) : BaseManager(logConfig) {}
         virtual ~ThreadManager();
-
-        virtual std::shared_ptr<IObject> Clone() const override
-        {
-            return std::make_shared<ThreadManager>(*this);
-        }
         
         std::vector<std::shared_ptr<Thread>> &GetThreads() const;
         std::vector<std::shared_ptr<Thread>> &GetActiveThreads() const;

@@ -32,7 +32,7 @@ class VPGMainForm : public BaseForm
 
         virtual std::shared_ptr<IObject> Clone() const override;
 
-        virtual void Initialize() const override;
+        virtual void InitializeComponents() const override;
 
         virtual void DoAction(const int64_t &formProperty) const override;
 

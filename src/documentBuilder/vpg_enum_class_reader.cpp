@@ -100,8 +100,11 @@ std::wstring VPGEnumClassReader::_GetType(const std::wstring &macroStr, size_t &
             THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"GetType: Macro ( missing");
         pos++;
         size_t endPos = Find(macroStr, L",");
-        if (endPos == std::wstring::npos)
-            THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"GetType: Macro , missing");
+        if (endPos == std::wstring::npos) {
+            endPos = Find(macroStr, L")");
+            if (endPos == std::wstring::npos)
+                THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"GetType: Macro , or ) missing");
+        }
         result = macroStr.substr(pos, endPos - pos);
         pos = endPos;
         Trim(result);
@@ -194,6 +197,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
         std::wstring remainStr = property->_Macro.size() < propertyCommand.size() ? propertyCommand.substr(property->_Macro.size()) : L"";
         // if Macro is empty, then rollback to pos = 0
         if (property->_Macro.empty()) {
+            property->_PropertyType = VPGEnumClassPropertyType::NA;
             property->_Command = remainStr;
             Trim(property->_Command);
             return;
@@ -201,17 +205,9 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
 
         // split macro
         pos = 0;
-        if (IsStartWith(property->_Macro, L"MAP", pos) || IsStartWith(property->_Macro, L"ORDERED_MAP", pos)) {
-            property->_Type1 = _GetType(property->_Macro, pos);
-            if (property->_Macro[pos] == L',')  {
-                pos++;
-                property->_Type2 = _GetPropertyName(property->_Macro, pos);
-            }
-            if (property->_Macro[pos] == L',')  {
-                pos++;
-                property->_PropertyName = _GetDefaultValue(property->_Macro, pos);
-            }
-        } else {
+        if (IsStartWith(property->_Macro, L"MANAGER", pos)) {
+            property->_PropertyType = VPGEnumClassPropertyType::Manager;
+
             property->_Type1 = _GetType(property->_Macro, pos);
 
             if (property->_Macro[pos] == L',')  {
@@ -221,6 +217,35 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
             if (property->_Macro[pos] == L',')  {
                 pos++;
                 property->_DefaultValue = _GetDefaultValue(property->_Macro, pos);
+            }
+        } else if (IsStartWith(property->_Macro, L"ACTION", pos)) {
+            property->_PropertyType = VPGEnumClassPropertyType::Action;
+
+            property->_PropertyName = _GetType(property->_Macro, pos); // First element
+        } else {
+            property->_PropertyType = VPGEnumClassPropertyType::Property;
+
+            if (IsStartWith(property->_Macro, L"MAP", pos) || IsStartWith(property->_Macro, L"ORDERED_MAP", pos)) {
+                property->_Type1 = _GetType(property->_Macro, pos);
+                if (property->_Macro[pos] == L',')  {
+                    pos++;
+                    property->_Type2 = _GetPropertyName(property->_Macro, pos);
+                }
+                if (property->_Macro[pos] == L',')  {
+                    pos++;
+                    property->_PropertyName = _GetDefaultValue(property->_Macro, pos);
+                }
+            } else {
+                property->_Type1 = _GetType(property->_Macro, pos);
+
+                if (property->_Macro[pos] == L',')  {
+                    pos++;
+                    property->_PropertyName = _GetPropertyName(property->_Macro, pos);
+                }
+                if (property->_Macro[pos] == L',')  {
+                    pos++;
+                    property->_DefaultValue = _GetDefaultValue(property->_Macro, pos);
+                }
             }
         }
         
@@ -371,7 +396,7 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
                     enumClass->_Type = VPGEnumClassType::Form;
                     command = L"";
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Inherit")) {
-                    std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Inherit");
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Inherit");
                     assert(jsonAttributes != nullptr);
                     std::wstring className = jsonAttributes->GetString(L"Class");
                     if (IsBlank(className))
@@ -380,23 +405,23 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
                 
                     command = L"";
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Log")) {
-                    std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Log");
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Log");
                     if (jsonAttributes != nullptr)
                         enumClass->_IsLogConfigIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Action")) {
-                    std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Action");
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Action");
                     if (jsonAttributes != nullptr)
                         enumClass->_IsActionManagerIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Thread")) {
-                    std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Thread");
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Thread");
                     if (jsonAttributes != nullptr)
                         enumClass->_IsThreadManagerIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Json")) {
                     enumClass->_IsJson = true;
-                    std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Json");
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Json");
                     if (jsonAttributes != nullptr) {
                         for (auto const &key : jsonAttributes->GetKeys())
                             enumClass->InsertJsonAttributes(key, jsonAttributes->GetString(key));

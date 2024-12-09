@@ -26,7 +26,7 @@ std::wstring GetGeneralTypeIndexContentHeader(const std::wstring &classPropertyN
 {
     const std::wstring className = GetClassNameFromClassPropertyName(classPropertyName);
     return INDENT + INDENT + L"assert(index >= -1);\r\n"
-        + INDENT + INDENT + L"std::shared_ptr<" + className + L"> obj = std::static_pointer_cast<" + className + L">(_Object);\r\n"
+        + INDENT + INDENT + L"auto obj = std::static_pointer_cast<" + className + L">(_Object);\r\n"
         + INDENT + INDENT + L"assert(obj != nullptr);\r\n"
         + INDENT + INDENT + L"switch(static_cast<" + classPropertyName + L">(objectProperty))\r\n"
         + INDENT + INDENT + L"{\r\n";
@@ -35,7 +35,7 @@ std::wstring GetGeneralTypeIndexContentHeader(const std::wstring &classPropertyN
 std::wstring GetGeneralTypeMapContentHeader(const std::wstring &classPropertyName)
 {
     const std::wstring className = GetClassNameFromClassPropertyName(classPropertyName);
-    return INDENT + INDENT + L"std::shared_ptr<" + className + L"> obj = std::static_pointer_cast<" + className + L">(_Object);\r\n"
+    return INDENT + INDENT + L"auto obj = std::static_pointer_cast<" + className + L">(_Object);\r\n"
         + INDENT + INDENT + L"assert(obj != nullptr);\r\n"
         + INDENT + INDENT + L"assert(key != nullptr);\r\n"
         + INDENT + INDENT + L"switch(static_cast<" + classPropertyName + L">(objectProperty))\r\n"
@@ -45,7 +45,7 @@ std::wstring GetGeneralTypeMapContentHeader(const std::wstring &classPropertyNam
 std::wstring GetGeneralContentHeader(const std::wstring &classPropertyName)
 {
     const std::wstring className = GetClassNameFromClassPropertyName(classPropertyName);
-    return INDENT + INDENT + L"std::shared_ptr<" + className + L"> obj = std::static_pointer_cast<" + className + L">(_Object);\r\n"
+    return INDENT + INDENT + L"auto obj = std::static_pointer_cast<" + className + L">(_Object);\r\n"
         + INDENT + INDENT + L"assert(obj != nullptr);\r\n"
         + INDENT + INDENT + L"switch(static_cast<" + classPropertyName + L">(objectProperty))\r\n"
         + INDENT + INDENT + L"{\r\n";
@@ -217,7 +217,7 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const LogConfig *logConfi
             bool isObject = false;
             std::map<std::wstring, std::wstring> types;
             for (auto const &property : readWrite) {
-                if (IsBlank(property->GetMacro()))
+                if (property->GetPropertyType() != VPGEnumClassPropertyType::Property)
                     continue;
 
                 // property accessor not support set
@@ -938,7 +938,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
             std::map<std::wstring, std::vector<std::shared_ptr<VPGEnumClassProperty>>> initMap;
             typeMacroMap.insert(std::make_pair(enumClass->GetName(), initMap));
             for (auto const &property : enumClass->GetProperties()) {
-                if (property->GetMacro().empty())
+                if (property->GetPropertyType() != VPGEnumClassPropertyType::Property)
                     continue;
 
                 // not support set
@@ -973,7 +973,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
                 std::wstring type1 = property->GetType1();
                 std::wstring type2 = property->GetType2();
                 if (!type1.empty()) {
-                    if (std::iswupper(type1[0])) {
+                    if (IsCaptial(type1)) {
                         includePath = VPGPropertyAccessorGenerationService::GetIncludeFile(projectClassIncludeFiles, type1);
                         if (includePath.empty())
                             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Header file of class " + type1 + L" not found");
@@ -982,7 +982,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
                         systemIncludeFiles.insert(L"string");
                 }
                 if (!type2.empty()) {
-                    if (std::iswupper(type2[0])) {
+                    if (IsCaptial(type2)) {
                         includePath = VPGPropertyAccessorGenerationService::GetIncludeFile(projectClassIncludeFiles, type2);
                         if (includePath.empty())
                             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Header file of class " + type2 + L" not found");
@@ -1001,7 +1001,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
                     typeMacroMap[enumClass->GetName()][objectToken].push_back(property);
                 } else {
                     std::wstring type = IsStartWith(property->GetMacro(), L"MAP") || IsStartWith(property->GetMacro(), L"ORDERED_MAP") ? type2 : type1;
-                    if (!type.empty() && std::iswupper(type[0]))
+                    if (!type.empty() && IsCaptial(type))
                         type = enumToken;
                     std::wstring convertedType = L"";
                     std::wstring converttedName = L"";
@@ -1009,10 +1009,8 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
                     VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(type, convertedType, converttedName, returnResult);
                     typeMacroMap[enumClass->GetName()][convertedType].push_back(property);
                 }
-
             }
         }
-
 
         std::wstring headerFileName = GetFileName(filePathCpp);
         Replace(headerFileName, L".cpp", L".hpp");

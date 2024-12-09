@@ -78,14 +78,23 @@ namespace vcc
     void BaseForm::Initialize() const
     {
         TRY
+            InitializeComponents();
+            InitializeValue();
             OnInitialize();
         CATCH
     }
 
-    void BaseForm::Reload() const
+    void BaseForm::InitializeComponents() const
     {
         TRY
-            OnReload();
+            OnInitialize();
+        CATCH
+    }
+
+    void BaseForm::InitializeValue() const
+    {
+        TRY
+            OnInitializeValues();
         CATCH
     }
 

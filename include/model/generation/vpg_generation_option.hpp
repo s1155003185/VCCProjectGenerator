@@ -75,7 +75,7 @@ class VPGGenerationOption : public BaseObject, public BaseJsonObject
 
         virtual std::shared_ptr<IObject> Clone() const override
         {
-            std::shared_ptr<VPGGenerationOption> obj = std::make_shared<VPGGenerationOption>(*this);
+            auto obj = std::make_shared<VPGGenerationOption>(*this);
             obj->CloneExports(this->_Exports);
             return obj;
         }

@@ -18,7 +18,7 @@ bool VPGGenerationOptionExportPropertyAccessor::_ReadBool(const int64_t &objectP
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOptionExport> obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
         {
@@ -43,7 +43,7 @@ void VPGGenerationOptionExportPropertyAccessor::_WriteBool(const int64_t &object
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOptionExport> obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
         {
@@ -74,7 +74,7 @@ long VPGGenerationOptionExportPropertyAccessor::_ReadLong(const int64_t &objectP
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOptionExport> obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
         {
@@ -99,7 +99,7 @@ void VPGGenerationOptionExportPropertyAccessor::_WriteLong(const int64_t &object
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOptionExport> obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
         {
@@ -130,7 +130,7 @@ std::wstring VPGGenerationOptionExportPropertyAccessor::_ReadString(const int64_
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOptionExport> obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
         {
@@ -167,7 +167,7 @@ void VPGGenerationOptionExportPropertyAccessor::_WriteString(const int64_t &obje
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOptionExport> obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
         {
@@ -216,7 +216,7 @@ bool VPGGenerationOptionPropertyAccessor::_ReadBool(const int64_t &objectPropert
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOption> obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
@@ -245,7 +245,7 @@ void VPGGenerationOptionPropertyAccessor::_WriteBool(const int64_t &objectProper
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOption> obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
@@ -282,7 +282,7 @@ long VPGGenerationOptionPropertyAccessor::_ReadLong(const int64_t &objectPropert
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOption> obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
@@ -307,7 +307,7 @@ void VPGGenerationOptionPropertyAccessor::_WriteLong(const int64_t &objectProper
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOption> obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
@@ -338,7 +338,7 @@ std::wstring VPGGenerationOptionPropertyAccessor::_ReadString(const int64_t &obj
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOption> obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
@@ -407,7 +407,7 @@ void VPGGenerationOptionPropertyAccessor::_WriteString(const int64_t &objectProp
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOption> obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
@@ -500,7 +500,7 @@ void VPGGenerationOptionPropertyAccessor::_InsertString(const int64_t &objectPro
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOption> obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
@@ -520,7 +520,7 @@ std::shared_ptr<IObject> VPGGenerationOptionPropertyAccessor::_ReadObject(const 
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOption> obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
@@ -545,7 +545,7 @@ void VPGGenerationOptionPropertyAccessor::_WriteObject(const int64_t &objectProp
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOption> obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
@@ -572,7 +572,7 @@ void VPGGenerationOptionPropertyAccessor::_InsertObject(const int64_t &objectPro
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOption> obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
@@ -592,7 +592,7 @@ std::shared_ptr<IObject> VPGGenerationOptionPropertyAccessor::_CloneObject(const
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOption> obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
@@ -616,7 +616,7 @@ std::shared_ptr<IObject> VPGGenerationOptionPropertyAccessor::_CloneObject(const
 size_t VPGGenerationOptionPropertyAccessor::_GetContainerCount(const int64_t &objectProperty) const
 {
     TRY
-        std::shared_ptr<VPGGenerationOption> obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
@@ -652,7 +652,7 @@ void VPGGenerationOptionPropertyAccessor::_RemoveContainerElement(const int64_t 
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGenerationOption> obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
@@ -678,7 +678,7 @@ void VPGGenerationOptionPropertyAccessor::_RemoveContainerElement(const int64_t 
 void VPGGenerationOptionPropertyAccessor::_ClearContainer(const int64_t &objectProperty) const
 {
     TRY
-        std::shared_ptr<VPGGenerationOption> obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {

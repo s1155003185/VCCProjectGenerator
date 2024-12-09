@@ -15,7 +15,7 @@ bool VPGGitLogPropertyAccessor::_ReadBool(const int64_t &objectProperty, const i
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGitLog> obj = std::static_pointer_cast<VPGGitLog>(_Object);
+        auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
@@ -40,7 +40,7 @@ void VPGGitLogPropertyAccessor::_WriteBool(const int64_t &objectProperty, const 
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGitLog> obj = std::static_pointer_cast<VPGGitLog>(_Object);
+        auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
@@ -71,7 +71,7 @@ long VPGGitLogPropertyAccessor::_ReadLong(const int64_t &objectProperty, const i
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGitLog> obj = std::static_pointer_cast<VPGGitLog>(_Object);
+        auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
@@ -100,7 +100,7 @@ void VPGGitLogPropertyAccessor::_WriteLong(const int64_t &objectProperty, const 
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGitLog> obj = std::static_pointer_cast<VPGGitLog>(_Object);
+        auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
@@ -137,7 +137,7 @@ std::wstring VPGGitLogPropertyAccessor::_ReadString(const int64_t &objectPropert
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGitLog> obj = std::static_pointer_cast<VPGGitLog>(_Object);
+        auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
@@ -194,7 +194,7 @@ void VPGGitLogPropertyAccessor::_WriteString(const int64_t &objectProperty, cons
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGitLog> obj = std::static_pointer_cast<VPGGitLog>(_Object);
+        auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
@@ -278,7 +278,7 @@ void VPGGitLogPropertyAccessor::_InsertString(const int64_t &objectProperty, con
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGitLog> obj = std::static_pointer_cast<VPGGitLog>(_Object);
+        auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
@@ -315,7 +315,7 @@ void VPGGitLogPropertyAccessor::_InsertString(const int64_t &objectProperty, con
 size_t VPGGitLogPropertyAccessor::_GetContainerCount(const int64_t &objectProperty) const
 {
     TRY
-        std::shared_ptr<VPGGitLog> obj = std::static_pointer_cast<VPGGitLog>(_Object);
+        auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
@@ -355,7 +355,7 @@ void VPGGitLogPropertyAccessor::_RemoveContainerElement(const int64_t &objectPro
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGGitLog> obj = std::static_pointer_cast<VPGGitLog>(_Object);
+        auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
@@ -387,7 +387,7 @@ void VPGGitLogPropertyAccessor::_RemoveContainerElement(const int64_t &objectPro
 void VPGGitLogPropertyAccessor::_ClearContainer(const int64_t &objectProperty) const
 {
     TRY
-        std::shared_ptr<VPGGitLog> obj = std::static_pointer_cast<VPGGitLog>(_Object);
+        auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {

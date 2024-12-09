@@ -10,6 +10,9 @@
 #include "memory_macro.hpp"
 
 #include "vpg_enum_class.hpp"
+#include "vpg_enum_class_reader.hpp"
+#include "vpg_file_generation_manager.hpp"
+
 #include "vpg_property_accessor_generation_service.hpp"
 
 using namespace vcc;
@@ -21,6 +24,8 @@ class VPGPropertyAccessorFileGenerationServiceTest : public testing::Test
     GETSET_SPTR(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGPropertyAccessorFileGenerationServiceTest/");
     
+    MANAGER_SPTR(VPGEnumClassReader, Reader);
+
     GETSET(std::wstring, FilePathHpp, L"");
     GETSET(std::wstring, FilePathCpp, L"");
     GETSET(std::wstring, IncludeFileName, L"");
@@ -43,6 +48,11 @@ class VPGPropertyAccessorFileGenerationServiceTest : public testing::Test
             this->InsertProjectIncludeList(L"VPGObjectAProperty", L"vpg_object_a_property.hpp");
             this->InsertProjectIncludeList(L"VPGObjectB", L"vpg_object_b.hpp");
             this->InsertProjectIncludeList(L"VPGObjectBProperty", L"vpg_object_b_property.hpp");
+
+
+            DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr, L"");
+            manager->GetClassMacroList(L"");
+            _Reader->InsertClassMacroList(manager->GetClassMacros());
         }
 
         void TearDown() override
@@ -53,46 +63,18 @@ class VPGPropertyAccessorFileGenerationServiceTest : public testing::Test
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
 {
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectProperty\r\n"
+        "{\r\n"
+        "    Bool, // GETSET(bool, Bool, false)\r\n"
+        "    String, // GETSET(std::string, String, \"\")\r\n"
+        "    Wstring, // GETSET(std::wstring, Wstring, L\"\")\r\n"
+        "    Enum // GETSET(VCCEnum, Enum, VCCEnum::VCCEnumA)\r\n"
+        "};\r\n";
+
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    DECLARE_SPTR(VPGEnumClass, enumClass);
-    enumClass->SetName(L"VPGObjectProperty");
-    enumClassList.push_back(enumClass);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propBool);
-    propBool->SetEnum(L"Bool");
-    propBool->SetMacro(L"GETSET(bool, Bool, false)");
-    propBool->SetType1(L"bool");
-    propBool->SetType2(L"");
-    propBool->SetPropertyName(L"Bool");
-    propBool->SetDefaultValue(L"");
-    enumClass->InsertProperties(propBool);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propString);
-    propString->SetEnum(L"String");
-    propString->SetMacro(L"GETSET(std::string, String, \"\")");
-    propString->SetType1(L"std::string");
-    propString->SetType2(L"");
-    propString->SetPropertyName(L"String");
-    propString->SetDefaultValue(L"");
-    enumClass->InsertProperties(propString);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propWstring);
-    propWstring->SetEnum(L"Wstring");
-    propWstring->SetMacro(L"GETSET(std::wstring, Wstring, L\"\")");
-    propWstring->SetType1(L"std::wstring");
-    propWstring->SetType2(L"");
-    propWstring->SetPropertyName(L"Wstring");
-    propWstring->SetDefaultValue(L"");
-    enumClass->InsertProperties(propWstring);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propEnum);
-    propEnum->SetEnum(L"Enum");
-    propEnum->SetMacro(L"GETSET(VCCEnum, Enum, L\"\")");
-    propEnum->SetType1(L"VCCEnum");
-    propEnum->SetType2(L"");
-    propEnum->SetPropertyName(L"Enum");
-    propEnum->SetDefaultValue(L"");
-    enumClass->InsertProperties(propEnum);
+    this->GetReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -140,7 +122,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -165,7 +147,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -196,7 +178,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -221,7 +203,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -252,7 +234,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -279,7 +261,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -313,51 +295,19 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
 {
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectProperty\r\n"
+        "{\r\n"
+        "    ReadWrite, // GETSET(bool, ReadWrite, false) @@NoAccess\r\n"
+        "    Read, // GETSET(bool, Read, false) @@NoAccess\r\n"
+        "    Write, // GETSET(bool, Write, false) @@NoAccess\r\n"
+        "    NoAccess // GETSET(bool, NoAccess, false) @@NoAccess\r\n"
+        "};\r\n";
+
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    DECLARE_SPTR(VPGEnumClass, enumClass);
-    enumClass->SetName(L"VPGObjectProperty");
-    enumClassList.push_back(enumClass);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propBool);
-    propBool->SetEnum(L"ReadWrite");
-    propBool->SetMacro(L"GETSET(bool, ReadWrite, false)");
-    propBool->SetType1(L"bool");
-    propBool->SetType2(L"");
-    propBool->SetPropertyName(L"ReadWrite");
-    propBool->SetDefaultValue(L"");
-    propBool->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
-    enumClass->InsertProperties(propBool);
+    this->GetReader()->Parse(enumClass, enumClassList);
     
-    DECLARE_SPTR(VPGEnumClassProperty, propRead);
-    propRead->SetEnum(L"Read");
-    propRead->SetMacro(L"GETSET(bool, Read, false)");
-    propRead->SetType1(L"bool");
-    propRead->SetType2(L"");
-    propRead->SetPropertyName(L"Read");
-    propRead->SetDefaultValue(L"");
-    propRead->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
-    enumClass->InsertProperties(propRead);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propWrite);
-    propWrite->SetEnum(L"Write");
-    propWrite->SetMacro(L"GETSET(bool, Write, false)");
-    propWrite->SetType1(L"bool");
-    propWrite->SetType2(L"");
-    propWrite->SetPropertyName(L"Write");
-    propWrite->SetDefaultValue(L"");
-    propWrite->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
-    enumClass->InsertProperties(propWrite);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propNoAccess);
-    propNoAccess->SetEnum(L"NoAccess");
-    propNoAccess->SetMacro(L"GETSET(bool, NoAccess, false)");
-    propNoAccess->SetType1(L"bool");
-    propNoAccess->SetType2(L"");
-    propNoAccess->SetPropertyName(L"NoAccess");
-    propNoAccess->SetDefaultValue(L"");
-    propNoAccess->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
-    enumClass->InsertProperties(propNoAccess);
-
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
@@ -384,50 +334,18 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
 {
-    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    DECLARE_SPTR(VPGEnumClass, enumClass);
-    enumClass->SetName(L"VPGObjectProperty");
-    enumClassList.push_back(enumClass);
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectProperty\r\n"
+        "{\r\n"
+        "    ReadWrite, // GETSET(bool, ReadWrite, false) @@ReadWrite\r\n"
+        "    Read, // GETSET(bool, Read, false) @@ReadOnly\r\n"
+        "    Write, // GETSET(bool, Write, false) @@WriteOnly\r\n"
+        "    NoAccess // GETSET(bool, NoAccess, false) @@NoAccess\r\n"
+        "};\r\n";
 
-    DECLARE_SPTR(VPGEnumClassProperty, propBool);
-    propBool->SetEnum(L"ReadWrite");
-    propBool->SetMacro(L"GETSET(bool, ReadWrite, false)");
-    propBool->SetType1(L"bool");
-    propBool->SetType2(L"");
-    propBool->SetPropertyName(L"ReadWrite");
-    propBool->SetDefaultValue(L"");
-    propBool->SetAccessMode(VPGEnumClassPropertyAccessMode::ReadWrite);
-    enumClass->InsertProperties(propBool);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propRead);
-    propRead->SetEnum(L"Read");
-    propRead->SetMacro(L"GETSET(bool, Read, false)");
-    propRead->SetType1(L"bool");
-    propRead->SetType2(L"");
-    propRead->SetPropertyName(L"Read");
-    propRead->SetDefaultValue(L"");
-    propRead->SetAccessMode(VPGEnumClassPropertyAccessMode::ReadOnly);
-    enumClass->InsertProperties(propRead);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propWrite);
-    propWrite->SetEnum(L"Write");
-    propWrite->SetMacro(L"GETSET(bool, Write, false)");
-    propWrite->SetType1(L"bool");
-    propWrite->SetType2(L"");
-    propWrite->SetPropertyName(L"Write");
-    propWrite->SetDefaultValue(L"");
-    propWrite->SetAccessMode(VPGEnumClassPropertyAccessMode::WriteOnly);
-    enumClass->InsertProperties(propWrite);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propNoAccess);
-    propNoAccess->SetEnum(L"NoAccess");
-    propNoAccess->SetMacro(L"GETSET(bool, NoAccess, false)");
-    propNoAccess->SetType1(L"bool");
-    propNoAccess->SetType2(L"");
-    propNoAccess->SetPropertyName(L"NoAccess");
-    propNoAccess->SetDefaultValue(L"");
-    propNoAccess->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
-    enumClass->InsertProperties(propNoAccess);
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    this->GetReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -468,7 +386,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -495,7 +413,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -529,51 +447,19 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
 {
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectProperty\r\n"
+        "{\r\n"
+        "    ReadWrite, // VECTOR(bool, ReadWrite) @@ReadWrite\r\n"
+        "    Read, // VECTOR(bool, Read) @@ReadOnly\r\n"
+        "    Write, // VECTOR(bool, Write) @@WriteOnly\r\n"
+        "    NoAccess // VECTOR(bool, NoAccess) @@NoAccess\r\n"
+        "};\r\n";
+
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    DECLARE_SPTR(VPGEnumClass, enumClass);
-    enumClass->SetName(L"VPGObjectProperty");
-    enumClassList.push_back(enumClass);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propBool);
-    propBool->SetEnum(L"ReadWrite");
-    propBool->SetMacro(L"VECTOR(bool, ReadWrite, false)");
-    propBool->SetType1(L"bool");
-    propBool->SetType2(L"");
-    propBool->SetPropertyName(L"ReadWrite");
-    propBool->SetDefaultValue(L"");
-    propBool->SetAccessMode(VPGEnumClassPropertyAccessMode::ReadWrite);
-    enumClass->InsertProperties(propBool);
+    this->GetReader()->Parse(enumClass, enumClassList);
     
-    DECLARE_SPTR(VPGEnumClassProperty, propRead);
-    propRead->SetEnum(L"Read");
-    propRead->SetMacro(L"VECTOR(bool, Read, false)");
-    propRead->SetType1(L"bool");
-    propRead->SetType2(L"");
-    propRead->SetPropertyName(L"Read");
-    propRead->SetDefaultValue(L"");
-    propRead->SetAccessMode(VPGEnumClassPropertyAccessMode::ReadOnly);
-    enumClass->InsertProperties(propRead);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propWrite);
-    propWrite->SetEnum(L"Write");
-    propWrite->SetMacro(L"VECTOR(bool, Write, false)");
-    propWrite->SetType1(L"bool");
-    propWrite->SetType2(L"");
-    propWrite->SetPropertyName(L"Write");
-    propWrite->SetDefaultValue(L"");
-    propWrite->SetAccessMode(VPGEnumClassPropertyAccessMode::WriteOnly);
-    enumClass->InsertProperties(propWrite);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propNoAccess);
-    propNoAccess->SetEnum(L"NoAccess");
-    propNoAccess->SetMacro(L"VECTOR(bool, NoAccess, false)");
-    propNoAccess->SetType1(L"bool");
-    propNoAccess->SetType2(L"");
-    propNoAccess->SetPropertyName(L"NoAccess");
-    propNoAccess->SetDefaultValue(L"");
-    propNoAccess->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
-    enumClass->InsertProperties(propNoAccess);
-
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
@@ -617,7 +503,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -644,7 +530,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -677,7 +563,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -702,7 +588,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     "size_t VPGObjectPropertyAccessor::_GetContainerCount(const int64_t &objectProperty) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -740,7 +626,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -766,7 +652,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     "void VPGObjectPropertyAccessor::_ClearContainer(const int64_t &objectProperty) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -786,24 +672,20 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
 {
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectAProperty\r\n"
+        "{\r\n"
+        "    Bool // GETSET(bool, Bool, false)\r\n"
+        "};\r\n"
+        "\r\n"
+        "enum class VPGObjectBProperty\r\n"
+        "{\r\n"
+        "    Bool // GETSET(bool, Bool, false)\r\n"
+        "};\r\n";
+
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    DECLARE_SPTR(VPGEnumClass, enumClassA);
-    enumClassA->SetName(L"VPGObjectAProperty");
-    enumClassList.push_back(enumClassA);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propBool);
-    propBool->SetEnum(L"Bool");
-    propBool->SetMacro(L"GETSET(bool, Bool, false)");
-    propBool->SetType1(L"bool");
-    propBool->SetType2(L"");
-    propBool->SetPropertyName(L"Bool");
-    propBool->SetDefaultValue(L"");
-    enumClassA->InsertProperties(propBool);
-
-    DECLARE_SPTR(VPGEnumClass, enumClassB);
-    enumClassB->SetName(L"VPGObjectBProperty");
-    enumClassList.push_back(enumClassB);
-    enumClassB->InsertProperties(propBool);
+    this->GetReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -855,7 +737,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObjectA> obj = std::static_pointer_cast<VPGObjectA>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObjectA>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectAProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -880,7 +762,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObjectA> obj = std::static_pointer_cast<VPGObjectA>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObjectA>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectAProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -911,7 +793,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObjectB> obj = std::static_pointer_cast<VPGObjectB>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObjectB>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectBProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -936,7 +818,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObjectB> obj = std::static_pointer_cast<VPGObjectB>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObjectB>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectBProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -967,19 +849,15 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
 {
-    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    DECLARE_SPTR(VPGEnumClass, enumClass);
-    enumClass->SetName(L"VPGObjectProperty");
-    enumClassList.push_back(enumClass);
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectProperty\r\n"
+        "{\r\n"
+        "    Object // GETSET_SPTR_NULL(VPGObjectA, Object)\r\n"
+        "};\r\n";
 
-    DECLARE_SPTR(VPGEnumClassProperty, propObject);
-    propObject->SetEnum(L"Object");
-    propObject->SetMacro(L"GETSET_SPTR_NULL(VPGObjectA, Object)");
-    propObject->SetType1(L"VPGObjectA");
-    propObject->SetType2(L"");
-    propObject->SetPropertyName(L"Object");
-    propObject->SetDefaultValue(L"");
-    enumClass->InsertProperties(propObject);
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    this->GetReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -1023,7 +901,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1048,7 +926,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1079,7 +957,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1104,92 +982,23 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
 {
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectProperty\r\n"
+        "{\r\n"
+        "    VectorInt, // VECTOR(int, VectorInt)\r\n"
+        "    VectorEnum, // VECTOR(VCCEnum, VectorEnum)\r\n"
+        "    VectorObj, // VECTOR_SPTR(VPGObjectA, VectorObj)\r\n"
+        "    MapInt, // MAP(int, int, MapInt)\r\n"
+        "    MapEnum, // MAP(char, VCCEnum, MapEnum)\r\n"
+        "    MapObj, // MAP_SPTR_R(double, VPGObjectA, MapObj)\r\n"
+        "    OrderedMapInt, // ORDERED_MAP(int, int, OrderedMapInt)\r\n"
+        "    OrderedMapEnum, // ORDERED_MAP(char, VCCEnum, OrderedMapEnum)\r\n"
+        "    OrderedMapObj // ORDERED_MAP_SPTR_R(double, VPGObjectA, OrderedMapObj)\r\n"
+        "};\r\n";
+
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    DECLARE_SPTR(VPGEnumClass, enumClass);
-    enumClass->SetName(L"VPGObjectProperty");
-    enumClassList.push_back(enumClass);
-
-    // need to check normal, enum and object
-    DECLARE_SPTR(VPGEnumClassProperty, propVectorInt);
-    propVectorInt->SetEnum(L"VectorInt");
-    propVectorInt->SetMacro(L"VECTOR(int, VectorInt)");
-    propVectorInt->SetType1(L"int");
-    propVectorInt->SetType2(L"");
-    propVectorInt->SetPropertyName(L"VectorInt");
-    propVectorInt->SetDefaultValue(L"");
-    enumClass->InsertProperties(propVectorInt);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propVectorEnum);
-    propVectorEnum->SetEnum(L"VectorEnum");
-    propVectorEnum->SetMacro(L"VECTOR(VCCEnum, VectorEnum)");
-    propVectorEnum->SetType1(L"VCCEnum");
-    propVectorEnum->SetType2(L"");
-    propVectorEnum->SetPropertyName(L"VectorEnum");
-    propVectorEnum->SetDefaultValue(L"");
-    enumClass->InsertProperties(propVectorEnum);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propVectorObj);
-    propVectorObj->SetEnum(L"VectorObj");
-    propVectorObj->SetMacro(L"VECTOR_SPTR(VPGObjectA, VectorObj)");
-    propVectorObj->SetType1(L"VPGObjectA");
-    propVectorObj->SetType2(L"");
-    propVectorObj->SetPropertyName(L"VectorObj");
-    propVectorObj->SetDefaultValue(L"");
-    enumClass->InsertProperties(propVectorObj);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propMapInt);
-    propMapInt->SetEnum(L"MapInt");
-    propMapInt->SetMacro(L"MAP(int, int, MapInt)");
-    propMapInt->SetType1(L"int");
-    propMapInt->SetType2(L"int");
-    propMapInt->SetPropertyName(L"MapInt");
-    propMapInt->SetDefaultValue(L"");
-    enumClass->InsertProperties(propMapInt);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propMapEnum);
-    propMapEnum->SetEnum(L"MapEnum");
-    propMapEnum->SetMacro(L"MAP(char, VCCEnum, MapEnum)");
-    propMapEnum->SetType1(L"char");
-    propMapEnum->SetType2(L"VCCEnum");
-    propMapEnum->SetPropertyName(L"MapEnum");
-    propMapEnum->SetDefaultValue(L"");
-    enumClass->InsertProperties(propMapEnum);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propMapObj);
-    propMapObj->SetEnum(L"MapObj");
-    propMapObj->SetMacro(L"MAP_SPTR(double, VPGObjectA, MapObj)");
-    propMapObj->SetType1(L"double");
-    propMapObj->SetType2(L"VPGObjectA");
-    propMapObj->SetPropertyName(L"MapObj");
-    propMapObj->SetDefaultValue(L"");
-    enumClass->InsertProperties(propMapObj);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propOrderedMapInt);
-    propOrderedMapInt->SetEnum(L"OrderedMapInt");
-    propOrderedMapInt->SetMacro(L"ORDERED_MAP(int, int, OrderedMapInt)");
-    propOrderedMapInt->SetType1(L"int");
-    propOrderedMapInt->SetType2(L"int");
-    propOrderedMapInt->SetPropertyName(L"OrderedMapInt");
-    propOrderedMapInt->SetDefaultValue(L"");
-    enumClass->InsertProperties(propOrderedMapInt);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propOrderedMapEnum);
-    propOrderedMapEnum->SetEnum(L"OrderedMapEnum");
-    propOrderedMapEnum->SetMacro(L"ORDERED_MAP(char, VCCEnum, OrderedMapEnum)");
-    propOrderedMapEnum->SetType1(L"char");
-    propOrderedMapEnum->SetType2(L"VCCEnum");
-    propOrderedMapEnum->SetPropertyName(L"OrderedMapEnum");
-    propOrderedMapEnum->SetDefaultValue(L"");
-    enumClass->InsertProperties(propOrderedMapEnum);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propOrderedMapObj);
-    propOrderedMapObj->SetEnum(L"OrderedMapObj");
-    propOrderedMapObj->SetMacro(L"ORDERED_MAP_SPTR(double, VPGObjectA, OrderedMapObj)");
-    propOrderedMapObj->SetType1(L"double");
-    propOrderedMapObj->SetType2(L"VPGObjectA");
-    propOrderedMapObj->SetPropertyName(L"OrderedMapObj");
-    propOrderedMapObj->SetDefaultValue(L"");
-    enumClass->InsertProperties(propOrderedMapObj);
+    this->GetReader()->Parse(enumClass, enumClassList);
     
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -1240,7 +1049,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1258,7 +1067,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "int VPGObjectPropertyAccessor::_ReadInt(const int64_t &objectProperty, const void *key) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        assert(key != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
@@ -1288,7 +1097,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1313,7 +1122,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "void VPGObjectPropertyAccessor::_WriteInt(const int64_t &objectProperty, const int &value, const void *key) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        assert(key != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
@@ -1350,7 +1159,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1376,7 +1185,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1394,7 +1203,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "long VPGObjectPropertyAccessor::_ReadLong(const int64_t &objectProperty, const void *key) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        assert(key != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
@@ -1424,7 +1233,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1449,7 +1258,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "void VPGObjectPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long &value, const void *key) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        assert(key != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
@@ -1486,7 +1295,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1512,7 +1321,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1530,7 +1339,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "std::shared_ptr<IObject> VPGObjectPropertyAccessor::_ReadObject(const int64_t &objectProperty, const void *key) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        assert(key != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
@@ -1560,7 +1369,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1585,7 +1394,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "void VPGObjectPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> value, const void *key) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        assert(key != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
@@ -1622,7 +1431,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1648,7 +1457,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1666,7 +1475,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "std::shared_ptr<IObject> VPGObjectPropertyAccessor::_CloneObject(const int64_t &objectProperty, const void *key) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        assert(key != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
@@ -1695,7 +1504,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "size_t VPGObjectPropertyAccessor::_GetContainerCount(const int64_t &objectProperty) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1728,7 +1537,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "{\r\n"
     "    std::set<void *> result;\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1754,7 +1563,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "bool VPGObjectPropertyAccessor::_IsContainKey(const int64_t &objectProperty, const void *key) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        assert(key != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
@@ -1812,7 +1621,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1843,7 +1652,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "void VPGObjectPropertyAccessor::_RemoveContainerElement(const int64_t &objectProperty, const void *key) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        assert(key != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
@@ -1905,7 +1714,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "void VPGObjectPropertyAccessor::_ClearContainer(const int64_t &objectProperty) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -1946,56 +1755,19 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
 {
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectProperty\r\n"
+        "{\r\n"
+        "    Bool, // GETSET(bool, Bool, false)\r\n"
+        "    String, // GETSET(std::wstring, String, L\"\")\r\n"
+        "    Object, // GETSET_SPTR_NULL(VPGObjectA, Object)\r\n"
+        "    Vector, // VECTOR(std::wstring, Vector)\r\n"
+        "    Map // MAP(int, double, Map)\r\n"
+        "};\r\n";
+
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    DECLARE_SPTR(VPGEnumClass, enumClass);
-    enumClass->SetName(L"VPGObjectProperty");
-    enumClassList.push_back(enumClass);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propBool);
-    propBool->SetEnum(L"Bool");
-    propBool->SetMacro(L"GETSET(bool, Bool, false)");
-    propBool->SetType1(L"bool");
-    propBool->SetType2(L"");
-    propBool->SetPropertyName(L"Bool");
-    propBool->SetDefaultValue(L"");
-    enumClass->InsertProperties(propBool);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propString);
-    propString->SetEnum(L"String");
-    propString->SetMacro(L"GETSET(std::wstring, String, L\"\")");
-    propString->SetType1(L"std::wstring");
-    propString->SetType2(L"");
-    propString->SetPropertyName(L"String");
-    propString->SetDefaultValue(L"");
-    enumClass->InsertProperties(propString);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propObject);
-    propObject->SetEnum(L"Object");
-    propObject->SetMacro(L"GETSET_SPTR_NULL(VPGObjectA, Object)");
-    propObject->SetType1(L"VPGObjectA");
-    propObject->SetType2(L"");
-    propObject->SetPropertyName(L"Object");
-    propObject->SetDefaultValue(L"");
-    enumClass->InsertProperties(propObject);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propVector);
-    propVector->SetEnum(L"Vector");
-    propVector->SetMacro(L"VECTOR(std::wstring, Vector)");
-    propVector->SetType1(L"std::wstring");
-    propVector->SetType2(L"");
-    propVector->SetPropertyName(L"Vector");
-    propVector->SetDefaultValue(L"");
-    enumClass->InsertProperties(propVector);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propMap);
-    propMap->SetEnum(L"Map");
-    propMap->SetMacro(L"MAP(int, double, Map)");
-    propMap->SetType1(L"int");
-    propMap->SetType2(L"double");
-    propMap->SetPropertyName(L"Map");
-    propMap->SetDefaultValue(L"");
-    enumClass->InsertProperties(propMap);
-
+    this->GetReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -2049,7 +1821,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -2074,7 +1846,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -2112,7 +1884,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "double VPGObjectPropertyAccessor::_ReadDouble(const int64_t &objectProperty, const void *key) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        assert(key != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
@@ -2141,7 +1913,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "void VPGObjectPropertyAccessor::_WriteDouble(const int64_t &objectProperty, const double &value, const void *key) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        assert(key != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
@@ -2174,7 +1946,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -2201,7 +1973,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -2231,7 +2003,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -2251,7 +2023,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -2276,7 +2048,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -2307,7 +2079,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -2331,7 +2103,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "size_t VPGObjectPropertyAccessor::_GetContainerCount(const int64_t &objectProperty) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -2350,7 +2122,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "{\r\n"
     "    std::set<void *> result;\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -2366,7 +2138,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "bool VPGObjectPropertyAccessor::_IsContainKey(const int64_t &objectProperty, const void *key) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        assert(key != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
@@ -2389,7 +2161,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "{\r\n"
     "    TRY\r\n"
     "        assert(index >= -1);\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -2405,7 +2177,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "void VPGObjectPropertyAccessor::_RemoveContainerElement(const int64_t &objectProperty, const void *key) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        assert(key != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
@@ -2427,7 +2199,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "void VPGObjectPropertyAccessor::_ClearContainer(const int64_t &objectProperty) const\r\n"
     "{\r\n"
     "    TRY\r\n"
-    "        std::shared_ptr<VPGObject> obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
+    "        auto obj = std::static_pointer_cast<VPGObject>(_Object);\r\n"
     "        assert(obj != nullptr);\r\n"
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
@@ -2443,4 +2215,42 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "    CATCH\r\n"
     "}\r\n";
     EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedCppContent);
+}
+
+TEST_F(VPGPropertyAccessorFileGenerationServiceTest, ManagerAndAction)
+{
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectProperty\r\n"
+        "{\r\n"
+        "    GitManager, // MANAGER_SPTR_NULL(VPGGitManger, GitManager)\r\n"
+        "    ActionManager, // MANAGER_SPTR_PARENT(VPGActionManager, ActionManager)\r\n"
+        "    Action // ACTION(std::wstring, Vector)\r\n"
+        "};\r\n";
+
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    this->GetReader()->Parse(enumClass, enumClassList);
+
+    std::set<std::wstring> propertyTypes;
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
+    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
+    EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
+
+    std::wstring expectedHppContent = L""
+    "#pragma once\r\n"
+    "\r\n"
+    "#include \"base_property_accessor.hpp\"\r\n"
+    "#include \"property_accessor_macro.hpp\"\r\n"
+    "\r\n"
+    "using namespace vcc;\r\n"
+    "\r\n"
+    "class VPGObjectPropertyAccessor : public BasePropertyAccessor\r\n"
+    "{\r\n"
+    "\r\n"
+    "    public:\r\n"
+    "        VPGObjectPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}\r\n"
+    "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
+    "};\r\n";
+    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), expectedHppContent);
 }

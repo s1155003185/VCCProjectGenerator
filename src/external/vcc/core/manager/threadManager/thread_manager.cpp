@@ -10,7 +10,6 @@
 
 namespace vcc
 {
-
     ThreadManager::~ThreadManager()
     {
         Stop();

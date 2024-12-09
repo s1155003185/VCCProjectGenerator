@@ -13,10 +13,12 @@ namespace vcc
     class BaseManager : public IManager, public BaseObject
     {
         GETSET_SPTR_NULL(LogConfig, LogConfig);
-        
-    protected:
+    
+    private:
         BaseManager() = default;
-        BaseManager(std::shared_ptr<LogConfig> logConfig) { this->_LogConfig = logConfig; }
+
+    protected:
+        BaseManager(std::shared_ptr<LogConfig> logConfig) : _LogConfig(logConfig) {}
         virtual ~BaseManager() {}
         
         // No Clone for Manager

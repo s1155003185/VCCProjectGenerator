@@ -4,10 +4,8 @@
 #include <assert.h>
 #include <memory>
 
-#include "action_manager.hpp"
 #include "base_form.hpp"
 #include "exception_macro.hpp"
-#include "log_config.hpp"
 #include "vpg_workspace_form_property.hpp"
 
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
@@ -25,18 +23,19 @@ VPGWorkspaceForm::VPGWorkspaceForm() : BaseForm()
 
 std::shared_ptr<IObject> VPGWorkspaceForm::Clone() const
 {
-    std::shared_ptr<VPGWorkspaceForm> obj = std::make_shared<VPGWorkspaceForm>(*this);
+    auto obj = std::make_shared<VPGWorkspaceForm>(*this);
     obj->CloneGitForms(this->_GitForms);
     return obj;
 }
 
-void VPGWorkspaceForm::Initialize() const
+void VPGWorkspaceForm::InitializeComponents() const
 {
     TRY
-        BaseForm::Initialize();
-        _LogConfig = std::make_shared<LogConfig>();
-        _ActionManager = std::make_shared<ActionManager>(_LogConfig);
-        OnInitialize();
+        BaseForm::InitializeComponents();
+        _LogConfig = nullptr;
+        _ActionManager = nullptr;
+        _ThreadManager = nullptr;
+        OnInitializeComponents();
     CATCH
 }
 

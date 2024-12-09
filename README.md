@@ -771,16 +771,36 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Command xxx]
     Enum class enum. Used in property Accessor
 
 {ClassMacro}
-    Getter, Setter stated in class_macro.hpp. If it is not match with any class macro in class_macro.hpp, the rest will be ignored
-    Current Options:
-        GETSET(type, name, defaultValue)
-        GETSET_SPTR_NULL(type, name)
-        VECTOR(type, name)
-        VECTOR_SPTR(type, name)
-        MAP(type, name)
-        MAP_SPTR_R(type1, type2, name)
-        ORDERED_MAP(type1, type2, name)
-        ORDERED_MAP_SPTR_R(type1, type2, name)
+    Macro stated in class_macro.hpp. If it is not match with any class macro in class_macro.hpp, the rest will be ignored
+    Note: No Initialize method in Class Object (except Form). Otherwise need to handle more than one place after adjustment of properties.
+    Please use recreation of object if initialize is needed.
+
+    Current Options for Properties:
+        | Macro | Description | Example |
+        | --- | --- | --- |
+        | GETSET(type, name, defaultValue) |  Normal Type and Enum.  | GETSET(std::wstring, Name, L"") |
+        | GETSET_SPTR(type, name, ...) | Object. Initialize in class definition. It may cause infinite loop when class initializaion. Please use GETSET_SPTR_NULL. | GETSET_SPTR(GitOption, Name, _LogConfig, L"Remark") |
+        | GETSET_SPTR_NULL(type, name) | Object and initialize as nullptr. Please initialize it after class creation. | GETSET_SPTR_NULL(GitOption, Name) |
+        | VECTOR(type, name) | std::vector<type>. Vector for Normal Type and Enum. | VECTOR(double, Name) |
+        | VECTOR_SPTR(type, name) | std::vecotr<std::shared_ptr<type>>. Vector for Object. | VECTOR_SPTR(GitOption, Name) |
+        | MAP(type1, type2, name) | Map of Normal Type and Enum. | MAP(std::wstring, double, Name) |
+        | MAP_SPTR_R(type1, type2, name) | Map of Object. Only allow Object at type2. If want to set object at type1, please use int64_t | MAP(type1, type2, name) |
+        | ORDERED_MAP(type1, type2, name) | std::vector<std::pair<type1, type2>>. Allow to use method of vector and map | ORDERED_MAP(type1, type2, name) |
+        | ORDERED_MAP_SPTR_R(type1, type2, name) | std::vector<std::pair<type1, std::shared_ptr<type2>>>. Allow to use method of vector and map | ORDERED_MAP(type1, type2, name) |
+
+        Pending for SET
+
+    Current Options for Manager: (Form Only)
+        | Macro | Description | Example |
+        | --- | --- | --- |
+        | MANAGER_SPTR(type, name, ...) |  Manager. Initialize in class definition. It may cause infinite loop when class initializaion. Please use MANAGER_SPTR_NULL | MANAGER_SPTR(GitManager, GitManager1, _LogConfig) |
+        | MANAGER_SPTR_NULL(type, name, ...) |  Manager. Initialize at Initialize() | MANAGER_SPTR_NULL(GitManager, GitManager1) |
+        | MANAGER_SPTR_PARENT(type, name, parentClass) |  Manager. If value is nullptr, then will use parentClass->Get##name(), else will use local manager. Please ensure parentClass is Form also and have same type. Initialize as nullptr at Initialize(). | MANAGER_SPTR_NULL(GitManager, GitManager1, GitBaseManager) |
+
+    Current Option for Action:
+        | Macro | Description | Example |
+        | --- | --- | --- |
+        | ACTION(name) | Generator will create void Do##name() and generate Action Class. Please handle logic in .cpp file. | ACTION(AddWorkspace) |
 
 [@@AccessMode]
     Default is @@ReadWrite.

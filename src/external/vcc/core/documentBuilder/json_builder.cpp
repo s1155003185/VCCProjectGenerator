@@ -160,7 +160,7 @@ namespace vcc
     void JsonBuilder::Deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc) const
     {
         TRY
-            std::shared_ptr<Json> jsonObj = std::dynamic_pointer_cast<Json>(doc);
+            auto jsonObj = std::dynamic_pointer_cast<Json>(doc);
             assert(jsonObj != nullptr);
             GetNextCharPos(str, pos, true);
             if (str[pos] != L'{')

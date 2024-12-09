@@ -13,6 +13,20 @@
 
 using namespace vcc;
 
+void Application::InitializeComponents() const
+{
+    TRY
+        // Initialize for Global Log and Thread Setting
+        // Default No Action
+        _LogConfig = std::make_shared<LogConfig>();
+        _ActionManager = nullptr;
+        _ThreadManager = std::make_shared<ThreadManager>(_LogConfig);
+
+        // Custom Initialize Log, Action, Thread by override OnInitializeComponents
+        OnInitializeComponents();
+    CATCH
+}
+
 std::shared_ptr<IObject> Application::GetFormSharedPtr(IObject *form)
 {
     TRY
@@ -45,28 +59,11 @@ std::shared_ptr<IObject> Application::CreateForm(const ObjectType &objectType)
     TRY
         auto form = ObjectFactory::Create(objectType);
         assert(form != nullptr);
+        form->SetParentObject(application);
         application->_Forms.insert(form);
         return form;
     CATCH
     return nullptr;
-}
-
-void Application::InitializeForm(IObject *form)
-{
-    TRY
-        if (form == nullptr)
-            return;
-        GetIFormPtrFromIObject(form)->Initialize();
-    CATCH
-}
-
-void Application::ReloadForm(IObject *form)
-{
-    TRY
-        if (form == nullptr)
-            return;
-        GetIFormPtrFromIObject(form)->Reload();
-    CATCH
 }
 
 void Application::DoFormAction(IObject *form, const int64_t &formProperty)
