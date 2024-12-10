@@ -10,6 +10,9 @@
 #include "memory_macro.hpp"
 
 #include "vpg_enum_class.hpp"
+#include "vpg_enum_class_reader.hpp"
+#include "vpg_file_generation_manager.hpp"
+
 #include "vpg_property_accessor_generation_service.hpp"
 
 using namespace vcc;
@@ -21,6 +24,8 @@ class VPGPropertyAccessorFileGenerationServiceTest : public testing::Test
     GETSET_SPTR(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGPropertyAccessorFileGenerationServiceTest/");
     
+    MANAGER_SPTR(VPGEnumClassReader, Reader);
+
     GETSET(std::wstring, FilePathHpp, L"");
     GETSET(std::wstring, FilePathCpp, L"");
     GETSET(std::wstring, IncludeFileName, L"");
@@ -43,6 +48,11 @@ class VPGPropertyAccessorFileGenerationServiceTest : public testing::Test
             this->InsertProjectIncludeList(L"VPGObjectAProperty", L"vpg_object_a_property.hpp");
             this->InsertProjectIncludeList(L"VPGObjectB", L"vpg_object_b.hpp");
             this->InsertProjectIncludeList(L"VPGObjectBProperty", L"vpg_object_b_property.hpp");
+
+
+            DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr, L"");
+            manager->GetClassMacroList(L"");
+            _Reader->InsertClassMacroList(manager->GetClassMacros());
         }
 
         void TearDown() override
@@ -53,46 +63,18 @@ class VPGPropertyAccessorFileGenerationServiceTest : public testing::Test
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
 {
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectProperty\r\n"
+        "{\r\n"
+        "    Bool, // GETSET(bool, Bool, false)\r\n"
+        "    String, // GETSET(std::string, String, \"\")\r\n"
+        "    Wstring, // GETSET(std::wstring, Wstring, L\"\")\r\n"
+        "    Enum // GETSET(VCCEnum, Enum, VCCEnum::VCCEnumA)\r\n"
+        "};\r\n";
+
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    DECLARE_SPTR(VPGEnumClass, enumClass);
-    enumClass->SetName(L"VPGObjectProperty");
-    enumClassList.push_back(enumClass);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propBool);
-    propBool->SetEnum(L"Bool");
-    propBool->SetMacro(L"GETSET(bool, Bool, false)");
-    propBool->SetType1(L"bool");
-    propBool->SetType2(L"");
-    propBool->SetPropertyName(L"Bool");
-    propBool->SetDefaultValue(L"");
-    enumClass->InsertProperties(propBool);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propString);
-    propString->SetEnum(L"String");
-    propString->SetMacro(L"GETSET(std::string, String, \"\")");
-    propString->SetType1(L"std::string");
-    propString->SetType2(L"");
-    propString->SetPropertyName(L"String");
-    propString->SetDefaultValue(L"");
-    enumClass->InsertProperties(propString);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propWstring);
-    propWstring->SetEnum(L"Wstring");
-    propWstring->SetMacro(L"GETSET(std::wstring, Wstring, L\"\")");
-    propWstring->SetType1(L"std::wstring");
-    propWstring->SetType2(L"");
-    propWstring->SetPropertyName(L"Wstring");
-    propWstring->SetDefaultValue(L"");
-    enumClass->InsertProperties(propWstring);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propEnum);
-    propEnum->SetEnum(L"Enum");
-    propEnum->SetMacro(L"GETSET(VCCEnum, Enum, L\"\")");
-    propEnum->SetType1(L"VCCEnum");
-    propEnum->SetType2(L"");
-    propEnum->SetPropertyName(L"Enum");
-    propEnum->SetDefaultValue(L"");
-    enumClass->InsertProperties(propEnum);
+    this->GetReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
