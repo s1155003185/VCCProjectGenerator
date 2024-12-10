@@ -672,24 +672,20 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
 {
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectAProperty\r\n"
+        "{\r\n"
+        "    Bool // GETSET(bool, Bool, false)\r\n"
+        "};\r\n"
+        "\r\n"
+        "enum class VPGObjectBProperty\r\n"
+        "{\r\n"
+        "    Bool // GETSET(bool, Bool, false)\r\n"
+        "};\r\n";
+
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    DECLARE_SPTR(VPGEnumClass, enumClassA);
-    enumClassA->SetName(L"VPGObjectAProperty");
-    enumClassList.push_back(enumClassA);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propBool);
-    propBool->SetEnum(L"Bool");
-    propBool->SetMacro(L"GETSET(bool, Bool, false)");
-    propBool->SetType1(L"bool");
-    propBool->SetType2(L"");
-    propBool->SetPropertyName(L"Bool");
-    propBool->SetDefaultValue(L"");
-    enumClassA->InsertProperties(propBool);
-
-    DECLARE_SPTR(VPGEnumClass, enumClassB);
-    enumClassB->SetName(L"VPGObjectBProperty");
-    enumClassList.push_back(enumClassB);
-    enumClassB->InsertProperties(propBool);
+    this->GetReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -853,19 +849,15 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
 {
-    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    DECLARE_SPTR(VPGEnumClass, enumClass);
-    enumClass->SetName(L"VPGObjectProperty");
-    enumClassList.push_back(enumClass);
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectProperty\r\n"
+        "{\r\n"
+        "    Object // GETSET_SPTR_NULL(VPGObjectA, Object)\r\n"
+        "};\r\n";
 
-    DECLARE_SPTR(VPGEnumClassProperty, propObject);
-    propObject->SetEnum(L"Object");
-    propObject->SetMacro(L"GETSET_SPTR_NULL(VPGObjectA, Object)");
-    propObject->SetType1(L"VPGObjectA");
-    propObject->SetType2(L"");
-    propObject->SetPropertyName(L"Object");
-    propObject->SetDefaultValue(L"");
-    enumClass->InsertProperties(propObject);
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    this->GetReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -990,92 +982,23 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
 {
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectProperty\r\n"
+        "{\r\n"
+        "    VectorInt, // VECTOR(int, VectorInt)\r\n"
+        "    VectorEnum, // VECTOR(VCCEnum, VectorEnum)\r\n"
+        "    VectorObj, // VECTOR_SPTR(VPGObjectA, VectorObj)\r\n"
+        "    MapInt, // MAP(int, int, MapInt)\r\n"
+        "    MapEnum, // MAP(char, VCCEnum, MapEnum)\r\n"
+        "    MapObj, // MAP_SPTR_R(double, VPGObjectA, MapObj)\r\n"
+        "    OrderedMapInt, // ORDERED_MAP(int, int, OrderedMapInt)\r\n"
+        "    OrderedMapEnum, // ORDERED_MAP(char, VCCEnum, OrderedMapEnum)\r\n"
+        "    OrderedMapObj // ORDERED_MAP_SPTR_R(double, VPGObjectA, OrderedMapObj)\r\n"
+        "};\r\n";
+
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    DECLARE_SPTR(VPGEnumClass, enumClass);
-    enumClass->SetName(L"VPGObjectProperty");
-    enumClassList.push_back(enumClass);
-
-    // need to check normal, enum and object
-    DECLARE_SPTR(VPGEnumClassProperty, propVectorInt);
-    propVectorInt->SetEnum(L"VectorInt");
-    propVectorInt->SetMacro(L"VECTOR(int, VectorInt)");
-    propVectorInt->SetType1(L"int");
-    propVectorInt->SetType2(L"");
-    propVectorInt->SetPropertyName(L"VectorInt");
-    propVectorInt->SetDefaultValue(L"");
-    enumClass->InsertProperties(propVectorInt);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propVectorEnum);
-    propVectorEnum->SetEnum(L"VectorEnum");
-    propVectorEnum->SetMacro(L"VECTOR(VCCEnum, VectorEnum)");
-    propVectorEnum->SetType1(L"VCCEnum");
-    propVectorEnum->SetType2(L"");
-    propVectorEnum->SetPropertyName(L"VectorEnum");
-    propVectorEnum->SetDefaultValue(L"");
-    enumClass->InsertProperties(propVectorEnum);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propVectorObj);
-    propVectorObj->SetEnum(L"VectorObj");
-    propVectorObj->SetMacro(L"VECTOR_SPTR(VPGObjectA, VectorObj)");
-    propVectorObj->SetType1(L"VPGObjectA");
-    propVectorObj->SetType2(L"");
-    propVectorObj->SetPropertyName(L"VectorObj");
-    propVectorObj->SetDefaultValue(L"");
-    enumClass->InsertProperties(propVectorObj);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propMapInt);
-    propMapInt->SetEnum(L"MapInt");
-    propMapInt->SetMacro(L"MAP(int, int, MapInt)");
-    propMapInt->SetType1(L"int");
-    propMapInt->SetType2(L"int");
-    propMapInt->SetPropertyName(L"MapInt");
-    propMapInt->SetDefaultValue(L"");
-    enumClass->InsertProperties(propMapInt);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propMapEnum);
-    propMapEnum->SetEnum(L"MapEnum");
-    propMapEnum->SetMacro(L"MAP(char, VCCEnum, MapEnum)");
-    propMapEnum->SetType1(L"char");
-    propMapEnum->SetType2(L"VCCEnum");
-    propMapEnum->SetPropertyName(L"MapEnum");
-    propMapEnum->SetDefaultValue(L"");
-    enumClass->InsertProperties(propMapEnum);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propMapObj);
-    propMapObj->SetEnum(L"MapObj");
-    propMapObj->SetMacro(L"MAP_SPTR(double, VPGObjectA, MapObj)");
-    propMapObj->SetType1(L"double");
-    propMapObj->SetType2(L"VPGObjectA");
-    propMapObj->SetPropertyName(L"MapObj");
-    propMapObj->SetDefaultValue(L"");
-    enumClass->InsertProperties(propMapObj);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propOrderedMapInt);
-    propOrderedMapInt->SetEnum(L"OrderedMapInt");
-    propOrderedMapInt->SetMacro(L"ORDERED_MAP(int, int, OrderedMapInt)");
-    propOrderedMapInt->SetType1(L"int");
-    propOrderedMapInt->SetType2(L"int");
-    propOrderedMapInt->SetPropertyName(L"OrderedMapInt");
-    propOrderedMapInt->SetDefaultValue(L"");
-    enumClass->InsertProperties(propOrderedMapInt);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propOrderedMapEnum);
-    propOrderedMapEnum->SetEnum(L"OrderedMapEnum");
-    propOrderedMapEnum->SetMacro(L"ORDERED_MAP(char, VCCEnum, OrderedMapEnum)");
-    propOrderedMapEnum->SetType1(L"char");
-    propOrderedMapEnum->SetType2(L"VCCEnum");
-    propOrderedMapEnum->SetPropertyName(L"OrderedMapEnum");
-    propOrderedMapEnum->SetDefaultValue(L"");
-    enumClass->InsertProperties(propOrderedMapEnum);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propOrderedMapObj);
-    propOrderedMapObj->SetEnum(L"OrderedMapObj");
-    propOrderedMapObj->SetMacro(L"ORDERED_MAP_SPTR(double, VPGObjectA, OrderedMapObj)");
-    propOrderedMapObj->SetType1(L"double");
-    propOrderedMapObj->SetType2(L"VPGObjectA");
-    propOrderedMapObj->SetPropertyName(L"OrderedMapObj");
-    propOrderedMapObj->SetDefaultValue(L"");
-    enumClass->InsertProperties(propOrderedMapObj);
+    this->GetReader()->Parse(enumClass, enumClassList);
     
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -1832,56 +1755,19 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
 {
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectProperty\r\n"
+        "{\r\n"
+        "    Bool, // GETSET(bool, Bool, false)\r\n"
+        "    String, // GETSET(std::wstring, String, L\"\")\r\n"
+        "    Object, // GETSET_SPTR_NULL(VPGObjectA, Object)\r\n"
+        "    Vector, // VECTOR(std::wstring, Vector)\r\n"
+        "    Map // MAP(int, double, Map)\r\n"
+        "};\r\n";
+
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    DECLARE_SPTR(VPGEnumClass, enumClass);
-    enumClass->SetName(L"VPGObjectProperty");
-    enumClassList.push_back(enumClass);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propBool);
-    propBool->SetEnum(L"Bool");
-    propBool->SetMacro(L"GETSET(bool, Bool, false)");
-    propBool->SetType1(L"bool");
-    propBool->SetType2(L"");
-    propBool->SetPropertyName(L"Bool");
-    propBool->SetDefaultValue(L"");
-    enumClass->InsertProperties(propBool);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propString);
-    propString->SetEnum(L"String");
-    propString->SetMacro(L"GETSET(std::wstring, String, L\"\")");
-    propString->SetType1(L"std::wstring");
-    propString->SetType2(L"");
-    propString->SetPropertyName(L"String");
-    propString->SetDefaultValue(L"");
-    enumClass->InsertProperties(propString);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propObject);
-    propObject->SetEnum(L"Object");
-    propObject->SetMacro(L"GETSET_SPTR_NULL(VPGObjectA, Object)");
-    propObject->SetType1(L"VPGObjectA");
-    propObject->SetType2(L"");
-    propObject->SetPropertyName(L"Object");
-    propObject->SetDefaultValue(L"");
-    enumClass->InsertProperties(propObject);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propVector);
-    propVector->SetEnum(L"Vector");
-    propVector->SetMacro(L"VECTOR(std::wstring, Vector)");
-    propVector->SetType1(L"std::wstring");
-    propVector->SetType2(L"");
-    propVector->SetPropertyName(L"Vector");
-    propVector->SetDefaultValue(L"");
-    enumClass->InsertProperties(propVector);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propMap);
-    propMap->SetEnum(L"Map");
-    propMap->SetMacro(L"MAP(int, double, Map)");
-    propMap->SetType1(L"int");
-    propMap->SetType2(L"double");
-    propMap->SetPropertyName(L"Map");
-    propMap->SetDefaultValue(L"");
-    enumClass->InsertProperties(propMap);
-
+    this->GetReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
