@@ -295,51 +295,19 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
 {
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectProperty\r\n"
+        "{\r\n"
+        "    ReadWrite, // GETSET(bool, ReadWrite, false) @@NoAccess\r\n"
+        "    Read, // GETSET(bool, Read, false) @@NoAccess\r\n"
+        "    Write, // GETSET(bool, Write, false) @@NoAccess\r\n"
+        "    NoAccess // GETSET(bool, NoAccess, false) @@NoAccess\r\n"
+        "};\r\n";
+
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    DECLARE_SPTR(VPGEnumClass, enumClass);
-    enumClass->SetName(L"VPGObjectProperty");
-    enumClassList.push_back(enumClass);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propBool);
-    propBool->SetEnum(L"ReadWrite");
-    propBool->SetMacro(L"GETSET(bool, ReadWrite, false)");
-    propBool->SetType1(L"bool");
-    propBool->SetType2(L"");
-    propBool->SetPropertyName(L"ReadWrite");
-    propBool->SetDefaultValue(L"");
-    propBool->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
-    enumClass->InsertProperties(propBool);
+    this->GetReader()->Parse(enumClass, enumClassList);
     
-    DECLARE_SPTR(VPGEnumClassProperty, propRead);
-    propRead->SetEnum(L"Read");
-    propRead->SetMacro(L"GETSET(bool, Read, false)");
-    propRead->SetType1(L"bool");
-    propRead->SetType2(L"");
-    propRead->SetPropertyName(L"Read");
-    propRead->SetDefaultValue(L"");
-    propRead->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
-    enumClass->InsertProperties(propRead);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propWrite);
-    propWrite->SetEnum(L"Write");
-    propWrite->SetMacro(L"GETSET(bool, Write, false)");
-    propWrite->SetType1(L"bool");
-    propWrite->SetType2(L"");
-    propWrite->SetPropertyName(L"Write");
-    propWrite->SetDefaultValue(L"");
-    propWrite->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
-    enumClass->InsertProperties(propWrite);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propNoAccess);
-    propNoAccess->SetEnum(L"NoAccess");
-    propNoAccess->SetMacro(L"GETSET(bool, NoAccess, false)");
-    propNoAccess->SetType1(L"bool");
-    propNoAccess->SetType2(L"");
-    propNoAccess->SetPropertyName(L"NoAccess");
-    propNoAccess->SetDefaultValue(L"");
-    propNoAccess->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
-    enumClass->InsertProperties(propNoAccess);
-
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
@@ -366,50 +334,18 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
 {
-    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    DECLARE_SPTR(VPGEnumClass, enumClass);
-    enumClass->SetName(L"VPGObjectProperty");
-    enumClassList.push_back(enumClass);
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectProperty\r\n"
+        "{\r\n"
+        "    ReadWrite, // GETSET(bool, ReadWrite, false) @@ReadWrite\r\n"
+        "    Read, // GETSET(bool, Read, false) @@ReadOnly\r\n"
+        "    Write, // GETSET(bool, Write, false) @@WriteOnly\r\n"
+        "    NoAccess // GETSET(bool, NoAccess, false) @@NoAccess\r\n"
+        "};\r\n";
 
-    DECLARE_SPTR(VPGEnumClassProperty, propBool);
-    propBool->SetEnum(L"ReadWrite");
-    propBool->SetMacro(L"GETSET(bool, ReadWrite, false)");
-    propBool->SetType1(L"bool");
-    propBool->SetType2(L"");
-    propBool->SetPropertyName(L"ReadWrite");
-    propBool->SetDefaultValue(L"");
-    propBool->SetAccessMode(VPGEnumClassPropertyAccessMode::ReadWrite);
-    enumClass->InsertProperties(propBool);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propRead);
-    propRead->SetEnum(L"Read");
-    propRead->SetMacro(L"GETSET(bool, Read, false)");
-    propRead->SetType1(L"bool");
-    propRead->SetType2(L"");
-    propRead->SetPropertyName(L"Read");
-    propRead->SetDefaultValue(L"");
-    propRead->SetAccessMode(VPGEnumClassPropertyAccessMode::ReadOnly);
-    enumClass->InsertProperties(propRead);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propWrite);
-    propWrite->SetEnum(L"Write");
-    propWrite->SetMacro(L"GETSET(bool, Write, false)");
-    propWrite->SetType1(L"bool");
-    propWrite->SetType2(L"");
-    propWrite->SetPropertyName(L"Write");
-    propWrite->SetDefaultValue(L"");
-    propWrite->SetAccessMode(VPGEnumClassPropertyAccessMode::WriteOnly);
-    enumClass->InsertProperties(propWrite);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propNoAccess);
-    propNoAccess->SetEnum(L"NoAccess");
-    propNoAccess->SetMacro(L"GETSET(bool, NoAccess, false)");
-    propNoAccess->SetType1(L"bool");
-    propNoAccess->SetType2(L"");
-    propNoAccess->SetPropertyName(L"NoAccess");
-    propNoAccess->SetDefaultValue(L"");
-    propNoAccess->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
-    enumClass->InsertProperties(propNoAccess);
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    this->GetReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -511,51 +447,19 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
 {
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectProperty\r\n"
+        "{\r\n"
+        "    ReadWrite, // VECTOR(bool, ReadWrite) @@ReadWrite\r\n"
+        "    Read, // VECTOR(bool, Read) @@ReadOnly\r\n"
+        "    Write, // VECTOR(bool, Write) @@WriteOnly\r\n"
+        "    NoAccess // VECTOR(bool, NoAccess) @@NoAccess\r\n"
+        "};\r\n";
+
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    DECLARE_SPTR(VPGEnumClass, enumClass);
-    enumClass->SetName(L"VPGObjectProperty");
-    enumClassList.push_back(enumClass);
-
-    DECLARE_SPTR(VPGEnumClassProperty, propBool);
-    propBool->SetEnum(L"ReadWrite");
-    propBool->SetMacro(L"VECTOR(bool, ReadWrite, false)");
-    propBool->SetType1(L"bool");
-    propBool->SetType2(L"");
-    propBool->SetPropertyName(L"ReadWrite");
-    propBool->SetDefaultValue(L"");
-    propBool->SetAccessMode(VPGEnumClassPropertyAccessMode::ReadWrite);
-    enumClass->InsertProperties(propBool);
+    this->GetReader()->Parse(enumClass, enumClassList);
     
-    DECLARE_SPTR(VPGEnumClassProperty, propRead);
-    propRead->SetEnum(L"Read");
-    propRead->SetMacro(L"VECTOR(bool, Read, false)");
-    propRead->SetType1(L"bool");
-    propRead->SetType2(L"");
-    propRead->SetPropertyName(L"Read");
-    propRead->SetDefaultValue(L"");
-    propRead->SetAccessMode(VPGEnumClassPropertyAccessMode::ReadOnly);
-    enumClass->InsertProperties(propRead);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propWrite);
-    propWrite->SetEnum(L"Write");
-    propWrite->SetMacro(L"VECTOR(bool, Write, false)");
-    propWrite->SetType1(L"bool");
-    propWrite->SetType2(L"");
-    propWrite->SetPropertyName(L"Write");
-    propWrite->SetDefaultValue(L"");
-    propWrite->SetAccessMode(VPGEnumClassPropertyAccessMode::WriteOnly);
-    enumClass->InsertProperties(propWrite);
-    
-    DECLARE_SPTR(VPGEnumClassProperty, propNoAccess);
-    propNoAccess->SetEnum(L"NoAccess");
-    propNoAccess->SetMacro(L"VECTOR(bool, NoAccess, false)");
-    propNoAccess->SetType1(L"bool");
-    propNoAccess->SetType2(L"");
-    propNoAccess->SetPropertyName(L"NoAccess");
-    propNoAccess->SetDefaultValue(L"");
-    propNoAccess->SetAccessMode(VPGEnumClassPropertyAccessMode::NoAccess);
-    enumClass->InsertProperties(propNoAccess);
-
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
