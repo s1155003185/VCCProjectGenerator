@@ -707,7 +707,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManagerAndAction)
         "enum class VPGGitFormProperty\r\n"
         "{\r\n"
         "    String // GETSET(std::wstring, String, L\"\")\r\n"
-        "    , GitManager MANAGER_SPTR_NULL(GitManager, GitManager)\r\n"
+        "    , GitManager // MANAGER_SPTR_NULL(GitManager, GitManager)\r\n"
         "    , AddWorkspace // ACTION()\r\n"
         "    , DeleteAction // ACTION()\r\n"
         "};\r\n"

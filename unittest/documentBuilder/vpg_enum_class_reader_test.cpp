@@ -555,3 +555,39 @@ TEST_F(VPGEnumClassReaderTest, EnumClassMixedWithOthers)
     EXPECT_EQ(element->GetNamespace(), L"");
     EXPECT_EQ(element->GetName(), L"EnumBOneLine");
 }
+
+TEST_F(VPGEnumClassReaderTest, EnumClassWithActionAndManager)
+{
+    std::wstring code = L""
+        "#pragma once\r\n"
+        "\r\n"
+        "enum class Property {\r\n"
+        "    Property, // GETSET(std::wstring, Property, L\"\")\r\n"
+        "    Manager1, // MANAGER_SPTR(GitManager, GitManager1, _LogProperty)\r\n"
+        "    Manager2, // MANAGER_SPTR_NULL(GitManager, GitManager2)\r\n"
+        "    Action // ACTION(AddGitLog) \r\n"
+        "};\r\n";
+    std::vector<std::shared_ptr<VPGEnumClass>> results;
+    this->GetReader()->Parse(code, results);
+    EXPECT_EQ(results.size(), (size_t)1);
+    std::shared_ptr<VPGEnumClass> element = results.at(0);
+    EXPECT_EQ(element->GetNamespace(), L"");
+    EXPECT_EQ(element->GetName(), L"Property");
+
+    // Property
+    EXPECT_EQ(element->GetProperties().size(), (size_t)4);
+    EXPECT_EQ((int64_t)element->GetProperties().at(0)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Property);
+    EXPECT_EQ(element->GetProperties().at(0)->GetType1(), L"std::wstring");
+    EXPECT_EQ(element->GetProperties().at(0)->GetPropertyName(), L"Property");
+    EXPECT_EQ((int64_t)element->GetProperties().at(1)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Manager);
+    EXPECT_EQ(element->GetProperties().at(1)->GetType1(), L"GitManager");
+    EXPECT_EQ(element->GetProperties().at(1)->GetPropertyName(), L"GitManager1");
+    EXPECT_EQ(element->GetProperties().at(1)->GetDefaultValue(), L"_LogProperty");
+    EXPECT_EQ((int64_t)element->GetProperties().at(2)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Manager);
+    EXPECT_EQ(element->GetProperties().at(2)->GetType1(), L"GitManager");
+    EXPECT_EQ(element->GetProperties().at(2)->GetPropertyName(), L"GitManager2");
+    EXPECT_EQ((int64_t)element->GetProperties().at(3)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
+    EXPECT_EQ(element->GetProperties().at(3)->GetPropertyName(), L"AddGitLog");
+
+
+}
