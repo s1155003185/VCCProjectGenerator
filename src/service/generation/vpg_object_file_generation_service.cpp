@@ -691,6 +691,9 @@ void VPGObjectFileGenerationService::GetCppIncludeFiles(
             if (!IsEndWith(enumClass->GetName(), propertyClassNameSuffix))
                 continue;
             for (auto const &property : enumClass->GetProperties()) {
+                if (property->GetPropertyType() != VPGEnumClassPropertyType::Property)
+                    continue;
+
                 if (!property->GetType1().empty() && IsCaptial(property->GetType1())) {
                     if (classPathMapping.find(property->GetType1()) != classPathMapping.end())
                         customIncludeFiles.insert(classPathMapping.at(property->GetType1()));
@@ -778,6 +781,9 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
         std::wstring toJsonStr = L"";
         std::wstring deserializeStr = L"";
         for (auto const &property : enumClass->GetProperties()) {
+            if (property->GetPropertyType() != VPGEnumClassPropertyType::Property)
+                continue;
+                
             std::wstring propertyName = property->GetPropertyName();
             std::wstring convertedPropertyName = GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, property->GetPropertyName());
             std::wstring originalType = property->GetType1();
