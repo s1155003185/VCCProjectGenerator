@@ -13,7 +13,7 @@
 
 using namespace vcc;
 
-class Application
+class Application // need to inherit base object and base form
 {
     private:
         std::set<std::shared_ptr<IObject>> _Forms;
