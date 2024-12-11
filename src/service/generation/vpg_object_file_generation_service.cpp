@@ -338,7 +338,7 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
         // ------------------------------------------------------------------------------------------ //
         for (std::shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
             // handle enum without macro case
-            if (property->GetMacro().empty() || property->GetIsInherit())
+            if (property->GetMacro().empty() || property->GetPropertyType() == VPGEnumClassPropertyType::Action || property->GetIsInherit())
                 continue;
 
             std::wstring type = property->GetType1();
@@ -365,7 +365,7 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
             }
 
             type = property->GetType2();
-            if (!type.empty() && std::iswupper(type[0])) {
+            if (!type.empty() && IsCaptial(type)) {
                 if (Find(property->GetMacro().substr(0, Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
 
                     std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
