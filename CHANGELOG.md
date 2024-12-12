@@ -4,6 +4,8 @@
 - Support @@Thread
 - @@Log, @@Action, @@Thread use IsIndependent insead of IsInheritFromParent
 - Support Class Macro ACTION, MANAGER_SPTR, MANAGER_SPTR_NULL, MANAGER_SPTR_PARENT
+- Rename Initialzie() to InitializeComponent(), OnInitialzie() to OnInitialzieComponent()
+- Add Add InitialzeValues() and OnInitializeValues()
 
 ### [v0.2.5] - 2024-12-08: Form - Generate Java Form
 - Form Action - Create, Reload, Close

@@ -386,6 +386,17 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
                 if (CountSubstring(type, L"string") > 0)
                     systemFileList.insert(L"string");
             }
+            
+            if (property->GetPropertyType() == VPGEnumClassPropertyType::Manager && IsStartWith(property->GetMacro(), L"MANAGER_SPTR_PARENT")) {
+                type = property->GetDefaultValue();
+                if (!type.empty() && IsCaptial(type)) {
+                    std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
+                    if (!includeFile.empty())
+                        projectFileList.insert(includeFile);
+                    else
+                        abstractClassList.insert(type);
+                }
+            }
         }
     }
 }
@@ -944,6 +955,23 @@ std::wstring VPGObjectFileGenerationService::GetCppInitialize(const VPGEnumClass
                 result += INDENT + INDENT + L"_ThreadManager = std::make_shared<ThreadManager>(_LogConfig);\r\n";
             else
                 result += INDENT + INDENT + L"_ThreadManager = nullptr;\r\n";
+
+            // Custom Manager
+            std::set<std::wstring> customManagers;
+            for (auto const &property : enumClass->GetProperties()) {
+                if (property->GetPropertyType() == VPGEnumClassPropertyType::Manager) {
+                    if (IsStartWith(property->GetMacro(), L"MANAGER_SPTR_PARENT"))
+                        customManagers.insert(L"_" + property->GetPropertyName() + L" = nullptr;");
+                    else if (IsStartWith(property->GetMacro(), L"MANAGER_SPTR_NULL"))
+                        customManagers.insert(L"_" + property->GetPropertyName() + L" = std::make_shared<" + property->GetType1() + L">(" + property->GetDefaultValue() + L");");
+                }
+            }
+
+            if (!customManagers.empty()) {
+                result += INDENT + INDENT +  L"// Custom Managers\r\n";
+                for (auto const &customManager : customManagers)
+                    result += INDENT + INDENT + customManager + L"\r\n";
+            }
             result += INDENT + INDENT + L"OnInitialize();\r\n"
                 + INDENT + L"CATCH\r\n"
                 "}\r\n";
