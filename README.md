@@ -797,7 +797,7 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Command xxx]
     Current Option for Action:
         | Macro | Description | Example |
         | --- | --- | --- |
-        | ACTION(name) | Generator will create void Do##name(). Please handle logic in .cpp file. | ACTION(AddWorkspace) |
+        | ACTION(name) | Generator will create void Do##name() and generate Action Class. Please handle logic in .cpp file. | ACTION(AddWorkspace) |
 
 [@@AccessMode]
     Default is @@ReadWrite.
