@@ -194,11 +194,11 @@ namespace vcc
         std::shared_ptr<type> Get##var() const { return _##var; } \
         void Set##var(std::shared_ptr<type> value) const { _##var = value; }
         
-    #define MANAGER_SPTR_PARENT(type, var) \
+    #define MANAGER_SPTR_PARENT(type, var, parentClass) \
     protected: \
         mutable std::shared_ptr<type> _##var = nullptr; \
     public: \
-        std::shared_ptr<type> Get##var() const { auto baseForm = std::dynamic_pointer_cast<BaseForm>(_ParentObject); return (_##var == nullptr && baseForm != nullptr) ? baseForm->Get##var() : _##var; } \
+        std::shared_ptr<type> Get##var() const { auto baseForm = std::dynamic_pointer_cast<parentClass>(_ParentObject); return (_##var == nullptr && baseForm != nullptr) ? baseForm->Get##var() : _##var; } \
         void Set##var(std::shared_ptr<type> value) const { _##var = value; }
 
     //------------------------------------------------------------------------------------------------------//
@@ -208,5 +208,5 @@ namespace vcc
     // ActionName, DoActionReturn, UndoActionReturn, DoActionParameters
     #define ACTION(name) \
         public: \
-            void On##name();
+            void Do##name();
 }
