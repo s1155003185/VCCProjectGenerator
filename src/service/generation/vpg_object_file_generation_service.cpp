@@ -46,7 +46,7 @@ std::wstring VPGObjectFileGenerationService::GetCloneFunction(const VPGEnumClass
             std::wstring cloneContent = L"";
             for (auto const &property : enumClass->GetProperties()) {
                 // handle enum without macro case
-                if (property->GetMacro().empty())
+                if (property->GetPropertyType() != VPGEnumClassPropertyType::Property)
                     continue;
                 if ((!property->GetType1().empty() && IsCaptial(property->GetType1())) 
                     || (!property->GetType2().empty() && IsCaptial(property->GetType2()))) {
