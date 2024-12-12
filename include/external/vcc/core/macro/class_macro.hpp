@@ -187,7 +187,7 @@ namespace vcc
         std::shared_ptr<type> Get##var() const { return _##var; } \
         void Set##var(std::shared_ptr<type> value) const { _##var = value; }
         
-    #define MANAGER_SPTR_NULL(type, var) \
+    #define MANAGER_SPTR_NULL(type, var, ...) \
     protected: \
         mutable std::shared_ptr<type> _##var = nullptr; \
     public: \

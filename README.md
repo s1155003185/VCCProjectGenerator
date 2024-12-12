@@ -791,8 +791,8 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Command xxx]
         | Macro | Description | Example |
         | --- | --- | --- |
         | MANAGER_SPTR(type, name, ...) |  Manager. Initialize in class definition. It may cause infinite loop when class initializaion. Please use MANAGER_SPTR_NULL | MANAGER_SPTR(GitManager, GitManager1, _LogConfig) |
-        | MANAGER_SPTR_NULL(type, name) |  Manager. Need to initialize at Initialize() or OnInitialize() | MANAGER_SPTR_NULL(GitManager, GitManager1) |
-        | MANAGER_SPTR_PARENT(type, name, parentClass) |  Manager. If value is nullptr, then will use parentClass->Get##name(), else will use local manager. Please ensure parentClass is Form also and have same type.  | MANAGER_SPTR_NULL(GitManager, GitManager1) |
+        | MANAGER_SPTR_NULL(type, name, ...) |  Manager. Initialize at Initialize() | MANAGER_SPTR_NULL(GitManager, GitManager1) |
+        | MANAGER_SPTR_PARENT(type, name, parentClass) |  Manager. If value is nullptr, then will use parentClass->Get##name(), else will use local manager. Please ensure parentClass is Form also and have same type. Initialize as nullptr at Initialize(). | MANAGER_SPTR_NULL(GitManager, GitManager1) |
 
     Current Option for Action:
         | Macro | Description | Example |
