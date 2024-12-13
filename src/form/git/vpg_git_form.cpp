@@ -35,6 +35,8 @@ void VPGGitForm::InitializeComponents() const
         _LogConfig = nullptr;
         _ActionManager = nullptr;
         _ThreadManager = nullptr;
+        // Custom Managers
+        _GitManager = std::make_shared<GitManager>(_LogConfig);
         OnInitializeComponents();
     CATCH
 }

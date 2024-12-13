@@ -3,6 +3,7 @@
 
 #include "base_form.hpp"
 #include "class_macro.hpp"
+#include "git_manager.hpp"
 #include "object_type.hpp"
 #include "vpg_git_log.hpp"
 
@@ -14,6 +15,7 @@ using namespace vcc;
 class VPGGitForm : public BaseForm
 {
     GETSET_SPTR_NULL(VPGGitLog, Log)
+    MANAGER_SPTR_NULL(GitManager, GitManager, _LogConfig)
 
     // <vcc:customVPGGitFormProperties sync="RESERVE" gen="RESERVE">
     // </vcc:customVPGGitFormProperties>
