@@ -583,13 +583,13 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
             if (classInCurrentFileList.find(str) != classInCurrentFileList.end())
                 continue;
             content +=  L"\r\n"
-                "class " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, str) + L";";
+                "class " + str + L";";
         }
         for (auto const &str : abstractEnumClassList) {
             if (classInCurrentFileList.find(str) != classInCurrentFileList.end())
                 continue;
             content +=  L"\r\n"
-                "enum class " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, str) + L";";
+                "enum class " + str + L";";
         }
             
         // generate class
