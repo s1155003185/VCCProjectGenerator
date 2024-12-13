@@ -15,7 +15,7 @@ namespace vcc
             mutable std::shared_ptr<IObject> _ParentObject = nullptr;
 
             BaseObject() = default;
-            BaseObject(const ObjectType &type) { _ObjectType = type; }
+            BaseObject(const ObjectType &type) : _ObjectType(type) {}
             virtual ~BaseObject() {}
 
         public:
