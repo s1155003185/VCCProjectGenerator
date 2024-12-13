@@ -51,24 +51,6 @@ std::shared_ptr<IObject> Application::CreateForm(const ObjectType &objectType)
     return nullptr;
 }
 
-void Application::InitializeForm(IObject *form)
-{
-    TRY
-        if (form == nullptr)
-            return;
-        GetIFormPtrFromIObject(form)->Initialize();
-    CATCH
-}
-
-void Application::ReloadForm(IObject *form)
-{
-    TRY
-        if (form == nullptr)
-            return;
-        GetIFormPtrFromIObject(form)->Reload();
-    CATCH
-}
-
 void Application::DoFormAction(IObject *form, const int64_t &formProperty)
 {
     TRY

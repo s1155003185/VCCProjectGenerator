@@ -40,8 +40,6 @@ class Application // need to inherit base object and base form
 
         // Create Form
         static std::shared_ptr<IObject> CreateForm(const ObjectType &objectType);
-        static void InitializeForm(IObject *form);
-        static void ReloadForm(IObject *form);
 
         // Form Action
         static void DoFormAction(IObject *form, const int64_t &formProperty);

@@ -26,9 +26,8 @@ namespace vcc
         virtual ~BaseForm() = default;
 
         virtual void OnInitialize() const override {}
-        virtual void OnInitializeComponent() const override {}
-        virtual void OnInitializeValue() const override {}
-        virtual void OnReload() const override {}
+        virtual void OnInitializeComponents() const override {}
+        virtual void OnInitializeValues() const override {}
         virtual bool OnIsClosable() const override { return true; }
         virtual bool OnClose() const override { return true; }
     public:
@@ -51,9 +50,8 @@ namespace vcc
 
         // Initialize
         virtual void Initialize() const override;
-        virtual void InitializeComponent() const override;
+        virtual void InitializeComponents() const override;
         virtual void InitializeValue() const override;
-        virtual void Reload() const override;
         
         // Action
         virtual int64_t GetActionFirstSeqNo() const override;

@@ -15,9 +15,8 @@ namespace vcc
         
             // Initialize
             virtual void OnInitialize() const = 0;
-            virtual void OnInitializeComponent() const = 0;
-            virtual void OnInitializeValue() const = 0;
-            virtual void OnReload() const = 0;
+            virtual void OnInitializeComponents() const = 0;
+            virtual void OnInitializeValues() const = 0;
 
             // Close
             virtual bool OnIsClosable() const = 0;
@@ -42,9 +41,8 @@ namespace vcc
 
             // Initialize
             virtual void Initialize() const = 0;
-            virtual void InitializeComponent() const = 0;
+            virtual void InitializeComponents() const = 0;
             virtual void InitializeValue() const = 0;
-            virtual void Reload() const = 0;
 
             // Action
             virtual void DoAction(const int64_t &formProperty) const = 0;
@@ -61,6 +59,6 @@ namespace vcc
             virtual int64_t TruncateAction() const = 0;
 
             // Close
-            virtual bool Close(bool isForce = false) const = 0;            
+            virtual bool Close(bool isForce = false) const = 0;
     };
 }

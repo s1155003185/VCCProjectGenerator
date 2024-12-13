@@ -501,7 +501,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnum
     TRY
         if (enumClass->GetType() == VPGEnumClassType::Form) {
             result += L"\r\n"
-                + INDENT + INDENT + L"virtual void Initialize() const override;\r\n"
+                + INDENT + INDENT + L"virtual void InitializeComponents() const override;\r\n"
                 "\r\n"
                 + INDENT + INDENT + L"virtual void DoAction(const int64_t &formProperty) const override;\r\n";
         }
@@ -939,10 +939,10 @@ std::wstring VPGObjectFileGenerationService::GetCppInitialize(const VPGEnumClass
     TRY
         if (enumClass->GetType() == VPGEnumClassType::Form) {
             result += L"\r\n"
-                "void " + className + L"::Initialize() const\r\n"
+                "void " + className + L"::InitializeComponents() const\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
-                + INDENT + INDENT + baseClassName + L"::Initialize();\r\n";
+                + INDENT + INDENT + baseClassName + L"::InitializeComponents();\r\n";
             if (enumClass->GetIsLogConfigIndependent())
                 result += INDENT + INDENT + L"_LogConfig = std::make_shared<LogConfig>();\r\n";
             else
@@ -962,7 +962,7 @@ std::wstring VPGObjectFileGenerationService::GetCppInitialize(const VPGEnumClass
                 if (property->GetPropertyType() == VPGEnumClassPropertyType::Manager) {
                     if (IsStartWith(property->GetMacro(), L"MANAGER_SPTR_PARENT"))
                         customManagers.insert(L"_" + property->GetPropertyName() + L" = nullptr;");
-                    else if (IsStartWith(property->GetMacro(), L"MANAGER_SPTR_NULL"))
+                    else
                         customManagers.insert(L"_" + property->GetPropertyName() + L" = std::make_shared<" + property->GetType1() + L">(" + property->GetDefaultValue() + L");");
                 }
             }
@@ -972,7 +972,7 @@ std::wstring VPGObjectFileGenerationService::GetCppInitialize(const VPGEnumClass
                 for (auto const &customManager : customManagers)
                     result += INDENT + INDENT + customManager + L"\r\n";
             }
-            result += INDENT + INDENT + L"OnInitialize();\r\n"
+            result += INDENT + INDENT + L"OnInitializeComponents();\r\n"
                 + INDENT + L"CATCH\r\n"
                 "}\r\n";
         }

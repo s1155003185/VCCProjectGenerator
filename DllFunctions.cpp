@@ -88,13 +88,6 @@ int64_t ApplicationGetFormActionLastSeqNo(void *form)
     return -1;
 }
 
-void ApplicationInitializeForm(void *form)
-{
-    TRY
-        return Application::InitializeForm(static_cast<IObject *>(form));
-    CATCH
-}
-
 bool ApplicationIsFormClosed(void *form)
 {
     TRY
@@ -125,13 +118,6 @@ int64_t ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo)
         return Application::RedoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);
     CATCH
     return -1;
-}
-
-void ApplicationReloadForm(void *form)
-{
-    TRY
-        return Application::ReloadForm(static_cast<IObject *>(form));
-    CATCH
 }
 
 void ApplicationStart()
