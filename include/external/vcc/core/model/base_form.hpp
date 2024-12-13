@@ -26,6 +26,8 @@ namespace vcc
         virtual ~BaseForm() = default;
 
         virtual void OnInitialize() const override {}
+        virtual void OnInitializeComponent() const override {}
+        virtual void OnInitializeValue() const override {}
         virtual void OnReload() const override {}
         virtual bool OnIsClosable() const override { return true; }
         virtual bool OnClose() const override { return true; }
@@ -49,6 +51,8 @@ namespace vcc
 
         // Initialize
         virtual void Initialize() const override;
+        virtual void InitializeComponent() const override;
+        virtual void InitializeValue() const override;
         virtual void Reload() const override;
         
         // Action

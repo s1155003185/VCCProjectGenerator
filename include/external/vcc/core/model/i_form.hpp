@@ -15,6 +15,8 @@ namespace vcc
         
             // Initialize
             virtual void OnInitialize() const = 0;
+            virtual void OnInitializeComponent() const = 0;
+            virtual void OnInitializeValue() const = 0;
             virtual void OnReload() const = 0;
 
             // Close
@@ -40,6 +42,8 @@ namespace vcc
 
             // Initialize
             virtual void Initialize() const = 0;
+            virtual void InitializeComponent() const = 0;
+            virtual void InitializeValue() const = 0;
             virtual void Reload() const = 0;
 
             // Action

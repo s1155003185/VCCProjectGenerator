@@ -771,7 +771,10 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Command xxx]
     Enum class enum. Used in property Accessor
 
 {ClassMacro}
-    Getter, Setter stated in class_macro.hpp. If it is not match with any class macro in class_macro.hpp, the rest will be ignored
+    Macro stated in class_macro.hpp. If it is not match with any class macro in class_macro.hpp, the rest will be ignored
+    Note: No Initialize method in Class Object (except Form). Otherwise need to handle more than one place after adjustment of properties.
+    Please use recreation of object if initialize is needed.
+
     Current Options for Properties:
         | Macro | Description | Example |
         | --- | --- | --- |
