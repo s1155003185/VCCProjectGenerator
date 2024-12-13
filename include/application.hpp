@@ -4,6 +4,7 @@
 #include <set>
 #include <memory>
 
+#include "base_form.hpp"
 #include "i_form.hpp"
 #include "i_object.hpp"
 #include "object_type.hpp"
@@ -13,7 +14,7 @@
 
 using namespace vcc;
 
-class Application // need to inherit base object and base form
+class Application : public BaseForm
 {
     private:
         std::set<std::shared_ptr<IObject>> _Forms;
@@ -33,8 +34,10 @@ class Application // need to inherit base object and base form
         // </vcc:customApplicationProtectedFunctions>
 
     public:
-        Application() = default;
+        Application() : BaseForm() {}
         ~Application() {}
+
+        virtual void InitializeComponents() const override;
  
         static void Run();
 
@@ -60,8 +63,12 @@ class Application // need to inherit base object and base form
         static bool IsFormClosed(IObject *form);
         static bool CloseForm(IObject *form, const bool &isForce = false);
 
+        // Useless
+        virtual std::shared_ptr<IObject> Clone() const override { return nullptr; }
+        virtual void DoAction(const int64_t &/*formProperty*/) const override {}
+
         // <vcc:customApplicationPublicFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customApplicationPublicFunctions>
 };
 
-static std::unique_ptr<Application> application = nullptr;
+static std::shared_ptr<Application> application = nullptr;
