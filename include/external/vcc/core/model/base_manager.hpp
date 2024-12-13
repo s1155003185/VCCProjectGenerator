@@ -18,7 +18,7 @@ namespace vcc
         BaseManager() = default;
 
     protected:
-        BaseManager(std::shared_ptr<LogConfig> logConfig) { this->_LogConfig = logConfig; Initialize(); }
+        BaseManager(std::shared_ptr<LogConfig> logConfig) { this->_LogConfig = logConfig; }
         virtual ~BaseManager() {}
         
         // No Clone for Manager
