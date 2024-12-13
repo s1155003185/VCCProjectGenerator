@@ -396,7 +396,7 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
                     enumClass->_Type = VPGEnumClassType::Form;
                     command = L"";
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Inherit")) {
-                    std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Inherit");
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Inherit");
                     assert(jsonAttributes != nullptr);
                     std::wstring className = jsonAttributes->GetString(L"Class");
                     if (IsBlank(className))
@@ -405,23 +405,23 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
                 
                     command = L"";
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Log")) {
-                    std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Log");
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Log");
                     if (jsonAttributes != nullptr)
                         enumClass->_IsLogConfigIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Action")) {
-                    std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Action");
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Action");
                     if (jsonAttributes != nullptr)
                         enumClass->_IsActionManagerIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Thread")) {
-                    std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Thread");
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Thread");
                     if (jsonAttributes != nullptr)
                         enumClass->_IsThreadManagerIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Json")) {
                     enumClass->_IsJson = true;
-                    std::shared_ptr<Json> jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Json");
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Json");
                     if (jsonAttributes != nullptr) {
                         for (auto const &key : jsonAttributes->GetKeys())
                             enumClass->InsertJsonAttributes(key, jsonAttributes->GetString(key));

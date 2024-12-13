@@ -23,5 +23,5 @@ TEST(ApplicationTest, CreateForm)
     IObject *object = static_cast<IObject *>((gitform));
     //IObject *object =  form.get();
     std::shared_ptr<IObject> ptr(object, [](IObject*){});
-    std::shared_ptr<IObject> result = PropertyAccessorFactory::Create(ptr)->ReadObject(LockType::ReadLock, 0, -1);
+    PropertyAccessorFactory::Create(ptr)->ReadObject(LockType::ReadLock, 0, -1);
 }

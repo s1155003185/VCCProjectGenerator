@@ -36,7 +36,7 @@ namespace vcc
     void ConfigBuilder::Deserialize(const std::wstring &str, size_t &/*pos*/, std::shared_ptr<IDocument> doc) const
     {
         TRY
-            std::shared_ptr<Config> configObj = std::dynamic_pointer_cast<Config>(doc);
+            auto configObj = std::dynamic_pointer_cast<Config>(doc);
             assert(configObj != nullptr);
 
             std::vector<std::wstring> lines = SplitStringByLine(str);

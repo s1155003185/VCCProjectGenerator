@@ -257,7 +257,7 @@ namespace vcc
     void XmlBuilder::Deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc) const
     {
         TRY
-            std::shared_ptr<Xml> xmlObject = std::dynamic_pointer_cast<Xml>(doc);
+            auto xmlObject = std::dynamic_pointer_cast<Xml>(doc);
             assert(xmlObject != nullptr);
             ParseXml(str, pos, xmlObject);
         CATCH

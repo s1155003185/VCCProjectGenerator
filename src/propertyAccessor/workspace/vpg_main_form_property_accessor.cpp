@@ -16,7 +16,7 @@ std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObject(const int64_t 
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGMainForm> obj = std::static_pointer_cast<VPGMainForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGMainForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGMainFormProperty>(objectProperty))
         {
@@ -41,7 +41,7 @@ void VPGMainFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, st
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGMainForm> obj = std::static_pointer_cast<VPGMainForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGMainForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGMainFormProperty>(objectProperty))
         {
@@ -68,7 +68,7 @@ void VPGMainFormPropertyAccessor::_InsertObject(const int64_t &objectProperty, s
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGMainForm> obj = std::static_pointer_cast<VPGMainForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGMainForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGMainFormProperty>(objectProperty))
         {
@@ -88,7 +88,7 @@ std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_CloneObject(const int64_t
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGMainForm> obj = std::static_pointer_cast<VPGMainForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGMainForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGMainFormProperty>(objectProperty))
         {
@@ -112,7 +112,7 @@ std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_CloneObject(const int64_t
 size_t VPGMainFormPropertyAccessor::_GetContainerCount(const int64_t &objectProperty) const
 {
     TRY
-        std::shared_ptr<VPGMainForm> obj = std::static_pointer_cast<VPGMainForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGMainForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGMainFormProperty>(objectProperty))
         {
@@ -146,7 +146,7 @@ void VPGMainFormPropertyAccessor::_RemoveContainerElement(const int64_t &objectP
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGMainForm> obj = std::static_pointer_cast<VPGMainForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGMainForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGMainFormProperty>(objectProperty))
         {
@@ -169,7 +169,7 @@ void VPGMainFormPropertyAccessor::_RemoveContainerElement(const int64_t &objectP
 void VPGMainFormPropertyAccessor::_ClearContainer(const int64_t &objectProperty) const
 {
     TRY
-        std::shared_ptr<VPGMainForm> obj = std::static_pointer_cast<VPGMainForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGMainForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGMainFormProperty>(objectProperty))
         {

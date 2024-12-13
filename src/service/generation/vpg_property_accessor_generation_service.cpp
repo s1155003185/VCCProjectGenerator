@@ -26,7 +26,7 @@ std::wstring GetGeneralTypeIndexContentHeader(const std::wstring &classPropertyN
 {
     const std::wstring className = GetClassNameFromClassPropertyName(classPropertyName);
     return INDENT + INDENT + L"assert(index >= -1);\r\n"
-        + INDENT + INDENT + L"std::shared_ptr<" + className + L"> obj = std::static_pointer_cast<" + className + L">(_Object);\r\n"
+        + INDENT + INDENT + L"auto obj = std::static_pointer_cast<" + className + L">(_Object);\r\n"
         + INDENT + INDENT + L"assert(obj != nullptr);\r\n"
         + INDENT + INDENT + L"switch(static_cast<" + classPropertyName + L">(objectProperty))\r\n"
         + INDENT + INDENT + L"{\r\n";
@@ -35,7 +35,7 @@ std::wstring GetGeneralTypeIndexContentHeader(const std::wstring &classPropertyN
 std::wstring GetGeneralTypeMapContentHeader(const std::wstring &classPropertyName)
 {
     const std::wstring className = GetClassNameFromClassPropertyName(classPropertyName);
-    return INDENT + INDENT + L"std::shared_ptr<" + className + L"> obj = std::static_pointer_cast<" + className + L">(_Object);\r\n"
+    return INDENT + INDENT + L"auto obj = std::static_pointer_cast<" + className + L">(_Object);\r\n"
         + INDENT + INDENT + L"assert(obj != nullptr);\r\n"
         + INDENT + INDENT + L"assert(key != nullptr);\r\n"
         + INDENT + INDENT + L"switch(static_cast<" + classPropertyName + L">(objectProperty))\r\n"
@@ -45,7 +45,7 @@ std::wstring GetGeneralTypeMapContentHeader(const std::wstring &classPropertyNam
 std::wstring GetGeneralContentHeader(const std::wstring &classPropertyName)
 {
     const std::wstring className = GetClassNameFromClassPropertyName(classPropertyName);
-    return INDENT + INDENT + L"std::shared_ptr<" + className + L"> obj = std::static_pointer_cast<" + className + L">(_Object);\r\n"
+    return INDENT + INDENT + L"auto obj = std::static_pointer_cast<" + className + L">(_Object);\r\n"
         + INDENT + INDENT + L"assert(obj != nullptr);\r\n"
         + INDENT + INDENT + L"switch(static_cast<" + classPropertyName + L">(objectProperty))\r\n"
         + INDENT + INDENT + L"{\r\n";

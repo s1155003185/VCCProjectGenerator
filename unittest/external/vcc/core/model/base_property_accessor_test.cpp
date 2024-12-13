@@ -38,7 +38,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
         {
             assert(objectProperty == 0L);
             assert(index == -1);
-            std::shared_ptr<BasePropertyAccessorTestObject> obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
+            auto obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
             return obj->GetString();
         }
 
@@ -46,7 +46,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
         {
             assert(objectProperty == 0L);
             assert(index == -1);
-            std::shared_ptr<BasePropertyAccessorTestObject> obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
+            auto obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
             obj->SetString(value);
             obj->GetString();
         }
@@ -55,7 +55,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
         {
             assert(objectProperty == 0L);
             assert(index == -1);
-            std::shared_ptr<BasePropertyAccessorTestObject> obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
+            auto obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
             return obj->GetInteger();
         }
 
@@ -63,7 +63,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
         {
             assert(objectProperty == 0L);
             assert(index == -1);
-            std::shared_ptr<BasePropertyAccessorTestObject> obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
+            auto obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
             obj->SetInteger(value);
         }
 
@@ -71,7 +71,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
         {
             assert(objectProperty == 0L);
             assert(index == -1);
-            std::shared_ptr<BasePropertyAccessorTestObject> obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
+            auto obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
             return obj->GetObject();
         }
 
@@ -79,7 +79,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
         {
             assert(objectProperty == 0L);
             assert(index == -1);
-            std::shared_ptr<BasePropertyAccessorTestObject> obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
+            auto obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
             obj->SetObject(std::static_pointer_cast<BasePropertyAccessorTestObject>(value));
         }
 
@@ -88,7 +88,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             TRY
                 assert(objectProperty == 0L);
                 assert(index >= -1);
-                std::shared_ptr<BasePropertyAccessorTestObject> obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
+                auto obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
                 assert(obj != nullptr);
                 obj->InsertVectorObject(index, std::static_pointer_cast<BasePropertyAccessorTestObject>(value));
             CATCH
@@ -98,7 +98,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
         {
             assert(objectProperty == 0L);
             assert(key != nullptr);
-            std::shared_ptr<BasePropertyAccessorTestObject> obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
+            auto obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
             const std::wstring *keyPtr = static_cast<const std::wstring *>(key);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
@@ -109,7 +109,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
         {
             assert(objectProperty == 0L);
             assert(key != nullptr);
-            std::shared_ptr<BasePropertyAccessorTestObject> obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
+            auto obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
             const std::wstring *keyPtr = static_cast<const std::wstring *>(key);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");

@@ -16,7 +16,7 @@ std::shared_ptr<IObject> VPGWorkspaceFormPropertyAccessor::_ReadObject(const int
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGWorkspaceForm> obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
@@ -41,7 +41,7 @@ void VPGWorkspaceFormPropertyAccessor::_WriteObject(const int64_t &objectPropert
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGWorkspaceForm> obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
@@ -68,7 +68,7 @@ void VPGWorkspaceFormPropertyAccessor::_InsertObject(const int64_t &objectProper
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGWorkspaceForm> obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
@@ -88,7 +88,7 @@ std::shared_ptr<IObject> VPGWorkspaceFormPropertyAccessor::_CloneObject(const in
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGWorkspaceForm> obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
@@ -112,7 +112,7 @@ std::shared_ptr<IObject> VPGWorkspaceFormPropertyAccessor::_CloneObject(const in
 size_t VPGWorkspaceFormPropertyAccessor::_GetContainerCount(const int64_t &objectProperty) const
 {
     TRY
-        std::shared_ptr<VPGWorkspaceForm> obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
@@ -146,7 +146,7 @@ void VPGWorkspaceFormPropertyAccessor::_RemoveContainerElement(const int64_t &ob
 {
     TRY
         assert(index >= -1);
-        std::shared_ptr<VPGWorkspaceForm> obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
@@ -169,7 +169,7 @@ void VPGWorkspaceFormPropertyAccessor::_RemoveContainerElement(const int64_t &ob
 void VPGWorkspaceFormPropertyAccessor::_ClearContainer(const int64_t &objectProperty) const
 {
     TRY
-        std::shared_ptr<VPGWorkspaceForm> obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
+        auto obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {

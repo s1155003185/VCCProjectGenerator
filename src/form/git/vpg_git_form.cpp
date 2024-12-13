@@ -23,7 +23,7 @@ VPGGitForm::VPGGitForm() : BaseForm()
 
 std::shared_ptr<IObject> VPGGitForm::Clone() const
 {
-    std::shared_ptr<VPGGitForm> obj = std::make_shared<VPGGitForm>(*this);
+    auto obj = std::make_shared<VPGGitForm>(*this);
     obj->CloneLog(this->_Log);
     return obj;
 }

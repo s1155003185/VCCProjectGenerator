@@ -115,7 +115,7 @@ TEST_F(VPGEnumClassReaderTest, TableCommand)
     this->GetReader()->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)3);
     // first
-    std::shared_ptr<VPGEnumClass> element = results.at(0);
+    auto element = results.at(0);
     EXPECT_EQ(element->GetName(), L"VCCObjectProperty");
     EXPECT_EQ(element->GetCommand(), L"table command 1");
 
@@ -147,7 +147,7 @@ TEST_F(VPGEnumClassReaderTest, TableAttribute)
     this->GetReader()->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     // first
-    std::shared_ptr<VPGEnumClass> element = results.at(0);
+    auto element = results.at(0);
     EXPECT_EQ(element->GetName(), L"VCCObjectProperty");
     EXPECT_EQ(element->GetCommand(), L"");
     EXPECT_TRUE(element->GetIsJson());
@@ -181,7 +181,7 @@ void CheckVPGEnumClassReaderTestNormalEnumClassResult(const VPGEnumClassReader *
     reader->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
 
-    std::shared_ptr<VPGEnumClass> element = results.at(0);
+    auto element = results.at(0);
     EXPECT_EQ(element->GetName(), L"VCCObjectProperty");
     EXPECT_EQ(element->GetCommand(), L"");
     EXPECT_EQ(element->GetProperties().size(), 4UL);
@@ -246,7 +246,7 @@ void CheckVPGEnumClassReaderTestNormalResult(const VPGEnumClassReader *reader, c
     reader->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)3);
     // first
-    std::shared_ptr<VPGEnumClass> element = results.at(0);
+    auto element = results.at(0);
     EXPECT_EQ(element->GetName(), L"VCCObjectProperty");
     EXPECT_EQ(element->GetCommand(), L"Class Command");
     EXPECT_EQ(element->GetProperties().size(), 1UL);
@@ -414,7 +414,7 @@ TEST_F(VPGEnumClassReaderTest, VCCEnumClassProperty)
     this->GetReader()->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     // first
-    std::shared_ptr<VPGEnumClass> element = results.at(0);
+    auto element = results.at(0);
     EXPECT_EQ(element->GetName(), L"VCCObjectProperty");
     EXPECT_EQ(element->GetCommand(), L"");
     EXPECT_EQ(element->GetProperties().size(), (size_t)7);
@@ -487,7 +487,7 @@ TEST_F(VPGEnumClassReaderTest, AccessMode)
     this->GetReader()->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     // first
-    std::shared_ptr<VPGEnumClass> element = results.at(0);
+    auto element = results.at(0);
     EXPECT_EQ(element->GetName(), L"VCCObjectProperty");
     EXPECT_EQ(element->GetCommand(), L"");
     EXPECT_EQ(element->GetProperties().size(), 5UL);
@@ -536,7 +536,7 @@ TEST_F(VPGEnumClassReaderTest, EnumClassMixedWithOthers)
     std::vector<std::shared_ptr<VPGEnumClass>> results;
     this->GetReader()->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)6);
-    std::shared_ptr<VPGEnumClass> element = results.at(0);
+    auto element = results.at(0);
     EXPECT_EQ(element->GetNamespace(), L"");
     EXPECT_EQ(element->GetName(), L"EnumA");
     element = results.at(1);
@@ -571,7 +571,7 @@ TEST_F(VPGEnumClassReaderTest, EnumClassWithActionAndManager)
     std::vector<std::shared_ptr<VPGEnumClass>> results;
     this->GetReader()->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
-    std::shared_ptr<VPGEnumClass> element = results.at(0);
+    auto element = results.at(0);
     EXPECT_EQ(element->GetNamespace(), L"");
     EXPECT_EQ(element->GetName(), L"Property");
 

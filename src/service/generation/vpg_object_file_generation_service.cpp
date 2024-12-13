@@ -56,7 +56,7 @@ std::wstring VPGObjectFileGenerationService::GetCloneFunction(const VPGEnumClass
                 }
             }
             if (!cloneContent.empty()) {
-                result += indent + INDENT + L"std::shared_ptr<" + className + L"> obj = std::make_shared<" + className + L">(*this);\r\n"
+                result += indent + INDENT + L"auto obj = std::make_shared<" + className + L">(*this);\r\n"
                     + cloneContent
                     + indent + INDENT + L"return obj;\r\n";
             } else
@@ -843,8 +843,8 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
                 
                 deserializeStr += INDENT + INDENT + L"Clear" + propertyName + L"();\r\n"
                     + INDENT + INDENT + L"if (json->IsContainKey(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) && json->GetObject(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) != nullptr) {\r\n"
-                    + INDENT + INDENT + INDENT + L"std::shared_ptr<Json> tmpObject = json->GetObject(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase));\r\n"
-                    + INDENT + INDENT + INDENT + L"std::vector<std::wstring> tmpKeys = tmpObject->GetKeys();\r\n"
+                    + INDENT + INDENT + INDENT + L"auto tmpObject = json->GetObject(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase));\r\n"
+                    + INDENT + INDENT + INDENT + L"auto tmpKeys = tmpObject->GetKeys();\r\n"
                     + INDENT + INDENT + INDENT + L"for (auto const &key : tmpKeys) {\r\n";
                     
                 std::wstring toJsonStrKeyStr = L"";
@@ -924,7 +924,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
             "{\r\n"
             + INDENT + L"TRY\r\n"
             + deserializeVariable
-            + INDENT + INDENT + L"std::shared_ptr<Json> json = std::dynamic_pointer_cast<Json>(document);\r\n"
+            + INDENT + INDENT + L"auto json = std::dynamic_pointer_cast<Json>(document);\r\n"
             + INDENT + INDENT + L"assert(json != nullptr);\r\n"
             + deserializeStr
             + INDENT + L"CATCH\r\n"

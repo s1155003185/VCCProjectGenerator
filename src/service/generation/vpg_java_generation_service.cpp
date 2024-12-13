@@ -30,16 +30,14 @@ const std::wstring dllInterfaceExportPropertyAccessorContainer = L"PROPERTY_ACCE
 
 std::shared_ptr<VPGGenerationOptionExport> VPGJavaGenerationService::GetJavaOption(const VPGGenerationOption *option)
 {
-    std::shared_ptr<VPGGenerationOptionExport> result = nullptr;
     TRY
         for (auto element : option->GetExports()) {
             if (element->GetInterface() == VPGGenerationOptionInterfaceType::Java) {
-                result = element;
-                break;
+                return element;
             }
         }
     CATCH
-    return result;
+    return nullptr;
 }
 
 std::wstring VPGJavaGenerationService::GetJavaPactkage(const std::wstring &path, const std::wstring &middlePath, const std::wstring &filePathName)
@@ -160,7 +158,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
 {
     std::wstring result = L"";
     TRY
-        std::shared_ptr<VPGGenerationOptionExport> javaOption = VPGJavaGenerationService::GetJavaOption(option);
+        auto javaOption = VPGJavaGenerationService::GetJavaOption(option);
         if (javaOption == nullptr || IsBlank(javaOption->GetWorkspace()) || IsBlank(javaOption->GetDllBridgeDirectory()))
             return result;
 
@@ -359,7 +357,7 @@ void VPGJavaGenerationService::GenerateJavaBridge(const LogConfig *logConfig, co
         if (!IsFileExists(dllInterfacehppFilePath))
             return;
 
-        std::shared_ptr<VPGGenerationOptionExport> javaOption = VPGJavaGenerationService::GetJavaOption(option);
+        auto javaOption = VPGJavaGenerationService::GetJavaOption(option);
         if (javaOption == nullptr || IsBlank(javaOption->GetWorkspace()) || IsBlank(javaOption->GetDllBridgeDirectory()))
             return;
         
@@ -961,7 +959,7 @@ std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &pr
     TRY
         std::map<std::wstring, std::wstring> formActions;
         // General
-        
+
         // Form Action
         // formActions.insert(std::make_pair(L"doAction", L"DLLEXPORT void ApplicationDoFormAction(void *form, int64_t formProperty);\r\n"));
         formActions.insert(std::make_pair(L"getActionFirstSeqNo",
