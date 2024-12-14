@@ -104,7 +104,7 @@ TEST_F(VPGFileGenerationManagerTest, GetClassNameFromEnumClassName)
 TEST_F(VPGFileGenerationManagerTest, GetFileList)
 {
     std::map<std::wstring, std::wstring> classList, enumList;
-    this->GetManager()->GetFileList(this->_Reader.get(), this->GetWorkspaceSource(), L"");
+    this->GetManager()->GetFileList(this->_Reader.get(), this->GetWorkspaceSource(), L"", false);
     EXPECT_TRUE(this->GetManager()->GetIncludeFiles().at(L"VCCObject") == L"vcc_a.hpp");
     EXPECT_TRUE(this->GetManager()->GetIncludeFiles().at(L"VCCObjectPtr") == L"vcc_a.hpp");
     EXPECT_TRUE(this->GetManager()->GetIncludeFiles().at(L"VCCObjectProperty") == L"vcc_a_property.hpp");

@@ -30,17 +30,12 @@ class VPGFileGenerationManager : public BaseManager
         VPGFileGenerationManager(std::shared_ptr<LogConfig> logConfig, std::wstring workspace) : BaseManager(logConfig) { _Workspace = workspace; }
         virtual ~VPGFileGenerationManager() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
-        {
-            return std::make_shared<VPGFileGenerationManager>(*this);
-        }
-
         // properties
         void GetClassMacroList(const std::wstring &projWorkspace);
         
         std::wstring GetClassNameFromEnumClassName(const std::wstring &enumClassName);
         std::wstring GetClassFilenameFromEnumClassFilename(const std::wstring &enumClassFileName);
-        void GetFileList(const VPGEnumClassReader *reader, const std::wstring &directoryFullPath, const std::wstring &projectPrefix);
+        void GetFileList(const VPGEnumClassReader *reader, const std::wstring &directoryFullPath, const std::wstring &projectPrefix, const bool &isSeperateAction);
         
         // validation
         bool IsClassEnumFile(const std::wstring &filename, const std::wstring &projectPrefix);

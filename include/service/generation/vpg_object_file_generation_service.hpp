@@ -16,6 +16,7 @@ class VPGObjectFileGenerationService
         VPGObjectFileGenerationService() = default;
         ~VPGObjectFileGenerationService() {}
 
+        // Clone
         static std::wstring GetCloneFunction(const VPGEnumClass *enumClass, const std::wstring &className, const bool &isCpp);
 
         // Json
@@ -76,6 +77,7 @@ class VPGObjectFileGenerationService
             const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
             const std::wstring &objectFilePathHpp,
             const std::wstring &formFilePathHpp,
+            const std::wstring &actionFolderPathHpp,
             const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
 
         static void GenerateCpp(const LogConfig *logConfig,
@@ -84,5 +86,6 @@ class VPGObjectFileGenerationService
             const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
             const std::wstring &objectFilePathCpp,
             const std::wstring &formFilePathCpp,
+            const std::wstring &actionFolderPathCpp,
             const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
 };

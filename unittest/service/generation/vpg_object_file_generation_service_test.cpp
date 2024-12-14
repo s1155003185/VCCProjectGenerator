@@ -23,6 +23,8 @@ class VPGObjectFileGenerationServiceTest : public testing::Test
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGObjectFileGenerationServiceTest/");
     GETSET(std::wstring, FilePathHpp, L"");
     GETSET(std::wstring, FilePathCpp, L"");
+    GETSET(std::wstring, ActionFolderPathHpp, L"");
+    GETSET(std::wstring, ActionFolderPathCpp, L"");
 
     MANAGER_SPTR(VPGEnumClassReader, Reader);
     MAP(std::wstring, std::wstring, IncludeFiles);
@@ -56,7 +58,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Empty)
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);    
+        this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);    
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
 }
@@ -82,7 +84,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
 
@@ -134,7 +136,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Object)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
 
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
 
@@ -199,7 +201,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritClass)
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"GitLog", L"git_service.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
 
@@ -265,7 +267,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Multi)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
 
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
 
@@ -331,9 +333,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form)
     //projectClassIncludeFiles.insert(std::make_pair(L"GitLog", L"git_service.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, this->GetEnumClasses(),
-        this->GetFilePathCpp(), this->GetFilePathCpp(), enumClassList);
+        this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
 
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
@@ -459,9 +461,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormWithIndependentManager)
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, this->GetEnumClasses(),
-        this->GetFilePathCpp(), this->GetFilePathCpp(), enumClassList);
+        this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
 
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
@@ -592,9 +594,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritForm)
     projectClassIncludeFiles.insert(std::make_pair(L"GitBaseForm", L"git_form.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, this->GetEnumClasses(),
-        this->GetFilePathCpp(), this->GetFilePathCpp(), enumClassList);
+        this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
         
@@ -698,7 +700,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritForm)
         "// </vcc:customFunctions>\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, FormManagerAndAction)
+TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
 {
     std::wstring enumClass = L""
         "#pragma once\r\n"
@@ -710,8 +712,6 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManagerAndAction)
         "    , GitManager1 // MANAGER_SPTR(GitManager, GitManager1, _LogProperty)\r\n"
         "    , GitManager2 // MANAGER_SPTR_NULL(GitManager, GitManager2)\r\n"
         "    , GitManager3 // MANAGER_SPTR_PARENT(GitManager, GitManager3, BaseGitManager)\r\n"
-        "    , AddWorkspace // ACTION(AddWorkspace)\r\n"
-        "    , DeleteAction // ACTION(DeleteWorkspace)\r\n"
         "};\r\n"
         "\r\n";
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
@@ -722,9 +722,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManagerAndAction)
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, this->GetEnumClasses(),
-        this->GetFilePathCpp(), this->GetFilePathCpp(), enumClassList);
+        this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
 
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
@@ -755,8 +755,6 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManagerAndAction)
         "    MANAGER_SPTR(GitManager, GitManager1, _LogProperty)\r\n"
         "    MANAGER_SPTR_NULL(GitManager, GitManager2)\r\n"
         "    MANAGER_SPTR_PARENT(GitManager, GitManager3, BaseGitManager)\r\n"
-        "    ACTION(AddWorkspace)\r\n"
-        "    ACTION(DeleteWorkspace)\r\n"
         "\r\n"
         "    // <vcc:customVPGGitFormProperties sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "    // </vcc:customVPGGitFormProperties>\r\n"
@@ -876,6 +874,445 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManagerAndAction)
         "// </vcc:customFunctions>\r\n");
 }
 
+TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
+{
+    std::wstring enumClass = L""
+        "#pragma once\r\n"
+        "\r\n"
+        "//@@Form\r\n"
+        "enum class VPGGitFormProperty\r\n"
+        "{\r\n"
+        "    AddWorkspace // ACTION(AddWorkspace) @@Class { \"Properties\" : [ \"GETSET(std::wstring, Name, L\\\"\\\")\" ]\r\n"
+        "    , WorkNormal // ACTION(WorkNormal) @@Class { \"Properties\" : [ \"GETSET(std::wstring, Name, L\\\"\\\")\", \"GETSET(State, State, State::Busy)\" ], \"Assignments\": [\"\", \"State::Busy\"] } }\r\n"
+        "    , DeleteWorkspace // ACTION(DeleteWorkspace)\r\n"
+        "};\r\n"
+        "\r\n";
+    WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    this->GetReader()->Parse(enumClass, enumClassList);
+
+    std::wstring classPrefix = L"VPG";
+    std::map<std::wstring, std::wstring> projectClassIncludeFiles;
+    projectClassIncludeFiles.insert(std::make_pair(L"State", L"state.hpp"));
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
+        this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, this->GetEnumClasses(),
+        this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
+
+    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+
+    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), 
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#pragma once\r\n"
+        "\r\n"
+        "#include <memory>\r\n"
+        "#include <string>\r\n"
+        "\r\n"
+        "#include \"base_action.hpp\"\r\n"
+        "#include \"base_form.hpp\"\r\n"
+        "#include \"class_macro.hpp\"\r\n"
+        "#include \"i_object.hpp\"\r\n"
+        "#include \"log_config.hpp\"\r\n"
+        "#include \"object_type.hpp\"\r\n"
+        "#include \"state.hpp\"\r\n"
+        "\r\n"
+        "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "// </vcc:customHeader>\r\n"
+        "\r\n"
+        "using namespace vcc;\r\n"
+        "\r\n"
+        "class VPGGitFormAddWorkspace : public BaseAction\r\n"
+        "{\r\n"
+        "    GETSET(std::wstring, Name, L\"\")\r\n"
+        "\r\n"
+        "    // <vcc:customVPGGitFormAddWorkspaceProperties sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "    // </vcc:customVPGGitFormAddWorkspaceProperties>\r\n"
+        "\r\n"
+        "    private:\r\n"
+        "        // <vcc:customVPGGitFormAddWorkspacePrivateFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:customVPGGitFormAddWorkspacePrivateFunctions>\r\n"
+        "\r\n"
+        "    protected:\r\n"
+        "        virtual std::wstring GetRedoMessageStart() const override;\r\n"
+        "        virtual std::wstring GetRedoMessageComplete() const override;\r\n"
+        "        virtual std::wstring GetUndoMessageStart() const override;\r\n"
+        "        virtual std::wstring GetUndoMessageComplete() const override;\r\n"
+        "\r\n"
+        "        virtual void OnRedo() const override;\r\n"
+        "        virtual void OnUndo() const override;\r\n"
+        "\r\n"
+        "        // <vcc:customVPGGitFormAddWorkspaceProtectedFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:customVPGGitFormAddWorkspaceProtectedFunctions>\r\n"
+        "\r\n"
+        "    public:\r\n"
+        "        VPGGitFormAddWorkspace() : BaseAction() {}\r\n"
+        "        VPGGitFormAddWorkspace(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm, std::wstring name);\r\n"
+        "        ~VPGGitFormAddWorkspace() {}\r\n"
+        "\r\n"
+        "        // <vcc:customVPGGitFormAddWorkspacePublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:customVPGGitFormAddWorkspacePublicFunctions>\r\n"
+        "};\r\n"
+        "\r\n"
+        "class VPGGitFormWorkNormal : public BaseAction\r\n"
+        "{\r\n"
+        "    GETSET(std::wstring, Name, L\"\")\r\n"
+        "    GETSET(State, State, State::Busy)\r\n"
+        "\r\n"
+        "    // <vcc:customVPGGitFormWorkNormalProperties sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "    // </vcc:customVPGGitFormWorkNormalProperties>\r\n"
+        "\r\n"
+        "    private:\r\n"
+        "        // <vcc:customVPGGitFormWorkNormalPrivateFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:customVPGGitFormWorkNormalPrivateFunctions>\r\n"
+        "\r\n"
+        "    protected:\r\n"
+        "        virtual std::wstring GetRedoMessageStart() const override;\r\n"
+        "        virtual std::wstring GetRedoMessageComplete() const override;\r\n"
+        "        virtual std::wstring GetUndoMessageStart() const override;\r\n"
+        "        virtual std::wstring GetUndoMessageComplete() const override;\r\n"
+        "\r\n"
+        "        virtual void OnRedo() const override;\r\n"
+        "        virtual void OnUndo() const override;\r\n"
+        "\r\n"
+        "        // <vcc:customVPGGitFormWorkNormalProtectedFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:customVPGGitFormWorkNormalProtectedFunctions>\r\n"
+        "\r\n"
+        "    public:\r\n"
+        "        VPGGitFormWorkNormal() : BaseAction() {}\r\n"
+        "        VPGGitFormWorkNormal(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm, std::wstring name, State state);\r\n"
+        "        ~VPGGitFormWorkNormal() {}\r\n"
+        "\r\n"
+        "        // <vcc:customVPGGitFormWorkNormalPublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:customVPGGitFormWorkNormalPublicFunctions>\r\n"
+        "};\r\n"
+        "\r\n"
+        "class VPGGitFormDeleteWorkspace : public BaseAction\r\n"
+        "{\r\n"
+        "    // <vcc:customVPGGitFormDeleteWorkspaceProperties sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "    // </vcc:customVPGGitFormDeleteWorkspaceProperties>\r\n"
+        "\r\n"
+        "    private:\r\n"
+        "        // <vcc:customVPGGitFormDeleteWorkspacePrivateFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:customVPGGitFormDeleteWorkspacePrivateFunctions>\r\n"
+        "\r\n"
+        "    protected:\r\n"
+        "        virtual std::wstring GetRedoMessageStart() const override;\r\n"
+        "        virtual std::wstring GetRedoMessageComplete() const override;\r\n"
+        "        virtual std::wstring GetUndoMessageStart() const override;\r\n"
+        "        virtual std::wstring GetUndoMessageComplete() const override;\r\n"
+        "\r\n"
+        "        virtual void OnRedo() const override;\r\n"
+        "        virtual void OnUndo() const override;\r\n"
+        "\r\n"
+        "        // <vcc:customVPGGitFormDeleteWorkspaceProtectedFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:customVPGGitFormDeleteWorkspaceProtectedFunctions>\r\n"
+        "\r\n"
+        "    public:\r\n"
+        "        VPGGitFormDeleteWorkspace() : BaseAction() {}\r\n"
+        "        VPGGitFormDeleteWorkspace(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm);\r\n"
+        "        ~VPGGitFormDeleteWorkspace() {}\r\n"
+        "\r\n"
+        "        // <vcc:customVPGGitFormDeleteWorkspacePublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:customVPGGitFormDeleteWorkspacePublicFunctions>\r\n"
+        "};\r\n"
+        "\r\n"
+        "class VPGGitForm : public BaseForm\r\n"
+        "{\r\n"
+        "    ACTION(AddWorkspace)\r\n"
+        "    ACTION(WorkNormal)\r\n"
+        "    ACTION(DeleteWorkspace)\r\n"
+        "\r\n"
+        "    // <vcc:customVPGGitFormProperties sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "    // </vcc:customVPGGitFormProperties>\r\n"
+        "\r\n"
+        "    private:\r\n"
+        "        // <vcc:customVPGGitFormPrivateFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:customVPGGitFormPrivateFunctions>\r\n"
+        "\r\n"
+        "    protected:\r\n"
+        "        // <vcc:customVPGGitFormProtectedFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:customVPGGitFormProtectedFunctions>\r\n"
+        "\r\n"
+        "    public:\r\n"
+        "        VPGGitForm();\r\n"
+        "        virtual ~VPGGitForm() {}\r\n"
+        "\r\n"
+        "        virtual std::shared_ptr<IObject> Clone() const override;\r\n"
+        "\r\n"
+        "        virtual void InitializeComponents() const override;\r\n"
+        "\r\n"
+        "        virtual void DoAction(const int64_t &formProperty) const override;\r\n"
+        "\r\n"
+        "        // <vcc:customVPGGitFormPublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:customVPGGitFormPublicFunctions>\r\n"
+        "};\r\n");
+    EXPECT_EQ(ReadFile(this->GetFilePathCpp()),
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#include \"vcc_object.hpp\"\r\n"
+        "\r\n"
+        "#include <assert.h>\r\n"
+        "#include <memory>\r\n"
+        "#include <string>\r\n"
+        "\r\n"
+        "#include \"\"\r\n"
+        "#include \"base_action.hpp\"\r\n"
+        "#include \"base_form.hpp\"\r\n"
+        "#include \"exception_macro.hpp\"\r\n"
+        "#include \"i_object.hpp\"\r\n"
+        "#include \"log_config.hpp\"\r\n"
+        "#include \"state.hpp\"\r\n"
+        "\r\n"
+        "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "// </vcc:customHeader>\r\n"
+        "\r\n"
+        "using namespace vcc;\r\n"
+        "\r\n"
+        "VPGGitFormAddWorkspace::VPGGitFormAddWorkspace(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm, std::wstring name) : BaseAction()\r\n"
+        "{\r\n"
+        "    _LogConfig = logConfig;\r\n"
+        "    _ParentObject = parentForm;\r\n"
+        "    _Name = name;\r\n"
+        "}\r\n"
+        "\r\n"
+        "std::wstring VPGGitFormAddWorkspace::GetRedoMessageStart() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormAddWorkspaceGetRedoMessageStart sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormAddWorkspaceGetRedoMessageStart>\r\n"
+        "    CATCH\r\n"
+        "    return L\"\";\r\n"
+        "}\r\n"
+        "\r\n"
+        "std::wstring VPGGitFormAddWorkspace::GetRedoMessageComplete() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormAddWorkspaceGetRedoMessageComplete sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormAddWorkspaceGetRedoMessageComplete>\r\n"
+        "    CATCH\r\n"
+        "    return L\"\";\r\n"
+        "}\r\n"
+        "\r\n"
+        "std::wstring VPGGitFormAddWorkspace::GetUndoMessageStart() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormAddWorkspaceGetUndoMessageStart sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormAddWorkspaceGetUndoMessageStart>\r\n"
+        "    CATCH\r\n"
+        "    return L\"\";\r\n"
+        "}\r\n"
+        "\r\n"
+        "std::wstring VPGGitFormAddWorkspace::GetUndoMessageComplete() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormAddWorkspaceGetUndoMessageComplete sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormAddWorkspaceGetUndoMessageComplete>\r\n"
+        "    CATCH\r\n"
+        "    return L\"\";\r\n"
+        "}\r\n"
+        "\r\n"
+        "void VPGGitFormAddWorkspace::OnRedo() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormAddWorkspaceOnRedo sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormAddWorkspaceOnRedo>\r\n"
+        "    CATCH\r\n"
+        "}\r\n"
+        "\r\n"
+        "void VPGGitFormAddWorkspace::OnUndo() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormAddWorkspaceOnUndo sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormAddWorkspaceOnUndo>\r\n"
+        "    CATCH\r\n"
+        "}\r\n"
+        "\r\n"
+        "VPGGitFormWorkNormal::VPGGitFormWorkNormal(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm, std::wstring name, State state) : BaseAction()\r\n"
+        "{\r\n"
+        "    _LogConfig = logConfig;\r\n"
+        "    _ParentObject = parentForm;\r\n"
+        "    _Name = name;\r\n"
+        "    _State = state;\r\n"
+        "}\r\n"
+        "\r\n"
+        "std::wstring VPGGitFormWorkNormal::GetRedoMessageStart() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormWorkNormalGetRedoMessageStart sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormWorkNormalGetRedoMessageStart>\r\n"
+        "    CATCH\r\n"
+        "    return L\"\";\r\n"
+        "}\r\n"
+        "\r\n"
+        "std::wstring VPGGitFormWorkNormal::GetRedoMessageComplete() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormWorkNormalGetRedoMessageComplete sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormWorkNormalGetRedoMessageComplete>\r\n"
+        "    CATCH\r\n"
+        "    return L\"\";\r\n"
+        "}\r\n"
+        "\r\n"
+        "std::wstring VPGGitFormWorkNormal::GetUndoMessageStart() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormWorkNormalGetUndoMessageStart sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormWorkNormalGetUndoMessageStart>\r\n"
+        "    CATCH\r\n"
+        "    return L\"\";\r\n"
+        "}\r\n"
+        "\r\n"
+        "std::wstring VPGGitFormWorkNormal::GetUndoMessageComplete() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormWorkNormalGetUndoMessageComplete sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormWorkNormalGetUndoMessageComplete>\r\n"
+        "    CATCH\r\n"
+        "    return L\"\";\r\n"
+        "}\r\n"
+        "\r\n"
+        "void VPGGitFormWorkNormal::OnRedo() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormWorkNormalOnRedo sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormWorkNormalOnRedo>\r\n"
+        "    CATCH\r\n"
+        "}\r\n"
+        "\r\n"
+        "void VPGGitFormWorkNormal::OnUndo() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormWorkNormalOnUndo sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormWorkNormalOnUndo>\r\n"
+        "    CATCH\r\n"
+        "}\r\n"
+        "\r\n"
+        "VPGGitFormDeleteWorkspace::VPGGitFormDeleteWorkspace(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()\r\n"
+        "{\r\n"
+        "    _LogConfig = logConfig;\r\n"
+        "    _ParentObject = parentForm;\r\n"
+        "}\r\n"
+        "\r\n"
+        "std::wstring VPGGitFormDeleteWorkspace::GetRedoMessageStart() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormDeleteWorkspaceGetRedoMessageStart sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormDeleteWorkspaceGetRedoMessageStart>\r\n"
+        "    CATCH\r\n"
+        "    return L\"\";\r\n"
+        "}\r\n"
+        "\r\n"
+        "std::wstring VPGGitFormDeleteWorkspace::GetRedoMessageComplete() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormDeleteWorkspaceGetRedoMessageComplete sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormDeleteWorkspaceGetRedoMessageComplete>\r\n"
+        "    CATCH\r\n"
+        "    return L\"\";\r\n"
+        "}\r\n"
+        "\r\n"
+        "std::wstring VPGGitFormDeleteWorkspace::GetUndoMessageStart() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormDeleteWorkspaceGetUndoMessageStart sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormDeleteWorkspaceGetUndoMessageStart>\r\n"
+        "    CATCH\r\n"
+        "    return L\"\";\r\n"
+        "}\r\n"
+        "\r\n"
+        "std::wstring VPGGitFormDeleteWorkspace::GetUndoMessageComplete() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormDeleteWorkspaceGetUndoMessageComplete sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormDeleteWorkspaceGetUndoMessageComplete>\r\n"
+        "    CATCH\r\n"
+        "    return L\"\";\r\n"
+        "}\r\n"
+        "\r\n"
+        "void VPGGitFormDeleteWorkspace::OnRedo() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormDeleteWorkspaceOnRedo sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormDeleteWorkspaceOnRedo>\r\n"
+        "    CATCH\r\n"
+        "}\r\n"
+        "\r\n"
+        "void VPGGitFormDeleteWorkspace::OnUndo() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        // <vcc:VPGGitFormDeleteWorkspaceOnUndo sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // </vcc:VPGGitFormDeleteWorkspaceOnUndo>\r\n"
+        "    CATCH\r\n"
+        "}\r\n"
+        "\r\n"
+        "VPGGitForm::VPGGitForm() : BaseForm()\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        _ObjectType = ObjectType::GitForm;\r\n"
+        "        Initialize();\r\n"
+        "    CATCH\r\n"
+        "}\r\n"
+        "\r\n"
+        "std::shared_ptr<IObject> VPGGitForm::Clone() const\r\n"
+        "{\r\n"
+        "    return std::make_shared<VPGGitForm>(*this);\r\n"
+        "}\r\n"
+        "\r\n"
+        "void VPGGitForm::InitializeComponents() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        BaseForm::InitializeComponents();\r\n"
+        "        _LogConfig = nullptr;\r\n"
+        "        _ActionManager = nullptr;\r\n"
+        "        _ThreadManager = nullptr;\r\n"
+        "        OnInitializeComponents();\r\n"
+        "    CATCH\r\n"
+        "}\r\n"
+        "\r\n"
+        "void VPGGitForm::DoAction(const int64_t &formProperty) const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "        switch(static_cast<VPGGitFormProperty>(formProperty))\r\n"
+        "        {\r\n"
+        "        case VPGGitFormProperty::AddWorkspace:\r\n"
+        "            DoAddWorkspace();\r\n"
+        "            break;\r\n"
+        "        case VPGGitFormProperty::WorkNormal:\r\n"
+        "            DoWorkNormal();\r\n"
+        "            break;\r\n"
+        "        case VPGGitFormProperty::DeleteWorkspace:\r\n"
+        "            DoDeleteWorkspace();\r\n"
+        "            break;\r\n"
+        "        default:\r\n"
+        "            assert(false);\r\n"
+        "            break;\r\n"
+        "        }\r\n"
+        "    CATCH\r\n"
+        "}\r\n"
+        "\r\n"
+        "void VPGGitForm::DoAddWorkspace() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "    CATCH\r\n"
+        "}\r\n"
+        "\r\n"
+        "void VPGGitForm::DoWorkNormal() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "    CATCH\r\n"
+        "}\r\n"
+        "\r\n"
+        "void VPGGitForm::DoDeleteWorkspace() const\r\n"
+        "{\r\n"
+        "    TRY\r\n"
+        "    CATCH\r\n"
+        "}\r\n"
+        "\r\n"
+        "// <vcc:customFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "// </vcc:customFunctions>\r\n");
+}
+
 TEST_F(VPGObjectFileGenerationServiceTest, Json)
 {
     std::wstring enumClass = L""
@@ -913,9 +1350,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
     projectClassIncludeFiles.insert(std::make_pair(L"JsonInternalType", L"json.hpp"));
 
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, this->GetIncludeFiles(), this->GetEnumClasses(),
-        this->GetFilePathCpp(), this->GetFilePathCpp(), enumClassList);
+        this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
 
@@ -1374,9 +1811,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
     projectClassIncludeFiles.insert(std::make_pair(L"JsonInternalType", L"json.hpp"));
 
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, this->GetIncludeFiles(), this->GetEnumClasses(),
-        this->GetFilePathCpp(), this->GetFilePathCpp(), enumClassList);
+        this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
 
@@ -1540,9 +1977,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
     projectClassIncludeFiles.insert(std::make_pair(L"JsonInternalType", L"json.hpp"));
 
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
-        this->GetFilePathHpp(), this->GetFilePathHpp(), enumClassList);
+        this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, this->GetIncludeFiles(), this->GetEnumClasses(),
-        this->GetFilePathCpp(), this->GetFilePathCpp(), enumClassList);
+        this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
 

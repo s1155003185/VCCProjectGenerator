@@ -3,5 +3,6 @@
 // @@Form
 enum class VPGWorkspaceFormProperty
 {
-    GitForms // VECTOR_SPTR(VPGGitForm, GitForms)
+    Name // GETSET(std::wstring, Name, L"")
+    , GitForms // VECTOR_SPTR(VPGGitForm, GitForms)
 };

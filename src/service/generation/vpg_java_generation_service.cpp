@@ -785,7 +785,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetter(const std::wst
 {
     std::wstring result = L"";
     TRY
-        if (IsBlank(property->GetMacro()) || property->GetAccessMode() == VPGEnumClassPropertyAccessMode::NoAccess)
+        if (property->GetPropertyType() != VPGEnumClassPropertyType::Property || property->GetAccessMode() == VPGEnumClassPropertyAccessMode::NoAccess)
             return result;
         std::wstring macro = property->GetMacro().substr(0, property->GetMacro().find(L"("));
         std::wstring dllInstantPrefix = projectPrefix + L"DllFunctions.Instance.";
@@ -884,6 +884,8 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
     TRY
         std::wstring packageFolder = GetJavaPactkageObject(enumClass, option, middlePath);
         std::wstring objectName = enumClass->GetName();
+        std::wstring classObjectType = objectName.substr(0, objectName.size() - propertyClassNameSuffix.size());
+        classObjectType = IsStartWith(objectName, projectPrefix) ? classObjectType.substr(projectPrefix.length()) : classObjectType;
         objectName = (!IsStartWith(objectName, projectPrefix) ? projectPrefix : L"") + objectName.substr(0, objectName.size() - propertyClassNameSuffix.size());
         
         std::set<std::wstring> importFiles;
@@ -939,7 +941,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
         if (enumClass->GetType() == VPGEnumClassType::Form) {
             result += L"\r\n"
                 + INDENT + L"public " + objectName + L"() {\r\n"
-                + INDENT + INDENT + L"this.Handle = " + projectPrefix + L"DllFunctions.Instance.ApplicationCreateForm(" + projectPrefix + L"ObjectType.GitForm.getValue());\r\n"
+                + INDENT + INDENT + L"this.Handle = " + projectPrefix + L"DllFunctions.Instance.ApplicationCreateForm(" + projectPrefix + L"ObjectType." + classObjectType + L".getValue());\r\n"
                 + INDENT + L"}\r\n";
         }
         result += getterSetterStr

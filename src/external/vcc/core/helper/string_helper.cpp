@@ -32,29 +32,74 @@ namespace vcc
 		std::string str(wstr.begin(), wstr.end());
 		return str;
 	}
-
+	
+	void ToCamel(std::wstring &str)
+	{
+		TRY
+			if (str.empty())
+				return;
+			if (str.length() > 1) {
+				ToPascal(str);
+				str = std::wstring(1, std::towlower(str[0])) + str.substr(1);
+			} else
+				ToLower(str);
+		CATCH
+	}	
+	
+	void ToCapital(std::wstring &str)
+	{
+		TRY
+			if (str.empty())
+				return;
+			if (str.length() > 1) {
+				std::wstring tmpStr = L"";
+				bool isCapitalNeeded = true;
+				for (const auto &c : str) {
+					if (std::iswspace(c)) {
+						tmpStr += std::wstring(1, c);
+						isCapitalNeeded = true;
+					} else if (isCapitalNeeded && !std::iswspace(c)) {
+						tmpStr += std::wstring(1, std::towupper(c));
+						isCapitalNeeded = false;
+					} else
+						tmpStr += std::wstring(1, c);
+				}
+				str = tmpStr;
+			} else
+				ToUpper(str);
+		CATCH
+	}
+	
 	void ToLower(std::wstring &str)
 	{
 		std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+	}
+	
+	void ToPascal(std::wstring &str)
+	{
+		TRY
+			if (str.empty())
+				return;
+			if (str.length() > 1) {
+				if (IsContain(str, L" ")) {
+					ToLower(str);
+					auto tokens = SplitString(str, { L" " });
+					str = L"";
+					for (auto &token : tokens) {
+						if (token.empty())
+							continue;
+						str += std::wstring(1, std::towupper(token[0])) + (token.length() > 1 ? token.substr(1) : L"" );
+					}
+				} else
+					str = std::wstring(1, std::towupper(str[0])) + str.substr(1);
+			} else
+				ToUpper(str);
+		CATCH
 	}
 
 	void ToUpper(std::wstring &str)
 	{
 		std::transform(str.begin(), str.end(), str.begin(), ::toupper);
-	}
-	
-	void ToCapital(std::wstring &str)
-	{
-		TRY
-			ToLower(str);
-			auto tokens = SplitString(str, { L" " });
-			str = L"";
-			for (auto &token : tokens) {
-				if (token.empty())
-					continue;
-				str += std::wstring(1, std::towupper(token[0])) + (token.length() > 1 ? token.substr(1) : L"" );
-			}
-		CATCH
 	}
 
 	bool IsLower(const std::wstring &str)

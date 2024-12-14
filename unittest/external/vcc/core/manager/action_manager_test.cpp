@@ -16,19 +16,18 @@ class ActionManagerTestClass final : public BaseAction
         int uuid = 0;
     
     protected:
-        virtual void _DoRedo() override {}
-        virtual void _DoUndo() override {}
-
-        virtual std::wstring _GetRedoMessage() override { return L""; }
-        virtual std::wstring _GetUndoMessage() override { return L""; }
-
-        virtual void _LogRedo() override {}
-        virtual void _LogUndo() override {}
+        virtual void OnRedo() const override {}
+        virtual void OnUndo() const override {}
+        
+        virtual std::wstring GetRedoMessageStart() const override { return L""; }
+        virtual std::wstring GetRedoMessageComplete() const override { return L""; }
+        virtual std::wstring GetUndoMessageStart() const override { return L""; }
+        virtual std::wstring GetUndoMessageComplete() const override { return L""; }
     public:
-        virtual std::wstring GetMessage() override { return std::to_wstring(uuid); }
- 
         ActionManagerTestClass(int uuid) : BaseAction() { this->uuid = uuid; }
         ~ActionManagerTestClass() {}
+
+        std::wstring GetMessage() { return std::to_wstring(uuid); }
 };
 
 class ActionManagerTest : public testing::Test 
@@ -125,12 +124,12 @@ TEST_F(ActionManagerTest, RedoUndoTest)
     this->ResetWithFiveActions();
     EXPECT_EQ(manager->DoAction(this->CreateAction(10)), 5);
     EXPECT_TRUE(manager->GetActions().size() == 6);
-    EXPECT_EQ(manager->GetActions().at(0)->GetMessage(), L"0");
-    EXPECT_EQ(manager->GetActions().at(1)->GetMessage(), L"1");
-    EXPECT_EQ(manager->GetActions().at(2)->GetMessage(), L"2");
-    EXPECT_EQ(manager->GetActions().at(3)->GetMessage(), L"3");
-    EXPECT_EQ(manager->GetActions().at(4)->GetMessage(), L"4");
-    EXPECT_EQ(manager->GetActions().at(5)->GetMessage(), L"10");
+    EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->GetActions().at(0))->GetMessage(), L"0");
+    EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->GetActions().at(1))->GetMessage(), L"1");
+    EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->GetActions().at(2))->GetMessage(), L"2");
+    EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->GetActions().at(3))->GetMessage(), L"3");
+    EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->GetActions().at(4))->GetMessage(), L"4");
+    EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->GetActions().at(5))->GetMessage(), L"10");
     // Redo Undo
     EXPECT_EQ(manager->Undo(), 4);
     EXPECT_EQ(manager->Undo(2), 2);
@@ -144,10 +143,10 @@ TEST_F(ActionManagerTest, RedoUndoTest)
     EXPECT_EQ(manager->Undo(2), 2);
     EXPECT_EQ(manager->DoAction(this->CreateAction(20)), 3);
     EXPECT_TRUE(manager->GetActions().size() == 4);
-    EXPECT_EQ(manager->GetActions().at(0)->GetMessage(), L"0");
-    EXPECT_EQ(manager->GetActions().at(1)->GetMessage(), L"1");
-    EXPECT_EQ(manager->GetActions().at(2)->GetMessage(), L"2");
-    EXPECT_EQ(manager->GetActions().at(3)->GetMessage(), L"20");
+    EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->GetActions().at(0))->GetMessage(), L"0");
+    EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->GetActions().at(1))->GetMessage(), L"1");
+    EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->GetActions().at(2))->GetMessage(), L"2");
+    EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->GetActions().at(3))->GetMessage(), L"20");
 }
 
 TEST_F(ActionManagerTest, ChopTest) 
@@ -158,17 +157,17 @@ TEST_F(ActionManagerTest, ChopTest)
     EXPECT_EQ(manager->ChopActionListToSize(2), 4);
     EXPECT_TRUE(manager->GetActions().size() == 2);
     int64_t firstSeqNo = manager->GetFirstSeqNo();
-    EXPECT_EQ(manager->GetActions().at(firstSeqNo)->GetMessage(), L"3");
-    EXPECT_EQ(manager->GetActions().at(firstSeqNo + 1)->GetMessage(), L"4");
+    EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->GetActions().at(firstSeqNo))->GetMessage(), L"3");
+    EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->GetActions().at(firstSeqNo + 1))->GetMessage(), L"4");
 
     this->ResetWithFiveActions();
     EXPECT_EQ(manager->ChopActionListToSize(4), 4);
     EXPECT_TRUE(manager->GetActions().size() == 4);
     firstSeqNo = manager->GetFirstSeqNo();
-    EXPECT_EQ(manager->GetActions().at(firstSeqNo)->GetMessage(), L"1");
-    EXPECT_EQ(manager->GetActions().at(firstSeqNo + 1)->GetMessage(), L"2");
-    EXPECT_EQ(manager->GetActions().at(firstSeqNo + 2)->GetMessage(), L"3");
-    EXPECT_EQ(manager->GetActions().at(firstSeqNo + 3)->GetMessage(), L"4");
+    EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->GetActions().at(firstSeqNo))->GetMessage(), L"1");
+    EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->GetActions().at(firstSeqNo + 1))->GetMessage(), L"2");
+    EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->GetActions().at(firstSeqNo + 2))->GetMessage(), L"3");
+    EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->GetActions().at(firstSeqNo + 3))->GetMessage(), L"4");
 
 }
 

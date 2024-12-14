@@ -1,13 +1,13 @@
 #pragma once
 #include "base_manager.hpp"
 
-#include "base_action.hpp"
-#include "class_macro.hpp"
-
 #include <memory>
 #include <mutex>
 #include <shared_mutex>
 #include <stdint.h>
+
+#include "base_action.hpp"
+#include "class_macro.hpp"
 
 namespace vcc
 {

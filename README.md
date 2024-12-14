@@ -328,6 +328,8 @@ Sample
     "ObjectTypeDirectory": "include/type",
     "ApplicationDirectoryHpp": "include",
     "ApplicationDirectoryCpp": "src",
+    "ActionDirectoryHpp": "include/action",
+    "ActionDirectoryCpp": "src/action",
     "FormDirectoryHpp": "include/form",
     "FormDirectoryCpp": "src/form",
     "ObjectDirectoryHpp": "include/model",
@@ -409,6 +411,10 @@ ExceptionTypeDirectory, ObjectTypeDirectory
 ApplicationDirectoryHpp, ApplicationDirectoryCpp
     Optional. Empty for no generation.
     In Generation mode, application.hpp and application.cpp are generated here.
+
+ActionDirectoryHpp, ActionDirectoryCpp
+    Optional. Empty then generate in the same file with Form
+    In Generation Mode, action files are generated here.
 
 FormDirectoryHpp, FormDirectoryCpp
     Optional. Empty then follow ObjectDirectoryHpp, ObjectDirectoryCpp.
@@ -729,7 +735,7 @@ Note:
             If value is false, Form will follow Parent Object Action Manager (share same history)
             If Value is true, Form will have new Action History (independent history)
 
-[@@Action { "IsIndependent": true }]
+[@@Thread { "IsIndependent": true }]
     Form Only
     Attribute:
         IsIndependent
@@ -761,7 +767,7 @@ Note:
     Command used in VCC generator, can be any text in xxx without @@
 
 #### Field Attribute
-Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Command xxx]
+Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Class { "Properties\ : [ "GETSET(std::wstring, Name, L\"\")", "GETSET(int64_t, Age, 0)" ], "Assignment": [ \"Sam\", \"6\" ] }] [@@Command xxx]
 
 {...}: Compulsory
 []: Optional
@@ -815,7 +821,18 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Command xxx]
             Cannot Access via Property Accessor
 
 [@@Inherit]
-    If stated, generate will not generate Getter and Setter.
+    If stated, generate will not generate Getter and Setter, Manager, Action, etc.
+
+[@@Class { "Properties\ : [ "GETSET(std::wstring, Name, L\"\")", "GETSET(int64_t, Age, 0)" ], "Assignments": [ \"Sam\", \"6\" ] }]
+    Action Only.
+    Option:
+        Properties
+            Value is array of {ClassMacro}. As it is in json string, special characters need to be escaped.
+
+        Assignments
+            Value is array of values that should be initialized when creating object. Number of elements should be the same as that of Properties.
+            If not stated, Action() will be genrated.
+            If stated, Action(L"Sam", 6) will be generated.
 
 [@@Command xxx]
     Command used in VCC generator, can be any text in xxx without @@

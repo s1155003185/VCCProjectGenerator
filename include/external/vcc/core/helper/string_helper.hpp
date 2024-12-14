@@ -33,9 +33,11 @@ namespace vcc
 	std::wstring str2wstr(const std::string& str);
 	std::string wstr2str(const std::wstring &wstr);
 
+	void ToCamel(std::wstring &str); // camelCase
+	void ToCapital(std::wstring &str); // Capitial Case
 	void ToLower(std::wstring &str);
+	void ToPascal(std::wstring &str); // PascalCase
 	void ToUpper(std::wstring &str);
-	void ToCapital(std::wstring &str);
 
 	bool IsLower(const std::wstring &str);
 	bool IsUpper(const std::wstring &str);

@@ -1,5 +1,5 @@
 {
-    "Version": "v0.2.5",
+    "Version": "v0.2.6",
     "ProjectType": "VccModule",
     "TemplateGitUrl": "https://github.com/s1155003185/VCCModule.git",
     "TemplateWorkspace": "${userHome}/Documents/vcc/VCCModule",
@@ -15,6 +15,10 @@
     "ObjectTypeDirectory": "include/type",
     "ApplicationDirectoryHpp": "include",
     "ApplicationDirectoryCpp": "src",
+    "ActionDirectoryHpp": "",
+    "ActionDirectoryCpp": "",
+    "FormDirectoryHpp": "include/form",
+    "FormDirectoryCpp": "src/form",
     "ObjectDirectoryHpp": "include/model",
     "ObjectDirectoryCpp": "src/model",
     "PropertyAccessorDirectoryHpp": "include/propertyAccessor",

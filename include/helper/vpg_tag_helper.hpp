@@ -86,10 +86,26 @@ inline std::wstring GetVccTagTailer(const VPGCodeType &codeType, const std::wstr
     return L"";
 }
 
+inline std::wstring GetVccTagHeaderCustomClassCustomFunctions(const VPGCodeType &codeType, const std::wstring &prefix, const std::wstring &className, const std::wstring &functionName)
+{
+    TRY
+        return GetVccTagHeader(codeType, prefix + className + functionName, VPGTagMode::Reserve, VPGTagMode::Reserve);
+    CATCH
+    return L"";
+}
+
+inline std::wstring GetVccTagTailerCustomClassCustomFunctions(const VPGCodeType &codeType, const std::wstring &prefix, const std::wstring &className, const std::wstring &functionName)
+{
+    TRY
+        return GetVccTagTailer(codeType, prefix + className + functionName);
+    CATCH
+    return L"";
+}
+
 inline std::wstring GetVccTagHeaderCustomHeader(const VPGCodeType &codeType)
 {
     TRY
-        return GetVccTagHeader(codeType, L"customHeader", VPGTagMode::Reserve, VPGTagMode::Reserve);
+        return GetVccTagHeaderCustomClassCustomFunctions(codeType, L"custom", L"", L"Header");
     CATCH
     return L"";
 }
@@ -97,7 +113,7 @@ inline std::wstring GetVccTagHeaderCustomHeader(const VPGCodeType &codeType)
 inline std::wstring GetVccTagTailerCustomHeader(const VPGCodeType &codeType)
 {
     TRY
-        return GetVccTagTailer(codeType, L"customHeader");
+        return GetVccTagTailerCustomClassCustomFunctions(codeType, L"custom", L"", L"Header");
     CATCH
     return L"";
 }
@@ -105,7 +121,7 @@ inline std::wstring GetVccTagTailerCustomHeader(const VPGCodeType &codeType)
 inline std::wstring GetVccTagHeaderCustomClassProperties(const VPGCodeType &codeType, const std::wstring &className)
 {
     TRY
-        return GetVccTagHeader(codeType, L"custom" + className + L"Properties", VPGTagMode::Reserve, VPGTagMode::Reserve);
+        return GetVccTagHeaderCustomClassCustomFunctions(codeType, L"custom", className, L"Properties");
     CATCH
     return L"";
 }
@@ -113,7 +129,7 @@ inline std::wstring GetVccTagHeaderCustomClassProperties(const VPGCodeType &code
 inline std::wstring GetVccTagTailerCustomClassProperties(const VPGCodeType &codeType, const std::wstring &className)
 {
     TRY
-        return GetVccTagTailer(codeType, L"custom" + className + L"Properties");
+        return GetVccTagTailerCustomClassCustomFunctions(codeType, L"custom", className, L"Properties");
     CATCH
     return L"";
 }
@@ -121,7 +137,7 @@ inline std::wstring GetVccTagTailerCustomClassProperties(const VPGCodeType &code
 inline std::wstring GetVccTagHeaderCustomClassPrivateFunctions(const VPGCodeType &codeType, const std::wstring &className)
 {
     TRY
-        return GetVccTagHeader(codeType, L"custom" + className + L"PrivateFunctions", VPGTagMode::Reserve, VPGTagMode::Reserve);
+        return GetVccTagHeaderCustomClassCustomFunctions(codeType, L"custom", className, L"PrivateFunctions");
     CATCH
     return L"";
 }
@@ -129,7 +145,7 @@ inline std::wstring GetVccTagHeaderCustomClassPrivateFunctions(const VPGCodeType
 inline std::wstring GetVccTagTailerCustomClassPrivateFunctions(const VPGCodeType &codeType, const std::wstring &className)
 {
     TRY
-        return GetVccTagTailer(codeType, L"custom" + className + L"PrivateFunctions");
+        return GetVccTagTailerCustomClassCustomFunctions(codeType, L"custom", className, L"PrivateFunctions");
     CATCH
     return L"";
 }
@@ -137,7 +153,7 @@ inline std::wstring GetVccTagTailerCustomClassPrivateFunctions(const VPGCodeType
 inline std::wstring GetVccTagHeaderCustomClassProtectedFunctions(const VPGCodeType &codeType, const std::wstring &className)
 {
     TRY
-        return GetVccTagHeader(codeType, L"custom" + className + L"ProtectedFunctions", VPGTagMode::Reserve, VPGTagMode::Reserve);
+        return GetVccTagHeaderCustomClassCustomFunctions(codeType, L"custom", className, L"ProtectedFunctions");
     CATCH
     return L"";
 }
@@ -145,7 +161,7 @@ inline std::wstring GetVccTagHeaderCustomClassProtectedFunctions(const VPGCodeTy
 inline std::wstring GetVccTagTailerCustomClassProtectedFunctions(const VPGCodeType &codeType, const std::wstring &className)
 {
     TRY
-        return GetVccTagTailer(codeType, L"custom" + className + L"ProtectedFunctions");
+        return GetVccTagTailerCustomClassCustomFunctions(codeType, L"custom", className, L"ProtectedFunctions");
     CATCH
     return L"";
 }
@@ -153,7 +169,7 @@ inline std::wstring GetVccTagTailerCustomClassProtectedFunctions(const VPGCodeTy
 inline std::wstring GetVccTagHeaderCustomClassPublicFunctions(const VPGCodeType &codeType, const std::wstring &className)
 {
     TRY
-        return GetVccTagHeader(codeType, L"custom" + className + L"PublicFunctions", VPGTagMode::Reserve, VPGTagMode::Reserve);
+        return GetVccTagHeaderCustomClassCustomFunctions(codeType, L"custom", className, L"PublicFunctions");
     CATCH
     return L"";
 }
@@ -161,7 +177,7 @@ inline std::wstring GetVccTagHeaderCustomClassPublicFunctions(const VPGCodeType 
 inline std::wstring GetVccTagTailerCustomClassPublicFunctions(const VPGCodeType &codeType, const std::wstring &className)
 {
     TRY
-        return GetVccTagTailer(codeType, L"custom" + className + L"PublicFunctions");
+        return GetVccTagTailerCustomClassCustomFunctions(codeType, L"custom", className, L"PublicFunctions");
     CATCH
     return L"";
 }
@@ -169,7 +185,7 @@ inline std::wstring GetVccTagTailerCustomClassPublicFunctions(const VPGCodeType 
 inline std::wstring GetVccTagHeaderCustomClassFunctions(const VPGCodeType &codeType, const std::wstring &className)
 {
     TRY
-        return GetVccTagHeader(codeType, L"custom" + className + L"Functions", VPGTagMode::Reserve, VPGTagMode::Reserve);
+        return GetVccTagHeaderCustomClassCustomFunctions(codeType,  L"custom", className, L"Functions");
     CATCH
     return L"";
 }
@@ -177,7 +193,7 @@ inline std::wstring GetVccTagHeaderCustomClassFunctions(const VPGCodeType &codeT
 inline std::wstring GetVccTagTailerCustomClassFunctions(const VPGCodeType &codeType, const std::wstring &className)
 {
     TRY
-        return GetVccTagTailer(codeType, L"custom" + className + L"Functions");
+        return GetVccTagTailerCustomClassCustomFunctions(codeType,  L"custom", className,  L"Functions");
     CATCH
     return L"";
 }

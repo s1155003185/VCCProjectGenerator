@@ -21,7 +21,5 @@ TEST(ApplicationTest, CreateForm)
     auto form = Application::CreateForm(ObjectType::GitForm);
     auto gitform = static_cast<BaseForm *>(form.get());
     IObject *object = static_cast<IObject *>((gitform));
-    //IObject *object =  form.get();
-    std::shared_ptr<IObject> ptr(object, [](IObject*){});
-    PropertyAccessorFactory::Create(ptr)->ReadObject(LockType::ReadLock, 0, -1);
+    PropertyAccessorFactory::Create(object->GetSharedPtr())->ReadObject(LockType::ReadLock, 0, -1);
 }

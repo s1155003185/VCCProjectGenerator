@@ -1,6 +1,8 @@
 // <vcc:vccproj sync="FULL" gen="FULL"/>
 #pragma once
 
+#include <string>
+
 #include "base_form.hpp"
 #include "class_macro.hpp"
 #include "object_type.hpp"
@@ -13,6 +15,7 @@ using namespace vcc;
 
 class VPGWorkspaceForm : public BaseForm
 {
+    GETSET(std::wstring, Name, L"")
     VECTOR_SPTR(VPGGitForm, GitForms)
 
     // <vcc:customVPGWorkspaceFormProperties sync="RESERVE" gen="RESERVE">

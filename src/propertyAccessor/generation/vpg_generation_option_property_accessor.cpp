@@ -366,6 +366,10 @@ std::wstring VPGGenerationOptionPropertyAccessor::_ReadString(const int64_t &obj
             return obj->GetApplicationDirectoryHpp();
         case VPGGenerationOptionProperty::ApplicationDirectoryCpp:
             return obj->GetApplicationDirectoryCpp();
+        case VPGGenerationOptionProperty::ActionDirectoryHpp:
+            return obj->GetActionDirectoryHpp();
+        case VPGGenerationOptionProperty::ActionDirectoryCpp:
+            return obj->GetActionDirectoryCpp();
         case VPGGenerationOptionProperty::FormDirectoryHpp:
             return obj->GetFormDirectoryHpp();
         case VPGGenerationOptionProperty::FormDirectoryCpp:
@@ -446,6 +450,12 @@ void VPGGenerationOptionPropertyAccessor::_WriteString(const int64_t &objectProp
             break;
         case VPGGenerationOptionProperty::ApplicationDirectoryCpp:
             obj->SetApplicationDirectoryCpp(value);
+            break;
+        case VPGGenerationOptionProperty::ActionDirectoryHpp:
+            obj->SetActionDirectoryHpp(value);
+            break;
+        case VPGGenerationOptionProperty::ActionDirectoryCpp:
+            obj->SetActionDirectoryCpp(value);
             break;
         case VPGGenerationOptionProperty::FormDirectoryHpp:
             obj->SetFormDirectoryHpp(value);
