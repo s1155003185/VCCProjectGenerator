@@ -14,6 +14,8 @@ using namespace vcc;
 class VPGMainForm : public BaseForm
 {
     VECTOR_SPTR(VPGWorkspaceForm, WorkspaceForms)
+    ACTION(AddWorkspace)
+    ACTION(DeleteWorkspace)
 
     // <vcc:customVPGMainFormProperties sync="RESERVE" gen="RESERVE">
     // </vcc:customVPGMainFormProperties>

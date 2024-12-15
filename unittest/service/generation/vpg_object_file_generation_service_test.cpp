@@ -937,8 +937,6 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "        virtual void InitializeComponents() const override;\r\n"
         "\r\n"
         "        virtual void DoAction(const int64_t &formProperty) const override;\r\n"
-        "        virtual void DoAddWorkspace() const;\r\n"
-        "        virtual void DoDeleteWorkspace() const;\r\n"
         "\r\n"
         "        // <vcc:customVPGGitFormPublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "        // </vcc:customVPGGitFormPublicFunctions>\r\n"

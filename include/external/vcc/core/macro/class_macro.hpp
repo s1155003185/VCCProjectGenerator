@@ -208,5 +208,5 @@ namespace vcc
     // ActionName, DoActionReturn, UndoActionReturn, DoActionParameters
     #define ACTION(name) \
         public: \
-            void Do##name();
+            virtual void Do##name() const;
 }

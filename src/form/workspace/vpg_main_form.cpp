@@ -44,10 +44,28 @@ void VPGMainForm::DoAction(const int64_t &formProperty) const
     TRY
         switch(static_cast<VPGMainFormProperty>(formProperty))
         {
+        case VPGMainFormProperty::AddWorkspace:
+            DoAddWorkspace();
+            break;
+        case VPGMainFormProperty::DeleteWorkspace:
+            DoDeleteWorkspace();
+            break;
         default:
             assert(false);
             break;
         }
+    CATCH
+}
+
+void VPGMainForm::DoAddWorkspace() const
+{
+    TRY
+    CATCH
+}
+
+void VPGMainForm::DoDeleteWorkspace() const
+{
+    TRY
     CATCH
 }
 

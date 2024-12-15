@@ -504,11 +504,6 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnum
                 + INDENT + INDENT + L"virtual void InitializeComponents() const override;\r\n"
                 "\r\n"
                 + INDENT + INDENT + L"virtual void DoAction(const int64_t &formProperty) const override;\r\n";
-            // Custom Action
-            for (auto const &property : enumClass->GetProperties()) {
-                if (property->GetPropertyType() == VPGEnumClassPropertyType::Action && !property->GetIsInherit())
-                    result += INDENT + INDENT + L"virtual void Do" + property->GetPropertyName() + L"() const;\r\n";
-            }
         }
     CATCH
     return result;
