@@ -504,6 +504,11 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnum
                 + INDENT + INDENT + L"virtual void InitializeComponents() const override;\r\n"
                 "\r\n"
                 + INDENT + INDENT + L"virtual void DoAction(const int64_t &formProperty) const override;\r\n";
+            // Custom Action
+            for (auto const &property : enumClass->GetProperties()) {
+                if (property->GetPropertyType() == VPGEnumClassPropertyType::Action && !property->GetIsInherit())
+                    result += INDENT + INDENT + L"virtual void Do" + property->GetPropertyName() + L"() const;\r\n";
+            }
         }
     CATCH
     return result;
@@ -990,13 +995,32 @@ std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *en
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + L"switch(static_cast<" + enumClass->GetName() + L">(formProperty))\r\n"
-                + INDENT + INDENT + L"{\r\n"
-                + INDENT + INDENT + L"default:\r\n"
+                + INDENT + INDENT + L"{\r\n";
+            for (auto const& property : enumClass->GetProperties()) {
+                if (property->GetPropertyType() != VPGEnumClassPropertyType::Action)
+                    continue;
+                result += INDENT + INDENT + L"case " + enumClass->GetName() + L"::" + property->GetEnum() + L":\r\n"
+                    + INDENT + INDENT + INDENT + L"Do" + property->GetPropertyName() + L"();\r\n"
+                    + INDENT + INDENT + INDENT + L"break;\r\n";
+            }
+            result += INDENT + INDENT + L"default:\r\n"
                 + INDENT + INDENT + INDENT + L"assert(false);\r\n"
                 + INDENT + INDENT + INDENT + L"break;\r\n"
                 + INDENT + INDENT + L"}\r\n"
                 + INDENT + L"CATCH\r\n"
                 "}\r\n";
+
+            for (auto const &property : enumClass->GetProperties()) {
+                if (property->GetPropertyType() != VPGEnumClassPropertyType::Action || property->GetIsInherit())
+                    continue;
+                
+                result += L"\r\n"
+                    "void " + className + L"::Do" + property->GetPropertyName() + L"() const\r\n"
+                    "{\r\n"
+                    + INDENT + L"TRY\r\n"
+                    + INDENT + L"CATCH\r\n"
+                    "}\r\n";
+            }
         }
     CATCH
     return result;
