@@ -16,16 +16,16 @@ class ActionManagerTestClass final : public BaseAction
         int uuid = 0;
     
     protected:
-        virtual void _DoRedo() override {}
-        virtual void _DoUndo() override {}
+        virtual void OnRedo() const override {}
+        virtual void OnUndo() const override {}
 
-        virtual std::wstring _GetRedoMessage() override { return L""; }
-        virtual std::wstring _GetUndoMessage() override { return L""; }
+        virtual std::wstring GetRedoMessage() const override { return L""; }
+        virtual std::wstring GetUndoMessage() const override { return L""; }
 
-        virtual void _LogRedo() override {}
-        virtual void _LogUndo() override {}
+        virtual void LogRedo() const override {}
+        virtual void LogUndo() const override {}
     public:
-        virtual std::wstring GetMessage() override { return std::to_wstring(uuid); }
+        virtual std::wstring GetMessage() const override { return std::to_wstring(uuid); }
  
         ActionManagerTestClass(int uuid) : BaseAction() { this->uuid = uuid; }
         ~ActionManagerTestClass() {}
