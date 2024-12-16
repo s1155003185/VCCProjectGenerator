@@ -17,8 +17,10 @@ namespace vcc
         virtual void OnRedo() const = 0;
         virtual void OnUndo() const = 0;
 
-        virtual std::wstring GetRedoMessage() const = 0;
-        virtual std::wstring GetUndoMessage() const = 0;
+        virtual std::wstring GetRedoMessageStart() const = 0;
+        virtual std::wstring GetRedoMessageComplete() const = 0;
+        virtual std::wstring GetUndoMessageStart() const = 0;
+        virtual std::wstring GetUndoMessageComplete() const = 0;
 
     public:
         // Log
@@ -31,7 +33,6 @@ namespace vcc
         
         virtual void SetSeqNo(const size_t &seqNo) const = 0;
         virtual size_t GetSeqNo() const = 0;
-        virtual std::wstring GetMessage() const = 0;
         
         virtual void Redo() const = 0;
         virtual void Undo() const = 0;

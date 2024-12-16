@@ -12,17 +12,18 @@ namespace vcc
 {
     class BaseAction : public IAction, public BaseObject
     {
-        private:
+        protected:
             mutable size_t _SeqNo = 0;
             mutable std::shared_ptr<LogConfig> _LogConfig = nullptr;
             mutable std::shared_ptr<ThreadManager> _ThreadManager = nullptr;
 
-        protected:
             BaseAction() : BaseObject() {}
             virtual ~BaseAction() {}
 
-            virtual void LogRedo() const;
-            virtual void LogUndo() const;
+            virtual void LogRedoStart() const;
+            virtual void LogRedoComplete() const;
+            virtual void LogUndoStart() const;
+            virtual void LogUndoComplete() const;
         public:
             // No Clone Method for Action
             virtual std::shared_ptr<IObject> Clone() const override;

@@ -31,19 +31,37 @@ namespace vcc
         _ThreadManager = threadManager;
     }
 
-    void BaseAction::LogRedo() const
+    void BaseAction::LogRedoStart() const
     { 
         TRY
-            std::wstring message = GetRedoMessage();
+            std::wstring message = GetRedoMessageStart();
             if (!IsBlank(message))
                 LogService::LogInfo(_LogConfig.get(), L"", message);
         CATCH
     }
     
-    void BaseAction::LogUndo() const
+    void BaseAction::LogRedoComplete() const
+    { 
+        TRY
+            std::wstring message = GetRedoMessageComplete();
+            if (!IsBlank(message))
+                LogService::LogInfo(_LogConfig.get(), L"", message);
+        CATCH
+    }
+
+    void BaseAction::LogUndoStart() const
     {
         TRY
-            std::wstring message = GetUndoMessage();
+            std::wstring message = GetUndoMessageStart();
+            if (!IsBlank(message))
+                LogService::LogInfo(_LogConfig.get(), L"", message);
+        CATCH
+    }
+
+    void BaseAction::LogUndoComplete() const
+    {
+        TRY
+            std::wstring message = GetUndoMessageComplete();
             if (!IsBlank(message))
                 LogService::LogInfo(_LogConfig.get(), L"", message);
         CATCH
@@ -60,7 +78,7 @@ namespace vcc
     { 
         return _SeqNo;
     }
-    
+
     void BaseAction::SetSeqNo(const size_t &seqNo) const 
     { 
         _SeqNo = seqNo; 
@@ -69,16 +87,18 @@ namespace vcc
     void BaseAction::Redo() const 
     {
         TRY
+            LogRedoStart();
             OnRedo();
-            LogRedo();
+            LogRedoComplete();
         CATCH
     }
 
     void BaseAction::Undo() const
     {
         TRY
+            LogUndoStart();
             OnUndo();
-            LogUndo();
+            LogUndoComplete();
         CATCH
     }
 }
