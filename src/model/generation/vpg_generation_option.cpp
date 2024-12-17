@@ -163,6 +163,10 @@ std::shared_ptr<Json> VPGGenerationOption::ToJson() const
         json->AddString(ConvertNamingStyle(L"ApplicationDirectoryHpp", NamingStyle::PascalCase, namestyle), _ApplicationDirectoryHpp);
         // ApplicationDirectoryCpp
         json->AddString(ConvertNamingStyle(L"ApplicationDirectoryCpp", NamingStyle::PascalCase, namestyle), _ApplicationDirectoryCpp);
+        // ActionDirectoryHpp
+        json->AddString(ConvertNamingStyle(L"ActionDirectoryHpp", NamingStyle::PascalCase, namestyle), _ActionDirectoryHpp);
+        // ActionDirectioryCpp
+        json->AddString(ConvertNamingStyle(L"ActionDirectioryCpp", NamingStyle::PascalCase, namestyle), _ActionDirectioryCpp);
         // FormDirectoryHpp
         json->AddString(ConvertNamingStyle(L"FormDirectoryHpp", NamingStyle::PascalCase, namestyle), _FormDirectoryHpp);
         // FormDirectoryCpp
@@ -274,6 +278,12 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
         // ApplicationDirectoryCpp
         if (json->IsContainKey(ConvertNamingStyle(L"ApplicationDirectoryCpp", namestyle, NamingStyle::PascalCase)))
             _ApplicationDirectoryCpp = json->GetString(ConvertNamingStyle(L"ApplicationDirectoryCpp", namestyle, NamingStyle::PascalCase));
+        // ActionDirectoryHpp
+        if (json->IsContainKey(ConvertNamingStyle(L"ActionDirectoryHpp", namestyle, NamingStyle::PascalCase)))
+            _ActionDirectoryHpp = json->GetString(ConvertNamingStyle(L"ActionDirectoryHpp", namestyle, NamingStyle::PascalCase));
+        // ActionDirectioryCpp
+        if (json->IsContainKey(ConvertNamingStyle(L"ActionDirectioryCpp", namestyle, NamingStyle::PascalCase)))
+            _ActionDirectioryCpp = json->GetString(ConvertNamingStyle(L"ActionDirectioryCpp", namestyle, NamingStyle::PascalCase));
         // FormDirectoryHpp
         if (json->IsContainKey(ConvertNamingStyle(L"FormDirectoryHpp", namestyle, NamingStyle::PascalCase)))
             _FormDirectoryHpp = json->GetString(ConvertNamingStyle(L"FormDirectoryHpp", namestyle, NamingStyle::PascalCase));

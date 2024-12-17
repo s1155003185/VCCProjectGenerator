@@ -56,6 +56,8 @@ class VPGGenerationOption : public BaseObject, public BaseJsonObject
     GETSET(std::wstring, ObjectTypeDirectory, L"include/type")
     GETSET(std::wstring, ApplicationDirectoryHpp, L"include")
     GETSET(std::wstring, ApplicationDirectoryCpp, L"src")
+    GETSET(std::wstring, ActionDirectoryHpp, L"include/action")
+    GETSET(std::wstring, ActionDirectioryCpp, L"src/action")
     GETSET(std::wstring, FormDirectoryHpp, L"include/form")
     GETSET(std::wstring, FormDirectoryCpp, L"src/form")
     GETSET(std::wstring, ObjectDirectoryHpp, L"include/model")
