@@ -50,7 +50,7 @@ enum class VPGGenerationOptionProperty
     ApplicationDirectoryHpp, // GETSET(std::wstring, ApplicationDirectoryHpp, L"include")
     ApplicationDirectoryCpp, // GETSET(std::wstring, ApplicationDirectoryCpp, L"src")
     ActionDirectoryHpp, // GETSET(std::wstring, ActionDirectoryHpp, L"include/action")
-    ActionDirectoryCpp, // GETSET(std::wstring, ActionDirectioryCpp, L"src/action")
+    ActionDirectoryCpp, // GETSET(std::wstring, ActionDirectoryCpp, L"src/action")
     FormDirectoryHpp, // GETSET(std::wstring, FormDirectoryHpp, L"include/form")
     FormDirectoryCpp, // GETSET(std::wstring, FormDirectoryCpp, L"src/form")
     ObjectDirectoryHpp, // GETSET(std::wstring, ObjectDirectoryHpp, L"include/model")

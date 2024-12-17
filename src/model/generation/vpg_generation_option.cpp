@@ -165,8 +165,8 @@ std::shared_ptr<Json> VPGGenerationOption::ToJson() const
         json->AddString(ConvertNamingStyle(L"ApplicationDirectoryCpp", NamingStyle::PascalCase, namestyle), _ApplicationDirectoryCpp);
         // ActionDirectoryHpp
         json->AddString(ConvertNamingStyle(L"ActionDirectoryHpp", NamingStyle::PascalCase, namestyle), _ActionDirectoryHpp);
-        // ActionDirectioryCpp
-        json->AddString(ConvertNamingStyle(L"ActionDirectioryCpp", NamingStyle::PascalCase, namestyle), _ActionDirectioryCpp);
+        // ActionDirectoryCpp
+        json->AddString(ConvertNamingStyle(L"ActionDirectoryCpp", NamingStyle::PascalCase, namestyle), _ActionDirectoryCpp);
         // FormDirectoryHpp
         json->AddString(ConvertNamingStyle(L"FormDirectoryHpp", NamingStyle::PascalCase, namestyle), _FormDirectoryHpp);
         // FormDirectoryCpp
@@ -281,9 +281,9 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
         // ActionDirectoryHpp
         if (json->IsContainKey(ConvertNamingStyle(L"ActionDirectoryHpp", namestyle, NamingStyle::PascalCase)))
             _ActionDirectoryHpp = json->GetString(ConvertNamingStyle(L"ActionDirectoryHpp", namestyle, NamingStyle::PascalCase));
-        // ActionDirectioryCpp
-        if (json->IsContainKey(ConvertNamingStyle(L"ActionDirectioryCpp", namestyle, NamingStyle::PascalCase)))
-            _ActionDirectioryCpp = json->GetString(ConvertNamingStyle(L"ActionDirectioryCpp", namestyle, NamingStyle::PascalCase));
+        // ActionDirectoryCpp
+        if (json->IsContainKey(ConvertNamingStyle(L"ActionDirectoryCpp", namestyle, NamingStyle::PascalCase)))
+            _ActionDirectoryCpp = json->GetString(ConvertNamingStyle(L"ActionDirectoryCpp", namestyle, NamingStyle::PascalCase));
         // FormDirectoryHpp
         if (json->IsContainKey(ConvertNamingStyle(L"FormDirectoryHpp", namestyle, NamingStyle::PascalCase)))
             _FormDirectoryHpp = json->GetString(ConvertNamingStyle(L"FormDirectoryHpp", namestyle, NamingStyle::PascalCase));
