@@ -16,6 +16,7 @@ class VPGObjectFileGenerationService
         VPGObjectFileGenerationService() = default;
         ~VPGObjectFileGenerationService() {}
 
+        // Clone
         static std::wstring GetCloneFunction(const VPGEnumClass *enumClass, const std::wstring &className, const bool &isCpp);
 
         // Json
@@ -29,6 +30,10 @@ class VPGObjectFileGenerationService
         static std::vector<std::wstring> GetJsonToObject(const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
             const std::wstring &parentName, const std::wstring &macro, const std::wstring &type, const std::wstring &mapKeyType, const std::wstring &propertyName, const bool &isArray, const bool &isMap);
     
+        // Action
+        static std::wstring GetHppActionClasses(const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
+        static std::wstring GetCppActionClasses(const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
+
         // Hpp
         static void GetHppIncludeFiles(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
             const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList,

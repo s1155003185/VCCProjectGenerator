@@ -267,6 +267,24 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetJsonToObject(const 
     return result;
 }
 
+std::wstring VPGObjectFileGenerationService::GetHppActionClasses(const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+{
+    std::wstring result = L"";
+    TRY
+
+    CATCH
+    return result;
+}
+
+std::wstring VPGObjectFileGenerationService::GetCppActionClasses(const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+{
+    std::wstring result = L"";
+    TRY
+
+    CATCH
+    return result;
+}
+
 std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::wstring &className)
 {
     TRY
@@ -338,7 +356,7 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
         // ------------------------------------------------------------------------------------------ //
         for (std::shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
             // handle enum without macro case
-            if (property->GetMacro().empty() || property->GetPropertyType() == VPGEnumClassPropertyType::Action || property->GetIsInherit())
+            if (property->GetPropertyType() == VPGEnumClassPropertyType::NA || property->GetPropertyType() == VPGEnumClassPropertyType::Action || property->GetIsInherit())
                 continue;
 
             std::wstring type = property->GetType1();
@@ -591,6 +609,8 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
             content +=  L"\r\n"
                 "enum class " + str + L";";
         }
+
+        content += GetHppActionClasses(enumClassList);
             
         // generate class
         for (auto const &enumClass : enumClassList) {
@@ -1095,6 +1115,8 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
         content += GetCppCustomHeader(isIncludeForm)
             + L"\r\n"
             "using namespace vcc;\r\n";
+
+        content += GetCppActionClasses(enumClassList);
 
         // Generate Part
         for (auto const &enumClass : enumClassList) {
