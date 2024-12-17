@@ -328,6 +328,8 @@ Sample
     "ObjectTypeDirectory": "include/type",
     "ApplicationDirectoryHpp": "include",
     "ApplicationDirectoryCpp": "src",
+    "ActionDirectoryHpp": "include/action",
+    "ActionDirectoryCpp": "src/action",
     "FormDirectoryHpp": "include/form",
     "FormDirectoryCpp": "src/form",
     "ObjectDirectoryHpp": "include/model",
@@ -409,6 +411,10 @@ ExceptionTypeDirectory, ObjectTypeDirectory
 ApplicationDirectoryHpp, ApplicationDirectoryCpp
     Optional. Empty for no generation.
     In Generation mode, application.hpp and application.cpp are generated here.
+
+ActionDirectoryHpp, ActionDirectoryCpp
+    Optional. Empty then generate in the same file with Form
+    In Generation Mode, action files are generated here.
 
 FormDirectoryHpp, FormDirectoryCpp
     Optional. Empty then follow ObjectDirectoryHpp, ObjectDirectoryCpp.

@@ -31,13 +31,14 @@ class VPGObjectFileGenerationService
             const std::wstring &parentName, const std::wstring &macro, const std::wstring &type, const std::wstring &mapKeyType, const std::wstring &propertyName, const bool &isArray, const bool &isMap);
     
         // Action
-        static std::wstring GetHppActionClasses(const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
-        static std::wstring GetCppActionClasses(const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
+        static std::wstring GetHppActionClasses(const std::wstring actionFolderPathHpp, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
+        static std::wstring GetCppActionClasses(const std::wstring actionFolderPathCpp, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
 
         // Hpp
         static void GetHppIncludeFiles(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
             const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList,
             bool &isContainForm,
+            const bool &isGenerateAction,
             std::set<std::wstring> &systemFileList,
             std::set<std::wstring> &projectFileList,
             std::set<std::wstring> &abstractClassList,
@@ -59,6 +60,7 @@ class VPGObjectFileGenerationService
             const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList,
             const bool &isContainForm,
             const bool &isContainJson,
+            const bool &isGenerateAction,
             std::set<std::wstring> &systemIncludeFiles,
             std::set<std::wstring> &customIncludeFiles);
 

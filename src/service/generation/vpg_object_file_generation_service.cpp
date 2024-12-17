@@ -267,7 +267,7 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetJsonToObject(const 
     return result;
 }
 
-std::wstring VPGObjectFileGenerationService::GetHppActionClasses(const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+std::wstring VPGObjectFileGenerationService::GetHppActionClasses(const std::wstring actionFolderPathHpp, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     std::wstring result = L"";
     TRY
@@ -276,7 +276,7 @@ std::wstring VPGObjectFileGenerationService::GetHppActionClasses(const std::vect
     return result;
 }
 
-std::wstring VPGObjectFileGenerationService::GetCppActionClasses(const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+std::wstring VPGObjectFileGenerationService::GetCppActionClasses(const std::wstring actionFolderPathCpp, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     std::wstring result = L"";
     TRY
@@ -299,6 +299,7 @@ std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const st
 void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
     const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList,
     bool &isContainForm,
+    const bool &isGenerateAction,
     std::set<std::wstring> &systemFileList,
     std::set<std::wstring> &projectFileList,
     std::set<std::wstring> &abstractClassList,
@@ -545,7 +546,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
     const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
     const std::wstring &objectFilePathHpp,
     const std::wstring &formFilePathHpp,
-    const std::wstring & actionFolderPathHpp,
+    const std::wstring &actionFolderPathHpp,
     const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
@@ -560,6 +561,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
         GetHppIncludeFiles(projectClassIncludeFiles,
             enumClassList,
             isContainForm,
+            actionFolderPathHpp.empty(),
             systemFileList,
             projectFileList,
             abstractClassList,
@@ -611,7 +613,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
                 "enum class " + str + L";";
         }
 
-        content += GetHppActionClasses(enumClassList);
+        content += GetHppActionClasses(actionFolderPathHpp, projectClassIncludeFiles, enumClassList);
             
         // generate class
         for (auto const &enumClass : enumClassList) {
@@ -662,8 +664,9 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
 void VPGObjectFileGenerationService::GetCppIncludeFiles(
     const std::map<std::wstring, std::wstring> &classPathMapping, 
     const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList,
-    const bool & isContainForm,
+    const bool &isContainForm,
     const bool &isContainJson,
+    const bool &isGenerateACtion,
     std::set<std::wstring> &systemIncludeFiles,
     std::set<std::wstring> &customIncludeFiles)
 {
@@ -1091,6 +1094,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
             enumClassList,
             isIncludeForm,
             isIncludeJson,
+            actionFolderPathCpp.empty(),
             systemIncludeFiles,
             customIncludeFiles);
 
@@ -1118,7 +1122,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
             + L"\r\n"
             "using namespace vcc;\r\n";
 
-        content += GetCppActionClasses(enumClassList);
+        content += GetCppActionClasses(actionFolderPathCpp, classPathMapping, enumClassList);
 
         // Generate Part
         for (auto const &enumClass : enumClassList) {
