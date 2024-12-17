@@ -545,6 +545,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
     const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
     const std::wstring &objectFilePathHpp,
     const std::wstring &formFilePathHpp,
+    const std::wstring & actionFolderPathHpp,
     const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
@@ -1059,6 +1060,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
     const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
     const std::wstring &objectFilePathCpp,
     const std::wstring &formFilePathCpp,
+    const std::wstring &actionFolderPathCpp,
     const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY

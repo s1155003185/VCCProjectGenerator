@@ -297,8 +297,11 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
                     objectFileNames.insert(objectFileName + L".hpp");
                     std::wstring fileObjectDirectoryHpp = !option->GetFormDirectoryHpp().empty() ? GetConcatPath(projWorkspace, option->GetFormDirectoryHpp(), middlePath, objectFileName + L".hpp") : L"";
                     std::wstring fileObjectDirectoryCpp = !option->GetFormDirectoryCpp().empty() ? GetConcatPath(projWorkspace, option->GetFormDirectoryCpp(), middlePath, objectFileName + L".cpp") : L"";
-                    VPGObjectFileGenerationService::GenerateHpp(logConfig, projPrefix, _IncludeFiles, GetConcatPath(projWorkspace, option->GetObjectDirectoryHpp(), middlePath, objectFileName + L".hpp"), fileObjectDirectoryHpp, objectEnumClassList);
-                    VPGObjectFileGenerationService::GenerateCpp(logConfig, projPrefix, _IncludeFiles, _EnumClasses, GetConcatPath(projWorkspace, option->GetObjectDirectoryCpp(), middlePath, objectFileName + L".cpp"), fileObjectDirectoryCpp, objectEnumClassList);
+                    std::wstring actionFolderHpp = !option->GetActionDirectoryHpp().empty() ? GetConcatPath(projWorkspace, option->GetActionDirectoryHpp(), middlePath, L"") : L"";
+                    std::wstring actionFolderCpp = !option->GetActionDirectioryCpp().empty() ? GetConcatPath(projWorkspace, option->GetActionDirectioryCpp(), middlePath, L"") : L"";
+                    
+                    VPGObjectFileGenerationService::GenerateHpp(logConfig, projPrefix, _IncludeFiles, GetConcatPath(projWorkspace, option->GetObjectDirectoryHpp(), middlePath, objectFileName + L".hpp"), fileObjectDirectoryHpp, actionFolderHpp, objectEnumClassList);
+                    VPGObjectFileGenerationService::GenerateCpp(logConfig, projPrefix, _IncludeFiles, _EnumClasses, GetConcatPath(projWorkspace, option->GetObjectDirectoryCpp(), middlePath, objectFileName + L".cpp"), fileObjectDirectoryCpp, actionFolderCpp, objectEnumClassList);
                 }
                 if (!propertyAccessorDirectoryHpp.empty() && !propertyAccessorDirectoryCpp.empty()) {
                     propertyAccessorFileNames.insert(propertyAccessorFileName + L".hpp");
