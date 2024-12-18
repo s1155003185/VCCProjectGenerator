@@ -882,7 +882,11 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "//@@Form\r\n"
         "enum class VPGGitFormProperty\r\n"
         "{\r\n"
-        "    AddWorkspace // ACTION(AddWorkspace)\r\n"
+        "    AddWorkspace // ACTION(AddWorkspace) @@Properties { \"Properties\" : [ \"GETSET(std::wstring, Name, L\\\"\\\")\" ]\r\n"
+        "    , DoWorkNormalProperty // ACTION(DoWorkNormalProperty) @@Properties { \"Properties\" : [ \"GETSET(std::wstring, Name, L\\\"\\\")\", \"GETSET(State, State, State::Busy)\" ], \"IsGenerateConstructor\": true } }\r\n"
+        "    , DoWorkObject // ACTION(DoWorkObject) @@Properties { \"Properties\" : [ \"GETSET_SPTR_NULL(LogConfig, LogConfig)\" , \"GETSET(std::wstring, Name, L\\\"\\\")\"], \"IsGenerateConstructor\": true }\r\n"
+        "    , DoWorkList // ACTION(DoWorkList) @@Properties { \"Properties\" : [ \"VECTOR(double, VECTOR)\" , \"MAP(std::wstring, std::wstring, MAP)\", \"ORDERED_MAP(int64_t, int64_t, ORDERED_MAP)\"], \"IsGenerateConstructor\": true }\r\n"
+        "    , DoWorkListObject // ACTION(DoWorkListObject) @@Properties { \"Properties\" : [ \"VECTOR_SPTR(LogConfig, VECTOR)\" , \"MAP_SPTR_R(std::wstring, LogConfig, MAP)\", \"ORDERED_MAP_SPTR_R(int64_t, LogConfig, ORDERED_MAP)\"], \"IsGenerateConstructor\": true }\r\n"
         "    , DeleteWorkspace // ACTION(DeleteWorkspace)\r\n"
         "};\r\n"
         "\r\n";

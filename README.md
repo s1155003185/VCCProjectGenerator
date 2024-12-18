@@ -767,7 +767,7 @@ Note:
     Command used in VCC generator, can be any text in xxx without @@
 
 #### Field Attribute
-Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Command xxx]
+Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Class { "Properties\ : [ "GETSET(std::wstring, Name, L\"\")" ], "IsGenerateConstructor": true }] [@@Command xxx]
 
 {...}: Compulsory
 []: Optional
@@ -821,7 +821,18 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Command xxx]
             Cannot Access via Property Accessor
 
 [@@Inherit]
-    If stated, generate will not generate Getter and Setter.
+    If stated, generate will not generate Getter and Setter, Manager, Action, etc.
+
+[@@Properties { "Properties\ : [ "GETSET(std::wstring, Name, L\"\")" ], "IsGenerateConstructor": true }]
+    Action Only.
+    Option:
+        Properties
+            Value is same as {ClassMacro}.
+            User need to handle assignment in Form maunally.
+        IsGenerateConstructor
+            Value is true or false.
+            Default is false and generator will generate Action().
+            If value is true, generator will generate Action(std::wstring name).
 
 [@@Command xxx]
     Command used in VCC generator, can be any text in xxx without @@
