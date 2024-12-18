@@ -556,7 +556,7 @@ TEST_F(VPGEnumClassReaderTest, EnumClassMixedWithOthers)
     EXPECT_EQ(element->GetName(), L"EnumBOneLine");
 }
 
-TEST_F(VPGEnumClassReaderTest, EnumClassWithActionAndManager)
+TEST_F(VPGEnumClassReaderTest, EnumClassWithManager)
 {
     std::wstring code = L""
         "#pragma once\r\n"
@@ -567,6 +567,46 @@ TEST_F(VPGEnumClassReaderTest, EnumClassWithActionAndManager)
         "    Manager2, // MANAGER_SPTR_NULL(GitManager, GitManager2)\r\n"
         "    Manager3, // MANAGER_SPTR_PARENT(GitManager, GitManager3, GitBaseManager)\r\n"
         "    Action // ACTION(AddGitLog) \r\n"
+        "};\r\n";
+    std::vector<std::shared_ptr<VPGEnumClass>> results;
+    this->GetReader()->Parse(code, results);
+    EXPECT_EQ(results.size(), (size_t)1);
+    auto element = results.at(0);
+    EXPECT_EQ(element->GetNamespace(), L"");
+    EXPECT_EQ(element->GetName(), L"Property");
+
+    // Property
+    EXPECT_EQ(element->GetProperties().size(), (size_t)5);
+    EXPECT_EQ((int64_t)element->GetProperties().at(0)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Property);
+    EXPECT_EQ(element->GetProperties().at(0)->GetType1(), L"std::wstring");
+    EXPECT_EQ(element->GetProperties().at(0)->GetPropertyName(), L"Property");
+    EXPECT_EQ((int64_t)element->GetProperties().at(1)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Manager);
+    EXPECT_EQ(element->GetProperties().at(1)->GetType1(), L"GitManager");
+    EXPECT_EQ(element->GetProperties().at(1)->GetPropertyName(), L"GitManager1");
+    EXPECT_EQ(element->GetProperties().at(1)->GetDefaultValue(), L"_LogProperty");
+    EXPECT_EQ((int64_t)element->GetProperties().at(2)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Manager);
+    EXPECT_EQ(element->GetProperties().at(2)->GetType1(), L"GitManager");
+    EXPECT_EQ(element->GetProperties().at(2)->GetPropertyName(), L"GitManager2");
+    EXPECT_EQ((int64_t)element->GetProperties().at(3)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Manager);
+    EXPECT_EQ(element->GetProperties().at(3)->GetType1(), L"GitManager");
+    EXPECT_EQ(element->GetProperties().at(3)->GetPropertyName(), L"GitManager3");
+    EXPECT_EQ(element->GetProperties().at(3)->GetDefaultValue(), L"GitBaseManager");
+    EXPECT_EQ((int64_t)element->GetProperties().at(4)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
+    EXPECT_EQ(element->GetProperties().at(4)->GetPropertyName(), L"AddGitLog");
+}
+
+TEST_F(VPGEnumClassReaderTest, EnumClassWithAction)
+{
+    std::wstring code = L""
+        "#pragma once\r\n"
+        "\r\n"
+        "enum class Property {\r\n"
+        "    AddWorkspace // ACTION(AddWorkspace) @@Class { \"Properties\" : [ \"GETSET(std::wstring, Name, L\\\"\\\")\" ]\r\n"
+        "    , DoWorkNormalProperty // ACTION(DoWorkNormalProperty) @@Class { \"Properties\" : [ \"GETSET(std::wstring, Name, L\\\"\\\")\", \"GETSET(State, State, State::Busy)\" ], \"Assignments\": [\"\", \"State::Busy\"] } }\r\n"
+        "    , DoWorkObject // ACTION(DoWorkObject) @@Class { \"Properties\" : [ \"GETSET_SPTR_NULL(LogConfig, LogConfig)\" , \"GETSET(std::wstring, Name, L\\\"\\\")\"], \"Assignments\": [\"_LogConfig\", \"State::Busy\"] }\r\n"
+        "    , DoWorkList // ACTION(DoWorkList) @@Class { \"Properties\" : [ \"VECTOR(double, VECTOR)\" , \"MAP(std::wstring, std::wstring, MAP)\", \"ORDERED_MAP(int64_t, int64_t, ORDERED_MAP)\"], \"Assignments\": [ \"{1, 2}\", \"{ std::make_shared(1,2), std::make_shared(2,3) }\" ]] }\r\n"
+        "    , DoWorkListObject // ACTION(DoWorkListObject) @@Class { \"Properties\" : [ \"VECTOR_SPTR(LogConfig, VECTOR)\" , \"MAP_SPTR_R(std::wstring, LogConfig, MAP)\", \"ORDERED_MAP_SPTR_R(int64_t, LogConfig, ORDERED_MAP)\"], \"Assignments\": [ {}, {} ]] }\r\n"
+        "    , DeleteWorkspace // ACTION(DeleteWorkspace)\r\n"
         "};\r\n";
     std::vector<std::shared_ptr<VPGEnumClass>> results;
     this->GetReader()->Parse(code, results);
