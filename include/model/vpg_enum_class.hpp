@@ -48,6 +48,9 @@ class VPGEnumClassProperty : public BaseObject
     GETSET(VPGEnumClassPropertyAccessMode, AccessMode, VPGEnumClassPropertyAccessMode::ReadWrite);
     GETSET(bool, IsInherit, false);
 
+    VECTOR(std::wstring, ClassProperties);
+    VECTOR(std::wstring, ClassAssignments);
+
     public:
         VPGEnumClassProperty() : BaseObject() {}
         virtual ~VPGEnumClassProperty() {}

@@ -252,6 +252,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
         // split Remain
         std::vector<std::wstring> attributes = GetAttribute(remainStr);
         for (auto const &attribute : attributes) {
+            // Privilege
             if (Equal(attribute, attributeToken + L"ReadOnly", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::ReadOnly;
             else if (Equal(attribute, attributeToken + L"WriteOnly", true))
@@ -262,6 +263,24 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::NoAccess;
             else if (Equal(attribute, attributeToken + L"Inherit", true))
                 property->SetIsInherit(true);
+            // Class
+            else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Class")) {
+                auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Class");
+                assert(jsonAttributes != nullptr);
+                if (jsonAttributes->IsContainKey(L"Properties")) {
+                    auto classProperties = jsonAttributes->GetArray(L"Properties");
+                    if (!classProperties.empty()) {
+                        for (auto const &classProperty : classProperties)
+                            property->InsertClassProperties(classProperty->GetArrayElementString());
+                        if (jsonAttributes->IsContainKey(L"Assignments")) {
+                            auto classAssignments = jsonAttributes->GetArray(L"Assignments");
+                            for (auto const &classAssignment : classAssignments)
+                                property->InsertClassAssignments(classAssignment->GetArrayElementString());
+                        }
+                    }
+                }
+
+            }
             else if (Equal(attribute, attributeToken + L"Command", true)) {
                 std::wstring commandToken = attributeToken + L"Command";
                 commandToken = attribute.substr(commandToken.length());
