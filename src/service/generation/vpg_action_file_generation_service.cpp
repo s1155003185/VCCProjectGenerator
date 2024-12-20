@@ -17,7 +17,7 @@ using namespace vcc;
 
 #define LOG_ID L"Action File Generation"
 
-std::wstring VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig, const std::wstring &filePathHpp, const VPGEnumClass *enumClass)
+std::wstring VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig, const std::wstring &folderPathHpp, const VPGEnumClass *enumClass)
 {
     TRY
         assert(enumClass != nullptr);
@@ -49,7 +49,7 @@ std::wstring VPGActionFileGenerationService::GenerateHpp(const LogConfig *logCon
     return L"";
 }
 
-std::wstring VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig, const std::wstring &filePathCpp, const VPGEnumClass *enumClass)
+std::wstring VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig, const std::wstring &folderPathCpp, const VPGEnumClass *enumClass)
 {
     TRY
         assert(enumClass != nullptr);
