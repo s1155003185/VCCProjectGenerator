@@ -61,10 +61,15 @@ std::vector<std::wstring> VPGActionFileGenerationService::GenerateHpp(const LogC
 
             std::wstring propertyStr = L"";
             std::wstring assignmentStr = L"";
+            for (auto const str : property->GetClassProperties())
+            {
+                
+            }
 
             std::wstring action = L"class " + actionClassName + L" : public BaseAction\n"
                 "{\r\n"
                 + propertyStr
+                + (!propertyStr.empty() ? L"\r\n" : L"")
                 + INDENT + GetVccTagHeaderCustomClassProperties(VPGCodeType::Cpp, actionClassName)
                 + INDENT + GetVccTagTailerCustomClassProperties(VPGCodeType::Cpp, actionClassName)
                 + INDENT + L"private:\r\n"
