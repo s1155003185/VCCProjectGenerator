@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "log_config.hpp"
 #include "vpg_enum_class.hpp"
@@ -14,6 +15,10 @@ class VPGActionFileGenerationService
         ~VPGActionFileGenerationService() {}
 
     public:
-        static std::wstring GenerateHpp(const LogConfig *logConfig, const std::wstring &folderPathHpp, const VPGEnumClass *enumClass);
-        static std::wstring GenerateCpp(const LogConfig *logConfig, const std::wstring &foldPathCpp, const VPGEnumClass *enumClass);
+        static std::wstring GetActionFileNameWithoutExtension(const std::wstring &actionClassName, const std::wstring &projectPrefix);
+
+        static std::vector<std::wstring> GenerateHpp(const LogConfig *logConfig, const VPGEnumClass *enumClass,
+            const std::wstring &projectPrefix, const std::wstring &folderPathHpp);
+        static std::vector<std::wstring> GenerateCpp(const LogConfig *logConfig, const VPGEnumClass *enumClass,
+            const std::wstring &projectPrefix, const std::wstring &foldPathCpp);
 };

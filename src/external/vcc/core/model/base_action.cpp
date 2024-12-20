@@ -20,15 +20,21 @@ namespace vcc
     {
         _LogConfig = logConfig;
     }
-
-    std::shared_ptr<ThreadManager> BaseAction::GetThreadManager() const
+    
+    std::shared_ptr<BaseForm> BaseAction::GetParentForm() const
     {
-        return _ThreadManager;
+        TRY
+            auto baseForm = std::dynamic_pointer_cast<BaseForm>(_ParentObject);
+            return baseForm;
+        CATCH
+        return nullptr;
     }
 
-    void BaseAction::SetThreadManager(std::shared_ptr<ThreadManager> threadManager) const
+    void BaseAction::SetParentForm(std::shared_ptr<BaseForm> threadManager) const
     {
-        _ThreadManager = threadManager;
+        TRY
+            _ParentObject = threadManager;
+        CATCH
     }
 
     void BaseAction::LogRedoStart() const

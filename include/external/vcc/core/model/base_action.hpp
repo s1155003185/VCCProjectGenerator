@@ -4,9 +4,9 @@
 #include <string>
 
 #include "base_object.hpp"
+#include "base_form.hpp"
 #include "i_action.hpp"
 #include "log_config.hpp"
-#include "thread_manager.hpp"
 
 namespace vcc
 {
@@ -15,11 +15,10 @@ namespace vcc
         protected:
             mutable size_t _SeqNo = 0;
             mutable std::shared_ptr<LogConfig> _LogConfig = nullptr;
-            mutable std::shared_ptr<ThreadManager> _ThreadManager = nullptr;
 
             BaseAction() : BaseObject() {}
             virtual ~BaseAction() {}
-
+        
             virtual void LogRedoStart() const;
             virtual void LogRedoComplete() const;
             virtual void LogUndoStart() const;
@@ -32,9 +31,8 @@ namespace vcc
             virtual std::shared_ptr<LogConfig> GetLogConfig() const override;
             virtual void SetLogConfig(std::shared_ptr<LogConfig> logConfig) const override;
 
-            // Thead
-            virtual std::shared_ptr<ThreadManager> GetThreadManager() const override;
-            virtual void SetThreadManager(std::shared_ptr<ThreadManager> threadManager) const override;
+            virtual std::shared_ptr<BaseForm> GetParentForm() const override;
+            virtual void SetParentForm(std::shared_ptr<BaseForm> threadManager) const override;
 
             virtual size_t GetSeqNo() const override;
             virtual void SetSeqNo(const size_t &seqNo) const override;

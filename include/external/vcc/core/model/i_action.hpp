@@ -3,8 +3,8 @@
 #include <memory>
 #include <string>
 
+#include "base_form.hpp"
 #include "log_config.hpp"
-#include "thread_manager.hpp"
 
 namespace vcc
 {
@@ -28,8 +28,8 @@ namespace vcc
         virtual void SetLogConfig(std::shared_ptr<LogConfig> logConfig) const = 0;
         
         // Thead
-        virtual std::shared_ptr<ThreadManager> GetThreadManager() const = 0;
-        virtual void SetThreadManager(std::shared_ptr<ThreadManager> threadManager) const = 0;
+        virtual std::shared_ptr<BaseForm> GetParentForm() const = 0;
+        virtual void SetParentForm(std::shared_ptr<BaseForm> threadManager) const = 0;
         
         virtual void SetSeqNo(const size_t &seqNo) const = 0;
         virtual size_t GetSeqNo() const = 0;
