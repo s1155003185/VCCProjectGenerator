@@ -7,6 +7,7 @@
 #include "file_helper.hpp"
 
 #include "vpg_action_file_generation_service.hpp"
+#include "vpg_enum_class_reader.hpp"
 
 using namespace vcc;
 
@@ -15,35 +16,13 @@ class VPGActionFileGenerationServiceTest : public testing::Test
     GETSET_SPTR(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGActionFileGenerationServiceTest/");
 
+    MANAGER_SPTR(VPGEnumClassReader, Reader);
+
     public:
         void SetUp() override
         {
             this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
-
-            // this->_FilePathHpp = ConcatPaths({this->GetWorkspace(), L"object_factory.hpp"});
-            // this->_FilePathCpp = ConcatPaths({this->GetWorkspace(), L"object_factory.cpp"});
-
-            // this->_ExpectedHpp = L""
-            //     "#pragma once\r\n"
-            //     "\r\n"
-            //     "#include <memory>\r\n"
-            //     "\r\n"
-            //     "#include \"base_factory.hpp\"\r\n"
-            //     "#include \"i_object.hpp\"\r\n"
-            //     "#include \"object_type.hpp\"\r\n"
-            //     "\r\n"
-            //     "using namespace vcc;\r\n"
-            //     "\r\n"
-            //     "class ObjectFactory : public BaseFactory\r\n"
-            //     "{\r\n"
-            //     "    private:\r\n"
-            //     "        ObjectFactory() = default;\r\n"
-            //     "        virtual ~ObjectFactory() {}\r\n"
-            //     "\r\n"
-            //     "    public:\r\n"
-            //     "        static std::shared_ptr<IObject> Create(const ObjectType &objectType, std::shared_ptr<IObject> parentObject = nullptr);\r\n"
-            //     "};\r\n";
         }
 
         void TearDown() override
@@ -71,9 +50,9 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile)
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     this->GetReader()->Parse(enumClass, enumClassList);
-    EXPECT_EQ(VPGActionFileGenerationService::GenerateHpp(nullptr, L"", enumClassList.at(0)),
+    EXPECT_EQ(VPGActionFileGenerationService::GenerateHpp(nullptr, L"", enumClassList.at(0).get()),
         L"abc");
-    EXPECT_EQ(VPGActionFileGenerationService::GenerateCpp(nullptr, L"", enumClassList.at(0)),
+    EXPECT_EQ(VPGActionFileGenerationService::GenerateCpp(nullptr, L"", enumClassList.at(0).get()),
         L"def");
 }
 
@@ -96,32 +75,32 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     this->GetReader()->Parse(enumClass, enumClassList);
-    EXPECT_EQ(VPGActionFileGenerationService::GenerateHpp(nullptr, this->GetWorkspace(), enumClassList.at(0)), L"");
-    EXPECT_EQ(VPGActionFileGenerationService::GenerateCpp(nullptr, this->GetWorkspace(), enumClassList.at(0)), L"");
+    EXPECT_EQ(VPGActionFileGenerationService::GenerateHpp(nullptr, this->GetWorkspace(), enumClassList.at(0).get()), L"");
+    EXPECT_EQ(VPGActionFileGenerationService::GenerateCpp(nullptr, this->GetWorkspace(), enumClassList.at(0).get()), L"");
 
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetFilePathHpp(), L"vpg_git_form_add_workspace.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetFilePathCpp(), L"vpg_git_form_add_workspace.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetFilePathHpp(), L"vpg_git_form_work_normal_property.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetFilePathCpp(), L"vpg_git_form_work_normal_property.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetFilePathHpp(), L"vpg_git_form_work_object.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetFilePathCpp(), L"vpg_git_form_work_object.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetFilePathHpp(), L"vpg_git_form_work_list.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetFilePathCpp(), L"vpg_git_form_work_list.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetFilePathHpp(), L"vpg_git_form_work_list_object.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetFilePathCpp(), L"vpg_git_form_work_list_object.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetFilePathHpp(), L"vpg_git_form_delete_workspace.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetFilePathCpp(), L"vpg_git_form_delete_workspace.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_normal_property.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_normal_property.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_object.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_object.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_list.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_list.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_list_object.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_list_object.cpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.hpp"})));
+    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.cpp"})));
     
-    EXPECT_EQ(ReadFile((ConcatPaths({this->GetFilePathHpp(), L"vpg_git_form_add_workspace.hpp"})), L""));
-    EXPECT_EQ(ReadFile((ConcatPaths({this->GetFilePathCpp(), L"vpg_git_form_add_workspace.cpp"})), L""));
-    EXPECT_EQ(ReadFile((ConcatPaths({this->GetFilePathHpp(), L"vpg_git_form_work_normal_property.hpp"})), L""));
-    EXPECT_EQ(ReadFile((ConcatPaths({this->GetFilePathCpp(), L"vpg_git_form_work_normal_property.cpp"})), L""));
-    EXPECT_EQ(ReadFile((ConcatPaths({this->GetFilePathHpp(), L"vpg_git_form_work_object.hpp"})), L""));
-    EXPECT_EQ(ReadFile((ConcatPaths({this->GetFilePathCpp(), L"vpg_git_form_work_object.cpp"})), L""));
-    EXPECT_EQ(ReadFile((ConcatPaths({this->GetFilePathHpp(), L"vpg_git_form_work_list.hpp"})), L""));
-    EXPECT_EQ(ReadFile((ConcatPaths({this->GetFilePathCpp(), L"vpg_git_form_work_list.cpp"})), L""));
-    EXPECT_EQ(ReadFile((ConcatPaths({this->GetFilePathHpp(), L"vpg_git_form_work_list_object.hpp"})), L""));
-    EXPECT_EQ(ReadFile((ConcatPaths({this->GetFilePathCpp(), L"vpg_git_form_work_list_object.cpp"})), L""));
-    EXPECT_EQ(ReadFile((ConcatPaths({this->GetFilePathHpp(), L"vpg_git_form_delete_workspace.hpp"})), L""));
-    EXPECT_EQ(ReadFile((ConcatPaths({this->GetFilePathCpp(), L"vpg_git_form_delete_workspace.cpp"})), L""));
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.hpp"})), L"");
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.cpp"})), L"");
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_normal_property.hpp"})), L"");
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_normal_property.cpp"})), L"");
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_object.hpp"})), L"");
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_object.cpp"})), L"");
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_list.hpp"})), L"");
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_list.cpp"})), L"");
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_list_object.hpp"})), L"");
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_list_object.cpp"})), L"");
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.hpp"})), L"");
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.cpp"})), L"");
 }

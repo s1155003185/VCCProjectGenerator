@@ -21,10 +21,10 @@ std::wstring VPGActionFileGenerationService::GenerateHpp(const LogConfig *logCon
 {
     TRY
         assert(enumClass != nullptr);
-        if (!IsFileExists(filePathHpp))
-            return L"";
+        // if (!IsFileExists(folderPathHpp))
+        //     return L"";
         
-        LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file: " + filePathHpp);
+        // LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file: " + folderPathCpp);
 
         // header
         std::wstring content = L"";
@@ -43,8 +43,8 @@ std::wstring VPGActionFileGenerationService::GenerateHpp(const LogConfig *logCon
         // content = applicationStr;
         // content += propertyAccessorStr;
 
-        WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathHpp), L"vcc:dllInterface", content, L"//"), true);
-        LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file completed.");
+        // WriteFile(folderPathHpp, VPGFileGenerationService::GenerateFileContent(ReadFile(folderPathHpp), L"vcc:dllInterface", content, L"//"), true);
+        // LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file completed.");
     CATCH
     return L"";
 }
@@ -53,12 +53,12 @@ std::wstring VPGActionFileGenerationService::GenerateCpp(const LogConfig *logCon
 {
     TRY
         assert(enumClass != nullptr);
-        if (!IsFileExists(filePathCpp))
-            return L"";
+        // if (!IsFileExists(folderPathCpp))
+        //     return L"";
 
-        LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp file: " + filePathCpp);
-        // header
-        std::wstring content = L"";
+        // LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp file: " + folderPathCpp);
+        // // header
+        // std::wstring content = L"";
         // std::set<std::wstring> customIncludeFiles;
         // std::wstring applicationStr = GenerateApplicationCpp(option, customIncludeFiles);
         // std::wstring propertyAccessorStr = GeneratePropertyAccessorCpp(option, customIncludeFiles);
@@ -69,12 +69,12 @@ std::wstring VPGActionFileGenerationService::GenerateCpp(const LogConfig *logCon
         //     content += L"\r\n"
         //         "using namespace vcc;\r\n";
         // }
-        WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathCpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
+        //WriteFile(folderPathCpp, VPGFileGenerationService::GenerateFileContent(ReadFile(folderPathCpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
 
         // content
         // content = applicationStr;
         // content += propertyAccessorStr;
-        WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathCpp), L"vcc:dllInterface", content, L"//"), true);
+        //WriteFile(folderPathCpp, VPGFileGenerationService::GenerateFileContent(ReadFile(folderPathCpp), L"vcc:dllInterface", content, L"//"), true);
 
         LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp completed.");
     CATCH
