@@ -8,6 +8,7 @@
 
 #include "base_action.hpp"
 #include "class_macro.hpp"
+#include "i_action.hpp"
 
 namespace vcc
 {
@@ -35,7 +36,7 @@ namespace vcc
         int64_t GetFirstSeqNo() const;
         int64_t GetLastSeqNo() const;
 
-        int64_t DoAction(std::shared_ptr<BaseAction> action) const;
+        int64_t DoAction(std::shared_ptr<IAction> action) const;
         
         int64_t Redo(const int64_t &noOfStep = 1) const;
         int64_t RedoToSeqNo(const int64_t &seqNo) const;

@@ -20,7 +20,7 @@ class Application : public BaseForm
         std::set<std::shared_ptr<IObject>> _Forms;
 
         static std::shared_ptr<IObject> GetFormSharedPtr(IObject *IObject);
-        static const IForm *GetIFormPtrFromIObject(IObject *obj);
+        static IForm *GetIFormPtrFromIObject(IObject *obj);
 
         // <vcc:customApplicationProperties sync="RESERVE" gen="RESERVE">
         // </vcc:customApplicationProperties>
@@ -65,7 +65,7 @@ class Application : public BaseForm
 
         // Useless
         virtual std::shared_ptr<IObject> Clone() const override { return nullptr; }
-        virtual void DoAction(const int64_t &/*formProperty*/) const override {}
+        virtual void DoAction(const int64_t &/*formProperty*/) override {}
 
         // <vcc:customApplicationPublicFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customApplicationPublicFunctions>

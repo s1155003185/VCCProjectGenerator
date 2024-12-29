@@ -74,7 +74,7 @@ namespace vcc
         _SeqNo = seqNo; 
     }
 
-    void BaseAction::Redo() const 
+    void BaseAction::Redo() 
     {
         TRY
             LogRedoStart();
@@ -83,7 +83,7 @@ namespace vcc
         CATCH
     }
 
-    void BaseAction::Undo() const
+    void BaseAction::Undo()
     {
         TRY
             LogUndoStart();

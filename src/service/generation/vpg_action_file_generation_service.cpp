@@ -54,7 +54,8 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
             std::wstring actionClassName = className + property->GetPropertyName();
 
             std::wstring propertyStr = L"";
-            std::wstring assignmentStr = L"std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm";
+            std::wstring assignmentStrSimple = L"std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm";
+            std::wstring assignmentStr = assignmentStrSimple;
             for (auto const &property : property->GetClassProperties())
             {
                 if (property->GetPropertyType() != VPGEnumClassPropertyType::Manager && property->GetPropertyType() != VPGEnumClassPropertyType::Property)
@@ -111,16 +112,18 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
                 + INDENT + INDENT + L"virtual std::wstring GetUndoMessageStart() const override;\r\n"
                 + INDENT + INDENT + L"virtual std::wstring GetUndoMessageComplete() const override;\r\n"
                 "\r\n"
-                + INDENT + INDENT + L"virtual void OnRedo() const override;\r\n"
-                + INDENT + INDENT + L"virtual void OnUndo() const override;\r\n"
+                + INDENT + INDENT + L"virtual void OnRedo() override;\r\n"
+                + INDENT + INDENT + L"virtual void OnUndo() override;\r\n"
                 "\r\n"
                 + INDENT + INDENT + GetVccTagHeaderCustomClassProtectedFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
                 + INDENT + INDENT + GetVccTagTailerCustomClassProtectedFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
                 "\r\n"
                 + INDENT + L"public:\r\n"
                 + INDENT + INDENT + actionClassName + L"() : BaseAction() {}\r\n"
-                + INDENT + INDENT + actionClassName + L"(" + assignmentStr + L");\r\n"
-                + INDENT + INDENT + L"~" + actionClassName + L"() {}\r\n"
+                + INDENT + INDENT + actionClassName + L"(" + assignmentStrSimple + L");\r\n";
+                if (assignmentStr != assignmentStrSimple)
+                    action += INDENT + INDENT + actionClassName + L"(" + assignmentStr + L");\r\n";
+                action += INDENT + INDENT + L"~" + actionClassName + L"() {}\r\n"
                 "\r\n"
                 + INDENT + INDENT + GetVccTagHeaderCustomClassPublicFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
                 + INDENT + INDENT + GetVccTagTailerCustomClassPublicFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
@@ -197,10 +200,14 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
             // class name
             std::wstring actionClassName = className + property->GetPropertyName();
 
-            std::wstring assignmentStr = L"std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm";
+            std::wstring assignmentStrSimple = L"std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm";
+            std::wstring assignmentStr = assignmentStrSimple;
+            std::vector<std::wstring> propertyAssignmentsSimple;
+            propertyAssignmentsSimple.push_back(L"_LogConfig = logConfig");
+            propertyAssignmentsSimple.push_back(L"_ParentObject = parentForm");
             std::vector<std::wstring> propertyAssignments;
-            propertyAssignments.push_back(L"_LogConfig = logConfig");
-            propertyAssignments.push_back(L"_ParentObject = parentForm");
+            propertyAssignments.insert(propertyAssignments.end(), propertyAssignmentsSimple.begin(), propertyAssignmentsSimple.end());
+
             for (auto const &property : property->GetClassProperties())
             {
                 if (property->GetPropertyType() != VPGEnumClassPropertyType::Manager && property->GetPropertyType() != VPGEnumClassPropertyType::Property)
@@ -239,12 +246,20 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 propertyAssignments.push_back(L"_" + property->GetPropertyName() + L" = " + propertyName);
             }
 
-            std::wstring action = actionClassName + L"::" + actionClassName + L"(" + assignmentStr + L") : BaseAction()\r\n"
-                "{\r\n";
-            for (auto const &str : propertyAssignments)
+            std::wstring action = actionClassName + L"::" + actionClassName + L"(" + assignmentStrSimple + L") : BaseAction()\r\n"
+            "{\r\n";
+            for (auto const &str : propertyAssignmentsSimple)
                 action += INDENT + str + L";\r\n";
-            action += L"}\r\n"
-                "\r\n"
+            action += L"}\r\n";
+            if (assignmentStrSimple != assignmentStr) {
+                action += L"\r\n" + actionClassName + L"::" + actionClassName + L"(" + assignmentStr + L") : BaseAction()\r\n"
+                "{\r\n";
+                for (auto const &str : propertyAssignments)
+                    action += INDENT + str + L";\r\n";
+                action += L"}\r\n";
+            }
+
+            action += L"\r\n"
                 "std::wstring " + actionClassName + L"::GetRedoMessageStart() const\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
@@ -281,7 +296,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 + INDENT + L"return L\"\";\r\n"
                 "}\r\n"
                 "\r\n"
-                "void " + actionClassName + L"::OnRedo() const\r\n"
+                "void " + actionClassName + L"::OnRedo()\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
@@ -289,7 +304,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 + INDENT + L"CATCH\r\n"
                 "}\r\n"
                 "\r\n"
-                "void " + actionClassName + L"::OnUndo() const\r\n"
+                "void " + actionClassName + L"::OnUndo()\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"

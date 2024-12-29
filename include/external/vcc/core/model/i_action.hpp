@@ -13,8 +13,8 @@ namespace vcc
         IAction() {}
         virtual ~IAction() {}
 
-        virtual void OnRedo() const = 0;
-        virtual void OnUndo() const = 0;
+        virtual void OnRedo() = 0;
+        virtual void OnUndo() = 0;
 
         virtual std::wstring GetRedoMessageStart() const = 0;
         virtual std::wstring GetRedoMessageComplete() const = 0;
@@ -29,7 +29,7 @@ namespace vcc
         virtual void SetSeqNo(const size_t &seqNo) const = 0;
         virtual size_t GetSeqNo() const = 0;
         
-        virtual void Redo() const = 0;
-        virtual void Undo() const = 0;
+        virtual void Redo() = 0;
+        virtual void Undo() = 0;
     };
 }

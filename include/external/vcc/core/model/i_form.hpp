@@ -45,15 +45,16 @@ namespace vcc
             virtual void InitializeValue() const = 0;
 
             // Action
-            virtual void DoAction(const int64_t &formProperty) const = 0;
+            virtual void DoAction(const int64_t &formProperty) = 0;
+            virtual void ExecuteAction(std::shared_ptr<IAction> action, bool isNoHistory) = 0;
             virtual int64_t GetActionFirstSeqNo() const = 0;
             virtual int64_t GetActionLastSeqNo() const = 0;
             
-            virtual int64_t RedoAction(const int64_t &noOfStep = 1) const = 0;
-            virtual int64_t RedoActionToSeqNo(const int64_t &seqNo) const = 0;
+            virtual int64_t RedoAction(const int64_t &noOfStep = 1) = 0;
+            virtual int64_t RedoActionToSeqNo(const int64_t &seqNo) = 0;
 
-            virtual int64_t UndoAction(const int64_t &noOfStep = 1) const = 0;
-            virtual int64_t UndoActionToSeqNo(const int64_t &seqNo) const = 0;
+            virtual int64_t UndoAction(const int64_t &noOfStep = 1) = 0;
+            virtual int64_t UndoActionToSeqNo(const int64_t &seqNo) = 0;
 
             virtual int64_t ClearAction() const = 0;
             virtual int64_t TruncateAction() const = 0;

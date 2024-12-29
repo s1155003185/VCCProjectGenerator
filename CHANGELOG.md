@@ -6,6 +6,7 @@
 - Support Class Macro ACTION, MANAGER_SPTR, MANAGER_SPTR_NULL, MANAGER_SPTR_PARENT
 - Add InitializeComponent(), OnInitialzieComponent(), InitialzeValues() and OnInitializeValues()
 - Remove Java Form Initialize() and Reload(). Use should use Action to initalize or reload
+- Initialzie Action
 
 ### [v0.2.5] - 2024-12-08: Form - Generate Java Form
 - Form Action - Create, Reload, Close

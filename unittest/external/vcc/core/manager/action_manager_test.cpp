@@ -16,8 +16,8 @@ class ActionManagerTestClass final : public BaseAction
         int uuid = 0;
     
     protected:
-        virtual void OnRedo() const override {}
-        virtual void OnUndo() const override {}
+        virtual void OnRedo() override {}
+        virtual void OnUndo() override {}
         
         virtual std::wstring GetRedoMessageStart() const override { return L""; }
         virtual std::wstring GetRedoMessageComplete() const override { return L""; }

@@ -39,7 +39,7 @@ void VPGWorkspaceForm::InitializeComponents() const
     CATCH
 }
 
-void VPGWorkspaceForm::DoAction(const int64_t &formProperty) const
+void VPGWorkspaceForm::DoAction(const int64_t &formProperty)
 {
     TRY
         switch(static_cast<VPGWorkspaceFormProperty>(formProperty))

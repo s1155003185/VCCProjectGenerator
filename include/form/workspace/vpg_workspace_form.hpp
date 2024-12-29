@@ -37,7 +37,7 @@ class VPGWorkspaceForm : public BaseForm
 
         virtual void InitializeComponents() const override;
 
-        virtual void DoAction(const int64_t &formProperty) const override;
+        virtual void DoAction(const int64_t &formProperty) override;
 
         // <vcc:customVPGWorkspaceFormPublicFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGWorkspaceFormPublicFunctions>

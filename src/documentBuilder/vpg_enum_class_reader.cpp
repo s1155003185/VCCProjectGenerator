@@ -263,7 +263,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::NoAccess;
             else if (Equal(attribute, attributeToken + L"Inherit", true))
                 property->SetIsInherit(true);
-            // Class
+            // Action
             else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Class")) {
                 auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Class");
                 assert(jsonAttributes != nullptr);
@@ -283,8 +283,10 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
                         }
                     }
                 }
-
             }
+            else if (Equal(attribute, attributeToken + L"NoHistory", true))
+                property->SetIsNoHistory(true);
+            // Command
             else if (Equal(attribute, attributeToken + L"Command", true)) {
                 std::wstring commandToken = attributeToken + L"Command";
                 commandToken = attribute.substr(commandToken.length());

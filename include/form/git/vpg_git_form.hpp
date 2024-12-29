@@ -36,7 +36,7 @@ class VPGGitForm : public BaseForm
 
         virtual void InitializeComponents() const override;
 
-        virtual void DoAction(const int64_t &formProperty) const override;
+        virtual void DoAction(const int64_t &formProperty) override;
 
         // <vcc:customVPGGitFormPublicFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGGitFormPublicFunctions>

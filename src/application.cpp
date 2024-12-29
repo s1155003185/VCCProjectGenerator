@@ -38,7 +38,7 @@ std::shared_ptr<IObject> Application::GetFormSharedPtr(IObject *form)
     return nullptr;
 }
 
-const IForm *Application::GetIFormPtrFromIObject(IObject *obj)
+IForm *Application::GetIFormPtrFromIObject(IObject *obj)
 {
     TRY
         return static_cast<BaseForm *>(obj);

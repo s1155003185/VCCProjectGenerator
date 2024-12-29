@@ -43,7 +43,7 @@ std::wstring GetHppClass(const std::wstring &actionName, const std::vector<std::
         for (auto const &property : properties)
             propertyStr += INDENT + property + L"\r\n";
 
-        return L"class VPGGitForm" + actionName + L" : public BaseAction\r\n"
+        std::wstring action = L"class VPGGitForm" + actionName + L" : public BaseAction\r\n"
             "{\r\n"
             + propertyStr
             + (!propertyStr.empty() ? L"\r\n" : L"")
@@ -60,20 +60,23 @@ std::wstring GetHppClass(const std::wstring &actionName, const std::vector<std::
             "        virtual std::wstring GetUndoMessageStart() const override;\r\n"
             "        virtual std::wstring GetUndoMessageComplete() const override;\r\n"
             "\r\n"
-            "        virtual void OnRedo() const override;\r\n"
-            "        virtual void OnUndo() const override;\r\n"
+            "        virtual void OnRedo() override;\r\n"
+            "        virtual void OnUndo() override;\r\n"
             "\r\n"
             "        // <vcc:customVPGGitForm" + actionName + L"ProtectedFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
             "        // </vcc:customVPGGitForm" + actionName + L"ProtectedFunctions>\r\n"
             "\r\n"
             "    public:\r\n"
             "        VPGGitForm" + actionName + L"() : BaseAction() {}\r\n"
-            "        VPGGitForm" + actionName + L"(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm" + (!assignment.empty() ? L", " : L"") + assignment + L");\r\n"
-            "        ~VPGGitForm" + actionName + L"() {}\r\n"
+            "        VPGGitForm" + actionName + L"(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm);\r\n";
+        if (!assignment.empty())
+            action += L"        VPGGitForm" + actionName + L"(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm, " + assignment + L");\r\n";
+        action += L"        ~VPGGitForm" + actionName + L"() {}\r\n"
             "\r\n"
             "        // <vcc:customVPGGitForm" + actionName + L"PublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
             "        // </vcc:customVPGGitForm" + actionName + L"PublicFunctions>\r\n"
             "};\r\n";
+        return action;
     CATCH
     return L"";
 }
@@ -81,17 +84,24 @@ std::wstring GetHppClass(const std::wstring &actionName, const std::vector<std::
 std::wstring GetCppClass(const std::wstring &actionName, const std::vector<std::wstring> &properties, const std::wstring &assignment)
 {
     TRY
-        std::wstring propertyStr = L"";
-        propertyStr += INDENT + L"_LogConfig = logConfig;\r\n"
+        std::wstring propertyStr = INDENT + L"_LogConfig = logConfig;\r\n"
             + INDENT + L"_ParentObject = parentForm;\r\n";
+        std::wstring propertyStrSimple = propertyStr;
+        
         for (auto const &property : properties)
             propertyStr += INDENT + property + L"\r\n";
 
-        return L"VPGGitForm" + actionName + L"::VPGGitForm" + actionName + L"(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm" + (!assignment.empty() ? L", " : L"") + assignment + L") : BaseAction()\r\n"
+        std::wstring action = L"VPGGitForm" + actionName + L"::VPGGitForm" + actionName + L"(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()\r\n"
             "{\r\n"
-            + propertyStr
-            + L"}\r\n"
-            "\r\n"
+            + propertyStrSimple
+            + L"}\r\n";
+        if (propertyStr != propertyStrSimple)
+            action += L"\r\n"
+                "VPGGitForm" + actionName + L"::VPGGitForm" + actionName + L"(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm" + (!assignment.empty() ? L", " : L"") + assignment + L") : BaseAction()\r\n"
+                "{\r\n"
+                + propertyStr
+                + L"}\r\n";
+        action += L"\r\n"
             "std::wstring VPGGitForm" + actionName + L"::GetRedoMessageStart() const\r\n"
             "{\r\n"
             "    TRY\r\n"
@@ -128,7 +138,7 @@ std::wstring GetCppClass(const std::wstring &actionName, const std::vector<std::
             "    return L\"\";\r\n"
             "}\r\n"
             "\r\n"
-            "void VPGGitForm" + actionName + L"::OnRedo() const\r\n"
+            "void VPGGitForm" + actionName + L"::OnRedo()\r\n"
             "{\r\n"
             "    TRY\r\n"
             "        // <vcc:VPGGitForm" + actionName + L"OnRedo sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
@@ -136,13 +146,14 @@ std::wstring GetCppClass(const std::wstring &actionName, const std::vector<std::
             "    CATCH\r\n"
             "}\r\n"
             "\r\n"
-            "void VPGGitForm" + actionName + L"::OnUndo() const\r\n"
+            "void VPGGitForm" + actionName + L"::OnUndo()\r\n"
             "{\r\n"
             "    TRY\r\n"
             "        // <vcc:VPGGitForm" + actionName + L"OnUndo sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
             "        // </vcc:VPGGitForm" + actionName + L"OnUndo>\r\n"
             "    CATCH\r\n"
             "}\r\n";
+        return action;
     CATCH
     return L"";
 }

@@ -41,7 +41,7 @@ void VPGGitForm::InitializeComponents() const
     CATCH
 }
 
-void VPGGitForm::DoAction(const int64_t &formProperty) const
+void VPGGitForm::DoAction(const int64_t &formProperty)
 {
     TRY
         switch(static_cast<VPGGitFormProperty>(formProperty))

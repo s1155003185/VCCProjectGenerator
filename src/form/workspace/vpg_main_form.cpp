@@ -59,7 +59,7 @@ std::wstring VPGMainFormAddWorkspace::GetUndoMessageComplete() const
     return L"";
 }
 
-void VPGMainFormAddWorkspace::OnRedo() const
+void VPGMainFormAddWorkspace::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormAddWorkspaceOnRedo sync="RESERVE" gen="RESERVE">
@@ -67,7 +67,7 @@ void VPGMainFormAddWorkspace::OnRedo() const
     CATCH
 }
 
-void VPGMainFormAddWorkspace::OnUndo() const
+void VPGMainFormAddWorkspace::OnUndo()
 {
     TRY
         // <vcc:VPGMainFormAddWorkspaceOnUndo sync="RESERVE" gen="RESERVE">
@@ -117,7 +117,7 @@ std::wstring VPGMainFormDeleteWorkspace::GetUndoMessageComplete() const
     return L"";
 }
 
-void VPGMainFormDeleteWorkspace::OnRedo() const
+void VPGMainFormDeleteWorkspace::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormDeleteWorkspaceOnRedo sync="RESERVE" gen="RESERVE">
@@ -125,7 +125,7 @@ void VPGMainFormDeleteWorkspace::OnRedo() const
     CATCH
 }
 
-void VPGMainFormDeleteWorkspace::OnUndo() const
+void VPGMainFormDeleteWorkspace::OnUndo()
 {
     TRY
         // <vcc:VPGMainFormDeleteWorkspaceOnUndo sync="RESERVE" gen="RESERVE">
@@ -159,7 +159,7 @@ void VPGMainForm::InitializeComponents() const
     CATCH
 }
 
-void VPGMainForm::DoAction(const int64_t &formProperty) const
+void VPGMainForm::DoAction(const int64_t &formProperty)
 {
     TRY
         switch(static_cast<VPGMainFormProperty>(formProperty))
@@ -177,15 +177,23 @@ void VPGMainForm::DoAction(const int64_t &formProperty) const
     CATCH
 }
 
-void VPGMainForm::DoAddWorkspace() const
+void VPGMainForm::DoAddWorkspace()
 {
     TRY
+        auto action = std::make_shared<VPGMainFormAddWorkspace>(_LogConfig, GetSharedPtr());
+        // <vcc:VPGMainFormDoAddWorkspace sync="RESERVE" gen="RESERVE">
+        // </vcc:VPGMainFormDoAddWorkspace>
+        ExecuteAction(action, false);
     CATCH
 }
 
-void VPGMainForm::DoDeleteWorkspace() const
+void VPGMainForm::DoDeleteWorkspace()
 {
     TRY
+        auto action = std::make_shared<VPGMainFormDeleteWorkspace>(_LogConfig, GetSharedPtr());
+        // <vcc:VPGMainFormDoDeleteWorkspace sync="RESERVE" gen="RESERVE">
+        // </vcc:VPGMainFormDoDeleteWorkspace>
+        ExecuteAction(action, false);
     CATCH
 }
 

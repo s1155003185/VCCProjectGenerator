@@ -32,8 +32,8 @@ class VPGMainFormAddWorkspace : public BaseAction
         virtual std::wstring GetUndoMessageStart() const override;
         virtual std::wstring GetUndoMessageComplete() const override;
 
-        virtual void OnRedo() const override;
-        virtual void OnUndo() const override;
+        virtual void OnRedo() override;
+        virtual void OnUndo() override;
 
         // <vcc:customVPGMainFormAddWorkspaceProtectedFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormAddWorkspaceProtectedFunctions>
@@ -62,8 +62,8 @@ class VPGMainFormDeleteWorkspace : public BaseAction
         virtual std::wstring GetUndoMessageStart() const override;
         virtual std::wstring GetUndoMessageComplete() const override;
 
-        virtual void OnRedo() const override;
-        virtual void OnUndo() const override;
+        virtual void OnRedo() override;
+        virtual void OnUndo() override;
 
         // <vcc:customVPGMainFormDeleteWorkspaceProtectedFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormDeleteWorkspaceProtectedFunctions>
@@ -102,7 +102,7 @@ class VPGMainForm : public BaseForm
 
         virtual void InitializeComponents() const override;
 
-        virtual void DoAction(const int64_t &formProperty) const override;
+        virtual void DoAction(const int64_t &formProperty) override;
 
         // <vcc:customVPGMainFormPublicFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormPublicFunctions>

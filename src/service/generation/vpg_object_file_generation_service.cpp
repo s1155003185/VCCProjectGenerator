@@ -11,6 +11,7 @@
 #include "string_helper.hpp"
 
 #include "vpg_action_file_generation_service.hpp"
+#include "vpg_class_helper.hpp"
 #include "vpg_enum_class.hpp"
 #include "vpg_file_sync_service.hpp"
 #include "vpg_include_path_service.hpp"
@@ -504,7 +505,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnum
             result += L"\r\n"
                 + INDENT + INDENT + L"virtual void InitializeComponents() const override;\r\n"
                 "\r\n"
-                + INDENT + INDENT + L"virtual void DoAction(const int64_t &formProperty) const override;\r\n";
+                + INDENT + INDENT + L"virtual void DoAction(const int64_t &formProperty) override;\r\n";
         }
     CATCH
     return result;
@@ -993,13 +994,13 @@ std::wstring VPGObjectFileGenerationService::GetCppInitialize(const VPGEnumClass
     return result;
 }
 
-std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *enumClass, const std::wstring &className)
+std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *enumClass, const std::wstring &classPrefix, const std::wstring &className)
 {
     std::wstring result = L"";
     TRY
         if (enumClass->GetType() == VPGEnumClassType::Form) {
             result += L"\r\n"
-                "void " + className + L"::DoAction(const int64_t &formProperty) const\r\n"
+                "void " + className + L"::DoAction(const int64_t &formProperty)\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + L"switch(static_cast<" + enumClass->GetName() + L">(formProperty))\r\n"
@@ -1022,10 +1023,32 @@ std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *en
                 if (property->GetPropertyType() != VPGEnumClassPropertyType::Action || property->GetIsInherit())
                     continue;
                 
+                std::wstring assignmentStr = L"_LogConfig, GetSharedPtr()";
+                if (!property->GetClassAssignments().empty()) {
+                    if (property->GetClassProperties().size() != property->GetClassAssignments().size())
+                        THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Enum Class " + enumClass->GetName() + L" Properties and Assignments Attribute @@Class ");
+
+                    for (size_t i = 0; i < property->GetClassAssignments().size(); i++) {
+                        std::wstring assignment = property->GetClassAssignments(i);
+                        if (IsStartWith(property->GetClassProperties(i)->GetMacro(), L"GETSET")) {
+                            if (Equal(property->GetClassProperties(i)->GetType1(), L"std::wstring"))
+                                assignment = L"L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, assignment);
+                            else if (Equal(property->GetClassProperties(i)->GetType1(), L"std::string"))
+                                assignment = GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, assignment);
+                        }
+                        assignmentStr += L", " + assignment;
+                    }
+                }
+
+                std::wstring functionName = L"Do" + property->GetPropertyName();
                 result += L"\r\n"
-                    "void " + className + L"::Do" + property->GetPropertyName() + L"() const\r\n"
+                    "void " + className + L"::" + functionName + L"()\r\n"
                     "{\r\n"
                     + INDENT + L"TRY\r\n"
+                    + INDENT + INDENT + L"auto action = std::make_shared<" + GetActionClassName(classPrefix, enumClass, property.get()) + L">(" + assignmentStr + L");\r\n"
+                    + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", className, functionName) + L"\r\n"
+                    + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", className, functionName) + L"\r\n"
+                    + INDENT + INDENT + L"ExecuteAction(action, " + (property->GetIsNoHistory() ? L"true" : L"false") + L");\r\n"
                     + INDENT + L"CATCH\r\n"
                     "}\r\n";
             }
@@ -1139,7 +1162,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 + GetCppCloneFunctions(enumClass.get(), className)
                 + GetCppJsonFunction(className, enumClassMapping, enumClass)
                 + GetCppInitialize(enumClass.get(), className, baseClassNameWithoutQuote)
-                + GetCppAction(enumClass.get(), className);
+                + GetCppAction(enumClass.get(), classPrefix, className);
         }
 
         content += GetCppCustomFunction(isIncludeForm);

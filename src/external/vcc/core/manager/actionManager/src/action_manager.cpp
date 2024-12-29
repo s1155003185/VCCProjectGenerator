@@ -1,5 +1,6 @@
 #include "action_manager.hpp"
 
+#include <assert.h>
 #include <math.h>
 
 #include "exception_macro.hpp"
@@ -99,7 +100,7 @@ namespace vcc
         return _CurrentSeqNo;
     }
 
-    int64_t ActionManager::DoAction(std::shared_ptr<BaseAction> action) const
+    int64_t ActionManager::DoAction(std::shared_ptr<IAction> action) const
     {
         TRY
             //std::unique_lock lock(_mutex);
@@ -108,12 +109,15 @@ namespace vcc
             // 2. Append action
             // 3. Do Action
             // 4. Current Index + 1
+            auto baseAction = std::dynamic_pointer_cast<BaseAction>(action);
+            assert(baseAction != nullptr);
+
             _RemoveAction(_GetFirstSeqNo(false) - _CurrentSeqNo, false);
             if (_Actions.size() > 0)
                 _MaxSeqNo = _GetFirstSeqNo(false);
             int64_t nextSeqNo = _MaxSeqNo + 1;
             action->SetSeqNo(nextSeqNo);
-            _Actions.emplace(nextSeqNo, action);
+            _Actions.emplace(nextSeqNo, baseAction);
             action->Redo();
             _MaxSeqNo = _CurrentSeqNo = _GetFirstSeqNo(false);
 

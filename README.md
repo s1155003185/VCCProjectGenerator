@@ -6,6 +6,8 @@ Maintain those standard already stable long time ago. No reason to implement twi
 Current Stage Objective: Start VCC Project Manager (Multi Project Handling), including Java Interface, Thread, Form, Action, Git.
 
 Note: Still in initialize version, will have full review when official release
+Note: Need to review usage of const - always have const for getter and no const for setter
+Note: Need to review name of helper function
 
 Note: For Generator, if version not match, it will drop the template in Document/VCC/VCCModule and clone new one.
     But in Window version, Drop Create Method not work as Git still holds the folder a few while after executing Git Command.
@@ -767,7 +769,7 @@ Note:
     Command used in VCC generator, can be any text in xxx without @@
 
 #### Field Attribute
-Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Class { "Properties\ : [ "GETSET(std::wstring, Name, L\"\")", "GETSET(int64_t, Age, 0)" ], "Assignment": [ \"Sam\", \"6\" ] }] [@@Command xxx]
+Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Class { "Properties\ : [ "GETSET(std::wstring, Name, L\"\")", "GETSET(int64_t, Age, 0)" ], "Assignment": [ \"Sam\", \"6\" ] }] [@@NoHistory] [@@Command xxx]
 
 {...}: Compulsory
 []: Optional
@@ -833,6 +835,10 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Class { "Properties\ : [ "GET
             Value is array of values that should be initialized when creating object. Number of elements should be the same as that of Properties.
             If not stated, Action() will be genrated.
             If stated, Action(L"Sam", 6) will be generated.
+
+[@@NoHistory]
+    Action Only.
+    Will not add to Action Manager. After executing Do, this action cannot be found in Action List. So, this action cannot be Undo.
 
 [@@Command xxx]
     Command used in VCC generator, can be any text in xxx without @@

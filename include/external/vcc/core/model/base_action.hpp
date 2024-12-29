@@ -33,7 +33,7 @@ namespace vcc
             virtual size_t GetSeqNo() const override;
             virtual void SetSeqNo(const size_t &seqNo) const override;
 
-            virtual void Redo() const override;
-            virtual void Undo() const override;
+            virtual void Redo() override;
+            virtual void Undo() override;
     };
 }

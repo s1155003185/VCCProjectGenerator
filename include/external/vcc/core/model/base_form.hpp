@@ -54,14 +54,15 @@ namespace vcc
         virtual void InitializeValue() const override;
         
         // Action
+        virtual void ExecuteAction(std::shared_ptr<IAction> action, bool isNoHistory) override;
         virtual int64_t GetActionFirstSeqNo() const override;
         virtual int64_t GetActionLastSeqNo() const override;
         
-        virtual int64_t RedoAction(const int64_t &noOfStep = 1) const override;
-        virtual int64_t RedoActionToSeqNo(const int64_t &seqNo) const override;
+        virtual int64_t RedoAction(const int64_t &noOfStep = 1) override;
+        virtual int64_t RedoActionToSeqNo(const int64_t &seqNo) override;
 
-        virtual int64_t UndoAction(const int64_t &noOfStep = 1) const override;
-        virtual int64_t UndoActionToSeqNo(const int64_t &seqNo) const  override;
+        virtual int64_t UndoAction(const int64_t &noOfStep = 1) override;
+        virtual int64_t UndoActionToSeqNo(const int64_t &seqNo) override;
 
         virtual int64_t ClearAction() const override;
         virtual int64_t TruncateAction() const override;
