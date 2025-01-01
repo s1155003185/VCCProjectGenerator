@@ -108,13 +108,19 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
                 "\r\n"
                 + INDENT + L"protected:\r\n"
                 + INDENT + INDENT + L"virtual std::wstring GetRedoMessageStart() const override;\r\n"
-                + INDENT + INDENT + L"virtual std::wstring GetRedoMessageComplete() const override;\r\n"
-                + INDENT + INDENT + L"virtual std::wstring GetUndoMessageStart() const override;\r\n"
-                + INDENT + INDENT + L"virtual std::wstring GetUndoMessageComplete() const override;\r\n"
-                "\r\n"
-                + INDENT + INDENT + L"virtual void OnRedo() override;\r\n"
-                + INDENT + INDENT + L"virtual void OnUndo() override;\r\n"
-                "\r\n"
+                + INDENT + INDENT + L"virtual std::wstring GetRedoMessageComplete() const override;\r\n";
+            
+            if (!property->GetIsNoHistory())
+                action += INDENT + INDENT + L"virtual std::wstring GetUndoMessageStart() const override;\r\n"
+                    + INDENT + INDENT + L"virtual std::wstring GetUndoMessageComplete() const override;\r\n";
+                
+            action += L"\r\n"
+                + INDENT + INDENT + L"virtual void OnRedo() override;\r\n";
+
+            if (!property->GetIsNoHistory())
+                action += INDENT + INDENT + L"virtual void OnUndo() override;\r\n";
+            
+            action += L"\r\n"
                 + INDENT + INDENT + GetVccTagHeaderCustomClassProtectedFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
                 + INDENT + INDENT + GetVccTagTailerCustomClassProtectedFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
                 "\r\n"
@@ -276,41 +282,46 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetRedoMessageComplete") + L"\r\n"
                 + INDENT + L"CATCH\r\n"
                 + INDENT + L"return L\"\";\r\n"
-                "}\r\n"
-                "\r\n"
-                "std::wstring " + actionClassName + L"::GetUndoMessageStart() const\r\n"
-                "{\r\n"
-                + INDENT + L"TRY\r\n"
-                + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetUndoMessageStart") + L"\r\n"
-                + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetUndoMessageStart") + L"\r\n"
-                + INDENT + L"CATCH\r\n"
-                + INDENT + L"return L\"\";\r\n"
-                "}\r\n"
-                "\r\n"
-                "std::wstring " + actionClassName + L"::GetUndoMessageComplete() const\r\n"
-                "{\r\n"
-                + INDENT + L"TRY\r\n"
-                + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetUndoMessageComplete") + L"\r\n"
-                + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetUndoMessageComplete") + L"\r\n"
-                + INDENT + L"CATCH\r\n"
-                + INDENT + L"return L\"\";\r\n"
-                "}\r\n"
-                "\r\n"
+                "}\r\n";
+            
+            if (!property->GetIsNoHistory())
+                action += L"\r\n"
+                    "std::wstring " + actionClassName + L"::GetUndoMessageStart() const\r\n"
+                    "{\r\n"
+                    + INDENT + L"TRY\r\n"
+                    + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetUndoMessageStart") + L"\r\n"
+                    + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetUndoMessageStart") + L"\r\n"
+                    + INDENT + L"CATCH\r\n"
+                    + INDENT + L"return L\"\";\r\n"
+                    "}\r\n"
+                    "\r\n"
+                    "std::wstring " + actionClassName + L"::GetUndoMessageComplete() const\r\n"
+                    "{\r\n"
+                    + INDENT + L"TRY\r\n"
+                    + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetUndoMessageComplete") + L"\r\n"
+                    + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetUndoMessageComplete") + L"\r\n"
+                    + INDENT + L"CATCH\r\n"
+                    + INDENT + L"return L\"\";\r\n"
+                    "}\r\n";
+
+            action += L"\r\n"
                 "void " + actionClassName + L"::OnRedo()\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
                 + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
                 + INDENT + L"CATCH\r\n"
-                "}\r\n"
-                "\r\n"
-                "void " + actionClassName + L"::OnUndo()\r\n"
-                "{\r\n"
-                + INDENT + L"TRY\r\n"
-                + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
-                + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
-                + INDENT + L"CATCH\r\n"
                 "}\r\n";
+
+            if (!property->GetIsNoHistory())
+                action += L"\r\n"
+                    "void " + actionClassName + L"::OnUndo()\r\n"
+                    "{\r\n"
+                    + INDENT + L"TRY\r\n"
+                    + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
+                    + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
+                    + INDENT + L"CATCH\r\n"
+                    "}\r\n";
 
             if (isSeperateFile) {
                 // Generate to seperate files

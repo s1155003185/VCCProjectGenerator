@@ -8,6 +8,7 @@
 #include "file_helper.hpp"
 #include "log_config.hpp"
 
+#include "vpg_class_helper.hpp"
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_generation_option.hpp"
 #include "vpg_generation_option_interface_type.hpp"
@@ -921,6 +922,14 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
                 + INDENT + formActionStr
                 + INDENT + L"// </editor-fold>\r\n";
         }
+        std::wstring  formCustomActionStr = VPGJavaGenerationService::GenerateFormCustomAction(projectPrefix, enumClass);
+        if (!formCustomActionStr.empty()) {
+            LTrim(formCustomActionStr);
+            formCustomActionStr = L"\r\n"
+                + INDENT + L"// <editor-fold defaultstate=\"collapsed\" desc=\"Generated Form Custom Actions\">\r\n"
+                + INDENT + formCustomActionStr
+                + INDENT + L"// </editor-fold>\r\n";
+        }
         
         result += L"package " + packageFolder + L";\r\n"
             "\r\n";
@@ -946,6 +955,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
         }
         result += getterSetterStr
             + formActionStr
+            + formCustomActionStr
             + L"}\r\n";
     CATCH
     return result;
@@ -960,10 +970,7 @@ std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &pr
     std::wstring result = L"";
     TRY
         std::map<std::wstring, std::wstring> formActions;
-        // General
-
         // Form Action
-        // formActions.insert(std::make_pair(L"doAction", L"DLLEXPORT void ApplicationDoFormAction(void *form, int64_t formProperty);\r\n"));
         formActions.insert(std::make_pair(L"getActionFirstSeqNo",
             L"public long getActionFirstSeqNo() {\r\n"
             + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationGetFormActionFirstSeqNo(Handle);\r\n"
@@ -1016,8 +1023,6 @@ std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &pr
             + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationCloseForm(Handle, isForce);\r\n"
             "}\r\n"));
         
-        // TODO: Custom
-
         for (auto const &action : formActions) {
             std::vector<std::wstring> lines = SplitStringByLine(action.second);
             result += L"\r\n";
@@ -1030,6 +1035,37 @@ std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &pr
     return result;
 }
 
+std::wstring VPGJavaGenerationService::GenerateFormCustomAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass)
+{
+    assert(enumClass != nullptr);
+    if (enumClass->GetType() != VPGEnumClassType::Form)
+        return L"";
+    
+    std::wstring result = L"";
+    TRY
+        std::map<std::wstring, std::wstring> formActions;
+        for (auto const &property : enumClass->GetProperties()) {
+            if (property->GetPropertyType() != VPGEnumClassPropertyType::Action)
+                continue;
+
+            std::wstring functionName = L"do" + property->GetPropertyName();
+            formActions.insert(std::make_pair(functionName,
+                L"public void " + functionName + L"() {\r\n"
+                + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationDoFormAction(Handle, " + enumClass->GetName() + L"." + property->GetEnum() + L".getValue());\r\n"
+                "}\r\n"));
+        }
+        
+        for (auto const &action : formActions) {
+            std::vector<std::wstring> lines = SplitStringByLine(action.second);
+            result += L"\r\n";
+            for (auto &line : lines) {
+                RTrim(line);
+                result += INDENT + line + L"\r\n";
+            }
+        }
+    CATCH
+    return result;
+}
 
 void VPGJavaGenerationService::GenerateEnum(const LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass, const VPGGenerationOption *option, const VPGGenerationOptionExport *javaOption)
 {

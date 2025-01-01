@@ -17,71 +17,65 @@
 
 using namespace vcc;
 
-class VPGMainFormAddWorkspace : public BaseAction
+class VPGMainFormAddWorkspaceForm : public BaseAction
 {
-    // <vcc:customVPGMainFormAddWorkspaceProperties sync="RESERVE" gen="RESERVE">
-    // </vcc:customVPGMainFormAddWorkspaceProperties>
+    // <vcc:customVPGMainFormAddWorkspaceFormProperties sync="RESERVE" gen="RESERVE">
+    // </vcc:customVPGMainFormAddWorkspaceFormProperties>
 
     private:
-        // <vcc:customVPGMainFormAddWorkspacePrivateFunctions sync="RESERVE" gen="RESERVE">
-        // </vcc:customVPGMainFormAddWorkspacePrivateFunctions>
+        // <vcc:customVPGMainFormAddWorkspaceFormPrivateFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGMainFormAddWorkspaceFormPrivateFunctions>
 
     protected:
         virtual std::wstring GetRedoMessageStart() const override;
         virtual std::wstring GetRedoMessageComplete() const override;
-        virtual std::wstring GetUndoMessageStart() const override;
-        virtual std::wstring GetUndoMessageComplete() const override;
 
         virtual void OnRedo() override;
-        virtual void OnUndo() override;
 
-        // <vcc:customVPGMainFormAddWorkspaceProtectedFunctions sync="RESERVE" gen="RESERVE">
-        // </vcc:customVPGMainFormAddWorkspaceProtectedFunctions>
+        // <vcc:customVPGMainFormAddWorkspaceFormProtectedFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGMainFormAddWorkspaceFormProtectedFunctions>
 
     public:
-        VPGMainFormAddWorkspace() : BaseAction() {}
-        VPGMainFormAddWorkspace(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm);
-        ~VPGMainFormAddWorkspace() {}
+        VPGMainFormAddWorkspaceForm() : BaseAction() {}
+        VPGMainFormAddWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm);
+        ~VPGMainFormAddWorkspaceForm() {}
 
-        // <vcc:customVPGMainFormAddWorkspacePublicFunctions sync="RESERVE" gen="RESERVE">
-        // </vcc:customVPGMainFormAddWorkspacePublicFunctions>
+        // <vcc:customVPGMainFormAddWorkspaceFormPublicFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGMainFormAddWorkspaceFormPublicFunctions>
 };
 
-class VPGMainFormDeleteWorkspace : public BaseAction
+class VPGMainFormDeleteWorkspaceForm : public BaseAction
 {
-    // <vcc:customVPGMainFormDeleteWorkspaceProperties sync="RESERVE" gen="RESERVE">
-    // </vcc:customVPGMainFormDeleteWorkspaceProperties>
+    // <vcc:customVPGMainFormDeleteWorkspaceFormProperties sync="RESERVE" gen="RESERVE">
+    // </vcc:customVPGMainFormDeleteWorkspaceFormProperties>
 
     private:
-        // <vcc:customVPGMainFormDeleteWorkspacePrivateFunctions sync="RESERVE" gen="RESERVE">
-        // </vcc:customVPGMainFormDeleteWorkspacePrivateFunctions>
+        // <vcc:customVPGMainFormDeleteWorkspaceFormPrivateFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGMainFormDeleteWorkspaceFormPrivateFunctions>
 
     protected:
         virtual std::wstring GetRedoMessageStart() const override;
         virtual std::wstring GetRedoMessageComplete() const override;
-        virtual std::wstring GetUndoMessageStart() const override;
-        virtual std::wstring GetUndoMessageComplete() const override;
 
         virtual void OnRedo() override;
-        virtual void OnUndo() override;
 
-        // <vcc:customVPGMainFormDeleteWorkspaceProtectedFunctions sync="RESERVE" gen="RESERVE">
-        // </vcc:customVPGMainFormDeleteWorkspaceProtectedFunctions>
+        // <vcc:customVPGMainFormDeleteWorkspaceFormProtectedFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGMainFormDeleteWorkspaceFormProtectedFunctions>
 
     public:
-        VPGMainFormDeleteWorkspace() : BaseAction() {}
-        VPGMainFormDeleteWorkspace(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm);
-        ~VPGMainFormDeleteWorkspace() {}
+        VPGMainFormDeleteWorkspaceForm() : BaseAction() {}
+        VPGMainFormDeleteWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm);
+        ~VPGMainFormDeleteWorkspaceForm() {}
 
-        // <vcc:customVPGMainFormDeleteWorkspacePublicFunctions sync="RESERVE" gen="RESERVE">
-        // </vcc:customVPGMainFormDeleteWorkspacePublicFunctions>
+        // <vcc:customVPGMainFormDeleteWorkspaceFormPublicFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGMainFormDeleteWorkspaceFormPublicFunctions>
 };
 
 class VPGMainForm : public BaseForm
 {
     VECTOR_SPTR(VPGWorkspaceForm, WorkspaceForms)
-    ACTION(AddWorkspace)
-    ACTION(DeleteWorkspace)
+    ACTION(AddWorkspaceForm)
+    ACTION(DeleteWorkspaceForm)
 
     // <vcc:customVPGMainFormProperties sync="RESERVE" gen="RESERVE">
     // </vcc:customVPGMainFormProperties>
