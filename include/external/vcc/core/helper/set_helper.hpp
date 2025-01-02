@@ -35,4 +35,26 @@ namespace vcc
             result += str + delimitor;
         return result.substr(0, result.size() - delimitor.size());
     }
+    
+    // Remove
+    template <typename T>
+    inline void RemoveElement(std::set<T> &sourceSet, const T &obj)
+    {
+        sourceSet.erase(std::remove_if(sourceSet.begin(), sourceSet.end(),
+            [&](const T &element) {
+                return element == obj;
+            }), sourceSet.end());
+    }
+
+    template <typename T>
+    inline void RemoveIObject(std::set<std::shared_ptr<T>> &sourceSet, const std::shared_ptr<IObject> &obj)
+    {
+        auto derivedObj = std::dynamic_pointer_cast<T>(obj);        
+        if (derivedObj) {
+            sourceSet.erase(std::remove_if(sourceSet.begin(), sourceSet.end(),
+                [&](const std::shared_ptr<T> &element) {
+                    return element == derivedObj;
+                }), sourceSet.end());
+        }
+    }
 };

@@ -56,7 +56,7 @@ namespace vcc
         void Insert##var(int64_t index, type value) const { if (index >= 0) this->_##var.insert(this->_##var.begin() + index, value); else this->Insert##var(value); } \
         void Insert##var(const std::vector<type> &value) const { this->_##var.insert(this->_##var.end(), value.begin(), value.end()); } \
         void Insert##var(int64_t index, std::vector<type> &value) const { if (index >= 0) this->_##var.insert(this->_##var.begin() + index, value.begin(), value.end()); else Insert##var(value); } \
-        void Remove##var(int64_t index) const { if (index >= 0) { this->_##var.erase(this->_##var.begin() + (size_t)index); } } \
+        void Remove##var##ByIndex(int64_t index) const { if (index >= 0) { this->_##var.erase(this->_##var.begin() + (size_t)index); } } \
         void Clone##var(const std::vector<type> &value) const { this->_##var.clear(); this->Insert##var(value); }\
         void Clear##var() const { this->_##var.clear(); }
 
@@ -72,7 +72,7 @@ namespace vcc
         void Insert##var(int64_t index, std::shared_ptr<type> value) const { if (index >= 0) this->_##var.insert(this->_##var.begin() + index, value); else this->Insert##var(value); } \
         void Insert##var(std::vector<std::shared_ptr<type>> &value) { this->_##var.insert(this->_##var.end(), value.begin(), value.end()); } \
         void Insert##var(int64_t index, std::vector<std::shared_ptr<type>> &value) { if (index >= 0) this->_##var.insert(this->_##var.begin() + index, value.begin(), value.end()); else this->Insert##var(value); } \
-        void Remove##var(int64_t index) { if (index >= 0) { this->_##var.erase(this->_##var.begin() + (size_t)index); } } \
+        void Remove##var##ByIndex(int64_t index) { if (index >= 0) { this->_##var.erase(this->_##var.begin() + (size_t)index); } } \
         std::shared_ptr<type> Clone##var(int64_t index) const { return std::static_pointer_cast<type>(Get##var(index)->Clone()); } \
         void Clone##var(const std::vector<std::shared_ptr<type>> &value) { this->_##var.clear(); for (std::shared_ptr<type> element : value) { this->Insert##var(element != nullptr ? std::dynamic_pointer_cast<type>(element->Clone()) : nullptr); } }\
         void Clear##var() const { this->_##var.clear(); }
@@ -114,7 +114,7 @@ namespace vcc
         void Insert##var(keyType key, valueType value) const { _##var.insert(std::make_pair(key, value)); } \
         void Insert##var(const std::map<keyType, valueType> &value) const { _##var.insert(value.begin(), value.end()); } \
         void Clone##var(const std::map<keyType, valueType> &value) const { this->_##var.clear(); this->Insert##var(value); } \
-        void Remove##var(keyType key) { this->_##var.erase(this->_##var.find(key)); } \
+        void Remove##var##ByKey(keyType key) { this->_##var.erase(this->_##var.find(key)); } \
         void Clear##var() const { this->_##var.clear(); }
 
     #define MAP_SPTR_R(keyType, valueType, var) \
@@ -131,7 +131,7 @@ namespace vcc
         void Insert##var(const std::map<keyType, std::shared_ptr<valueType>> &value) const { _##var.insert(value.begin(), value.end()); } \
         std::shared_ptr<valueType> Clone##var(keyType key) const { return std::static_pointer_cast<valueType>(Get##var(key)->Clone()); } \
         void Clone##var(const std::map<keyType, std::shared_ptr<valueType>> &value) const { this->_##var.clear(); for (auto const& element : value) { this->Insert##var(element.first, element.second != nullptr ? std::dynamic_pointer_cast<valueType>(element.second->Clone()) : nullptr); } }\
-        void Remove##var(keyType key) { this->_##var.erase(this->_##var.find(key)); } \
+        void Remove##var##ByKey(keyType key) { this->_##var.erase(this->_##var.find(key)); } \
         void Clear##var() const { this->_##var.clear(); }
 
     #define ORDERED_MAP(keyType, valueType, var) \
@@ -172,8 +172,8 @@ namespace vcc
         std::shared_ptr<valueType> Clone##var##ByIndex(int64_t index) const { return std::static_pointer_cast<valueType>(Get##var##ByIndex(index).second->Clone()); } \
         std::shared_ptr<valueType> Clone##var##ByKey(keyType key) const { return std::static_pointer_cast<valueType>(Get##var##ByKey(key)->Clone()); } \
         void Clone##var(const std::vector<std::pair<keyType, std::shared_ptr<valueType>>> &value) const { this->_##var.clear(); for (auto const& element : value) { this->Insert##var(element.first, element.second != nullptr ? std::dynamic_pointer_cast<valueType>(element.second->Clone()) : nullptr); } }\
-        void Remove##var(int64_t index) { if (index >= 0) { this->_##var.erase(this->_##var.begin() + (size_t)index); } } \
-        void Remove##var(keyType key) { int64_t index = this->Find##var(key); if (index >= 0) (this->_##var.erase(this->_##var.begin() + (size_t)(this->Find##var(key)))); } \
+        void Remove##var##ByIndex(int64_t index) { if (index >= 0) { this->_##var.erase(this->_##var.begin() + (size_t)index); } } \
+        void Remove##var##ByKey(keyType key) { int64_t index = this->Find##var(key); if (index >= 0) (this->_##var.erase(this->_##var.begin() + (size_t)(this->Find##var(key)))); } \
         void Clear##var() const { this->_##var.clear(); }
 
     //------------------------------------------------------------------------------------------------------//

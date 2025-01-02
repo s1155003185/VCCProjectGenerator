@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -39,9 +40,22 @@ namespace vcc
     template <typename T>
     inline void RemoveElement(std::vector<T> &sourceVector, const T &obj)
     {
-        sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(), [&](const T &element) {
-            return element == obj;
-        }), sourceVector.end());
+        sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(),
+            [&](const T &element) {
+                return element == obj;
+            }), sourceVector.end());
+    }
+
+    template <typename T>
+    inline void RemoveIObject(std::vector<std::shared_ptr<T>> &sourceVector, const std::shared_ptr<IObject> &obj)
+    {
+        auto derivedObj = std::dynamic_pointer_cast<T>(obj);        
+        if (derivedObj) {
+            sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(),
+                [&](const std::shared_ptr<T> &element) {
+                    return element == derivedObj;
+                }), sourceVector.end());
+        }
     }
 
     template <typename T>

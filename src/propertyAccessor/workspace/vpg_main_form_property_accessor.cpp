@@ -22,6 +22,8 @@ std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObject(const int64_t 
         {
         case VPGMainFormProperty::WorkspaceForms:
             return std::static_pointer_cast<IObject>(obj->GetWorkspaceForms(index));
+        case VPGMainFormProperty::CurrentWorkspaceForm:
+            return std::static_pointer_cast<IObject>(obj->GetCurrentWorkspaceForm());
         default:
             assert(false);
         }
@@ -50,6 +52,9 @@ void VPGMainFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, st
                 obj->SetWorkspaceForms(index, std::static_pointer_cast<VPGWorkspaceForm>(value));
             else
                 obj->InsertWorkspaceForms(std::static_pointer_cast<VPGWorkspaceForm>(value));
+            break;
+        case VPGMainFormProperty::CurrentWorkspaceForm:
+            obj->SetCurrentWorkspaceForm(std::static_pointer_cast<VPGWorkspaceForm>(value));
             break;
         default:
             assert(false);
@@ -94,6 +99,8 @@ std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_CloneObject(const int64_t
         {
         case VPGMainFormProperty::WorkspaceForms:
             return std::static_pointer_cast<IObject>(obj->CloneWorkspaceForms(index));
+        case VPGMainFormProperty::CurrentWorkspaceForm:
+            return std::static_pointer_cast<IObject>(obj->GetCurrentWorkspaceForm()->Clone());
         default:
             assert(false);
         }
@@ -151,7 +158,7 @@ void VPGMainFormPropertyAccessor::_RemoveContainerElement(const int64_t &objectP
         switch(static_cast<VPGMainFormProperty>(objectProperty))
         {
         case VPGMainFormProperty::WorkspaceForms:
-            obj->RemoveWorkspaceForms(index);
+            obj->RemoveWorkspaceFormsByIndex(index);
             break;
         default:
             assert(false);
