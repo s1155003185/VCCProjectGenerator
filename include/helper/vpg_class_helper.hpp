@@ -18,3 +18,5 @@ bool IsPropertyClass(const std::wstring &className, const std::wstring &projectP
 std::wstring GetActionClassName(const std::wstring &projectPrefix, const VPGEnumClass* enumClass, const VPGEnumClassProperty * property);
 std::wstring GetActionFileNameWithoutExtension(const std::wstring &actionClassName, const std::wstring &projectPrefix);
 std::wstring GetClassNameFromPropertyClassName(const std::wstring &className, const std::wstring &projectPrefix);
+
+std::wstring GetActionMessage(const std::wstring &id, const std::wstring &msg);

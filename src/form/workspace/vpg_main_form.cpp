@@ -16,6 +16,7 @@
 #include "i_property_accessor.hpp"
 #include "lock_type.hpp"
 #include "property_accessor_factory.hpp"
+#include "vpg_class_helper.hpp"
 // </vcc:customHeader>
 
 using namespace vcc;
@@ -30,6 +31,7 @@ std::wstring VPGMainFormAddWorkspaceForm::GetRedoMessageStart() const
 {
     TRY
         // <vcc:VPGMainFormAddWorkspaceFormGetRedoMessageStart sync="RESERVE" gen="RESERVE">
+        return GetActionMessage(L"AddWorkspaceForm", L"Start");
         // </vcc:VPGMainFormAddWorkspaceFormGetRedoMessageStart>
     CATCH
     return L"";
@@ -39,6 +41,7 @@ std::wstring VPGMainFormAddWorkspaceForm::GetRedoMessageComplete() const
 {
     TRY
         // <vcc:VPGMainFormAddWorkspaceFormGetRedoMessageComplete sync="RESERVE" gen="RESERVE">
+        return GetActionMessage(L"AddWorkspaceForm", L"Complete");
         // </vcc:VPGMainFormAddWorkspaceFormGetRedoMessageComplete>
     CATCH
     return L"";
@@ -63,6 +66,7 @@ std::wstring VPGMainFormDeleteWorkspaceForm::GetRedoMessageStart() const
 {
     TRY
         // <vcc:VPGMainFormDeleteWorkspaceFormGetRedoMessageStart sync="RESERVE" gen="RESERVE">
+        return GetActionMessage(L"DeleteWorkspaceForm", L"Start");
         // </vcc:VPGMainFormDeleteWorkspaceFormGetRedoMessageStart>
     CATCH
     return L"";
@@ -72,6 +76,7 @@ std::wstring VPGMainFormDeleteWorkspaceForm::GetRedoMessageComplete() const
 {
     TRY
         // <vcc:VPGMainFormDeleteWorkspaceFormGetRedoMessageComplete sync="RESERVE" gen="RESERVE">
+        return GetActionMessage(L"DeleteWorkspaceForm", L"Complete");
         // </vcc:VPGMainFormDeleteWorkspaceFormGetRedoMessageComplete>
     CATCH
     return L"";
@@ -81,6 +86,15 @@ void VPGMainFormDeleteWorkspaceForm::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormDeleteWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
+        auto propertyAccessor = PropertyAccessorFactory::Create(_ParentObject);
+        auto currentWorkspaceForm = propertyAccessor->ReadObject(LockType::ReadLock, static_cast<int64_t>(VPGMainFormProperty::CurrentWorkspaceForm));
+        if (currentWorkspaceForm != nullptr) {
+            // propertyAccessor->WriteLock();
+            // auto mainForm = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
+            // assert(mainForm != nullptr);
+            // mainForm->GetWorkspaceForms().erase(std::dynamic_pointer_cast<VPGWorkspaceForm>(currentWorkspaceForm));
+            // propertyAccessor->Unlock();
+        }
         // </vcc:VPGMainFormDeleteWorkspaceFormOnRedo>
     CATCH
 }
@@ -97,6 +111,7 @@ std::shared_ptr<IObject> VPGMainForm::Clone() const
 {
     auto obj = std::make_shared<VPGMainForm>(*this);
     obj->CloneWorkspaceForms(this->_WorkspaceForms);
+    obj->CloneCurrentWorkspaceForm(this->_CurrentWorkspaceForm);
     return obj;
 }
 

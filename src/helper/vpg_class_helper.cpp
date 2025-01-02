@@ -88,3 +88,8 @@ std::wstring GetClassNameFromPropertyClassName(const std::wstring &className, co
     CATCH
     return className;
 }
+
+std::wstring GetActionMessage(const std::wstring &id, const std::wstring &msg)
+{
+    return L"[" + id + L"] " + msg;
+}
