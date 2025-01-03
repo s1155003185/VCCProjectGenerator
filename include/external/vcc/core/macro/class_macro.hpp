@@ -172,8 +172,8 @@ namespace vcc
         std::shared_ptr<valueType> Clone##var##ByIndex(int64_t index) const { return std::static_pointer_cast<valueType>(Get##var##ByIndex(index).second->Clone()); } \
         std::shared_ptr<valueType> Clone##var##ByKey(keyType key) const { return std::static_pointer_cast<valueType>(Get##var##ByKey(key)->Clone()); } \
         void Clone##var(const std::vector<std::pair<keyType, std::shared_ptr<valueType>>> &value) const { this->_##var.clear(); for (auto const& element : value) { this->Insert##var(element.first, element.second != nullptr ? std::dynamic_pointer_cast<valueType>(element.second->Clone()) : nullptr); } }\
-        void Remove##var(int64_t index) { if (index >= 0) { this->_##var.erase(this->_##var.begin() + (size_t)index); } } \
-        void Remove##var(keyType key) { int64_t index = this->Find##var(key); if (index >= 0) (this->_##var.erase(this->_##var.begin() + (size_t)(this->Find##var(key)))); } \
+        void Remove##var##ByIndex(int64_t index) { if (index >= 0) { this->_##var.erase(this->_##var.begin() + (size_t)index); } } \
+        void Remove##var##ByKey(keyType key) { int64_t index = this->Find##var(key); if (index >= 0) (this->_##var.erase(this->_##var.begin() + (size_t)(this->Find##var(key)))); } \
         void Clear##var() const { this->_##var.clear(); }
 
     //------------------------------------------------------------------------------------------------------//
