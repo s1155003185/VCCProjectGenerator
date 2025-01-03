@@ -158,7 +158,7 @@ void VPGMainFormPropertyAccessor::_RemoveContainerElement(const int64_t &objectP
         switch(static_cast<VPGMainFormProperty>(objectProperty))
         {
         case VPGMainFormProperty::WorkspaceForms:
-            obj->RemoveWorkspaceForms(index);
+            obj->RemoveWorkspaceFormsByIndex(index);
             break;
         default:
             assert(false);

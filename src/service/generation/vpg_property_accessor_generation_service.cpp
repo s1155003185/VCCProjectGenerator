@@ -838,9 +838,8 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
                     std::wstring tmpConvertedName = L"";
                     std::wstring tmpReturnResult = L"";
                     VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(property->GetType1(), tmpConvertedType, tmpConvertedName, tmpReturnResult);
-                    bool isOrderedMap = IsStartWith(property->GetMacro(), L"ORDERED_MAP");
                     result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L":\r\n"
-                        + INDENT + INDENT + INDENT + L"obj->Remove" + property->GetPropertyName() + (isOrderedMap ? L"ByIndex" : L"") + L"(index);\r\n"
+                        + INDENT + INDENT + INDENT + L"obj->Remove" + property->GetPropertyName() + L"ByIndex(index);\r\n"
                         + INDENT + INDENT + INDENT + L"break;\r\n";
                 }
             }
@@ -867,7 +866,6 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
                     std::wstring tmpReturnResult = L"";
                     VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(property->GetType1(), tmpConvertedType, tmpConvertedName, tmpReturnResult);
                     
-                    bool isOrderedMap = IsStartWith(property->GetMacro(), L"ORDERED_MAP");
                     std::wstring castType = property->GetType1() == L"std::wstring" ? L"wchar_t" : property->GetType1();
                     std::wstring mapGetKey = property->GetType1() == L"std::wstring" ? L"keyPtr" : L"*keyPtr";
                     result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L": {\r\n"
@@ -875,7 +873,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
                         + INDENT + INDENT + INDENT + L"assert(keyPtr != nullptr);\r\n"
                         + INDENT + INDENT + INDENT + L"if (keyPtr == nullptr)\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-                        + INDENT + INDENT + INDENT + L"obj->Remove" + property->GetPropertyName() + (isOrderedMap ? L"ByKey" : L"") + L"(" + mapGetKey + L");\r\n"
+                        + INDENT + INDENT + INDENT + L"obj->Remove" + property->GetPropertyName() + L"ByKey(" + mapGetKey + L");\r\n"
                         + INDENT + INDENT + INDENT + L"break;\r\n"
                         + INDENT + INDENT + L"}\r\n";
                 }
