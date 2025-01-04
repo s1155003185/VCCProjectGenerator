@@ -18,10 +18,10 @@ Please go to following session to see how to create VCC Project to generate c++ 
 - Tutorial for Create VCC DLL Project to generate dll with Java Interface
 
 ## What's new
-Generate Form
+Generate Action
 
 ## What's next
-Action, Git adjustment
+Git, Review function naming
 
 ## Features
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
@@ -119,7 +119,7 @@ Suitable for long term project
 ****
 ## VCCModule Feature
 ### Core
--	Action Manager (Pending)
+-	Action Manager
 -	Exception
 -	Form
 -	Helper (Keep update)
@@ -1138,6 +1138,14 @@ X(Twitter) @VCCProject
 
 ****
 ## Release Log
+
+### [v0.2.6] - 2025-01-05: Form - Action
+- Support @@Thread
+- @@Log, @@Action, @@Thread use IsIndependent insead of IsInheritFromParent
+- Support Class Macro ACTION, MANAGER_SPTR, MANAGER_SPTR_NULL, MANAGER_SPTR_PARENT
+- Add InitializeComponent(), OnInitialzieComponent(), InitialzeValues() and OnInitializeValues()
+- Remove Java Form Initialize() and Reload(). Use should use Action to initalize or reload
+- Initialzie Action
 
 ### [v0.2.5] - 2024-12-08: Form - Generate Java Form
 - Form Action - Create, Reload, Close

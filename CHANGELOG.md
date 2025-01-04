@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+
+### [v0.2.6] - 2025-01-05: Form - Action
 - Support @@Thread
 - @@Log, @@Action, @@Thread use IsIndependent insead of IsInheritFromParent
 - Support Class Macro ACTION, MANAGER_SPTR, MANAGER_SPTR_NULL, MANAGER_SPTR_PARENT
