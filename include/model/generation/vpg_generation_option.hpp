@@ -16,14 +16,14 @@ using namespace vcc;
 class VPGGenerationOptionExport : public BaseObject, public BaseJsonObject
 {
     GETSET(VPGGenerationOptionInterfaceType, Interface, VPGGenerationOptionInterfaceType::Java)
-    GETSET(std::wstring, Workspace, L"")
+    GETSET(std::wstring, Workspace, L"../JavaProject")
     GETSET(bool, IsExportExternalLib, true)
-    GETSET(std::wstring, ExportDirectoryDll, L"")
+    GETSET(std::wstring, ExportDirectoryDll, L"src/main/resources")
     GETSET(std::wstring, ExportDirectoryExe, L"")
-    GETSET(std::wstring, DllBridgeDirectory, L"")
-    GETSET(std::wstring, FormDirectory, L"")
-    GETSET(std::wstring, ObjectDirectory, L"")
-    GETSET(std::wstring, TypeDirectory, L"")
+    GETSET(std::wstring, DllBridgeDirectory, L"src/main/java/com/package")
+    GETSET(std::wstring, FormDirectory, L"src/main/java/com/package/form")
+    GETSET(std::wstring, ObjectDirectory, L"src/main/java/com/package/model")
+    GETSET(std::wstring, TypeDirectory, L"src/main/java/com/package/type")
 
     public:
         VPGGenerationOptionExport() : BaseObject(ObjectType::GenerationOptionExport) {}

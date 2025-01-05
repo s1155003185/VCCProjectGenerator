@@ -4,19 +4,19 @@
 enum class VPGGenerationOptionExportProperty
 {
     Interface, // GETSET(VPGGenerationOptionInterfaceType, Interface, VPGGenerationOptionInterfaceType::Java)
-    Workspace, // GETSET(std::wstring, Workspace, L"")
+    Workspace, // GETSET(std::wstring, Workspace, L"../JavaProject")
 
     IsExportExternalLib, // GETSET(bool, IsExportExternalLib, true)
-    ExportDirectoryDll, // GETSET(std::wstring, ExportDirectoryDll, L"")
+    ExportDirectoryDll, // GETSET(std::wstring, ExportDirectoryDll, L"src/main/resources")
     ExportDirectoryExe, // GETSET(std::wstring, ExportDirectoryExe, L"")
 
     // Bridge Location
-    DllBridgeDirectory, // GETSET(std::wstring, DllBridgeDirectory, L"")
+    DllBridgeDirectory, // GETSET(std::wstring, DllBridgeDirectory, L"src/main/java/com/package")
 
     // Export Location
-    FormDirectory, // GETSET(std::wstring, FormDirectory, L"")
-    ObjectDirectory, // GETSET(std::wstring, ObjectDirectory, L"")
-    TypeDirectory // GETSET(std::wstring, TypeDirectory, L"")
+    FormDirectory, // GETSET(std::wstring, FormDirectory, L"src/main/java/com/package/form")
+    ObjectDirectory, // GETSET(std::wstring, ObjectDirectory, L"src/main/java/com/package/model")
+    TypeDirectory // GETSET(std::wstring, TypeDirectory, L"src/main/java/com/package/type")
 };
 
 // @@json { "Key.NamingStyle" : "PascalCase" }
