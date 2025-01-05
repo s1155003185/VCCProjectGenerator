@@ -110,8 +110,8 @@ namespace vcc
             std::vector<std::wstring> equalFiles;
             std::set_intersection(srcFileList.begin(),srcFileList.end(), tarFileList.begin(), tarFileList.end(), back_inserter(equalFiles));
 
-            RemoveElements(srcFileList, equalFiles);
-            RemoveElements(tarFileList, equalFiles);
+            Remove(srcFileList, equalFiles);
+            Remove(tarFileList, equalFiles);
 
             needToAdd.assign(srcFileList.begin(), srcFileList.end());
             needToDelete.assign(tarFileList.begin(), tarFileList.end());

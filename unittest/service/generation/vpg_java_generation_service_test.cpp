@@ -7,6 +7,7 @@
 #include "file_helper.hpp"
 
 #include "vpg_file_generation_manager.hpp"
+#include "vpg_global.hpp"
 #include "vpg_java_generation_service.hpp"
 
 using namespace vcc;
@@ -19,16 +20,10 @@ class VPGJavaGenerationServiceTest : public testing::Test
     
     GETSET_SPTR_NULL(VPGGenerationOption, Option);
     
-    MANAGER_SPTR(VPGEnumClassReader, Reader);
-
     public:
         void SetUp() override
         {
             this->_LogConfig->SetIsConsoleLog(false);
-
-            DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr, L"");
-            manager->GetClassMacroList(L"");
-            _Reader->InsertClassMacroList(manager->GetClassMacros());
 
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
@@ -133,26 +128,26 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "    Pointer CreateObject(long property);\r\n"
         "    boolean ReadBool(Pointer ref, long property, long index);\r\n"
         "    byte ReadChar(Pointer ref, long property, long index);\r\n"
-        "    byte ReadCharByKey(Pointer ref, long property, Pointer key);\r\n"
+        "    byte ReadCharAtKey(Pointer ref, long property, Pointer key);\r\n"
         "    void WriteChar(Pointer ref, long property, byte value, long index);\r\n"
-        "    void WriteCharByKey(Pointer ref, long property, byte value, Pointer key);\r\n"
+        "    void WriteCharAtKey(Pointer ref, long property, byte value, Pointer key);\r\n"
         "    void InsertChar(Pointer ref, long property, byte value, long index);\r\n"
         "    void ReadString(Pointer ref, long property, PointerByReference value, long index);\r\n"
-        "    void ReadStringByKey(Pointer ref, long property, PointerByReference value, Pointer key);\r\n"
+        "    void ReadStringAtKey(Pointer ref, long property, PointerByReference value, Pointer key);\r\n"
         "    void WriteString(Pointer ref, long property, PointerByReference value, long index);\r\n"
-        "    void WriteStringByKey(Pointer ref, long property, PointerByReference value, Pointer key);\r\n"
+        "    void WriteStringAtKey(Pointer ref, long property, PointerByReference value, Pointer key);\r\n"
         "    void InsertString(Pointer ref, long property, PointerByReference value, long index);\r\n"
         "    Pointer ReadObject(Pointer ref, long property, long index);\r\n"
-        "    Pointer ReadObjectByKey(Pointer ref, long property, Pointer key);\r\n"
+        "    Pointer ReadObjectAtKey(Pointer ref, long property, Pointer key);\r\n"
         "    void WriteObject(Pointer ref, long property, Pointer value, long index);\r\n"
-        "    void WriteObjectByKey(Pointer ref, long property, Pointer value, Pointer key);\r\n"
+        "    void WriteObjectAtKey(Pointer ref, long property, Pointer value, Pointer key);\r\n"
         "    Pointer AddObject(Pointer ref, long property, long objectType, long index);\r\n"
         "    void InsertObject(Pointer ref, long property, Pointer value, long index);\r\n"
         "    long GetContainerCount(Pointer ref, long property);\r\n"
         "    Pointer GetMapKeys(Pointer ref, long property);\r\n"
         "    boolean IsContainKey(Pointer ref, long property, Pointer key);\r\n"
         "    void RemoveContainerElement(Pointer ref, long property, long index);\r\n"
-        "    void RemoveContainerElementByKey(Pointer ref, long property, Pointer key);\r\n"
+        "    void RemoveContainerElementAtKey(Pointer ref, long property, Pointer key);\r\n"
         "    void ClearContainer(Pointer ref, long property);\r\n"
         "}\r\n"
         );
@@ -178,8 +173,8 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList1;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList2;
-    this->GetReader()->Parse(enumClass1, enumClassList1);
-    this->GetReader()->Parse(enumClass2, enumClassList2);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass1, enumClassList1);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass2, enumClassList2);
 
     std::wstring filePath1 = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeA.java"});
     std::wstring filePath2 = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeBProperty.java"});
@@ -275,7 +270,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMap;
     std::wstring filePath = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"});
@@ -442,16 +437,16 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
         "        return VPGDllFunctions.Instance.GetContainerCount(Handle, VPGTypeBProperty.Map.getValue());\r\n"
         "    }\r\n"
         "\r\n"
-        "    public double getMapByKey(int key) {\r\n"
+        "    public double getMapAtKey(int key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(int.class));\r\n"
         "        keyPtr.setInt(0, key);\r\n"
-        "        return VPGDllFunctions.Instance.ReadDoubleByKey(Handle, VPGTypeBProperty.Map.getValue(), keyPtr);\r\n"
+        "        return VPGDllFunctions.Instance.ReadDoubleAtKey(Handle, VPGTypeBProperty.Map.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
-        "    public void setMapByKey(int key, double value) {\r\n"
+        "    public void setMapAtKey(int key, double value) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(int.class));\r\n"
         "        keyPtr.setInt(0, key);\r\n"
-        "        VPGDllFunctions.Instance.WriteIntByKey(Handle, VPGTypeBProperty.Map.getValue(), value, keyPtr);\r\n"
+        "        VPGDllFunctions.Instance.WriteIntAtKey(Handle, VPGTypeBProperty.Map.getValue(), value, keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public Set<Integer> getMapKeys() {\r\n"
@@ -476,10 +471,10 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
         "        return VPGDllFunctions.Instance.IsContainKey(Handle, VPGTypeBProperty.Map.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
-        "    public void removeMapByKey(int key) {\r\n"
+        "    public void removeMapAtKey(int key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(int.class));\r\n"
         "        keyPtr.setInt(0, key);\r\n"
-        "        VPGDllFunctions.Instance.RemoveContainerElementByKey(Handle, VPGTypeBProperty.Map.getValue(), keyPtr);\r\n"
+        "        VPGDllFunctions.Instance.RemoveContainerElementAtKey(Handle, VPGTypeBProperty.Map.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void clearMap() {\r\n"
@@ -526,16 +521,16 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
         "        return VPGDllFunctions.Instance.GetContainerCount(Handle, VPGTypeBProperty.MapObject.getValue());\r\n"
         "    }\r\n"
         "\r\n"
-        "    public VPGTypeB getMapObjectByKey(String key) {\r\n"
+        "    public VPGTypeB getMapObjectAtKey(String key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.WCHAR_SIZE * (key.length() + 1));\r\n"
         "        keyPtr.setWideString(0, key);\r\n"
-        "        return new VPGTypeB(VPGDllFunctions.Instance.ReadObjectByKey(Handle, VPGTypeBProperty.MapObject.getValue(), keyPtr));\r\n"
+        "        return new VPGTypeB(VPGDllFunctions.Instance.ReadObjectAtKey(Handle, VPGTypeBProperty.MapObject.getValue(), keyPtr));\r\n"
         "    }\r\n"
         "\r\n"
-        "    public void setMapObjectByKey(String key, VPGTypeB value) {\r\n"
+        "    public void setMapObjectAtKey(String key, VPGTypeB value) {\r\n"
         "        Pointer keyPtr = new Memory(Native.WCHAR_SIZE * (key.length() + 1));\r\n"
         "        keyPtr.setWideString(0, key);\r\n"
-        "        VPGDllFunctions.Instance.WriteObjectByKey(Handle, VPGTypeBProperty.MapObject.getValue(), value.Handle, keyPtr);\r\n"
+        "        VPGDllFunctions.Instance.WriteObjectAtKey(Handle, VPGTypeBProperty.MapObject.getValue(), value.Handle, keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public Set<String> getMapObjectKeys() {\r\n"
@@ -560,10 +555,10 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
         "        return VPGDllFunctions.Instance.IsContainKey(Handle, VPGTypeBProperty.MapObject.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
-        "    public void removeMapObjectByKey(String key) {\r\n"
+        "    public void removeMapObjectAtKey(String key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.WCHAR_SIZE * (key.length() + 1));\r\n"
         "        keyPtr.setWideString(0, key);\r\n"
-        "        VPGDllFunctions.Instance.RemoveContainerElementByKey(Handle, VPGTypeBProperty.MapObject.getValue(), keyPtr);\r\n"
+        "        VPGDllFunctions.Instance.RemoveContainerElementAtKey(Handle, VPGTypeBProperty.MapObject.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void clearMapObject() {\r\n"
@@ -590,16 +585,16 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
         "        return new double(VPGDllFunctions.Instance.AddObject(Handle, VPGTypeBProperty.OrderedMapObject.getValue(), VPGObjectType.double.getValue(), index));\r\n"
         "    }\r\n"
         "\r\n"
-        "    public VPGTypeB getOrderedMapObjectByKey(double key) {\r\n"
+        "    public VPGTypeB getOrderedMapObjectAtKey(double key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(double.class));\r\n"
         "        keyPtr.setDouble(0, key);\r\n"
-        "        return new VPGTypeB(VPGDllFunctions.Instance.ReadObjectByKey(Handle, VPGTypeBProperty.OrderedMapObject.getValue(), keyPtr));\r\n"
+        "        return new VPGTypeB(VPGDllFunctions.Instance.ReadObjectAtKey(Handle, VPGTypeBProperty.OrderedMapObject.getValue(), keyPtr));\r\n"
         "    }\r\n"
         "\r\n"
-        "    public void setOrderedMapObjectByKey(double key, VPGTypeB value) {\r\n"
+        "    public void setOrderedMapObjectAtKey(double key, VPGTypeB value) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(double.class));\r\n"
         "        keyPtr.setDouble(0, key);\r\n"
-        "        VPGDllFunctions.Instance.WriteObjectByKey(Handle, VPGTypeBProperty.OrderedMapObject.getValue(), value.Handle, keyPtr);\r\n"
+        "        VPGDllFunctions.Instance.WriteObjectAtKey(Handle, VPGTypeBProperty.OrderedMapObject.getValue(), value.Handle, keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void insertOrderedMapObject(double value) {\r\n"
@@ -636,10 +631,10 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
         "        VPGDllFunctions.Instance.RemoveContainerElement(Handle, VPGTypeBProperty.OrderedMapObject.getValue(), index);\r\n"
         "    }\r\n"
         "\r\n"
-        "    public void removeOrderedMapObjectByKey(double key) {\r\n"
+        "    public void removeOrderedMapObjectAtKey(double key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(double.class));\r\n"
         "        keyPtr.setDouble(0, key);\r\n"
-        "        VPGDllFunctions.Instance.RemoveContainerElementByKey(Handle, VPGTypeBProperty.OrderedMapObject.getValue(), keyPtr);\r\n"
+        "        VPGDllFunctions.Instance.RemoveContainerElementAtKey(Handle, VPGTypeBProperty.OrderedMapObject.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void clearOrderedMapObject() {\r\n"
@@ -659,7 +654,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
     typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));

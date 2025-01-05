@@ -2,9 +2,16 @@
 
 #include <string>
 
+#include "vpg_enum_class_reader.hpp"
+#include "vpg_file_generation_manager.hpp"
+
 enum class VPGProjectType;
 class VPGGlobal
 {
+    private:
+        static std::shared_ptr<VPGEnumClassReader> _EnumClassReader;
+        static std::shared_ptr<VPGFileGenerationManager> _FileGenerationManager;
+
     public:
         static std::wstring GetVersion();
         static std::wstring GetVccLocalResponseFolder();
@@ -18,6 +25,13 @@ class VPGGlobal
         static std::wstring GetCppDefaultIncludePathLinux();
         static std::wstring GetCppDefaultIncludePathMacOs();
 
+        // Generator
+        static std::shared_ptr<VPGEnumClassReader> GetEnumClassReader();
+        static std::shared_ptr<VPGFileGenerationManager> GetFileGenerationManager();
+
         // helper
         static std::wstring GetConvertedPath(const std::wstring &path);
+
+        // Initialize
+        static void Initialize(const std::wstring &projectWorkspace);
 };

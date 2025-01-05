@@ -155,23 +155,23 @@ namespace vcc
 
     #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(exportType, typeName) \
         DLLEXPORT exportType Read##typeName(void *ref, int64_t property, int64_t index); \
-        DLLEXPORT exportType Read##typeName##ByKey(void *ref, int64_t property, void *key); \
+        DLLEXPORT exportType Read##typeName##AtKey(void *ref, int64_t property, void *key); \
         DLLEXPORT void Write##typeName(void *ref, int64_t property, exportType value, int64_t index); \
-        DLLEXPORT void Write##typeName##ByKey(void *ref, int64_t property, exportType value, void *key); \
+        DLLEXPORT void Write##typeName##AtKey(void *ref, int64_t property, exportType value, void *key); \
         DLLEXPORT void Insert##typeName(void *ref, int64_t property, exportType value, int64_t index);
 
     #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_STRING \
         DLLEXPORT void ReadString(void *ref, int64_t property, wchar_t **value, int64_t index); \
-        DLLEXPORT void ReadStringByKey(void *ref, int64_t property, wchar_t **value, void *key); \
+        DLLEXPORT void ReadStringAtKey(void *ref, int64_t property, wchar_t **value, void *key); \
         DLLEXPORT void WriteString(void *ref, int64_t property, wchar_t **value, int64_t index); \
-        DLLEXPORT void WriteStringByKey(void *ref, int64_t property, wchar_t **value, void *key); \
+        DLLEXPORT void WriteStringAtKey(void *ref, int64_t property, wchar_t **value, void *key); \
         DLLEXPORT void InsertString(void *ref, int64_t property, wchar_t **value, int64_t index);
 
     #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_OBJECT \
         DLLEXPORT void *ReadObject(void *ref, int64_t property, int64_t index); \
-        DLLEXPORT void *ReadObjectByKey(void *ref, int64_t property, void *key); \
+        DLLEXPORT void *ReadObjectAtKey(void *ref, int64_t property, void *key); \
         DLLEXPORT void WriteObject(void *ref, int64_t property, void *value, int64_t index); \
-        DLLEXPORT void WriteObjectByKey(void *ref, int64_t property, void *value, void *key); \
+        DLLEXPORT void WriteObjectAtKey(void *ref, int64_t property, void *value, void *key); \
         DLLEXPORT void *AddObject(void *ref, int64_t property, int64_t objectType, int64_t index); \
         DLLEXPORT void InsertObject(void *ref, int64_t property, void *value, int64_t index);
 
@@ -180,7 +180,7 @@ namespace vcc
         DLLEXPORT void **GetMapKeys(void *ref, int64_t property); \
         DLLEXPORT bool IsContainKey(void *ref, int64_t property, void *key); \
         DLLEXPORT void RemoveContainerElement(void *ref, int64_t property, int64_t index); \
-        DLLEXPORT void RemoveContainerElementByKey(void *ref, int64_t property, void *key); \
+        DLLEXPORT void RemoveContainerElementAtKey(void *ref, int64_t property, void *key); \
         DLLEXPORT void ClearContainer(void *ref, int64_t property);
 
 #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(exportType, typeName, defaultValue) \
@@ -192,7 +192,7 @@ namespace vcc
         CATCH \
         return defaultValue; \
     } \
-    exportType Read##typeName##ByKey(void *ref, int64_t property, void *key) \
+    exportType Read##typeName##AtKey(void *ref, int64_t property, void *key) \
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
@@ -207,7 +207,7 @@ namespace vcc
             PropertyAccessorFactory::Create(object->GetSharedPtr())->Write##typeName(LockType::WriteLock, property, value, index); \
         CATCH \
     } \
-    void Write##typeName##ByKey(void *ref, int64_t property, exportType value, void *key) \
+    void Write##typeName##AtKey(void *ref, int64_t property, exportType value, void *key) \
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
@@ -233,7 +233,7 @@ namespace vcc
             wcscpy(*value, result.c_str()); \
         CATCH \
     } \
-    void ReadStringByKey(void *ref, int64_t property, wchar_t **value, void *key) \
+    void ReadStringAtKey(void *ref, int64_t property, wchar_t **value, void *key) \
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
@@ -254,7 +254,7 @@ namespace vcc
             } \
         CATCH \
     } \
-    void WriteStringByKey(void *ref, int64_t property, wchar_t **value, void *key) \
+    void WriteStringAtKey(void *ref, int64_t property, wchar_t **value, void *key) \
     { \
         TRY \
             if (value != nullptr && *value != nullptr) \
@@ -285,7 +285,7 @@ namespace vcc
         CATCH \
         return nullptr; \
     } \
-    DLLEXPORT void *ReadObjectByKey(void *ref, int64_t property, void *key) \
+    DLLEXPORT void *ReadObjectAtKey(void *ref, int64_t property, void *key) \
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
@@ -303,7 +303,7 @@ namespace vcc
             PropertyAccessorFactory::Create(object->GetSharedPtr())->WriteObject(LockType::WriteLock, property, resultPtr, index); \
         CATCH \
     } \
-    DLLEXPORT void WriteObjectByKey(void *ref, int64_t property, void *value, void *key) \
+    DLLEXPORT void WriteObjectAtKey(void *ref, int64_t property, void *value, void *key) \
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
@@ -370,7 +370,7 @@ namespace vcc
             PropertyAccessorFactory::Create(object->GetSharedPtr())->RemoveContainerElement(LockType::WriteLock, property, index); \
         CATCH \
     } \
-    void RemoveContainerElementByKey(void *ref, int64_t property, void *key) \
+    void RemoveContainerElementAtKey(void *ref, int64_t property, void *key) \
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \

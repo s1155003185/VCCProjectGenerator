@@ -11,12 +11,11 @@
 #include "memory_macro.hpp"
 #include "vpg_enum_class_reader.hpp"
 #include "vpg_file_generation_manager.hpp"
-#include "string_helper.hpp"
+#include "vpg_global.hpp"
 
 class VPGFileGenerationManagerTest : public testing::Test 
 {
     GETSET_SPTR(LogConfig, LogConfig, LogConfigInitialType::None);
-    MANAGER_SPTR(VPGFileGenerationManager, Manager, _LogConfig, L"");
 
     GETSET(std::wstring, Workspace, L"bin/Debug/FileGenerationServiceTest");
     GETSET(std::wstring, WorkspaceSource, L"");
@@ -48,7 +47,6 @@ class VPGFileGenerationManagerTest : public testing::Test
             AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), fileName}), content, true);
         }
     public:
-        std::unique_ptr<VPGEnumClassReader> _Reader = nullptr;
 
         VPGFileGenerationManagerTest() {}
         virtual ~VPGFileGenerationManagerTest() {}
@@ -59,9 +57,6 @@ class VPGFileGenerationManagerTest : public testing::Test
             this->_WorkspaceTarget = ConcatPaths({this->_Workspace, L"Target"});
 
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
-            this->GetManager()->GetClassMacroList(L"");
-
-            this->_Reader = std::make_unique<VPGEnumClassReader>(this->GetManager()->GetClassMacros());
 
             std::wstring code =  L"";
             code += L"#pragma once\r\n";
@@ -98,22 +93,22 @@ class VPGFileGenerationManagerTest : public testing::Test
 
 TEST_F(VPGFileGenerationManagerTest, GetClassNameFromEnumClassName)
 {
-    EXPECT_EQ(this->GetManager()->GetClassNameFromEnumClassName(L"VCCObjectProperty"), L"VCCObject");
+    EXPECT_EQ(VPGGlobal::GetFileGenerationManager()->GetClassNameFromEnumClassName(L"VCCObjectProperty"), L"VCCObject");
 }
 
 TEST_F(VPGFileGenerationManagerTest, GetFileList)
 {
     std::map<std::wstring, std::wstring> classList, enumList;
-    this->GetManager()->GetFileList(this->_Reader.get(), this->GetWorkspaceSource(), L"", false);
-    EXPECT_TRUE(this->GetManager()->GetIncludeFiles().at(L"VCCObject") == L"vcc_a.hpp");
-    EXPECT_TRUE(this->GetManager()->GetIncludeFiles().at(L"VCCObjectPtr") == L"vcc_a.hpp");
-    EXPECT_TRUE(this->GetManager()->GetIncludeFiles().at(L"VCCObjectProperty") == L"vcc_a_property.hpp");
-    EXPECT_TRUE(this->GetManager()->GetIncludeFiles().at(L"VCCObjectPtrProperty") == L"vcc_a_property.hpp");
+    VPGGlobal::GetFileGenerationManager()->GetFileList(VPGGlobal::GetEnumClassReader().get(), this->GetWorkspaceSource(), L"", false);
+    EXPECT_TRUE(VPGGlobal::GetFileGenerationManager()->GetIncludeFiles().at(L"VCCObject") == L"vcc_a.hpp");
+    EXPECT_TRUE(VPGGlobal::GetFileGenerationManager()->GetIncludeFiles().at(L"VCCObjectPtr") == L"vcc_a.hpp");
+    EXPECT_TRUE(VPGGlobal::GetFileGenerationManager()->GetIncludeFiles().at(L"VCCObjectProperty") == L"vcc_a_property.hpp");
+    EXPECT_TRUE(VPGGlobal::GetFileGenerationManager()->GetIncludeFiles().at(L"VCCObjectPtrProperty") == L"vcc_a_property.hpp");
 }
 
 TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
 {
-    _Manager->SetWorkspace(L"");
+    VPGGlobal::GetFileGenerationManager()->SetWorkspace(L"");
     VPGGenerationOption option;
     option.SetProjectPrefix(L"VCC");
     option.SetTemplateWorkspace(L"");
@@ -130,7 +125,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     option.SetPropertyAccessorFactoryDirectoryHpp(this->GetWorkspaceTarget());
     option.SetPropertyAccessorFactoryDirectoryCpp(this->GetWorkspaceTarget());
 
-    this->GetManager()->GernerateProperty(this->GetLogConfig().get(), &option);
+    VPGGlobal::GetFileGenerationManager()->GernerateProperty(this->GetLogConfig().get(), &option);
 
     // ------------------------------------------------------------------------------------------ //
     //                                      Object Type File                                      //
@@ -198,8 +193,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         + INDENT + INDENT + L"virtual std::shared_ptr<IObject> Clone() const override\r\n"
         + INDENT + INDENT + L"{\r\n"
         + INDENT + INDENT + INDENT + L"auto obj = std::make_shared<VCCObjectPtr>(*this);\r\n"
-        + INDENT + INDENT + INDENT + L"obj->CloneEnumA(this->_EnumA);\r\n"
-        + INDENT + INDENT + INDENT + L"obj->CloneEnumB(this->_EnumB);\r\n"
+        + INDENT + INDENT + INDENT + L"obj->CloneEnumA(this->_EnumA.get());\r\n"
+        + INDENT + INDENT + INDENT + L"obj->CloneEnumB(this->_EnumB.get());\r\n"
         + INDENT + INDENT + INDENT + L"obj->CloneEnumC(this->_EnumC);\r\n"
         + INDENT + INDENT + INDENT + L"obj->CloneEnumD(this->_EnumD);\r\n"
         + INDENT + INDENT + INDENT + L"return obj;\r\n"
@@ -441,7 +436,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "        switch(static_cast<VCCObjectProperty>(objectProperty))\r\n"
         "        {\r\n"
         "        case VCCObjectProperty::EnumE:\r\n"
-        "            obj->RemoveEnumEByIndex(index);\r\n"
+        "            obj->RemoveEnumEAtIndex(index);\r\n"
         "            break;\r\n"
         "        default:\r\n"
         "            assert(false);\r\n"
@@ -625,7 +620,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "        switch(static_cast<VCCObjectPtrProperty>(objectProperty))\r\n"
         "        {\r\n"
         "        case VCCObjectPtrProperty::EnumC:\r\n"
-        "            obj->RemoveEnumCByIndex(index);\r\n"
+        "            obj->RemoveEnumCAtIndex(index);\r\n"
         "            break;\r\n"
         "        default:\r\n"
         "            assert(false);\r\n"

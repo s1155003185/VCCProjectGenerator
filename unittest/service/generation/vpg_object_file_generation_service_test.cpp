@@ -10,12 +10,16 @@
 #include "file_helper.hpp"
 #include "memory_macro.hpp"
 
-#include "vpg_file_generation_manager.hpp"
 #include "vpg_enum_class_reader.hpp"
+#include "vpg_file_generation_manager.hpp"
+#include "vpg_global.hpp"
 #include "vpg_include_path_service.hpp"
 #include "vpg_object_file_generation_service.hpp"
 
 using namespace vcc;
+
+static std::map<std::wstring, std::wstring> _IncludeFiles;
+static std::map<std::wstring, std::shared_ptr<VPGEnumClass>> _EnumClasses;
 
 class VPGObjectFileGenerationServiceTest : public testing::Test 
 {
@@ -26,10 +30,6 @@ class VPGObjectFileGenerationServiceTest : public testing::Test
     GETSET(std::wstring, ActionFolderPathHpp, L"");
     GETSET(std::wstring, ActionFolderPathCpp, L"");
 
-    MANAGER_SPTR(VPGEnumClassReader, Reader);
-    MAP(std::wstring, std::wstring, IncludeFiles);
-    MAP_SPTR_R(std::wstring, VPGEnumClass, EnumClasses);
-
     public:
         void SetUp() override
         {
@@ -39,11 +39,8 @@ class VPGObjectFileGenerationServiceTest : public testing::Test
             this->_FilePathHpp = ConcatPaths({this->_Workspace, L"vcc_object.hpp"});
             this->_FilePathCpp = ConcatPaths({this->_Workspace, L"vcc_object.cpp"});
 
-            DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr, L"");
-            manager->GetClassMacroList(L"");
-            _Reader->InsertClassMacroList(manager->GetClassMacros());
-
-            VPGIncludePathService::GetWorkspaceIncludePath(L"", manager->GetClassMacros(), _IncludeFiles, _EnumClasses);
+            if (_IncludeFiles.empty())
+                VPGIncludePathService::GetWorkspaceIncludePath(L"", VPGGlobal::GetFileGenerationManager()->GetClassMacros(), _IncludeFiles, _EnumClasses);
         }
 
         void TearDown() override
@@ -76,7 +73,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
@@ -127,7 +124,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Object)
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
@@ -166,7 +163,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Object)
         "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
         "        {\r\n"
         "            auto obj = std::make_shared<VPGObject>(*this);\r\n"
-        "            obj->CloneEnumA(this->_EnumA);\r\n"
+        "            obj->CloneEnumA(this->_EnumA.get());\r\n"
         "            obj->CloneEnumB(this->_EnumB);\r\n"
         "            return obj;\r\n"
         "        }\r\n"
@@ -195,7 +192,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritClass)
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
@@ -232,7 +229,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritClass)
         "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
         "        {\r\n"
         "            auto obj = std::make_shared<VPGGitLog>(*this);\r\n"
-        "            obj->CloneEnumA1(this->_EnumA1);\r\n"
+        "            obj->CloneEnumA1(this->_EnumA1.get());\r\n"
         "            obj->CloneEnumB1(this->_EnumB1);\r\n"
         "            obj->CloneEnumC1(this->_EnumC1);\r\n"
         "            obj->CloneEnumD1(this->_EnumD1);\r\n"
@@ -258,7 +255,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Multi)
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
@@ -326,7 +323,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form)
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
@@ -334,7 +331,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, this->GetEnumClasses(),
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
 
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
@@ -455,14 +452,14 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormWithIndependentManager)
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, this->GetEnumClasses(),
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
 
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
@@ -587,7 +584,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritForm)
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
@@ -595,7 +592,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritForm)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, this->GetEnumClasses(),
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
@@ -717,13 +714,13 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, this->GetEnumClasses(),
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
 
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
@@ -890,14 +887,14 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"State", L"state.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, this->GetEnumClasses(),
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
 
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
@@ -1339,7 +1336,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
@@ -1348,7 +1345,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
 
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, this->GetIncludeFiles(), this->GetEnumClasses(),
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
@@ -1395,7 +1392,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
         "        {\r\n"
         "            auto obj = std::make_shared<VPGObject>(*this);\r\n"
-        "            obj->CloneObject(this->_Object);\r\n"
+        "            obj->CloneObject(this->_Object.get());\r\n"
         "            obj->CloneVectorObject(this->_VectorObject);\r\n"
         "            obj->CloneMapObject(this->_MapObject);\r\n"
         "            obj->CloneSetObject(this->_SetObject);\r\n"
@@ -1799,7 +1796,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
@@ -1809,7 +1806,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
 
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, this->GetIncludeFiles(), this->GetEnumClasses(),
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
@@ -1855,7 +1852,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
         "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
         "        {\r\n"
         "            auto obj = std::make_shared<VPGObjectB>(*this);\r\n"
-        "            obj->CloneObject(this->_Object);\r\n"
+        "            obj->CloneObject(this->_Object.get());\r\n"
         "            return obj;\r\n"
         "        }\r\n"
         "\r\n"
@@ -1965,7 +1962,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
@@ -1975,7 +1972,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
 
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, this->GetIncludeFiles(), this->GetEnumClasses(),
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
     EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
@@ -2020,7 +2017,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
         "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
         "        {\r\n"
         "            auto obj = std::make_shared<VPGObject>(*this);\r\n"
-        "            obj->CloneObject(this->_Object);\r\n"
+        "            obj->CloneObject(this->_Object.get());\r\n"
         "            obj->CloneVectorObject(this->_VectorObject);\r\n"
         "            obj->CloneMapObject(this->_MapObject);\r\n"
         "            obj->CloneSetObject(this->_SetObject);\r\n"

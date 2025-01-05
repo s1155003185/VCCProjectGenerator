@@ -2,92 +2,76 @@
 
 #include "memory_macro.hpp"
 #include "vpg_enum_class_reader.hpp"
-#include "vpg_file_generation_manager.hpp"
+#include "vpg_global.hpp"
 
-class VPGEnumClassReaderTest : public testing::Test 
-{
-    MANAGER_SPTR(VPGEnumClassReader, Reader);
-    public:
-        void SetUp() override
-        {
-            DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr, L"");
-            manager->GetClassMacroList(L"");
-            _Reader->InsertClassMacroList(manager->GetClassMacros());
-        }
-
-        void TearDown() override
-        {
-        }
-};
-
-TEST_F(VPGEnumClassReaderTest, GetCodeLine)
+TEST(VPGEnumClassReaderTest, GetCodeLine)
 {
     size_t pos = 0;
-    EXPECT_EQ(this->GetReader()->GetCppCodeLine(L"a\nb\nc", pos, true), L"a\n");
+    EXPECT_EQ(VPGGlobal::GetEnumClassReader()->GetCppCodeLine(L"a\nb\nc", pos, true), L"a\n");
     EXPECT_EQ(pos, 1UL);
 
     pos = 0;
-    EXPECT_EQ(this->GetReader()->GetCppCodeLine(L"a\r\nb\nc", pos, true), L"a\r\n");
+    EXPECT_EQ(VPGGlobal::GetEnumClassReader()->GetCppCodeLine(L"a\r\nb\nc", pos, true), L"a\r\n");
     EXPECT_EQ(pos, 2UL);
     
     pos = 0;
-    EXPECT_EQ(this->GetReader()->GetCppCodeLine(L"a\\\nb\nc", pos, true), L"a\\\nb\n");
+    EXPECT_EQ(VPGGlobal::GetEnumClassReader()->GetCppCodeLine(L"a\\\nb\nc", pos, true), L"a\\\nb\n");
     EXPECT_EQ(pos, 4UL);
 
     pos = 0;
-    EXPECT_EQ(this->GetReader()->GetCppCodeLine(L"a\\\r\nb\nc", pos, true), L"a\\\r\nb\n");
+    EXPECT_EQ(VPGGlobal::GetEnumClassReader()->GetCppCodeLine(L"a\\\r\nb\nc", pos, true), L"a\\\r\nb\n");
     EXPECT_EQ(pos, 5UL);
 }
 
-TEST_F(VPGEnumClassReaderTest, GetAttribute)
+TEST(VPGEnumClassReaderTest, GetAttribute)
 {
-    std::vector<std::wstring> result = this->GetReader()->GetAttribute(L"");
+    std::vector<std::wstring> result = VPGGlobal::GetEnumClassReader()->GetAttribute(L"");
     std::vector<std::wstring> expectedResult = {};
     EXPECT_EQ(result, expectedResult);
 
-    result = this->GetReader()->GetAttribute(L"abc");
+    result = VPGGlobal::GetEnumClassReader()->GetAttribute(L"abc");
     expectedResult = {};
     EXPECT_EQ(result, expectedResult);
     
-    result = this->GetReader()->GetAttribute(L"@");
+    result = VPGGlobal::GetEnumClassReader()->GetAttribute(L"@");
     expectedResult = { };
     EXPECT_EQ(result, expectedResult);
     
-    result = this->GetReader()->GetAttribute(L"@@");
+    result = VPGGlobal::GetEnumClassReader()->GetAttribute(L"@@");
     expectedResult = { };
     EXPECT_EQ(result, expectedResult);
     
-    result = this->GetReader()->GetAttribute(L"@@ReadWrite NoAccess");
+    result = VPGGlobal::GetEnumClassReader()->GetAttribute(L"@@ReadWrite NoAccess");
     expectedResult = { L"@@ReadWrite NoAccess" };
     EXPECT_EQ(result, expectedResult);
     
-    result = this->GetReader()->GetAttribute(L"@@ReadWrite @NoAccess");
+    result = VPGGlobal::GetEnumClassReader()->GetAttribute(L"@@ReadWrite @NoAccess");
     expectedResult = { L"@@ReadWrite @NoAccess" };
     EXPECT_EQ(result, expectedResult);
     
-    result = this->GetReader()->GetAttribute(L"@@ReadWrite No@@Access");
+    result = VPGGlobal::GetEnumClassReader()->GetAttribute(L"@@ReadWrite No@@Access");
     expectedResult = { L"@@ReadWrite No", L"@@Access" };
     EXPECT_EQ(result, expectedResult);
     
-    result = this->GetReader()->GetAttribute(L"@@ReadWrite @@NoAccess");
+    result = VPGGlobal::GetEnumClassReader()->GetAttribute(L"@@ReadWrite @@NoAccess");
     expectedResult = { L"@@ReadWrite", L"@@NoAccess" };
     EXPECT_EQ(result, expectedResult);
 
-    result = this->GetReader()->GetAttribute(L"@@ReadWrite( @@NoAccess)");
+    result = VPGGlobal::GetEnumClassReader()->GetAttribute(L"@@ReadWrite( @@NoAccess)");
     expectedResult = { L"@@ReadWrite(", L"@@NoAccess)" };
     EXPECT_EQ(result, expectedResult);
 }
 
-TEST_F(VPGEnumClassReaderTest, GetJsonAttributes)
+TEST(VPGEnumClassReaderTest, GetJsonAttributes)
 {
-    EXPECT_EQ(this->GetReader()->GetJsonAttributes(L"@@A@@Json@@B", L"@@Json"), nullptr);
+    EXPECT_EQ(VPGGlobal::GetEnumClassReader()->GetJsonAttributes(L"@@A@@Json@@B", L"@@Json"), nullptr);
 
     std::vector<std::wstring> keys = { L"Number", L"String" };
-    EXPECT_EQ(this->GetReader()->GetJsonAttributes(L"@@A@@Json { \"Number\" : 12, \"String\":\"abc\" } @@B { \"B\" : 123}", L"@@Json")->GetKeys(), keys);
-    EXPECT_EQ(this->GetReader()->GetJsonAttributes(L"@@A@@Json{\"Number\":12,\"String\":\"abc\"}@@B{\"B\":123}", L"@@Json")->GetKeys(), keys);
+    EXPECT_EQ(VPGGlobal::GetEnumClassReader()->GetJsonAttributes(L"@@A@@Json { \"Number\" : 12, \"String\":\"abc\" } @@B { \"B\" : 123}", L"@@Json")->GetKeys(), keys);
+    EXPECT_EQ(VPGGlobal::GetEnumClassReader()->GetJsonAttributes(L"@@A@@Json{\"Number\":12,\"String\":\"abc\"}@@B{\"B\":123}", L"@@Json")->GetKeys(), keys);
 }
 
-TEST_F(VPGEnumClassReaderTest, TableCommand)
+TEST(VPGEnumClassReaderTest, TableCommand)
 {
     std::wstring code = L""
         L"#pragma once\r\n"
@@ -112,7 +96,7 @@ TEST_F(VPGEnumClassReaderTest, TableCommand)
         L"};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    this->GetReader()->Parse(code, results);
+    VPGGlobal::GetEnumClassReader()->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)3);
     // first
     auto element = results.at(0);
@@ -130,7 +114,7 @@ TEST_F(VPGEnumClassReaderTest, TableCommand)
     EXPECT_EQ(element->GetCommand(), L"table command 1\r\ntable command 2");
 }
 
-TEST_F(VPGEnumClassReaderTest, TableAttribute)
+TEST(VPGEnumClassReaderTest, TableAttribute)
 {
     std::wstring code = L"#pragma once\r\n"
         "\r\n"
@@ -144,7 +128,7 @@ TEST_F(VPGEnumClassReaderTest, TableAttribute)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    this->GetReader()->Parse(code, results);
+    VPGGlobal::GetEnumClassReader()->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     // first
     auto element = results.at(0);
@@ -165,7 +149,7 @@ TEST_F(VPGEnumClassReaderTest, TableAttribute)
         "};\r\n";
 
     results.clear();
-    this->GetReader()->Parse(code, results);
+    VPGGlobal::GetEnumClassReader()->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     // first
     element = results.at(0);
@@ -195,9 +179,9 @@ void CheckVPGEnumClassReaderTestNormalEnumClassResult(const VPGEnumClassReader *
     EXPECT_EQ(element->GetProperties().at(3)->GetEnumValue(), 1000);
 }
 
-TEST_F(VPGEnumClassReaderTest, NormalEnumClass1)
+TEST(VPGEnumClassReaderTest, NormalEnumClass1)
 {
-    CheckVPGEnumClassReaderTestNormalEnumClassResult(this->GetReader().get(),
+    CheckVPGEnumClassReaderTestNormalEnumClassResult(VPGGlobal::GetEnumClassReader().get(),
         L"#pragma once\r\n"
         L"\r\n"
         L"enum class VCCObjectProperty\r\n"
@@ -210,9 +194,9 @@ TEST_F(VPGEnumClassReaderTest, NormalEnumClass1)
         L"\r\n");
 }
 
-TEST_F(VPGEnumClassReaderTest, NormalEnumClass2)
+TEST(VPGEnumClassReaderTest, NormalEnumClass2)
 {      
-    CheckVPGEnumClassReaderTestNormalEnumClassResult(this->GetReader().get(),
+    CheckVPGEnumClassReaderTestNormalEnumClassResult(VPGGlobal::GetEnumClassReader().get(),
         L"#pragma once\r\n"
         L"\r\n"
         L"enum class VCCObjectProperty\r\n"
@@ -225,9 +209,9 @@ TEST_F(VPGEnumClassReaderTest, NormalEnumClass2)
         L"\r\n");
 }
 
-TEST_F(VPGEnumClassReaderTest, NormalEnumClass3)
+TEST(VPGEnumClassReaderTest, NormalEnumClass3)
 {
-    CheckVPGEnumClassReaderTestNormalEnumClassResult(this->GetReader().get(),
+    CheckVPGEnumClassReaderTestNormalEnumClassResult(VPGGlobal::GetEnumClassReader().get(),
         L"#pragma once\r\n"
         L"\r\n"
         L"enum class VCCObjectProperty\r\n"
@@ -282,9 +266,9 @@ void CheckVPGEnumClassReaderTestNormalResult(const VPGEnumClassReader *reader, c
     EXPECT_EQ(element->GetProperties().at(4)->GetCommand(), L"Command F\r\nCommand G");
 }
 
-TEST_F(VPGEnumClassReaderTest, Normal1)
+TEST(VPGEnumClassReaderTest, Normal1)
 {
-    CheckVPGEnumClassReaderTestNormalResult(this->GetReader().get(),
+    CheckVPGEnumClassReaderTestNormalResult(VPGGlobal::GetEnumClassReader().get(),
         L"#pragma once\r\n"
         L"\r\n"
         L"#include <string>\r\n"
@@ -317,9 +301,9 @@ TEST_F(VPGEnumClassReaderTest, Normal1)
     );
 }
 
-TEST_F(VPGEnumClassReaderTest, Normal2)
+TEST(VPGEnumClassReaderTest, Normal2)
 {   
-    CheckVPGEnumClassReaderTestNormalResult(this->GetReader().get(),
+    CheckVPGEnumClassReaderTestNormalResult(VPGGlobal::GetEnumClassReader().get(),
         L"#pragma once\r\n"
         L"\r\n"
         L"#include <string>\r\n"
@@ -352,9 +336,9 @@ TEST_F(VPGEnumClassReaderTest, Normal2)
     );
 }
 
-TEST_F(VPGEnumClassReaderTest, Normal3)
+TEST(VPGEnumClassReaderTest, Normal3)
 {    
-    CheckVPGEnumClassReaderTestNormalResult(this->GetReader().get(),
+    CheckVPGEnumClassReaderTestNormalResult(VPGGlobal::GetEnumClassReader().get(),
         L"#pragma once\r\n"
         L"\r\n"
         L"#include <string>\r\n"
@@ -387,7 +371,7 @@ TEST_F(VPGEnumClassReaderTest, Normal3)
     );
 }
 
-TEST_F(VPGEnumClassReaderTest, VCCEnumClassProperty)
+TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
 {
     std::wstring code = L""
         L"#pragma once\r\n"
@@ -411,7 +395,7 @@ TEST_F(VPGEnumClassReaderTest, VCCEnumClassProperty)
         L"};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    this->GetReader()->Parse(code, results);
+    VPGGlobal::GetEnumClassReader()->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     // first
     auto element = results.at(0);
@@ -469,7 +453,7 @@ TEST_F(VPGEnumClassReaderTest, VCCEnumClassProperty)
     EXPECT_EQ(element->GetProperties().at(6)->GetCommand(), L"");
 }
 
-TEST_F(VPGEnumClassReaderTest, AccessMode)
+TEST(VPGEnumClassReaderTest, AccessMode)
 {
     std::wstring code = L""
         "#pragma once\r\n"
@@ -484,7 +468,7 @@ TEST_F(VPGEnumClassReaderTest, AccessMode)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    this->GetReader()->Parse(code, results);
+    VPGGlobal::GetEnumClassReader()->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     // first
     auto element = results.at(0);
@@ -508,7 +492,7 @@ TEST_F(VPGEnumClassReaderTest, AccessMode)
     EXPECT_EQ(element->GetProperties().at(4)->GetAccessMode(), VPGEnumClassPropertyAccessMode::NoAccess);
 }
 
-TEST_F(VPGEnumClassReaderTest, EnumClassMixedWithOthers)
+TEST(VPGEnumClassReaderTest, EnumClassMixedWithOthers)
 {
     std::wstring code = L""
         "#pragma once\r\n"
@@ -534,7 +518,7 @@ TEST_F(VPGEnumClassReaderTest, EnumClassMixedWithOthers)
         "}\r\n"
         "enum EnumAOneLine {}; enum class EnumBOneLine {}; enum class EnumCOneLine;\r\n";
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    this->GetReader()->Parse(code, results);
+    VPGGlobal::GetEnumClassReader()->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)6);
     auto element = results.at(0);
     EXPECT_EQ(element->GetNamespace(), L"");
@@ -556,7 +540,7 @@ TEST_F(VPGEnumClassReaderTest, EnumClassMixedWithOthers)
     EXPECT_EQ(element->GetName(), L"EnumBOneLine");
 }
 
-TEST_F(VPGEnumClassReaderTest, EnumClassWithManager)
+TEST(VPGEnumClassReaderTest, EnumClassWithManager)
 {
     std::wstring code = L""
         "#pragma once\r\n"
@@ -569,7 +553,7 @@ TEST_F(VPGEnumClassReaderTest, EnumClassWithManager)
         "    Action // ACTION(AddGitLog) \r\n"
         "};\r\n";
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    this->GetReader()->Parse(code, results);
+    VPGGlobal::GetEnumClassReader()->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     auto element = results.at(0);
     EXPECT_EQ(element->GetNamespace(), L"");
@@ -595,7 +579,7 @@ TEST_F(VPGEnumClassReaderTest, EnumClassWithManager)
     EXPECT_EQ(element->GetProperties().at(4)->GetPropertyName(), L"AddGitLog");
 }
 
-TEST_F(VPGEnumClassReaderTest, EnumClassWithAction)
+TEST(VPGEnumClassReaderTest, EnumClassWithAction)
 {
     std::wstring code = L""
         "#pragma once\r\n"
@@ -606,7 +590,7 @@ TEST_F(VPGEnumClassReaderTest, EnumClassWithAction)
         "    , DeleteWorkspace // ACTION(DeleteWorkspace)\r\n"
         "};\r\n";
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    this->GetReader()->Parse(code, results);
+    VPGGlobal::GetEnumClassReader()->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     auto element = results.at(0);
     EXPECT_EQ(element->GetNamespace(), L"");

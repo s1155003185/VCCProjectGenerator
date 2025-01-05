@@ -107,7 +107,7 @@ TEST(ClassMacroTest, Vector)
     EXPECT_EQ(testClass->GetVector().at(5), 4);
     EXPECT_EQ(testClass->GetVector().at(6), 3);
 
-    testClass->RemoveVectorByIndex(1);
+    testClass->RemoveVectorAtIndex(1);
     EXPECT_TRUE(testClass->GetVector().size() == 6);
     EXPECT_EQ(testClass->GetVector().at(0), 10);
     EXPECT_EQ(testClass->GetVector().at(1), 12);
@@ -143,7 +143,7 @@ TEST(ClassMacroTest, Vector)
     EXPECT_EQ(testClass->GetVectorSPTR().at(5)->GetIndex(), 4);
     EXPECT_EQ(testClass->GetVectorSPTR().at(6)->GetIndex(), 3);
 
-    testClass->RemoveVectorSPTRByIndex(1);
+    testClass->RemoveVectorSPTRAtIndex(1);
     EXPECT_TRUE(testClass->GetVectorSPTR().size() == 6);
     EXPECT_EQ(testClass->GetVectorSPTR().at(0)->GetIndex(), 10);
     EXPECT_EQ(testClass->GetVectorSPTR().at(1)->GetIndex(), 12);

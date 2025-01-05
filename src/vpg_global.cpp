@@ -1,13 +1,16 @@
 #include "vpg_global.hpp"
 
+#include <assert.h>
 #include <string>
+#include <memory>
 
-#include "terminal_service.hpp"
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
 #include "log_config.hpp"
 
 #include "vpg_project_type.hpp"
+
+using namespace vcc;
 
 constexpr auto URL = L"https://github.com/s1155003185/";
 constexpr auto URL_GIT = L".git"; 
@@ -16,12 +19,12 @@ constexpr auto VCC_GIT_PROJ_NAME = L"VCCModule";
 
 constexpr auto USER_HOME_VARIABLE = L"${userHome}";
 
-using namespace vcc;
-
+std::shared_ptr<VPGEnumClassReader> VPGGlobal::_EnumClassReader = nullptr;
+std::shared_ptr<VPGFileGenerationManager> VPGGlobal::_FileGenerationManager = nullptr;
 
 std::wstring VPGGlobal::GetVersion()
 {
-    return L"v0.2.6";
+    return L"v0.3.0";
 }
 
 std::wstring VPGGlobal::GetVccLocalResponseFolder()
@@ -85,6 +88,18 @@ std::wstring VPGGlobal::GetCppDefaultIncludePathMacOs()
     return L"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/V1";
 }
 
+std::shared_ptr<VPGEnumClassReader> VPGGlobal::GetEnumClassReader()
+{
+    assert(VPGGlobal::_EnumClassReader != nullptr);
+    return VPGGlobal::_EnumClassReader;
+}
+
+std::shared_ptr<VPGFileGenerationManager> VPGGlobal::GetFileGenerationManager()
+{
+    assert(VPGGlobal::_FileGenerationManager != nullptr);
+    return VPGGlobal::_FileGenerationManager;
+}
+
 std::wstring VPGGlobal::GetConvertedPath(const std::wstring &path)
 {
     std::wstring result = path;
@@ -93,4 +108,11 @@ std::wstring VPGGlobal::GetConvertedPath(const std::wstring &path)
         ReplaceAll(result, USER_HOME_VARIABLE, userHomePath);
     CATCH
     return result;
+}
+
+void VPGGlobal::Initialize(const std::wstring &projectWorkspace)
+{
+    VPGGlobal::_FileGenerationManager = std::make_unique<VPGFileGenerationManager>(std::make_shared<LogConfig>(LogConfigInitialType::None), L"");
+    VPGGlobal::_FileGenerationManager->GetClassMacroList(projectWorkspace);
+    VPGGlobal::_EnumClassReader = std::make_shared<VPGEnumClassReader>(VPGGlobal::_FileGenerationManager->GetClassMacros());
 }

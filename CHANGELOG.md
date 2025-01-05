@@ -1,6 +1,9 @@
 # Change Log
 
 ## [Unreleased]
+- Review function naming
+- Class macro VECTOR, VECTOR_SPTR add Remove method
+- Git
 
 ### [v0.2.6] - 2025-01-05: Form - Action
 - Support @@Thread

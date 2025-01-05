@@ -7,8 +7,9 @@
 #include "file_helper.hpp"
 
 #include "vpg_action_file_generation_service.hpp"
-#include "vpg_file_generation_manager.hpp"
 #include "vpg_enum_class_reader.hpp"
+#include "vpg_file_generation_manager.hpp"
+#include "vpg_global.hpp"
 
 using namespace vcc;
 
@@ -17,17 +18,11 @@ class VPGActionFileGenerationServiceTest : public testing::Test
     GETSET_SPTR(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGActionFileGenerationServiceTest/");
 
-    MANAGER_SPTR(VPGEnumClassReader, Reader);
-
     public:
         void SetUp() override
         {
             this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
-            
-            DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr, L"");
-            manager->GetClassMacroList(L"");
-            _Reader->InsertClassMacroList(manager->GetClassMacros());
         }
 
         void TearDown() override
@@ -176,7 +171,7 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile)
         "\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::vector<std::wstring> hppResult = {
             GetHppClass(L"AddWorkspace", { L"GETSET(std::wstring, Name, L\"\")" }, L"std::wstring name"),
@@ -224,7 +219,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
         "\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
     std::vector<std::wstring> emptyVector;
     
     std::map<std::wstring, std::wstring> classPathMapping;

@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <math.h>
 #include <string>
+#include <mutex>
 #include <vector>
 
 #include "exception_macro.hpp"
@@ -15,6 +16,7 @@
 using namespace vcc;
 
 const std::wstring attributeToken = L"@@";
+std::mutex _mutex;
 
 VPGEnumClassReader::VPGEnumClassReader(const std::set<std::wstring> &classMacroList) 
 {
@@ -497,6 +499,7 @@ std::wstring VPGEnumClassReader::GetCppCodeLine(const std::wstring &str, size_t 
 void VPGEnumClassReader::Parse(const std::wstring &cppCode, std::vector<std::shared_ptr<VPGEnumClass>> &results) const
 {
     TRY
+        std::unique_lock lock(_mutex);
         size_t pos = 0;
         std::wstring currentCommand = L"";
         std::wstring currentNamespace = L"";

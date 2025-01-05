@@ -667,10 +667,10 @@ void VPGGenerationOptionPropertyAccessor::_RemoveContainerElement(const int64_t 
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
         case VPGGenerationOptionProperty::Plugins:
-            obj->RemovePluginsByIndex(index);
+            obj->RemovePluginsAtIndex(index);
             break;
         case VPGGenerationOptionProperty::Exports:
-            obj->RemoveExportsByIndex(index);
+            obj->RemoveExportsAtIndex(index);
             break;
         default:
             assert(false);

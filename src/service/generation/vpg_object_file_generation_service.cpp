@@ -53,7 +53,7 @@ std::wstring VPGObjectFileGenerationService::GetCloneFunction(const VPGEnumClass
                 if ((!property->GetType1().empty() && IsCaptial(property->GetType1())) 
                     || (!property->GetType2().empty() && IsCaptial(property->GetType2()))) {
                     if (Find(property->GetMacro(), L"SPTR") != std::wstring::npos) {
-                        cloneContent += indent + INDENT + L"obj->Clone" + property->GetPropertyName() + L"(this->_" + property->GetPropertyName() + L");\r\n";
+                        cloneContent += indent + INDENT + L"obj->Clone" + property->GetPropertyName() + L"(this->_" + property->GetPropertyName() + (IsStartWith(property->GetMacro(), L"GETSET") ? L".get()" : L"" ) + L");\r\n";
                     }
                 }
             }

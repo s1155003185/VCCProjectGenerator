@@ -274,17 +274,17 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                 importPackages.insert(L"com.sun.jna.Pointer");
                 importPackages.insert(L"com.sun.jna.ptr.PointerByReference");
                 result += INDENT + L"void ReadString(Pointer ref, long property, PointerByReference value, long index);\r\n"
-                    + INDENT + L"void ReadStringByKey(Pointer ref, long property, PointerByReference value, Pointer key);\r\n"
+                    + INDENT + L"void ReadStringAtKey(Pointer ref, long property, PointerByReference value, Pointer key);\r\n"
                     + INDENT + L"void WriteString(Pointer ref, long property, PointerByReference value, long index);\r\n"
-                    + INDENT + L"void WriteStringByKey(Pointer ref, long property, PointerByReference value, Pointer key);\r\n"
+                    + INDENT + L"void WriteStringAtKey(Pointer ref, long property, PointerByReference value, Pointer key);\r\n"
                     + INDENT + L"void InsertString(Pointer ref, long property, PointerByReference value, long index);\r\n";
                 pos += dllInterfaceExportPropertyAccessorString.length() - 1;
             } else if (IsStartWith(content, dllInterfaceExportPropertyAccessorObject, pos)) {
                 importPackages.insert(L"com.sun.jna.Pointer");
                 result += INDENT + L"Pointer ReadObject(Pointer ref, long property, long index);\r\n"
-                    + INDENT + L"Pointer ReadObjectByKey(Pointer ref, long property, Pointer key);\r\n"
+                    + INDENT + L"Pointer ReadObjectAtKey(Pointer ref, long property, Pointer key);\r\n"
                     + INDENT + L"void WriteObject(Pointer ref, long property, Pointer value, long index);\r\n"
-                    + INDENT + L"void WriteObjectByKey(Pointer ref, long property, Pointer value, Pointer key);\r\n"
+                    + INDENT + L"void WriteObjectAtKey(Pointer ref, long property, Pointer value, Pointer key);\r\n"
                     + INDENT + L"Pointer AddObject(Pointer ref, long property, long objectType, long index);\r\n"
                     + INDENT + L"void InsertObject(Pointer ref, long property, Pointer value, long index);\r\n";
                 pos += dllInterfaceExportPropertyAccessorObject.length() - 1;
@@ -294,7 +294,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                     + INDENT + L"Pointer GetMapKeys(Pointer ref, long property);\r\n"
                     + INDENT + L"boolean IsContainKey(Pointer ref, long property, Pointer key);\r\n"
                     + INDENT + L"void RemoveContainerElement(Pointer ref, long property, long index);\r\n"
-                    + INDENT + L"void RemoveContainerElementByKey(Pointer ref, long property, Pointer key);\r\n"
+                    + INDENT + L"void RemoveContainerElementAtKey(Pointer ref, long property, Pointer key);\r\n"
                     + INDENT + L"void ClearContainer(Pointer ref, long property);\r\n";
                 pos += dllInterfaceExportPropertyAccessorContainer.length() - 1;
             } else if (IsStartWith(content, dllInterfaceExportPropertyAccessor, pos)) {
@@ -319,9 +319,9 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                 Trim(name);
                 std::wstring convectedType = GetPropertyAccessorCppToJavaConvertedType(type);
                 result += INDENT + convectedType + L" Read" + name + L"(Pointer ref, long property, long index);\r\n"
-                    + INDENT + convectedType + L" Read" + name + L"ByKey(Pointer ref, long property, Pointer key);\r\n"
+                    + INDENT + convectedType + L" Read" + name + L"AtKey(Pointer ref, long property, Pointer key);\r\n"
                     + INDENT + L"void Write" + name + L"(Pointer ref, long property, " + convectedType + L" value, long index);\r\n"
-                    + INDENT + L"void Write" + name + L"ByKey(Pointer ref, long property, " + convectedType + L" value, Pointer key);\r\n"
+                    + INDENT + L"void Write" + name + L"AtKey(Pointer ref, long property, " + convectedType + L" value, Pointer key);\r\n"
                     + INDENT + L"void Insert" + name + L"(Pointer ref, long property, " + convectedType + L" value, long index);\r\n";
                 pos = endPos;
             } 
@@ -519,8 +519,8 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const
 
         if (isMap && isAllowWrite) {
             result += L"\r\n"
-                + INDENT + L"public void remove" + property->GetPropertyName() + L"ByKey(" + javaType1 + L" key) {\r\n"
-                + GetGetterSetterMapKeyContent(classPropertyEnum, dllInstantPrefix, javaType1, L"RemoveContainerElementByKey", false)
+                + INDENT + L"public void remove" + property->GetPropertyName() + L"AtKey(" + javaType1 + L" key) {\r\n"
+                + GetGetterSetterMapKeyContent(classPropertyEnum, dllInstantPrefix, javaType1, L"RemoveContainerElementAtKey", false)
                 + INDENT + L"}\r\n";
         }
             
@@ -558,7 +558,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterRead(const VPGE
             javaFunctionArgument = L"long index";
             dllFunctionIndex = L"index";
         } else if (isMap) {
-            javaFunctionNameSuffix = L"ByKey";
+            javaFunctionNameSuffix = L"AtKey";
             javaFunctionArgument = javaType1 + L" key";
             dllFunctionIndex = L"keyPtr";
             
@@ -597,17 +597,17 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterRead(const VPGE
         }
         if (returnJavaType == L"String") {
             result += INDENT + INDENT + L"PointerByReference result = new PointerByReference();\r\n"
-                + INDENT + INDENT + dllInstantPrefix + L"ReadString" + (isMap ? L"ByKey" : L"") + L"(Handle, " + classPropertyEnum + L", result, " + dllFunctionIndex + L");\r\n"
+                + INDENT + INDENT + dllInstantPrefix + L"ReadString" + (isMap ? L"AtKey" : L"") + L"(Handle, " + classPropertyEnum + L", result, " + dllFunctionIndex + L");\r\n"
                 + INDENT + INDENT + L"return result.getValue().getWideString(0);\r\n"; 
         } else if (IsContain(macro, L"SPTR")) {
             // Object
-            result += INDENT + INDENT + L"return new " + returnJavaType + L"(" + dllInstantPrefix + L"ReadObject" + (isMap ? L"ByKey" : L"") + L"(Handle, " + classPropertyEnum + L", " + dllFunctionIndex + L"));\r\n";
+            result += INDENT + INDENT + L"return new " + returnJavaType + L"(" + dllInstantPrefix + L"ReadObject" + (isMap ? L"AtKey" : L"") + L"(Handle, " + classPropertyEnum + L", " + dllFunctionIndex + L"));\r\n";
         } else if (IsCaptial(returnJavaType)) {
             // Enum
-            result += INDENT + INDENT + L"return " + returnJavaType + L".parse((int)" + dllInstantPrefix + L"ReadLong" + (isMap ? L"ByKey" : L"") + L"(Handle, " + classPropertyEnum + L", " + dllFunctionIndex + L"));\r\n";
+            result += INDENT + INDENT + L"return " + returnJavaType + L".parse((int)" + dllInstantPrefix + L"ReadLong" + (isMap ? L"AtKey" : L"") + L"(Handle, " + classPropertyEnum + L", " + dllFunctionIndex + L"));\r\n";
         } else {
             // Normal Type
-            result += INDENT + INDENT + L"return " + dllInstantPrefix + L"Read" + convertedName + (isMap ? L"ByKey" : L"") + L"(Handle, " + classPropertyEnum + L", " + dllFunctionIndex + L");\r\n";
+            result += INDENT + INDENT + L"return " + dllInstantPrefix + L"Read" + convertedName + (isMap ? L"AtKey" : L"") + L"(Handle, " + classPropertyEnum + L", " + dllFunctionIndex + L");\r\n";
         }
         result += INDENT + L"}\r\n";
     CATCH
@@ -647,7 +647,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterWrite(const VPG
                 importFiles.insert(L"com.sun.jna.Pointer");
             }
         } else if (isMap) {
-            javaFunctionNameSuffix = L"ByKey";
+            javaFunctionNameSuffix = L"AtKey";
             javaFunctionArgument = javaType1 + L" key, ";
             dllFunctionIndex = L"keyPtr";
             
@@ -692,15 +692,15 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterWrite(const VPG
                 + INDENT + INDENT + L"valuePtr.setWideString(0, value);\r\n"
                 + INDENT + INDENT + L"PointerByReference valueReference = new PointerByReference();\r\n"
                 + INDENT + INDENT + L"valueReference.setValue(valuePtr);\r\n"
-                + INDENT + INDENT + dllInstantPrefix + L"WriteString" + (isMap ? L"ByKey" : L"") + L"(Handle, " + classPropertyEnum + L", valueReference, " + dllFunctionIndex + L");\r\n";
+                + INDENT + INDENT + dllInstantPrefix + L"WriteString" + (isMap ? L"AtKey" : L"") + L"(Handle, " + classPropertyEnum + L", valueReference, " + dllFunctionIndex + L");\r\n";
         } else if (IsContain(macro, L"SPTR")) {
             // Object
-            result += INDENT + INDENT + dllInstantPrefix + L"WriteObject" + (isMap ? L"ByKey" : L"") + L"(Handle, " + classPropertyEnum + L", value.Handle, " + dllFunctionIndex + L");\r\n";
+            result += INDENT + INDENT + dllInstantPrefix + L"WriteObject" + (isMap ? L"AtKey" : L"") + L"(Handle, " + classPropertyEnum + L", value.Handle, " + dllFunctionIndex + L");\r\n";
         } else if (IsCaptial(cppType)) {
             // Enum
-            result += INDENT + INDENT + dllInstantPrefix + L"WriteLong" + (isMap ? L"ByKey" : L"") + L"(Handle, " + classPropertyEnum + L", value.getValue(), " + dllFunctionIndex + L");\r\n";
+            result += INDENT + INDENT + dllInstantPrefix + L"WriteLong" + (isMap ? L"AtKey" : L"") + L"(Handle, " + classPropertyEnum + L", value.getValue(), " + dllFunctionIndex + L");\r\n";
         } else {
-            result += INDENT + INDENT + dllInstantPrefix + L"Write" + convertedName + (isMap ? L"ByKey" : L"") + L"(Handle, " + classPropertyEnum + L", value, " + dllFunctionIndex + L");\r\n";
+            result += INDENT + INDENT + dllInstantPrefix + L"Write" + convertedName + (isMap ? L"AtKey" : L"") + L"(Handle, " + classPropertyEnum + L", value, " + dllFunctionIndex + L");\r\n";
         }
         result += INDENT + L"}\r\n";
 

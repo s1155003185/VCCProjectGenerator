@@ -360,16 +360,16 @@ void VPGGitLogPropertyAccessor::_RemoveContainerElement(const int64_t &objectPro
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::ParentHashIDs:
-            obj->RemoveParentHashIDsByIndex(index);
+            obj->RemoveParentHashIDsAtIndex(index);
             break;
         case VPGGitLogProperty::AbbreviatedParentHashIDs:
-            obj->RemoveAbbreviatedParentHashIDsByIndex(index);
+            obj->RemoveAbbreviatedParentHashIDsAtIndex(index);
             break;
         case VPGGitLogProperty::Branches:
-            obj->RemoveBranchesByIndex(index);
+            obj->RemoveBranchesAtIndex(index);
             break;
         case VPGGitLogProperty::Tags:
-            obj->RemoveTagsByIndex(index);
+            obj->RemoveTagsAtIndex(index);
             break;
         default:
             assert(false);

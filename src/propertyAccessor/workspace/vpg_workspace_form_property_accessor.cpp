@@ -208,7 +208,7 @@ void VPGWorkspaceFormPropertyAccessor::_RemoveContainerElement(const int64_t &ob
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
         case VPGWorkspaceFormProperty::GitForms:
-            obj->RemoveGitFormsByIndex(index);
+            obj->RemoveGitFormsAtIndex(index);
             break;
         default:
             assert(false);

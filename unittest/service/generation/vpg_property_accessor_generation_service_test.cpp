@@ -12,7 +12,7 @@
 #include "vpg_enum_class.hpp"
 #include "vpg_enum_class_reader.hpp"
 #include "vpg_file_generation_manager.hpp"
-
+#include "vpg_global.hpp"
 #include "vpg_property_accessor_generation_service.hpp"
 
 using namespace vcc;
@@ -24,8 +24,6 @@ class VPGPropertyAccessorFileGenerationServiceTest : public testing::Test
     GETSET_SPTR(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGPropertyAccessorFileGenerationServiceTest/");
     
-    MANAGER_SPTR(VPGEnumClassReader, Reader);
-
     GETSET(std::wstring, FilePathHpp, L"");
     GETSET(std::wstring, FilePathCpp, L"");
     GETSET(std::wstring, IncludeFileName, L"");
@@ -48,11 +46,6 @@ class VPGPropertyAccessorFileGenerationServiceTest : public testing::Test
             this->InsertProjectIncludeList(L"VPGObjectAProperty", L"vpg_object_a_property.hpp");
             this->InsertProjectIncludeList(L"VPGObjectB", L"vpg_object_b.hpp");
             this->InsertProjectIncludeList(L"VPGObjectBProperty", L"vpg_object_b_property.hpp");
-
-
-            DECLARE_UPTR(VPGFileGenerationManager, manager, nullptr, L"");
-            manager->GetClassMacroList(L"");
-            _Reader->InsertClassMacroList(manager->GetClassMacros());
         }
 
         void TearDown() override
@@ -74,7 +67,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -306,7 +299,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
     
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -345,7 +338,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -458,7 +451,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
     
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -631,10 +624,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::ReadWrite:\r\n"
-    "            obj->RemoveReadWriteByIndex(index);\r\n"
+    "            obj->RemoveReadWriteAtIndex(index);\r\n"
     "            break;\r\n"
     "        case VPGObjectProperty::Write:\r\n"
-    "            obj->RemoveWriteByIndex(index);\r\n"
+    "            obj->RemoveWriteAtIndex(index);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -685,7 +678,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -857,7 +850,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -998,7 +991,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
     
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -1056,7 +1049,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        case VPGObjectProperty::VectorInt:\r\n"
     "            return obj->GetVectorInt(index);\r\n"
     "        case VPGObjectProperty::OrderedMapInt:\r\n"
-    "            return obj->GetOrderedMapIntByIndex(index).second;\r\n"
+    "            return obj->GetOrderedMapIntAtIndex(index).second;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -1084,7 +1077,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return obj->GetOrderedMapIntByKey(*keyPtr).second;\r\n"
+    "            return obj->GetOrderedMapIntAtKey(*keyPtr).second;\r\n"
     "        }\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -1109,7 +1102,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            break;\r\n"
     "        case VPGObjectProperty::OrderedMapInt:\r\n"
     "            if (index > -1)\r\n"
-    "                obj->SetOrderedMapIntByIndex(index, value);\r\n"
+    "                obj->SetOrderedMapIntAtIndex(index, value);\r\n"
     "            else\r\n"
     "                obj->InsertOrderedMapInt(value);\r\n"
     "            break;\r\n"
@@ -1144,7 +1137,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
     "            if (obj->IsOrderedMapIntContainKey(*keyPtr))\r\n"
-    "                obj->SetOrderedMapIntByKey(*keyPtr, value);\r\n"
+    "                obj->SetOrderedMapIntAtKey(*keyPtr, value);\r\n"
     "            else\r\n"
     "                obj->InsertOrderedMapInt(*keyPtr, value);\r\n"
     "            break;\r\n"
@@ -1192,7 +1185,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        case VPGObjectProperty::VectorEnum:\r\n"
     "            return static_cast<long>(obj->GetVectorEnum(index));\r\n"
     "        case VPGObjectProperty::OrderedMapEnum:\r\n"
-    "            return static_cast<long>(obj->GetOrderedMapEnumByIndex(index).second);\r\n"
+    "            return static_cast<long>(obj->GetOrderedMapEnumAtIndex(index).second);\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -1220,7 +1213,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return static_cast<long>(obj->GetOrderedMapEnumByKey(*keyPtr).second);\r\n"
+    "            return static_cast<long>(obj->GetOrderedMapEnumAtKey(*keyPtr).second);\r\n"
     "        }\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -1245,7 +1238,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            break;\r\n"
     "        case VPGObjectProperty::OrderedMapEnum:\r\n"
     "            if (index > -1)\r\n"
-    "                obj->SetOrderedMapEnumByIndex(index, static_cast<VCCEnum>(value));\r\n"
+    "                obj->SetOrderedMapEnumAtIndex(index, static_cast<VCCEnum>(value));\r\n"
     "            else\r\n"
     "                obj->InsertOrderedMapEnum(static_cast<VCCEnum>(value));\r\n"
     "            break;\r\n"
@@ -1280,7 +1273,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
     "            if (obj->IsOrderedMapEnumContainKey(*keyPtr))\r\n"
-    "                obj->SetOrderedMapEnumByKey(*keyPtr, static_cast<VCCEnum>(value));\r\n"
+    "                obj->SetOrderedMapEnumAtKey(*keyPtr, static_cast<VCCEnum>(value));\r\n"
     "            else\r\n"
     "                obj->InsertOrderedMapEnum(*keyPtr, static_cast<VCCEnum>(value));\r\n"
     "            break;\r\n"
@@ -1328,7 +1321,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        case VPGObjectProperty::VectorObj:\r\n"
     "            return std::static_pointer_cast<IObject>(obj->GetVectorObj(index));\r\n"
     "        case VPGObjectProperty::OrderedMapObj:\r\n"
-    "            return std::static_pointer_cast<IObject>(obj->GetOrderedMapObjByIndex(index).second);\r\n"
+    "            return std::static_pointer_cast<IObject>(obj->GetOrderedMapObjAtIndex(index).second);\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -1356,7 +1349,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return std::static_pointer_cast<IObject>(obj->GetOrderedMapObjByKey(*keyPtr).second);\r\n"
+    "            return std::static_pointer_cast<IObject>(obj->GetOrderedMapObjAtKey(*keyPtr).second);\r\n"
     "        }\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -1381,7 +1374,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            break;\r\n"
     "        case VPGObjectProperty::OrderedMapObj:\r\n"
     "            if (index > -1)\r\n"
-    "                obj->SetOrderedMapObjByIndex(index, std::static_pointer_cast<VPGObjectA>(value));\r\n"
+    "                obj->SetOrderedMapObjAtIndex(index, std::static_pointer_cast<VPGObjectA>(value));\r\n"
     "            else\r\n"
     "                obj->InsertOrderedMapObj(std::static_pointer_cast<VPGObjectA>(value));\r\n"
     "            break;\r\n"
@@ -1416,7 +1409,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
     "            if (obj->IsOrderedMapObjContainKey(*keyPtr))\r\n"
-    "                obj->SetOrderedMapObjByKey(*keyPtr, std::static_pointer_cast<VPGObjectA>(value));\r\n"
+    "                obj->SetOrderedMapObjAtKey(*keyPtr, std::static_pointer_cast<VPGObjectA>(value));\r\n"
     "            else\r\n"
     "                obj->InsertOrderedMapObj(*keyPtr, std::static_pointer_cast<VPGObjectA>(value));\r\n"
     "            break;\r\n"
@@ -1464,7 +1457,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        case VPGObjectProperty::VectorObj:\r\n"
     "            return std::static_pointer_cast<IObject>(obj->CloneVectorObj(index));\r\n"
     "        case VPGObjectProperty::OrderedMapObj:\r\n"
-    "            return std::static_pointer_cast<IObject>(obj->CloneOrderedMapObjByIndex(index));\r\n"
+    "            return std::static_pointer_cast<IObject>(obj->CloneOrderedMapObjAtIndex(index));\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -1492,7 +1485,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return std::static_pointer_cast<IObject>(obj->CloneOrderedMapObjByKey(*keyPtr));\r\n"
+    "            return std::static_pointer_cast<IObject>(obj->CloneOrderedMapObjAtKey(*keyPtr));\r\n"
     "        }\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -1626,22 +1619,22 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::VectorInt:\r\n"
-    "            obj->RemoveVectorIntByIndex(index);\r\n"
+    "            obj->RemoveVectorIntAtIndex(index);\r\n"
     "            break;\r\n"
     "        case VPGObjectProperty::VectorEnum:\r\n"
-    "            obj->RemoveVectorEnumByIndex(index);\r\n"
+    "            obj->RemoveVectorEnumAtIndex(index);\r\n"
     "            break;\r\n"
     "        case VPGObjectProperty::VectorObj:\r\n"
-    "            obj->RemoveVectorObjByIndex(index);\r\n"
+    "            obj->RemoveVectorObjAtIndex(index);\r\n"
     "            break;\r\n"
     "        case VPGObjectProperty::OrderedMapInt:\r\n"
-    "            obj->RemoveOrderedMapIntByIndex(index);\r\n"
+    "            obj->RemoveOrderedMapIntAtIndex(index);\r\n"
     "            break;\r\n"
     "        case VPGObjectProperty::OrderedMapEnum:\r\n"
-    "            obj->RemoveOrderedMapEnumByIndex(index);\r\n"
+    "            obj->RemoveOrderedMapEnumAtIndex(index);\r\n"
     "            break;\r\n"
     "        case VPGObjectProperty::OrderedMapObj:\r\n"
-    "            obj->RemoveOrderedMapObjByIndex(index);\r\n"
+    "            obj->RemoveOrderedMapObjAtIndex(index);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -1662,7 +1655,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            obj->RemoveMapIntByKey(*keyPtr);\r\n"
+    "            obj->RemoveMapIntAtKey(*keyPtr);\r\n"
     "            break;\r\n"
     "        }\r\n"
     "        case VPGObjectProperty::MapEnum: {\r\n"
@@ -1670,7 +1663,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            obj->RemoveMapEnumByKey(*keyPtr);\r\n"
+    "            obj->RemoveMapEnumAtKey(*keyPtr);\r\n"
     "            break;\r\n"
     "        }\r\n"
     "        case VPGObjectProperty::MapObj: {\r\n"
@@ -1678,7 +1671,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            obj->RemoveMapObjByKey(*keyPtr);\r\n"
+    "            obj->RemoveMapObjAtKey(*keyPtr);\r\n"
     "            break;\r\n"
     "        }\r\n"
     "        case VPGObjectProperty::OrderedMapInt: {\r\n"
@@ -1686,7 +1679,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            obj->RemoveOrderedMapIntByKey(*keyPtr);\r\n"
+    "            obj->RemoveOrderedMapIntAtKey(*keyPtr);\r\n"
     "            break;\r\n"
     "        }\r\n"
     "        case VPGObjectProperty::OrderedMapEnum: {\r\n"
@@ -1694,7 +1687,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            obj->RemoveOrderedMapEnumByKey(*keyPtr);\r\n"
+    "            obj->RemoveOrderedMapEnumAtKey(*keyPtr);\r\n"
     "            break;\r\n"
     "        }\r\n"
     "        case VPGObjectProperty::OrderedMapObj: {\r\n"
@@ -1702,7 +1695,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            obj->RemoveOrderedMapObjByKey(*keyPtr);\r\n"
+    "            obj->RemoveOrderedMapObjAtKey(*keyPtr);\r\n"
     "            break;\r\n"
     "        }\r\n"
     "        default:\r\n"
@@ -1767,7 +1760,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);
@@ -2166,7 +2159,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Vector:\r\n"
-    "            obj->RemoveVectorByIndex(index);\r\n"
+    "            obj->RemoveVectorAtIndex(index);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -2187,7 +2180,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            obj->RemoveMapByKey(*keyPtr);\r\n"
+    "            obj->RemoveMapAtKey(*keyPtr);\r\n"
     "            break;\r\n"
     "        }\r\n"
     "        default:\r\n"
@@ -2229,7 +2222,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, ManagerAndAction)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    this->GetReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), enumClassList);

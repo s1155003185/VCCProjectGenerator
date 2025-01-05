@@ -111,7 +111,7 @@ std::shared_ptr<IObject> VPGMainForm::Clone() const
 {
     auto obj = std::make_shared<VPGMainForm>(*this);
     obj->CloneWorkspaceForms(this->_WorkspaceForms);
-    obj->CloneCurrentWorkspaceForm(this->_CurrentWorkspaceForm);
+    obj->CloneCurrentWorkspaceForm(this->_CurrentWorkspaceForm.get());
     return obj;
 }
 
