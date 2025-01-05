@@ -23,7 +23,7 @@ class VPGVccGenerationManager : public VPGBaseGenerationManager
         std::vector<std::wstring> GetUpdateList() const;
         std::vector<std::wstring> GetUpdateUnitTestList() const;
 
-        void CreateVccJson() const;
+        void CreateVccJson(bool isNew) const;
         void ReadVccJson() const;
 
         virtual void Add() const override;

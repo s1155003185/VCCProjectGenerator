@@ -72,13 +72,14 @@ std::vector<std::wstring> VPGVccGenerationManager::GetUpdateUnitTestList() const
     return result;    
 }
 
-void VPGVccGenerationManager::CreateVccJson() const
+void VPGVccGenerationManager::CreateVccJson(bool isNew) const
 {
     TRY
         DECLARE_UPTR(JsonBuilder, jsonBuilder);
         jsonBuilder->SetIsBeautify(true);
         _Option->SetVersion(VPGGlobal::GetVersion());
-        _Option->InsertExports(std::make_shared<VPGGenerationOptionExport>());
+        if (isNew)
+            _Option->InsertExports(std::make_shared<VPGGenerationOptionExport>());
         WriteFile(ConcatPaths({_Workspace, VPGGlobal::GetVccJsonFileName()}), _Option->SerializeJson(jsonBuilder.get()), true);
     CATCH
 }
@@ -119,7 +120,7 @@ void VPGVccGenerationManager::Add() const
         }
         
         // Create Json file at the end to force override
-        CreateVccJson();
+        CreateVccJson(true);
         LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Done");
     CATCH
 }
@@ -155,7 +156,7 @@ void VPGVccGenerationManager::Update() const
         WriteFile(makefilePath, this->AdjustMakefile(makefileContent), true);
         
         // Create Json file at the end to force override
-        CreateVccJson();
+        CreateVccJson(false);
         LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Done");        
     CATCH
 }
