@@ -199,7 +199,7 @@ bool VPGWorkspaceFormPropertyAccessor::_IsContainKey(const int64_t &objectProper
     return false;
 }
 
-void VPGWorkspaceFormPropertyAccessor::_RemoveContainerElement(const int64_t &objectProperty, const int64_t &index) const
+void VPGWorkspaceFormPropertyAccessor::_RemoveContainerElementAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -216,7 +216,7 @@ void VPGWorkspaceFormPropertyAccessor::_RemoveContainerElement(const int64_t &ob
     CATCH
 }
 
-void VPGWorkspaceFormPropertyAccessor::_RemoveContainerElement(const int64_t &objectProperty, const void * /*key*/) const
+void VPGWorkspaceFormPropertyAccessor::_RemoveContainerElementAtKey(const int64_t &objectProperty, const void * /*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND

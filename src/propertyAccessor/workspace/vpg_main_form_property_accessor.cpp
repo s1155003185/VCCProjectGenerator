@@ -149,7 +149,7 @@ bool VPGMainFormPropertyAccessor::_IsContainKey(const int64_t &objectProperty, c
     return false;
 }
 
-void VPGMainFormPropertyAccessor::_RemoveContainerElement(const int64_t &objectProperty, const int64_t &index) const
+void VPGMainFormPropertyAccessor::_RemoveContainerElementAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -166,7 +166,7 @@ void VPGMainFormPropertyAccessor::_RemoveContainerElement(const int64_t &objectP
     CATCH
 }
 
-void VPGMainFormPropertyAccessor::_RemoveContainerElement(const int64_t &objectProperty, const void * /*key*/) const
+void VPGMainFormPropertyAccessor::_RemoveContainerElementAtKey(const int64_t &objectProperty, const void * /*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND

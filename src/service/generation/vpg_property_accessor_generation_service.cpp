@@ -823,7 +823,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
         GetIsHavingGenerateTypeMapType(enumClassProperties, isHavingGeneralType, isHavingVectorType, isHavingMapType);
 
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_RemoveContainerElement";
+            "void " + propertyName + L"Accessor::_RemoveContainerElementAtIndex";
         if (isHavingVectorType)
             result += L"(const int64_t &objectProperty, const int64_t &index) const\r\n";
         else
@@ -850,7 +850,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
             "}\r\n";
 
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_RemoveContainerElement";
+            "void " + propertyName + L"Accessor::_RemoveContainerElementAtKey";
         if (isHavingMapType)
             result += L"(const int64_t &objectProperty, const void *key) const\r\n";
         else

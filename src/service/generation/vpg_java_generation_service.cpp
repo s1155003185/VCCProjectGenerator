@@ -293,7 +293,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                 result += INDENT + L"long GetContainerCount(Pointer ref, long property);\r\n"
                     + INDENT + L"Pointer GetMapKeys(Pointer ref, long property);\r\n"
                     + INDENT + L"boolean IsContainKey(Pointer ref, long property, Pointer key);\r\n"
-                    + INDENT + L"void RemoveContainerElement(Pointer ref, long property, long index);\r\n"
+                    + INDENT + L"void RemoveContainerElementAtIndex(Pointer ref, long property, long index);\r\n"
                     + INDENT + L"void RemoveContainerElementAtKey(Pointer ref, long property, Pointer key);\r\n"
                     + INDENT + L"void ClearContainer(Pointer ref, long property);\r\n";
                 pos += dllInterfaceExportPropertyAccessorContainer.length() - 1;
@@ -514,7 +514,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const
         if (isVector && isAllowWrite)
             result += L"\r\n"
                 + INDENT + L"public void remove" + property->GetPropertyName() + L"At(long index) {\r\n"
-                + INDENT + INDENT + dllInstantPrefix + L"RemoveContainerElement(Handle, " + classPropertyEnum + L", index);\r\n"
+                + INDENT + INDENT + dllInstantPrefix + L"RemoveContainerElementAtIndex(Handle, " + classPropertyEnum + L", index);\r\n"
                 + INDENT + L"}\r\n";
 
         if (isMap && isAllowWrite) {
