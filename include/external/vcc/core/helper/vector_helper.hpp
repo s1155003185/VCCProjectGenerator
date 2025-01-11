@@ -93,7 +93,7 @@ namespace vcc
         if (IsEmpty(sourceVector))
             return -1;
         auto derivedObj = std::dynamic_pointer_cast<T>(obj);
-        if (derivedObj)
+        if (derivedObj != nullptr)
             return Find(sourceVector, derivedObj);
         return -1;
     }
@@ -111,7 +111,7 @@ namespace vcc
     void SetIObject(std::vector<std::shared_ptr<T>> &sourceVector, std::shared_ptr<IObject> &obj, const int64_t &index)
     {
         auto derivedObj = std::dynamic_pointer_cast<T>(obj);
-        if (derivedObj) {
+        if (derivedObj != nullptr) {
             if (index >= 0)
                 sourceVector[index] = derivedObj;
             else
@@ -141,12 +141,14 @@ namespace vcc
     void InsertIObject(std::vector<std::shared_ptr<T>> &sourceVector, std::shared_ptr<IObject> obj, const int64_t &index)
     {
         auto derivedObj = std::dynamic_pointer_cast<T>(obj);
-        if (derivedObj) {
+        if (derivedObj != nullptr) {
+            throw std::runtime_error("Hi");
             if (index >= 0)
                 sourceVector.insert(sourceVector.begin() + index, derivedObj);
             else
                 sourceVector.push_back(derivedObj);
         }
+        throw std::runtime_error("Bi");
     }
     
     template <typename T>
@@ -185,7 +187,7 @@ namespace vcc
     void RemoveIObject(std::vector<std::shared_ptr<T>> &sourceVector, const std::shared_ptr<IObject> &obj)
     {
         auto derivedObj = std::dynamic_pointer_cast<T>(obj);
-        if (derivedObj) {
+        if (derivedObj != nullptr) {
             sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(),
                 [&](const std::shared_ptr<T> &element) {
                     return element == derivedObj;

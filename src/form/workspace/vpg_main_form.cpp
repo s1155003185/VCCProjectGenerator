@@ -50,7 +50,7 @@ std::wstring VPGMainFormAddWorkspaceForm::GetRedoMessageComplete() const
 void VPGMainFormAddWorkspaceForm::OnRedo()
 {
     TRY
-        // <vcc:VPGMainFormAddWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">        
+        // <vcc:VPGMainFormAddWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
         PropertyAccessorFactory::Create(_ParentObject)->InsertObject(LockType::WriteLock, static_cast<int64_t>(VPGMainFormProperty::WorkspaceForms), std::make_shared<VPGMainForm>());
         // </vcc:VPGMainFormAddWorkspaceFormOnRedo>
     CATCH
