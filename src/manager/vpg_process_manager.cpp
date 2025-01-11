@@ -9,7 +9,6 @@
 #include "i_vpg_generation_manager.hpp"
 #include "json.hpp"
 #include "json_builder.hpp"
-#include "memory_macro.hpp"
 #include "string_helper.hpp"
 #include "vector_helper.hpp"
 #include "vpg_global.hpp"
@@ -60,7 +59,7 @@ void VPGProcessManager::VerifyLocalResponse()
                     // check tag version
                     // if same as current version of generator, no action
                     // if not same, then check verison of genertor exists, if not exists, then master, else switch to correct branch
-                    DECLARE_SPTR(GitLog, currentLog);
+                    auto currentLog = std::make_shared<GitLog>();
                     GitService::GetCurrentLog(this->GetLogConfig().get(), localResponseDirectoryProject, currentLog);
                     if (!IsContain(currentLog->GetTags(), VPGGlobal::GetVersion())) {
                         std::wstring currentBranchName = L"";
@@ -303,8 +302,8 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
             if (!IsFileExists(vccJsonFilePath))
                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, vccJsonFilePath + L": File not found.");
             std::wstring fileContent = ReadFile(vccJsonFilePath);
-            DECLARE_UPTR(JsonBuilder, jsonBuilder);
-            DECLARE_SPTR(Json, json);
+            auto jsonBuilder = std::make_unique<JsonBuilder>();
+            auto json = std::make_shared<Json>();
             jsonBuilder->Deserialize(fileContent, json);
             _Option->DeserializeJson(json);
             _Option->SetProjectType(VPGProjectType::VccComplex);

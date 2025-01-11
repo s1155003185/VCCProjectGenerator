@@ -18,7 +18,6 @@
 #include "time_helper.hpp"
 #include "exception_macro.hpp"
 #include "log_config.hpp"
-#include "memory_macro.hpp"
 #include "process_service.hpp"
 #include "string_helper.hpp"
 #include "vector_helper.hpp"
@@ -190,7 +189,7 @@ namespace vcc
                 std::vector<std::wstring> tokens = SplitString(line, { L" ", L"\t" });
                 if (tokens.size() != (size_t)3)
                     THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected Remote: " + line);
-                DECLARE_SPTR(GitRemote, remote);
+                auto remote = std::make_shared<GitRemote>();
                 remote->SetName(tokens[0]);
                 remote->SetURL(tokens[1]);
                 if (tokens[2] == remoteMirrorFetch)
@@ -459,7 +458,7 @@ namespace vcc
                 size_t pos = Find(line, L"*");
                 if (pos == std::wstring::npos)
                     continue;
-                DECLARE_SPTR(GitLog, log);
+                auto log = std::make_shared<GitLog>();
                 if (pos > 0) {
                     log->SetColumnIndex((size_t)std::floor(pos/2));
                 } else
@@ -692,7 +691,7 @@ namespace vcc
     void GitService::GetCurrentLog(const LogConfig *logConfig, const std::wstring &workspace, std::shared_ptr<GitLog> log)
     {
         TRY
-            DECLARE_SPTR(GitLogSearchCriteria, searchCriteria);
+            auto searchCriteria = std::make_shared<GitLogSearchCriteria>();
             searchCriteria->SetLogCount(1);
             std::vector<std::shared_ptr<GitLog>> logs;
             GitService::GetLogs(logConfig, workspace, searchCriteria.get(), logs);
@@ -898,7 +897,7 @@ namespace vcc
             std::vector<std::wstring> lines = SplitStringByLine(str);
             for (const std::wstring &line : lines) {
                 if (SplitString(str, { L" ", L"\t" }).size() > 2) {
-                    DECLARE_SPTR(GitBranch, branch);
+                    auto branch = std::make_shared<GitBranch>();
                     ParseGitBranch(line, branch);
                     branches.push_back(branch);
                 }
@@ -1257,7 +1256,7 @@ namespace vcc
     {
         TRY
             GitService::GetLocalConfig(logConfig, workspace, config);
-            DECLARE_SPTR(GitConfig, globalResult);
+            auto globalResult = std::make_shared<GitConfig>();
             GitService::GetGlobalConfig(logConfig, globalResult);
             if (config->GetUserName().empty())
                 config->SetUserName(globalResult->GetUserName());
@@ -1265,7 +1264,7 @@ namespace vcc
                 config->SetUserEmail(globalResult->GetUserEmail());
             for (auto tmpConfig : globalResult->GetConfigs()) {
                 if (config->GetConfigs().find(tmpConfig.first) != config->GetConfigs().end())
-                    config->InsertConfigs(tmpConfig.first, tmpConfig.second);
+                    config->InsertConfigsAtKey(tmpConfig.first, tmpConfig.second);
             }
         CATCH
     }
@@ -1305,7 +1304,7 @@ namespace vcc
     {
         bool result = false;
         try {
-            DECLARE_SPTR(GitConfig, config);
+            auto config = std::make_shared<GitConfig>();
             GitService::GetConfig(logConfig, key, config);
             result = true;
         } catch (...) {
@@ -1319,8 +1318,8 @@ namespace vcc
         TRY
             std::wstring cmdResult = ProcessService::Execute(logConfig, GIT_LOG_ID, L"git config --global --list");
             if (!IsBlank(cmdResult)) {
-                DECLARE_SPTR(Config, element);
-                DECLARE_UPTR(ConfigBuilder, reader);
+                auto element = std::make_shared<Config>();
+                auto reader = std::make_unique<ConfigBuilder>();
                 reader->Deserialize(cmdResult, element);
                 for (auto it : element->GetConfigs()) {
                     if (!element->IsValue(it.first))
@@ -1331,7 +1330,7 @@ namespace vcc
                     } else if (it.first == GIT_CONFIG_USER_EMAIL) {
                         config->SetUserEmail(it.second);
                     }
-                    config->InsertConfigs(it.first, it.second);
+                    config->InsertConfigsAtKey(it.first, it.second);
                 }
 
             }
@@ -1401,8 +1400,8 @@ namespace vcc
         TRY
             std::wstring cmdResult = ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git config --local --list");
             if (!IsBlank(cmdResult)) {
-                DECLARE_SPTR(Config, element);
-                DECLARE_UPTR(ConfigBuilder, reader);
+                auto element = std::make_shared<Config>();
+                auto reader = std::make_unique<ConfigBuilder>();
 
                 reader->Deserialize(cmdResult, element);
                 for (auto it : element->GetConfigs()) {
@@ -1413,7 +1412,7 @@ namespace vcc
                     } else if (it.first == GIT_CONFIG_USER_EMAIL) {
                         config->SetUserEmail(it.second);
                     }
-                    config->InsertConfigs(it.first, it.second);
+                    config->InsertConfigsAtKey(it.first, it.second);
                 }
             }
         CATCH

@@ -74,7 +74,7 @@ class VPGMainFormDeleteWorkspaceForm : public BaseAction
 class VPGMainForm : public BaseForm
 {
     VECTOR_SPTR(VPGWorkspaceForm, WorkspaceForms)
-    GETSET_SPTR(VPGWorkspaceForm, CurrentWorkspaceForm)
+    GETSET_SPTR_NULL(VPGWorkspaceForm, CurrentWorkspaceForm)
     ACTION(AddWorkspaceForm)
     ACTION(DeleteWorkspaceForm)
 

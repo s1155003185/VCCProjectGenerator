@@ -3,7 +3,6 @@
 #include <memory>
 #include <string>
 
-#include "memory_macro.hpp"
 #include "xml_builder.hpp"
 
 using namespace vcc;
@@ -12,7 +11,7 @@ TEST(XMLBuilderTest, ParserSimple_String)
 {
     std::unique_ptr<XmlBuilder> reader = std::make_unique<XmlBuilder>();
     std::wstring xml = L" abc  ";
-    DECLARE_SPTR(Xml, element);
+    auto element = std::make_shared<Xml>();
     reader->Deserialize(xml, element);
     EXPECT_EQ(element->GetName(), L"");
     EXPECT_EQ(element->GetAttributes().size(), (size_t)0);
@@ -27,7 +26,7 @@ TEST(XMLBuilderTest, ParserSimple_SingleTag)
 {
     std::unique_ptr<XmlBuilder> reader = std::make_unique<XmlBuilder>();
     std::wstring xml = L"<br/>";
-    DECLARE_SPTR(Xml, element);
+    auto element = std::make_shared<Xml>();
     reader->Deserialize(xml, element);
     EXPECT_EQ(element->GetName(), L"br");
     EXPECT_EQ(element->GetAttributes().size(), (size_t)0);
@@ -42,7 +41,7 @@ TEST(XMLBuilderTest, ParserSimple_TagWithString)
 {
     std::unique_ptr<XmlBuilder> reader = std::make_unique<XmlBuilder>();
     std::wstring xml = L"<h1>abc</h1>";
-    DECLARE_SPTR(Xml, element);
+    auto element = std::make_shared<Xml>();
     reader->Deserialize(xml, element);
     EXPECT_EQ(element->GetName(), L"h1");
     EXPECT_EQ(element->GetAttributes().size(), (size_t)0);
@@ -57,7 +56,7 @@ TEST(XMLBuilderTest, ParserSimple_EmptyTag)
 {
     std::unique_ptr<XmlBuilder> reader = std::make_unique<XmlBuilder>();
     std::wstring xml = L"<h2></h2>";
-    DECLARE_SPTR(Xml, element);
+    auto element = std::make_shared<Xml>();
     reader->Deserialize(xml, element);
     EXPECT_EQ(element->GetName(), L"h2");
     EXPECT_EQ(element->GetAttributes().size(), (size_t)0);
@@ -72,7 +71,7 @@ TEST(XMLBuilderTest, ParserSimple_Namespace)
 {
     std::unique_ptr<XmlBuilder> reader = std::make_unique<XmlBuilder>();
     std::wstring xml = L"<a:h2></a:h2>";
-    DECLARE_SPTR(Xml, element);
+    auto element = std::make_shared<Xml>();
     reader->Deserialize(xml, element);
     EXPECT_EQ(element->GetName(), L"a:h2");
     EXPECT_EQ(element->GetAttributes().size(), (size_t)0);
@@ -87,7 +86,7 @@ TEST(XMLBuilderTest, ParserSimple_TagWithEscapeString)
 {
     std::unique_ptr<XmlBuilder> reader = std::make_unique<XmlBuilder>();
     std::wstring xml = L"<b:h3>&quot;&amp;&quot;</b:h3>";
-    DECLARE_SPTR(Xml, element);
+    auto element = std::make_shared<Xml>();
     reader->Deserialize(xml, element);
     EXPECT_EQ(element->GetName(), L"b:h3");
     EXPECT_EQ(element->GetAttributes().size(), (size_t)0);
@@ -102,7 +101,7 @@ TEST(XMLBuilderTest, ParserSimple_TagWithProperties)
 {
     std::unique_ptr<XmlBuilder> reader = std::make_unique<XmlBuilder>();
     std::wstring xml = L"<img src=\"img.jpg\" width=\"111\" height=\"222.222\">abc</img>";
-    DECLARE_SPTR(Xml, element);
+    auto element = std::make_shared<Xml>();
     reader->Deserialize(xml, element);
     EXPECT_EQ(element->GetName(), L"img");
     EXPECT_EQ(element->GetAttributes().size(), (size_t)3);
@@ -128,7 +127,7 @@ TEST(XMLBuilderTest, Full)
     xml += L"    <f:td>&quot;Beta&quot;</f:td>\r\n";
     xml += L"    <f:td>&amp;gamma</f:td>\r\n";
     xml += L"</f:table>";
-    DECLARE_SPTR(Xml, element);
+    auto element = std::make_shared<Xml>();
     reader->Deserialize(xml, element);
     EXPECT_EQ(element->GetName(), L"f:table");
     EXPECT_EQ(element->GetAttributes().size(), (size_t)0);

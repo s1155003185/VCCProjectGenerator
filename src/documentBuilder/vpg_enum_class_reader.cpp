@@ -9,7 +9,6 @@
 #include "exception_macro.hpp"
 #include "json.hpp"
 #include "json_builder.hpp"
-#include "memory_macro.hpp"
 #include "string_helper.hpp"
 #include "vpg_enum_class.hpp"
 
@@ -157,7 +156,7 @@ std::shared_ptr<Json> VPGEnumClassReader::GetJsonAttributes(const std::wstring &
         if (command[pos] == L'{') {
             std::wstring jsonStr = GetNextQuotedString(command, pos, { L" ", L"\t", L"\n" }, { L"{", L"[", L"\"", L"'" }, { L"}", L"]", L"\"", L"'" }, { L"", L"", L"\\", L"\\" });
             TRY
-                DECLARE_SPTR(Json, json);
+                auto json = std::make_shared<Json>();
                 JsonBuilder builder;
                 builder.Deserialize(jsonStr, json);
                 return json;
@@ -227,6 +226,21 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
         } else {
             property->_PropertyType = VPGEnumClassPropertyType::Property;
 
+            if (IsStartWith(property->_Macro, L"VECTOR", pos))
+                property->_GetSetType = VPGEnumClassGetSetType::Vector;
+            else if (IsStartWith(property->_Macro, L"MAP", pos))
+                property->_GetSetType = VPGEnumClassGetSetType::Map;
+            else if (IsStartWith(property->_Macro, L"ORDERED_MAP", pos))
+                property->_GetSetType = VPGEnumClassGetSetType::OrderedMap;
+            else if (IsStartWith(property->_Macro, L"SET", pos))
+                property->_GetSetType = VPGEnumClassGetSetType::Set;
+            else
+                property->_GetSetType = VPGEnumClassGetSetType::General;
+            
+            size_t posOfOpenQuote = Find(property->_Macro, L"(");
+            if (posOfOpenQuote != std::wstring::npos)
+                property->_IsObject = IsContain(property->_Macro.substr(0, posOfOpenQuote) , L"_SPTR");
+
             if (IsStartWith(property->_Macro, L"MAP", pos) || IsStartWith(property->_Macro, L"ORDERED_MAP", pos)) {
                 property->_Type1 = _GetType(property->_Macro, pos);
                 if (property->_Macro[pos] == L',')  {
@@ -274,7 +288,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
                     if (!classProperties.empty()) {
                         for (auto const &classProperty : classProperties) {
                             std::wstring propertyMacro = classProperty->GetArrayElementString();
-                            DECLARE_SPTR(VPGEnumClassProperty, tmpProperty);
+                            auto tmpProperty = std::make_shared<VPGEnumClassProperty>();
                             _AssignEnumClassProperty(propertyMacro, tmpProperty);
                             property->InsertClassProperties(tmpProperty);
                         }
@@ -349,7 +363,7 @@ void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &p
             if (name.empty())
                 break;
             
-            DECLARE_SPTR(VPGEnumClassProperty, property);
+            auto property = std::make_shared<VPGEnumClassProperty>();
             property->_Enum = name;
             GetNextCharPos(cppCode, pos, false);
             if (cppCode[pos] == L'=') {
@@ -451,7 +465,7 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
                     auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Json");
                     if (jsonAttributes != nullptr) {
                         for (auto const &key : jsonAttributes->GetKeys())
-                            enumClass->InsertJsonAttributes(key, jsonAttributes->GetString(key));
+                            enumClass->InsertJsonAttributesAtKey(key, jsonAttributes->GetString(key));
                     }
                     command = L"";
                 } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Command")) {
@@ -537,7 +551,7 @@ void VPGEnumClassReader::Parse(const std::wstring &cppCode, std::vector<std::sha
                 GetCppCodeLine(cppCode, pos, true);
                 currentCommand = L"";
             } else if (IsStartWith(cppCode, L"enum ", pos)) {
-                DECLARE_SPTR(VPGEnumClass, enumClass);
+                auto enumClass = std::make_shared<VPGEnumClass>();
                 enumClass->SetNamespace(currentNamespace);
                 enumClass->SetCommand(currentCommand);
                 bool isFullEnumClass = _ParseClass(cppCode, pos, enumClass);

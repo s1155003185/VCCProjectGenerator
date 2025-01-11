@@ -130,7 +130,7 @@ namespace vcc
 		return false;
 	}
 
-	bool IsCaptial(const std::wstring &str)
+	bool IsCapital(const std::wstring &str)
 	{
 		TRY
 			if (str.empty())

@@ -50,8 +50,8 @@ std::wstring VPGMainFormAddWorkspaceForm::GetRedoMessageComplete() const
 void VPGMainFormAddWorkspaceForm::OnRedo()
 {
     TRY
-        // <vcc:VPGMainFormAddWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">        
-        PropertyAccessorFactory::Create(_ParentObject)->InsertObject(LockType::WriteLock, static_cast<int64_t>(VPGMainFormProperty::WorkspaceForms), std::make_shared<VPGMainForm>());
+        // <vcc:VPGMainFormAddWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
+        PropertyAccessorFactory::Create(_ParentObject)->InsertObjectAtIndex(LockType::WriteLock, static_cast<int64_t>(VPGMainFormProperty::WorkspaceForms), std::make_shared<VPGWorkspaceForm>());
         // </vcc:VPGMainFormAddWorkspaceFormOnRedo>
     CATCH
 }
@@ -87,14 +87,9 @@ void VPGMainFormDeleteWorkspaceForm::OnRedo()
     TRY
         // <vcc:VPGMainFormDeleteWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
         auto propertyAccessor = PropertyAccessorFactory::Create(_ParentObject);
-        auto currentWorkspaceForm = propertyAccessor->ReadObject(LockType::ReadLock, static_cast<int64_t>(VPGMainFormProperty::CurrentWorkspaceForm));
-        if (currentWorkspaceForm != nullptr) {
-            // propertyAccessor->WriteLock();
-            // auto mainForm = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
-            // assert(mainForm != nullptr);
-            // mainForm->GetWorkspaceForms().erase(std::dynamic_pointer_cast<VPGWorkspaceForm>(currentWorkspaceForm));
-            // propertyAccessor->Unlock();
-        }
+        auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
+        auto obj = form->GetWorkspaceForms().at(0).get();
+        propertyAccessor->Remove(LockType::WriteLock, static_cast<int64_t>(VPGMainFormProperty::WorkspaceForms), obj);
         // </vcc:VPGMainFormDeleteWorkspaceFormOnRedo>
     CATCH
 }

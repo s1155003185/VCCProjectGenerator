@@ -6,8 +6,8 @@
 #include "i_property_accessor.hpp"
 #include "lock_type.hpp"
 #include "property_accessor_factory.hpp"
-#include "vpg_git_form_property.hpp"
-#include "vpg_git_form.hpp"
+#include "vpg_main_form.hpp"
+#include "vpg_main_form_property.hpp"
 
 using namespace vcc;
 
@@ -18,8 +18,8 @@ TEST(ApplicationTest, CreateForm)
     // auto form =  ApplicationCreateForm((int64_t)ObjectType::GitForm);
     // ReadObject(form, (int64_t)VPGGitFormProperty::Log, -1);
 
-    auto form = Application::CreateForm(ObjectType::GitForm);
+    auto form = Application::CreateForm(ObjectType::MainForm);
     auto gitform = static_cast<BaseForm *>(form.get());
     IObject *object = static_cast<IObject *>((gitform));
-    PropertyAccessorFactory::Create(object->GetSharedPtr())->ReadObject(LockType::ReadLock, 0, -1);
+    EXPECT_TRUE(PropertyAccessorFactory::Create(object->GetSharedPtr())->ReadObject(LockType::ReadLock, static_cast<int64_t>(VPGMainFormProperty::CurrentWorkspaceForm)) == nullptr);
 }

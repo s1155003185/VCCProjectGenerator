@@ -8,7 +8,6 @@
 #include "i_document.hpp"
 #include "i_document_builder.hpp"
 #include "json.hpp"
-#include "memory_macro.hpp"
 #include "number_helper.hpp"
 #include "string_helper.hpp"
 #include "vpg_generation_option_interface_type.hpp"
@@ -20,7 +19,7 @@ std::shared_ptr<Json> VPGGenerationOptionExport::ToJson() const
 {
     TRY
         NamingStyle namestyle = NamingStyle::PascalCase;
-        DECLARE_UPTR(Json, json);
+        auto json = std::make_unique<Json>();
         // Interface
         std::wstring interfaceValueStr = L"";
         switch (_Interface)
@@ -102,7 +101,7 @@ std::shared_ptr<Json> VPGGenerationOption::ToJson() const
 {
     TRY
         NamingStyle namestyle = NamingStyle::PascalCase;
-        DECLARE_UPTR(Json, json);
+        auto json = std::make_unique<Json>();
         // Version
         json->AddString(ConvertNamingStyle(L"Version", NamingStyle::PascalCase, namestyle), _Version);
         // ProjectType
@@ -188,13 +187,13 @@ std::shared_ptr<Json> VPGGenerationOption::ToJson() const
         // PropertyAccessorFactoryDirectoryCpp
         json->AddString(ConvertNamingStyle(L"PropertyAccessorFactoryDirectoryCpp", NamingStyle::PascalCase, namestyle), _PropertyAccessorFactoryDirectoryCpp);
         // Plugins
-        DECLARE_SPTR(Json, tmpPlugins);
+        auto tmpPlugins = std::make_shared<Json>();
         json->AddArray(ConvertNamingStyle(L"Plugins", NamingStyle::PascalCase, namestyle), tmpPlugins);
         for (auto const &element : _Plugins) {
             tmpPlugins->AddArrayString(element);
         }
         // Exports
-        DECLARE_SPTR(Json, tmpExports);
+        auto tmpExports = std::make_shared<Json>();
         json->AddArray(ConvertNamingStyle(L"Exports", NamingStyle::PascalCase, namestyle), tmpExports);
         for (auto const &element : _Exports) {
             tmpExports->AddArrayObject(element->ToJson());
@@ -325,7 +324,7 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
         ClearExports();
         if (json->IsContainKey(ConvertNamingStyle(L"Exports", namestyle, NamingStyle::PascalCase))) {
             for (auto const &element : json->GetArray(ConvertNamingStyle(L"Exports", namestyle, NamingStyle::PascalCase))) {
-                DECLARE_SPTR(VPGGenerationOptionExport, tmpExports);
+                auto tmpExports = std::make_shared<VPGGenerationOptionExport>();
                 tmpExports->DeserializeJson(element->GetArrayElementObject());
                 InsertExports(tmpExports);
             }

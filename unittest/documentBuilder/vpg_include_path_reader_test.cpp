@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 
-#include "memory_macro.hpp"
 #include "platform_type.hpp"
 #include "string_helper.hpp"
 #include "vpg_include_path_reader.hpp"
@@ -12,7 +11,7 @@ using namespace vcc;
 
 TEST(VPGIncludePathReaderTest, Normal)
 {
-    DECLARE_UPTR(VPGIncludePathReader, reader);
+    auto reader = std::make_unique<VPGIncludePathReader>();
     std::wstring code = L""
         L"#parma once\r\n"
         L"#include <sth>\r\n"

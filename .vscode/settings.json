@@ -128,7 +128,8 @@
     "codecvt": "cpp",
     "execution": "cpp",
     "vpg": "cpp",
-    "memory_resource": "cpp"
+    "memory_resource": "cpp",
+    "print": "cpp"
   },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "clang",

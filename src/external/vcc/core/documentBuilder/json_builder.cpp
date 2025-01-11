@@ -6,7 +6,6 @@
 #include "exception_type.hpp"
 #include "exception_macro.hpp"
 #include "json.hpp"
-#include "memory_macro.hpp"
 #include "string_helper.hpp"
 
 const std::wstring nullStr = L"null";
@@ -115,7 +114,7 @@ namespace vcc
                 doc->SetJsonInternalType(JsonInternalType::String);
                 doc->SetJsonInternalValue(value);
             } else if (str[pos] == L'{') {
-                DECLARE_SPTR(Json, jsonObj);
+                auto jsonObj = std::make_shared<Json>();
                 Deserialize(str, pos, jsonObj);
                 doc->SetJsonInternalType(JsonInternalType::Object);
                 doc->InsertJsonInternalArray(jsonObj);
@@ -124,7 +123,7 @@ namespace vcc
                 GetNextCharPos(str, pos, false);
                 if (str[pos] != L']') {
                     while (pos < str.length()) {
-                        DECLARE_SPTR(Json, obj);
+                        auto obj = std::make_shared<Json>();
                         ParseJsonObject(str, pos, obj);
                         doc->InsertJsonInternalArray(obj);
                         GetNextCharPos(str, pos, false);
@@ -171,21 +170,20 @@ namespace vcc
                 // name
                 std::wstring name = GetNextQuotedString(str, pos, {L":"}, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
                 Trim(name);
-                if (name.starts_with(L"\"")) {
+                if (IsStartWith(name, L"\""))
                     name = GetUnescapeStringWithQuote(EscapeStringType::DoubleQuote, name);
-                } else if (name.starts_with(L"\'")) {
+                else if (IsStartWith(name, L"\'"))
                     name = GetUnescapeStringWithQuote(EscapeStringType::SingleQuote, name);
-                }
                 GetNextCharPos(str, pos, false);
                 if (str[pos] != L':')
                     THROW_EXCEPTION_MSG(ExceptionType::ParserError, GetErrorMessage(str, pos, L"Json Object name " + name + L" not followed by :"));
                 GetNextCharPos(str, pos, false);
 
                 // value
-                DECLARE_SPTR(Json, obj);
+                auto obj = std::make_shared<Json>();
                 ParseJsonObject(str, pos, obj);
                 jsonObj->SetJsonInternalType(JsonInternalType::Json);
-                jsonObj->InsertJsonInternalNameValuePairs(name, obj);
+                jsonObj->InsertJsonInternalNameValuePairsAtKey(name, obj);
 
                 GetNextCharPos(str, pos, false);
                 if (str[pos] != L',')

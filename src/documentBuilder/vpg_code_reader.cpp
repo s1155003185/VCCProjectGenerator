@@ -3,7 +3,6 @@
 #include <string>
 
 #include "exception_macro.hpp"
-#include "memory_macro.hpp"
 #include "string_helper.hpp"
 
 using namespace vcc;
@@ -37,7 +36,7 @@ void VPGCodeReader::ParseXml(const std::wstring &xmlData, size_t &pos, std::shar
             if (IsStartWith(xmlData, this->_CommandDelimiter, pos) && IsStartWithTrimSpace(xmlData, this->_CommandDelimiter + L"<vcc:", pos)) {
                 if (pos > 0) {
                     pos--;
-                    DECLARE_SPTR(Xml, previous);
+                    auto previous = std::make_shared<Xml>();
                     previous->SetFullText(pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos));
                     element->InsertChildren(previous);
 
@@ -47,7 +46,7 @@ void VPGCodeReader::ParseXml(const std::wstring &xmlData, size_t &pos, std::shar
 
                 pos = Find(xmlData, L"<", pos);
 
-                DECLARE_SPTR(Xml, tmp);
+                auto tmp = std::make_shared<Xml>();
                 ParseXMLTag(xmlData, pos, tmp);
                 tmp->SetFullText(pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos));
                 element->InsertChildren(tmp);
@@ -58,7 +57,7 @@ void VPGCodeReader::ParseXml(const std::wstring &xmlData, size_t &pos, std::shar
                 pos++;
         }
         if (startPos < xmlData.length() - 1) {
-            DECLARE_SPTR(Xml, tmp);
+            auto tmp = std::make_shared<Xml>();
             tmp->SetFullText(pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos));
             element->InsertChildren(tmp);
         }

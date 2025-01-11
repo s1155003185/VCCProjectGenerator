@@ -11,10 +11,9 @@
 
 using namespace vcc;
 
-std::shared_ptr<IObject> VPGGitFormPropertyAccessor::_ReadObject(const int64_t &objectProperty, const int64_t &index) const
+std::shared_ptr<IObject> VPGGitFormPropertyAccessor::_ReadObject(const int64_t &objectProperty) const
 {
     TRY
-        assert(index >= -1);
         auto obj = std::static_pointer_cast<VPGGitForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitFormProperty>(objectProperty))
@@ -28,7 +27,7 @@ std::shared_ptr<IObject> VPGGitFormPropertyAccessor::_ReadObject(const int64_t &
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGGitFormPropertyAccessor::_ReadObject(const int64_t &objectProperty, const void * /*key*/) const
+std::shared_ptr<IObject> VPGGitFormPropertyAccessor::_ReadObjectAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -36,10 +35,17 @@ std::shared_ptr<IObject> VPGGitFormPropertyAccessor::_ReadObject(const int64_t &
     return nullptr;
 }
 
-void VPGGitFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index) const
+std::shared_ptr<IObject> VPGGitFormPropertyAccessor::_ReadObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
-        assert(index >= -1);
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return nullptr;
+}
+
+void VPGGitFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> value) const
+{
+    TRY
         auto obj = std::static_pointer_cast<VPGGitForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitFormProperty>(objectProperty))
@@ -53,24 +59,30 @@ void VPGGitFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std
     CATCH
 }
 
-void VPGGitFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const void * /*key*/) const
+void VPGGitFormPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGGitFormPropertyAccessor::_InsertObject(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const int64_t & /*index*/) const
+void VPGGitFormPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-std::shared_ptr<IObject> VPGGitFormPropertyAccessor::_CloneObject(const int64_t &objectProperty, const int64_t &index) const
+void VPGGitFormPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const int64_t &/*index*/) const
 {
     TRY
-        assert(index >= -1);
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+std::shared_ptr<IObject> VPGGitFormPropertyAccessor::_CloneObject(const int64_t &objectProperty) const
+{
+    TRY
         auto obj = std::static_pointer_cast<VPGGitForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitFormProperty>(objectProperty))
@@ -84,7 +96,15 @@ std::shared_ptr<IObject> VPGGitFormPropertyAccessor::_CloneObject(const int64_t 
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGGitFormPropertyAccessor::_CloneObject(const int64_t &objectProperty, const void * /*key*/) const
+std::shared_ptr<IObject> VPGGitFormPropertyAccessor::_CloneObjectAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return nullptr;
+}
+
+std::shared_ptr<IObject> VPGGitFormPropertyAccessor::_CloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND

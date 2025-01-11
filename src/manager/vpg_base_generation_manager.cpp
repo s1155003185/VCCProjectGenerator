@@ -10,7 +10,6 @@
 #include "file_helper.hpp"
 #include "i_document.hpp"
 #include "i_document_builder.hpp"
-#include "memory_macro.hpp"
 #include "json.hpp"
 #include "json_builder.hpp"
 #include "vpg_code_reader.hpp"
@@ -211,7 +210,7 @@ std::wstring VPGBaseGenerationManager::AdjustMakefile(const std::wstring &fileCo
     ValidateOption();
     std::wstring result = L"";
     TRY
-        DECLARE_SPTR(Xml, elements);
+        auto elements = std::make_shared<Xml>();
         VPGCodeReader reader(L"#");
         reader.Deserialize(fileContent, elements);
         for (std::shared_ptr<vcc::Xml> element : elements->GetChildren()) {
@@ -297,11 +296,11 @@ std::wstring VPGBaseGenerationManager::AdjustVSCodeLaunchJson(const std::wstring
             programPath = L"${workspaceFolder}/bin/Debug/" + projectName;
         }
 
-        DECLARE_UPTR(JsonBuilder, jsonBuilder);
+        auto jsonBuilder = std::make_unique<JsonBuilder>();
         jsonBuilder->SetIsBeautify(true);
         jsonBuilder->SetIndent(L"  ");
 
-        DECLARE_SPTR(Json, json);
+        auto json = std::make_shared<Json>();
         jsonBuilder->Deserialize(fileContent, json);
         for (std::shared_ptr<Json> element : json->GetArray(L"configurations")) {
             for (std::shared_ptr<Json> arrayElement : element->GetJsonInternalArray()) {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "base_manager.hpp"
-#include "memory_macro.hpp"
 #include "process_state.hpp"
 #include "thread_management_mode.hpp"
 

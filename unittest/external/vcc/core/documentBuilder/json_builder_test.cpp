@@ -4,7 +4,6 @@
 #include <memory>
 #include <string>
 
-#include "memory_macro.hpp"
 #include "json.hpp"
 #include "json_builder.hpp"
 
@@ -14,7 +13,7 @@ TEST(JsonBuilderTest, String)
 {
     std::wstring str = L"{\"name\":\"John\"}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    DECLARE_SPTR(Json, json);
+    auto json = std::make_shared<Json>();
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"name")->GetJsonInternalType(), JsonInternalType::String);
@@ -26,7 +25,7 @@ TEST(JsonBuilderTest, Boolean)
 {
     std::wstring str = L"{\"answer\":true}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    DECLARE_SPTR(Json, json);
+    auto json = std::make_shared<Json>();
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"answer")->GetJsonInternalType(), JsonInternalType::Boolean);
@@ -38,7 +37,7 @@ TEST(JsonBuilderTest, Number)
 {
     std::wstring str = L"{\"age\":11}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    DECLARE_SPTR(Json, json);
+    auto json = std::make_shared<Json>();
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"age")->GetJsonInternalType(), JsonInternalType::Number);
@@ -50,7 +49,7 @@ TEST(JsonBuilderTest, Object)
 {
     std::wstring str = L"{\"Name\":{\"firstName\":\"A\",\"lastName\":\"B\"}}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    DECLARE_SPTR(Json, json);
+    auto json = std::make_shared<Json>();
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"Name")->GetJsonInternalType(), JsonInternalType::Object);
@@ -64,7 +63,7 @@ TEST(JsonBuilderTest, Array)
 {
     std::wstring str = L"{\"employees\":[1,true,null,\"Str\\\"ing\",[1,2],{\"firstName\":\"A\",\"lastName\":\"B\"}]}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    DECLARE_SPTR(Json, json);
+    auto json = std::make_shared<Json>();
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalType(), JsonInternalType::Array);
@@ -87,7 +86,7 @@ TEST(JsonBuilderTest, Null)
 {
     std::wstring str = L"{\"Name\":null}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    DECLARE_SPTR(Json, json);
+    auto json = std::make_shared<Json>();
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"Name")->GetJsonInternalType(), JsonInternalType::Null);
@@ -98,7 +97,7 @@ TEST(JsonBuilderTest, Full)
 {
     std::wstring str = L"{\"name\":\"John\",\"age\":11,\"tel\":null,\"FullName\":{\"firstName\":\"A\",\"lastName\":\"B\"},\"employees\":[{\"firstName\":\"A\",\"lastName\":\"B\"},{\"firstName\":\"C\",\"lastName\":\"D\"}]}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    DECLARE_SPTR(Json, json);
+    auto json = std::make_shared<Json>();
     builder->Deserialize(str, json);
     EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"name")->GetJsonInternalType(), JsonInternalType::String);
@@ -115,7 +114,7 @@ TEST(JsonBuilderTest, Beautify)
 {
     std::wstring str = L"{\"name\":\"John\",\"age\":11,\"tel\":null,\"FullName\":{\"firstName\":\"A\",\"lastName\":\"B\"},\"employees\":[{\"firstName\":\"A\",\"lastName\":\"B\"},{\"firstName\":\"C\",\"lastName\":\"D\"}]}";
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    DECLARE_SPTR(Json, json);
+    auto json = std::make_shared<Json>();
     builder->Deserialize(str, json);
 
     std::wstring indent = L"\t";

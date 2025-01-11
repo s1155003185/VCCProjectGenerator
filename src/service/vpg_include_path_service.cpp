@@ -8,7 +8,6 @@
 
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
-#include "memory_macro.hpp"
 #include "platform_type.hpp"
 #include "string_helper.hpp"
 #include "vector_helper.hpp"
@@ -21,7 +20,7 @@
 void VPGIncludePathService::GetWorkspaceIncludePath(const std::wstring &workspace, const std::set<std::wstring> &classMacroList, std::map<std::wstring, std::wstring> &classPathMapping, std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping)
 {
     TRY
-        DECLARE_UPTR(VPGEnumClassReader, reader, classMacroList);
+        auto reader = std::make_unique<VPGEnumClassReader>(classMacroList);
         for (auto const &filePath : std::filesystem::recursive_directory_iterator(PATH(!workspace.empty() ? workspace : L"."))) {
             if (filePath.is_directory() || !filePath.path().wstring().ends_with(L".hpp"))
                 continue;

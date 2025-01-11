@@ -6,7 +6,6 @@
 
 #include "class_macro.hpp"
 #include "file_helper.hpp"
-#include "memory_macro.hpp"
 
 #include "vpg_dll_file_generation_service.hpp"
 
@@ -43,7 +42,7 @@ class VPGDllFileGenerationServiceTest : public testing::Test
 
 TEST_F(VPGDllFileGenerationServiceTest, Normal)
 {
-    DECLARE_SPTR(VPGDllFileGenerationServiceOption, option);
+    auto option = std::make_shared<VPGDllFileGenerationServiceOption>();
     option->SetIsGeneratePropertyAccessor(true);
     VPGDllFileGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), option.get());
     VPGDllFileGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetFilePathCpp(), option.get());

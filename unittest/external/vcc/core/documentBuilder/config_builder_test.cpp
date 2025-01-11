@@ -5,7 +5,6 @@
 
 #include "config.hpp"
 #include "config_builder.hpp"
-#include "memory_macro.hpp"
 
 using namespace vcc;
 
@@ -13,7 +12,7 @@ TEST(ConfigBuilderTest, Full)
 {
     std::unique_ptr<ConfigBuilder> reader = std::make_unique<ConfigBuilder>();
     
-    DECLARE_SPTR(Config, element);
+    auto element = std::make_shared<Config>();
     std::wstring str = L"";
     str += L"# command\r\n";
     str += L"name1=value1\r\n";

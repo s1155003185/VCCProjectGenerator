@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <assert.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -23,7 +24,7 @@ namespace vcc
     template <typename T>
     int64_t Find(const std::vector<T> &sourceVector, const T &obj);
     template <typename T>
-    int64_t FindIObject(std::vector<std::shared_ptr<T>> &sourceVector, const std::shared_ptr<IObject> &obj);
+    int64_t FindIObject(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj);
 
     // Set
     template <typename T>
@@ -48,11 +49,15 @@ namespace vcc
     void Remove(std::vector<T> &sourceVector, const std::vector<T> &filters);
     template <typename T>
     void RemoveAtIndex(std::vector<T> &sourceVector, const int64_t &index);
+    template <typename T>
+    void RemoveAll(std::vector<T> &sourceVector, const T &obj);
 
     template <typename T>
-    void RemoveIObject(std::vector<std::shared_ptr<T>> &sourceVector, const std::shared_ptr<IObject> &obj);
+    void RemoveIObject(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj);
     template <typename T>
     void RemoveIObjecttAtIndex(std::vector<T> &sourceVector, const int64_t &index);
+    template <typename T>
+    void RemoveIObjectAll(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj);
 
     // ----------------------------------------------------------------------------------------------------
     // ---------------------------------------- Implement -------------------------------------------------
@@ -88,13 +93,14 @@ namespace vcc
     }
 
     template <typename T>
-    int64_t FindIObject(std::vector<std::shared_ptr<T>> &sourceVector, const std::shared_ptr<IObject> &obj)
+    int64_t FindIObject(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj)
     {
         if (IsEmpty(sourceVector))
             return -1;
-        auto derivedObj = std::dynamic_pointer_cast<T>(obj);
-        if (derivedObj)
-            return Find(sourceVector, derivedObj);
+        for (size_t i = 0; i < sourceVector.size(); i++) {
+            if ((void *)(sourceVector.at(i).get()) == (void *)obj)
+                return i;
+        }
         return -1;
     }
 
@@ -111,12 +117,11 @@ namespace vcc
     void SetIObject(std::vector<std::shared_ptr<T>> &sourceVector, std::shared_ptr<IObject> &obj, const int64_t &index)
     {
         auto derivedObj = std::dynamic_pointer_cast<T>(obj);
-        if (derivedObj) {
-            if (index >= 0)
-                sourceVector[index] = derivedObj;
-            else
-                InsertIObject(sourceVector, derivedObj);
-        }
+        assert(derivedObj != nullptr);
+        if (index >= 0)
+            sourceVector[index] = derivedObj;
+        else
+            InsertIObject(sourceVector, derivedObj);
     }
 
     template <typename T>
@@ -141,12 +146,11 @@ namespace vcc
     void InsertIObject(std::vector<std::shared_ptr<T>> &sourceVector, std::shared_ptr<IObject> obj, const int64_t &index)
     {
         auto derivedObj = std::dynamic_pointer_cast<T>(obj);
-        if (derivedObj) {
-            if (index >= 0)
-                sourceVector.insert(sourceVector.begin() + index, derivedObj);
-            else
-                sourceVector.push_back(derivedObj);
-        }
+        assert(derivedObj != nullptr);
+        if (index >= 0)
+            sourceVector.insert(sourceVector.begin() + index, derivedObj);
+        else
+            sourceVector.push_back(derivedObj);
     }
     
     template <typename T>
@@ -160,10 +164,9 @@ namespace vcc
     template <typename T>
     void Remove(std::vector<T> &sourceVector, const T &obj)
     {
-        sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(),
-            [&](const T &element) {
-                return element == obj;
-            }), sourceVector.end());
+        auto it = std::find(sourceVector.begin(), sourceVector.end(), obj);
+        if (it != sourceVector.end())
+            sourceVector.erase(it);
     }
     
     template <typename T>
@@ -180,22 +183,34 @@ namespace vcc
         if (index >= 0)
             sourceVector.erase(sourceVector.begin() + (size_t)index);
     }
+    
+    template <typename T>
+    void RemoveAll(std::vector<T> &sourceVector, const T &obj)
+    {
+        sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(),
+            [&](const T &element) {
+                return element == obj;
+            }), sourceVector.end());
+    }
 
     template <typename T>
-    void RemoveIObject(std::vector<std::shared_ptr<T>> &sourceVector, const std::shared_ptr<IObject> &obj)
+    void RemoveIObject(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj)
     {
-        auto derivedObj = std::dynamic_pointer_cast<T>(obj);
-        if (derivedObj) {
-            sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(),
-                [&](const std::shared_ptr<T> &element) {
-                    return element == derivedObj;
-                }), sourceVector.end());
-        }
+        RemoveIObjecttAtIndex(sourceVector, FindIObject(sourceVector, obj));
     }
 
     template <typename T>
     void RemoveIObjecttAtIndex(std::vector<T> &sourceVector, const int64_t &index)
     {
         RemoveAtIndex(sourceVector, index);
+    }
+    
+    template <typename T>
+    void RemoveIObjectAll(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj)
+    {
+        sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(),
+            [&](const T &element) {
+                return (void *)(element.get()) == (void *)obj;
+            }), sourceVector.end());
     }
 };

@@ -49,10 +49,10 @@ bool IsPropertyClass(const std::wstring &className, const std::wstring &projectP
     return false;
 }
 
-std::wstring GetActionClassName(const std::wstring &projectPrefix, const VPGEnumClass* enumClass, const VPGEnumClassProperty * property)
+std::wstring GetActionClassName(const VPGEnumClass* enumClass, const VPGEnumClassProperty * property)
 {
     TRY
-        return GetClassNameFromPropertyClassName(enumClass->GetName(), projectPrefix)  + property->GetPropertyName();
+        return GetClassNameFromPropertyClassName(enumClass->GetName())  + property->GetPropertyName();
     CATCH
     return L"";
 }
@@ -79,12 +79,11 @@ std::wstring GetActionFileNameWithoutExtension(const std::wstring &actionClassNa
     return result;
 }
 
-std::wstring GetClassNameFromPropertyClassName(const std::wstring &className, const std::wstring &projectPrefix)
+std::wstring GetClassNameFromPropertyClassName(const std::wstring &className)
 {
     TRY
-        if (!IsPropertyClass(className, projectPrefix))
-            THROW_EXCEPTION_MSG(ExceptionType::CustomError, className + L" is not start with " + projectPrefix + L" or end with Property");
-        return className.substr(0, className.length() - propertyClassSuffix.length());
+        if (IsEndWith(className, propertyClassSuffix) && className.length() > propertyClassSuffix.length())
+            return className.substr(0, className.length() - propertyClassSuffix.length());
     CATCH
     return className;
 }

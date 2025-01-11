@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <assert.h>
 #include <map>
 #include <memory>
 #include <set>
@@ -38,7 +39,7 @@ namespace vcc
     template <typename A, typename B>
     void Set(std::map<A, B> &sourceMap, const std::map<A, B> &appendMap);
     template <typename A, typename B>
-    void SetIObject(std::map<A, std::shared_ptr<B>> &sourceMap, A key, std::shared_ptr<B> value);
+    void SetIObject(std::map<A, std::shared_ptr<B>> &sourceMap, A key, std::shared_ptr<IObject> value);
     template <typename A, typename B>
     void SetIObjects(std::map<A, std::shared_ptr<B>> &sourceMap, const std::map<A, std::shared_ptr<B>> &appendMap);
     
@@ -133,12 +134,14 @@ namespace vcc
     }
 
     template <typename A, typename B>
-    void SetIObject(std::map<A, std::shared_ptr<B>> &sourceMap, A key, std::shared_ptr<B> value)
+    void SetIObject(std::map<A, std::shared_ptr<B>> &sourceMap, A key, std::shared_ptr<IObject> value)
     {
+        auto derivedObj = std::dynamic_pointer_cast<B>(value);
+        assert(derivedObj != nullptr);
         if (sourceMap.find(key) != sourceMap.end())
-            sourceMap[key] = value;
+            sourceMap[key] = derivedObj;
         else
-            sourceMap.insert(std::make_pair(key, value));
+            sourceMap.insert(std::make_pair(key, derivedObj));
     }
 
     template <typename A, typename B>

@@ -6,7 +6,6 @@
 #include "class_macro.hpp"
 #include "file_helper.hpp"
 #include "log_config.hpp"
-#include "memory_macro.hpp"
 #include "string_helper.hpp"
 
 #include "vpg_project_type.hpp"

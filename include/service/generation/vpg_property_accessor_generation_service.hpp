@@ -34,7 +34,9 @@ class VPGPropertyAccessorGenerationService
 
         static void GetPropertyAccessorTypeName(const std::wstring &originalType, std::wstring &convertedType, std::wstring &convertedName, std::wstring &returnResult);
 
-        static void GenerateHpp(const LogConfig *logConfig, const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
-        static void GenerateCpp(const LogConfig *logConfig, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
+        static void GenerateHpp(const LogConfig *logConfig, const std::wstring &projectPrefix,
+            const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
+        static void GenerateCpp(const LogConfig *logConfig, const std::wstring &projectPrefix,
+            const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
             const std::wstring &filePathCpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
 };

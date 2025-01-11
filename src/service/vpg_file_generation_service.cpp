@@ -3,7 +3,6 @@
 #include <string>
 
 #include "exception_macro.hpp"
-#include "memory_macro.hpp"
 
 #include "vpg_code_reader.hpp"
 
@@ -231,7 +230,7 @@ std::wstring VPGFileGenerationService::GenerateFileContent(const std::wstring &c
 {
     TRY
         std::unique_ptr<VPGCodeReader> reader = std::make_unique<VPGCodeReader>(commandDelimiter);
-        DECLARE_SPTR(Xml, codeElement);
+        auto codeElement = std::make_shared<Xml>();
         reader->Deserialize(code, codeElement);
 
         switch (GetGenerationMode(codeElement.get()))

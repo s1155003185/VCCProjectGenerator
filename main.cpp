@@ -5,7 +5,6 @@
 #include "application.hpp"
 
 #include "log_config.hpp"
-#include "memory_macro.hpp"
 #include "vpg_process_manager.hpp"
 #include "string_helper.hpp"
 
@@ -15,8 +14,7 @@ int main(int argc, char **argv)
 {
 	Application::Run();
 
-
-	DECLARE_SPTR(LogConfig, logConfig);
+	auto logConfig = std::make_shared<LogConfig>();
 	logConfig->Initialize(LogConfigInitialType::None);
 	logConfig->SetIsConsoleLog(false);
 	try {
