@@ -142,13 +142,11 @@ namespace vcc
     {
         auto derivedObj = std::dynamic_pointer_cast<T>(obj);
         if (derivedObj != nullptr) {
-            throw std::runtime_error("Hi");
             if (index >= 0)
                 sourceVector.insert(sourceVector.begin() + index, derivedObj);
             else
                 sourceVector.push_back(derivedObj);
         }
-        throw std::runtime_error("Bi");
     }
     
     template <typename T>
