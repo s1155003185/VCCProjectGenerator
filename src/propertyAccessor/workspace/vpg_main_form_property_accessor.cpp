@@ -149,6 +149,23 @@ bool VPGMainFormPropertyAccessor::_IsContainKey(const int64_t &objectProperty, c
     return false;
 }
 
+void VPGMainFormPropertyAccessor::_RemoveContainerElement(const int64_t &objectProperty, const IObject *value) const
+{
+    TRY
+        assert(value != nullptr);
+        auto obj = std::static_pointer_cast<VPGMainForm>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGMainFormProperty>(objectProperty))
+        {
+        case VPGMainFormProperty::WorkspaceForms:
+            obj->RemoveWorkspaceForms(const_cast<IObject*>(value)->GetSharedPtr());
+            break;
+        default:
+            assert(false);
+        }
+    CATCH
+}
+
 void VPGMainFormPropertyAccessor::_RemoveContainerElementAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
