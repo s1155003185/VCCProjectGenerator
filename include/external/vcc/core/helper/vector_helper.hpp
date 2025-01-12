@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <assert.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -111,12 +112,11 @@ namespace vcc
     void SetIObject(std::vector<std::shared_ptr<T>> &sourceVector, std::shared_ptr<IObject> &obj, const int64_t &index)
     {
         auto derivedObj = std::dynamic_pointer_cast<T>(obj);
-        if (derivedObj != nullptr) {
-            if (index >= 0)
-                sourceVector[index] = derivedObj;
-            else
-                InsertIObject(sourceVector, derivedObj);
-        }
+        assert(derivedObj != nullptr);
+        if (index >= 0)
+            sourceVector[index] = derivedObj;
+        else
+            InsertIObject(sourceVector, derivedObj);
     }
 
     template <typename T>
@@ -141,12 +141,11 @@ namespace vcc
     void InsertIObject(std::vector<std::shared_ptr<T>> &sourceVector, std::shared_ptr<IObject> obj, const int64_t &index)
     {
         auto derivedObj = std::dynamic_pointer_cast<T>(obj);
-        if (derivedObj != nullptr) {
-            if (index >= 0)
-                sourceVector.insert(sourceVector.begin() + index, derivedObj);
-            else
-                sourceVector.push_back(derivedObj);
-        }
+        assert(derivedObj != nullptr);
+        if (index >= 0)
+            sourceVector.insert(sourceVector.begin() + index, derivedObj);
+        else
+            sourceVector.push_back(derivedObj);
     }
     
     template <typename T>
@@ -185,12 +184,11 @@ namespace vcc
     void RemoveIObject(std::vector<std::shared_ptr<T>> &sourceVector, const std::shared_ptr<IObject> &obj)
     {
         auto derivedObj = std::dynamic_pointer_cast<T>(obj);
-        if (derivedObj != nullptr) {
-            sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(),
-                [&](const std::shared_ptr<T> &element) {
-                    return element == derivedObj;
-                }), sourceVector.end());
-        }
+        assert(derivedObj != nullptr);
+        sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(),
+            [&](const std::shared_ptr<T> &element) {
+                return element == derivedObj;
+            }), sourceVector.end());
     }
 
     template <typename T>
