@@ -820,8 +820,49 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
         bool isHavingMapType = false;
         bool isHavingVectorType = false;
         bool isHavingGeneralType = false;
+        bool isHavingVectorObject = false;
         GetIsHavingGenerateTypeMapType(enumClassProperties, isHavingGeneralType, isHavingVectorType, isHavingMapType);
 
+        for (auto const &item : enumClassProperties) {
+            if (IsStartWith(item->GetMacro(), L"VECTOR_SPTR")) {
+                isHavingVectorObject = true;
+                break;
+            }
+        }
+
+        const std::wstring className = GetClassNameFromClassPropertyName(propertyName);
+        result += L"\r\n"
+            "void " + propertyName + L"Accessor::_RemoveContainerElement";
+        if (isHavingVectorObject)
+            result += L"(const int64_t &objectProperty, const IObject *value) const\r\n";
+        else
+            result += L"(const int64_t &objectProperty, const IObject * /*value*/) const\r\n";
+        result += L"{\r\n"
+            + INDENT + L"TRY\r\n";
+        if (isHavingVectorObject) {
+            result += INDENT + INDENT + L"assert(value != nullptr);\r\n"
+                + INDENT + INDENT + L"auto obj = std::static_pointer_cast<" + className + L">(_Object);\r\n"
+                + INDENT + INDENT + L"assert(obj != nullptr);\r\n"
+                + INDENT + INDENT + L"switch(static_cast<" + propertyName + L">(objectProperty))\r\n"
+                + INDENT + INDENT + L"{\r\n";
+
+            for (auto const &property : enumClassProperties) {
+                if (IsStartWith(property->GetMacro(), L"VECTOR_SPTR")) {
+                    std::wstring tmpConvertedType = L"";
+                    std::wstring tmpConvertedName = L"";
+                    std::wstring tmpReturnResult = L"";
+                    VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(property->GetType1(), tmpConvertedType, tmpConvertedName, tmpReturnResult);
+                    result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L":\r\n"
+                        + INDENT + INDENT + INDENT + L"obj->Remove" + property->GetPropertyName() + L"(const_cast<IObject*>(value)->GetSharedPtr());\r\n"
+                        + INDENT + INDENT + INDENT + L"break;\r\n";
+                }
+            }
+            result += generalTypeContentFooter;
+        } else
+            result += INDENT + INDENT + L"THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n";
+        result += INDENT + L"CATCH\r\n"
+            "}\r\n";
+        
         result += L"\r\n"
             "void " + propertyName + L"Accessor::_RemoveContainerElementAtIndex";
         if (isHavingVectorType)
