@@ -853,10 +853,10 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
                     std::wstring tmpReturnResult = L"";
                     VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(property->GetType1(), tmpConvertedType, tmpConvertedName, tmpReturnResult);
                     result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L":\r\n";
-                    if (IsContain(property->GetMacro(), L"SPTR"))
-                        result += INDENT + INDENT + INDENT + L"obj->Remove" + property->GetPropertyName() + L"(const_cast<IObject*>(value)->GetSharedPtr());\r\n";
-                    else
-                        result += L"";
+                    // if (IsContain(property->GetMacro(), L"SPTR"))
+                    //     result += INDENT + INDENT + INDENT + L"obj->Remove" + property->GetPropertyName() + L"(const_cast<IObject*>(value)->GetSharedPtr());\r\n";
+                    // else
+                    //     result += L"";
                     result += INDENT + INDENT + INDENT + L"break;\r\n";
                 }
             }

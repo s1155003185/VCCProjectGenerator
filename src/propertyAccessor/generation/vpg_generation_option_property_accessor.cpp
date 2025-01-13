@@ -658,7 +658,7 @@ bool VPGGenerationOptionPropertyAccessor::_IsContainKey(const int64_t &objectPro
     return false;
 }
 
-void VPGGenerationOptionPropertyAccessor::_RemoveContainerElement(const int64_t &objectProperty, const IObject *value) const
+void VPGGenerationOptionPropertyAccessor::_RemoveContainerElement(const int64_t &objectProperty, const void *value) const
 {
     TRY
         assert(value != nullptr);
@@ -666,8 +666,9 @@ void VPGGenerationOptionPropertyAccessor::_RemoveContainerElement(const int64_t 
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
+        case VPGGenerationOptionProperty::Plugins:
+            break;
         case VPGGenerationOptionProperty::Exports:
-            obj->RemoveExports(const_cast<IObject*>(value)->GetSharedPtr());
             break;
         default:
             assert(false);

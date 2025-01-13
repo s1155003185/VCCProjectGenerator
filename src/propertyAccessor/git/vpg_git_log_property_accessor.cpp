@@ -351,10 +351,25 @@ bool VPGGitLogPropertyAccessor::_IsContainKey(const int64_t &objectProperty, con
     return false;
 }
 
-void VPGGitLogPropertyAccessor::_RemoveContainerElement(const int64_t &objectProperty, const IObject * /*value*/) const
+void VPGGitLogPropertyAccessor::_RemoveContainerElement(const int64_t &objectProperty, const void *value) const
 {
     TRY
-        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+        assert(value != nullptr);
+        auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGGitLogProperty>(objectProperty))
+        {
+        case VPGGitLogProperty::ParentHashIDs:
+            break;
+        case VPGGitLogProperty::AbbreviatedParentHashIDs:
+            break;
+        case VPGGitLogProperty::Branches:
+            break;
+        case VPGGitLogProperty::Tags:
+            break;
+        default:
+            assert(false);
+        }
     CATCH
 }
 

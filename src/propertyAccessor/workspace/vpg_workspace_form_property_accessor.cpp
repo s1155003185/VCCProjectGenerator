@@ -199,7 +199,7 @@ bool VPGWorkspaceFormPropertyAccessor::_IsContainKey(const int64_t &objectProper
     return false;
 }
 
-void VPGWorkspaceFormPropertyAccessor::_RemoveContainerElement(const int64_t &objectProperty, const IObject *value) const
+void VPGWorkspaceFormPropertyAccessor::_RemoveContainerElement(const int64_t &objectProperty, const void *value) const
 {
     TRY
         assert(value != nullptr);
@@ -208,7 +208,6 @@ void VPGWorkspaceFormPropertyAccessor::_RemoveContainerElement(const int64_t &ob
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
         case VPGWorkspaceFormProperty::GitForms:
-            obj->RemoveGitForms(const_cast<IObject*>(value)->GetSharedPtr());
             break;
         default:
             assert(false);
