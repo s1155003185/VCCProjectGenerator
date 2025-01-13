@@ -361,18 +361,30 @@ void VPGGitLogPropertyAccessor::_RemoveContainerElement(const int64_t &objectPro
         {
         case VPGGitLogProperty::ParentHashIDs:
         {
+            const wchar_t *valuePtr = static_cast<const wchar_t *>(value);
+            assert(valuePtr != nullptr);
+            obj->RemoveParentHashIDs(valuePtr);
             break;
         }
         case VPGGitLogProperty::AbbreviatedParentHashIDs:
         {
+            const wchar_t *valuePtr = static_cast<const wchar_t *>(value);
+            assert(valuePtr != nullptr);
+            obj->RemoveAbbreviatedParentHashIDs(valuePtr);
             break;
         }
         case VPGGitLogProperty::Branches:
         {
+            const wchar_t *valuePtr = static_cast<const wchar_t *>(value);
+            assert(valuePtr != nullptr);
+            obj->RemoveBranches(valuePtr);
             break;
         }
         case VPGGitLogProperty::Tags:
         {
+            const wchar_t *valuePtr = static_cast<const wchar_t *>(value);
+            assert(valuePtr != nullptr);
+            obj->RemoveTags(valuePtr);
             break;
         }
         default:

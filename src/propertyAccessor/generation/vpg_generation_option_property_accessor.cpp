@@ -668,6 +668,9 @@ void VPGGenerationOptionPropertyAccessor::_RemoveContainerElement(const int64_t 
         {
         case VPGGenerationOptionProperty::Plugins:
         {
+            const wchar_t *valuePtr = static_cast<const wchar_t *>(value);
+            assert(valuePtr != nullptr);
+            obj->RemovePlugins(valuePtr);
             break;
         }
         case VPGGenerationOptionProperty::Exports:

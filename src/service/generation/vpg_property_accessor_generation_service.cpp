@@ -858,8 +858,13 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
                         result += INDENT + INDENT + INDENT + L"IObject* valuePtr = const_cast<IObject*>(static_cast<const IObject*>(value));\r\n"
                             + INDENT + INDENT + INDENT + L"assert(valuePtr != nullptr);\r\n"
                             + INDENT + INDENT + INDENT + L"obj->Remove" + property->GetPropertyName() + L"(valuePtr->GetSharedPtr());\r\n";
-                    else
-                        result += L"";
+                    else {
+                        std::wstring castType = property->GetType1() == L"std::wstring" ? L"wchar_t" : property->GetType1();
+                        std::wstring valueAssign = property->GetType1() == L"std::wstring" ? L"valuePtr" : L"*valuePtr";
+                        result += INDENT + INDENT + INDENT + L"const " + castType + L" *valuePtr = static_cast<const " + castType + L" *>(value);\r\n"
+                            + INDENT + INDENT + INDENT + L"assert(valuePtr != nullptr);\r\n"
+                            + INDENT + INDENT + INDENT + L"obj->Remove" + property->GetPropertyName() + L"(" + valueAssign + L");\r\n";
+                    }
                     result += INDENT + INDENT + INDENT + L"break;\r\n"
                         + INDENT + INDENT + L"}\r\n";
                 }
