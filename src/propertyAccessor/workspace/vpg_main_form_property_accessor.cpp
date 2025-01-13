@@ -158,7 +158,12 @@ void VPGMainFormPropertyAccessor::_RemoveContainerElement(const int64_t &objectP
         switch(static_cast<VPGMainFormProperty>(objectProperty))
         {
         case VPGMainFormProperty::WorkspaceForms:
+        {
+            IObject* valuePtr = const_cast<IObject*>(static_cast<const IObject*>(value));
+            assert(valuePtr != nullptr);
+            obj->RemoveWorkspaceForms(valuePtr->GetSharedPtr());
             break;
+        }
         default:
             assert(false);
         }

@@ -208,7 +208,12 @@ void VPGWorkspaceFormPropertyAccessor::_RemoveContainerElement(const int64_t &ob
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
         case VPGWorkspaceFormProperty::GitForms:
+        {
+            IObject* valuePtr = const_cast<IObject*>(static_cast<const IObject*>(value));
+            assert(valuePtr != nullptr);
+            obj->RemoveGitForms(valuePtr->GetSharedPtr());
             break;
+        }
         default:
             assert(false);
         }

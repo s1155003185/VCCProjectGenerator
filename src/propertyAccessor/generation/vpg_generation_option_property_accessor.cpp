@@ -667,9 +667,16 @@ void VPGGenerationOptionPropertyAccessor::_RemoveContainerElement(const int64_t 
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
         case VPGGenerationOptionProperty::Plugins:
+        {
             break;
+        }
         case VPGGenerationOptionProperty::Exports:
+        {
+            IObject* valuePtr = const_cast<IObject*>(static_cast<const IObject*>(value));
+            assert(valuePtr != nullptr);
+            obj->RemoveExports(valuePtr->GetSharedPtr());
             break;
+        }
         default:
             assert(false);
         }
