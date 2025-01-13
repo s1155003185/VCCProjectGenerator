@@ -65,9 +65,9 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
 
                 std::wstring type1 = property->GetType1();
                 std::wstring type2 = property->GetType2();
-                if (!type1.empty() && IsCaptial(type1))
+                if (!type1.empty() && IsCapital(type1))
                     customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, type1));
-                if (!type2.empty() && IsCaptial(type2))
+                if (!type2.empty() && IsCapital(type2))
                     customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, type2));
 
                 if (!assignmentStr.empty())
@@ -221,9 +221,9 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
 
                 std::wstring type1 = property->GetType1();
                 std::wstring type2 = property->GetType2();
-                if (!type1.empty() && IsCaptial(type1))
+                if (!type1.empty() && IsCapital(type1))
                     customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, type1));
-                if (!type2.empty() && IsCaptial(type2))
+                if (!type2.empty() && IsCapital(type2))
                     customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, type2));
 
                 if (!assignmentStr.empty())

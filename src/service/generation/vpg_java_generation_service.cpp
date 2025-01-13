@@ -129,7 +129,7 @@ std::wstring VPGJavaGenerationService::GetJavaGetterSetterCppToJavaConvertedType
 std::wstring VPGJavaGenerationService::GetJavaGetterSetterJavaTypeToJavaCaptialType(const std::wstring &javaType)
 {
     TRY
-        if (IsCaptial(javaType))
+        if (IsCapital(javaType))
             return javaType;
 
         if (javaType == L"boolean") {
@@ -427,7 +427,7 @@ std::wstring VPGJavaGenerationService::GetGetterSetterMapKeyContent(const std::w
         if (javaType1 == L"String")
             result += INDENT + INDENT + L"Pointer keyPtr = new Memory(Native.WCHAR_SIZE * (key.length() + 1));\r\n"
                 + INDENT + INDENT + L"keyPtr.setWideString(0, key);\r\n";
-        else if (IsCaptial(javaType1)) {
+        else if (IsCapital(javaType1)) {
             // Enum
             result += INDENT + INDENT + L"Pointer keyPtr = new Memory(Native.getNativeSize(long.class));\r\n"
                 + INDENT + INDENT + L"keyPtr.setLong(0, (long)key.getValue());\r\n";
@@ -482,7 +482,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const
             std::wstring getFromPointer = L"ptr.get" + javaCaptitalType + L"(0)";
             if (cppType1 == L"std::wstring")
                 getFromPointer = L"ptr.getWideString(0)";
-            else if (IsCaptial(cppType1)) {
+            else if (IsCapital(cppType1)) {
                 // not support Left type is pointer
                 // if (IsContain(macro, L"SPTR"))
                 //     getFromPointer = L"ptr.getLong(0)";
@@ -584,7 +584,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterRead(const VPGE
             if (javaType1 == L"String")
                 result += INDENT + INDENT + L"Pointer keyPtr = new Memory(Native.WCHAR_SIZE * (key.length() + 1));\r\n"
                     + INDENT + INDENT + L"keyPtr.setWideString(0, key);\r\n";
-            else if (IsCaptial(javaType1)) {
+            else if (IsCapital(javaType1)) {
                 // Enum
                 result += INDENT + INDENT + L"Pointer keyPtr = new Memory(Native.getNativeSize(long.class));\r\n"
                     + INDENT + INDENT + L"keyPtr.setLong(0, (long)key.getValue());\r\n";
@@ -602,7 +602,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterRead(const VPGE
         } else if (IsContain(macro, L"SPTR")) {
             // Object
             result += INDENT + INDENT + L"return new " + returnJavaType + L"(" + dllInstantPrefix + L"ReadObject" + (isMap ? L"AtKey" : L"") + L"(Handle, " + classPropertyEnum + L", " + dllFunctionIndex + L"));\r\n";
-        } else if (IsCaptial(returnJavaType)) {
+        } else if (IsCapital(returnJavaType)) {
             // Enum
             result += INDENT + INDENT + L"return " + returnJavaType + L".parse((int)" + dllInstantPrefix + L"ReadLong" + (isMap ? L"AtKey" : L"") + L"(Handle, " + classPropertyEnum + L", " + dllFunctionIndex + L"));\r\n";
         } else {
@@ -674,7 +674,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterWrite(const VPG
             if (javaType1 == L"String")
                 result += INDENT + INDENT + L"Pointer keyPtr = new Memory(Native.WCHAR_SIZE * (key.length() + 1));\r\n"
                     + INDENT + INDENT + L"keyPtr.setWideString(0, key);\r\n";
-            else if (IsCaptial(javaType1)) {
+            else if (IsCapital(javaType1)) {
                 // Enum
                 result += INDENT + INDENT + L"Pointer keyPtr = new Memory(Native.getNativeSize(long.class));\r\n"
                     + INDENT + INDENT + L"keyPtr.setLong(0, (long)key.getValue());\r\n";
@@ -696,7 +696,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterWrite(const VPG
         } else if (IsContain(macro, L"SPTR")) {
             // Object
             result += INDENT + INDENT + dllInstantPrefix + L"WriteObject" + (isMap ? L"AtKey" : L"") + L"(Handle, " + classPropertyEnum + L", value.Handle, " + dllFunctionIndex + L");\r\n";
-        } else if (IsCaptial(cppType)) {
+        } else if (IsCapital(cppType)) {
             // Enum
             result += INDENT + INDENT + dllInstantPrefix + L"WriteLong" + (isMap ? L"AtKey" : L"") + L"(Handle, " + classPropertyEnum + L", value.getValue(), " + dllFunctionIndex + L");\r\n";
         } else {
@@ -771,7 +771,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterInsert(const VP
         } else if (IsContain(macro, L"SPTR")) {
             // Object
             result += INDENT + INDENT + dllInstantPrefix + L"InsertObject(Handle, " + classPropertyEnum + L", value.Handle, " + dllFunctionIndex + L");\r\n";
-        } else if (IsCaptial(cppType1)) {
+        } else if (IsCapital(cppType1)) {
             // Enum
             result += INDENT + INDENT + dllInstantPrefix + L"InsertLong(Handle, " + classPropertyEnum + L", value.getValue(), " + dllFunctionIndex + L");\r\n";
         } else {
@@ -800,20 +800,20 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetter(const std::wst
         if (IsBlank(cppType1))
             return result;
 
-        std::wstring javaType1 = IsCaptial(cppType1) ? cppType1 : GetJavaGetterSetterCppToJavaConvertedType(cppType1);
+        std::wstring javaType1 = IsCapital(cppType1) ? cppType1 : GetJavaGetterSetterCppToJavaConvertedType(cppType1);
         std::wstring cppType2 = property->GetType2();
-        std::wstring javaType2 = !IsBlank(cppType2) ? (IsCaptial(cppType2) ? cppType2 : GetJavaGetterSetterCppToJavaConvertedType(cppType2)) : cppType2;
-        if (!IsBlank(cppType1) && IsCaptial(cppType1) && importFileMap.find(javaType1) != importFileMap.end())
+        std::wstring javaType2 = !IsBlank(cppType2) ? (IsCapital(cppType2) ? cppType2 : GetJavaGetterSetterCppToJavaConvertedType(cppType2)) : cppType2;
+        if (!IsBlank(cppType1) && IsCapital(cppType1) && importFileMap.find(javaType1) != importFileMap.end())
             importFiles.insert(importFileMap.find(javaType1)->second + L"." + javaType1);
-        if (!IsBlank(cppType2) && IsCaptial(cppType2) && importFileMap.find(javaType2) != importFileMap.end())
+        if (!IsBlank(cppType2) && IsCapital(cppType2) && importFileMap.find(javaType2) != importFileMap.end())
             importFiles.insert(importFileMap.find(javaType2)->second + L"." + javaType2);
         
         // add import file
-        if (!javaType1.empty() && IsCaptial(javaType1)) {
+        if (!javaType1.empty() && IsCapital(javaType1)) {
             if (importFileMap.find(javaType1) != importFileMap.end())
                 importFiles.insert(importFileMap.find(javaType1)->second + L"." + javaType1);
         }
-        if (!javaType2.empty() && IsCaptial(javaType2)) {
+        if (!javaType2.empty() && IsCapital(javaType2)) {
             if (importFileMap.find(javaType2) != importFileMap.end())
                 importFiles.insert(importFileMap.find(javaType2)->second + L"." + javaType2);
         }
