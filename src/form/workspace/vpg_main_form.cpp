@@ -87,14 +87,9 @@ void VPGMainFormDeleteWorkspaceForm::OnRedo()
     TRY
         // <vcc:VPGMainFormDeleteWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
         auto propertyAccessor = PropertyAccessorFactory::Create(_ParentObject);
-        auto currentWorkspaceForm = propertyAccessor->ReadObject(LockType::ReadLock, static_cast<int64_t>(VPGMainFormProperty::CurrentWorkspaceForm));
-        if (currentWorkspaceForm != nullptr) {
-            // propertyAccessor->WriteLock();
-            // auto mainForm = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
-            // assert(mainForm != nullptr);
-            // mainForm->GetWorkspaceForms().erase(std::dynamic_pointer_cast<VPGWorkspaceForm>(currentWorkspaceForm));
-            // propertyAccessor->Unlock();
-        }
+        auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
+        auto obj = form->GetWorkspaceForms().at(0).get();
+        propertyAccessor->RemoveContainerElement(LockType::WriteLock, static_cast<int64_t>(VPGMainFormProperty::WorkspaceForms), obj);
         // </vcc:VPGMainFormDeleteWorkspaceFormOnRedo>
     CATCH
 }
