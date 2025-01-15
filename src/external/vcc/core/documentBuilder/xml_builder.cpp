@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "exception_macro.hpp"
-#include "memory_macro.hpp"
 #include "string_helper.hpp"
 #include "xml.hpp"
 
@@ -135,7 +134,7 @@ namespace vcc
             }
             element->_Name += tagName;
             while (!IsNextCharTagEnd(xmlData, pos)) {
-                DECLARE_SPTR(XmlAttribute, attr);
+                auto attr = std::make_shared<XmlAttribute>();
                 attr->_Name = GetTag(xmlData, pos);
                 pos++;
                 if (pos >= dataLength || xmlData[pos] != L'=')
@@ -157,7 +156,7 @@ namespace vcc
         TRY
             while (pos < xmlData.length())
             {
-                DECLARE_SPTR(Xml, child);
+                auto child = std::make_shared<Xml>();
                 ParseXml(xmlData, pos, child);
                 if (!child->_Name.empty()) {
                     element->_Children.push_back(child);

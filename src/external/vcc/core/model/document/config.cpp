@@ -6,7 +6,6 @@
 #include "exception_type.hpp"
 #include "exception_macro.hpp"
 #include "string_helper.hpp"
-#include "memory_macro.hpp"
 
 namespace vcc
 {

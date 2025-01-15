@@ -6,7 +6,6 @@
 #include "i_action.hpp"
 #include "base_action.hpp"
 #include "action_manager.hpp"
-#include "memory_macro.hpp"
 
 using namespace vcc;
 

@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include "memory_macro.hpp"
 #include "vpg_enum_class_reader.hpp"
 #include "vpg_global.hpp"
 

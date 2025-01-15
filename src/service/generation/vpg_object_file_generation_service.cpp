@@ -6,7 +6,6 @@
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
 #include "log_service.hpp"
-#include "memory_macro.hpp"
 #include "set_helper.hpp"
 #include "string_helper.hpp"
 
@@ -708,7 +707,6 @@ void VPGObjectFileGenerationService::GetCppIncludeFiles(
         customIncludeFiles.insert(L"i_document.hpp");
         customIncludeFiles.insert(L"i_document_builder.hpp");
         customIncludeFiles.insert(L"json.hpp");
-        customIncludeFiles.insert(L"memory_macro.hpp");
         customIncludeFiles.insert(L"number_helper.hpp");
         customIncludeFiles.insert(L"string_helper.hpp");
     
@@ -927,7 +925,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
             "{\r\n"
             + INDENT + L"TRY\r\n"
             + toJsonVarable
-            + INDENT + INDENT + L"DECLARE_UPTR(Json, json);\r\n"
+            + INDENT + INDENT + L"auto json = std::make_unique<Json>();\r\n"
             + toJsonStr
             + INDENT + INDENT + L"return json;\r\n"
             + INDENT + L"CATCH\r\n"

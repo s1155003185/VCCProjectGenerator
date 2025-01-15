@@ -5,7 +5,6 @@
 #include "i_json_object.hpp"
 #include "json.hpp"
 #include "json_builder.hpp"
-#include "memory_macro.hpp"
 
 namespace vcc
 {

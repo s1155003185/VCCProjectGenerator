@@ -9,7 +9,6 @@
 #include "exception_type.hpp"
 #include "file_helper.hpp"
 #include "log_config.hpp"
-#include "memory_macro.hpp"
 #include "xml_builder.hpp"
 
 #include "vpg_code_reader.hpp"
@@ -234,8 +233,8 @@ std::wstring VPGFileSyncService::SyncFileContent(const VPGFileContentSyncTagMode
     std::wstring result = L"";
     TRY
         std::unique_ptr<VPGCodeReader> reader = std::make_unique<VPGCodeReader>(commandDelimiter);
-        DECLARE_SPTR(Xml, updatedCodeElement);
-        DECLARE_SPTR(Xml, originalCodeElement);
+        auto updatedCodeElement = std::make_shared<Xml>();
+        auto originalCodeElement = std::make_shared<Xml>();
         reader->Deserialize(updatedCode, updatedCodeElement);
         reader->Deserialize(originalCode, originalCodeElement);
 

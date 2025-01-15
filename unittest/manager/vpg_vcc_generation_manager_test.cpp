@@ -328,7 +328,7 @@ TEST_F(VPGVccGenerationManagerTest, Update)
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/versioning/git"})));
 
     this->_Option->InsertPlugins(L"vcc/versioning/git");
-    DECLARE_UPTR(JsonBuilder, jsonBuilder);
+    auto jsonBuilder = std::make_unique<JsonBuilder>();
     jsonBuilder->SetIsBeautify(true);
     WriteFile(ConcatPaths({this->GetWorkspaceTarget(), L".vcc/vcc.json"}), jsonBuilder->Serialize(this->_Option->ToJson().get()));
 
@@ -392,11 +392,11 @@ TEST_F(VPGVccGenerationManagerTest, Update_Makefile)
     std::wstring projectNameExe = L"NewProjectNameExe";
     std::wstring projectNameGtest = L"unittest";
 
-    DECLARE_UPTR(JsonBuilder, jsonBuilder);
+    auto jsonBuilder = std::make_unique<JsonBuilder>();
     jsonBuilder->SetIsBeautify(true);
 
     std::wstring vccJsonFileContent = ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L".vcc/vcc.json"}));
-    DECLARE_SPTR(Json, json);
+    auto json = std::make_shared<Json>();
     jsonBuilder->Deserialize(vccJsonFileContent, json);
     json->SetString(L"ProjectName", projectName);
     json->SetString(L"ProjectNameDll", projectNameDll);
@@ -630,8 +630,6 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
 
     std::wstring unittest = L""
     "#include <gtest/gtest.h>\r\n"
-    "\r\n"
-    "#include \"memory_macro.hpp\"\r\n"
     "\r\n"
     "#include \"vcc_object_empty.hpp\"\r\n"
     "#include \"vcc_object_dependent.hpp\"\r\n"

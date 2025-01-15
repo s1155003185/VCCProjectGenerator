@@ -4,7 +4,6 @@
 #include "base_property_accessor.hpp"
 #include "class_macro.hpp"
 #include "exception_macro.hpp"
-#include "memory_macro.hpp"
 #include "lock_type.hpp"
 
 #include <memory>
@@ -126,7 +125,7 @@ std::shared_ptr<IObject> Create()
 }
 TEST(BasePropertyAccessorTest, Full) 
 {
-    DECLARE_SPTR(BasePropertyAccessorTestObject, obj);
+    auto obj = std::make_shared<BasePropertyAccessorTestObject>();
     obj->SetObject(std::make_shared<BasePropertyAccessorTestObject>());
     std::unique_ptr<BasePropertyAccessorTestObjectPropertyAccessor> accessor = std::make_unique<BasePropertyAccessorTestObjectPropertyAccessor>(obj);
     EXPECT_EQ(accessor->ReadString(LockType::ReadLock, 0L), L"Test");

@@ -7,7 +7,6 @@
 
 #include "class_macro.hpp"
 #include "file_helper.hpp"
-#include "memory_macro.hpp"
 
 #include "vpg_enum_class.hpp"
 #include "vpg_enum_class_reader.hpp"

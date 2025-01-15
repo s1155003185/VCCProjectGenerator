@@ -73,7 +73,7 @@ namespace vcc
         void Insert##var(int64_t index, std::shared_ptr<IObject> value) const { InsertIObject(_##var, value, index); } \
         void Insert##var(std::vector<std::shared_ptr<type>> &value) { InsertIObjects(_##var, value); } \
         void Insert##var(int64_t index, std::vector<std::shared_ptr<type>> &value) { InsertIObjects(_##var, value, index); } \
-        void Remove##var(std::shared_ptr<IObject> value) const { RemoveIObject(_##var, value); } \
+        void Remove##var(std::shared_ptr<IObject> value) const { RemoveIObject(_##var, value.get()); } \
         void Remove##var##AtIndex(int64_t index) { RemoveIObjecttAtIndex(_##var, index); } \
         std::shared_ptr<type> Clone##var(int64_t index) const { return std::static_pointer_cast<type>(Get##var(index)->Clone()); } \
         void Clone##var(const std::vector<std::shared_ptr<type>> &value) { _##var.clear(); for (std::shared_ptr<type> element : value) { Insert##var(element != nullptr ? std::dynamic_pointer_cast<type>(element->Clone()) : nullptr); } }\

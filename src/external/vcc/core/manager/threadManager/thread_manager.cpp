@@ -148,7 +148,8 @@ namespace vcc
                     // Remove Complete thread
                     Trigger();
                 } else if (_TerminateMode == ThreadManagerTerminateMode::Wait) {
-                    DECLARE_SPTR(Thread, tmpThread, _LogConfig, L"ThreadTerminate", L"Start", L"Complete", [this](const Thread * /*thread*/) {
+                    auto tmpThread = std::make_shared<Thread>(_LogConfig, L"ThreadTerminate", L"Start", L"Complete",
+                        [this](const Thread * /*thread*/) {
                         while (true) {
                             this->Trigger();
                             if (this->GetActiveThreads().empty())

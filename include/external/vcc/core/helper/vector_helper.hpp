@@ -51,7 +51,7 @@ namespace vcc
     void RemoveAtIndex(std::vector<T> &sourceVector, const int64_t &index);
 
     template <typename T>
-    void RemoveIObject(std::vector<std::shared_ptr<T>> &sourceVector, const std::shared_ptr<IObject> &obj);
+    void RemoveIObject(std::vector<std::shared_ptr<T>> &sourceVector, IObject *obj);
     template <typename T>
     void RemoveIObjecttAtIndex(std::vector<T> &sourceVector, const int64_t &index);
 
@@ -181,14 +181,11 @@ namespace vcc
     }
 
     template <typename T>
-    void RemoveIObject(std::vector<std::shared_ptr<T>> &sourceVector, const std::shared_ptr<IObject> &obj)
+    void RemoveIObject(std::vector<std::shared_ptr<T>> &sourceVector, IObject *obj)
     {
-        auto derivedObj = std::dynamic_pointer_cast<T>(obj);
-        assert(derivedObj != nullptr);
-        sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(),
-            [&](const std::shared_ptr<T> &element) {
-                return element == derivedObj;
-            }), sourceVector.end());
+        auto index = FindIObject(sourceVector, obj->GetSharedPtr());
+        if (index >= 0)
+            sourceVector.erase(sourceVector.begin() + (size_t)index);
     }
 
     template <typename T>

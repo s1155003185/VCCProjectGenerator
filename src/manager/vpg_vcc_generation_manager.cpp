@@ -7,7 +7,6 @@
 #include "file_helper.hpp"
 #include "json.hpp"
 #include "json_builder.hpp"
-#include "memory_macro.hpp"
 #include "platform_type.hpp"
 #include "vpg_code_reader.hpp"
 #include "vpg_file_generation_manager.hpp"
@@ -75,7 +74,7 @@ std::vector<std::wstring> VPGVccGenerationManager::GetUpdateUnitTestList() const
 void VPGVccGenerationManager::CreateVccJson(bool isNew) const
 {
     TRY
-        DECLARE_UPTR(JsonBuilder, jsonBuilder);
+        auto jsonBuilder = std::make_unique<JsonBuilder>();
         jsonBuilder->SetIsBeautify(true);
         _Option->SetVersion(VPGGlobal::GetVersion());
         if (isNew)
@@ -88,8 +87,8 @@ void VPGVccGenerationManager::ReadVccJson() const
 {
     TRY
         std::wstring fileContent = ReadFile(ConcatPaths({_Workspace, VPGGlobal::GetVccJsonFileName()}));
-        DECLARE_UPTR(JsonBuilder, jsonBuilder);
-        DECLARE_SPTR(Json, json);
+        auto jsonBuilder = std::make_unique<JsonBuilder>();
+        auto json = std::make_shared<Json>();
         jsonBuilder->Deserialize(fileContent, json);
         _Option->DeserializeJson(json);
     CATCH
@@ -174,7 +173,7 @@ void VPGVccGenerationManager::Generate() const
         std::wstring makefileContent = ReadFile(ConcatPaths({_Workspace, MakeFileName}));
         WriteFile(makefilePath, this->AdjustMakefile(makefileContent), true);
         
-        DECLARE_UPTR(VPGFileGenerationManager, manager, this->_LogConfig, _Workspace);
+        auto manager = std::make_unique<VPGFileGenerationManager>(this->_LogConfig, _Workspace);
         LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Generate Project ...");
         manager->GernerateProperty(_LogConfig.get(), _Option.get());
         LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Done");

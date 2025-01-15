@@ -232,7 +232,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
         LogService::LogInfo(logConfig, logId, L"Generate property start.");
         std::set<std::wstring> objectTypes;
         std::set<std::wstring> objectFileNames, propertyAccessorFileNames;
-        DECLARE_SPTR(VPGDllFileGenerationServiceOption, dllOption);
+        auto dllOption = std::make_shared<VPGDllFileGenerationServiceOption>();
         for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(typeWorkspaceFullPath))) {
             if (filePath.is_directory())
                 continue;

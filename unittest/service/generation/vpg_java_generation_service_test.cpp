@@ -64,7 +64,6 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "\r\n"
         "// <vcc:dllInterfaceHeader gen=\"REPLACE\">\r\n"
         "#include \"property_accessor_macro.hpp\"\r\n"
-        "#include \"memory_macro.hpp\"\r\n"
         "#include \"exception_macro.hpp\"\r\n"
         "\r\n"
         "using namespace vcc;\r\n"

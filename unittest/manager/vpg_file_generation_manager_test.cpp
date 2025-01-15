@@ -8,7 +8,6 @@
 #include "class_macro.hpp"
 #include "file_helper.hpp"
 #include "log_service.hpp"
-#include "memory_macro.hpp"
 #include "vpg_enum_class_reader.hpp"
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_global.hpp"

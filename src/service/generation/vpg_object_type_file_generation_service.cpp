@@ -3,7 +3,6 @@
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
 #include "log_service.hpp"
-#include "memory_macro.hpp"
 #include "set_helper.hpp"
 #include "xml.hpp"
 
@@ -22,8 +21,8 @@ void VPGObjectTypeFileGenerationService::Generate(const LogConfig *logConfig, co
         std::wstring customContent = L"";
         if (IsFileExists(filePathHpp)) {
             std::wstring orginalContent = ReadFile(filePathHpp);
-            DECLARE_UPTR(VPGCodeReader, reader, L"//");
-            DECLARE_SPTR(Xml, element);
+            auto reader = std::make_unique<VPGCodeReader>(L"//");
+            auto element = std::make_shared<Xml>();
             reader->Deserialize(orginalContent, element);
             for (std::shared_ptr<Xml> child : element->GetChildren()) {
                 if (IsStartWith(child->GetName(), L"vcc:custom")) {

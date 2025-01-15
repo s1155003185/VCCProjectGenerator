@@ -6,7 +6,6 @@
 
 #include "class_macro.hpp"
 #include "file_helper.hpp"
-#include "memory_macro.hpp"
 #include "log_config.hpp"
 #include "vpg_global.hpp"
 #include "vpg_process_manager.hpp"
@@ -25,7 +24,7 @@ class VPGProcessManagerTest : public testing::Test
 
         void SetUp() override
         {
-            //DECLARE_SPTR(LogConfig, logConfig, LogConfigType::None);
+            //auto logConfig = std::make_shared<LogConfig>(LogConfigType::None);
             //logConfig->SetIsConsoleLog(true);
             //this->_Manager->SetLogConfig(logConfig);
         }
