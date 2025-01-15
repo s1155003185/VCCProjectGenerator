@@ -4,6 +4,7 @@
 - Review function naming
 - Class macro VECTOR, VECTOR_SPTR add Remove method
 - Git
+- Remove memory_macro.hpp
 
 ### [v0.2.6] - 2025-01-05: Form - Action
 - Support @@Thread
