@@ -111,7 +111,7 @@ void VPGFileGenerationManager::GetFileList(const VPGEnumClassReader *reader, con
                     } else
                         _IncludeFiles.insert(std::make_pair(enumClassName, fileName));
                     // class
-                    if (IsClassEnumFile(fileName, projectPrefix) && IsClassEnum(enumClassName, projectPrefix)) {
+                    if (IsPropertyFile(fileName, projectPrefix) && IsPropertyClass(enumClassName, projectPrefix)) {
                         std::wstring className = GetClassNameFromEnumClassName(enumClassName);
                         std::wstring classFileName = GetClassFilenameFromEnumClassFilename(fileName);
                         if (classFiles.count(className) > 0)
@@ -144,27 +144,6 @@ void VPGFileGenerationManager::GetFileList(const VPGEnumClassReader *reader, con
             CATCH_SLIENT
         }
     CATCH
-}
-
-bool VPGFileGenerationManager::IsClassEnumFile(const std::wstring &filename, const std::wstring &projectPrefix)
-{
-    TRY
-        std::wstring tmpFileName = filename;
-        ToLower(tmpFileName);
-        std::wstring tmpProjectPrefix = projectPrefix;
-        ToLower(tmpProjectPrefix);
-        return tmpFileName.ends_with(propertyFileSuffix) && (IsBlank(tmpProjectPrefix) || tmpFileName.starts_with(tmpProjectPrefix));
-    CATCH
-    return false;
-}
-
-bool VPGFileGenerationManager::IsClassEnum(const std::wstring &enumClassName, const std::wstring &projectPrefix)
-{
-    TRY
-        return enumClassName.ends_with(propertyClassNameSuffix) && enumClassName.length() > propertyClassNameSuffix.length()
-            && (IsBlank(projectPrefix) || enumClassName.starts_with(projectPrefix));
-    CATCH
-    return false;
 }
 
 std::wstring VPGFileGenerationManager::GetConcatPath(const std::wstring &projWorkspace, const std::wstring &objWorkspace, const std::wstring &middlePath, const std::wstring &fileName) const
@@ -260,7 +239,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
             enumClassReader.Parse(fileContent, enumClassList);
             for (auto const &enumClass : enumClassList) {
                 std::wstring className = GetClassNameFromEnumClassName(enumClass->GetName());
-                if (IsClassEnum(enumClass->GetName(), projPrefix)) {
+                if (IsPropertyClass(enumClass->GetName(), projPrefix)) {
                     std::wstring classNameWithoutPrefix = enumClass->GetName().substr(!projPrefix.empty() ? projPrefix.size() : 0);
                     classNameWithoutPrefix = GetClassNameFromEnumClassName(classNameWithoutPrefix);
                     objectTypes.insert(GetClassNameFromEnumClassName(classNameWithoutPrefix));
@@ -287,7 +266,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
                     if (!IsBlank(javaOption->GetTypeDirectory()))
                         VPGJavaGenerationService::GenerateEnum(logConfig, GetConcatPath(workspace, javaOption->GetTypeDirectory(), middlePath, javaEnumClassName + L".java"), middlePath, enumClass.get(), option, javaOption.get());
                     
-                    if (IsClassEnum(enumClass->GetName(), projPrefix)) {
+                    if (IsPropertyClass(enumClass->GetName(), projPrefix)) {
                         std::wstring objectDirectory = javaOption->GetObjectDirectory();
                         if (enumClass->GetType() == VPGEnumClassType::Form && !IsBlank(javaOption->GetFormDirectory()))
                             objectDirectory = javaOption->GetFormDirectory();
@@ -299,7 +278,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
                 }
             }
             
-            if (IsClassEnumFile(fileName, filePrefix)) {
+            if (IsPropertyFile(fileName, filePrefix)) {
                 // ------------------------------------------------------------------------------------------ //
                 //                               Generate Object Class File                                   //
                 // ------------------------------------------------------------------------------------------ //
@@ -321,8 +300,8 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
                 }
                 if (!propertyAccessorDirectoryHpp.empty() && !propertyAccessorDirectoryCpp.empty()) {
                     propertyAccessorFileNames.insert(propertyAccessorFileName + L".hpp");
-                    VPGPropertyAccessorGenerationService::GenerateHpp(logConfig, GetConcatPath(projWorkspace, propertyAccessorDirectoryHpp, middlePath, propertyAccessorFileName + L".hpp"), objectEnumClassList);
-                    VPGPropertyAccessorGenerationService::GenerateCpp(logConfig, _IncludeFiles, GetConcatPath(projWorkspace, propertyAccessorDirectoryCpp, middlePath, propertyAccessorFileName + L".cpp"), objectEnumClassList);
+                    VPGPropertyAccessorGenerationService::GenerateHpp(logConfig, projPrefix, GetConcatPath(projWorkspace, propertyAccessorDirectoryHpp, middlePath, propertyAccessorFileName + L".hpp"), objectEnumClassList);
+                    VPGPropertyAccessorGenerationService::GenerateCpp(logConfig, projPrefix, _IncludeFiles, GetConcatPath(projWorkspace, propertyAccessorDirectoryCpp, middlePath, propertyAccessorFileName + L".cpp"), objectEnumClassList);
                 }
             }
             

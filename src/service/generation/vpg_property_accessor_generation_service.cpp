@@ -9,7 +9,6 @@
 using namespace vcc;
 
 #define LOG_ID L"Property Accessor Generation"
-const std::wstring propertyClassNameSuffix = L"Property";
 const std::wstring containerToken = L"<Container>";
 const std::wstring objectToken = L"<Object>";
 const std::wstring enumToken = L"<Enum>";
@@ -181,7 +180,8 @@ std::wstring VPGPropertyAccessorGenerationService::GetIncludeFile(const std::map
     return L"";
 }
 
-void VPGPropertyAccessorGenerationService::GenerateHpp(const LogConfig *logConfig, const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+void VPGPropertyAccessorGenerationService::GenerateHpp(const LogConfig *logConfig, const std::wstring &projectPrefix,
+    const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
         LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor hpp file: " + filePathHpp);
@@ -197,7 +197,7 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const LogConfig *logConfi
             "using namespace vcc;\r\n";
 
         for (auto const &enumClass : enumClassList) {
-            if (!IsEndWith(enumClass->GetName(), propertyClassNameSuffix))
+            if (!IsPropertyClass(enumClass->GetName(), projectPrefix))
                 continue;
             std::vector<std::shared_ptr<VPGEnumClassProperty>> readWrite;
             for (auto property : enumClass->GetProperties()) {
@@ -948,8 +948,9 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
     CATCH
 }
 
-void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfig, const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
-            const std::wstring &filePathCpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfig, const std::wstring &projectPrefix,
+    const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
+    const std::wstring &filePathCpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
         LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor cpp file: " + filePathCpp);
@@ -964,10 +965,10 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
         std::map<std::wstring, std::map<std::wstring, std::vector<std::shared_ptr<VPGEnumClassProperty>>>> typeMacroMap;
         // type macro
         for (auto const &enumClass : enumClassList) {
-            if (!IsEndWith(enumClass->GetName(), propertyClassNameSuffix))
+            if (!IsPropertyClass(enumClass->GetName(), projectPrefix))
                 continue;
             // include orginal class and enum class
-            std::wstring className = enumClass->GetName().substr(0, enumClass->GetName().size() - propertyClassNameSuffix.size());
+            std::wstring className = GetClassNameFromPropertyClassName(enumClass->GetName());
 
             // include object class
             std::wstring includePath = VPGPropertyAccessorGenerationService::GetIncludeFile(projectClassIncludeFiles, className);
@@ -988,25 +989,33 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
                     continue;
 
                 // not support set
-                if (IsStartWith(property->GetMacro(), L"SET")) {
+                if (property->GetGetSetType() == VPGEnumClassGetSetType::Set)
                     continue;
-                }
 
                 bool isContainer = false;
-                if (IsStartWith(property->GetMacro(), L"MAP")
-                    || IsStartWith(property->GetMacro(), L"ORDERED_MAP")) {
-                    systemIncludeFiles.insert(L"map");
-                    isContainer = true;
-                }
-                if (IsStartWith(property->GetMacro(), L"SET")) {
-                    systemIncludeFiles.insert(L"set");
-                    isContainer = true;
-                }
-                if (IsStartWith(property->GetMacro(), L"VECTOR")
-                    || IsStartWith(property->GetMacro(), L"ORDERED_MAP")) {
+                switch (property->GetGetSetType())
+                {
+                case VPGEnumClassGetSetType::Vector:
                     systemIncludeFiles.insert(L"vector");
                     isContainer = true;
+                    break;
+                case VPGEnumClassGetSetType::Map:
+                    systemIncludeFiles.insert(L"map");
+                    isContainer = true;
+                    break;
+                case VPGEnumClassGetSetType::OrderedMap:
+                    systemIncludeFiles.insert(L"vector");
+                    systemIncludeFiles.insert(L"map");
+                    isContainer = true;
+                    break;
+                case VPGEnumClassGetSetType::Set:
+                    systemIncludeFiles.insert(L"set");
+                    isContainer = true;
+                    break;
+                default:
+                    break;
                 }
+
                 // container
                 if (isContainer) {
                     if (typeMacroMap[enumClass->GetName()].find(containerToken) == typeMacroMap[enumClass->GetName()].end()) {
@@ -1038,7 +1047,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
                 }
 
                 // object
-                if (Find(property->GetMacro(), L"SPTR") != std::wstring::npos) {
+                if (property->GetIsObject()) {
                     systemIncludeFiles.insert(L"memory");
                     if (typeMacroMap[enumClass->GetName()].find(objectToken) == typeMacroMap[enumClass->GetName()].end()) {
                         std::vector<std::shared_ptr<VPGEnumClassProperty>> initVector;
@@ -1046,7 +1055,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
                     }
                     typeMacroMap[enumClass->GetName()][objectToken].push_back(property);
                 } else {
-                    std::wstring type = IsStartWith(property->GetMacro(), L"MAP") || IsStartWith(property->GetMacro(), L"ORDERED_MAP") ? type2 : type1;
+                    std::wstring type = property->GetGetSetType() == VPGEnumClassGetSetType::Map || property->GetGetSetType() == VPGEnumClassGetSetType::OrderedMap ? type2 : type1;
                     if (!type.empty() && IsCapital(type))
                         type = enumToken;
                     std::wstring convertedType = L"";
