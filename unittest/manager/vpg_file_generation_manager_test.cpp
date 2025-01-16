@@ -90,11 +90,6 @@ class VPGFileGenerationManagerTest : public testing::Test
         }
 };
 
-TEST_F(VPGFileGenerationManagerTest, GetClassNameFromEnumClassName)
-{
-    EXPECT_EQ(VPGGlobal::GetFileGenerationManager()->GetClassNameFromEnumClassName(L"VCCObjectProperty"), L"VCCObject");
-}
-
 TEST_F(VPGFileGenerationManagerTest, GetFileList)
 {
     std::map<std::wstring, std::wstring> classList, enumList;

@@ -33,7 +33,6 @@ class VPGFileGenerationManager : public BaseManager
         // properties
         void GetClassMacroList(const std::wstring &projWorkspace);
         
-        std::wstring GetClassNameFromEnumClassName(const std::wstring &enumClassName);
         std::wstring GetClassFilenameFromEnumClassFilename(const std::wstring &enumClassFileName);
         void GetFileList(const VPGEnumClassReader *reader, const std::wstring &directoryFullPath, const std::wstring &projectPrefix, const bool &isSeperateAction);
         

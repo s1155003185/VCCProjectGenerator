@@ -55,15 +55,6 @@ void VPGFileGenerationManager::GetClassMacroList(const std::wstring &projWorkspa
     CATCH
 }
 
-std::wstring VPGFileGenerationManager::GetClassNameFromEnumClassName(const std::wstring &enumClassName)
-{
-    TRY
-        if (enumClassName.ends_with(propertyClassNameSuffix) && enumClassName != propertyClassNameSuffix)
-            return enumClassName.substr(0, enumClassName.length() - propertyClassNameSuffix.length());
-    CATCH
-    return enumClassName;
-}
-
 std::wstring VPGFileGenerationManager::GetClassFilenameFromEnumClassFilename(const std::wstring &enumClassFileName)
 {
     TRY
@@ -112,7 +103,7 @@ void VPGFileGenerationManager::GetFileList(const VPGEnumClassReader *reader, con
                         _IncludeFiles.insert(std::make_pair(enumClassName, fileName));
                     // class
                     if (IsPropertyFile(fileName, projectPrefix) && IsPropertyClass(enumClassName, projectPrefix)) {
-                        std::wstring className = GetClassNameFromEnumClassName(enumClassName);
+                        std::wstring className = GetClassFilenameFromEnumClassFilename(enumClassName);
                         std::wstring classFileName = GetClassFilenameFromEnumClassFilename(fileName);
                         if (classFiles.count(className) > 0)
                             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Class " + className + L" duplicated:\r\n"
@@ -238,11 +229,11 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
             std::vector<std::shared_ptr<VPGEnumClass>> objectEnumClassList;
             enumClassReader.Parse(fileContent, enumClassList);
             for (auto const &enumClass : enumClassList) {
-                std::wstring className = GetClassNameFromEnumClassName(enumClass->GetName());
+                std::wstring className = GetClassFilenameFromEnumClassFilename(enumClass->GetName());
                 if (IsPropertyClass(enumClass->GetName(), projPrefix)) {
                     std::wstring classNameWithoutPrefix = enumClass->GetName().substr(!projPrefix.empty() ? projPrefix.size() : 0);
-                    classNameWithoutPrefix = GetClassNameFromEnumClassName(classNameWithoutPrefix);
-                    objectTypes.insert(GetClassNameFromEnumClassName(classNameWithoutPrefix));
+                    classNameWithoutPrefix = GetClassFilenameFromEnumClassFilename(classNameWithoutPrefix);
+                    objectTypes.insert(GetClassFilenameFromEnumClassFilename(classNameWithoutPrefix));
 
                     objectEnumClassList.push_back(enumClass);
                 } else {
