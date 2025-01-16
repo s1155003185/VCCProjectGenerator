@@ -12,7 +12,7 @@ TEST(ConfigBuilderTest, Full)
 {
     std::unique_ptr<ConfigBuilder> reader = std::make_unique<ConfigBuilder>();
     
-    auto element = std::shared_ptr<Config>();
+    auto element = std::make_shared<Config>();
     std::wstring str = L"";
     str += L"# command\r\n";
     str += L"name1=value1\r\n";
