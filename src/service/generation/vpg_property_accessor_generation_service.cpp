@@ -273,14 +273,13 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const LogConfig *logConfi
 void VPGPropertyAccessorGenerationService::GetIsHavingGenerateTypeMapType(const std::vector<std::shared_ptr<VPGEnumClassProperty>> &enumClassProperties, bool &isHavingGeneralType,  bool &isHavingVectorType, bool &isHavingMapType)
 {
     TRY
+        isHavingGeneralType = false;
+        isHavingVectorType = false;
+        isHavingMapType = false;
         for (auto const &item : enumClassProperties) {
-            if (IsStartWith(item->GetMacro(), L"MAP") || IsStartWith(item->GetMacro(), L"ORDERED_MAP"))
-                isHavingMapType = true;
-            else
-                isHavingGeneralType = true;
-            
-            if (IsStartWith(item->GetMacro(), L"VECTOR") || IsStartWith(item->GetMacro(), L"ORDERED_MAP"))
-                isHavingVectorType = true;
+            isHavingGeneralType |= item->GetGetSetType() == VPGEnumClassGetSetType::General;
+            isHavingVectorType |= item->GetGetSetType() == VPGEnumClassGetSetType::Vector || item->GetGetSetType() == VPGEnumClassGetSetType::OrderedMap;
+            isHavingMapType |= item->GetGetSetType() == VPGEnumClassGetSetType::Map || item->GetGetSetType() == VPGEnumClassGetSetType::OrderedMap;
         }
     CATCH
 }

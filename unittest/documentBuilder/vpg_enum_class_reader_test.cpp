@@ -408,7 +408,7 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
     EXPECT_EQ(element->GetProperties().at(0)->GetPropertyName(), L"EnumA");
     EXPECT_EQ(element->GetProperties().at(0)->GetDefaultValue(), L"L\"Default\"");
     EXPECT_EQ(element->GetProperties().at(0)->GetCommand(), L"");
-    EXPECT_EQ(element->GetProperties().at(0)->GetGetSetType(), VPGEnumClassGetSetType::GetSet);
+    EXPECT_EQ(element->GetProperties().at(0)->GetGetSetType(), VPGEnumClassGetSetType::General);
     EXPECT_EQ(element->GetProperties().at(0)->GetIsObject(), false);
     EXPECT_EQ(element->GetProperties().at(1)->GetEnum(), L"EnumB");
     EXPECT_EQ(element->GetProperties().at(1)->GetMacro(), L"GETSET_SPTR(EnumTypeB, EnumB)");
@@ -417,7 +417,7 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
     EXPECT_EQ(element->GetProperties().at(1)->GetPropertyName(), L"EnumB");
     EXPECT_EQ(element->GetProperties().at(1)->GetDefaultValue(), L"");
     EXPECT_EQ(element->GetProperties().at(1)->GetCommand(), L"");
-    EXPECT_EQ(element->GetProperties().at(1)->GetGetSetType(), VPGEnumClassGetSetType::GetSet);
+    EXPECT_EQ(element->GetProperties().at(1)->GetGetSetType(), VPGEnumClassGetSetType::General);
     EXPECT_EQ(element->GetProperties().at(1)->GetIsObject(), true);
     EXPECT_EQ(element->GetProperties().at(2)->GetEnum(), L"EnumC");
     EXPECT_EQ(element->GetProperties().at(2)->GetMacro(), L"GETSET_SPTR(EnumTypeC, EnumC, ArgumentA, ArgumentB, ArgumentC)");
@@ -426,7 +426,7 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
     EXPECT_EQ(element->GetProperties().at(2)->GetPropertyName(), L"EnumC");
     EXPECT_EQ(element->GetProperties().at(2)->GetDefaultValue(), L"ArgumentA, ArgumentB, ArgumentC");
     EXPECT_EQ(element->GetProperties().at(2)->GetCommand(), L"");
-    EXPECT_EQ(element->GetProperties().at(2)->GetGetSetType(), VPGEnumClassGetSetType::GetSet);
+    EXPECT_EQ(element->GetProperties().at(2)->GetGetSetType(), VPGEnumClassGetSetType::General);
     EXPECT_EQ(element->GetProperties().at(2)->GetIsObject(), true);
     EXPECT_EQ(element->GetProperties().at(3)->GetEnum(), L"EnumD");
     EXPECT_EQ(element->GetProperties().at(3)->GetMacro(), L"");

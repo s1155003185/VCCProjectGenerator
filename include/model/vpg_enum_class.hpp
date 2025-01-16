@@ -34,7 +34,7 @@ enum class VPGEnumClassPropertyType
 enum class VPGEnumClassGetSetType
 {
     NA
-    , GetSet
+    , General
     , Vector
     , Map
     , OrderedMap

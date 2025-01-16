@@ -235,7 +235,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
             else if (IsStartWith(property->_Macro, L"SET", pos))
                 property->_GetSetType = VPGEnumClassGetSetType::Set;
             else
-                property->_GetSetType = VPGEnumClassGetSetType::GetSet;
+                property->_GetSetType = VPGEnumClassGetSetType::General;
             
             size_t posOfOpenQuote = Find(property->_Macro, L"(");
             if (posOfOpenQuote != std::wstring::npos)
