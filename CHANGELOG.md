@@ -5,6 +5,7 @@
 - Class macro VECTOR, VECTOR_SPTR add Remove method
 - Git
 - Remove memory_macro.hpp
+- Property Accessor Seperate Read, Write, Remove, Clone to Read, ReadAtIndex, ReadAtKey, Write, WriteAtIndex, WriteAtKey, RemoveAtIndex, RemoveAtKey, CloneAtIndex, CloneAtKey. (Compiler cannot distinguish pointer and integer)
 
 ### [v0.2.6] - 2025-01-05: Form - Action
 - Support @@Thread
