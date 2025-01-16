@@ -226,6 +226,21 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
         } else {
             property->_PropertyType = VPGEnumClassPropertyType::Property;
 
+            if (IsStartWith(property->_Macro, L"VECTOR", pos))
+                property->_GetSetType = VPGEnumClassGetSetType::Vector;
+            else if (IsStartWith(property->_Macro, L"MAP", pos))
+                property->_GetSetType = VPGEnumClassGetSetType::Map;
+            else if (IsStartWith(property->_Macro, L"ORDERED_MAP", pos))
+                property->_GetSetType = VPGEnumClassGetSetType::OrderedMap;
+            else if (IsStartWith(property->_Macro, L"SET", pos))
+                property->_GetSetType = VPGEnumClassGetSetType::Set;
+            else
+                property->_GetSetType = VPGEnumClassGetSetType::GetSet;
+            
+            size_t posOfOpenQuote = Find(property->_Macro, L"(");
+            if (posOfOpenQuote != std::wstring::npos)
+                property->_IsObject = IsContain(property->_Macro.substr(0, posOfOpenQuote) , L"_SPTR");
+
             if (IsStartWith(property->_Macro, L"MAP", pos) || IsStartWith(property->_Macro, L"ORDERED_MAP", pos)) {
                 property->_Type1 = _GetType(property->_Macro, pos);
                 if (property->_Macro[pos] == L',')  {

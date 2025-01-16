@@ -31,11 +31,21 @@ enum class VPGEnumClassPropertyType
     , Action
 };
 
+enum class VPGEnumClassGetSetType
+{
+    NA
+    , GetSet
+    , Vector
+    , Map
+    , OrderedMap
+    , Set
+};
+
 class VPGEnumClassProperty : public BaseObject
 {
     friend class VPGEnumClassReader;
 
-    GETSET(VPGEnumClassPropertyType, PropertyType, VPGEnumClassPropertyType::NA)
+    GETSET(VPGEnumClassPropertyType, PropertyType, VPGEnumClassPropertyType::NA);
     GETSET(std::wstring, Enum, L"");
     GETSET(int64_t, EnumValue, 0);
     GETSET(std::wstring, Macro, L"");
@@ -45,6 +55,9 @@ class VPGEnumClassProperty : public BaseObject
     GETSET(std::wstring, DefaultValue, L"");
     GETSET(std::wstring, Command, L"");
 
+    // Macro
+    GETSET(VPGEnumClassGetSetType, GetSetType, VPGEnumClassGetSetType::NA);
+    GETSET(bool, IsObject, false);
     GETSET(VPGEnumClassPropertyAccessMode, AccessMode, VPGEnumClassPropertyAccessMode::ReadWrite);
     GETSET(bool, IsInherit, false);
 
