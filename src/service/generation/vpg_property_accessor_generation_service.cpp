@@ -173,9 +173,9 @@ std::vector<std::wstring> VPGPropertyAccessorGenerationService::GetPropertyAcces
 std::wstring VPGPropertyAccessorGenerationService::GetIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::wstring &className)
 {
     TRY
-        if (projectClassIncludeFiles.contains(className))
+        if (IsContain(projectClassIncludeFiles, className))
             return projectClassIncludeFiles.at(className);
-        else if (projectClassIncludeFiles.contains(L"vcc::" + className))
+        else if (IsContain(projectClassIncludeFiles, L"vcc::" + className))
             return projectClassIncludeFiles.at(L"vcc::" + className);
     CATCH
     return L"";
