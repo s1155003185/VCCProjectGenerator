@@ -992,7 +992,7 @@ std::wstring VPGObjectFileGenerationService::GetCppInitialize(const VPGEnumClass
     return result;
 }
 
-std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *enumClass, const std::wstring &classPrefix, const std::wstring &className)
+std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *enumClass, const std::wstring &className)
 {
     std::wstring result = L"";
     TRY
@@ -1160,7 +1160,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 + GetCppCloneFunctions(enumClass.get(), className)
                 + GetCppJsonFunction(className, enumClassMapping, enumClass)
                 + GetCppInitialize(enumClass.get(), className, baseClassNameWithoutQuote)
-                + GetCppAction(enumClass.get(), classPrefix, className);
+                + GetCppAction(enumClass.get(), className);
         }
 
         content += GetCppCustomFunction(isIncludeForm);
