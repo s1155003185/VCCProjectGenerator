@@ -33,7 +33,7 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
         if (!IsPropertyClassNameValidToGenerateClass(enumClass->GetName(), projectPrefix))
             return;
 
-        std::wstring className = GetClassNameFromPropertyClassName(enumClass->GetName(), projectPrefix);
+        std::wstring className = GetClassNameFromPropertyClassName(enumClass->GetName());
         bool isSeperateFile = !IsBlank(folderPathHpp);
 
         for (auto const &property : enumClass->GetProperties()) {
@@ -185,7 +185,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
         if (!IsPropertyClassNameValidToGenerateClass(enumClass->GetName(), projectPrefix))
             return;
 
-        std::wstring className = GetClassNameFromPropertyClassName(enumClass->GetName(), projectPrefix);
+        std::wstring className = GetClassNameFromPropertyClassName(enumClass->GetName());
         bool isSeperateFile = !IsBlank(folderPathCpp);
 
         for (auto const &property : enumClass->GetProperties()) {

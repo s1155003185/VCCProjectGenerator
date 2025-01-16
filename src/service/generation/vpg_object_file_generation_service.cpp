@@ -1043,7 +1043,7 @@ std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *en
                     "void " + className + L"::" + functionName + L"()\r\n"
                     "{\r\n"
                     + INDENT + L"TRY\r\n"
-                    + INDENT + INDENT + L"auto action = std::make_shared<" + GetActionClassName(classPrefix, enumClass, property.get()) + L">(" + assignmentStr + L");\r\n"
+                    + INDENT + INDENT + L"auto action = std::make_shared<" + GetActionClassName(enumClass, property.get()) + L">(" + assignmentStr + L");\r\n"
                     + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", className, functionName) + L"\r\n"
                     + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", className, functionName) + L"\r\n"
                     + INDENT + INDENT + L"ExecuteAction(action, " + (property->GetIsNoHistory() ? L"true" : L"false") + L");\r\n"

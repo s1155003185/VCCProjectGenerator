@@ -4,6 +4,7 @@
 
 #include "exception_macro.hpp"
 #include "file_helper.hpp"
+#include "vpg_class_helper.hpp"
 
 using namespace vcc;
 
@@ -17,14 +18,9 @@ const std::wstring generalTypeContentFooter = INDENT + INDENT + L"default:\r\n"
                 + INDENT + INDENT + INDENT + L"assert(false);\r\n"
                 + INDENT + INDENT + L"}\r\n";
 
-std::wstring GetClassNameFromClassPropertyName(const std::wstring &classPropertyName)
-{
-    return classPropertyName.substr(0, classPropertyName.size() - propertyClassNameSuffix.size());
-}
-
 std::wstring GetGeneralTypeIndexContentHeader(const std::wstring &classPropertyName)
 {
-    const std::wstring className = GetClassNameFromClassPropertyName(classPropertyName);
+    const std::wstring className = GetClassNameFromPropertyClassName(classPropertyName);
     return INDENT + INDENT + L"assert(index >= -1);\r\n"
         + INDENT + INDENT + L"auto obj = std::static_pointer_cast<" + className + L">(_Object);\r\n"
         + INDENT + INDENT + L"assert(obj != nullptr);\r\n"
@@ -34,7 +30,7 @@ std::wstring GetGeneralTypeIndexContentHeader(const std::wstring &classPropertyN
 
 std::wstring GetGeneralTypeMapContentHeader(const std::wstring &classPropertyName)
 {
-    const std::wstring className = GetClassNameFromClassPropertyName(classPropertyName);
+    const std::wstring className = GetClassNameFromPropertyClassName(classPropertyName);
     return INDENT + INDENT + L"auto obj = std::static_pointer_cast<" + className + L">(_Object);\r\n"
         + INDENT + INDENT + L"assert(obj != nullptr);\r\n"
         + INDENT + INDENT + L"assert(key != nullptr);\r\n"
@@ -44,7 +40,7 @@ std::wstring GetGeneralTypeMapContentHeader(const std::wstring &classPropertyNam
 
 std::wstring GetGeneralContentHeader(const std::wstring &classPropertyName)
 {
-    const std::wstring className = GetClassNameFromClassPropertyName(classPropertyName);
+    const std::wstring className = GetClassNameFromPropertyClassName(classPropertyName);
     return INDENT + INDENT + L"auto obj = std::static_pointer_cast<" + className + L">(_Object);\r\n"
         + INDENT + INDENT + L"assert(obj != nullptr);\r\n"
         + INDENT + INDENT + L"switch(static_cast<" + classPropertyName + L">(objectProperty))\r\n"
@@ -829,7 +825,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
             }
         }
 
-        const std::wstring className = GetClassNameFromClassPropertyName(propertyName);
+        const std::wstring className = GetClassNameFromPropertyClassName(propertyName);
         result += L"\r\n"
             "void " + propertyName + L"Accessor::_RemoveContainerElement";
         if (isHavingVectorObject)

@@ -132,7 +132,7 @@ void VPGFileGenerationManager::GetFileList(const VPGEnumClassReader *reader, con
                         if (isSeperateAction) {
                             for (auto const &property : enumClass->GetProperties()) {
                                 if (property->GetPropertyType() == VPGEnumClassPropertyType::Action) {
-                                    std::wstring actionClassName = GetActionClassName(projectPrefix, enumClass.get(), property.get());
+                                    std::wstring actionClassName = GetActionClassName(enumClass.get(), property.get());
                                     std::wstring actionFileName = GetActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".hpp";
                                     if (_IncludeFiles.find(actionClassName) == _IncludeFiles.end())
                                         _IncludeFiles.insert(std::make_pair(actionClassName, actionFileName));
