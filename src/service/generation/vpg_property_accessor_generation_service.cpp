@@ -217,21 +217,15 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const LogConfig *logConfi
                     continue;
 
                 // property accessor not support set
-                if (IsStartWith(property->GetMacro(), L"SET")) {
+                if (property->GetIsSet()) {
                     LogService::LogWarning(logConfig, L"Property Accessor Generation Service", L"Property Accessor not support SET: class " + enumClass->GetName() + L": " + property->GetMacro());
                     continue;
                 }
                 
-                size_t pos = Find(property->GetMacro(), L"(");
-                std::wstring macro = pos != std::wstring::npos && pos > 0 ? property->GetMacro().substr(0, pos) : property->GetMacro();
-                isCollection = isCollection
-                                    || IsStartWith(macro, L"VECTOR")
-                                    || IsStartWith(macro, L"MAP")
-                                    || IsStartWith(macro, L"ORDERED_MAP")
-                                    || IsStartWith(macro, L"SET");
-                isObject = isObject || Find(macro, L"SPTR") != std::wstring::npos;
-                if (Find(macro, L"SPTR") == std::wstring::npos) {
-                    std::wstring type = IsStartWith(macro, L"MAP") || IsStartWith(macro, L"ORDERED_MAP") ? property->GetType2() : property->GetType1();
+                isCollection |= property->GetIsCollection();
+                isObject |= property->GetIsObject();
+                if (property->GetIsObject()) {
+                    std::wstring type = property->GetIsMap() || property->GetIsOrderedMap() ? property->GetType2() : property->GetType1();
                     if (type.empty())
                         THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Unknow Macro found in " + enumClass->GetName() + L": " + property->GetMacro());
                     
@@ -989,7 +983,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
                     continue;
 
                 // not support set
-                if (property->GetGetSetType() == VPGEnumClassGetSetType::Set)
+                if (property->GetIsSet())
                     continue;
 
                 bool isContainer = false;
@@ -1055,7 +1049,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
                     }
                     typeMacroMap[enumClass->GetName()][objectToken].push_back(property);
                 } else {
-                    std::wstring type = property->GetGetSetType() == VPGEnumClassGetSetType::Map || property->GetGetSetType() == VPGEnumClassGetSetType::OrderedMap ? type2 : type1;
+                    std::wstring type = property->GetIsMap() || property->GetIsOrderedMap() ? type2 : type1;
                     if (!type.empty() && IsCapital(type))
                         type = enumToken;
                     std::wstring convertedType = L"";

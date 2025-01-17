@@ -74,6 +74,13 @@ class VPGEnumClassProperty : public BaseObject
         {
             return std::make_shared<VPGEnumClassProperty>(*this);
         }
+
+        bool GetIsGeneralType() { return _GetSetType == VPGEnumClassGetSetType::General; }
+        bool GetIsVector() { return _GetSetType == VPGEnumClassGetSetType::Vector; }
+        bool GetIsMap() { return _GetSetType == VPGEnumClassGetSetType::Map; }
+        bool GetIsOrderedMap() { return _GetSetType == VPGEnumClassGetSetType::OrderedMap; }
+        bool GetIsSet() { return _GetSetType == VPGEnumClassGetSetType::Set; }
+        bool GetIsCollection() { return GetIsVector() || GetIsMap() || GetIsOrderedMap() || GetIsSet(); }
 };
 
 class VPGEnumClass : public BaseObject
