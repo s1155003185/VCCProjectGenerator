@@ -1012,7 +1012,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
 
                 // container
                 if (isContainer) {
-                    if (typeMacroMap[enumClass->GetName()].find(containerToken) == typeMacroMap[enumClass->GetName()].end()) {
+                    if (!IsContain(typeMacroMap[enumClass->GetName()], containerToken)) {
                         std::vector<std::shared_ptr<VPGEnumClassProperty>> initVector;
                         typeMacroMap[enumClass->GetName()].insert(std::make_pair(containerToken, initVector));
                     }
@@ -1043,7 +1043,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
                 // object
                 if (property->GetIsObject()) {
                     systemIncludeFiles.insert(L"memory");
-                    if (typeMacroMap[enumClass->GetName()].find(objectToken) == typeMacroMap[enumClass->GetName()].end()) {
+                    if (!IsContain(typeMacroMap[enumClass->GetName()], (objectToken))) {
                         std::vector<std::shared_ptr<VPGEnumClassProperty>> initVector;
                         typeMacroMap[enumClass->GetName()].insert(std::make_pair(objectToken, initVector));
                     }
