@@ -821,7 +821,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
             if (IsStartWith(originalMacro, L"VECTOR")
                 || IsStartWith(originalMacro, L"SET")) {
                 // To Json
-                toJsonStr += INDENT + INDENT + L"DECLARE_SPTR(Json, tmp" + propertyName + L");\r\n"
+                toJsonStr += INDENT + INDENT + L"auto tmp" + propertyName + L" = std::make_shared<Json>();\r\n"
                     + INDENT + INDENT + L"json->AddArray(ConvertNamingStyle(L" + convertedPropertyName + L", NamingStyle::PascalCase, namestyle), tmp" + propertyName + L");\r\n"
                     + INDENT + INDENT + L"for (auto const &element : _" + propertyName + L") {\r\n";
                 
@@ -832,7 +832,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
                     // Object
                     toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->AddArrayObject(element->ToJson());\r\n";
 
-                    deserializeStr += INDENT + INDENT + INDENT + INDENT + L"DECLARE_SPTR(" + originalType + L", tmp" + propertyName + L");\r\n"
+                    deserializeStr += INDENT + INDENT + INDENT + INDENT + L"auto tmp" + propertyName + L" = std::make_shared<" + originalType + L">();\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->DeserializeJson(element->GetArrayElementObject());\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"Insert" + propertyName + L"(tmp" + propertyName + L");\r\n";
                 } else {
@@ -849,7 +849,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
                     + INDENT + INDENT + L"}\r\n";
 
             } else if (IsStartWith(originalMacro, L"MAP") || IsStartWith(originalMacro, L"ORDERED_MAP")) {
-                toJsonStr += INDENT + INDENT + L"DECLARE_SPTR(Json, tmp" + propertyName + L");\r\n"
+                toJsonStr += INDENT + INDENT + L"auto tmp" + propertyName + L" = std::make_shared<Json>();\r\n"
                     + INDENT + INDENT + L"json->AddObject(ConvertNamingStyle(L" + convertedPropertyName + L", NamingStyle::PascalCase, namestyle), tmp" + propertyName + L");\r\n"
                     + INDENT + INDENT + L"for (auto const &element : _" + propertyName + L") {\r\n";
                 
@@ -879,7 +879,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
                     toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->AddObject(" + toJsonStrKeyStr + L", element.second->ToJson());\r\n";
                 
                     deserializeStr += INDENT + INDENT + INDENT + INDENT + L"if (tmpObject->GetObject(key) != nullptr) {\r\n"
-                        + INDENT + INDENT + INDENT + INDENT + INDENT + L"DECLARE_SPTR(" + property->GetType2() + L", tmpElementObject);\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + INDENT + L"auto tmpElementObject = std::make_shared<" + property->GetType2() + L">();\r\n"
                         + INDENT + INDENT + INDENT + INDENT + INDENT + L"tmpElementObject->DeserializeJson(tmpObject->GetObject(key));\r\n"
                         + INDENT + INDENT + INDENT + INDENT + INDENT + L"Insert" + propertyName + L"(" + GetJsonToObjectMapKey(originalType) + L", tmpElementObject);\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"} else\r\n"
