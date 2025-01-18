@@ -232,7 +232,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
                 std::wstring className = GetClassFilenameFromEnumClassFilename(enumClass->GetName());
                 if (IsPropertyClass(enumClass->GetName(), projPrefix)) {
                     std::wstring classNameWithoutPrefix = GetClassNameFromPropertyClassName(classNameWithoutPrefix);
-                    if (!IsBlank(projPrefix))
+                    if (!IsBlank(projPrefix) && IsStartWith(classNameWithoutPrefix, projPrefix))
                         classNameWithoutPrefix = classNameWithoutPrefix.substr(projPrefix.size());
                     objectTypes.insert(GetClassFilenameFromEnumClassFilename(classNameWithoutPrefix));
 
