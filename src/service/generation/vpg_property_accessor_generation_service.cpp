@@ -328,7 +328,7 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
                     else if (type == L"std::string")
                         returnStr = L"str2wstr(" + returnStr + (isOrderedMap ? L"AtIndex" : L"") + L"(index)" + (isOrderedMap ? L".second" : L"") + L");\r\n";
                     else
-                        returnStr += (isOrderedMap ? L"AtIndex" : L"") + L"(index)" + (isOrderedMap ? L".second" : L"") + L";\r\n";
+                        returnStr = returnStr + (isOrderedMap ? L"AtIndex" : L"") + L"(index)" + (isOrderedMap ? L".second" : L"") + L";\r\n";
                 }
                 vectorCases.insert(std::make_pair(property->GetEnum(), returnStr));
             }
@@ -347,7 +347,7 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
                 else if (property->GetType2() == L"std::string")
                     returnStr = L"str2wstr(" + returnStr + (isOrderedMap ? L"AtKey" : L"") + L"(" + mapGetKey + L")"+ (isOrderedMap ? L".second" : L"") + L");\r\n";
                 else
-                    returnStr += (isOrderedMap ? L"AtKey" : L"") + L"(" + mapGetKey + L")"+ (isOrderedMap ? L".second" : L"") + L";\r\n";
+                    returnStr = returnStr + (isOrderedMap ? L"AtKey" : L"") + L"(" + mapGetKey + L")"+ (isOrderedMap ? L".second" : L"") + L";\r\n";
                 mapCases.insert(std::make_pair(property->GetEnum(), returnStr));
             }
         }
