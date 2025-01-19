@@ -21,5 +21,5 @@ TEST(ApplicationTest, CreateForm)
     auto form = Application::CreateForm(ObjectType::GitForm);
     auto gitform = static_cast<BaseForm *>(form.get());
     IObject *object = static_cast<IObject *>((gitform));
-    PropertyAccessorFactory::Create(object->GetSharedPtr())->ReadObject(LockType::ReadLock, 0, -1);
+    PropertyAccessorFactory::Create(object->GetSharedPtr())->ReadObject(LockType::ReadLock, 0);
 }

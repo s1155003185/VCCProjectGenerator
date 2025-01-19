@@ -33,7 +33,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
 {
     protected:
 
-        virtual std::wstring _ReadString(const int64_t &objectProperty, const int64_t &index = -1) const override
+        virtual std::wstring _ReadStringAtIndex(const int64_t &objectProperty, const int64_t &index = -1) const override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -50,7 +50,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             obj->GetString();
         }
             
-        virtual int _ReadInt(const int64_t &objectProperty, const int64_t &index = -1) const override
+        virtual int _ReadIntAtIndex(const int64_t &objectProperty, const int64_t &index = -1) const override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -66,10 +66,9 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             obj->SetInteger(value);
         }
 
-        virtual std::shared_ptr<IObject> _ReadObject(const int64_t &objectProperty, const int64_t &index = -1) const override
+        virtual std::shared_ptr<IObject> _ReadObject(const int64_t &objectProperty) const override
         {
             assert(objectProperty == 0L);
-            assert(index == -1);
             auto obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
             return obj->GetObject();
         }
@@ -93,7 +92,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             CATCH
         }
         
-        virtual std::wstring _ReadString(const int64_t &objectProperty, const void *key) const override
+        virtual std::wstring _ReadStringAtKey(const int64_t &objectProperty, const void *key) const override
         {
             assert(objectProperty == 0L);
             assert(key != nullptr);
@@ -128,15 +127,15 @@ TEST(BasePropertyAccessorTest, Full)
     auto obj = std::make_shared<BasePropertyAccessorTestObject>();
     obj->SetObject(std::make_shared<BasePropertyAccessorTestObject>());
     std::unique_ptr<BasePropertyAccessorTestObjectPropertyAccessor> accessor = std::make_unique<BasePropertyAccessorTestObjectPropertyAccessor>(obj);
-    EXPECT_EQ(accessor->ReadString(LockType::ReadLock, 0L), L"Test");
-    EXPECT_EQ(accessor->ReadInt(LockType::ReadLock, 0L), 1);
-    EXPECT_TRUE(accessor->ReadObject(LockType::ReadLock, 0L) != nullptr);
+    EXPECT_EQ(accessor->ReadStringAtIndex(LockType::ReadLock, 0L), L"Test");
+    EXPECT_EQ(accessor->ReadIntAtIndex(LockType::ReadLock, 0L), 1);
+    EXPECT_TRUE(accessor->ReadObjectAtIndex(LockType::ReadLock, 0L) != nullptr);
 
     accessor->WriteString(LockType::WriteLock, 0L, L"SetString");
     accessor->WriteInt(LockType::WriteLock, 0L, 2);
-    EXPECT_EQ(accessor->ReadString(LockType::ReadLock, 0L), L"SetString");
-    EXPECT_EQ(accessor->ReadInt(LockType::ReadLock, 0L), 2);
-    EXPECT_TRUE(accessor->ReadObject(LockType::ReadLock, 0L) != nullptr);
+    EXPECT_EQ(accessor->ReadStringAtIndex(LockType::ReadLock, 0L), L"SetString");
+    EXPECT_EQ(accessor->ReadIntAtIndex(LockType::ReadLock, 0L), 2);
+    EXPECT_TRUE(accessor->ReadObjectAtIndex(LockType::ReadLock, 0L) != nullptr);
 
     std::shared_ptr<IObject> newObj = Create();
     accessor->InsertObject(LockType::NoLock, 0L, newObj);
@@ -144,5 +143,5 @@ TEST(BasePropertyAccessorTest, Full)
     std::wstring mapKey1 = L"key";
     std::wstring mapKey2 = L"key";
     accessor->WriteString(LockType::WriteLock, 0L, L"value", &mapKey1);
-    EXPECT_EQ(accessor->ReadString(LockType::ReadLock, 0L, &mapKey2), L"value");
+    EXPECT_EQ(accessor->ReadStringAtKey(LockType::ReadLock, 0L, &mapKey2), L"value");
 }
