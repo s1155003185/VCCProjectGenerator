@@ -12,16 +12,13 @@
 
 using namespace vcc;
 
-std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObject(const int64_t &objectProperty, const int64_t &index) const
+std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObject(const int64_t &objectProperty) const
 {
     TRY
-        assert(index >= -1);
         auto obj = std::static_pointer_cast<VPGMainForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGMainFormProperty>(objectProperty))
         {
-        case VPGMainFormProperty::WorkspaceForms:
-            return std::static_pointer_cast<IObject>(obj->GetWorkspaceForms(index));
         case VPGMainFormProperty::CurrentWorkspaceForm:
             return std::static_pointer_cast<IObject>(obj->GetCurrentWorkspaceForm());
         default:
@@ -31,7 +28,25 @@ std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObject(const int64_t 
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObject(const int64_t &objectProperty, const void * /*key*/) const
+std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
+{
+    TRY
+        assert(index >= -1);
+        auto obj = std::static_pointer_cast<VPGMainForm>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGMainFormProperty>(objectProperty))
+        {
+        case VPGMainFormProperty::WorkspaceForms:
+            return std::static_pointer_cast<IObject>(obj->GetWorkspaceForms(index));
+;
+        default:
+            assert(false);
+        }
+    CATCH
+    return nullptr;
+}
+
+std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -161,7 +176,7 @@ void VPGMainFormPropertyAccessor::_RemoveContainerElement(const int64_t &objectP
         {
             IObject* valuePtr = const_cast<IObject*>(static_cast<const IObject*>(value));
             assert(valuePtr != nullptr);
-            //obj->RemoveWorkspaceForms(valuePtr->GetSharedPtr());
+            obj->RemoveWorkspaceForms(valuePtr->GetSharedPtr());
             break;
         }
         default:

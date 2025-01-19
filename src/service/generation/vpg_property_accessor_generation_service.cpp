@@ -320,7 +320,7 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
                 VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(property->GetType1(), tmpConvertedType, tmpConvertedName, tmpReturnResult);
                 
                 if (type == objectToken)
-                    returnStr = L"return std::static_pointer_cast<IObject>(" + returnStr + (isOrderedMap ? L"AtIndex" : L"") + L"(index)" + (isOrderedMap ? L".second" : L"") + L");\r\n";
+                    returnStr = L"std::static_pointer_cast<IObject>(" + returnStr + (isOrderedMap ? L"AtIndex" : L"") + L"(index)" + (isOrderedMap ? L".second" : L"") + L");\r\n";
                 else {
                     std::wstring type = isOrderedMap ? property->GetType2() : property->GetType1();
                     if (!type.empty() && IsCapital(type))

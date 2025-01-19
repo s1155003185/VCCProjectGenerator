@@ -6,16 +6,18 @@ namespace vcc
     
     #define I_PROPERTY_ACCESSOR_HEADER(type, name) \
         public: \
-            virtual type Read##name(const LockType &lockType, const int64_t &objectProperty, const int64_t &index = -1) const = 0; \
-            virtual type Read##name(const LockType &lockType, const int64_t &objectProperty, const void *key) const = 0; \
+            virtual type Read##name(const LockType &lockType, const int64_t &objectProperty) const = 0; \
+            virtual type Read##name##AtIndex(const LockType &lockType, const int64_t &objectProperty, const int64_t &index = -1) const = 0; \
+            virtual type Read##name##AtKey(const LockType &lockType, const int64_t &objectProperty, const void *key) const = 0; \
             virtual void Write##name(const LockType &lockType, const int64_t &objectProperty, const type &value, const int64_t &index = -1) const = 0; \
             virtual void Write##name(const LockType &lockType, const int64_t &objectProperty, const type &value, const void *key) const = 0; \
             virtual void Insert##name(const LockType &lockType, const int64_t &objectProperty, const type &value, const int64_t &index = -1) const = 0;
 
     #define I_PROPERTY_ACCESSOR_OBJECT_HEADER(type, name) \
         public: \
-            virtual type Read##name(const LockType &lockType, const int64_t &objectProperty, const int64_t &index = -1) const = 0; \
-            virtual type Read##name(const LockType &lockType, const int64_t &objectProperty, const void *key) const = 0; \
+            virtual type Read##name(const LockType &lockType, const int64_t &objectProperty) const = 0; \
+            virtual type Read##name##AtIndex(const LockType &lockType, const int64_t &objectProperty, const int64_t &index = -1) const = 0; \
+            virtual type Read##name##AtKey(const LockType &lockType, const int64_t &objectProperty, const void *key) const = 0; \
             virtual void Write##name(const LockType &lockType, const int64_t &objectProperty, type value, const int64_t &index = -1) const = 0; \
             virtual void Write##name(const LockType &lockType, const int64_t &objectProperty, type value, const void *key) const = 0; \
             virtual void Insert##name(const LockType &lockType, const int64_t &objectProperty, type value, const int64_t &index = -1) const = 0; \
@@ -34,30 +36,34 @@ namespace vcc
 
     #define BASE_PROPERTY_ACCESSOR_HEADER(type, name) \
         protected: \
-            virtual type _Read##name(const int64_t &objectProperty, const int64_t &index = -1) const; \
-            virtual type _Read##name(const int64_t &objectProperty, const void *key) const; \
+            virtual type _Read##name(const int64_t &objectProperty) const; \
+            virtual type _Read##name##AtIndex(const int64_t &objectProperty, const int64_t &index = -1) const; \
+            virtual type _Read##name##AtKey(const int64_t &objectProperty, const void *key) const; \
             virtual void _Write##name(const int64_t &objectProperty, const type &value, const int64_t &index = -1) const; \
             virtual void _Write##name(const int64_t &objectProperty, const type &value, const void *key) const; \
             virtual void _Insert##name(const int64_t &objectProperty, const type &value, const int64_t &index = -1) const; \
         public: \
-            virtual type Read##name(const LockType &lockType, const int64_t &objectProperty, const int64_t &index = -1) const override; \
-            virtual type Read##name(const LockType &lockType, const int64_t &objectProperty, const void *key) const override; \
+            virtual type Read##name(const LockType &lockType, const int64_t &objectProperty) const override; \
+            virtual type Read##name##AtIndex(const LockType &lockType, const int64_t &objectProperty, const int64_t &index = -1) const override; \
+            virtual type Read##name##AtKey(const LockType &lockType, const int64_t &objectProperty, const void *key) const override; \
             virtual void Write##name(const LockType &lockType, const int64_t &objectProperty, const type &value, const int64_t &index = -1) const override; \
             virtual void Write##name(const LockType &lockType, const int64_t &objectProperty, const type &value, const void *key) const override; \
             virtual void Insert##name(const LockType &lockType, const int64_t &objectProperty, const type &value, const int64_t &index = -1) const override;
 
     #define BASE_PROPERTY_ACCESSOR_OBJECT_HEADER(type, name) \
         protected: \
-            virtual type _Read##name(const int64_t &objectProperty, const int64_t &index = -1) const; \
-            virtual type _Read##name(const int64_t &objectProperty, const void *key) const; \
+            virtual type _Read##name(const int64_t &objectProperty) const; \
+            virtual type _Read##name##AtIndex(const int64_t &objectProperty, const int64_t &index = -1) const; \
+            virtual type _Read##name##AtKey(const int64_t &objectProperty, const void *key) const; \
             virtual void _Write##name(const int64_t &objectProperty, type value, const int64_t &index = -1) const; \
             virtual void _Write##name(const int64_t &objectProperty, type value, const void *key) const; \
             virtual void _Insert##name(const int64_t &objectProperty, type value, const int64_t &index = -1) const; \
             virtual type _Clone##name(const int64_t &objectProperty, const int64_t &index = -1) const; \
             virtual type _Clone##name(const int64_t &objectProperty, const void *key) const; \
         public: \
-            virtual type Read##name(const LockType &lockType, const int64_t &objectProperty, const int64_t &index = -1) const override; \
-            virtual type Read##name(const LockType &lockType, const int64_t &objectProperty, const void *key) const override; \
+            virtual type Read##name(const LockType &lockType, const int64_t &objectProperty) const override; \
+            virtual type Read##name##AtIndex(const LockType &lockType, const int64_t &objectProperty, const int64_t &index = -1) const override; \
+            virtual type Read##name##AtKey(const LockType &lockType, const int64_t &objectProperty, const void *key) const override; \
             virtual void Write##name(const LockType &lockType, const int64_t &objectProperty, type value, const int64_t &index = -1) const override; \
             virtual void Write##name(const LockType &lockType, const int64_t &objectProperty, type value, const void *key) const override; \
             virtual void Insert##name(const LockType &lockType, const int64_t &objectProperty, type value, const int64_t &index = -1) const override; \
@@ -83,27 +89,31 @@ namespace vcc
             virtual void ClearContainer(const LockType &lockType, const int64_t &objectProperty) const override;
 
     #define BASE_PROPERTY_ACCESSOR_DETAIL(type, name, defaultValue) \
-        type BasePropertyAccessor::_Read##name(const int64_t &objectProperty, const int64_t &/*index*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
-        type BasePropertyAccessor::_Read##name(const int64_t &objectProperty, const void * /*key*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
+        type BasePropertyAccessor::_Read##name(const int64_t &objectProperty) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
+        type BasePropertyAccessor::_Read##name##AtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
+        type BasePropertyAccessor::_Read##name##AtKey(const int64_t &objectProperty, const void * /*key*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
         void BasePropertyAccessor::_Write##name(const int64_t &objectProperty, const type &/*value*/, const int64_t & /*index*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
         void BasePropertyAccessor::_Write##name(const int64_t &objectProperty, const type &/*value*/, const void * /*key*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
         void BasePropertyAccessor::_Insert##name(const int64_t &objectProperty, const type &/*value*/, const int64_t & /*index*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
-        type BasePropertyAccessor::Read##name(const LockType &lockType, const int64_t &objectProperty, const int64_t &index) const { type result = defaultValue; LOCK_BEGIN result = _Read##name(objectProperty, index); LOCK_END return result; } \
-        type BasePropertyAccessor::Read##name(const LockType &lockType, const int64_t &objectProperty, const void *key) const { type result = defaultValue; LOCK_BEGIN result = _Read##name(objectProperty, key); LOCK_END return result; } \
+        type BasePropertyAccessor::Read##name(const LockType &lockType, const int64_t &objectProperty) const { type result = defaultValue; LOCK_BEGIN result = _Read##name(objectProperty); LOCK_END return result; } \
+        type BasePropertyAccessor::Read##name##AtIndex(const LockType &lockType, const int64_t &objectProperty, const int64_t &index) const { type result = defaultValue; LOCK_BEGIN result = _Read##name##AtIndex(objectProperty, index); LOCK_END return result; } \
+        type BasePropertyAccessor::Read##name##AtKey(const LockType &lockType, const int64_t &objectProperty, const void *key) const { type result = defaultValue; LOCK_BEGIN result = _Read##name##AtKey(objectProperty, key); LOCK_END return result; } \
         void BasePropertyAccessor::Write##name(const LockType &lockType, const int64_t &objectProperty, const type &value, const int64_t &index) const { LOCK_BEGIN _Write##name(objectProperty, value, index); LOCK_END } \
         void BasePropertyAccessor::Write##name(const LockType &lockType, const int64_t &objectProperty, const type &value, const void *key) const { LOCK_BEGIN _Write##name(objectProperty, value, key); LOCK_END } \
         void BasePropertyAccessor::Insert##name(const LockType &lockType, const int64_t &objectProperty, const type &value, const int64_t &index) const { LOCK_BEGIN _Insert##name(objectProperty, value, index); LOCK_END }
     
     #define BASE_PROPERTY_ACCESSOR_OBJECT_DETAIL(type, name, defaultValue) \
-        type BasePropertyAccessor::_Read##name(const int64_t &objectProperty, const int64_t &/*index*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
-        type BasePropertyAccessor::_Read##name(const int64_t &objectProperty, const void * /*key*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
+        type BasePropertyAccessor::_Read##name(const int64_t &objectProperty) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
+        type BasePropertyAccessor::_Read##name##AtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
+        type BasePropertyAccessor::_Read##name##AtKey(const int64_t &objectProperty, const void * /*key*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
         void BasePropertyAccessor::_Write##name(const int64_t &objectProperty, type /*value*/, const int64_t & /*index*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
         void BasePropertyAccessor::_Write##name(const int64_t &objectProperty, type /*value*/, const void * /*key*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
         void BasePropertyAccessor::_Insert##name(const int64_t &objectProperty, type /*value*/, const int64_t & /*index*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
         type BasePropertyAccessor::_Clone##name(const int64_t &objectProperty, const int64_t &/*index*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
         type BasePropertyAccessor::_Clone##name(const int64_t &objectProperty, const void * /*key*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
-        type BasePropertyAccessor::Read##name(const LockType &lockType, const int64_t &objectProperty, const int64_t &index) const { type result = defaultValue; LOCK_BEGIN result = _Read##name(objectProperty, index); LOCK_END return result; } \
-        type BasePropertyAccessor::Read##name(const LockType &lockType, const int64_t &objectProperty, const void *key) const { type result = defaultValue; LOCK_BEGIN result = _Read##name(objectProperty, key); LOCK_END return result; } \
+        type BasePropertyAccessor::Read##name(const LockType &lockType, const int64_t &objectProperty) const { type result = defaultValue; LOCK_BEGIN result = _Read##name(objectProperty); LOCK_END return result; } \
+        type BasePropertyAccessor::Read##name##AtIndex(const LockType &lockType, const int64_t &objectProperty, const int64_t &index) const { type result = defaultValue; LOCK_BEGIN result = _Read##name##AtIndex(objectProperty, index); LOCK_END return result; } \
+        type BasePropertyAccessor::Read##name##AtKey(const LockType &lockType, const int64_t &objectProperty, const void *key) const { type result = defaultValue; LOCK_BEGIN result = _Read##name##AtKey(objectProperty, key); LOCK_END return result; } \
         void BasePropertyAccessor::Write##name(const LockType &lockType, const int64_t &objectProperty, type value, const int64_t &index) const { LOCK_BEGIN _Write##name(objectProperty, value, index); LOCK_END } \
         void BasePropertyAccessor::Write##name(const LockType &lockType, const int64_t &objectProperty, type value, const void *key) const { LOCK_BEGIN _Write##name(objectProperty, value, key); LOCK_END } \
         void BasePropertyAccessor::Insert##name(const LockType &lockType, const int64_t &objectProperty, type value, const int64_t &index) const { LOCK_BEGIN _Insert##name(objectProperty, value, index); LOCK_END } \
@@ -128,16 +138,18 @@ namespace vcc
 
     #define PROPERTY_ACCESSOR_HEADER(type, name) \
         protected: \
-            virtual type _Read##name(const int64_t &objectProperty, const int64_t &index = -1) const override; \
-            virtual type _Read##name(const int64_t &objectProperty, const void *key) const override; \
+            virtual type _Read##name(const int64_t &objectProperty) const override; \
+            virtual type _Read##name##AtIndex(const int64_t &objectProperty, const int64_t &index = -1) const override; \
+            virtual type _Read##name##AtKey(const int64_t &objectProperty, const void *key) const override; \
             virtual void _Write##name(const int64_t &objectProperty, const type &value, const int64_t &index = -1) const override; \
             virtual void _Write##name(const int64_t &objectProperty, const type &value, const void *key) const override; \
             virtual void _Insert##name(const int64_t &objectProperty, const type &value, const int64_t &index = -1) const override;
 
     #define PROPERTY_ACCESSOR_OBJECT_HEADER(type, name) \
         protected: \
-            virtual type _Read##name(const int64_t &objectProperty, const int64_t &index = -1) const override; \
-            virtual type _Read##name(const int64_t &objectProperty, const void *key) const override; \
+            virtual type _Read##name(const int64_t &objectProperty) const override; \
+            virtual type _Read##name##AtIndex(const int64_t &objectProperty, const int64_t &index = -1) const override; \
+            virtual type _Read##name##AtKey(const int64_t &objectProperty, const void *key) const override; \
             virtual void _Write##name(const int64_t &objectProperty, type value, const int64_t &index = -1) const override; \
             virtual void _Write##name(const int64_t &objectProperty, type value, const void *key) const override; \
             virtual void _Insert##name(const int64_t &objectProperty, type value, const int64_t &index = -1) const override; \
@@ -160,21 +172,24 @@ namespace vcc
     // ------------------------------------------------------------------------------------------ //
 
     #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(exportType, typeName) \
-        DLLEXPORT exportType Read##typeName(void *ref, int64_t property, int64_t index); \
+        DLLEXPORT exportType Read##typeName(void *ref, int64_t property); \
+        DLLEXPORT exportType Read##typeName##AtIndex(void *ref, int64_t property, int64_t index); \
         DLLEXPORT exportType Read##typeName##AtKey(void *ref, int64_t property, void *key); \
         DLLEXPORT void Write##typeName(void *ref, int64_t property, exportType value, int64_t index); \
         DLLEXPORT void Write##typeName##AtKey(void *ref, int64_t property, exportType value, void *key); \
         DLLEXPORT void Insert##typeName(void *ref, int64_t property, exportType value, int64_t index);
 
     #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_STRING \
-        DLLEXPORT void ReadString(void *ref, int64_t property, wchar_t **value, int64_t index); \
+        DLLEXPORT void ReadString(void *ref, int64_t property, wchar_t **value); \
+        DLLEXPORT void ReadStringAtIndex(void *ref, int64_t property, wchar_t **value, int64_t index); \
         DLLEXPORT void ReadStringAtKey(void *ref, int64_t property, wchar_t **value, void *key); \
         DLLEXPORT void WriteString(void *ref, int64_t property, wchar_t **value, int64_t index); \
         DLLEXPORT void WriteStringAtKey(void *ref, int64_t property, wchar_t **value, void *key); \
         DLLEXPORT void InsertString(void *ref, int64_t property, wchar_t **value, int64_t index);
 
     #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_OBJECT \
-        DLLEXPORT void *ReadObject(void *ref, int64_t property, int64_t index); \
+        DLLEXPORT void *ReadObject(void *ref, int64_t property); \
+        DLLEXPORT void *ReadObjectAtIndex(void *ref, int64_t property, int64_t index); \
         DLLEXPORT void *ReadObjectAtKey(void *ref, int64_t property, void *key); \
         DLLEXPORT void WriteObject(void *ref, int64_t property, void *value, int64_t index); \
         DLLEXPORT void WriteObjectAtKey(void *ref, int64_t property, void *value, void *key); \
@@ -191,11 +206,19 @@ namespace vcc
         DLLEXPORT void ClearContainer(void *ref, int64_t property);
 
 #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(exportType, typeName, defaultValue) \
-    exportType Read##typeName(void *ref, int64_t property, int64_t index) \
+    exportType Read##typeName(void *ref, int64_t property) \
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
-            return PropertyAccessorFactory::Create(object->GetSharedPtr())->Read##typeName(LockType::ReadLock, property, index); \
+            return PropertyAccessorFactory::Create(object->GetSharedPtr())->Read##typeName(LockType::ReadLock, property); \
+        CATCH \
+        return defaultValue; \
+    } \
+    exportType Read##typeName##AtIndex(void *ref, int64_t property, int64_t index) \
+    { \
+        TRY \
+            IObject *object = static_cast<IObject *>(ref); \
+            return PropertyAccessorFactory::Create(object->GetSharedPtr())->Read##typeName##AtIndex(LockType::ReadLock, property, index); \
         CATCH \
         return defaultValue; \
     } \
@@ -203,7 +226,7 @@ namespace vcc
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
-            return PropertyAccessorFactory::Create(object->GetSharedPtr())->Read##typeName(LockType::ReadLock, property, key); \
+            return PropertyAccessorFactory::Create(object->GetSharedPtr())->Read##typeName##AtKey(LockType::ReadLock, property, key); \
         CATCH \
         return defaultValue; \
     } \
@@ -230,11 +253,21 @@ namespace vcc
     }
 
 #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL_STRING \
-    void ReadString(void *ref, int64_t property, wchar_t **value, int64_t index) \
+    void ReadString(void *ref, int64_t property, wchar_t **value) \
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
-            std::wstring result = PropertyAccessorFactory::Create(object->GetSharedPtr())->ReadString(LockType::ReadLock, property, index); \
+            std::wstring result = PropertyAccessorFactory::Create(object->GetSharedPtr())->ReadString(LockType::ReadLock, property); \
+            size_t size = (result.length() + 1) * sizeof(wchar_t); \
+            *value = static_cast<wchar_t*>(malloc(size)); \
+            wcscpy(*value, result.c_str()); \
+        CATCH \
+    } \
+    void ReadStringAtIndex(void *ref, int64_t property, wchar_t **value, int64_t index) \
+    { \
+        TRY \
+            IObject *object = static_cast<IObject *>(ref); \
+            std::wstring result = PropertyAccessorFactory::Create(object->GetSharedPtr())->ReadStringAtIndex(LockType::ReadLock, property, index); \
             size_t size = (result.length() + 1) * sizeof(wchar_t); \
             *value = static_cast<wchar_t*>(malloc(size)); \
             wcscpy(*value, result.c_str()); \
@@ -244,7 +277,7 @@ namespace vcc
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
-            std::wstring result = PropertyAccessorFactory::Create(object->GetSharedPtr())->ReadString(LockType::ReadLock, property, key); \
+            std::wstring result = PropertyAccessorFactory::Create(object->GetSharedPtr())->ReadStringAtKey(LockType::ReadLock, property, key); \
             size_t size = (result.length() + 1) * sizeof(wchar_t); \
             *value = static_cast<wchar_t*>(malloc(size)); \
             wcscpy(*value, result.c_str()); \
@@ -283,11 +316,20 @@ namespace vcc
     }
 
 #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL_OBJECT \
-    DLLEXPORT void *ReadObject(void *ref, int64_t property, int64_t index) \
+    DLLEXPORT void *ReadObject(void *ref, int64_t property) \
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
-            std::shared_ptr<IObject> result = PropertyAccessorFactory::Create(object->GetSharedPtr())->ReadObject(LockType::ReadLock, property, index); \
+            std::shared_ptr<IObject> result = PropertyAccessorFactory::Create(object->GetSharedPtr())->ReadObject(LockType::ReadLock, property); \
+            return result != nullptr ? result.get() : nullptr; \
+        CATCH \
+        return nullptr; \
+    } \
+    DLLEXPORT void *ReadObjectAtIndex(void *ref, int64_t property, int64_t index) \
+    { \
+        TRY \
+            IObject *object = static_cast<IObject *>(ref); \
+            std::shared_ptr<IObject> result = PropertyAccessorFactory::Create(object->GetSharedPtr())->ReadObjectAtIndex(LockType::ReadLock, property, index); \
             return result != nullptr ? result.get() : nullptr; \
         CATCH \
         return nullptr; \
@@ -296,7 +338,7 @@ namespace vcc
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
-            std::shared_ptr<IObject> result = PropertyAccessorFactory::Create(object->GetSharedPtr())->ReadObject(LockType::ReadLock, property, key); \
+            std::shared_ptr<IObject> result = PropertyAccessorFactory::Create(object->GetSharedPtr())->ReadObjectAtKey(LockType::ReadLock, property, key); \
             return result != nullptr ? result.get() : nullptr; \
         CATCH \
         return nullptr; \

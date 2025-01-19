@@ -11,10 +11,9 @@
 
 using namespace vcc;
 
-bool VPGGitLogPropertyAccessor::_ReadBool(const int64_t &objectProperty, const int64_t &index) const
+bool VPGGitLogPropertyAccessor::_ReadBool(const int64_t &objectProperty) const
 {
     TRY
-        assert(index >= -1);
         auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitLogProperty>(objectProperty))
@@ -28,7 +27,15 @@ bool VPGGitLogPropertyAccessor::_ReadBool(const int64_t &objectProperty, const i
     return false;
 }
 
-bool VPGGitLogPropertyAccessor::_ReadBool(const int64_t &objectProperty, const void * /*key*/) const
+bool VPGGitLogPropertyAccessor::_ReadBoolAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return false;
+}
+
+bool VPGGitLogPropertyAccessor::_ReadBoolAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -67,18 +74,17 @@ void VPGGitLogPropertyAccessor::_InsertBool(const int64_t &objectProperty, const
     CATCH
 }
 
-long VPGGitLogPropertyAccessor::_ReadLong(const int64_t &objectProperty, const int64_t &index) const
+long VPGGitLogPropertyAccessor::_ReadLong(const int64_t &objectProperty) const
 {
     TRY
-        assert(index >= -1);
         auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
-        case VPGGitLogProperty::ColumnIndex:
-            return obj->GetColumnIndex();
         case VPGGitLogProperty::AuthorDate:
             return obj->GetAuthorDate();
+        case VPGGitLogProperty::ColumnIndex:
+            return obj->GetColumnIndex();
         case VPGGitLogProperty::CommitDate:
             return obj->GetCommitDate();
         default:
@@ -88,7 +94,15 @@ long VPGGitLogPropertyAccessor::_ReadLong(const int64_t &objectProperty, const i
     return 0L;
 }
 
-long VPGGitLogPropertyAccessor::_ReadLong(const int64_t &objectProperty, const void * /*key*/) const
+long VPGGitLogPropertyAccessor::_ReadLongAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return 0L;
+}
+
+long VPGGitLogPropertyAccessor::_ReadLongAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -133,48 +147,39 @@ void VPGGitLogPropertyAccessor::_InsertLong(const int64_t &objectProperty, const
     CATCH
 }
 
-std::wstring VPGGitLogPropertyAccessor::_ReadString(const int64_t &objectProperty, const int64_t &index) const
+std::wstring VPGGitLogPropertyAccessor::_ReadString(const int64_t &objectProperty) const
 {
     TRY
-        assert(index >= -1);
         auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
-        case VPGGitLogProperty::HashID:
-            return obj->GetHashID();
         case VPGGitLogProperty::AbbreviatedHashID:
             return obj->GetAbbreviatedHashID();
-        case VPGGitLogProperty::TreeHashID:
-            return obj->GetTreeHashID();
         case VPGGitLogProperty::AbbreviatedTreeHashID:
             return obj->GetAbbreviatedTreeHashID();
-        case VPGGitLogProperty::ParentHashIDs:
-            return obj->GetParentHashIDs(index);
-        case VPGGitLogProperty::AbbreviatedParentHashIDs:
-            return obj->GetAbbreviatedParentHashIDs(index);
-        case VPGGitLogProperty::Branches:
-            return obj->GetBranches(index);
-        case VPGGitLogProperty::Tags:
-            return obj->GetTags(index);
         case VPGGitLogProperty::Author:
             return obj->GetAuthor();
-        case VPGGitLogProperty::AuthorEmail:
-            return obj->GetAuthorEmail();
         case VPGGitLogProperty::AuthorDateStr:
             return obj->GetAuthorDateStr();
+        case VPGGitLogProperty::AuthorEmail:
+            return obj->GetAuthorEmail();
+        case VPGGitLogProperty::CommitDateStr:
+            return obj->GetCommitDateStr();
         case VPGGitLogProperty::Committer:
             return obj->GetCommitter();
         case VPGGitLogProperty::CommitterEmail:
             return obj->GetCommitterEmail();
-        case VPGGitLogProperty::CommitDateStr:
-            return obj->GetCommitDateStr();
-        case VPGGitLogProperty::Title:
-            return obj->GetTitle();
-        case VPGGitLogProperty::Message:
-            return obj->GetMessage();
         case VPGGitLogProperty::FullMessage:
             return obj->GetFullMessage();
+        case VPGGitLogProperty::HashID:
+            return obj->GetHashID();
+        case VPGGitLogProperty::Message:
+            return obj->GetMessage();
+        case VPGGitLogProperty::Title:
+            return obj->GetTitle();
+        case VPGGitLogProperty::TreeHashID:
+            return obj->GetTreeHashID();
         default:
             assert(false);
         }
@@ -182,7 +187,34 @@ std::wstring VPGGitLogPropertyAccessor::_ReadString(const int64_t &objectPropert
     return L"";
 }
 
-std::wstring VPGGitLogPropertyAccessor::_ReadString(const int64_t &objectProperty, const void * /*key*/) const
+std::wstring VPGGitLogPropertyAccessor::_ReadStringAtIndex(const int64_t &objectProperty, const int64_t &index) const
+{
+    TRY
+        assert(index >= -1);
+        auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGGitLogProperty>(objectProperty))
+        {
+        case VPGGitLogProperty::AbbreviatedParentHashIDs:
+            return obj->GetAbbreviatedParentHashIDs(index);
+;
+        case VPGGitLogProperty::Branches:
+            return obj->GetBranches(index);
+;
+        case VPGGitLogProperty::ParentHashIDs:
+            return obj->GetParentHashIDs(index);
+;
+        case VPGGitLogProperty::Tags:
+            return obj->GetTags(index);
+;
+        default:
+            assert(false);
+        }
+    CATCH
+    return L"";
+}
+
+std::wstring VPGGitLogPropertyAccessor::_ReadStringAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
