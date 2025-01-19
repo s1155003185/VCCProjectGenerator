@@ -46,10 +46,9 @@ bool VPGGenerationOptionExportPropertyAccessor::_ReadBoolAtKey(const int64_t &ob
     return false;
 }
 
-void VPGGenerationOptionExportPropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool &value, const int64_t &index) const
+void VPGGenerationOptionExportPropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool &value) const 
 {
     TRY
-        assert(index >= -1);
         auto obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
@@ -63,7 +62,14 @@ void VPGGenerationOptionExportPropertyAccessor::_WriteBool(const int64_t &object
     CATCH
 }
 
-void VPGGenerationOptionExportPropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool & /*value*/, const void * /*key*/) const
+void VPGGenerationOptionExportPropertyAccessor::_WriteBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/) const 
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGGenerationOptionExportPropertyAccessor::_WriteBoolAtKey(const int64_t &objectProperty, const bool &/*value*/, const void */*key*/) const 
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -109,10 +115,9 @@ long VPGGenerationOptionExportPropertyAccessor::_ReadLongAtKey(const int64_t &ob
     return 0L;
 }
 
-void VPGGenerationOptionExportPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long &value, const int64_t &index) const
+void VPGGenerationOptionExportPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long &value) const 
 {
     TRY
-        assert(index >= -1);
         auto obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
@@ -126,7 +131,14 @@ void VPGGenerationOptionExportPropertyAccessor::_WriteLong(const int64_t &object
     CATCH
 }
 
-void VPGGenerationOptionExportPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long & /*value*/, const void * /*key*/) const
+void VPGGenerationOptionExportPropertyAccessor::_WriteLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/) const 
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGGenerationOptionExportPropertyAccessor::_WriteLongAtKey(const int64_t &objectProperty, const long &/*value*/, const void */*key*/) const 
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -184,25 +196,21 @@ std::wstring VPGGenerationOptionExportPropertyAccessor::_ReadStringAtKey(const i
     return L"";
 }
 
-void VPGGenerationOptionExportPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring &value, const int64_t &index) const
+void VPGGenerationOptionExportPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring &value) const 
 {
     TRY
-        assert(index >= -1);
         auto obj = std::static_pointer_cast<VPGGenerationOptionExport>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionExportProperty>(objectProperty))
         {
-        case VPGGenerationOptionExportProperty::Workspace:
-            obj->SetWorkspace(value);
+        case VPGGenerationOptionExportProperty::DllBridgeDirectory:
+            obj->SetDllBridgeDirectory(value);
             break;
         case VPGGenerationOptionExportProperty::ExportDirectoryDll:
             obj->SetExportDirectoryDll(value);
             break;
         case VPGGenerationOptionExportProperty::ExportDirectoryExe:
             obj->SetExportDirectoryExe(value);
-            break;
-        case VPGGenerationOptionExportProperty::DllBridgeDirectory:
-            obj->SetDllBridgeDirectory(value);
             break;
         case VPGGenerationOptionExportProperty::FormDirectory:
             obj->SetFormDirectory(value);
@@ -213,13 +221,23 @@ void VPGGenerationOptionExportPropertyAccessor::_WriteString(const int64_t &obje
         case VPGGenerationOptionExportProperty::TypeDirectory:
             obj->SetTypeDirectory(value);
             break;
+        case VPGGenerationOptionExportProperty::Workspace:
+            obj->SetWorkspace(value);
+            break;
         default:
             assert(false);
         }
     CATCH
 }
 
-void VPGGenerationOptionExportPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring & /*value*/, const void * /*key*/) const
+void VPGGenerationOptionExportPropertyAccessor::_WriteStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/) const 
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGGenerationOptionExportPropertyAccessor::_WriteStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/) const 
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -269,22 +287,21 @@ bool VPGGenerationOptionPropertyAccessor::_ReadBoolAtKey(const int64_t &objectPr
     return false;
 }
 
-void VPGGenerationOptionPropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool &value, const int64_t &index) const
+void VPGGenerationOptionPropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool &value) const 
 {
     TRY
-        assert(index >= -1);
         auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
-        case VPGGenerationOptionProperty::IsGit:
-            obj->SetIsGit(value);
-            break;
         case VPGGenerationOptionProperty::IsExcludeUnittest:
             obj->SetIsExcludeUnittest(value);
             break;
         case VPGGenerationOptionProperty::IsExcludeVCCUnitTest:
             obj->SetIsExcludeVCCUnitTest(value);
+            break;
+        case VPGGenerationOptionProperty::IsGit:
+            obj->SetIsGit(value);
             break;
         default:
             assert(false);
@@ -292,7 +309,14 @@ void VPGGenerationOptionPropertyAccessor::_WriteBool(const int64_t &objectProper
     CATCH
 }
 
-void VPGGenerationOptionPropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool & /*value*/, const void * /*key*/) const
+void VPGGenerationOptionPropertyAccessor::_WriteBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/) const 
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGGenerationOptionPropertyAccessor::_WriteBoolAtKey(const int64_t &objectProperty, const bool &/*value*/, const void */*key*/) const 
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -338,10 +362,9 @@ long VPGGenerationOptionPropertyAccessor::_ReadLongAtKey(const int64_t &objectPr
     return 0L;
 }
 
-void VPGGenerationOptionPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long &value, const int64_t &index) const
+void VPGGenerationOptionPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long &value) const 
 {
     TRY
-        assert(index >= -1);
         auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
@@ -355,7 +378,14 @@ void VPGGenerationOptionPropertyAccessor::_WriteLong(const int64_t &objectProper
     CATCH
 }
 
-void VPGGenerationOptionPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long & /*value*/, const void * /*key*/) const
+void VPGGenerationOptionPropertyAccessor::_WriteLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/) const 
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGGenerationOptionPropertyAccessor::_WriteLongAtKey(const int64_t &objectProperty, const long &/*value*/, const void */*key*/) const 
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -457,25 +487,48 @@ std::wstring VPGGenerationOptionPropertyAccessor::_ReadStringAtKey(const int64_t
     return L"";
 }
 
-void VPGGenerationOptionPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring &value, const int64_t &index) const
+void VPGGenerationOptionPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring &value) const 
 {
     TRY
-        assert(index >= -1);
         auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
-        case VPGGenerationOptionProperty::Version:
-            obj->SetVersion(value);
+        case VPGGenerationOptionProperty::ActionDirectoryCpp:
+            obj->SetActionDirectoryCpp(value);
             break;
-        case VPGGenerationOptionProperty::TemplateGitUrl:
-            obj->SetTemplateGitUrl(value);
+        case VPGGenerationOptionProperty::ActionDirectoryHpp:
+            obj->SetActionDirectoryHpp(value);
             break;
-        case VPGGenerationOptionProperty::TemplateWorkspace:
-            obj->SetTemplateWorkspace(value);
+        case VPGGenerationOptionProperty::ApplicationDirectoryCpp:
+            obj->SetApplicationDirectoryCpp(value);
             break;
-        case VPGGenerationOptionProperty::ProjectPrefix:
-            obj->SetProjectPrefix(value);
+        case VPGGenerationOptionProperty::ApplicationDirectoryHpp:
+            obj->SetApplicationDirectoryHpp(value);
+            break;
+        case VPGGenerationOptionProperty::ExceptionTypeDirectory:
+            obj->SetExceptionTypeDirectory(value);
+            break;
+        case VPGGenerationOptionProperty::FormDirectoryCpp:
+            obj->SetFormDirectoryCpp(value);
+            break;
+        case VPGGenerationOptionProperty::FormDirectoryHpp:
+            obj->SetFormDirectoryHpp(value);
+            break;
+        case VPGGenerationOptionProperty::ObjectDirectoryCpp:
+            obj->SetObjectDirectoryCpp(value);
+            break;
+        case VPGGenerationOptionProperty::ObjectDirectoryHpp:
+            obj->SetObjectDirectoryHpp(value);
+            break;
+        case VPGGenerationOptionProperty::ObjectFactoryDirectoryCpp:
+            obj->SetObjectFactoryDirectoryCpp(value);
+            break;
+        case VPGGenerationOptionProperty::ObjectFactoryDirectoryHpp:
+            obj->SetObjectFactoryDirectoryHpp(value);
+            break;
+        case VPGGenerationOptionProperty::ObjectTypeDirectory:
+            obj->SetObjectTypeDirectory(value);
             break;
         case VPGGenerationOptionProperty::ProjectName:
             obj->SetProjectName(value);
@@ -486,57 +539,47 @@ void VPGGenerationOptionPropertyAccessor::_WriteString(const int64_t &objectProp
         case VPGGenerationOptionProperty::ProjectNameExe:
             obj->SetProjectNameExe(value);
             break;
-        case VPGGenerationOptionProperty::TypeWorkspace:
-            obj->SetTypeWorkspace(value);
-            break;
-        case VPGGenerationOptionProperty::ExceptionTypeDirectory:
-            obj->SetExceptionTypeDirectory(value);
-            break;
-        case VPGGenerationOptionProperty::ObjectTypeDirectory:
-            obj->SetObjectTypeDirectory(value);
-            break;
-        case VPGGenerationOptionProperty::ApplicationDirectoryHpp:
-            obj->SetApplicationDirectoryHpp(value);
-            break;
-        case VPGGenerationOptionProperty::ApplicationDirectoryCpp:
-            obj->SetApplicationDirectoryCpp(value);
-            break;
-        case VPGGenerationOptionProperty::ActionDirectoryHpp:
-            obj->SetActionDirectoryHpp(value);
-            break;
-        case VPGGenerationOptionProperty::ActionDirectoryCpp:
-            obj->SetActionDirectoryCpp(value);
-            break;
-        case VPGGenerationOptionProperty::FormDirectoryHpp:
-            obj->SetFormDirectoryHpp(value);
-            break;
-        case VPGGenerationOptionProperty::FormDirectoryCpp:
-            obj->SetFormDirectoryCpp(value);
-            break;
-        case VPGGenerationOptionProperty::ObjectDirectoryHpp:
-            obj->SetObjectDirectoryHpp(value);
-            break;
-        case VPGGenerationOptionProperty::ObjectDirectoryCpp:
-            obj->SetObjectDirectoryCpp(value);
-            break;
-        case VPGGenerationOptionProperty::PropertyAccessorDirectoryHpp:
-            obj->SetPropertyAccessorDirectoryHpp(value);
+        case VPGGenerationOptionProperty::ProjectPrefix:
+            obj->SetProjectPrefix(value);
             break;
         case VPGGenerationOptionProperty::PropertyAccessorDirectoryCpp:
             obj->SetPropertyAccessorDirectoryCpp(value);
             break;
-        case VPGGenerationOptionProperty::ObjectFactoryDirectoryHpp:
-            obj->SetObjectFactoryDirectoryHpp(value);
-            break;
-        case VPGGenerationOptionProperty::ObjectFactoryDirectoryCpp:
-            obj->SetObjectFactoryDirectoryCpp(value);
-            break;
-        case VPGGenerationOptionProperty::PropertyAccessorFactoryDirectoryHpp:
-            obj->SetPropertyAccessorFactoryDirectoryHpp(value);
+        case VPGGenerationOptionProperty::PropertyAccessorDirectoryHpp:
+            obj->SetPropertyAccessorDirectoryHpp(value);
             break;
         case VPGGenerationOptionProperty::PropertyAccessorFactoryDirectoryCpp:
             obj->SetPropertyAccessorFactoryDirectoryCpp(value);
             break;
+        case VPGGenerationOptionProperty::PropertyAccessorFactoryDirectoryHpp:
+            obj->SetPropertyAccessorFactoryDirectoryHpp(value);
+            break;
+        case VPGGenerationOptionProperty::TemplateGitUrl:
+            obj->SetTemplateGitUrl(value);
+            break;
+        case VPGGenerationOptionProperty::TemplateWorkspace:
+            obj->SetTemplateWorkspace(value);
+            break;
+        case VPGGenerationOptionProperty::TypeWorkspace:
+            obj->SetTypeWorkspace(value);
+            break;
+        case VPGGenerationOptionProperty::Version:
+            obj->SetVersion(value);
+            break;
+        default:
+            assert(false);
+        }
+    CATCH
+}
+
+void VPGGenerationOptionPropertyAccessor::_WriteStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index) const 
+{
+    TRY
+        assert(index >= -1);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
+        {
         case VPGGenerationOptionProperty::Plugins:
             if (index > -1)
                 obj->SetPlugins(index, value);
@@ -549,7 +592,7 @@ void VPGGenerationOptionPropertyAccessor::_WriteString(const int64_t &objectProp
     CATCH
 }
 
-void VPGGenerationOptionPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring & /*value*/, const void * /*key*/) const
+void VPGGenerationOptionPropertyAccessor::_WriteStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/) const 
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -594,6 +637,7 @@ std::shared_ptr<IObject> VPGGenerationOptionPropertyAccessor::_ReadObjectAtIndex
         {
         case VPGGenerationOptionProperty::Exports:
             return std::static_pointer_cast<IObject>(obj->GetExports(index));
+;
         default:
             assert(false);
         }
@@ -609,14 +653,34 @@ std::shared_ptr<IObject> VPGGenerationOptionPropertyAccessor::_ReadObjectAtKey(c
     return nullptr;
 }
 
-void VPGGenerationOptionPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const int64_t & /*index*/) const
+void VPGGenerationOptionPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/) const 
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGGenerationOptionPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const void * /*key*/) const
+void VPGGenerationOptionPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index) const 
+{
+    TRY
+        assert(index >= -1);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
+        {
+        case VPGGenerationOptionProperty::Exports:
+            if (index > -1)
+                obj->SetExports(index, std::static_pointer_cast<VPGGenerationOptionExport>(value));
+            else
+                obj->InsertExports(std::static_pointer_cast<VPGGenerationOptionExport>(value));
+            break;
+        default:
+            assert(false);
+        }
+    CATCH
+}
+
+void VPGGenerationOptionPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const void */*key*/) const 
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND

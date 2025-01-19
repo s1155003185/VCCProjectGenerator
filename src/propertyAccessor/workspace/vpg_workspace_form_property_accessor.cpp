@@ -45,10 +45,9 @@ std::wstring VPGWorkspaceFormPropertyAccessor::_ReadStringAtKey(const int64_t &o
     return L"";
 }
 
-void VPGWorkspaceFormPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring &value, const int64_t &index) const
+void VPGWorkspaceFormPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring &value) const 
 {
     TRY
-        assert(index >= -1);
         auto obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
         assert(obj != nullptr);
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
@@ -62,7 +61,14 @@ void VPGWorkspaceFormPropertyAccessor::_WriteString(const int64_t &objectPropert
     CATCH
 }
 
-void VPGWorkspaceFormPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring & /*value*/, const void * /*key*/) const
+void VPGWorkspaceFormPropertyAccessor::_WriteStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/) const 
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGWorkspaceFormPropertyAccessor::_WriteStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/) const 
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -110,14 +116,34 @@ std::shared_ptr<IObject> VPGWorkspaceFormPropertyAccessor::_ReadObjectAtKey(cons
     return nullptr;
 }
 
-void VPGWorkspaceFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const int64_t & /*index*/) const
+void VPGWorkspaceFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/) const 
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGWorkspaceFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const void * /*key*/) const
+void VPGWorkspaceFormPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index) const 
+{
+    TRY
+        assert(index >= -1);
+        auto obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
+        {
+        case VPGWorkspaceFormProperty::GitForms:
+            if (index > -1)
+                obj->SetGitForms(index, std::static_pointer_cast<VPGGitForm>(value));
+            else
+                obj->InsertGitForms(std::static_pointer_cast<VPGGitForm>(value));
+            break;
+        default:
+            assert(false);
+        }
+    CATCH
+}
+
+void VPGWorkspaceFormPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const void */*key*/) const 
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND

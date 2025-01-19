@@ -54,7 +54,23 @@ std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObjectAtKey(const int
     return nullptr;
 }
 
-void VPGMainFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index) const
+void VPGMainFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> value) const 
+{
+    TRY
+        auto obj = std::static_pointer_cast<VPGMainForm>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGMainFormProperty>(objectProperty))
+        {
+        case VPGMainFormProperty::CurrentWorkspaceForm:
+            obj->SetCurrentWorkspaceForm(std::static_pointer_cast<VPGWorkspaceForm>(value));
+            break;
+        default:
+            assert(false);
+        }
+    CATCH
+}
+
+void VPGMainFormPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index) const 
 {
     TRY
         assert(index >= -1);
@@ -68,16 +84,13 @@ void VPGMainFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, st
             else
                 obj->InsertWorkspaceForms(std::static_pointer_cast<VPGWorkspaceForm>(value));
             break;
-        case VPGMainFormProperty::CurrentWorkspaceForm:
-            obj->SetCurrentWorkspaceForm(std::static_pointer_cast<VPGWorkspaceForm>(value));
-            break;
         default:
             assert(false);
         }
     CATCH
 }
 
-void VPGMainFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const void * /*key*/) const
+void VPGMainFormPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const void */*key*/) const 
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
