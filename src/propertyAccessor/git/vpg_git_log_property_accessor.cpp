@@ -73,7 +73,7 @@ void VPGGitLogPropertyAccessor::_WriteBoolAtKey(const int64_t &objectProperty, c
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_InsertBoolAtIndex(const int64_t &objectProperty, const bool & /*value*/, const int64_t & /*index*/) const
+void VPGGitLogPropertyAccessor::_InsertBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/) const 
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -152,7 +152,7 @@ void VPGGitLogPropertyAccessor::_WriteLongAtKey(const int64_t &objectProperty, c
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_InsertLongAtIndex(const int64_t &objectProperty, const long & /*value*/, const int64_t & /*index*/) const
+void VPGGitLogPropertyAccessor::_InsertLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/) const 
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -331,7 +331,7 @@ void VPGGitLogPropertyAccessor::_WriteStringAtKey(const int64_t &objectProperty,
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index) const
+void VPGGitLogPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index) const 
 {
     TRY
         assert(index >= -1);
@@ -339,12 +339,6 @@ void VPGGitLogPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProper
         assert(obj != nullptr);
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
-        case VPGGitLogProperty::ParentHashIDs:
-            if (index > -1)
-                obj->InsertParentHashIDs(index, value);
-            else
-                obj->InsertParentHashIDs(value);
-            break;
         case VPGGitLogProperty::AbbreviatedParentHashIDs:
             if (index > -1)
                 obj->InsertAbbreviatedParentHashIDs(index, value);
@@ -356,6 +350,12 @@ void VPGGitLogPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProper
                 obj->InsertBranches(index, value);
             else
                 obj->InsertBranches(value);
+            break;
+        case VPGGitLogProperty::ParentHashIDs:
+            if (index > -1)
+                obj->InsertParentHashIDs(index, value);
+            else
+                obj->InsertParentHashIDs(value);
             break;
         case VPGGitLogProperty::Tags:
             if (index > -1)

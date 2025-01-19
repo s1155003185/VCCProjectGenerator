@@ -97,7 +97,7 @@ void VPGMainFormPropertyAccessor::_WriteObjectAtKey(const int64_t &objectPropert
     CATCH
 }
 
-void VPGMainFormPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index) const
+void VPGMainFormPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index) const 
 {
     TRY
         assert(index >= -1);

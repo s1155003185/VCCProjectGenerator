@@ -574,65 +574,54 @@ void VPGPropertyAccessorGenerationService::GenerateInsert(const std::wstring &pr
         std::wstring convertedName = L"";
         std::wstring returnResult = L"";
         VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(type, convertedType, convertedName, returnResult);
-        bool isHavingMapType = false;
-        bool isHavingVectorType = false;
-        bool isHavingGeneralType = false;
-        GetIsHavingGenerateTypeMapType(enumClassPropertiesWriteOnly, isHavingGeneralType, isHavingVectorType, isHavingMapType);
 
-        // General Type
-        // header
-        result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Insert" + convertedName + L"AtIndex";
-        if (isHavingGeneralType && isHavingVectorType) {
-            if (type == objectToken)
-                result += L"(const int64_t &objectProperty, " + convertedType + L" value, const int64_t &index) const\r\n";
-            else
-                result += L"(const int64_t &objectProperty, const " + convertedType + L" &value, const int64_t &index) const\r\n";
-        } else {
-            if (type == objectToken)
-                result += L"(const int64_t &objectProperty, " + convertedType + L" /*value*/, const int64_t & /*index*/) const\r\n";
-            else
-                result += L"(const int64_t &objectProperty, const " + convertedType + L" & /*value*/, const int64_t & /*index*/) const\r\n";
-        }
-        // body
-        result += L"{\r\n"
-                + INDENT + L"TRY\r\n";
-        if (isHavingGeneralType && isHavingVectorType) {
-            result += GetGeneralTypeIndexContentHeader(propertyName);
-            for (auto const &property : enumClassPropertiesWriteOnly) {
-                if (!IsStartWith(property->GetMacro(), L"VECTOR") && !IsStartWith(property->GetMacro(), L"ORDERED_MAP"))
-                    continue;
+        std::map<std::wstring, std::wstring> vectorCases;
 
-                result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L":\r\n";
-                std::wstring type = IsStartWith(property->GetMacro(), L"ORDERED_MAP") ? property->GetType2() : property->GetType1();
-                if (Find(property->GetMacro(), L"SPTR") != std::wstring::npos) {
-                    result += INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
+        for (auto const &property : enumClassPropertiesWriteOnly) {
+            if (property->GetIsVector() || property->GetIsOrderedMap()) {
+                std::wstring returnStr = L"";
+
+                bool isOrderedMap = property->GetIsOrderedMap();
+                std::wstring type = isOrderedMap ? property->GetType2() : property->GetType1();
+                if (property->GetIsObject()) {
+                    returnStr += INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(index, std::static_pointer_cast<" + type + L">(value));\r\n"
                         + INDENT + INDENT + INDENT + L"else\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(std::static_pointer_cast<" + type + L">(value));\r\n";
                 } else if (!type.empty() && IsCapital(type)) {
-                    result += INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
+                    returnStr += INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(index, static_cast<" + type + L">(value));\r\n"
                         + INDENT + INDENT + INDENT + L"else\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(static_cast<" + type + L">(value));\r\n";
                 } else if (type == L"std::string") {
-                    result += INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
+                    returnStr += INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(index, wstr2str(value));\r\n"
                         + INDENT + INDENT + INDENT + L"else\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(wstr2str(value));\r\n";
                 } else {
-                    result += INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
+                    returnStr += INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(index, value);\r\n"
                         + INDENT + INDENT + INDENT + L"else\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(value);\r\n";
                 }
-                result += INDENT + INDENT + INDENT + L"break;\r\n";
+                vectorCases.insert(std::make_pair(property->GetEnum(), returnStr));
             }
+        }
+        result += L"\r\n"
+            "void " + propertyName + L"Accessor::_Insert" + convertedName + L"AtIndex(const int64_t &objectProperty, " + (Equal(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (Equal(type, objectToken) ? L"" : L"&") + (!vectorCases.empty() ? L"value" : L"/*value*/") + L", const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L") const \r\n"
+            "{\r\n"
+            + INDENT + L"TRY\r\n";
+        if (!vectorCases.empty()) {
+            result += GetGeneralTypeIndexContentHeader(propertyName);
+            for (auto const &pair : vectorCases)
+                result += INDENT + INDENT + L"case " + propertyName + L"::" + pair.first + L":\r\n"
+                    + pair.second
+                    + INDENT + INDENT + INDENT + L"break;\r\n";
             result += generalTypeContentFooter;
         } else
             result += INDENT + INDENT + L"THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n";
         result += INDENT + L"CATCH\r\n"
-                "}\r\n";
+            "}\r\n";
     CATCH
 }
 
