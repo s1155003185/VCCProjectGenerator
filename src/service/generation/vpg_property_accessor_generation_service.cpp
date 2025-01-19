@@ -233,7 +233,7 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const LogConfig *logConfi
                 
                 isCollection |= property->GetIsCollection();
                 isObject |= property->GetIsObject();
-                if (property->GetIsObject()) {
+                if (!property->GetIsObject()) {
                     std::wstring type = property->GetIsMap() || property->GetIsOrderedMap() ? property->GetType2() : property->GetType1();
                     if (type.empty())
                         THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Unknow Macro found in " + enumClass->GetName() + L": " + property->GetMacro());
