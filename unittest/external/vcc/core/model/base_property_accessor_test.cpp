@@ -41,7 +41,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             return obj->GetString();
         }
 
-        virtual void _WriteString(const int64_t &objectProperty, const std::wstring &value, const int64_t &index = -1) const override
+        virtual void _WriteStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index = -1) const override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -58,7 +58,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             return obj->GetInteger();
         }
 
-        virtual void _WriteInt(const int64_t &objectProperty, const int &value, const int64_t &index = -1) const override
+        virtual void _WriteIntAtIndex(const int64_t &objectProperty, const int &value, const int64_t &index = -1) const override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -73,7 +73,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             return obj->GetObject();
         }
 
-        virtual void _WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index = -1) const override
+        virtual void _WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index = -1) const override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -103,7 +103,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             return obj->GetMapString(*keyPtr);
         }
 
-        virtual void _WriteString(const int64_t &objectProperty, const std::wstring &value, const void *key) const override
+        virtual void _WriteStringAtKey(const int64_t &objectProperty, const std::wstring &value, const void *key) const override
         {
             assert(objectProperty == 0L);
             assert(key != nullptr);
@@ -142,6 +142,6 @@ TEST(BasePropertyAccessorTest, Full)
 
     std::wstring mapKey1 = L"key";
     std::wstring mapKey2 = L"key";
-    accessor->WriteString(LockType::WriteLock, 0L, L"value", &mapKey1);
+    accessor->WriteStringAtKey(LockType::WriteLock, 0L, L"value", &mapKey1);
     EXPECT_EQ(accessor->ReadStringAtKey(LockType::ReadLock, 0L, &mapKey2), L"value");
 }

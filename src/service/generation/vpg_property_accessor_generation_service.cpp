@@ -426,7 +426,6 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
         std::map<std::wstring, std::wstring> mapCasekeyTypes;
 
         for (auto const &property : enumClassPropertiesWriteOnly) {
-            bool isOrderedMap = property->GetIsOrderedMap();
             // General
             if (property->GetIsGeneralType()) {
                 std::wstring returnStr = L"obj->Set" + property->GetPropertyName();
