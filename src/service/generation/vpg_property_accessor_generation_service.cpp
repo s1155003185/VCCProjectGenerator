@@ -544,7 +544,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
 
         // map
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Write" + convertedName + L"AtKey(const int64_t &objectProperty, " + (Equal(type, objectToken) ? L"" : L"const")  + convertedType + L" " + (Equal(type, objectToken) ? L"" : L"&") + (!mapCases.empty() ? L"value" : L"/*value*/") + L", const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L") const \r\n"
+            "void " + propertyName + L"Accessor::_Write" + convertedName + L"AtKey(const int64_t &objectProperty, " + (Equal(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (Equal(type, objectToken) ? L"" : L"&") + (!mapCases.empty() ? L"value" : L"/*value*/") + L", const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L") const \r\n"
             "{\r\n"
                 + INDENT + L"TRY\r\n";
         if (!mapCases.empty()) {
