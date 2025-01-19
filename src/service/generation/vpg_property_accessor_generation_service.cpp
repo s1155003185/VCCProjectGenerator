@@ -517,7 +517,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
             result += GetGeneralTypeContentHeader(propertyName);
             for (auto const &pair : generalCases)
                 result += INDENT + INDENT + L"case " + propertyName + L"::" + pair.first + L":\r\n"
-                    + INDENT + INDENT + INDENT + pair.second + L"\r\n"
+                    + INDENT + INDENT + INDENT + pair.second
                     + INDENT + INDENT + INDENT + L"break;\r\n";
             result += generalTypeContentFooter;
         } else
