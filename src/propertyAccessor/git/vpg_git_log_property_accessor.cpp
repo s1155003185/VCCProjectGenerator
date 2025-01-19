@@ -73,7 +73,7 @@ void VPGGitLogPropertyAccessor::_WriteBoolAtKey(const int64_t &objectProperty, c
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_InsertBool(const int64_t &objectProperty, const bool & /*value*/, const int64_t & /*index*/) const
+void VPGGitLogPropertyAccessor::_InsertBoolAtIndex(const int64_t &objectProperty, const bool & /*value*/, const int64_t & /*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -152,7 +152,7 @@ void VPGGitLogPropertyAccessor::_WriteLongAtKey(const int64_t &objectProperty, c
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_InsertLong(const int64_t &objectProperty, const long & /*value*/, const int64_t & /*index*/) const
+void VPGGitLogPropertyAccessor::_InsertLongAtIndex(const int64_t &objectProperty, const long & /*value*/, const int64_t & /*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -331,7 +331,7 @@ void VPGGitLogPropertyAccessor::_WriteStringAtKey(const int64_t &objectProperty,
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_InsertString(const int64_t &objectProperty, const std::wstring &value, const int64_t &index) const
+void VPGGitLogPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index) const
 {
     TRY
         assert(index >= -1);

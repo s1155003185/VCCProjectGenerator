@@ -75,7 +75,7 @@ void VPGWorkspaceFormPropertyAccessor::_WriteStringAtKey(const int64_t &objectPr
     CATCH
 }
 
-void VPGWorkspaceFormPropertyAccessor::_InsertString(const int64_t &objectProperty, const std::wstring & /*value*/, const int64_t & /*index*/) const
+void VPGWorkspaceFormPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProperty, const std::wstring & /*value*/, const int64_t & /*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -150,7 +150,7 @@ void VPGWorkspaceFormPropertyAccessor::_WriteObjectAtKey(const int64_t &objectPr
     CATCH
 }
 
-void VPGWorkspaceFormPropertyAccessor::_InsertObject(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const int64_t & /*index*/) const
+void VPGWorkspaceFormPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const int64_t & /*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND

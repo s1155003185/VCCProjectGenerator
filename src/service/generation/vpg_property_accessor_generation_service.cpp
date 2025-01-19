@@ -582,7 +582,7 @@ void VPGPropertyAccessorGenerationService::GenerateInsert(const std::wstring &pr
         // General Type
         // header
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Insert" + convertedName;
+            "void " + propertyName + L"Accessor::_Insert" + convertedName + L"AtIndex";
         if (isHavingGeneralType && isHavingVectorType) {
             if (type == objectToken)
                 result += L"(const int64_t &objectProperty, " + convertedType + L" value, const int64_t &index) const\r\n";

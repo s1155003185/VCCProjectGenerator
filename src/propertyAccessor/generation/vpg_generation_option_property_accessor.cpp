@@ -76,7 +76,7 @@ void VPGGenerationOptionExportPropertyAccessor::_WriteBoolAtKey(const int64_t &o
     CATCH
 }
 
-void VPGGenerationOptionExportPropertyAccessor::_InsertBool(const int64_t &objectProperty, const bool & /*value*/, const int64_t & /*index*/) const
+void VPGGenerationOptionExportPropertyAccessor::_InsertBoolAtIndex(const int64_t &objectProperty, const bool & /*value*/, const int64_t & /*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -145,7 +145,7 @@ void VPGGenerationOptionExportPropertyAccessor::_WriteLongAtKey(const int64_t &o
     CATCH
 }
 
-void VPGGenerationOptionExportPropertyAccessor::_InsertLong(const int64_t &objectProperty, const long & /*value*/, const int64_t & /*index*/) const
+void VPGGenerationOptionExportPropertyAccessor::_InsertLongAtIndex(const int64_t &objectProperty, const long & /*value*/, const int64_t & /*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -244,7 +244,7 @@ void VPGGenerationOptionExportPropertyAccessor::_WriteStringAtKey(const int64_t 
     CATCH
 }
 
-void VPGGenerationOptionExportPropertyAccessor::_InsertString(const int64_t &objectProperty, const std::wstring & /*value*/, const int64_t & /*index*/) const
+void VPGGenerationOptionExportPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProperty, const std::wstring & /*value*/, const int64_t & /*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -323,7 +323,7 @@ void VPGGenerationOptionPropertyAccessor::_WriteBoolAtKey(const int64_t &objectP
     CATCH
 }
 
-void VPGGenerationOptionPropertyAccessor::_InsertBool(const int64_t &objectProperty, const bool & /*value*/, const int64_t & /*index*/) const
+void VPGGenerationOptionPropertyAccessor::_InsertBoolAtIndex(const int64_t &objectProperty, const bool & /*value*/, const int64_t & /*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -392,7 +392,7 @@ void VPGGenerationOptionPropertyAccessor::_WriteLongAtKey(const int64_t &objectP
     CATCH
 }
 
-void VPGGenerationOptionPropertyAccessor::_InsertLong(const int64_t &objectProperty, const long & /*value*/, const int64_t & /*index*/) const
+void VPGGenerationOptionPropertyAccessor::_InsertLongAtIndex(const int64_t &objectProperty, const long & /*value*/, const int64_t & /*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -599,7 +599,7 @@ void VPGGenerationOptionPropertyAccessor::_WriteStringAtKey(const int64_t &objec
     CATCH
 }
 
-void VPGGenerationOptionPropertyAccessor::_InsertString(const int64_t &objectProperty, const std::wstring &value, const int64_t &index) const
+void VPGGenerationOptionPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -687,7 +687,7 @@ void VPGGenerationOptionPropertyAccessor::_WriteObjectAtKey(const int64_t &objec
     CATCH
 }
 
-void VPGGenerationOptionPropertyAccessor::_InsertObject(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const int64_t & /*index*/) const
+void VPGGenerationOptionPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const int64_t & /*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
