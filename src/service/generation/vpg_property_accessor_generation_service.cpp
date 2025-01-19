@@ -419,144 +419,148 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
         std::wstring convertedName = L"";
         std::wstring returnResult = L"";
         VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(type, convertedType, convertedName, returnResult);
-        bool isHavingMapType = false;
-        bool isHavingVectorType = false;
-        bool isHavingGeneralType = false;
-        GetIsHavingGenerateTypeMapType(enumClassPropertiesWriteOnly, isHavingGeneralType, isHavingVectorType, isHavingMapType);
 
-        // General Type
-        // header
-        result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Write" + convertedName;
-        if (isHavingGeneralType) {
-            if (type == objectToken)
-                result += L"(const int64_t &objectProperty, " + convertedType + L" value, const int64_t &index) const\r\n";
-            else
-                result += L"(const int64_t &objectProperty, const " + convertedType + L" &value, const int64_t &index) const\r\n";
-        } else {
-            if (type == objectToken)
-                result += L"(const int64_t &objectProperty, " + convertedType + L" /*value*/, const int64_t & /*index*/) const\r\n";
-            else
-                result += L"(const int64_t &objectProperty, const " + convertedType + L" & /*value*/, const int64_t & /*index*/) const\r\n";
-        }
-        // body
-        result += L"{\r\n"
-                + INDENT + L"TRY\r\n";
-        if (isHavingGeneralType) {
-            result += GetGeneralTypeIndexContentHeader(propertyName);
-            for (auto const &property : enumClassPropertiesWriteOnly) {
-                if (IsStartWith(property->GetMacro(), L"MAP"))
-                    continue;
+        std::map<std::wstring, std::wstring> generalCases;
+        std::map<std::wstring, std::wstring> vectorCases;
+        std::map<std::wstring, std::wstring> mapCases;
+        std::map<std::wstring, std::wstring> mapCasekeyTypes;
 
-                result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L":\r\n";
-                if (IsStartWith(property->GetMacro(), L"VECTOR") || IsStartWith(property->GetMacro(), L"ORDERED_MAP")) {
-                    bool isOrderedMap = IsStartWith(property->GetMacro(), L"ORDERED_MAP");
-                    std::wstring type = IsStartWith(property->GetMacro(), L"ORDERED_MAP") ? property->GetType2() : property->GetType1();
-                    if (Find(property->GetMacro(), L"SPTR") != std::wstring::npos) {
-                        result += INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"AtIndex" : L"") + L"(index, std::static_pointer_cast<" + type + L">(value));\r\n"
-                            + INDENT + INDENT + INDENT + L"else\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(std::static_pointer_cast<" + type + L">(value));\r\n";
-                    } else if (!type.empty() && IsCapital(type)) {
-                        result += INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"AtIndex" : L"") + L"(index, static_cast<" + type + L">(value));\r\n"
-                            + INDENT + INDENT + INDENT + L"else\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(static_cast<" + type + L">(value));\r\n";
-                    } else if (type == L"std::string") {
-                        result += INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"AtIndex" : L"") + L"(index, wstr2str(value));\r\n"
-                            + INDENT + INDENT + INDENT + L"else\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(wstr2str(value));\r\n";                    
-                    } else {
-                        result += INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"AtIndex" : L"") + L"(index, value);\r\n"
-                            + INDENT + INDENT + INDENT + L"else\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(value);\r\n";
-                    }
-                } else if (type == objectToken)
-                    result += INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"(std::static_pointer_cast<" + property->GetType1() + L">(value));\r\n";
+        for (auto const &property : enumClassPropertiesWriteOnly) {
+            bool isOrderedMap = property->GetIsOrderedMap();
+            // General
+            if (property->GetIsGeneralType()) {
+                std::wstring returnStr = L"obj->Set" + property->GetPropertyName();
+
+                if (type == objectToken)
+                    returnStr += L"(std::static_pointer_cast<" + property->GetType1() + L">(value));\r\n";
                 else if (!property->GetType1().empty() && IsCapital(property->GetType1()))
-                    result += INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"(static_cast<" + property->GetType1() + L">(value));\r\n";
+                    returnStr += L"(static_cast<" + property->GetType1() + L">(value));\r\n";
                 else if (property->GetType1() == L"std::string")
-                    result += INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"(wstr2str(value));\r\n";
+                    returnStr += L"(wstr2str(value));\r\n";
                 else
-                    result += INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"(value);\r\n";
-                result += INDENT + INDENT + INDENT + L"break;\r\n";
+                    returnStr += L"(value);\r\n";
+                generalCases.insert(std::make_pair(property->GetEnum(), returnStr));
             }
-            result += generalTypeContentFooter;
-        } else
-            result += INDENT + INDENT + L"THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n";
-        result += INDENT + L"CATCH\r\n"
-                "}\r\n";
-            
-        // Map Type
-        result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Write" + convertedName;
-        if (isHavingMapType) {
-            if (type == objectToken)
-                result += L"(const int64_t &objectProperty, " + convertedType + L" value, const void *key) const\r\n";
-            else
-                result += L"(const int64_t &objectProperty, const " + convertedType + L" &value, const void *key) const\r\n";
-        } else {
-            if (type == objectToken)
-                result += L"(const int64_t &objectProperty, " + convertedType + L" /*value*/, const void * /*key*/) const\r\n";
-            else
-                result += L"(const int64_t &objectProperty, const " + convertedType + L" & /*value*/, const void * /*key*/) const\r\n";
-        }
-        // body
-        result += L"{\r\n"
-                + INDENT + L"TRY\r\n";
-        if (isHavingMapType) {
-            result += GetGeneralTypeMapContentHeader(propertyName);
-            for (auto const &property : enumClassPropertiesWriteOnly) {
-                if (!IsStartWith(property->GetMacro(), L"MAP") && !IsStartWith(property->GetMacro(), L"ORDERED_MAP"))
-                    continue;
-                
-                std::wstring tmpConvertedType = L"";
-                std::wstring tmpConvertedName = L"";
-                std::wstring tmpReturnResult = L"";
-                VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(property->GetType1(), tmpConvertedType, tmpConvertedName, tmpReturnResult);
-                
-                std::wstring castType = property->GetType1() == L"std::wstring" ? L"wchar_t" : property->GetType1();
-                result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L": {\r\n"
-                    + INDENT + INDENT + INDENT + L"const " + castType + L" *keyPtr = static_cast<const " + castType + L" *>(key);\r\n"
-                    + INDENT + INDENT + INDENT + L"assert(keyPtr != nullptr);\r\n"
-                    + INDENT + INDENT + INDENT + L"if (keyPtr == nullptr)\r\n"
-                    + INDENT + INDENT + INDENT + INDENT + L"THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n";
+            // Vector
+            if (property->GetIsVector() || property->GetIsOrderedMap()) {
+                std::wstring returnStr = L"";
 
+                bool isOrderedMap = property->GetIsOrderedMap();
+                std::wstring type = isOrderedMap ? property->GetType2() : property->GetType1();
+                if (property->GetIsObject()) {
+                    returnStr = INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"AtIndex" : L"") + L"(index, std::static_pointer_cast<" + type + L">(value));\r\n"
+                        + INDENT + INDENT + INDENT + L"else\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(std::static_pointer_cast<" + type + L">(value));\r\n";
+                } else if (!type.empty() && IsCapital(type)) {
+                    returnStr = INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"AtIndex" : L"") + L"(index, static_cast<" + type + L">(value));\r\n"
+                        + INDENT + INDENT + INDENT + L"else\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(static_cast<" + type + L">(value));\r\n";
+                } else if (type == L"std::string") {
+                    returnStr = INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"AtIndex" : L"") + L"(index, wstr2str(value));\r\n"
+                        + INDENT + INDENT + INDENT + L"else\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(wstr2str(value));\r\n";                    
+                } else {
+                    returnStr = INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"AtIndex" : L"") + L"(index, value);\r\n"
+                        + INDENT + INDENT + INDENT + L"else\r\n"
+                        + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(value);\r\n";
+                };
+
+                vectorCases.insert(std::make_pair(property->GetEnum(), returnStr));
+            }
+            // Map
+            if (property->GetIsMap() || property->GetIsOrderedMap()) {
+                // key
                 std::wstring mapGetKey = property->GetType1() == L"std::wstring" ? L"keyPtr" : L"*keyPtr";
+                mapCasekeyTypes.insert(std::make_pair(property->GetEnum(), mapGetKey));
+
+                // value
+                std::wstring returnStr = L"";
                 bool isOrderedMap = IsStartWith(property->GetMacro(), L"ORDERED_MAP");
                 if (type == objectToken) {
-                    result += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
+                    returnStr += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"AtKey" : L"") + L"(" + mapGetKey + L", std::static_pointer_cast<" + property->GetType2() + L">(value));\r\n"
                         + INDENT + INDENT + INDENT + L"else\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(" + mapGetKey + L", std::static_pointer_cast<" + property->GetType2() + L">(value));\r\n";
                 } else {
                     std::wstring type = property->GetType2();
                     if (!type.empty() && IsCapital(type)) {
-                        result += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
+                        returnStr += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
                             + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"AtKey" : L"") + L"(" + mapGetKey + L", static_cast<" + type + L">(value));\r\n"
                             + INDENT + INDENT + INDENT + L"else\r\n"
                             + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(" + mapGetKey + L", static_cast<" + type + L">(value));\r\n";
                     } else if (type == L"std::string") {
-                        result += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
+                        returnStr += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
                             + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"AtKey" : L"") + L"(" + mapGetKey + L", str2wstr(value));\r\n"
                             + INDENT + INDENT + INDENT + L"else\r\n"
                             + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(" + mapGetKey + L", wstr2str(value));\r\n";
                     } else {
-                        result += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
+                        returnStr += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
                             + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + (isOrderedMap ? L"AtKey" : L"") + L"(" + mapGetKey + L", value);\r\n"
                             + INDENT + INDENT + INDENT + L"else\r\n"
                             + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(" + mapGetKey + L", value);\r\n";
-                    }
-                    
+                    }                    
                 }
-                result += INDENT + INDENT + INDENT + L"break;\r\n"
-                    + INDENT + INDENT + L"}\r\n";
+                mapCases.insert(std::make_pair(property->GetEnum(), returnStr));
             }
+        }
+
+        // General Type
+        result += L"\r\n"
+            "void " + propertyName + L"Accessor::_Write" + convertedName + L"(const int64_t &objectProperty, " + (Equal(type, objectToken) ? L"" : L"const")  + convertedType + L" " + (Equal(type, objectToken) ? L"" : L"&") + (!generalCases.empty() ? L"value" : L"/*value*/") + L") const \r\n"
+            "{\r\n"
+            + INDENT + L"TRY\r\n";
+        if (!generalCases.empty()) {
+            result += GetGeneralTypeContentHeader(propertyName);
+            for (auto const &pair : generalCases)
+                result += INDENT + INDENT + L"case " + propertyName + L"::" + pair.first + L":\r\n"
+                    + INDENT + INDENT + INDENT + pair.second + L";\r\n"
+                    + INDENT + INDENT + INDENT + L"break;\r\n";
             result += generalTypeContentFooter;
         } else
             result += INDENT + INDENT + L"THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n";
+        result += INDENT + L"CATCH\r\n"
+            "}\r\n";
+
+        // vector
+        result += L"\r\n"
+            "void " + propertyName + L"Accessor::_Write" + convertedName + L"AtIndex(const int64_t &objectProperty, " + (Equal(type, objectToken) ? L"" : L"const")  + convertedType + L" " + (Equal(type, objectToken) ? L"" : L"&") + (!vectorCases.empty() ? L"value" : L"/*value*/") + L", const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L") const \r\n"
+            "{\r\n"
+            + INDENT + L"TRY\r\n";
+        if (!vectorCases.empty()) {
+            result += GetGeneralTypeIndexContentHeader(propertyName);
+            for (auto const &pair : vectorCases)
+                result += INDENT + INDENT + L"case " + propertyName + L"::" + pair.first + L":\r\n"
+                    + pair.second
+                    + INDENT + INDENT + INDENT + L"break;\r\n";
+            result += generalTypeContentFooter;
+        } else
+            result += INDENT + INDENT + L"THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n";
+        result += INDENT + L"CATCH\r\n"
+            "}\r\n";
+
+        // map
+        result += L"\r\n"
+            "void " + propertyName + L"Accessor::_Write" + convertedName + L"AtKey(const int64_t &objectProperty, " + (Equal(type, objectToken) ? L"" : L"const")  + convertedType + L" " + (Equal(type, objectToken) ? L"" : L"&") + (!mapCases.empty() ? L"value" : L"/*value*/") + L", const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L") const \r\n"
+            "{\r\n"
+                + INDENT + L"TRY\r\n";
+        if (!mapCases.empty()) {
+            result += GetGeneralTypeMapContentHeader(propertyName);
+            for (auto const &pair : mapCases)
+                result += INDENT + INDENT + L"case " + propertyName + L"::" + pair.first + L": {\r\n"
+                    + INDENT + INDENT + INDENT + L"const " + mapCasekeyTypes.at(pair.first) + L" *keyPtr = static_cast<const " + mapCasekeyTypes.at(pair.first) + L" *>(key);\r\n"
+                    + INDENT + INDENT + INDENT + L"assert(keyPtr != nullptr);\r\n"
+                    + INDENT + INDENT + INDENT + L"if (keyPtr == nullptr)\r\n"
+                    + INDENT + INDENT + INDENT + INDENT + L"THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
+                    + pair.second
+                    + INDENT + INDENT + INDENT + L"break;\r\n"
+                    + INDENT + INDENT + L"}\r\n";
+            result += generalTypeContentFooter;
+        } else
+            result += INDENT + INDENT + L"THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n";        
         result += INDENT + L"CATCH\r\n"
                 "}\r\n";
     CATCH

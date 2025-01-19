@@ -7,7 +7,7 @@ namespace vcc
     #define I_PROPERTY_ACCESSOR_HEADER(type, name) \
         public: \
             virtual type Read##name(const LockType &lockType, const int64_t &objectProperty) const = 0; \
-            virtual type Read##name##AtIndex(const LockType &lockType, const int64_t &objectProperty, const int64_t &index = -1) const = 0; \
+            virtual type Read##name##AtIndex(const LockType &lockType, const int64_t &objectProperty, const int64_t &index) const = 0; \
             virtual type Read##name##AtKey(const LockType &lockType, const int64_t &objectProperty, const void *key) const = 0; \
             virtual void Write##name(const LockType &lockType, const int64_t &objectProperty, const type &value, const int64_t &index = -1) const = 0; \
             virtual void Write##name(const LockType &lockType, const int64_t &objectProperty, const type &value, const void *key) const = 0; \
