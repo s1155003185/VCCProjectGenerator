@@ -81,7 +81,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             obj->SetObject(std::static_pointer_cast<BasePropertyAccessorTestObject>(value));
         }
 
-        void _InsertObject(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index) const override
+        void _InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index) const override
         {
             TRY
                 assert(objectProperty == 0L);
@@ -138,7 +138,7 @@ TEST(BasePropertyAccessorTest, Full)
     EXPECT_TRUE(accessor->ReadObjectAtIndex(LockType::ReadLock, 0L) != nullptr);
 
     std::shared_ptr<IObject> newObj = Create();
-    accessor->InsertObject(LockType::NoLock, 0L, newObj);
+    accessor->InsertObjectAtIndex(LockType::NoLock, 0L, newObj);
 
     std::wstring mapKey1 = L"key";
     std::wstring mapKey2 = L"key";
