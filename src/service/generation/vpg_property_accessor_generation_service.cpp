@@ -634,11 +634,53 @@ void VPGPropertyAccessorGenerationService::GenerateClone(const std::wstring &pro
         std::wstring convertedName = L"";
         std::wstring returnResult = L"";
         VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(type, convertedType, convertedName, returnResult);
-        bool isHavingMapType = false;
-        bool isHavingVectorType = false;
-        bool isHavingGeneralType = false;
-        GetIsHavingGenerateTypeMapType(enumClassPropertiesReadOnly, isHavingGeneralType, isHavingVectorType, isHavingMapType);
+        
+        std::map<std::wstring, std::wstring> generalCases;
+        std::map<std::wstring, std::wstring> vectorCases;
+        std::map<std::wstring, std::wstring> mapCases;
+        std::map<std::wstring, std::wstring> mapCasekeyTypes;
 
+        for (auto const &property : enumClassPropertiesReadOnly) {
+            // General
+            if (property->GetIsGeneralType()) {
+                std::wstring returnStr = L"obj->Set" + property->GetPropertyName();
+                generalCases.insert(std::make_pair(property->GetEnum(), returnStr));
+            }
+            // Vector
+            if (property->GetIsVector() || property->GetIsOrderedMap()) {
+                std::wstring returnStr = L"";
+                vectorCases.insert(std::make_pair(property->GetEnum(), returnStr));
+            }
+            // Map
+            if (property->GetIsMap() || property->GetIsOrderedMap()) {
+                // key
+                std::wstring mapGetKey = property->GetType1() == L"std::wstring" ? L"keyPtr" : L"*keyPtr";
+                mapCasekeyTypes.insert(std::make_pair(property->GetEnum(), mapGetKey));
+
+                // value
+                std::wstring returnStr = L"";
+                mapCases.insert(std::make_pair(property->GetEnum(), returnStr));
+            }
+        }
+
+        // General Type
+        result += L"\r\n"
+            "void " + propertyName + L"Accessor::_Clone" + convertedName + L"(const int64_t &objectProperty) const \r\n"
+            "{\r\n"
+            + INDENT + L"TRY\r\n";
+        if (!generalCases.empty()) {
+            result += GetGeneralTypeContentHeader(propertyName);
+            for (auto const &pair : generalCases)
+                result += INDENT + INDENT + L"case " + propertyName + L"::" + pair.first + L":\r\n"
+                    + INDENT + INDENT + INDENT + pair.second
+                    + INDENT + INDENT + INDENT + L"break;\r\n";
+            result += generalTypeContentFooter;
+        } else
+            result += INDENT + INDENT + L"THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n";
+        result += INDENT + L"CATCH\r\n"
+            + INDENT + L"return nullptr;\r\n"
+            "}\r\n";
+        
         // General Type
         // header
         result += L"\r\n"
