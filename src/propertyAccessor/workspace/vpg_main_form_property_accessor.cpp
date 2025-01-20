@@ -144,7 +144,7 @@ std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_CloneObject(const int64_t
     return nullptr;
 }
 
-size_t VPGMainFormPropertyAccessor::_GetContainerCount(const int64_t &objectProperty) const
+size_t VPGMainFormPropertyAccessor::_GetCount(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGMainForm>(_Object);

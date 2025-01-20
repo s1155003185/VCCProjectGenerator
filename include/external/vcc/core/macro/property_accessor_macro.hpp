@@ -28,7 +28,7 @@ namespace vcc
 
     #define I_PROPERTY_ACCESSOR_CONTAINER_HEADER \
         public: \
-            virtual size_t GetContainerCount(const LockType &lockType, const int64_t &objectProperty) const = 0; \
+            virtual size_t GetCount(const LockType &lockType, const int64_t &objectProperty) const = 0; \
             virtual std::set<void *> GetMapKeys(const LockType &lockType, const int64_t &objectProperty) const = 0; \
             virtual bool IsContainKey(const LockType &lockType, const int64_t &objectProperty, const void *key) const = 0;\
             virtual void RemoveContainerElement(const LockType &lockType, const int64_t &objectProperty, const void *value) const = 0; \
@@ -78,7 +78,7 @@ namespace vcc
     
     #define BASE_PROPERTY_ACCESSOR_CONTAINER_HEADER \
         protected: \
-            virtual size_t _GetContainerCount(const int64_t &objectProperty) const; \
+            virtual size_t _GetCount(const int64_t &objectProperty) const; \
             virtual std::set<void *> _GetMapKeys(const int64_t &objectProperty) const; \
             virtual bool _IsContainKey(const int64_t &objectProperty, const void *key) const;\
             virtual void _RemoveContainerElement(const int64_t &objectProperty, const void *value) const; \
@@ -86,7 +86,7 @@ namespace vcc
             virtual void _RemoveContainerElementAtKey(const int64_t &objectProperty, const void *key) const; \
             virtual void _ClearContainer(const int64_t &objectProperty) const; \
         public: \
-            virtual size_t GetContainerCount(const LockType &lockType, const int64_t &objectProperty) const override; \
+            virtual size_t GetCount(const LockType &lockType, const int64_t &objectProperty) const override; \
             virtual std::set<void *> GetMapKeys(const LockType &lockType, const int64_t &objectProperty) const override; \
             virtual bool IsContainKey(const LockType &lockType, const int64_t &objectProperty, const void *key) const override;\
             virtual void RemoveContainerElement(const LockType &lockType, const int64_t &objectProperty, const void *value) const override; \
@@ -131,14 +131,14 @@ namespace vcc
         type BasePropertyAccessor::Clone##name(const LockType &lockType, const int64_t &objectProperty, const void *key) const { type result = nullptr; LOCK_BEGIN result = _Clone##name(objectProperty, key); LOCK_END return result; } \
 
     #define BASE_PROPERTY_ACCESSOR_CONTAINER_DETAIL \
-        size_t BasePropertyAccessor::_GetContainerCount(const int64_t &objectProperty) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return 0;} \
+        size_t BasePropertyAccessor::_GetCount(const int64_t &objectProperty) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return 0;} \
         std::set<void *> BasePropertyAccessor::_GetMapKeys(const int64_t &objectProperty) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND std::set<void *> result; return result;} \
         bool BasePropertyAccessor::_IsContainKey(const int64_t &objectProperty, const void * /*key*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return false;} \
         void BasePropertyAccessor::_RemoveContainerElement(const int64_t &objectProperty, const void * /*value*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
         void BasePropertyAccessor::_RemoveContainerElementAtIndex(const int64_t &objectProperty, const int64_t & /*index*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
         void BasePropertyAccessor::_RemoveContainerElementAtKey(const int64_t &objectProperty, const void * /*key*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
         void BasePropertyAccessor::_ClearContainer(const int64_t &objectProperty) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
-        size_t BasePropertyAccessor::GetContainerCount(const LockType &lockType, const int64_t &objectProperty) const { size_t result = 0; LOCK_BEGIN result = _GetContainerCount(objectProperty); LOCK_END return result; } \
+        size_t BasePropertyAccessor::GetCount(const LockType &lockType, const int64_t &objectProperty) const { size_t result = 0; LOCK_BEGIN result = _GetCount(objectProperty); LOCK_END return result; } \
         std::set<void *> BasePropertyAccessor::GetMapKeys(const LockType &lockType, const int64_t &objectProperty) const { std::set<void *> result; LOCK_BEGIN result = _GetMapKeys(objectProperty); LOCK_END return result; } \
         bool BasePropertyAccessor::IsContainKey(const LockType &lockType, const int64_t &objectProperty, const void *key) const { bool result = false; LOCK_BEGIN result = _IsContainKey(objectProperty, key); LOCK_END return result; }\
         void BasePropertyAccessor::RemoveContainerElement(const LockType &lockType, const int64_t &objectProperty, const void *value) const { LOCK_BEGIN _RemoveContainerElement(objectProperty, value); LOCK_END } \
@@ -170,7 +170,7 @@ namespace vcc
             
     #define PROPERTY_ACCESSOR_CONTAINER_HEADER \
         protected: \
-            virtual size_t _GetContainerCount(const int64_t &objectProperty) const override; \
+            virtual size_t _GetCount(const int64_t &objectProperty) const override; \
             virtual std::set<void *> _GetMapKeys(const int64_t &objectProperty) const override; \
             virtual bool _IsContainKey(const int64_t &objectProperty, const void *key) const override; \
             void _RemoveContainerElement(const int64_t &objectProperty, const void *value) const override; \
@@ -212,7 +212,7 @@ namespace vcc
         DLLEXPORT void InsertObjectAtIndex(void *ref, int64_t property, void *value, int64_t index);
 
     #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_CONTAINER \
-        DLLEXPORT long GetContainerCount(void *ref, int64_t property); \
+        DLLEXPORT long GetCount(void *ref, int64_t property); \
         DLLEXPORT void **GetMapKeys(void *ref, int64_t property); \
         DLLEXPORT bool IsContainKey(void *ref, int64_t property, void *key); \
         DLLEXPORT void RemoveContainerElement(void *ref, int64_t property, void *value); \
@@ -424,11 +424,11 @@ namespace vcc
     }
 
 #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL_CONTAINER \
-    long GetContainerCount(void *ref, int64_t property) \
+    long GetCount(void *ref, int64_t property) \
     { \
         TRY \
             IObject *object = static_cast<IObject *>(ref); \
-            return PropertyAccessorFactory::Create(object->GetSharedPtr())->GetContainerCount(LockType::ReadLock, property); \
+            return PropertyAccessorFactory::Create(object->GetSharedPtr())->GetCount(LockType::ReadLock, property); \
         CATCH \
         return 0; \
     } \

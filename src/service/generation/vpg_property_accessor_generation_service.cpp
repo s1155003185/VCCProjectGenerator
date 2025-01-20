@@ -720,7 +720,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerCount(const std::wst
         return;
     TRY
         result += L"\r\n"
-            "size_t " + propertyName + L"Accessor::_GetContainerCount(const int64_t &objectProperty) const\r\n"
+            "size_t " + propertyName + L"Accessor::_GetCount(const int64_t &objectProperty) const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n" 
             + GetGeneralContentHeader(propertyName);
@@ -745,6 +745,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerMapKey(const std::ws
         bool isHavingGeneralType = false;
         GetIsHavingGenerateTypeMapType(enumClassProperties, isHavingGeneralType, isHavingVectorType, isHavingMapType);
 
+        std::map<std::wstring, std::wstring> mapCases;
         result += L"\r\n"
             "std::set<void *> " + propertyName + L"Accessor::_GetMapKeys(const int64_t &objectProperty) const\r\n"
             "{\r\n"

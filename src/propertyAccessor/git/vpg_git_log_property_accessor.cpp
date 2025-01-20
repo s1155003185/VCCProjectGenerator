@@ -369,7 +369,7 @@ void VPGGitLogPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProper
     CATCH
 }
 
-size_t VPGGitLogPropertyAccessor::_GetContainerCount(const int64_t &objectProperty) const
+size_t VPGGitLogPropertyAccessor::_GetCount(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGGitLog>(_Object);

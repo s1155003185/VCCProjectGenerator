@@ -186,7 +186,7 @@ std::shared_ptr<IObject> VPGWorkspaceFormPropertyAccessor::_CloneObject(const in
     return nullptr;
 }
 
-size_t VPGWorkspaceFormPropertyAccessor::_GetContainerCount(const int64_t &objectProperty) const
+size_t VPGWorkspaceFormPropertyAccessor::_GetCount(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);

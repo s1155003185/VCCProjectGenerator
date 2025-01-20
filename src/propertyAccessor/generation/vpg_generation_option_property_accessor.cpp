@@ -723,7 +723,7 @@ std::shared_ptr<IObject> VPGGenerationOptionPropertyAccessor::_CloneObject(const
     return nullptr;
 }
 
-size_t VPGGenerationOptionPropertyAccessor::_GetContainerCount(const int64_t &objectProperty) const
+size_t VPGGenerationOptionPropertyAccessor::_GetCount(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);

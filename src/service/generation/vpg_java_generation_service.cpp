@@ -290,7 +290,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                 pos += dllInterfaceExportPropertyAccessorObject.length() - 1;
             } else if (IsStartWith(content, dllInterfaceExportPropertyAccessorContainer, pos)) {
                 importPackages.insert(L"com.sun.jna.Pointer");
-                result += INDENT + L"long GetContainerCount(Pointer ref, long property);\r\n"
+                result += INDENT + L"long GetCount(Pointer ref, long property);\r\n"
                     + INDENT + L"Pointer GetMapKeys(Pointer ref, long property);\r\n"
                     + INDENT + L"boolean IsContainKey(Pointer ref, long property, Pointer key);\r\n"
                     + INDENT + L"void RemoveContainerElementAtIndex(Pointer ref, long property, long index);\r\n"
@@ -454,7 +454,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainerCount(
 
         result += L"\r\n"
         + INDENT + L"public long get" + property->GetPropertyName() + L"Count() {\r\n"
-        + INDENT + INDENT + L"return " + dllInstantPrefix + L"GetContainerCount(Handle, " + classPropertyEnum + L");\r\n"
+        + INDENT + INDENT + L"return " + dllInstantPrefix + L"GetCount(Handle, " + classPropertyEnum + L");\r\n"
         + INDENT + L"}\r\n";
     CATCH
     return result;
