@@ -742,11 +742,6 @@ void VPGPropertyAccessorGenerationService::GenerateContainerMapKey(const std::ws
     if (type != containerToken || enumClassProperties.empty())
         return;
     TRY
-        bool isHavingMapType = false;
-        bool isHavingVectorType = false;
-        bool isHavingGeneralType = false;
-        GetIsHavingGenerateTypeMapType(enumClassProperties, isHavingGeneralType, isHavingVectorType, isHavingMapType);
-
         std::map<std::wstring, std::wstring> mapCases;
         for (auto const &property : enumClassProperties)
             if (property->GetIsMap() || property->GetIsOrderedMap())
@@ -781,34 +776,32 @@ void VPGPropertyAccessorGenerationService::GenerateContainerIsContainKey(const s
         bool isHavingGeneralType = false;
         GetIsHavingGenerateTypeMapType(enumClassProperties, isHavingGeneralType, isHavingVectorType, isHavingMapType);
 
-        result += L"\r\n"
-            "bool " + propertyName + L"Accessor::_IsContainKey";
-        if (isHavingMapType)
-            result += L"(const int64_t &objectProperty, const void *key) const\r\n";
-        else
-            result += L"(const int64_t &objectProperty, const void * /*key*/) const\r\n";
-        result += L"{\r\n"
-            + INDENT + L"TRY\r\n";
-        if (isHavingMapType) {
-            result += GetGeneralTypeMapContentHeader(propertyName);
-            for (auto const &property : enumClassProperties) {
-                if (IsStartWith(property->GetMacro(), L"MAP") || IsStartWith(property->GetMacro(), L"ORDERED_MAP")) {
-                    std::wstring castType = property->GetType1() == L"std::wstring" ? L"wchar_t" : property->GetType1();
-                    std::wstring mapGetKey = property->GetType1() == L"std::wstring" ? L"keyPtr" : L"*keyPtr";
-                
-                    result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L": {\r\n"
-                        + INDENT + INDENT + INDENT + L"const " + castType + L" *keyPtr = static_cast<const " + castType + L" *>(key);\r\n"
-                        + INDENT + INDENT + INDENT + L"assert(keyPtr != nullptr);\r\n"
-                        + INDENT + INDENT + INDENT + L"if (keyPtr == nullptr)\r\n"
-                        + INDENT + INDENT + INDENT + INDENT + L"THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-                        + INDENT + INDENT + INDENT + L"return obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L");\r\n"
-                        + INDENT + INDENT + L"}\r\n";
-                }
+        std::map<std::wstring, std::wstring> mapCases;
+        for (auto const &property : enumClassProperties)
+            if (property->GetIsMap() || property->GetIsOrderedMap()) {
+                std::wstring castType = property->GetType1() == L"std::wstring" ? L"wchar_t" : property->GetType1();
+                std::wstring mapGetKey = property->GetType1() == L"std::wstring" ? L"keyPtr" : L"*keyPtr";
+                mapCases.insert(std::make_pair(property->GetEnum(), 
+                    INDENT + INDENT + INDENT + L"const " + castType + L" *keyPtr = static_cast<const " + castType + L" *>(key);\r\n"
+                    + INDENT + INDENT + INDENT + L"assert(keyPtr != nullptr);\r\n"
+                    + INDENT + INDENT + INDENT + L"if (keyPtr == nullptr)\r\n"
+                    + INDENT + INDENT + INDENT + INDENT + L"THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
+                    + INDENT + INDENT + INDENT + L"return obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L");\r\n"));
             }
+                
+        result += L"\r\n"
+            "bool " + propertyName + L"Accessor::_IsContainKey(const int64_t &objectProperty, const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L") const\r\n"
+            "{\r\n"
+            + INDENT + L"TRY\r\n";
+        if (!mapCases.empty()) {
+            result += GetGeneralTypeMapContentHeader(propertyName);
+            for (auto const &pair : mapCases)
+                result += INDENT + INDENT + L"case " + propertyName + L"::" + pair.first + L": {\r\n"
+                    + pair.second
+                    + INDENT + INDENT + L"}\r\n";
             result += generalTypeContentFooter;
         } else
             result += INDENT + INDENT + L"THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n";
-
         result += INDENT + L"CATCH\r\n"
             + INDENT + L"return false;\r\n"
             "}\r\n";
