@@ -725,11 +725,13 @@ void VPGPropertyAccessorGenerationService::GenerateContainerCount(const std::wst
             + INDENT + L"TRY\r\n" 
             + GetGeneralContentHeader(propertyName);
         for (auto const &property : enumClassProperties) {
+            if (!property->GetIsCollection())
+                continue;
             result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L":\r\n"
                 + INDENT + INDENT + INDENT + L"return obj->Get" + property->GetPropertyName() + L"().size();\r\n";
         }
-        result += generalTypeContentFooter;
-        result += INDENT + L"CATCH\r\n"
+        result += generalTypeContentFooter
+            + INDENT + L"CATCH\r\n"
             + INDENT + L"return 0;\r\n"
             "}\r\n";
     CATCH
@@ -746,23 +748,23 @@ void VPGPropertyAccessorGenerationService::GenerateContainerMapKey(const std::ws
         GetIsHavingGenerateTypeMapType(enumClassProperties, isHavingGeneralType, isHavingVectorType, isHavingMapType);
 
         std::map<std::wstring, std::wstring> mapCases;
+        for (auto const &property : enumClassProperties)
+            if (property->GetIsMap() || property->GetIsOrderedMap())
+                mapCases.insert(std::make_pair(property->GetEnum(), L"obj->Get" + property->GetPropertyName() + L"VoidKeys()"));
+
         result += L"\r\n"
             "std::set<void *> " + propertyName + L"Accessor::_GetMapKeys(const int64_t &objectProperty) const\r\n"
             "{\r\n"
             + INDENT + L"std::set<void *> result;\r\n"
             + INDENT + L"TRY\r\n";
-        if (isHavingMapType) {
+        if (!mapCases.empty()) {
             result += GetGeneralContentHeader(propertyName);
-            for (auto const &property : enumClassProperties) {
-                if (IsStartWith(property->GetMacro(), L"MAP") || IsStartWith(property->GetMacro(), L"ORDERED_MAP")) {
-                    result += INDENT + INDENT + L"case " + propertyName + L"::" + property->GetEnum() + L":\r\n"
-                        + INDENT + INDENT + INDENT + L"return obj->Get" + property->GetPropertyName() + L"VoidKeys();\r\n";
-                }
-            }
+            for (auto const &pair : mapCases)
+                result += INDENT + INDENT + L"case " + propertyName + L"::" + pair.first + L":\r\n"
+                        + INDENT + INDENT + INDENT + L"return " + pair.second + L";\r\n";
             result += generalTypeContentFooter;
         } else
             result += INDENT + INDENT + L"THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n";
-
         result += INDENT + L"CATCH\r\n"
             + INDENT + L"return result;\r\n"
             "}\r\n";
