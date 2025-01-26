@@ -11,7 +11,7 @@ Please go to following session to see how to create VCC Project to generate c++ 
 - Tutorial for Create VCC DLL Project to generate dll with Java Interface
 
 ## What's new
-Generate Action
+Review Property Accessor
 
 ## What's next
 Git, Review function naming
@@ -1132,6 +1132,13 @@ X(Twitter) @VCCProject
 ****
 ## Release Log
 
+### [v0.3.0] - 2025-01-26: Review - Review Property Accessor
+- Class macro VECTOR, VECTOR_SPTR add Remove method
+- Remove memory_macro.hpp
+- Review Class Macro and Property Accessor.
+    - add AtIndex and AtKey for Vector, Map and Ordered Map. (Compiler cannot distinguish when Ordered Map having int key)
+    - Property Accessor Seperate Read, Write, Remove, Clone to Read, ReadAtIndex, ReadAtKey, Write, WriteAtIndex, WriteAtKey, RemoveAtIndex, RemoveAtKey, CloneAtIndex, CloneAtKey. (Compiler cannot distinguish pointer and integer)
+    
 ### [v0.2.6] - 2025-01-05: Form - Action
 - Support @@Thread
 - @@Log, @@Action, @@Thread use IsIndependent insead of IsInheritFromParent

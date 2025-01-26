@@ -2,8 +2,10 @@
 
 ## [Unreleased]
 - Review function naming
-- Class macro VECTOR, VECTOR_SPTR add Remove method
 - Git
+
+### [v0.3.0] - 2025-01-26: Review - Review Property Accessor
+- Class macro VECTOR, VECTOR_SPTR add Remove method
 - Remove memory_macro.hpp
 - Review Class Macro and Property Accessor.
     - add AtIndex and AtKey for Vector, Map and Ordered Map. (Compiler cannot distinguish when Ordered Map having int key)
