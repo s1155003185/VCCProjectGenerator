@@ -229,7 +229,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
             std::vector<std::shared_ptr<VPGEnumClass>> objectEnumClassList;
             enumClassReader.Parse(fileContent, enumClassList);
             for (auto const &enumClass : enumClassList) {
-                std::wstring className = GetClassFilenameFromEnumClassFilename(enumClass->GetName());
+                std::wstring className = GetClassNameFromPropertyClassName(enumClass->GetName());
                 if (projPrefix.empty() || IsPropertyClass(enumClass->GetName(), projPrefix)) {
                     objectTypes.insert(GetClassNameFromPropertyClassName(enumClass->GetName()).substr(projPrefix.size()));
                     objectEnumClassList.push_back(enumClass);
