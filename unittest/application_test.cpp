@@ -21,5 +21,5 @@ TEST(ApplicationTest, CreateForm)
     auto form = Application::CreateForm(ObjectType::MainForm);
     auto gitform = static_cast<BaseForm *>(form.get());
     IObject *object = static_cast<IObject *>((gitform));
-    EXPECT_TRUE(PropertyAccessorFactory::Create(object->GetSharedPtr())->ReadObject(LockType::ReadLock, static_cast<int64_t>(VPGMainFormProperty::CurrentWorkspaceForm)) == nullptr);
+    EXPECT_TRUE(PropertyAccessorFactory::Create(object->SharedPtr())->ReadObject(LockType::ReadLock, static_cast<int64_t>(VPGMainFormProperty::CurrentWorkspaceForm)) == nullptr);
 }

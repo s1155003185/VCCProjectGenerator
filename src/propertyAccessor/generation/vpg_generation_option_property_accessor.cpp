@@ -787,12 +787,23 @@ void VPGGenerationOptionPropertyAccessor::_Remove(const int64_t &objectProperty,
             obj->RemovePlugins(valuePtr);
             break;
         }
-        case VPGGenerationOptionProperty::Exports: {
-            auto valuePtr = static_cast<const IObject *>(value);
-            assert(valuePtr != nullptr);
-            obj->RemoveExports(valuePtr);
-            break;
+        default:
+            assert(false);
         }
+    CATCH
+}
+
+void VPGGenerationOptionPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const IObject *value) const
+{
+    TRY
+        assert(value != nullptr);
+        auto obj = std::static_pointer_cast<VPGGenerationOption>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
+        {
+        case VPGGenerationOptionProperty::Exports:
+            obj->RemoveExports(value);
+            break;
         default:
             assert(false);
         }
@@ -807,11 +818,11 @@ void VPGGenerationOptionPropertyAccessor::_RemoveAtIndex(const int64_t &objectPr
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
-        case VPGGenerationOptionProperty::Plugins:
-            obj->RemovePluginsAtIndex(index);
-            break;
         case VPGGenerationOptionProperty::Exports:
             obj->RemoveExportsAtIndex(index);
+            break;
+        case VPGGenerationOptionProperty::Plugins:
+            obj->RemovePluginsAtIndex(index);
             break;
         default:
             assert(false);

@@ -98,7 +98,7 @@ namespace vcc
         if (IsEmpty(sourceVector))
             return -1;
         for (size_t i = 0; i < sourceVector.size(); i++) {
-            if ((void *)(sourceVector.at(i).get()) == (void *)obj)
+            if (sourceVector.at(i)->ObjectId() == obj->ObjectId())
                 return i;
         }
         return -1;

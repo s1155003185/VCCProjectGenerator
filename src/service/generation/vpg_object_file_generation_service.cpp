@@ -1021,7 +1021,7 @@ std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *en
                 if (property->GetPropertyType() != VPGEnumClassPropertyType::Action || property->GetIsInherit())
                     continue;
                 
-                std::wstring assignmentStr = L"_LogConfig, GetSharedPtr()";
+                std::wstring assignmentStr = L"_LogConfig, SharedPtr()";
                 if (!property->GetClassAssignments().empty()) {
                     if (property->GetClassProperties().size() != property->GetClassAssignments().size())
                         THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Enum Class " + enumClass->GetName() + L" Properties and Assignments Attribute @@Class ");

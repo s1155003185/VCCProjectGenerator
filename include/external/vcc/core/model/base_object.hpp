@@ -8,8 +8,13 @@
 
 namespace vcc
 {
+    // Should not change this value outside base_object.hpp
+    static size_t __NextObjectId = 0;
+    
     class BaseObject : public IObject
     {
+        private:
+            mutable size_t _ObjectId = __NextObjectId++;
         protected:
             mutable ObjectType _ObjectType = ObjectType::NA;
             mutable std::shared_ptr<IObject> _ParentObject = nullptr;
@@ -19,6 +24,11 @@ namespace vcc
             virtual ~BaseObject() {}
 
         public:
+            virtual size_t ObjectId() const override
+            {
+                return _ObjectId;
+            }
+
             virtual const ObjectType& GetObjectType() const override
             { 
                 return _ObjectType;

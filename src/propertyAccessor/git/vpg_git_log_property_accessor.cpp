@@ -412,12 +412,6 @@ void VPGGitLogPropertyAccessor::_Remove(const int64_t &objectProperty, const voi
         assert(obj != nullptr);
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
-        case VPGGitLogProperty::ParentHashIDs: {
-            auto valuePtr = static_cast<const wchar_t *>(value);
-            assert(valuePtr != nullptr);
-            obj->RemoveParentHashIDs(valuePtr);
-            break;
-        }
         case VPGGitLogProperty::AbbreviatedParentHashIDs: {
             auto valuePtr = static_cast<const wchar_t *>(value);
             assert(valuePtr != nullptr);
@@ -428,6 +422,12 @@ void VPGGitLogPropertyAccessor::_Remove(const int64_t &objectProperty, const voi
             auto valuePtr = static_cast<const wchar_t *>(value);
             assert(valuePtr != nullptr);
             obj->RemoveBranches(valuePtr);
+            break;
+        }
+        case VPGGitLogProperty::ParentHashIDs: {
+            auto valuePtr = static_cast<const wchar_t *>(value);
+            assert(valuePtr != nullptr);
+            obj->RemoveParentHashIDs(valuePtr);
             break;
         }
         case VPGGitLogProperty::Tags: {
@@ -442,6 +442,13 @@ void VPGGitLogPropertyAccessor::_Remove(const int64_t &objectProperty, const voi
     CATCH
 }
 
+void VPGGitLogPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const IObject */*value*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
 void VPGGitLogPropertyAccessor::_RemoveAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
@@ -450,14 +457,14 @@ void VPGGitLogPropertyAccessor::_RemoveAtIndex(const int64_t &objectProperty, co
         assert(obj != nullptr);
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
-        case VPGGitLogProperty::ParentHashIDs:
-            obj->RemoveParentHashIDsAtIndex(index);
-            break;
         case VPGGitLogProperty::AbbreviatedParentHashIDs:
             obj->RemoveAbbreviatedParentHashIDsAtIndex(index);
             break;
         case VPGGitLogProperty::Branches:
             obj->RemoveBranchesAtIndex(index);
+            break;
+        case VPGGitLogProperty::ParentHashIDs:
+            obj->RemoveParentHashIDsAtIndex(index);
             break;
         case VPGGitLogProperty::Tags:
             obj->RemoveTagsAtIndex(index);

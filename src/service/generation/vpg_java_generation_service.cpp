@@ -297,7 +297,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                 result += INDENT + L"long GetCount(Pointer ref, long property);\r\n"
                     + INDENT + L"Pointer GetMapKeys(Pointer ref, long property);\r\n"
                     + INDENT + L"boolean IsContainKey(Pointer ref, long property, Pointer key);\r\n"
-                    + INDENT + L"void Remove(Pointer ref, long property, Pointer value);\r\n"
+                    + INDENT + L"void RemoveObject(Pointer ref, long property, Pointer value);\r\n"
                     + INDENT + L"void RemoveAtIndex(Pointer ref, long property, long index);\r\n"
                     + INDENT + L"void RemoveAtKey(Pointer ref, long property, Pointer key);\r\n"
                     + INDENT + L"void Clear(Pointer ref, long property);\r\n";
@@ -519,11 +519,11 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const
         }
 
         if (isVector && isAllowWrite) {
-            // if (property->GetIsObject())
-            //     result += L"\r\n"
-            //         + INDENT + L"public void remove" + property->GetPropertyName() + L"(" + javaType1 + L" value) {\r\n"
-            //         + INDENT + INDENT + dllInstantPrefix + L"Remove(Handle, " + classPropertyEnum + L", value.Handle);\r\n"
-            //         + INDENT + L"}\r\n";
+            if (property->GetIsObject() && property->GetIsVector() && !property->GetIsOrderedMap())
+                result += L"\r\n"
+                    + INDENT + L"public void remove" + property->GetPropertyName() + L"(" + javaType1 + L" value) {\r\n"
+                    + INDENT + INDENT + dllInstantPrefix + L"RemoveObject(Handle, " + classPropertyEnum + L", value.Handle);\r\n"
+                    + INDENT + L"}\r\n";
             result += L"\r\n"
                 + INDENT + L"public void remove" + property->GetPropertyName() + L"AtIndex(long index) {\r\n"
                 + INDENT + INDENT + dllInstantPrefix + L"RemoveAtIndex(Handle, " + classPropertyEnum + L", index);\r\n"
@@ -742,7 +742,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterWrite(const VPG
 }
 
 std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterInsert(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
-    const std::wstring &macro, const std::wstring &cppType1, const std::wstring &javaType1,
+    const std::wstring &cppType1, const std::wstring &javaType1,
     bool isVector, std::set<std::wstring> &importFiles)
 {
     std::wstring result = L"";
@@ -762,7 +762,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterInsert(const VP
         std::wstring returnResult = L"";
         VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(cppType1, convertedType, convertedName, returnResult);
 
-        std::wstring javaFunctionNameSuffix = L"At";
+        std::wstring javaFunctionNameSuffix = L"AtIndex";
         std::wstring dllFunctionIndex = L"index";
 
         result += L"\r\n"
@@ -880,7 +880,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetter(const std::wst
         }
 
         result += GenerateObjectGetterSetterInsert(property, projectPrefix, objectProperty,
-            macro, cppType1, javaType1,
+            cppType1, javaType1,
             isVector, importFiles);
 
         // container

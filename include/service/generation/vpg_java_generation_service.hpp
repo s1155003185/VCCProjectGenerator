@@ -46,7 +46,7 @@ class VPGJavaGenerationService
             bool isVector, bool isMap, bool isSet,
             const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles);
         static std::wstring GenerateObjectGetterSetterInsert(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
-            const std::wstring &macro, const std::wstring &cppType1, const std::wstring &javaType1,
+            const std::wstring &cppType1, const std::wstring &javaType1,
             bool isVector, std::set<std::wstring> &importFiles);
         
         static std::wstring GenerateObjectGetterSetter(const std::wstring &projectPrefix, const std::wstring &objectProperty, const VPGEnumClassProperty *property, const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles);

@@ -190,7 +190,14 @@ bool VPGMainFormPropertyAccessor::_IsContainKey(const int64_t &objectProperty, c
     return false;
 }
 
-void VPGMainFormPropertyAccessor::_Remove(const int64_t &objectProperty, const void *value) const
+void VPGMainFormPropertyAccessor::_Remove(const int64_t &objectProperty, const void */*value*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGMainFormPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const IObject *value) const
 {
     TRY
         assert(value != nullptr);
@@ -198,12 +205,9 @@ void VPGMainFormPropertyAccessor::_Remove(const int64_t &objectProperty, const v
         assert(obj != nullptr);
         switch(static_cast<VPGMainFormProperty>(objectProperty))
         {
-        case VPGMainFormProperty::WorkspaceForms: {
-            auto valuePtr = static_cast<const IObject *>(value);
-            assert(valuePtr != nullptr);
-            obj->RemoveWorkspaceForms(valuePtr);
+        case VPGMainFormProperty::WorkspaceForms:
+            obj->RemoveWorkspaceForms(value);
             break;
-        }
         default:
             assert(false);
         }

@@ -89,7 +89,7 @@ void VPGMainFormDeleteWorkspaceForm::OnRedo()
         auto propertyAccessor = PropertyAccessorFactory::Create(_ParentObject);
         auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
         auto obj = form->GetWorkspaceForms().at(0).get();
-        propertyAccessor->Remove(LockType::WriteLock, static_cast<int64_t>(VPGMainFormProperty::WorkspaceForms), obj);
+        propertyAccessor->RemoveObject(LockType::WriteLock, static_cast<int64_t>(VPGMainFormProperty::WorkspaceForms), obj);
         // </vcc:VPGMainFormDeleteWorkspaceFormOnRedo>
     CATCH
 }
@@ -142,7 +142,7 @@ void VPGMainForm::DoAction(const int64_t &formProperty)
 void VPGMainForm::DoAddWorkspaceForm()
 {
     TRY
-        auto action = std::make_shared<VPGMainFormAddWorkspaceForm>(_LogConfig, GetSharedPtr());
+        auto action = std::make_shared<VPGMainFormAddWorkspaceForm>(_LogConfig, SharedPtr());
         // <vcc:VPGMainFormDoAddWorkspaceForm sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormDoAddWorkspaceForm>
         ExecuteAction(action, true);
@@ -152,7 +152,7 @@ void VPGMainForm::DoAddWorkspaceForm()
 void VPGMainForm::DoDeleteWorkspaceForm()
 {
     TRY
-        auto action = std::make_shared<VPGMainFormDeleteWorkspaceForm>(_LogConfig, GetSharedPtr());
+        auto action = std::make_shared<VPGMainFormDeleteWorkspaceForm>(_LogConfig, SharedPtr());
         // <vcc:VPGMainFormDoDeleteWorkspaceForm sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormDoDeleteWorkspaceForm>
         ExecuteAction(action, true);

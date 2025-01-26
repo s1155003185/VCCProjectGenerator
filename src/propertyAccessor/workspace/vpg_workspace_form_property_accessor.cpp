@@ -235,7 +235,14 @@ bool VPGWorkspaceFormPropertyAccessor::_IsContainKey(const int64_t &objectProper
     return false;
 }
 
-void VPGWorkspaceFormPropertyAccessor::_Remove(const int64_t &objectProperty, const void *value) const
+void VPGWorkspaceFormPropertyAccessor::_Remove(const int64_t &objectProperty, const void */*value*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGWorkspaceFormPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const IObject *value) const
 {
     TRY
         assert(value != nullptr);
@@ -243,12 +250,9 @@ void VPGWorkspaceFormPropertyAccessor::_Remove(const int64_t &objectProperty, co
         assert(obj != nullptr);
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
-        case VPGWorkspaceFormProperty::GitForms: {
-            auto valuePtr = static_cast<const IObject *>(value);
-            assert(valuePtr != nullptr);
-            obj->RemoveGitForms(valuePtr);
+        case VPGWorkspaceFormProperty::GitForms:
+            obj->RemoveGitForms(value);
             break;
-        }
         default:
             assert(false);
         }
