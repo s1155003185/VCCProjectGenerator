@@ -47,8 +47,8 @@ TEST_F(VPGDllFileGenerationServiceTest, Normal)
     VPGDllFileGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), option.get());
     VPGDllFileGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetFilePathCpp(), option.get());
 
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring contentHpp = ReadFile(this->GetFilePathHpp());
     if (!IsContain(contentHpp, L"// <vcc:dllInterfaceHeader gen=\"REPLACE\">") || !IsContain(contentHpp, L"// </vcc:dllInterfaceHeader>")) {

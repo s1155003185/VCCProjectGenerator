@@ -158,7 +158,7 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
                 // Generate File
                 std::wstring filePathHpp = ConcatPaths({folderPathHpp, GetActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".hpp"});
                 LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file: " + filePathHpp);
-                if (IsFileExists(filePathHpp))
+                if (IsFilePresent(filePathHpp))
                     content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, ReadFile(filePathHpp), VPGFileContentSyncMode::Full, L"//");
                 LTrim(content);
                 WriteFile(filePathHpp, content, true);
@@ -353,7 +353,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 // Generate File
                 std::wstring filePathCpp = ConcatPaths({folderPathCpp, GetActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".cpp"});
                 LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file: " + filePathCpp);
-                if (IsFileExists(filePathCpp))
+                if (IsFilePresent(filePathCpp))
                     content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, ReadFile(filePathCpp), VPGFileContentSyncMode::Full, L"//");
                 LTrim(content);
                 WriteFile(filePathCpp, content, true);

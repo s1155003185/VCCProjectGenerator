@@ -8,6 +8,7 @@
 #include "exception_macro.hpp"
 #include "exception_type.hpp"
 #include "file_helper.hpp"
+#include "number_helper.hpp"
 #include "string_helper.hpp"
 #include "vector_helper.hpp"
 

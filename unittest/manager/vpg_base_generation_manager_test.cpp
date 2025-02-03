@@ -292,21 +292,21 @@ TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_SyncWorkspaceFolderIncludeOn
 TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_SyncWorkspaceFileWithExclude)
 {
     this->CreateSyncWorkspaceFileWithExcludeTestCase();
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileAdd"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileModify"})));
-    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileDelete"})));
-    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileAddFilterOut"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileModifyFilterOut"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileDeleteFilterOut"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileAdd"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileModify"})));
+    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileDelete"})));
+    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileAddFilterOut"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileModifyFilterOut"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileDeleteFilterOut"})));
 }
 
 TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_SyncWorkspaceFileIncludeOnly)
 {
     this->CreateSyncWorkspaceFileIncludeOnlyTestCase();
-    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileAdd"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileModify"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileDelete"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileAddIncludeOnly"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileModifyIncludeOnly"})));
-    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileDeleteIncludeOnly"})));
+    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileAdd"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileModify"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileDelete"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileAddIncludeOnly"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileModifyIncludeOnly"})));
+    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileDeleteIncludeOnly"})));
 }

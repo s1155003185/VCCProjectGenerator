@@ -362,7 +362,7 @@ void VPGJavaGenerationService::GenerateJavaBridge(const LogConfig *logConfig, co
 {
     TRY
         assert(option != nullptr);
-        if (!IsFileExists(dllInterfacehppFilePath))
+        if (!IsFilePresent(dllInterfacehppFilePath))
             return;
 
         auto javaOption = VPGJavaGenerationService::GetJavaOption(option);

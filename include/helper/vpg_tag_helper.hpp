@@ -61,9 +61,9 @@ inline std::wstring GetVccTagModeString(const VPGTagMode &tagMode)
 inline VPGTagMode GetVccTagModeType(const std::wstring &tagMode)
 {
     TRY
-        if (Equal(tagMode, L"RESERVE", true))
+        if (IsEqual(tagMode, L"RESERVE", true))
             return VPGTagMode::Reserve;
-        else if (Equal(tagMode, L"REPLACE", true))
+        else if (IsEqual(tagMode, L"REPLACE", true))
             return VPGTagMode::Replace;
         assert(false);
     CATCH

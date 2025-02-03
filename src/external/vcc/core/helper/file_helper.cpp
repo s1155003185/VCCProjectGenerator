@@ -25,7 +25,7 @@ namespace vcc
         return std::filesystem::current_path().wstring();
     }
 
-	std::wstring GetSystemFolderPath(SystemFolderType fileType)
+	std::wstring GetSystemFolderPath(const SystemFolderType &fileType)
     {
         #ifdef __WIN32
         return GetSystemFolderPathWindow(fileType);
@@ -90,7 +90,7 @@ namespace vcc
         return L"";
     }
 
-    void GetFileDifferenceBetweenWorkspaces(std::wstring sourceWorkspace, std::wstring targetWorkspace, 
+    void GetFileDifferenceBetweenWorkspaces(const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace, 
         std::vector<std::wstring> &needToAdd, std::vector<std::wstring> &needToModify, std::vector<std::wstring> &needToDelete)
     {
         TRY
@@ -127,19 +127,21 @@ namespace vcc
         CATCH
     }
 
-    std::wstring GetWindowPath(std::wstring path)
+    std::wstring GetWindowPath(const std::wstring &path)
     {
-        ReplaceAll(path, L"/", L"\\");
-        return path;
+        std::wstring result = path;
+        ReplaceAll(result, L"/", L"\\");
+        return result;
     }
 
-    std::wstring GetLinuxPath(std::wstring path)
+    std::wstring GetLinuxPath(const std::wstring &path)
     {
-        ReplaceAll(path, L"\\", L"/");
-        return path;
+        std::wstring result = path;
+        ReplaceAll(result, L"\\", L"/");
+        return result;
     }
 
-    std::wstring GetCurrentPlatformPath(std::wstring path)
+    std::wstring GetCurrentPlatformPath(const std::wstring &path)
     {
         #ifdef __WIN32
         GetWindowPath(path);
@@ -193,7 +195,7 @@ namespace vcc
         return std::filesystem::exists(path) && std::filesystem::is_regular_file(path);
     }
 
-	bool IsFileExists(const std::wstring &path)
+	bool IsFilePresent(const std::wstring &path)
     {
         return std::filesystem::exists(path) && std::filesystem::is_regular_file(path);
     }
@@ -245,13 +247,13 @@ namespace vcc
         return false;
     }
 
-    void CopyFile(const std::wstring &srcFilePath, const std::wstring &destFilePath, bool isForce)
+    void CopyFile(const std::wstring &srcFilePath, const std::wstring &destFilePath, const bool &isForce)
     {
         TRY
             ValidateFile(srcFilePath);
             if (isForce)
                 CreateDirectory(PATH(destFilePath).parent_path().wstring());
-            if (isForce && IsFileExists(destFilePath))
+            if (isForce && IsFilePresent(destFilePath))
                 std::filesystem::remove(destFilePath);
             std::filesystem::copy(PATH(srcFilePath), PATH(destFilePath));
         CATCH
@@ -262,7 +264,7 @@ namespace vcc
         if (filePath.empty())
             return;
         TRY
-            if (!IsFileExists(filePath))
+            if (!IsFilePresent(filePath))
                 return;
                 
             PATH currentPath(filePath);
@@ -310,7 +312,7 @@ namespace vcc
                     if (!IsDirectoryExists(destAbsolutePath))
                         CreateDirectory(destAbsolutePath);
                 } else {
-                    if (IsFileExists(destAbsolutePath)) {
+                    if (IsFilePresent(destAbsolutePath)) {
                         if (isForce)
                             std::filesystem::remove(destAbsolutePath);
                         else
@@ -389,7 +391,7 @@ namespace vcc
         return L"";
     }
 
-	void WriteFile(const std::wstring &filePath, const std::wstring &content, bool isForce)
+	void WriteFile(const std::wstring &filePath, const std::wstring &content, const bool &isForce)
     {
         TRY
             PATH _filePath(filePath);		
@@ -412,7 +414,7 @@ namespace vcc
         CATCH
     }
 
-    void AppendFileOneLine(const std::wstring &filePath, const std::wstring &line, bool isForce) 
+    void AppendFileOneLine(const std::wstring &filePath, const std::wstring &line, const bool &isForce) 
     {
         TRY
             // 1. Check directory exists

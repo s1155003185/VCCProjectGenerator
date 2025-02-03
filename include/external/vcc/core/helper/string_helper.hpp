@@ -5,7 +5,7 @@
 
 namespace vcc
 {
-    const auto NL = L"\r\n";
+    const std::wstring NL = L"\r\n";
 	
 	const std::wstring INDENT = L"    ";
 
@@ -43,16 +43,13 @@ namespace vcc
 	bool IsUpper(const std::wstring &str);
 	bool IsCapital(const std::wstring &str);
 
-	std::wstring ToString(double value, size_t decimalPlaces);
-
 	bool IsEmpty(const std::wstring &str);
 	bool IsBlank(const std::wstring &str);
 
-	bool IsStartWith(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
-	bool IsStartWith(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &pos = 0);
-	bool IsStartWithCaseInsensitive(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
-	bool IsStartWithCaseInsensitive(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &pos = 0);
-	bool IsStartWithTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &pos = 0);
+	bool IsEqual(const std::wstring &str1, const std::wstring &str2, const bool &isIgnoreCase = false);
+	bool IsStartWith(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos = 0, bool isIgnoreCase = false);
+	bool IsStartWith(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &startFromPos = 0, bool isIgnoreCase = false);
+	bool IsStartWithTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos = 0);
 	bool IsEndWith(const std::wstring &str, const std::wstring &suffix);
 
 	std::vector<std::wstring> SplitString(std::wstring str, const std::vector<std::wstring> &delimiters,
@@ -61,11 +58,11 @@ namespace vcc
 	std::vector<std::wstring> SplitStringByUpperCase(const std::wstring &str, bool splitDigit, bool splitSpecialChar);
 
 	// Padding
-	std::string PadLeft(const std::string str, size_t length, char c);
-	std::string PadRight(const std::string str, size_t length, char c);
+	std::string PadLeft(const std::string &str, const size_t &length, const char &c);
+	std::string PadRight(const std::string &str, const size_t &length, const char &c);
 
-	std::wstring PadLeft(const std::wstring str, size_t length, wchar_t c);
-	std::wstring PadRight(const std::wstring str, size_t length, wchar_t c);
+	std::wstring PadLeft(const std::wstring &str, const size_t &length, const wchar_t &c);
+	std::wstring PadRight(const std::wstring &str, const size_t &length, const wchar_t &c);
 
 	// Trim
 	void LTrim(std::string &str);
@@ -80,7 +77,6 @@ namespace vcc
 	std::wstring ConvertNamingStyle(const std::wstring &str, const NamingStyle &from, const NamingStyle &to, const std::wstring& seperator = L" ");
 
 	// search
-	bool Equal(const std::wstring &str1, const std::wstring &str2, const bool &isIgnoreCase = false);
 	size_t Find(const std::wstring &str, const wchar_t &c, const size_t &pos = 0, const bool &isIgnoreCase = false);
 	size_t Find(const std::wstring &str, const std::wstring &subStr, const size_t &pos = 0, const bool &isIgnoreCase = false);
 	void GetCharacterRowAndColumn(const std::wstring &str, size_t pos, size_t &row, size_t &column);

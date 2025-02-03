@@ -1,8 +1,10 @@
 # Change Log
 
 ## [Unreleased]
-- Review function naming
 - Git
+
+### [v0.3.1] - 2025-02-08: Review - Review Function Name
+- Review helper function naming
 - Seperate Remove and RemoveObject (function using void * as argument will remove object property and shift pointer. i.e. cannot find object from vector)
 - Add ObjectId to IObject for idenitity checking. (Cannot find object from vector as pointer is shifted 8 for some cases)
 

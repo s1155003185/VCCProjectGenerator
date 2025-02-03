@@ -146,7 +146,7 @@ void VPGVccGenerationManager::Update() const
 
         // Update Makefile and unittest
         LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Update Project according to vcc.json");
-        if (!IsFileExists(ConcatPaths({dest, MakeFileName})))
+        if (!IsFilePresent(ConcatPaths({dest, MakeFileName})))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Cannot find " + ConcatPaths({dest, MakeFileName}));
         
         // Makefile
@@ -167,7 +167,7 @@ void VPGVccGenerationManager::Generate() const
         
         // Update Makefile
         LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Update Project according to vcc.json");
-        if (!IsFileExists(ConcatPaths({_Workspace, MakeFileName})))
+        if (!IsFilePresent(ConcatPaths({_Workspace, MakeFileName})))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Cannot find " + ConcatPaths({_Workspace, MakeFileName}));
         std::wstring makefilePath = ConcatPaths({_Workspace, MakeFileName});
         std::wstring makefileContent = ReadFile(ConcatPaths({_Workspace, MakeFileName}));

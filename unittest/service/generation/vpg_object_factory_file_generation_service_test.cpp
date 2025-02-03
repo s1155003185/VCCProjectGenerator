@@ -64,8 +64,8 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Empty)
     VPGObjectFactoryFileGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp());
     VPGObjectFactoryFileGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VCC", {}, this->GetFilePathCpp(), propertyTypes);
 
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()), this->GetExpectedHpp());
 
@@ -107,8 +107,8 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Normal)
     VPGObjectFactoryFileGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp());
     VPGObjectFactoryFileGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VCC", { L"abc.hpp" }, this->GetFilePathCpp(), propertyTypes);
 
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()), this->GetExpectedHpp());
 

@@ -272,7 +272,7 @@ void VPGDllFileGenerationService::GenerateHpp(const LogConfig *logConfig, const 
 {
     TRY
         assert(option != nullptr);
-        if (!IsFileExists(filePathHpp))
+        if (!IsFilePresent(filePathHpp))
             return;
         
         LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file: " + filePathHpp);
@@ -303,7 +303,7 @@ void VPGDllFileGenerationService::GenerateCpp(const LogConfig *logConfig, const 
 {
     TRY
         assert(option != nullptr);
-        if (!IsFileExists(filePathCpp))
+        if (!IsFilePresent(filePathCpp))
             return;
 
         LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp file: " + filePathCpp);

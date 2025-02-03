@@ -31,8 +31,8 @@ TEST(VectorHelperTest, InsertAndRemoveIObject)
     InsertIObject(v, std::make_shared<VectorHelperTestObj>());
     InsertIObject(v, std::make_shared<VectorHelperTestObj>());
     EXPECT_EQ(v.size(), (size_t)2);
-    auto objectId = v[1]->ObjectId();
+    auto objectId = v[1]->GetObjectId();
     RemoveIObject(v, v[0].get());
     EXPECT_EQ(v.size(), (size_t)1);
-    EXPECT_EQ(v[0]->ObjectId(), objectId);
+    EXPECT_EQ(v[0]->GetObjectId(), objectId);
 }

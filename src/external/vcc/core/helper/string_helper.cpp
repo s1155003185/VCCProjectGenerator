@@ -5,7 +5,6 @@
 #include <math.h>
 #include <memory>
 #include <iostream>
-#include <iomanip>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -20,17 +19,23 @@ namespace vcc
 	{
 		if (str.empty())
 			return L"";
-		std::wstringstream wss;
-		wss << str.c_str();
-		return wss.str();
+		TRY
+			std::wstringstream wss;
+			wss << str.c_str();
+			return wss.str();
+		CATCH
+		return L"";
 	}
 
 	std::string wstr2str(const std::wstring &wstr)
 	{
 		if (wstr.empty())
 			return "";
-		std::string str(wstr.begin(), wstr.end());
-		return str;
+		TRY
+			std::string str(wstr.begin(), wstr.end());
+			return str;
+		CATCH
+		return "";
 	}
 	
 	void ToCamel(std::wstring &str)
@@ -72,7 +77,9 @@ namespace vcc
 	
 	void ToLower(std::wstring &str)
 	{
-		std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+		TRY
+			std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+		CATCH
 	}
 	
 	void ToPascal(std::wstring &str)
@@ -99,7 +106,9 @@ namespace vcc
 
 	void ToUpper(std::wstring &str)
 	{
-		std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+		TRY
+			std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+		CATCH
 	}
 
 	bool IsLower(const std::wstring &str)
@@ -140,16 +149,6 @@ namespace vcc
 		return false;
 	}
 
-	std::wstring ToString(double value, size_t decimalPlaces)
-	{
-		TRY
-			std::wstringstream ss;
-			ss << std::fixed << std::setprecision(decimalPlaces) << value;
-			return ss.str();
-		CATCH
-		return L"";
-	}
-
 	bool IsEmpty(const std::wstring &str)
 	{
 		return str.empty();
@@ -157,114 +156,102 @@ namespace vcc
 
 	bool IsBlank(const std::wstring &str)
 	{
-		for (const wchar_t &c : str) {
-			if (!std::iswspace(c))
-				return false;
-		}
+		TRY
+			for (const wchar_t &c : str) {
+				if (!std::iswspace(c))
+					return false;
+			}
+		CATCH
 		return true;
 	}
-	
-	bool IsStartWith(const std::wstring &str, const std::wstring &prefix, const size_t &pos)
+
+	bool IsEqual(const std::wstring &str1, const std::wstring &str2, const bool &isIgnoreCase)
 	{
 		TRY
-		 	if (str.length() - pos < prefix.size())
-		 		return false;
+			if (str1.size() != str2.size())
+				return false;
+			if (str1.empty())
+				return true;
 
-		 	size_t cnt = 0;
-		 	for (auto const &c : prefix) {
-				if (str[pos + cnt] != c)
-					return false;
-				cnt++;
+			std::wstring tmpStr1 = str1;
+			std::wstring tmpStr2 = str2;
+			if (isIgnoreCase) {
+				ToLower(tmpStr1);
+				ToLower(tmpStr2);
 			}
-			return true;
+			return tmpStr1 == tmpStr2;
 		CATCH
 		return false;
 	}
 	
-	bool IsStartWith(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &pos)
-	{
-		bool result = false;
-		for (auto const &prefix : prefixes) {
-			if (IsStartWith(str, prefix, pos)) {
-				result = true;
-				break;
-			}
-		}
-		return result;
-	}
-	
-	bool IsStartWithCaseInsensitive(const std::wstring &str, const std::wstring &prefix, const size_t &pos)
+	bool IsStartWith(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos, bool isIgnoreCase)
 	{
 		TRY
-		 	if (str.length() - pos < prefix.size())
+		 	if (str.length() - startFromPos < prefix.size())
 		 		return false;
-
-			std::wstring prefixLower = prefix;
-			std::wstring strLower = str;
-			ToLower(prefixLower);
-			ToLower(strLower);
-
-		 	size_t cnt = 0;
-		 	for (auto const &c : prefixLower) {
-				if (strLower[pos + cnt] != c)
-					return false;
-				cnt++;
-			}
-			return true;
+			return IsEqual(str.substr(startFromPos, prefix.length()), prefix, isIgnoreCase);
 		CATCH
 		return false;
 	}
 	
-	bool IsStartWithCaseInsensitive(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &pos)
+	bool IsStartWith(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &startFromPos, bool isIgnoreCase)
 	{
 		bool result = false;
-		for (auto const &prefix : prefixes) {
-			if (IsStartWithCaseInsensitive(str, prefix, pos)) {
-				result = true;
-				break;
-			}
-		}
-		return result;
-	}
-
-	bool IsStartWithTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &pos)
-	{
-		std::wstring trimPrefix = std::wstring(prefix);
-		Trim(trimPrefix);
-		if (trimPrefix != prefix)
-			THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Prefix contains space.");
-
-		if (prefix.empty())
-			return true;
-
-		bool result = true;
-		try
-		{
-			size_t prefixPos = 0;
-			size_t currentPos = pos;
-			while (currentPos < str.length()) {
-				if (!std::iswspace(str[currentPos])) {
-					if (str[currentPos] != prefix[prefixPos]) {
-						result = false;
-						break;
-					}
-					prefixPos++;
-				}
-				if (prefixPos >= prefix.length())
+		TRY
+			for (auto const &prefix : prefixes) {
+				if (IsStartWith(str, prefix, startFromPos, isIgnoreCase)) {
+					result = true;
 					break;
-				currentPos++;
+				}
 			}
-		}
-		catch(...)
-		{
-			result = false;
-		}
+		CATCH
 		return result;
+	}
+
+	bool IsStartWithTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos)
+	{
+		TRY
+			std::wstring trimPrefix = std::wstring(prefix);
+			Trim(trimPrefix);
+			if (trimPrefix != prefix)
+				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Prefix contains space.");
+
+			if (prefix.empty())
+				return true;
+
+			bool result = true;
+			try
+			{
+				size_t prefixPos = 0;
+				size_t currentPos = startFromPos;
+				while (currentPos < str.length()) {
+					if (!std::iswspace(str[currentPos])) {
+						if (str[currentPos] != prefix[prefixPos]) {
+							result = false;
+							break;
+						}
+						prefixPos++;
+					}
+					if (prefixPos >= prefix.length())
+						break;
+					currentPos++;
+				}
+			}
+			catch(...)
+			{
+				result = false;
+			}
+			return result;
+		CATCH
+		return false;
 	}
 
 	bool IsEndWith(const std::wstring &str, const std::wstring &suffix)
 	{
-		return str.ends_with(suffix);
+		TRY
+			return str.ends_with(suffix);
+		CATCH
+		return false;
 	}
 
 	std::vector<std::wstring> SplitString(std::wstring str, const std::vector<std::wstring> &delimiters,
@@ -274,8 +261,7 @@ namespace vcc
 		if (str.empty())
 			return results;
 
-		try
-		{
+		TRY
 			if (!(quoteOpenList.size() == quoteCloseList.size() && (quoteEscapeList.empty() || quoteCloseList.size() == quoteEscapeList.size())))
 				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Command Open, Close, Escape List having different size.");
 
@@ -338,11 +324,7 @@ namespace vcc
 			}
 			if (!currentStr.empty() || !results.empty())
 				results.push_back(currentStr);
-        }
-        catch(const std::exception& e)
-        {
-            THROW_EXCEPTION(e);
-        }
+        CATCH
 		return results;
 	}
 
@@ -352,106 +334,133 @@ namespace vcc
 		if (str.empty())
 			return results;
 		
-		std::wistringstream iss(str);
-		std::wstring line;
-		while (std::getline(iss, line)) {
-			results.push_back(line);
-		}
+		TRY
+			std::wistringstream iss(str);
+			std::wstring line;
+			while (std::getline(iss, line))
+				results.push_back(line);
+		CATCH
 		return results;
 	}
 
 	std::vector<std::wstring> SplitStringByUpperCase(const std::wstring &str, bool splitDigit, bool splitSpecialChar)
 	{
 		std::vector<std::wstring> results;
-		std::wstring currentToken;
-		for (wchar_t c : str) {
-			bool pushCurrentToken = std::iswupper(c)
-				|| std::iswspace(c)
-				|| (splitSpecialChar && !std::isalnum(c))
-				|| (splitDigit && std::iswdigit(c));
+		TRY
+			std::wstring currentToken;
+			for (auto const &c : str) {
+				bool pushCurrentToken = std::iswupper(c)
+					|| std::iswspace(c)
+					|| (splitSpecialChar && !std::isalnum(c))
+					|| (splitDigit && std::iswdigit(c));
 
-			bool addCharToCurrentToken = !std::iswspace(c) && (std::iswalnum(c) || !splitSpecialChar);
+				bool addCharToCurrentToken = !std::iswspace(c) && (std::iswalnum(c) || !splitSpecialChar);
 
-			if (pushCurrentToken) {
-				Trim(currentToken);
-				if (!currentToken.empty())
-					results.push_back(currentToken);
-				currentToken = L"";
+				if (pushCurrentToken) {
+					Trim(currentToken);
+					if (!currentToken.empty())
+						results.push_back(currentToken);
+					currentToken = L"";
+				}
+				if (addCharToCurrentToken)
+					currentToken += std::wstring(1, c);
 			}
-			if (addCharToCurrentToken)
-				currentToken += std::wstring(1, c);
-		}
-		if (!currentToken.empty())
-			results.push_back(currentToken);
+			if (!currentToken.empty())
+				results.push_back(currentToken);
+		CATCH
 		return results;
 	}
 
-	std::string PadLeft(const std::string str, size_t length, char c)
+	std::string PadLeft(const std::string &str, const size_t &length, const char &c)
 	{
 		if (length <= str.length())
 			return str;
-		return std::string(length - std::min(length, str.length()), c) + str;
+		TRY
+			return std::string(length - std::min(length, str.length()), c) + str;
+		CATCH
+		return "";
 	}
 
-	std::string PadRight(const std::string str, size_t length, char c)
+	std::string PadRight(const std::string &str, const size_t &length, const char &c)
 	{
 		if (length <= str.length())
 			return str;
-		return str + std::string(length - std::min(length, str.length()), c);
+		TRY
+			return str + std::string(length - std::min(length, str.length()), c);
+		CATCH
+		return "";
 	}
 
-	std::wstring PadLeft(const std::wstring str, size_t length, wchar_t c)
+	std::wstring PadLeft(const std::wstring &str, const size_t &length, const wchar_t &c)
 	{
 		if (length <= str.length())
 			return str;
-		return std::wstring(length - std::min(length, str.length()), c) + str;
+		TRY
+			return std::wstring(length - std::min(length, str.length()), c) + str;
+		CATCH
+		return L"";
 	}
 
-	std::wstring PadRight(const std::wstring str, size_t length, wchar_t c)
+	std::wstring PadRight(const std::wstring &str, const size_t &length, const wchar_t &c)
 	{
 		if (length <= str.length())
 			return str;
-		return str + std::wstring(length - std::min(length, str.length()), c);
+		TRY
+			return str + std::wstring(length - std::min(length, str.length()), c);
+		CATCH
+		return L"";
 	}
 
 	void LTrim(std::string &str)
 	{
-		str.erase(str.begin(), std::find_if(str.begin(), str.end(), [](char c) {
-			return !std::isspace(c);
-		}));
+		TRY
+			str.erase(str.begin(), std::find_if(str.begin(), str.end(), [](char c) {
+				return !std::isspace(c);
+			}));
+		CATCH
 	}
 
 	void RTrim(std::string &str)
 	{
-		str.erase(std::find_if(str.rbegin(), str.rend(), [](char c) {
-			return !std::isspace(c);
-		}).base(), str.end());
+		TRY
+			str	.erase(std::find_if(str.rbegin(), str.rend(), [](char c) {
+				return !std::isspace(c);
+			}).base(), str.end());
+		CATCH
 	}
 
 	void Trim(std::string &str)
 	{
-		LTrim(str);
-		RTrim(str);
+		TRY
+			LTrim(str);
+			RTrim(str);
+		CATCH
 	}
 
 	void LTrim(std::wstring &str)
 	{
-		str.erase(str.begin(), std::find_if(str.begin(), str.end(), [](wchar_t c) {
-			return !std::iswspace(c);
-		}));
+		TRY
+			str.erase(str.begin(), std::find_if(str.begin(), str.end(), [](wchar_t c) {
+				return !std::iswspace(c);
+			}));
+		CATCH
 	}
 
 	void RTrim(std::wstring &str)
 	{
-		str.erase(std::find_if(str.rbegin(), str.rend(), [](wchar_t c) {
-			return !std::iswspace(c);
-		}).base(), str.end());
+		TRY
+			str.erase(std::find_if(str.rbegin(), str.rend(), [](wchar_t c) {
+				return !std::iswspace(c);
+			}).base(), str.end());
+		CATCH
 	}
 
 	void Trim(std::wstring &str)
 	{
-		LTrim(str);
-		RTrim(str);
+		TRY
+			LTrim(str);
+			RTrim(str);
+		CATCH
 	}
 
 	std::wstring ConvertNamingStyle(const std::wstring &str, const NamingStyle &from, const NamingStyle &to, const std::wstring& seperator)
@@ -541,26 +550,6 @@ namespace vcc
 		return result;
 	}
 
-	bool Equal(const std::wstring &str1, const std::wstring &str2, const bool &isIgnoreCase)
-	{
-		TRY
-			if (str1.size() != str2.size())
-				return false;
-			if (str1.empty())
-				return true;
-
-			for (size_t i = 0; i < str1.size(); i++) {
-				if (isIgnoreCase) {
-					if (std::towupper(str1[i]) != std::towupper(str2[i]))
-						return false;
-				} else if (str1[i] != str2[i])
-					return false;
-			}
-			return true;
-		CATCH
-		return false;
-	}
-
 	size_t Find(const std::wstring &str, const wchar_t &c, const size_t &pos, const bool &isIgnoreCase)
 	{
 		if (str.empty())
@@ -599,11 +588,6 @@ namespace vcc
 				// cannot check at beginning as there is ignoreCase
 				if (str.length() == subStr.length() && str != subStr)
 					return std::wstring::npos;
-				
-				// for (size_t i = pos; i < str.length(); i++) {
-				// 	if (IsStartWith(str, subStr, i))
-				// 		return i;
-				// }
 				return str.find(subStr, pos);
 			}
 		CATCH
@@ -630,28 +614,35 @@ namespace vcc
 
 	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos)
 	{
-		if (!fromCurrentPos)
-			pos++;
-		while (pos < str.length()) {
-			if (!std::iswspace(str[pos])) {
-				return;
+		TRY
+			if (!fromCurrentPos)
+				pos++;
+			while (pos < str.length()) {
+				if (!std::iswspace(str[pos]))
+					return;
+				pos++;
 			}
-			pos++;
-		}
+		CATCH
 	}
 
 	std::wstring GetTailingSubstring(const std::wstring &str, const size_t &length)
 	{
 		if (str.length() <= length)
 			return str;
-		return str.substr(str.length() - length, length);
+		TRY
+			return str.substr(str.length() - length, length);
+		CATCH
+		return str;
 	}
 
 	std::wstring GetNextStringSplitBySpace(const std::wstring &str, size_t &pos,
 		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
 	{
-		// \r\n must before \n and \r
-		return GetNextString(str, pos, {L" ", L"\r\n", L"\n", L"\r", L"\t"}, quoteOpenList, quoteCloseList, quoteEscapeList);
+		TRY
+			// \r\n must before \n and \r
+			return GetNextString(str, pos, {L" ", L"\r\n", L"\n", L"\r", L"\t"}, quoteOpenList, quoteCloseList, quoteEscapeList);
+		CATCH
+		return str;
 	}
 	
 	std::wstring GetNextString(const std::wstring &str, size_t &pos, const std::vector<std::wstring> &delimiters,
@@ -666,10 +657,9 @@ namespace vcc
 			pos = str.length() - 1;
 			return result;
 		}
-		GetNextCharPos(str, pos, true);
 		std::wstring result = L"";
-		try
-		{
+		TRY
+			GetNextCharPos(str, pos, true);
 			if (!(quoteOpenList.size() == quoteCloseList.size() && (quoteEscapeList.empty() || quoteCloseList.size() == quoteEscapeList.size())))
 				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Quote Open, Close, Escape List having different size.");
 
@@ -718,11 +708,7 @@ namespace vcc
 				result = str.substr(startPos, pos - startPos);
 				pos--;
 			}
-        }
-        catch(const std::exception& e)
-        {
-            THROW_EXCEPTION(e);
-        }
+        CATCH
 		return result;
 	}
 	
@@ -733,10 +719,9 @@ namespace vcc
 			return str;
 		if (pos >= str.length())
 			return L"";
-		GetNextCharPos(str, pos, true);
 		std::wstring result = L"";
-		try
-		{
+		TRY
+			GetNextCharPos(str, pos, true);
 			if (!(quoteOpenList.size() == quoteCloseList.size() && (quoteEscapeList.empty() || quoteCloseList.size() == quoteEscapeList.size())))
 				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Quote Open, Close, Escape List having different size.");
 
@@ -796,17 +781,16 @@ namespace vcc
 				result = str.substr(startPos, pos - startPos);
 				pos--;
 			}
-        }
-        catch(const std::exception& e)
-        {
-            THROW_EXCEPTION(e);
-        }
+        CATCH
 		return result;
 	}
 	
 	bool IsContain(const std::wstring &str, const std::wstring &subStr, const size_t &pos, const bool &isIgnoreCase)
 	{
-		return Find(str, subStr, pos, isIgnoreCase) != std::wstring::npos;
+		TRY
+			return Find(str, subStr, pos, isIgnoreCase) != std::wstring::npos;
+		CATCH
+		return false;
 	}
 
 	size_t CountSubstring(const std::wstring &str, const std::wstring &subStr, const bool &isIgnoreCase)
@@ -814,14 +798,16 @@ namespace vcc
 		size_t count = 0;
 		size_t pos = 0;
 
-		while (pos < str.length())
-		{
-			pos = Find(str, subStr, pos, isIgnoreCase);
-			if (pos == std::wstring::npos)
-				break;
-			count++;
-			pos += subStr.length();
-		}
+		TRY
+			while (pos < str.length())
+			{
+				pos = Find(str, subStr, pos, isIgnoreCase);
+				if (pos == std::wstring::npos)
+					break;
+				count++;
+				pos += subStr.length();
+			}
+		CATCH
 		return count;
 	}
 
@@ -844,12 +830,14 @@ namespace vcc
 
 	void ReplaceAll(std::wstring &str, const std::wstring& from, const std::wstring &to)
     {
-        size_t startPos = 0;
-        size_t foundPos;
-        while ((foundPos = Find(str, from, startPos)) != std::wstring::npos) {
-            str.replace(foundPos, from.length(), to);
-            startPos = foundPos + to.length();
-        }
+		TRY
+			size_t startPos = 0;
+			size_t foundPos;
+			while ((foundPos = Find(str, from, startPos)) != std::wstring::npos) {
+				str.replace(foundPos, from.length(), to);
+				startPos = foundPos + to.length();
+			}
+		CATCH
     }
 	
 	void ReplaceRegexAll(std::wstring &str, const std::wstring &regex, const std::wstring &replacement)
@@ -861,46 +849,49 @@ namespace vcc
 
     std::vector<wchar_t> GetSpecialCharacters(const EscapeStringType &type)
     {
-        switch (type)
-        {
-			case EscapeStringType::DoubleQuote:
-				return { L'\\', L'"' }; 
-            case EscapeStringType::Regex:
-                return { L'\\', L'^', L'$', L'.', L'|', L'?', L'*', L'+', L'(', L')', L'[', L']', L'{', L'}' };
-			case EscapeStringType::SingleQuote:
-				return { L'\\', L'\'' }; 
-			case EscapeStringType::XML:
-				return { L'<', L'>', L'"', L'`', L'&' };
-            default:
-                assert(false);
-        }
+		TRY
+			switch (type)
+			{
+				case EscapeStringType::DoubleQuote:
+					return { L'\\', L'"' }; 
+				case EscapeStringType::Regex:
+					return { L'\\', L'^', L'$', L'.', L'|', L'?', L'*', L'+', L'(', L')', L'[', L']', L'{', L'}' };
+				case EscapeStringType::SingleQuote:
+					return { L'\\', L'\'' }; 
+				case EscapeStringType::XML:
+					return { L'<', L'>', L'"', L'`', L'&' };
+				default:
+					assert(false);
+			}
+		CATCH
         return {};
     }
 
 	std::map<wchar_t, std::wstring> GetEscapeStringMap(const EscapeStringType &type)
 	{
 		std::map<wchar_t, std::wstring> result;
-		switch (type)
-        {
-            case EscapeStringType::XML:
-				return {
-					{L'<', L"&lt;"},
-					{L'>', L"&gt;"},
-					{L'"', L"&quot;"},
-					{L'`', L"&apos;"},
-					{L'&', L"&amp;"}
-				};
-                break;
-            default:
-                assert(false);
-        }
+		TRY
+			switch (type)
+			{
+				case EscapeStringType::XML:
+					return {
+						{L'<', L"&lt;"},
+						{L'>', L"&gt;"},
+						{L'"', L"&quot;"},
+						{L'`', L"&apos;"},
+						{L'&', L"&amp;"}
+					};
+					break;
+				default:
+					assert(false);
+			}
+		CATCH
 		return {};
 	}
 
 	std::wstring ConvertSpecialCharacterToEscapeString(const EscapeStringType &type, const wchar_t &c)
 	{
-        try 
-        {
+        TRY
 			std::vector<wchar_t> specialChars = GetSpecialCharacters(type);
 			if (!std::count(specialChars.begin(), specialChars.end(), c))
 				return std::wstring(1, c);
@@ -916,34 +907,24 @@ namespace vcc
 				default:
 					assert(false);
 			}
-        }
-        catch(const std::exception& e)
-        {
-            THROW_EXCEPTION(e);
-        }
+        CATCH
 		return std::wstring(1, c);
 	}
 
 	std::wstring GetEscapeString(const EscapeStringType &type, const std::wstring &str)
     {
         std::wstring result = L"";
-        try 
-        {
+        TRY
 			for (auto c : str)
 				result += ConvertSpecialCharacterToEscapeString(type, c);
-        }
-        catch(const std::exception& e)
-        {
-            THROW_EXCEPTION(e);
-        }
+        CATCH
         return result;
     }
 
 	std::wstring GetEscapeStringWithQuote(const EscapeStringType &type, const std::wstring &str)
 	{
         std::wstring result = L"";
-        try 
-        {
+        TRY
 			std::wstring openQuote = L"";
 			std::wstring closeQuote = L"";
 			switch (type)
@@ -959,11 +940,7 @@ namespace vcc
 				break;
 			}
 			result = openQuote + GetEscapeString(type, str) + closeQuote;
-        }
-        catch(const std::exception& e)
-        {
-            THROW_EXCEPTION(e);
-        }
+        CATCH
         return result;
 	}
 
@@ -1015,27 +992,30 @@ namespace vcc
 	}
 	
 	std::wstring GetUnescapeStringWithQuote(const EscapeStringType &type, const std::wstring &str)
-	{		
-		switch (type)
-		{
-		case EscapeStringType::DoubleQuote: {
-			bool isNeedRemoveHeadAndTail = str.starts_with(L"\"") && str.ends_with(L"\"") && str.length() >= 2;
-			assert(isNeedRemoveHeadAndTail);
-			if (!isNeedRemoveHeadAndTail)
-				THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"String does not start with \"");
-			break;
-		}
-		case EscapeStringType::SingleQuote: {
-			bool isNeedRemoveHeadAndTail = str.starts_with(L"\'") && str.ends_with(L"\'") && str.length() >= 2;
-			assert(isNeedRemoveHeadAndTail);
-			if (!isNeedRemoveHeadAndTail)
-				THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"String does not start with \'");
-			break;
-		}
-		default:
-			assert(false);
-			break;
-		}
-		return GetUnescapeString(type, str.substr(1, str.length() - 2));
+	{
+		TRY
+			switch (type)
+			{
+			case EscapeStringType::DoubleQuote: {
+				bool isNeedRemoveHeadAndTail = str.starts_with(L"\"") && str.ends_with(L"\"") && str.length() >= 2;
+				assert(isNeedRemoveHeadAndTail);
+				if (!isNeedRemoveHeadAndTail)
+					THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"String does not start with \"");
+				break;
+			}
+			case EscapeStringType::SingleQuote: {
+				bool isNeedRemoveHeadAndTail = str.starts_with(L"\'") && str.ends_with(L"\'") && str.length() >= 2;
+				assert(isNeedRemoveHeadAndTail);
+				if (!isNeedRemoveHeadAndTail)
+					THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"String does not start with \'");
+				break;
+			}
+			default:
+				assert(false);
+				break;
+			}
+			return GetUnescapeString(type, str.substr(1, str.length() - 2));
+		CATCH
+		return str;
 	}
 }

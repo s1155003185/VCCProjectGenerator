@@ -19,7 +19,7 @@ void VPGObjectTypeFileGenerationService::Generate(const LogConfig *logConfig, co
         LogService::LogInfo(logConfig, LOG_ID, L"Generate object type file: " + filePathHpp);
 
         std::wstring customContent = L"";
-        if (IsFileExists(filePathHpp)) {
+        if (IsFilePresent(filePathHpp)) {
             std::wstring orginalContent = ReadFile(filePathHpp);
             auto reader = std::make_unique<VPGCodeReader>(L"//");
             auto element = std::make_shared<Xml>();

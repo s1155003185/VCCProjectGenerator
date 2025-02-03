@@ -107,19 +107,19 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetIsExcludeUnittest(false);
     this->_Option->SetIsExcludeVCCUnitTest(false);
     this->GetManager()->Add();
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
 
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
     
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
@@ -140,19 +140,19 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetIsExcludeUnittest(false);
     this->_Option->SetIsExcludeVCCUnitTest(false);
     this->GetManager()->Add();
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
-    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
-    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
-    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
 
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
     
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
@@ -173,19 +173,19 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetIsExcludeUnittest(false);
     this->_Option->SetIsExcludeVCCUnitTest(false);
     this->GetManager()->Add();
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
-    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
 
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
     
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
@@ -206,19 +206,19 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetIsExcludeUnittest(true);
     this->_Option->SetIsExcludeVCCUnitTest(false);
     this->GetManager()->Add();
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
     
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
@@ -239,19 +239,19 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->SetIsExcludeUnittest(false);
     this->_Option->SetIsExcludeVCCUnitTest(true);
     this->GetManager()->Add();
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
     
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
@@ -273,19 +273,19 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->InsertPlugins(L"vcc/versioning/git");
     this->_Option->SetIsExcludeVCCUnitTest(false);
     this->GetManager()->Add();
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
     
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
@@ -309,19 +309,19 @@ TEST_F(VPGVccGenerationManagerTest, Update)
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetIsExcludeUnittest(false);
     this->GetManager()->Add();
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
     
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
@@ -333,19 +333,19 @@ TEST_F(VPGVccGenerationManagerTest, Update)
     WriteFile(ConcatPaths({this->GetWorkspaceTarget(), L".vcc/vcc.json"}), jsonBuilder->Serialize(this->_Option->ToJson().get()));
 
     this->GetManager()->Update();
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
     
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
@@ -368,19 +368,19 @@ TEST_F(VPGVccGenerationManagerTest, Update_Makefile)
     this->_Option->SetProjectName(L"ProjectName");
     this->_Option->SetIsExcludeUnittest(false);
     this->GetManager()->Add();
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"main.cpp"})));
     
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/application.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/type/exception_type.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/object_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/factory/property_accessor_factory.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/application.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/object_factory.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/factory/property_accessor_factory.cpp"})));
     
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"unittest"})));
     EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/core"})));
@@ -573,60 +573,60 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     this->GetManager()->Generate();
     
     // Empty Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_empty.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_empty_property_accessor.hpp"})));
-    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_empty_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_empty.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_empty_property_accessor.hpp"})));
+    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_empty_property_accessor.cpp"})));
 
     // Dependent Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA/Dependent", L"vcc_object_dependent.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA/Dependent", L"vcc_object_dependent_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA/Dependent", L"vcc_object_dependent_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA/Dependent", L"vcc_object_dependent.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA/Dependent", L"vcc_object_dependent_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA/Dependent", L"vcc_object_dependent_property_accessor.cpp"})));
 
     // Single Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_single.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_single_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_single_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_single.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_single_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_single_property_accessor.cpp"})));
 
     // NoAccess Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_no_access.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_no_access_property_accessor.hpp"})));
-    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_no_access_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_no_access.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_no_access_property_accessor.hpp"})));
+    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_no_access_property_accessor.cpp"})));
 
     // Access Normal Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_access_mode_normal.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_access_mode_normal_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_access_mode_normal_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_access_mode_normal.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_access_mode_normal_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_access_mode_normal_property_accessor.cpp"})));
 
     // Access Vector Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_access_mode_vector.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_access_mode_vector_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_access_mode_vector_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_access_mode_vector.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_access_mode_vector_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_access_mode_vector_property_accessor.cpp"})));
 
     // Multi Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_multi.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_multi_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_multi_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_multi.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_multi_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_multi_property_accessor.cpp"})));
 
     // Object Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_object.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_object_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_object_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_object.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_object_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_object_property_accessor.cpp"})));
 
     // Container Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_container.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_container_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_container_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_container.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_container_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_container_property_accessor.cpp"})));
 
     // Mix Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_mix.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_mix_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_mix_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_mix.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_mix_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_mix_property_accessor.cpp"})));
 
     // Mix Class
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_json.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/model/ClassA", L"vcc_object_json.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_mix_property_accessor.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_mix_property_accessor.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/model/ClassA", L"vcc_object_json.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/model/ClassA", L"vcc_object_json.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"include/propertyAccessor/ClassA", L"vcc_object_mix_property_accessor.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"src/propertyAccessor/ClassA", L"vcc_object_mix_property_accessor.cpp"})));
 
     std::wstring unittest = L""
     "#include <gtest/gtest.h>\r\n"

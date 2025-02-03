@@ -24,7 +24,7 @@ namespace vcc
             virtual ~BaseObject() {}
 
         public:
-            virtual size_t ObjectId() const override
+            virtual size_t GetObjectId() const override
             {
                 return _ObjectId;
             }

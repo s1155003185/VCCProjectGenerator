@@ -11,10 +11,10 @@ Please go to following session to see how to create VCC Project to generate c++ 
 - Tutorial for Create VCC DLL Project to generate dll with Java Interface
 
 ## What's new
-Review Property Accessor
+Review Helper Function Name
 
 ## What's next
-Git, Review function naming
+Git Manager
 
 ## Features
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
@@ -1131,6 +1131,11 @@ X(Twitter) @VCCProject
 
 ****
 ## Release Log
+
+### [v0.3.1] - 2025-02-08: Review - Review Function Name
+- Review helper function naming
+- Seperate Remove and RemoveObject (function using void * as argument will remove object property and shift pointer. i.e. cannot find object from vector)
+- Add ObjectId to IObject for idenitity checking. (Cannot find object from vector as pointer is shifted 8 for some cases)
 
 ### [v0.3.0] - 2025-01-26: Review - Review Property Accessor
 - Class macro VECTOR, VECTOR_SPTR add Remove method

@@ -642,7 +642,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
         // ------------------------------------------------------------------------------------------ //
         //                               Handle VCC Tag                                               //
         // ------------------------------------------------------------------------------------------ //
-        if (IsFileExists(filePathHpp))
+        if (IsFilePresent(filePathHpp))
             content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, ReadFile(filePathHpp), VPGFileContentSyncMode::Full, L"//");
         
         LTrim(content);
@@ -1029,9 +1029,9 @@ std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *en
                     for (size_t i = 0; i < property->GetClassAssignments().size(); i++) {
                         std::wstring assignment = property->GetClassAssignmentsAtIndex(i);
                         if (IsStartWith(property->GetClassPropertiesAtIndex(i)->GetMacro(), L"GETSET")) {
-                            if (Equal(property->GetClassPropertiesAtIndex(i)->GetType1(), L"std::wstring"))
+                            if (IsEqual(property->GetClassPropertiesAtIndex(i)->GetType1(), L"std::wstring"))
                                 assignment = L"L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, assignment);
-                            else if (Equal(property->GetClassPropertiesAtIndex(i)->GetType1(), L"std::string"))
+                            else if (IsEqual(property->GetClassPropertiesAtIndex(i)->GetType1(), L"std::string"))
                                 assignment = GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, assignment);
                         }
                         assignmentStr += L", " + assignment;
@@ -1168,7 +1168,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
         // ------------------------------------------------------------------------------------------ //
         //                               Handle VCC Tag                                               //
         // ------------------------------------------------------------------------------------------ //
-        if (IsFileExists(filePathCpp))
+        if (IsFilePresent(filePathCpp))
             content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, ReadFile(filePathCpp), VPGFileContentSyncMode::Full, L"//");
         
         LTrim(content);

@@ -98,7 +98,7 @@ namespace vcc
         if (IsEmpty(sourceVector))
             return -1;
         for (size_t i = 0; i < sourceVector.size(); i++) {
-            if (sourceVector.at(i)->ObjectId() == obj->ObjectId())
+            if (sourceVector.at(i)->GetObjectId() == obj->GetObjectId())
                 return i;
         }
         return -1;
@@ -156,9 +156,7 @@ namespace vcc
     template <typename T>
     void InsertIObjects(std::vector<std::shared_ptr<T>> &sourceVector, const std::vector<std::shared_ptr<T>> &objs, const int64_t &index)
     {
-        size_t cnt = 0;
-        for (auto &element : objs)
-            InsertIObject(sourceVector, element, index >= 0 ? cnt++ : -1);
+        Insert(sourceVector, objs, index);
     }
 
     template <typename T>
@@ -210,7 +208,7 @@ namespace vcc
     {
         sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(),
             [&](const T &element) {
-                return (void *)(element.get()) == (void *)obj;
+                return element->GetObjectId() == obj->GetObjectId();
             }), sourceVector.end());
     }
 };

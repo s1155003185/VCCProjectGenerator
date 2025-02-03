@@ -234,12 +234,12 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
     EXPECT_EQ(hppClass, emptyVector);
     EXPECT_EQ(cppClass, emptyVector);
 
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_object.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_object.cpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_list_object.hpp"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_list_object.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_object.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_object.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_list_object.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_list_object.cpp"})));
 
     std::wstring hppHeader = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         L"#pragma once\r\n"

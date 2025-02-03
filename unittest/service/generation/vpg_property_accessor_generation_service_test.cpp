@@ -71,8 +71,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -342,8 +342,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -381,8 +381,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -507,8 +507,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -782,8 +782,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -980,8 +980,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -1141,8 +1141,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -2006,8 +2006,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -2570,8 +2570,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, ManagerAndAction)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"

@@ -105,9 +105,9 @@ TEST_F(FileHelperTest, CopyDirectoryWithoutFilter)
     CopyDirectoryOption option;
     option.SetIsRecursive(true);
     CopyDirectory(this->GetWorkspaceSource(), this->GetWorkspaceTarget(), &option);
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileA.txt"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileC.txt"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FolderA", L"FileA.txt"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileA.txt"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileC.txt"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FolderA", L"FileA.txt"})));
 }
 
 TEST_F(FileHelperTest, CopyDirectoryWithIncludeFilter)
@@ -119,9 +119,9 @@ TEST_F(FileHelperTest, CopyDirectoryWithIncludeFilter)
     option.SetIsRecursive(true);
     option.InsertIncludeFileFilters(L"*FileA*");
     CopyDirectory(this->GetWorkspaceSource(), this->GetWorkspaceTarget(), &option);
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileA.txt"})));
-    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileC.txt"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FolderA", L"FileA.txt"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileA.txt"})));
+    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileC.txt"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FolderA", L"FileA.txt"})));
 }
 
 TEST_F(FileHelperTest, CopyDirectoryWithExcludeFilter)
@@ -133,7 +133,7 @@ TEST_F(FileHelperTest, CopyDirectoryWithExcludeFilter)
     option.SetIsRecursive(true);
     option.InsertExcludeFileFilters(L"*FileA*");
     CopyDirectory(this->GetWorkspaceSource(), this->GetWorkspaceTarget(), &option);
-    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileA.txt"})));
-    EXPECT_TRUE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FileC.txt"})));
-    EXPECT_FALSE(IsFileExists(ConcatPaths({this->GetWorkspaceTarget(), L"FolderA", L"FileA.txt"})));
+    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileA.txt"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileC.txt"})));
+    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FolderA", L"FileA.txt"})));
 }

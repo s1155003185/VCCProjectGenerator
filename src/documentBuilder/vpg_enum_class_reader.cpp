@@ -269,18 +269,18 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
         std::vector<std::wstring> attributes = GetAttribute(remainStr);
         for (auto const &attribute : attributes) {
             // Privilege
-            if (Equal(attribute, attributeToken + L"ReadOnly", true))
+            if (IsEqual(attribute, attributeToken + L"ReadOnly", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::ReadOnly;
-            else if (Equal(attribute, attributeToken + L"WriteOnly", true))
+            else if (IsEqual(attribute, attributeToken + L"WriteOnly", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::WriteOnly;
-            else if (Equal(attribute, attributeToken + L"ReadWrite", true))
+            else if (IsEqual(attribute, attributeToken + L"ReadWrite", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::ReadWrite;
-            else if (Equal(attribute, attributeToken + L"NoAccess", true))
+            else if (IsEqual(attribute, attributeToken + L"NoAccess", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::NoAccess;
-            else if (Equal(attribute, attributeToken + L"Inherit", true))
+            else if (IsEqual(attribute, attributeToken + L"Inherit", true))
                 property->SetIsInherit(true);
             // Action
-            else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Class")) {
+            else if (IsStartWith(attribute, attributeToken + L"Class", 0, true)) {
                 auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Class");
                 assert(jsonAttributes != nullptr);
                 if (jsonAttributes->IsContainKey(L"Properties")) {
@@ -300,10 +300,10 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
                     }
                 }
             }
-            else if (Equal(attribute, attributeToken + L"NoHistory", true))
+            else if (IsEqual(attribute, attributeToken + L"NoHistory", true))
                 property->SetIsNoHistory(true);
             // Command
-            else if (Equal(attribute, attributeToken + L"Command", true)) {
+            else if (IsEqual(attribute, attributeToken + L"Command", true)) {
                 std::wstring commandToken = attributeToken + L"Command";
                 commandToken = attribute.substr(commandToken.length());
                 Trim(commandToken);
@@ -433,10 +433,10 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
             std::vector<std::wstring> attributes = GetAttribute(enumClass->_Command);
             std::wstring command = L"";
             for (auto const &attribute : attributes) {
-                if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Form")) {
+                if (IsStartWith(attribute, attributeToken + L"Form", 0, true)) {
                     enumClass->_Type = VPGEnumClassType::Form;
                     command = L"";
-                } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Inherit")) {
+                } else if (IsStartWith(attribute, attributeToken + L"Inherit", 0, true)) {
                     auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Inherit");
                     assert(jsonAttributes != nullptr);
                     std::wstring className = jsonAttributes->GetString(L"Class");
@@ -445,22 +445,22 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
                     enumClass->_InheritClass = className;
                 
                     command = L"";
-                } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Log")) {
+                } else if (IsStartWith(attribute, attributeToken + L"Log", 0, true)) {
                     auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Log");
                     if (jsonAttributes != nullptr)
                         enumClass->_IsLogConfigIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
-                } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Action")) {
+                } else if (IsStartWith(attribute, attributeToken + L"Action", 0, true)) {
                     auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Action");
                     if (jsonAttributes != nullptr)
                         enumClass->_IsActionManagerIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
-                } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Thread")) {
+                } else if (IsStartWith(attribute, attributeToken + L"Thread", 0, true)) {
                     auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Thread");
                     if (jsonAttributes != nullptr)
                         enumClass->_IsThreadManagerIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
-                } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Json")) {
+                } else if (IsStartWith(attribute, attributeToken + L"Json", 0, true)) {
                     enumClass->_IsJson = true;
                     auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Json");
                     if (jsonAttributes != nullptr) {
@@ -468,7 +468,7 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
                             enumClass->InsertJsonAttributesAtKey(key, jsonAttributes->GetString(key));
                     }
                     command = L"";
-                } else if (IsStartWithCaseInsensitive(attribute, attributeToken + L"Command")) {
+                } else if (IsStartWith(attribute, attributeToken + L"Command", 0, true)) {
                     std::wstring commandToken = attributeToken + L"Command";
                     commandToken = attribute.substr(commandToken.length());
                     Trim(commandToken);

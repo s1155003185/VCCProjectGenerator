@@ -10,7 +10,7 @@ bool IsFileStartWithProjectPrefix(const std::wstring &str, const std::wstring &p
     TRY
         if (projectPrefix.empty())
             return true;
-        return IsStartWithCaseInsensitive(str, projectPrefix + L"_");
+        return IsStartWith(str, projectPrefix + L"_", 0, true);
     CATCH
     return false;
 }

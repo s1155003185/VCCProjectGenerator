@@ -7,7 +7,7 @@
 
 namespace vcc
 {
-	std::wstring GetSystemFolderPathLinux(SystemFolderType fileType);
+	std::wstring GetSystemFolderPathLinux(const SystemFolderType &fileType);
 };
 
 #endif

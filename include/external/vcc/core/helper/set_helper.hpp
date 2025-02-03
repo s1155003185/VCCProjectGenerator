@@ -4,6 +4,7 @@
 #include <string>
 
 #include "exception_macro.hpp"
+#include "i_object.hpp"
 
 namespace vcc
 {

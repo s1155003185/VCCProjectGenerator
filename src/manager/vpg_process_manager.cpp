@@ -299,7 +299,7 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Interface Type missing.");
         } else {
             std::wstring vccJsonFilePath = ConcatPaths({_Workspace, VPGGlobal::GetVccJsonFileName()});
-            if (!IsFileExists(vccJsonFilePath))
+            if (!IsFilePresent(vccJsonFilePath))
                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, vccJsonFilePath + L": File not found.");
             std::wstring fileContent = ReadFile(vccJsonFilePath);
             auto jsonBuilder = std::make_unique<JsonBuilder>();

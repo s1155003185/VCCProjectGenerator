@@ -119,10 +119,10 @@ bool VPGFileSyncService::IsTagReserve(const VPGFileContentSyncTagMode &mode, con
 void VPGFileSyncService::CopyFile(const LogConfig *logConfig, const VPGFileContentSyncTagMode &mode, const std::wstring &sourcePath, const std::wstring &originalCodePath)
 {
     TRY
-        if (!IsFileExists(sourcePath))
+        if (!IsFilePresent(sourcePath))
             THROW_EXCEPTION_MSG(ExceptionType::FileNotFound, sourcePath + L": File not found.");
 \
-        if (IsFileExists(originalCodePath)) {
+        if (IsFilePresent(originalCodePath)) {
             std::wstring commandDelimiter = GetFileName(sourcePath) == L"Makefile" ? L"#" : L"//";
             std::wstring fileContent = VPGFileSyncService::SyncFileContent(mode, ReadFile(sourcePath), ReadFile(originalCodePath), VPGFileContentSyncMode::Demand, commandDelimiter);
             WriteFile(originalCodePath, fileContent, true);

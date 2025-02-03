@@ -104,7 +104,7 @@ void VPGBaseGenerationManager::CreateBasicProject() const
         AppendFileOneLine(ConcatPaths({dest, L"README.md"}), L"", true);
         AppendFileOneLine(ConcatPaths({dest, L"CHANGELOG.md"}), L"", true);
 
-        if (IsFileExists(ConcatPaths({src, MakeFileName}))) {
+        if (IsFilePresent(ConcatPaths({src, MakeFileName}))) {
             // Makefile
             std::wstring makefilePath = ConcatPaths({dest, MakeFileName});
             std::wstring makefileContent = ReadFile(ConcatPaths({src, MakeFileName}));

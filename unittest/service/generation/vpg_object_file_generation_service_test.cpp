@@ -55,8 +55,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Empty)
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);    
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
 }
 
 TEST_F(VPGObjectFileGenerationServiceTest, Single)
@@ -81,8 +81,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()), L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
@@ -133,8 +133,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Object)
 
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()), 
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
@@ -198,8 +198,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritClass)
     projectClassIncludeFiles.insert(std::make_pair(L"GitLog", L"git_service.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
@@ -264,8 +264,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Multi)
 
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_FALSE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
@@ -333,8 +333,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form)
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
 
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
@@ -461,8 +461,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormWithIndependentManager)
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
 
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
@@ -593,8 +593,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritForm)
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
         
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
@@ -722,8 +722,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
 
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()), 
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
@@ -895,8 +895,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
 
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()), 
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
@@ -1345,8 +1345,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
@@ -1805,8 +1805,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
@@ -1970,8 +1970,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
-    EXPECT_TRUE(IsFileExists(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFileExists(this->GetFilePathCpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
     EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"

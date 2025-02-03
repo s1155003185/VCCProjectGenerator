@@ -496,7 +496,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
 
         // General Type
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Write" + convertedName + L"(const int64_t &objectProperty, " + (Equal(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (Equal(type, objectToken) ? L"" : L"&") + (!generalCases.empty() ? L"value" : L"/*value*/") + L") const\r\n"
+            "void " + propertyName + L"Accessor::_Write" + convertedName + L"(const int64_t &objectProperty, " + (IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (IsEqual(type, objectToken) ? L"" : L"&") + (!generalCases.empty() ? L"value" : L"/*value*/") + L") const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!generalCases.empty()) {
@@ -513,7 +513,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
 
         // vector
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Write" + convertedName + L"AtIndex(const int64_t &objectProperty, " + (Equal(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (Equal(type, objectToken) ? L"" : L"&") + (!vectorCases.empty() ? L"value" : L"/*value*/") + L", const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L") const\r\n"
+            "void " + propertyName + L"Accessor::_Write" + convertedName + L"AtIndex(const int64_t &objectProperty, " + (IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (IsEqual(type, objectToken) ? L"" : L"&") + (!vectorCases.empty() ? L"value" : L"/*value*/") + L", const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L") const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!vectorCases.empty()) {
@@ -530,7 +530,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
 
         // map
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Write" + convertedName + L"AtKey(const int64_t &objectProperty, " + (Equal(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (Equal(type, objectToken) ? L"" : L"&") + (!mapCases.empty() ? L"value" : L"/*value*/") + L", const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L") const\r\n"
+            "void " + propertyName + L"Accessor::_Write" + convertedName + L"AtKey(const int64_t &objectProperty, " + (IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (IsEqual(type, objectToken) ? L"" : L"&") + (!mapCases.empty() ? L"value" : L"/*value*/") + L", const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L") const\r\n"
             "{\r\n"
                 + INDENT + L"TRY\r\n";
         if (!mapCases.empty()) {
@@ -595,7 +595,7 @@ void VPGPropertyAccessorGenerationService::GenerateInsert(const std::wstring &pr
             }
         }
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Insert" + convertedName + L"AtIndex(const int64_t &objectProperty, " + (Equal(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (Equal(type, objectToken) ? L"" : L"&") + (!vectorCases.empty() ? L"value" : L"/*value*/") + L", const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L") const\r\n"
+            "void " + propertyName + L"Accessor::_Insert" + convertedName + L"AtIndex(const int64_t &objectProperty, " + (IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (IsEqual(type, objectToken) ? L"" : L"&") + (!vectorCases.empty() ? L"value" : L"/*value*/") + L", const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L") const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!vectorCases.empty()) {
@@ -1111,7 +1111,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
             WriteFile(filePathCpp, result, true);
             LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor cpp completed.");
         } else {
-            if (IsFileExists(filePathCpp)) {
+            if (IsFilePresent(filePathCpp)) {
                 RemoveFile(filePathCpp);
                 LogService::LogInfo(logConfig, LOG_ID, L"Removed property accessor cpp as no properties are acceesable.");
             } else
