@@ -73,8 +73,7 @@ TEST_F(GitServiceTest, ParseGitLogGraph)
     str += L"| * (A6)(A6Short)(A7)(A7Short)(A8)(A8Short)\r\n"; // merge branch
     str += L"* (B1)(B1Short)(B2)(B2Short)()()\r\n"; // node init
 
-    std::vector<std::shared_ptr<GitLog>> logs;
-    GitService::ParseGitLogGraph(str, logs);
+    std::vector<std::shared_ptr<GitLog>> logs = GitService::ParseGitLogGraph(str);
     EXPECT_EQ(logs.size(), (size_t)4);
     EXPECT_EQ(logs.at(0)->GetColumnIndex(), 0);
     EXPECT_EQ(logs.at(0)->GetHashID(), L"A1");
@@ -323,7 +322,7 @@ TEST_F(GitServiceTest, ParseGitBranch)
 TEST_F(GitServiceTest, Tag)
 {
     // init
-    GitService::Initialize(this->GetLogConfig().get(), this->GetWorkspace());
+    GitService::InitializeGitResponse(this->GetLogConfig().get(), this->GetWorkspace());
 
     WriteFile(ConcatPaths({this->GetWorkspace(), L"test.txt"}), L"hi\r\n", true);
     GitService::Stage(this->GetLogConfig().get(), this->GetWorkspace(), L"test.txt");
@@ -341,13 +340,12 @@ TEST_F(GitServiceTest, Tag)
     // }
     
     GitService::CreateTag(this->GetLogConfig().get(), this->GetWorkspace(), L"v0.0.1", nullptr);
-    std::vector<std::wstring> tags;
-    GitService::GetTags(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, tags);
+    std::vector<std::wstring> tags = GitService::GetTags(this->GetLogConfig().get(), this->GetWorkspace());
     EXPECT_EQ(tags.size(), (size_t)1);
     EXPECT_EQ(tags[0], L"v0.0.1");
-    GitTagCurrentTag currentTag = GitService::GetCurrentTag(this->GetLogConfig().get(), this->GetWorkspace());
-    EXPECT_EQ(currentTag.GetTagName(), L"v0.0.1");
-    EXPECT_EQ(currentTag.GetNoOfCommit(), 0);
+    auto currentTag = GitService::GetCurrentTag(this->GetLogConfig().get(), this->GetWorkspace());
+    EXPECT_EQ(currentTag->GetTagName(), L"v0.0.1");
+    EXPECT_EQ(currentTag->GetNoOfCommit(), 0);
 
     // Window behavior and Linux Behavior different, Window throw exception (tag will detach branch) while Linux will not
     // Can use GitService::SwitchReverse to switch back
@@ -370,7 +368,7 @@ TEST_F(GitServiceTest, Tag)
 TEST_F(GitServiceTest, Branch)
 {
     // init
-    GitService::Initialize(this->GetLogConfig().get(), this->GetWorkspace());
+    GitService::InitializeGitResponse(this->GetLogConfig().get(), this->GetWorkspace());
 
     WriteFile(ConcatPaths({this->GetWorkspace(), L"test.txt"}), L"hi\r\n", true);
     GitService::Stage(this->GetLogConfig().get(), this->GetWorkspace(), L"test.txt");
@@ -405,8 +403,7 @@ TEST_F(GitServiceTest, Branch)
     EXPECT_EQ(GitService::GetCurrentBranchName(this->GetLogConfig().get(), this->GetWorkspace()), L"branch");
 
     // Get Branches
-    std::vector<std::shared_ptr<GitBranch>> branches;
-    GitService::GetBranches(this->GetLogConfig().get(), this->GetWorkspace(), branches);
+    auto branches = GitService::GetBranches(this->GetLogConfig().get(), this->GetWorkspace());
     EXPECT_EQ(branches.at(0)->GetName(), L"branch");
     EXPECT_TRUE(branches.at(1)->GetName() == L"main" || branches.at(1)->GetName() == L"master");
 
@@ -429,8 +426,7 @@ TEST_F(GitServiceTest, ParseGitDiff)
     std::wstring expectedChangedLine = L"";
     expectedChangedLine += L" hi\r\n";
     expectedChangedLine += L"+HI\r\n";
-    auto diff = std::make_shared<GitDifference>();
-    GitService::ParseGitDiff(str, diff);
+    auto diff = GitService::ParseGitDiff(str);
     EXPECT_EQ(diff->GetFilePathOld(), L"test.txt");
     EXPECT_EQ(diff->GetFilePathNew(), L"test.txt");
     EXPECT_EQ(diff->GetLineNumberOld()[0], (size_t)1);
@@ -443,7 +439,7 @@ TEST_F(GitServiceTest, ParseGitDiff)
 TEST_F(GitServiceTest, StageAndDifference)
 {
     // init
-    GitService::Initialize(this->GetLogConfig().get(), this->GetWorkspace());
+    GitService::InitializeGitResponse(this->GetLogConfig().get(), this->GetWorkspace());
     EXPECT_TRUE(std::filesystem::exists(this->GetWorkspace() + L"/.git/HEAD"));
     
     // check existance
@@ -464,16 +460,14 @@ TEST_F(GitServiceTest, StageAndDifference)
     EXPECT_TRUE(GitService::IsLocalConfigExists(this->GetLogConfig().get(), this->GetWorkspace(), L"user.name"));
 
     // Case: Empty File
-    auto statusEmpty = std::make_shared<GitStatus>();
-    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusEmpty);
+    auto statusEmpty = GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace());
     // main for linux, master for window
     EXPECT_TRUE(statusEmpty->GetBranch() == L"main" || statusEmpty->GetBranch() == L"master");
     EXPECT_EQ(statusEmpty->GetRemoteBranch(), L"");
 
     // Case: New File
     WriteFile(ConcatPaths({this->GetWorkspace(), L"test.txt"}), L"hi\r\n", true);
-    auto statusCreateFile = std::make_shared<GitStatus>();
-    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusCreateFile);
+    auto statusCreateFile = GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace());
     EXPECT_EQ(statusCreateFile->GetIndexFiles().size(), (size_t)0);
     EXPECT_EQ(statusCreateFile->GetWorkingTreeFiles().size(), (size_t)1);
     EXPECT_EQ(statusCreateFile->GetWorkingTreeFiles()[GitFileStatus::Untracked].size(), (size_t)1);
@@ -481,8 +475,7 @@ TEST_F(GitServiceTest, StageAndDifference)
 
     // Case: Staged
     GitService::Stage(this->GetLogConfig().get(), this->GetWorkspace(), L"test.txt");
-    auto statusNewState = std::make_shared<GitStatus>();
-    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusNewState);
+    auto statusNewState = GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace());
     EXPECT_EQ(statusNewState->GetIndexFiles().size(), (size_t)1);
     EXPECT_EQ(statusNewState->GetIndexFiles()[GitFileStatus::Added].size(), (size_t)1);
     EXPECT_EQ(statusNewState->GetIndexFiles()[GitFileStatus::Added].at(0), L"test.txt");
@@ -494,27 +487,23 @@ TEST_F(GitServiceTest, StageAndDifference)
  
     // Case: Committed
     GitService::Commit(this->GetLogConfig().get(), this->GetWorkspace(), L"Test Commit");
-    auto statusNewCommit = std::make_shared<GitStatus>();
-    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusNewCommit);
+    auto statusNewCommit = GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace());
     EXPECT_EQ(statusNewCommit->GetIndexFiles().size(), (size_t)0);
     EXPECT_EQ(statusNewCommit->GetWorkingTreeFiles().size(), (size_t)0);
     
     // Case: Modified
     AppendFileOneLine(ConcatPaths({this->GetWorkspace(), L"test.txt"}), L"HI", false);
-    auto statusModify = std::make_shared<GitStatus>();
-    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusModify);
+    auto statusModify = GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace());
     EXPECT_EQ(statusModify->GetIndexFiles().size(), (size_t)0);
     EXPECT_EQ(statusModify->GetWorkingTreeFiles().size(), (size_t)1);
     EXPECT_EQ(statusModify->GetWorkingTreeFiles()[GitFileStatus::Modified].size(), (size_t)1);
     EXPECT_EQ(statusModify->GetWorkingTreeFiles()[GitFileStatus::Modified].at(0), L"test.txt");
-    auto differentSummary = std::make_shared<GitDifferenceSummary>();
-    GitService::GetDifferenceSummary(this->GetLogConfig().get(), this->GetWorkspace(), {}, differentSummary);
+    auto differentSummary = GitService::GetDifferenceSummary(this->GetLogConfig().get(), this->GetWorkspace(), {});
     EXPECT_EQ(differentSummary->GetFiles().size(), (size_t)1);
     EXPECT_EQ(differentSummary->GetFiles().at(0), L"test.txt");
     EXPECT_EQ(differentSummary->GetAddLineCounts().at(0), (size_t)1);
     EXPECT_EQ(differentSummary->GetDeleteLineCounts().at(0), (size_t)0);
-    auto diff = std::make_shared<GitDifference>();
-    GitService::GetDifferenceWorkingFile(this->GetLogConfig().get(), this->GetWorkspace(), {}, L"test.txt", diff); // output in ParseGitDiff
+    auto diff = GitService::GetDifferenceWorkingFile(this->GetLogConfig().get(), this->GetWorkspace(), L"test.txt"); // output in ParseGitDiff
     EXPECT_EQ(diff->GetFilePathOld(), L"test.txt");
     EXPECT_EQ(diff->GetFilePathNew(), L"test.txt");
     EXPECT_EQ(diff->GetLineNumberOld()[0], (size_t)1);
@@ -522,15 +511,13 @@ TEST_F(GitServiceTest, StageAndDifference)
     EXPECT_EQ(diff->GetLineNumberNew()[0], (size_t)1);
     EXPECT_EQ(diff->GetLineCountNew()[0], (size_t)2);
     GitService::Stage(this->GetLogConfig().get(), this->GetWorkspace(), L"test.txt");
-    auto statusModifyState = std::make_shared<GitStatus>();
-    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusModifyState);
+    auto statusModifyState = GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace());
     EXPECT_EQ(statusModifyState->GetIndexFiles().size(), (size_t)1);
     EXPECT_EQ(statusModifyState->GetIndexFiles()[GitFileStatus::Modified].size(), (size_t)1);
     EXPECT_EQ(statusModifyState->GetIndexFiles()[GitFileStatus::Modified].at(0), L"test.txt");
     EXPECT_EQ(statusModifyState->GetWorkingTreeFiles().size(), (size_t)0);
     AppendFileOneLine(ConcatPaths({this->GetWorkspace(), L"test.txt"}), L"BI", false);
-    auto statusModifyState2 = std::make_shared<GitStatus>();
-    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusModifyState2);
+    auto statusModifyState2 = GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace());
     EXPECT_EQ(statusModifyState2->GetIndexFiles().size(), (size_t)1);
     EXPECT_EQ(statusModifyState2->GetIndexFiles()[GitFileStatus::Modified].size(), (size_t)1);
     EXPECT_EQ(statusModifyState2->GetIndexFiles()[GitFileStatus::Modified].at(0), L"test.txt");
@@ -543,8 +530,7 @@ TEST_F(GitServiceTest, StageAndDifference)
 
     // Case: Renamed
     std::filesystem::rename(ConcatPaths({this->GetWorkspace(), L"test.txt"}), ConcatPaths({this->GetWorkspace(), L"test2.txt"}));
-    auto statusRename = std::make_shared<GitStatus>();
-    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusRename);
+    auto statusRename = GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace());
     EXPECT_EQ(statusRename->GetIndexFiles().size(), (size_t)0);
     EXPECT_EQ(statusRename->GetWorkingTreeFiles().size(), (size_t)2);
     EXPECT_EQ(statusRename->GetWorkingTreeFiles()[GitFileStatus::Untracked].size(), (size_t)1);
@@ -552,8 +538,7 @@ TEST_F(GitServiceTest, StageAndDifference)
     EXPECT_EQ(statusRename->GetWorkingTreeFiles()[GitFileStatus::Deleted].size(), (size_t)1);
     EXPECT_EQ(statusRename->GetWorkingTreeFiles()[GitFileStatus::Deleted].at(0), L"test.txt");
     GitService::StageAll(this->GetLogConfig().get(), this->GetWorkspace());
-    auto statusRenameState = std::make_shared<GitStatus>();
-    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusRenameState);
+    auto statusRenameState = GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace());
     EXPECT_EQ(statusRenameState->GetIndexFiles().size(), (size_t)1);
     EXPECT_EQ(statusRenameState->GetIndexFiles()[GitFileStatus::Renamed].size(), (size_t)1);
     EXPECT_EQ(statusRenameState->GetIndexFiles()[GitFileStatus::Renamed].at(0), L"test.txt -> test2.txt");
@@ -562,8 +547,7 @@ TEST_F(GitServiceTest, StageAndDifference)
 
     // Case: Deleted
     RemoveFile(ConcatPaths({this->GetWorkspace(), L"test2.txt"}));
-    auto statusDelete = std::make_shared<GitStatus>();
-    GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, statusDelete);
+    auto statusDelete = GitService::GetStatus(this->GetLogConfig().get(), this->GetWorkspace());
     EXPECT_EQ(statusDelete->GetIndexFiles().size(), (size_t)0);
     EXPECT_EQ(statusDelete->GetWorkingTreeFiles().size(), (size_t)1);
     EXPECT_EQ(statusDelete->GetWorkingTreeFiles()[GitFileStatus::Deleted].size(), (size_t)1);
@@ -572,8 +556,7 @@ TEST_F(GitServiceTest, StageAndDifference)
     GitService::Commit(this->GetLogConfig().get(), this->GetWorkspace(), L"Test Delete");
 
     // Summary Log
-    std::vector<std::shared_ptr<GitLog>> logs;
-    GitService::GetLogs(this->GetLogConfig().get(), this->GetWorkspace(), nullptr, logs);
+    std::vector<std::shared_ptr<GitLog>> logs = GitService::GetLogs(this->GetLogConfig().get(), this->GetWorkspace());
     EXPECT_EQ(logs.size(), (size_t)4);
     EXPECT_EQ(logs.at(0)->GetTitle(), L"Test Delete");
     EXPECT_EQ(logs.at(1)->GetTitle(), L"Test Rename");

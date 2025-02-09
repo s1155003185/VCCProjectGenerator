@@ -59,19 +59,17 @@ void VPGProcessManager::VerifyLocalResponse()
                     // check tag version
                     // if same as current version of generator, no action
                     // if not same, then check verison of genertor exists, if not exists, then master, else switch to correct branch
-                    auto currentLog = std::make_shared<GitLog>();
-                    GitService::GetCurrentLog(this->GetLogConfig().get(), localResponseDirectoryProject, currentLog);
+                    auto currentLog = GitService::GetCurrentLog(this->GetLogConfig().get(), localResponseDirectoryProject);
                     if (!IsContain(currentLog->GetTags(), VPGGlobal::GetVersion())) {
                         std::wstring currentBranchName = L"";
                         TRY
-                            GitTagCurrentTag currentTag = GitService::GetCurrentTag(this->GetLogConfig().get(), localResponseDirectoryProject);
-                            if (IsBlank(currentTag.GetTagName()))
+                            auto currentTag = GitService::GetCurrentTag(this->GetLogConfig().get(), localResponseDirectoryProject);
+                            if (IsBlank(currentTag->GetTagName()))
                                 currentBranchName = GitService::GetCurrentBranchName(this->GetLogConfig().get(), localResponseDirectoryProject);
                         CATCH_SLIENT
                         // If version is main and current tag version not exists, then no switch
                         std::wstring mainBranch = L"main";
-                        std::vector<std::wstring> allTags;
-                        GitService::GetTags(this->GetLogConfig().get(), localResponseDirectoryProject, nullptr, allTags);
+                        std::vector<std::wstring> allTags = GitService::GetTags(this->GetLogConfig().get(), localResponseDirectoryProject);
                         if (currentBranchName == L"main" && !IsContain(allTags, VPGGlobal::GetVersion())) {
                             LogService::LogInfo(this->GetLogConfig().get(), L"", L"Currently in main branch and " + VPGGlobal::GetVersion() + L" is not found. Keep in main branch.");
                         } else {
@@ -109,7 +107,7 @@ void VPGProcessManager::VerifyLocalResponse()
                 LogService::LogInfo(this->GetLogConfig().get(), L"", L"Clone from " + gitUrl);
                 GitCloneOption cloneOption;
                 cloneOption.SetIsQuiet(true);
-                GitService::Clone(this->GetLogConfig().get(), localResponseDirectoryBase, gitUrl, &cloneOption);
+                GitService::CloneGitResponse(this->GetLogConfig().get(), localResponseDirectoryBase, gitUrl, &cloneOption);
                 LogService::LogInfo(this->GetLogConfig().get(), L"", L"Done.");
             }
             catch(const std::exception& e)

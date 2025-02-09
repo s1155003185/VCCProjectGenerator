@@ -83,21 +83,6 @@ namespace vcc
         Push
     };
 
-    class GitRemoteAddOption : public BaseObject
-    {
-        GETSET(std::wstring, Name, L"");
-        GETSET(std::wstring, URL, L"");
-        GETSET(GitRemoteMirror, Mirror, GitRemoteMirror::NA);
-        public:
-            GitRemoteAddOption() : BaseObject() {}
-            virtual ~GitRemoteAddOption() {}
-            
-            virtual std::shared_ptr<IObject> Clone() const override
-            {
-                return std::make_shared<GitRemoteAddOption>(*this);
-            }
-    };
-
     class GitRemote : public BaseObject
     {
         GETSET(std::wstring, Name, L"");
@@ -454,180 +439,175 @@ namespace vcc
 
     class GitService : public BaseService
     {
-        private:
-            static GitFileStatus ParseGitFileStatus(const wchar_t &c);
-
         public:
             GitService() : BaseService() {}
             ~GitService() {}
 
-        static std::wstring Execute(const LogConfig *logConfig, const std::wstring &command);
+            static std::wstring Execute(const LogConfig *logConfig, const std::wstring &command);
 
-        // General
-        static std::wstring GetVersion(const LogConfig *logConfig);
-        static bool IsGitResponse(const LogConfig *logConfig, const std::wstring &workspace);
-        static void GetStatus(const LogConfig *logConfig, const std::wstring &workspace, const GitStatusSearchCriteria *searchCriteria, std::shared_ptr<GitStatus> status);
+            // General
+            static std::wstring GetVersion(const LogConfig *logConfig);
+            static bool IsGitResponse(const LogConfig *logConfig, const std::wstring &workspace);
+            static std::shared_ptr<GitStatus> GetStatus(const LogConfig *logConfig, const std::wstring &workspace, const GitStatusSearchCriteria *searchCriteria = nullptr);
 
-        // Initialization
-        static void Initialize(const LogConfig *logConfig, const std::wstring &workspace);
-        static void Clone(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &url, const GitCloneOption *option = nullptr);
+            // Initialize
+            static void InitializeGitResponse(const LogConfig *logConfig, const std::wstring &workspace);
+            static void CloneGitResponse(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &url, const GitCloneOption *option = nullptr);
 
-        /*-----------------------------------*
-         * ----------- Remote     -----------*
-         * ----------------------------------*/
-        // remote
-        static void GetRemote(const LogConfig *logConfig, const std::wstring &workspace, std::vector<std::shared_ptr<GitRemote>> &remotes);
-        static void AddRemote(const LogConfig *logConfig, const std::wstring &workspace, const GitRemoteAddOption *option = nullptr);
-        static void RenameRemote(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &oldName, const std::wstring &newName);
-        static void RemoveRemote(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &name);
-        // fetch
-        static void FetchAll(const LogConfig *logConfig, const std::wstring &workspace);
-        // pull
-        static void Pull(const LogConfig *logConfig, const std::wstring &workspace, const GitPullOption *option = nullptr);
-        // push
-        static void Push(const LogConfig *logConfig, const std::wstring &workspace, const GitPushOption *option = nullptr);
+            /*-----------------------------------*
+            * ----------- Remote     -----------*
+            * ----------------------------------*/
+            // remote
+            static std::vector<std::shared_ptr<GitRemote>> GetRemote(const LogConfig *logConfig, const std::wstring &workspace);
+            static void AddRemote(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &name, const std::wstring &url, const GitRemoteMirror &mirror = GitRemoteMirror::NA);
+            static void RenameRemote(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &oldName, const std::wstring &newName);
+            static void RemoveRemote(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &name);
+            // fetch
+            static void FetchAll(const LogConfig *logConfig, const std::wstring &workspace);
+            // pull
+            static void Pull(const LogConfig *logConfig, const std::wstring &workspace, const GitPullOption *option = nullptr);
+            // push
+            static void Push(const LogConfig *logConfig, const std::wstring &workspace, const GitPushOption *option = nullptr);
 
-        /*-----------------------------------*
-         * -----------  WorkTree  -----------*
-         * ----------------------------------*/
-        // TODO
+            /*-----------------------------------*
+            * -----------  WorkTree  -----------*
+            * ----------------------------------*/
+            // TODO
 
-        /*-----------------------------------*
-         * -----------   Log      -----------*
-         * ----------------------------------*/
-        static std::wstring GetGitLogSearchCriteriaString(const GitLogSearchCriteria *searchCriteria);
-        // only parse git log --graph --oneline --pretty=format:"(%H)(%h)(%T)(%t)(%P)(%p)"
-        static void ParseGitLogGraph(const std::wstring &str, std::vector<std::shared_ptr<GitLog>> &logs);
-        // only parse pattern L"Thu Jan 25 22:47:35 2024 +0800"
-        static std::time_t ParseGitLogDatetime(const std::wstring &datimeStr);
-        static void ParseGitLog(const std::wstring &str, std::shared_ptr<GitLog> log);
-        // To draw graph, mark the point by column index first, then link nodes if having same ParentHashID and HashID
-        static void GetLogs(const LogConfig *logConfig, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria, std::vector<std::shared_ptr<GitLog>> &logs);
-        static void GetCurrentLog(const LogConfig *logConfig, const std::wstring &workspace, std::shared_ptr<GitLog> log);
-        // Get log by GetLogs first, then put the share pointer to GetLogDetail
-        static void GetLog(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &hashID, std::shared_ptr<GitLog> log);
+            /*-----------------------------------*
+            * -----------   Log      -----------*
+            * ----------------------------------*/
+            // only parse git log --graph --oneline --pretty=format:"(%H)(%h)(%T)(%t)(%P)(%p)"
+            static std::vector<std::shared_ptr<GitLog>> ParseGitLogGraph(const std::wstring &str);
+            // only parse pattern L"Thu Jan 25 22:47:35 2024 +0800"
+            static std::time_t ParseGitLogDatetime(const std::wstring &datimeStr);
+            static void ParseGitLog(const std::wstring &str, std::shared_ptr<GitLog> log);
+            // To draw graph, mark the point by column index first, then link nodes if having same ParentHashID and HashID
+            static std::vector<std::shared_ptr<GitLog>> GetLogs(const LogConfig *logConfig, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria = nullptr);
+            static std::shared_ptr<GitLog> GetCurrentLog(const LogConfig *logConfig, const std::wstring &workspace);
+            //static void GetLog(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &hashID, std::shared_ptr<GitLog> log);
+            
+            /*-----------------------------------*
+            * -----------    Tag     -----------*
+            * ----------------------------------*/
+            static std::vector<std::wstring> GetTags(const LogConfig *logConfig, const std::wstring &workspace, const GitTagSearchCriteria *searchCriteria = nullptr);
+            // Note: There is bug for Git, if using process, return string does not have branch and tags " (HEAD -> main, tag: v0.0.1)" after commit Hash ID. But it is normal if using terminal
+            //static void GetTag(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName, std::shared_ptr<GitLog> log);
+            static std::shared_ptr<GitTagCurrentTag> GetCurrentTag(const LogConfig *logConfig, const std::wstring &workspace);
+            static void CreateTag(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName, const GitTagCreateTagOption *option = nullptr);
+            // Window behavior and Linux Behavior different, Window throw exception (tag will detach branch) while Linux will not
+            // Can use GitService::SwitchReverse to switch back
+            static void Switch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName, bool isForce = false);
+            // Undo Switch
+            static void SwitchReverse(const LogConfig *logConfig, const std::wstring &workspace);
+            static void DeleteTag(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName);
 
-        /*-----------------------------------*
-         * -----------    Tag     -----------*
-         * ----------------------------------*/
-        static void GetTags(const LogConfig *logConfig, const std::wstring &workspace, const GitTagSearchCriteria *searchCriteria, std::vector<std::wstring> &tags);
-        // Note: There is bug for Git, if using process, return string does not have branch and tags " (HEAD -> main, tag: v0.0.1)" after commit Hash ID. But it is normal if using terminal
-        //static void GetTag(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName, std::shared_ptr<GitLog> log);
-        static GitTagCurrentTag GetCurrentTag(const LogConfig *logConfig, const std::wstring &workspace);
-        static void CreateTag(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName, const GitTagCreateTagOption *option = nullptr);
-        // Window behavior and Linux Behavior different, Window throw exception (tag will detach branch) while Linux will not
-        // Can use GitService::SwitchReverse to switch back
-        static void Switch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName, bool isForce = false);
-        // Undo Switch
-        static void SwitchReverse(const LogConfig *logConfig, const std::wstring &workspace);
-        static void DeleteTag(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName);
+            /*-----------------------------------*
+            * -----------  Branch    -----------*
+            * ----------------------------------*/
+            // only for 
+            // 1. L"* master hashID Title"
+            // 2. L"  master hashID Title"
+            // 3. L"  head -> orgin/master"
+            static void ParseGitBranch(const std::wstring &str, std::shared_ptr<GitBranch> branch);
+            // static void GetCurrentBranch(const LogConfig *logConfig, const std::wstring &workspace, std::shared_ptr<GitBranch> branch);
+            static std::wstring GetCurrentBranchName(const LogConfig *logConfig, const std::wstring &workspace);
+            static std::vector<std::shared_ptr<GitBranch>> GetBranches(const LogConfig *logConfig, const std::wstring &workspace);
+            static void CreateBranch(const LogConfig *logConfig, const std::wstring &workspace,  const std::wstring &branchName, const GitBranchCreateBranchOption *option = nullptr);
+            static void SwitchBranch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &branchName, const GitBranchSwitchBranchOption *option = nullptr);
+            static void RenameBranch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce = false);
+            static void CopyBranch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce = false);
+            static void DeleteBranch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &branchName, bool isForce = false);
+            
+            /*-----------------------------------*
+            * ----------- Merge      -----------*
+            * ----------------------------------*/
+            // TODO
 
-        /*-----------------------------------*
-         * -----------  Branch    -----------*
-         * ----------------------------------*/
-        // only for 
-        // 1. L"* master hashID Title"
-        // 2. L"  master hashID Title"
-        // 3. L"  head -> orgin/master"
-        static void ParseGitBranch(const std::wstring &str, std::shared_ptr<GitBranch> branch);
-        // static void GetCurrentBranch(const LogConfig *logConfig, const std::wstring &workspace, std::shared_ptr<GitBranch> branch);
-        static std::wstring GetCurrentBranchName(const LogConfig *logConfig, const std::wstring &workspace);
-        static void GetBranches(const LogConfig *logConfig, const std::wstring &workspace, std::vector<std::shared_ptr<GitBranch>> &branches);
-        static void CreateBranch(const LogConfig *logConfig, const std::wstring &workspace,  const std::wstring &branchName, const GitBranchCreateBranchOption *option = nullptr);
-        static void SwitchBranch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &branchName, const GitBranchSwitchBranchOption *option = nullptr);
-        static void RenameBranch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce = false);
-        static void CopyBranch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce = false);
-        static void DeleteBranch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &branchName, bool isForce = false);
-        
-        /*-----------------------------------*
-         * ----------- Merge      -----------*
-         * ----------------------------------*/
-        // TODO
+            /*-----------------------------------*
+            * -----------Cherry Pick -----------*
+            * ----------------------------------*/
+            // TODO
 
-        /*-----------------------------------*
-         * -----------Cherry Pick -----------*
-         * ----------------------------------*/
-        // TODO
+            /*-----------------------------------*
+            * ----------- Difference -----------*
+            * ----------------------------------*/
+            // Difference Summary only show different between commit and commit / commit and working files
+            // hashIDs.size() == 0, then different from latest commit to current working files
+            // hashIDs.size() == 1, then different from commit to current working files
+            // hashIDs.size() > 1, then different between commit
+            static std::shared_ptr<GitDifferenceSummary> GetDifferenceSummary(const LogConfig *logConfig, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs);
+            // filePath must be filled
+            static std::shared_ptr<GitDifference> ParseGitDiff(const std::wstring &str);
+            static std::shared_ptr<GitDifference> GetDifferenceIndexFile(const LogConfig *logConfig, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria = nullptr);
+            static std::shared_ptr<GitDifference> GetDifferenceWorkingFile(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria = nullptr);
+            static std::shared_ptr<GitDifference> GetDifferenceFile(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria = nullptr);
+            static std::shared_ptr<GitDifference> GetDifferenceCommit(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria = nullptr);
 
-        /*-----------------------------------*
-         * ----------- Difference -----------*
-         * ----------------------------------*/
-        // Difference Summary only show different between commit and commit / commit and working files
-        // hashIDs.size() == 0, then different from latest commit to current working files
-        // hashIDs.size() == 1, then different from commit to current working files
-        // hashIDs.size() > 1, then different between commit
-        static void GetDifferenceSummary(const LogConfig *logConfig, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs, std::shared_ptr<GitDifferenceSummary> summary);
-        // filePath must be filled
-        static void ParseGitDiff(const std::wstring &str, std::shared_ptr<GitDifference> difference);
-        static void GetDifferenceIndexFile(const LogConfig *logConfig, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &filePath,  std::shared_ptr<GitDifference> diff);
-        static void GetDifferenceWorkingFile(const LogConfig *logConfig, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &filePath, std::shared_ptr<GitDifference> diff);
-        static void GetDifferenceFile(const LogConfig *logConfig, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &filePath, std::shared_ptr<GitDifference> diff);
-        static void GetDifferenceCommit(const LogConfig *logConfig, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, std::shared_ptr<GitDifference> diff);
+            /*-----------------------------------*
+            * ----------    Blame    -----------*
+            * ----------------------------------*/
+            // TODO
 
-        /*-----------------------------------*
-         * ----------    Blame    -----------*
-         * ----------------------------------*/
-        // TODO
+            /*-----------------------------------*
+            * ----------- Stash      -----------*
+            * ----------------------------------*/
+            // TODO
 
-        /*-----------------------------------*
-         * ----------- Stash      -----------*
-         * ----------------------------------*/
-        // TODO
-
-        /*-----------------------------------*
-         * ----------- Commit     -----------*
-         * ----------------------------------*/
-        static void Stage(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath);
-        static void StageAll(const LogConfig *logConfig, const std::wstring &workspace);
-        static void Unstage(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath);
-        static void UnstageAll(const LogConfig *logConfig, const std::wstring &workspace);
-        static void Commit(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &command);
-        static void Amend(const LogConfig *logConfig, const std::wstring &workspace);
+            /*-----------------------------------*
+            * ----------- Commit     -----------*
+            * ----------------------------------*/
+            static void Stage(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath);
+            static void StageAll(const LogConfig *logConfig, const std::wstring &workspace);
+            static void Unstage(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath);
+            static void UnstageAll(const LogConfig *logConfig, const std::wstring &workspace);
+            static void Commit(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &command);
+            static void Amend(const LogConfig *logConfig, const std::wstring &workspace);
 
 
-        /*-----------------------------------*
-         * ----------Reset/Restore-----------*
-         * ----------------------------------*/
-        static void DiscardFile(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath);
-        static void RestoreFileToParticularCommit(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath, const std::wstring &hashID);
-        static void ResetCommit(const LogConfig *logConfig, const std::wstring &workspace, const GitResetMode &resetMode, const std::wstring &hashID);
-        static void ReverseCommit(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &hashID);
-        
-        /*-----------------------------------*
-         * ----------  Submodule   ----------*
-         * ----------------------------------*/
-        // TODO
+            /*-----------------------------------*
+            * ----------Reset/Restore-----------*
+            * ----------------------------------*/
+            static void DiscardFile(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath);
+            static void RestoreFileToParticularCommit(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath, const std::wstring &hashID);
+            static void ResetCommit(const LogConfig *logConfig, const std::wstring &workspace, const GitResetMode &resetMode, const std::wstring &hashID);
+            static void ReverseCommit(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &hashID);
+            
+            /*-----------------------------------*
+            * ----------  Submodule   ----------*
+            * ----------------------------------*/
+            // TODO
 
-        /*-----------------------------------*
-         * ----------- Config     -----------*
-         * ----------------------------------*/
-        // Overall Config
-        static bool IsConfigExists(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key);
-        static void GetConfig(const LogConfig *logConfig, const std::wstring &workspace, std::shared_ptr<GitConfig> config);
-        static std::wstring GetConfig(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key);
-        static std::wstring GetUserName(const LogConfig *logConfig, const std::wstring &workspace);
-        static std::wstring GetUserEmail(const LogConfig *logConfig, const std::wstring &workspace);
-        
-        // Global Config
-        static bool IsGlobalConfigExists(const LogConfig *logConfig, const std::wstring &key);
-        static void GetGlobalConfig(const LogConfig *logConfig, std::shared_ptr<GitConfig> config);
-        static std::wstring GetGlobalConfig(const LogConfig *logConfig, const std::wstring &key);
-        static void SetGlobalConfig(const LogConfig *logConfig, const std::wstring &key, const std::wstring &value);
-        
-        static std::wstring GetGlobalUserName(const LogConfig *logConfig);
-        static void SetGlobalUserName(const LogConfig *logConfig, const std::wstring &value);
-        static std::wstring GetGlobalUserEmail(const LogConfig *logConfig);
-        static void SetGlobalUserEmail(const LogConfig *logConfig, const std::wstring &value);
+            /*-----------------------------------*
+            * ----------- Config     -----------*
+            * ----------------------------------*/
+            // Overall Config
+            static bool IsConfigExists(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key);
+            static void GetConfig(const LogConfig *logConfig, const std::wstring &workspace, std::shared_ptr<GitConfig> config);
+            static std::wstring GetConfig(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key);
+            static std::wstring GetUserName(const LogConfig *logConfig, const std::wstring &workspace);
+            static std::wstring GetUserEmail(const LogConfig *logConfig, const std::wstring &workspace);
+            
+            // Global Config
+            static bool IsGlobalConfigExists(const LogConfig *logConfig, const std::wstring &key);
+            static void GetGlobalConfig(const LogConfig *logConfig, std::shared_ptr<GitConfig> config);
+            static std::wstring GetGlobalConfig(const LogConfig *logConfig, const std::wstring &key);
+            static void SetGlobalConfig(const LogConfig *logConfig, const std::wstring &key, const std::wstring &value);
+            
+            static std::wstring GetGlobalUserName(const LogConfig *logConfig);
+            static void SetGlobalUserName(const LogConfig *logConfig, const std::wstring &value);
+            static std::wstring GetGlobalUserEmail(const LogConfig *logConfig);
+            static void SetGlobalUserEmail(const LogConfig *logConfig, const std::wstring &value);
 
-        // Local Config
-        static bool IsLocalConfigExists(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key);
-        static void GetLocalConfig(const LogConfig *logConfig, const std::wstring &workspace, std::shared_ptr<GitConfig> config);
-        static std::wstring GetLocalConfig(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key);
-        static void SetLocalConfig(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key, const std::wstring &value);
+            // Local Config
+            static bool IsLocalConfigExists(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key);
+            static void GetLocalConfig(const LogConfig *logConfig, const std::wstring &workspace, std::shared_ptr<GitConfig> config);
+            static std::wstring GetLocalConfig(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key);
+            static void SetLocalConfig(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key, const std::wstring &value);
 
-        static std::wstring GetLocalUserName(const LogConfig *logConfig, const std::wstring &workspace);
-        static void SetLocalUserName(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &value);
-        static std::wstring GetLocalUserEmail(const LogConfig *logConfig, const std::wstring &workspace);
-        static void SetLocalUserEmail(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &value);
+            static std::wstring GetLocalUserName(const LogConfig *logConfig, const std::wstring &workspace);
+            static void SetLocalUserName(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &value);
+            static std::wstring GetLocalUserEmail(const LogConfig *logConfig, const std::wstring &workspace);
+            static void SetLocalUserEmail(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &value);
     };
 }
