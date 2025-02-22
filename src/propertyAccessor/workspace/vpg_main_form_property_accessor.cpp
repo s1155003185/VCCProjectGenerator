@@ -15,15 +15,7 @@ using namespace vcc;
 std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObject(const int64_t &objectProperty) const
 {
     TRY
-        auto obj = std::static_pointer_cast<VPGMainForm>(_Object);
-        assert(obj != nullptr);
-        switch(static_cast<VPGMainFormProperty>(objectProperty))
-        {
-        case VPGMainFormProperty::CurrentWorkspaceForm:
-            return std::static_pointer_cast<IObject>(obj->GetCurrentWorkspaceForm());
-        default:
-            assert(false);
-        }
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
     return nullptr;
 }
@@ -53,19 +45,10 @@ std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObjectAtKey(const int
     return nullptr;
 }
 
-void VPGMainFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> value) const
+void VPGMainFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/) const
 {
     TRY
-        auto obj = std::static_pointer_cast<VPGMainForm>(_Object);
-        assert(obj != nullptr);
-        switch(static_cast<VPGMainFormProperty>(objectProperty))
-        {
-        case VPGMainFormProperty::CurrentWorkspaceForm:
-            obj->SetCurrentWorkspaceForm(std::static_pointer_cast<VPGWorkspaceForm>(value));
-            break;
-        default:
-            assert(false);
-        }
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
@@ -119,15 +102,7 @@ void VPGMainFormPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProp
 std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_CloneObject(const int64_t &objectProperty) const
 {
     TRY
-        auto obj = std::static_pointer_cast<VPGMainForm>(_Object);
-        assert(obj != nullptr);
-        switch(static_cast<VPGMainFormProperty>(objectProperty))
-        {
-        case VPGMainFormProperty::CurrentWorkspaceForm:
-            return std::static_pointer_cast<IObject>(obj->GetCurrentWorkspaceForm()->Clone());
-        default:
-            assert(false);
-        }
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
     return nullptr;
 }
