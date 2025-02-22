@@ -66,6 +66,9 @@ class VPGEnumClassProperty : public BaseObject
     VECTOR(std::wstring, ClassAssignments);
     GETSET(bool, IsNoHistory, false);
 
+    // Json
+    GETSET(bool, IsNoJson, false)
+
     public:
         VPGEnumClassProperty() : BaseObject() {}
         virtual ~VPGEnumClassProperty() {}

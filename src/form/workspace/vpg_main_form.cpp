@@ -8,89 +8,79 @@
 #include "base_action.hpp"
 #include "base_form.hpp"
 #include "exception_macro.hpp"
+#include "i_document.hpp"
+#include "i_document_builder.hpp"
 #include "i_object.hpp"
+#include "json.hpp"
 #include "log_config.hpp"
+#include "number_helper.hpp"
+#include "string_helper.hpp"
 #include "vpg_main_form_property.hpp"
+#include "vpg_workspace_form.hpp"
 
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
+#include "file_helper.hpp"
 #include "i_property_accessor.hpp"
 #include "lock_type.hpp"
 #include "property_accessor_factory.hpp"
 #include "vpg_class_helper.hpp"
+#include "vpg_global.hpp"
 // </vcc:customHeader>
 
 using namespace vcc;
 
-VPGMainFormAddWorkspaceForm::VPGMainFormAddWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()
+VPGMainFormInitialize::VPGMainFormInitialize(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()
 {
     _LogConfig = logConfig;
     _ParentObject = parentForm;
 }
 
-std::wstring VPGMainFormAddWorkspaceForm::GetRedoMessageStart() const
+std::wstring VPGMainFormInitialize::GetRedoMessageStart() const
 {
     TRY
-        // <vcc:VPGMainFormAddWorkspaceFormGetRedoMessageStart sync="RESERVE" gen="RESERVE">
-        return GetActionMessage(L"AddWorkspaceForm", L"Start");
-        // </vcc:VPGMainFormAddWorkspaceFormGetRedoMessageStart>
+        // <vcc:VPGMainFormInitializeGetRedoMessageStart sync="RESERVE" gen="RESERVE">
+        return L"VPGMainFormInitialize start";
+        // </vcc:VPGMainFormInitializeGetRedoMessageStart>
     CATCH
     return L"";
 }
 
-std::wstring VPGMainFormAddWorkspaceForm::GetRedoMessageComplete() const
+std::wstring VPGMainFormInitialize::GetRedoMessageComplete() const
 {
     TRY
-        // <vcc:VPGMainFormAddWorkspaceFormGetRedoMessageComplete sync="RESERVE" gen="RESERVE">
-        return GetActionMessage(L"AddWorkspaceForm", L"Complete");
-        // </vcc:VPGMainFormAddWorkspaceFormGetRedoMessageComplete>
+        // <vcc:VPGMainFormInitializeGetRedoMessageComplete sync="RESERVE" gen="RESERVE">
+        return L"VPGMainFormInitialize complete";
+        // </vcc:VPGMainFormInitializeGetRedoMessageComplete>
     CATCH
     return L"";
 }
 
-void VPGMainFormAddWorkspaceForm::OnRedo()
+void VPGMainFormInitialize::OnRedo()
 {
     TRY
-        // <vcc:VPGMainFormAddWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
-        PropertyAccessorFactory::Create(_ParentObject)->InsertObjectAtIndex(LockType::WriteLock, static_cast<int64_t>(VPGMainFormProperty::WorkspaceForms), std::make_shared<VPGWorkspaceForm>());
-        // </vcc:VPGMainFormAddWorkspaceFormOnRedo>
-    CATCH
-}
-
-VPGMainFormDeleteWorkspaceForm::VPGMainFormDeleteWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()
-{
-    _LogConfig = logConfig;
-    _ParentObject = parentForm;
-}
-
-std::wstring VPGMainFormDeleteWorkspaceForm::GetRedoMessageStart() const
-{
-    TRY
-        // <vcc:VPGMainFormDeleteWorkspaceFormGetRedoMessageStart sync="RESERVE" gen="RESERVE">
-        return GetActionMessage(L"DeleteWorkspaceForm", L"Start");
-        // </vcc:VPGMainFormDeleteWorkspaceFormGetRedoMessageStart>
-    CATCH
-    return L"";
-}
-
-std::wstring VPGMainFormDeleteWorkspaceForm::GetRedoMessageComplete() const
-{
-    TRY
-        // <vcc:VPGMainFormDeleteWorkspaceFormGetRedoMessageComplete sync="RESERVE" gen="RESERVE">
-        return GetActionMessage(L"DeleteWorkspaceForm", L"Complete");
-        // </vcc:VPGMainFormDeleteWorkspaceFormGetRedoMessageComplete>
-    CATCH
-    return L"";
-}
-
-void VPGMainFormDeleteWorkspaceForm::OnRedo()
-{
-    TRY
-        // <vcc:VPGMainFormDeleteWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
+        // <vcc:VPGMainFormInitializeOnRedo sync="RESERVE" gen="RESERVE">
         auto propertyAccessor = PropertyAccessorFactory::Create(_ParentObject);
+        propertyAccessor->WriteLock();
         auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
-        auto obj = form->GetWorkspaceForms().at(0).get();
-        propertyAccessor->RemoveObject(LockType::WriteLock, static_cast<int64_t>(VPGMainFormProperty::WorkspaceForms), obj);
-        // </vcc:VPGMainFormDeleteWorkspaceFormOnRedo>
+        form->TruncateAction();
+        form->ClearWorkspaceForms();
+
+        auto jsonBuilder = std::make_unique<JsonBuilder>();
+        jsonBuilder->SetIsBeautify(true);
+
+        auto configFilePath = VPGGlobal::GetVCCProjectManagerConfigFileFullPath();
+        if (IsFilePresent(configFilePath)) {
+            TRY
+                form->DeserializeJsonString(jsonBuilder.get(), ReadFile(configFilePath));
+            CATCH_MSG(ExceptionType::ParserError, L"File " + configFilePath + L" exists but not vaild. Please adjust / remove the file and try again")
+        } else {
+            auto workspace = std::make_shared<VPGWorkspaceForm>();
+            workspace->SetName(L"Default");
+            form->InsertWorkspaceForms(workspace);
+            WriteFile(configFilePath, form->SerializeJson(jsonBuilder.get()), true);
+        }
+        propertyAccessor->Unlock();
+        // </vcc:VPGMainFormInitializeOnRedo>
     CATCH
 }
 
@@ -106,8 +96,41 @@ std::shared_ptr<IObject> VPGMainForm::Clone() const
 {
     auto obj = std::make_shared<VPGMainForm>(*this);
     obj->CloneWorkspaceForms(this->_WorkspaceForms);
-    obj->CloneCurrentWorkspaceForm(this->_CurrentWorkspaceForm.get());
     return obj;
+}
+
+std::shared_ptr<Json> VPGMainForm::ToJson() const
+{
+    TRY
+        NamingStyle namestyle = NamingStyle::PascalCase;
+        auto json = std::make_unique<Json>();
+        // WorkspaceForms
+        auto tmpWorkspaceForms = std::make_shared<Json>();
+        json->AddArray(ConvertNamingStyle(L"WorkspaceForms", NamingStyle::PascalCase, namestyle), tmpWorkspaceForms);
+        for (auto const &element : _WorkspaceForms) {
+            tmpWorkspaceForms->AddArrayObject(element->ToJson());
+        }
+        return json;
+    CATCH
+    return nullptr;
+}
+
+void VPGMainForm::DeserializeJson(std::shared_ptr<IDocument> document) const
+{
+    TRY
+        NamingStyle namestyle = NamingStyle::PascalCase;
+        auto json = std::dynamic_pointer_cast<Json>(document);
+        assert(json != nullptr);
+        // WorkspaceForms
+        ClearWorkspaceForms();
+        if (json->IsContainKey(ConvertNamingStyle(L"WorkspaceForms", namestyle, NamingStyle::PascalCase))) {
+            for (auto const &element : json->GetArray(ConvertNamingStyle(L"WorkspaceForms", namestyle, NamingStyle::PascalCase))) {
+                auto tmpWorkspaceForms = std::make_shared<VPGWorkspaceForm>();
+                tmpWorkspaceForms->DeserializeJson(element->GetArrayElementObject());
+                InsertWorkspaceForms(tmpWorkspaceForms);
+            }
+        }
+    CATCH
 }
 
 void VPGMainForm::InitializeComponents() const
@@ -126,11 +149,8 @@ void VPGMainForm::DoAction(const int64_t &formProperty)
     TRY
         switch(static_cast<VPGMainFormProperty>(formProperty))
         {
-        case VPGMainFormProperty::AddWorkspaceForm:
-            DoAddWorkspaceForm();
-            break;
-        case VPGMainFormProperty::DeleteWorkspaceForm:
-            DoDeleteWorkspaceForm();
+        case VPGMainFormProperty::Initialize:
+            DoInitialize();
             break;
         default:
             assert(false);
@@ -139,22 +159,12 @@ void VPGMainForm::DoAction(const int64_t &formProperty)
     CATCH
 }
 
-void VPGMainForm::DoAddWorkspaceForm()
+void VPGMainForm::DoInitialize()
 {
     TRY
-        auto action = std::make_shared<VPGMainFormAddWorkspaceForm>(_LogConfig, SharedPtr());
-        // <vcc:VPGMainFormDoAddWorkspaceForm sync="RESERVE" gen="RESERVE">
-        // </vcc:VPGMainFormDoAddWorkspaceForm>
-        ExecuteAction(action, true);
-    CATCH
-}
-
-void VPGMainForm::DoDeleteWorkspaceForm()
-{
-    TRY
-        auto action = std::make_shared<VPGMainFormDeleteWorkspaceForm>(_LogConfig, SharedPtr());
-        // <vcc:VPGMainFormDoDeleteWorkspaceForm sync="RESERVE" gen="RESERVE">
-        // </vcc:VPGMainFormDoDeleteWorkspaceForm>
+        auto action = std::make_shared<VPGMainFormInitialize>(_LogConfig, SharedPtr());
+        // <vcc:VPGMainFormDoInitialize sync="RESERVE" gen="RESERVE">
+        // </vcc:VPGMainFormDoInitialize>
         ExecuteAction(action, true);
     CATCH
 }

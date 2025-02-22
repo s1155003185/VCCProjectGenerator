@@ -762,7 +762,7 @@ Note:
     Command used in VCC generator, can be any text in xxx without @@
 
 #### Field Attribute
-Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Class { "Properties\ : [ "GETSET(std::wstring, Name, L\"\")", "GETSET(int64_t, Age, 0)" ], "Assignment": [ \"Sam\", \"6\" ] }] [@@NoHistory] [@@Command xxx]
+Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Class { "Properties\ : [ "GETSET(std::wstring, Name, L\"\")", "GETSET(int64_t, Age, 0)" ], "Assignment": [ \"Sam\", \"6\" ] }] [@@NoHistory] [@@NoJson] [@@Command xxx]
 
 {...}: Compulsory
 []: Optional
@@ -832,6 +832,11 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Class { "Properties\ : [ "GET
 [@@NoHistory]
     Action Only.
     Will not add to Action Manager. After executing Do, this action cannot be found in Action List. So, this action cannot be Undo.
+
+[@@NoJson]
+    For class declare @@Json Only.
+    Will not generate Json for current property.
+    For those temp properties that do not need to be recored.
 
 [@@Command xxx]
     Command used in VCC generator, can be any text in xxx without @@

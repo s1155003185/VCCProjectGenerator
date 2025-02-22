@@ -4,7 +4,10 @@
 #include <string>
 
 #include "base_form.hpp"
+#include "base_json_object.hpp"
 #include "class_macro.hpp"
+#include "i_document.hpp"
+#include "json.hpp"
 #include "object_type.hpp"
 #include "vpg_git_form.hpp"
 
@@ -13,7 +16,7 @@
 
 using namespace vcc;
 
-class VPGWorkspaceForm : public BaseForm
+class VPGWorkspaceForm : public BaseForm, public BaseJsonObject
 {
     GETSET(std::wstring, Name, L"")
     VECTOR_SPTR(VPGGitForm, GitForms)
@@ -34,6 +37,9 @@ class VPGWorkspaceForm : public BaseForm
         virtual ~VPGWorkspaceForm() {}
 
         virtual std::shared_ptr<IObject> Clone() const override;
+
+        virtual std::shared_ptr<Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;
 
         virtual void InitializeComponents() const override;
 

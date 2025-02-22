@@ -22,5 +22,14 @@ namespace vcc
             CATCH
             return L"";
         }
+
+        virtual void DeserializeJsonString(const IDocumentBuilder *builder, const std::wstring &jsonStr) const override
+        {
+            TRY
+                auto json = std::make_shared<Json>();
+                builder->Deserialize(jsonStr, json);
+                DeserializeJson(json);
+            CATCH
+        }
     };
 }

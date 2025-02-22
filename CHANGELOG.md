@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 - Git Review
+- Add vpm.config.json. Default location is ~/Documents/vcc/config
+- Add field attribute @@NoJson
 
 ### [v0.3.1] - 2025-02-08: Review - Review Function Name
 - Review helper function naming

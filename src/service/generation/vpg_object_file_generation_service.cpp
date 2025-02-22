@@ -804,7 +804,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
         std::wstring toJsonStr = L"";
         std::wstring deserializeStr = L"";
         for (auto const &property : enumClass->GetProperties()) {
-            if (property->GetPropertyType() != VPGEnumClassPropertyType::Property)
+            if (property->GetPropertyType() != VPGEnumClassPropertyType::Property || property->GetIsNoJson())
                 continue;
                 
             std::wstring propertyName = property->GetPropertyName();

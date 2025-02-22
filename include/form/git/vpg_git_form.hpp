@@ -2,8 +2,11 @@
 #pragma once
 
 #include "base_form.hpp"
+#include "base_json_object.hpp"
 #include "class_macro.hpp"
 #include "git_manager.hpp"
+#include "i_document.hpp"
+#include "json.hpp"
 #include "object_type.hpp"
 #include "vpg_git_log.hpp"
 
@@ -12,7 +15,7 @@
 
 using namespace vcc;
 
-class VPGGitForm : public BaseForm
+class VPGGitForm : public BaseForm, public BaseJsonObject
 {
     GETSET_SPTR_NULL(VPGGitLog, Log)
     MANAGER_SPTR_NULL(GitManager, GitManager, _LogConfig)
@@ -33,6 +36,9 @@ class VPGGitForm : public BaseForm
         virtual ~VPGGitForm() {}
 
         virtual std::shared_ptr<IObject> Clone() const override;
+
+        virtual std::shared_ptr<Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;
 
         virtual void InitializeComponents() const override;
 

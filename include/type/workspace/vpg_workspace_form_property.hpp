@@ -1,6 +1,6 @@
 #pragma once
 
-// @@Form
+// @@Form @@Json
 enum class VPGWorkspaceFormProperty
 {
     Name // GETSET(std::wstring, Name, L"")

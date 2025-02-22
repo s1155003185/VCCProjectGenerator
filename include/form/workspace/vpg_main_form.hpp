@@ -6,8 +6,11 @@
 
 #include "base_action.hpp"
 #include "base_form.hpp"
+#include "base_json_object.hpp"
 #include "class_macro.hpp"
+#include "i_document.hpp"
 #include "i_object.hpp"
+#include "json.hpp"
 #include "log_config.hpp"
 #include "object_type.hpp"
 #include "vpg_workspace_form.hpp"
@@ -17,14 +20,14 @@
 
 using namespace vcc;
 
-class VPGMainFormAddWorkspaceForm : public BaseAction
+class VPGMainFormInitialize : public BaseAction
 {
-    // <vcc:customVPGMainFormAddWorkspaceFormProperties sync="RESERVE" gen="RESERVE">
-    // </vcc:customVPGMainFormAddWorkspaceFormProperties>
+    // <vcc:customVPGMainFormInitializeProperties sync="RESERVE" gen="RESERVE">
+    // </vcc:customVPGMainFormInitializeProperties>
 
     private:
-        // <vcc:customVPGMainFormAddWorkspaceFormPrivateFunctions sync="RESERVE" gen="RESERVE">
-        // </vcc:customVPGMainFormAddWorkspaceFormPrivateFunctions>
+        // <vcc:customVPGMainFormInitializePrivateFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGMainFormInitializePrivateFunctions>
 
     protected:
         virtual std::wstring GetRedoMessageStart() const override;
@@ -32,51 +35,22 @@ class VPGMainFormAddWorkspaceForm : public BaseAction
 
         virtual void OnRedo() override;
 
-        // <vcc:customVPGMainFormAddWorkspaceFormProtectedFunctions sync="RESERVE" gen="RESERVE">
-        // </vcc:customVPGMainFormAddWorkspaceFormProtectedFunctions>
+        // <vcc:customVPGMainFormInitializeProtectedFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGMainFormInitializeProtectedFunctions>
 
     public:
-        VPGMainFormAddWorkspaceForm() : BaseAction() {}
-        VPGMainFormAddWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm);
-        ~VPGMainFormAddWorkspaceForm() {}
+        VPGMainFormInitialize() : BaseAction() {}
+        VPGMainFormInitialize(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm);
+        ~VPGMainFormInitialize() {}
 
-        // <vcc:customVPGMainFormAddWorkspaceFormPublicFunctions sync="RESERVE" gen="RESERVE">
-        // </vcc:customVPGMainFormAddWorkspaceFormPublicFunctions>
+        // <vcc:customVPGMainFormInitializePublicFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGMainFormInitializePublicFunctions>
 };
 
-class VPGMainFormDeleteWorkspaceForm : public BaseAction
-{
-    // <vcc:customVPGMainFormDeleteWorkspaceFormProperties sync="RESERVE" gen="RESERVE">
-    // </vcc:customVPGMainFormDeleteWorkspaceFormProperties>
-
-    private:
-        // <vcc:customVPGMainFormDeleteWorkspaceFormPrivateFunctions sync="RESERVE" gen="RESERVE">
-        // </vcc:customVPGMainFormDeleteWorkspaceFormPrivateFunctions>
-
-    protected:
-        virtual std::wstring GetRedoMessageStart() const override;
-        virtual std::wstring GetRedoMessageComplete() const override;
-
-        virtual void OnRedo() override;
-
-        // <vcc:customVPGMainFormDeleteWorkspaceFormProtectedFunctions sync="RESERVE" gen="RESERVE">
-        // </vcc:customVPGMainFormDeleteWorkspaceFormProtectedFunctions>
-
-    public:
-        VPGMainFormDeleteWorkspaceForm() : BaseAction() {}
-        VPGMainFormDeleteWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm);
-        ~VPGMainFormDeleteWorkspaceForm() {}
-
-        // <vcc:customVPGMainFormDeleteWorkspaceFormPublicFunctions sync="RESERVE" gen="RESERVE">
-        // </vcc:customVPGMainFormDeleteWorkspaceFormPublicFunctions>
-};
-
-class VPGMainForm : public BaseForm
+class VPGMainForm : public BaseForm, public BaseJsonObject
 {
     VECTOR_SPTR(VPGWorkspaceForm, WorkspaceForms)
-    GETSET_SPTR_NULL(VPGWorkspaceForm, CurrentWorkspaceForm)
-    ACTION(AddWorkspaceForm)
-    ACTION(DeleteWorkspaceForm)
+    ACTION(Initialize)
 
     // <vcc:customVPGMainFormProperties sync="RESERVE" gen="RESERVE">
     // </vcc:customVPGMainFormProperties>
@@ -94,6 +68,9 @@ class VPGMainForm : public BaseForm
         virtual ~VPGMainForm() {}
 
         virtual std::shared_ptr<IObject> Clone() const override;
+
+        virtual std::shared_ptr<Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;
 
         virtual void InitializeComponents() const override;
 

@@ -302,6 +302,9 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
             }
             else if (IsEqual(attribute, attributeToken + L"NoHistory", true))
                 property->SetIsNoHistory(true);
+            // Json
+            else if (IsEqual(attribute, attributeToken + L"NoJson", true))
+                property->SetIsNoJson(true);
             // Command
             else if (IsEqual(attribute, attributeToken + L"Command", true)) {
                 std::wstring commandToken = attributeToken + L"Command";
