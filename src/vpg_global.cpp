@@ -88,9 +88,9 @@ std::wstring VPGGlobal::GetCppDefaultIncludePathMacOs()
     return L"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/V1";
 }
 
-std::wstring VPGGlobal::GetVCCProjectManagerConfigFilePath()
+std::wstring VPGGlobal::GetVCCProjectManagerConfigFileFullPath()
 {
-    return ConcatPaths({VPGGlobal::GetVccLocalResponseFolder(), L"config", L"vpm.config.json"});
+    return VPGGlobal::GetConvertedPath(ConcatPaths({VPGGlobal::GetVccLocalResponseFolder(), L"config", L"vpm.config.json"}));
 }
 
 std::shared_ptr<VPGEnumClassReader> VPGGlobal::GetEnumClassReader()

@@ -17,6 +17,7 @@
 #include "lock_type.hpp"
 #include "property_accessor_factory.hpp"
 #include "vpg_class_helper.hpp"
+#include "vpg_global.hpp"
 // </vcc:customHeader>
 
 using namespace vcc;
@@ -49,8 +50,23 @@ std::wstring VPGMainFormInitialize::GetRedoMessageComplete() const
 
 void VPGMainFormInitialize::OnRedo()
 {
+    // 1. Clear current Workspaces
+    // 2. Load Workspaces from config file
+    // 3. If no config files, add one temp workspace "Default"
+    // 4. Only insert workspace with IsVisible = true
+
     TRY
         // <vcc:VPGMainFormInitializeOnRedo sync="RESERVE" gen="RESERVE">
+        auto propertyAccessor = PropertyAccessorFactory::Create(_ParentObject);
+        propertyAccessor->WriteLock();
+        auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
+        form->TruncateAction();
+        form->ClearWorkspaceForms();
+
+        auto configFilePath = VPGGlobal::GetVCCProjectManagerConfigFileFullPath();
+        
+
+        propertyAccessor->Unlock();
         // </vcc:VPGMainFormInitializeOnRedo>
     CATCH
 }

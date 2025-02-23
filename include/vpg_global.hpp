@@ -26,7 +26,7 @@ class VPGGlobal
         static std::wstring GetCppDefaultIncludePathMacOs();
 
         // VPM - VCC Project Manager
-        static std::wstring GetVCCProjectManagerConfigFilePath();
+        static std::wstring GetVCCProjectManagerConfigFileFullPath();
 
         // Generator
         static std::shared_ptr<VPGEnumClassReader> GetEnumClassReader();
