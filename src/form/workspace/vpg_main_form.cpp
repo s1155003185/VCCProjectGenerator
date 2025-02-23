@@ -13,6 +13,7 @@
 #include "vpg_main_form_property.hpp"
 
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
+#include "file_helper.hpp"
 #include "i_property_accessor.hpp"
 #include "lock_type.hpp"
 #include "property_accessor_factory.hpp"
@@ -64,8 +65,13 @@ void VPGMainFormInitialize::OnRedo()
         form->ClearWorkspaceForms();
 
         auto configFilePath = VPGGlobal::GetVCCProjectManagerConfigFileFullPath();
-        
+        if (IsFilePresent(configFilePath)) {
 
+        } else {
+            auto workspace = std::make_shared<VPGWorkspaceForm>();
+            workspace->SetName(L"Default");
+            form->InsertWorkspaceForms(workspace);
+        }
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormInitializeOnRedo>
     CATCH
