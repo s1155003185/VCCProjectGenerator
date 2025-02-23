@@ -1,8 +1,14 @@
 // <vcc:vccproj sync="FULL" gen="FULL"/>
 #pragma once
 
+#include <memory>
+#include <string>
+
+#include "base_action.hpp"
 #include "base_form.hpp"
 #include "class_macro.hpp"
+#include "i_object.hpp"
+#include "log_config.hpp"
 #include "object_type.hpp"
 #include "vpg_workspace_form.hpp"
 
@@ -11,9 +17,37 @@
 
 using namespace vcc;
 
+class VPGMainFormInitialize : public BaseAction
+{
+    // <vcc:customVPGMainFormInitializeProperties sync="RESERVE" gen="RESERVE">
+    // </vcc:customVPGMainFormInitializeProperties>
+
+    private:
+        // <vcc:customVPGMainFormInitializePrivateFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGMainFormInitializePrivateFunctions>
+
+    protected:
+        virtual std::wstring GetRedoMessageStart() const override;
+        virtual std::wstring GetRedoMessageComplete() const override;
+
+        virtual void OnRedo() override;
+
+        // <vcc:customVPGMainFormInitializeProtectedFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGMainFormInitializeProtectedFunctions>
+
+    public:
+        VPGMainFormInitialize() : BaseAction() {}
+        VPGMainFormInitialize(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm);
+        ~VPGMainFormInitialize() {}
+
+        // <vcc:customVPGMainFormInitializePublicFunctions sync="RESERVE" gen="RESERVE">
+        // </vcc:customVPGMainFormInitializePublicFunctions>
+};
+
 class VPGMainForm : public BaseForm
 {
     VECTOR_SPTR(VPGWorkspaceForm, WorkspaceForms)
+    ACTION(Initialize)
 
     // <vcc:customVPGMainFormProperties sync="RESERVE" gen="RESERVE">
     // </vcc:customVPGMainFormProperties>
