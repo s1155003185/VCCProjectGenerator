@@ -31,6 +31,7 @@ std::wstring VPGMainFormInitialize::GetRedoMessageStart() const
 {
     TRY
         // <vcc:VPGMainFormInitializeGetRedoMessageStart sync="RESERVE" gen="RESERVE">
+        return L"VPGMainFormInitialize start";
         // </vcc:VPGMainFormInitializeGetRedoMessageStart>
     CATCH
     return L"";
@@ -40,6 +41,7 @@ std::wstring VPGMainFormInitialize::GetRedoMessageComplete() const
 {
     TRY
         // <vcc:VPGMainFormInitializeGetRedoMessageComplete sync="RESERVE" gen="RESERVE">
+        return L"VPGMainFormInitialize complete";
         // </vcc:VPGMainFormInitializeGetRedoMessageComplete>
     CATCH
     return L"";
