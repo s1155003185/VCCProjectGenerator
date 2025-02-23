@@ -90,7 +90,7 @@ std::wstring VPGGlobal::GetCppDefaultIncludePathMacOs()
 
 std::wstring VPGGlobal::GetVCCProjectManagerConfigFilePath()
 {
-    return ConcatPaths({VPGGlobal::GetVccLocalResponseFolder(), L"config", L"vpm.config"});
+    return ConcatPaths({VPGGlobal::GetVccLocalResponseFolder(), L"config", L"vpm.config.json"});
 }
 
 std::shared_ptr<VPGEnumClassReader> VPGGlobal::GetEnumClassReader()
