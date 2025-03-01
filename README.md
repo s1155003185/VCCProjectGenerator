@@ -11,10 +11,10 @@ Please go to following session to see how to create VCC Project to generate c++ 
 - Tutorial for Create VCC DLL Project to generate dll with Java Interface
 
 ## What's new
-Review Helper Function Name
+Initialize Git Manager
 
 ## What's next
-Git Manager
+Git Manager, Action Add Argument
 
 ## Features
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
@@ -1136,6 +1136,11 @@ X(Twitter) @VCCProject
 
 ****
 ## Release Log
+
+### [v0.3.2] - 2025-03-01: Review - Initialize Git Manager
+- Git Review
+- Add vpm.config.json. Default location is ~/Documents/vcc/config
+- Exception Macro add VALIDATE
 
 ### [v0.3.1] - 2025-02-08: Review - Review Function Name
 - Review helper function naming
