@@ -481,6 +481,19 @@ Exports
         In Generation Mode, Java class file will be generated in path specified.
         In Java, it must have prefix src/main/java
 
+#### Naming rules
+Generator will only copy the folder without renaming but using c++ class name as file name while converting c++ class to Java class
+
+C++
+    Folder: name must be lowercase and no seperator such as "_"
+    Filea: name must be lowercase and sperated by "_"
+
+Java
+    Folder: name must be lowercase and no seperator such as "_"
+    Filea: name must be same as Class name
+
+
+
 ### Update Rule
 Procedure:
 1. Download template.
@@ -1141,6 +1154,7 @@ X(Twitter) @VCCProject
 - Git Review
 - Add vpm.config.json. Default location is ~/Documents/vcc/config
 - Exception Macro add VALIDATE
+- Add field attribute @@NoJson
 
 ### [v0.3.1] - 2025-02-08: Review - Review Function Name
 - Review helper function naming
