@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 - Review folder and file naming rules. C++ folder must be lowercase without any seperator and file must be lower case with seperator. Java folder must be lowercase without any seperator and file must be having same name as class name
+- Action with argument
 
 ### [v0.3.2] - 2025-03-01: Review - Initialize Git Manager
 - Git Review
