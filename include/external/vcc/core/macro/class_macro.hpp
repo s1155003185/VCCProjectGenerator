@@ -214,8 +214,9 @@ namespace vcc
     //--------------------------------------------- ACTION -------------------------------------------------//
     //------------------------------------------------------------------------------------------------------//
     
-    // ActionName, DoActionReturn, UndoActionReturn, DoActionParameters
-    #define ACTION(name) \
+    // ActionName, ActionArgument
+    // Can only have 0 or 1 argument
+    #define ACTION(name, ...) \
         public: \
-            virtual void Do##name();
+            virtual void Do##name(__VA_ARGS__);
 }
