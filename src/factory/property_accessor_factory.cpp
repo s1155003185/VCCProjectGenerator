@@ -30,6 +30,12 @@ std::shared_ptr<IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_p
         return std::make_shared<VPGGitLogPropertyAccessor>(object);
     case ObjectType::MainForm:
         return std::make_shared<VPGMainFormPropertyAccessor>(object);
+    case ObjectType::MainFormAddWorkspaceFormArgument:
+        return std::make_shared<VPGMainFormAddWorkspaceFormArgumentPropertyAccessor>(object);
+    case ObjectType::MainFormDeleteWorkspaceFormArgument:
+        return std::make_shared<VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor>(object);
+    case ObjectType::MainFormRenameWorkspaceFormArgument:
+        return std::make_shared<VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor>(object);
     case ObjectType::WorkspaceForm:
         return std::make_shared<VPGWorkspaceFormPropertyAccessor>(object);
     default:

@@ -67,7 +67,7 @@ void VPGGitForm::InitializeComponents() const
     CATCH
 }
 
-void VPGGitForm::DoAction(const int64_t &formProperty)
+void VPGGitForm::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> /*argument*/)
 {
     TRY
         switch(static_cast<VPGGitFormProperty>(formProperty))

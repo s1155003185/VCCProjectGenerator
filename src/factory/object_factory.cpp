@@ -35,6 +35,15 @@ std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType, std
         case ObjectType::MainForm:
             result = std::make_shared<VPGMainForm>();
             break;
+        case ObjectType::MainFormAddWorkspaceFormArgument:
+            result = std::make_shared<VPGMainFormAddWorkspaceFormArgument>();
+            break;
+        case ObjectType::MainFormDeleteWorkspaceFormArgument:
+            result = std::make_shared<VPGMainFormDeleteWorkspaceFormArgument>();
+            break;
+        case ObjectType::MainFormRenameWorkspaceFormArgument:
+            result = std::make_shared<VPGMainFormRenameWorkspaceFormArgument>();
+            break;
         case ObjectType::WorkspaceForm:
             result = std::make_shared<VPGWorkspaceForm>();
             break;

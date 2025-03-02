@@ -213,9 +213,11 @@ namespace vcc
     //------------------------------------------------------------------------------------------------------//
     //--------------------------------------------- ACTION -------------------------------------------------//
     //------------------------------------------------------------------------------------------------------//
-    
-    // ActionName, DoActionReturn, UndoActionReturn, DoActionParameters
     #define ACTION(name) \
         public: \
             virtual void Do##name();
+            
+    #define ACTION_WITH_ARG_SPTR(name, type) \
+        public: \
+            virtual void Do##name(std::shared_ptr<type> value);
 }

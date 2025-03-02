@@ -935,7 +935,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
                 + INDENT + formActionStr
                 + INDENT + L"// </editor-fold>\r\n";
         }
-        std::wstring  formCustomActionStr = VPGJavaGenerationService::GenerateFormCustomAction(projectPrefix, enumClass);
+        std::wstring  formCustomActionStr = VPGJavaGenerationService::GenerateFormCustomAction(projectPrefix, enumClass, importFileMap, importFiles);
         if (!formCustomActionStr.empty()) {
             LTrim(formCustomActionStr);
             formCustomActionStr = L"\r\n"
@@ -960,11 +960,24 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
             + INDENT + L"public " + objectName + L"(Pointer handle) {\r\n"
             + INDENT + INDENT + L"this.Handle = handle;\r\n"
             + INDENT + L"}\r\n";
-        if (enumClass->GetType() == VPGEnumClassType::Form) {
+
+        // Special Constructor
+        switch (enumClass->GetType())
+        {
+        case VPGEnumClassType::Form:
             result += L"\r\n"
                 + INDENT + L"public " + objectName + L"() {\r\n"
                 + INDENT + INDENT + L"this.Handle = " + projectPrefix + L"DllFunctions.Instance.ApplicationCreateForm(" + projectPrefix + L"ObjectType." + classObjectType + L".getValue());\r\n"
                 + INDENT + L"}\r\n";
+            break;
+        case VPGEnumClassType::ActionArgument:
+            result += L"\r\n"
+                + INDENT + L"public " + objectName + L"() {\r\n"
+                + INDENT + INDENT + L"this.Handle = " + projectPrefix + L"DllFunctions.Instance.ApplicationCreateActionArgument(" + projectPrefix + L"ObjectType." + classObjectType + L".getValue());\r\n"
+                + INDENT + L"}\r\n";
+            break;
+        default:
+            break;
         }
         result += getterSetterStr
             + formActionStr
@@ -1048,7 +1061,7 @@ std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &pr
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateFormCustomAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass)
+std::wstring VPGJavaGenerationService::GenerateFormCustomAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles)
 {
     assert(enumClass != nullptr);
     if (enumClass->GetType() != VPGEnumClassType::Form)
@@ -1061,10 +1074,15 @@ std::wstring VPGJavaGenerationService::GenerateFormCustomAction(const std::wstri
             if (property->GetPropertyType() != VPGEnumClassPropertyType::Action)
                 continue;
 
+            // Only support SPTR
+            std::wstring type = property->GetType1();
+            if (!IsBlank(type) && IsCapital(type) && importFileMap.find(type) != importFileMap.end())
+                importFiles.insert(importFileMap.find(type)->second + L"." + type);
+
             std::wstring functionName = L"do" + property->GetPropertyName();
             formActions.insert(std::make_pair(functionName,
-                L"public void " + functionName + L"() {\r\n"
-                + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationDoFormAction(Handle, " + enumClass->GetName() + L"." + property->GetEnum() + L".getValue());\r\n"
+                L"public void " + functionName + L"(" + (!type.empty() ? (type + L" argument") : L"") + L") {\r\n"
+                + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationDoFormAction(Handle, " + enumClass->GetName() + L"." + property->GetEnum() + L".getValue(), " + (!type.empty() ? L"argument.Handle" : L"null") + L");\r\n"
                 "}\r\n"));
         }
         

@@ -1,6 +1,9 @@
 #pragma once
 
+#include <memory>
+
 #include "action_manager.hpp"
+#include "i_object.hpp"
 #include "log_config.hpp"
 #include "state.hpp"
 #include "thread_manager.hpp"
@@ -45,7 +48,7 @@ namespace vcc
             virtual void InitializeValue() const = 0;
 
             // Action
-            virtual void DoAction(const int64_t &formProperty) = 0;
+            virtual void DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) = 0;
             virtual void ExecuteAction(std::shared_ptr<IAction> action, bool isNoHistory) = 0;
             virtual int64_t GetActionFirstSeqNo() const = 0;
             virtual int64_t GetActionLastSeqNo() const = 0;

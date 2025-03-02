@@ -25,10 +25,12 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFil
         functionMap.insert(std::make_pair(L"ApplicationStart", L"DLLEXPORT void ApplicationStart();\r\n"));
 
         // Initialize Form
-        functionMap.insert(std::make_pair(L"ApplicationCreateForm", L"DLLEXPORT void *ApplicationCreateForm(int64_t formType);\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationCreateForm", L"DLLEXPORT void *ApplicationCreateForm(int64_t objectType);\r\n"));
         
         // Form Action
-        functionMap.insert(std::make_pair(L"ApplicationDoFormAction", L"DLLEXPORT void ApplicationDoFormAction(void *form, int64_t formProperty);\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationCreateActionArgument", L"DLLEXPORT void *ApplicationCreateActionArgument(int64_t objectType);\r\n"));
+
+        functionMap.insert(std::make_pair(L"ApplicationDoFormAction", L"DLLEXPORT void ApplicationDoFormAction(void *form, int64_t formProperty, void *argument);\r\n"));
         functionMap.insert(std::make_pair(L"ApplicationGetFormActionFirstSeqNo", L"DLLEXPORT int64_t ApplicationGetFormActionFirstSeqNo(void *form);\r\n"));
         functionMap.insert(std::make_pair(L"ApplicationGetFormActionLastSeqNo", L"DLLEXPORT int64_t ApplicationGetFormActionLastSeqNo(void *form);\r\n"));
 
@@ -88,11 +90,20 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             "}\r\n"));
             
         // Form Action
-        functionMap.insert(std::make_pair(L"ApplicationDoFormAction", 
-            L"void ApplicationDoFormAction(void *form, int64_t formProperty)\r\n"
+        functionMap.insert(std::make_pair(L"ApplicationCreateActionArgument",
+            L"void *ApplicationCreateActionArgument(int64_t objectType)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        Application::DoFormAction(static_cast<IObject *>(form), formProperty);\r\n"
+            "        return Application::CreateActionArgument(static_cast<ObjectType>(objectType)).get();\r\n"
+            "    CATCH\r\n"
+            "    return nullptr;\r\n"
+            "}\r\n"));
+
+        functionMap.insert(std::make_pair(L"ApplicationDoFormAction", 
+            L"void ApplicationDoFormAction(void *form, int64_t formProperty, void *argument)\r\n"
+            "{\r\n"
+            "    TRY\r\n"
+            "        Application::DoFormAction(static_cast<IObject *>(form), formProperty, static_cast<IObject *>(argument));\r\n"
             "    CATCH\r\n"
             "}\r\n"));
         functionMap.insert(std::make_pair(L"ApplicationGetFormActionFirstSeqNo",

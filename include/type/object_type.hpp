@@ -9,6 +9,9 @@ enum class ObjectType
     , GitForm
     , GitLog
     , MainForm
+    , MainFormAddWorkspaceFormArgument
+    , MainFormDeleteWorkspaceFormArgument
+    , MainFormRenameWorkspaceFormArgument
     , WorkspaceForm
     // <vcc:customObjectTypes sync="RESERVE" gen="RESERVE">
     // </vcc:customObjectTypes>

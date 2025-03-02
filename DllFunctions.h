@@ -28,8 +28,9 @@ DLLEXPORT void *CreateObject(int64_t objectType);
 // <vcc:dllInterface gen="REPLACE">
 DLLEXPORT int64_t ApplicationClearFormAction(void *form);
 DLLEXPORT bool ApplicationCloseForm(void *form, bool isForce);
-DLLEXPORT void *ApplicationCreateForm(int64_t formType);
-DLLEXPORT void ApplicationDoFormAction(void *form, int64_t formProperty);
+DLLEXPORT void *ApplicationCreateActionArgument(int64_t objectType);
+DLLEXPORT void *ApplicationCreateForm(int64_t objectType);
+DLLEXPORT void ApplicationDoFormAction(void *form, int64_t formProperty, void *argument);
 DLLEXPORT int64_t ApplicationGetFormActionFirstSeqNo(void *form);
 DLLEXPORT int64_t ApplicationGetFormActionLastSeqNo(void *form);
 DLLEXPORT bool ApplicationIsFormClosable(void *form);

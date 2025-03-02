@@ -56,43 +56,17 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
             std::wstring propertyStr = L"";
             std::wstring assignmentStrSimple = L"std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm";
             std::wstring assignmentStr = assignmentStrSimple;
-            for (auto const &property : property->GetClassProperties())
-            {
-                if (property->GetPropertyType() != VPGEnumClassPropertyType::Manager && property->GetPropertyType() != VPGEnumClassPropertyType::Property)
-                    continue;
-
-                propertyStr += INDENT + property->GetMacro() + L"\r\n";
-
-                std::wstring type1 = property->GetType1();
-                std::wstring type2 = property->GetType2();
-                if (!type1.empty() && IsCapital(type1))
-                    customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, type1));
-                if (!type2.empty() && IsCapital(type2))
-                    customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, type2));
+            
+            std::wstring type1 = property->GetType1();
+            // Only Support shared point argument
+            if (!type1.empty() && IsCapital(type1)) {
+                customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, type1));
+                
+                propertyStr = INDENT + L"GETSET_SPTR_NULL(" + type1 + L", Argument)\r\n";
 
                 if (!assignmentStr.empty())
                     assignmentStr += L", ";
-
-                if (property->GetPropertyType() == VPGEnumClassPropertyType::Manager) {
-                    assignmentStr += L"std::shared_ptr<" + property->GetType1() + L">";
-                } else if (property->GetPropertyType() == VPGEnumClassPropertyType::Property) {
-                    if (IsStartWith(property->GetMacro(), L"MAP")) {
-                        systemIncludeFiles.insert(L"map");
-                        assignmentStr += L"std::map<" + type1 + L", " + (IsContain(property->GetMacro(), L"SPTR") ? (L"std::shared_ptr<" + type2 + L">") : type2) + L">";
-                    } else if (IsStartWith(property->GetMacro(), L"VECTOR")) {
-                        systemIncludeFiles.insert(L"vector");
-                        assignmentStr += L"std::vector<" + (IsContain(property->GetMacro(), L"SPTR") ? (L"std::shared_ptr<" + type1 + L">") : type1) + L">";
-                    } else if (IsStartWith(property->GetMacro(), L"ORDERED_MAP")) {
-                        systemIncludeFiles.insert(L"map");
-                        systemIncludeFiles.insert(L"vector");
-                        assignmentStr += L"std::vector<std::pair<" + type1 + L", "+ (IsContain(property->GetMacro(), L"SPTR") ? (L"std::shared_ptr<" + type2 + L">") : type2) + L">>";
-                    } else {
-                        assignmentStr += IsContain(property->GetMacro(), L"SPTR") ? (L"std::shared_ptr<" + type1 + L">") : type1;
-                    }
-                }
-                std::wstring propertyName = property->GetPropertyName();
-                ToCamel(propertyName);
-                assignmentStr += L" " + propertyName;
+                assignmentStr += L"std::shared_ptr<" + type1 + L"> argument";
             }
 
             std::wstring action = L"class " + actionClassName + L" : public BaseAction\r\n"
@@ -214,42 +188,15 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
             std::vector<std::wstring> propertyAssignments;
             propertyAssignments.insert(propertyAssignments.end(), propertyAssignmentsSimple.begin(), propertyAssignmentsSimple.end());
 
-            for (auto const &property : property->GetClassProperties())
-            {
-                if (property->GetPropertyType() != VPGEnumClassPropertyType::Manager && property->GetPropertyType() != VPGEnumClassPropertyType::Property)
-                    continue;
-
-                std::wstring type1 = property->GetType1();
-                std::wstring type2 = property->GetType2();
-                if (!type1.empty() && IsCapital(type1))
-                    customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, type1));
-                if (!type2.empty() && IsCapital(type2))
-                    customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, type2));
-
+            std::wstring type1 = property->GetType1();
+            if (!type1.empty() && IsCapital(type1)) {
+                customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, type1));
+                
                 if (!assignmentStr.empty())
                     assignmentStr += L", ";
 
-                if (property->GetPropertyType() == VPGEnumClassPropertyType::Manager) {
-                    assignmentStr += L"std::shared_ptr<" + property->GetType1() + L">";
-                } else if (property->GetPropertyType() == VPGEnumClassPropertyType::Property) {
-                    if (IsStartWith(property->GetMacro(), L"MAP")) {
-                        systemIncludeFiles.insert(L"map");
-                        assignmentStr += L"std::map<" + type1 + L", " + (IsContain(property->GetMacro(), L"SPTR") ? (L"std::shared_ptr<" + type2 + L">") : type2) + L">";
-                    } else if (IsStartWith(property->GetMacro(), L"VECTOR")) {
-                        systemIncludeFiles.insert(L"vector");
-                        assignmentStr += L"std::vector<" + (IsContain(property->GetMacro(), L"SPTR") ? (L"std::shared_ptr<" + type1 + L">") : type1) + L">";
-                    } else if (IsStartWith(property->GetMacro(), L"ORDERED_MAP")) {
-                        systemIncludeFiles.insert(L"map");
-                        systemIncludeFiles.insert(L"vector");
-                        assignmentStr += L"std::vector<std::pair<" + type1 + L", "+ (IsContain(property->GetMacro(), L"SPTR") ? (L"std::shared_ptr<" + type2 + L">") : type2) + L">>";
-                    } else {
-                        assignmentStr += IsContain(property->GetMacro(), L"SPTR") ? (L"std::shared_ptr<" + type1 + L">") : type1;
-                    }
-                }
-                std::wstring propertyName = property->GetPropertyName();
-                ToCamel(propertyName);
-                assignmentStr += L" " + propertyName;
-                propertyAssignments.push_back(L"_" + property->GetPropertyName() + L" = " + propertyName);
+                assignmentStr += L"std::shared_ptr<" + property->GetType1() + L"> argument";
+                propertyAssignments.push_back(L"_Argument = argument");
             }
 
             std::wstring action = actionClassName + L"::" + actionClassName + L"(" + assignmentStrSimple + L") : BaseAction()\r\n"

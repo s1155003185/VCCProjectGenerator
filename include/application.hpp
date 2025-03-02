@@ -18,6 +18,7 @@ class Application : public BaseForm
 {
     private:
         std::set<std::shared_ptr<IObject>> _Forms;
+        std::set<std::shared_ptr<IObject>> _ActionArguments;
 
         static std::shared_ptr<IObject> GetFormSharedPtr(IObject *IObject);
         static IForm *GetIFormPtrFromIObject(IObject *obj);
@@ -45,7 +46,8 @@ class Application : public BaseForm
         static std::shared_ptr<IObject> CreateForm(const ObjectType &objectType);
 
         // Form Action
-        static void DoFormAction(IObject *form, const int64_t &formProperty);
+        static std::shared_ptr<IObject> CreateActionArgument(const ObjectType &objectType);
+        static void DoFormAction(IObject *form, const int64_t &formProperty, IObject *argument);
         static int64_t GetFormActionFirstSeqNo(IObject *form);
         static int64_t GetFormActionLastSeqNo(IObject *form);
         
@@ -65,7 +67,7 @@ class Application : public BaseForm
 
         // Useless
         virtual std::shared_ptr<IObject> Clone() const override { return nullptr; }
-        virtual void DoAction(const int64_t &/*formProperty*/) override {}
+        virtual void DoAction(const int64_t &/*formProperty*/, std::shared_ptr<IObject> /*argument*/) override {}
 
         // <vcc:customApplicationPublicFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customApplicationPublicFunctions>

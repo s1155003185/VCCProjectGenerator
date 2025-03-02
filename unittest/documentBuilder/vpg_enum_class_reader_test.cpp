@@ -563,7 +563,8 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
         "    Manager1, // MANAGER_SPTR(GitManager, GitManager1, _LogProperty)\r\n"
         "    Manager2, // MANAGER_SPTR_NULL(GitManager, GitManager2)\r\n"
         "    Manager3, // MANAGER_SPTR_PARENT(GitManager, GitManager3, GitBaseManager)\r\n"
-        "    Action // ACTION(AddGitLog) \r\n"
+        "    Action1, // ACTION(AddGitLog) \r\n"
+        "    Action2, // ACTION_WITH_ARG_SPTR(DeleteGitLog, GitLog) \r\n"
         "};\r\n";
     std::vector<std::shared_ptr<VPGEnumClass>> results;
     VPGGlobal::GetEnumClassReader()->Parse(code, results);
@@ -573,7 +574,7 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
     EXPECT_EQ(element->GetName(), L"Property");
 
     // Property
-    EXPECT_EQ(element->GetProperties().size(), (size_t)5);
+    EXPECT_EQ(element->GetProperties().size(), (size_t)6);
     EXPECT_EQ((int64_t)element->GetProperties().at(0)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Property);
     EXPECT_EQ(element->GetProperties().at(0)->GetType1(), L"std::wstring");
     EXPECT_EQ(element->GetProperties().at(0)->GetPropertyName(), L"Property");
@@ -589,48 +590,9 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
     EXPECT_EQ(element->GetProperties().at(3)->GetPropertyName(), L"GitManager3");
     EXPECT_EQ(element->GetProperties().at(3)->GetDefaultValue(), L"GitBaseManager");
     EXPECT_EQ((int64_t)element->GetProperties().at(4)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
+    EXPECT_EQ(element->GetProperties().at(4)->GetType1(), L"");
     EXPECT_EQ(element->GetProperties().at(4)->GetPropertyName(), L"AddGitLog");
-}
-
-TEST(VPGEnumClassReaderTest, EnumClassWithAction)
-{
-    std::wstring code = L""
-        "#pragma once\r\n"
-        "\r\n"
-        "enum class Property {\r\n"
-        "    AddWorkspace // ACTION(AddWorkspace) @@Class { \"Properties\" : [ \"GETSET(std::wstring, Name, L\\\"\\\")\" ]\r\n"
-        "    , DoWorkNormalProperty // ACTION(DoWorkNormalProperty) @@Class { \"Properties\" : [ \"GETSET(std::wstring, Name, L\\\"\\\")\", \"GETSET(State, State, State::Busy)\" ], \"Assignments\": [\"\", \"State::Busy\"] } }\r\n"
-        "    , DeleteWorkspace // ACTION(DeleteWorkspace)\r\n"
-        "};\r\n";
-    std::vector<std::shared_ptr<VPGEnumClass>> results;
-    VPGGlobal::GetEnumClassReader()->Parse(code, results);
-    EXPECT_EQ(results.size(), (size_t)1);
-    auto element = results.at(0);
-    EXPECT_EQ(element->GetNamespace(), L"");
-    EXPECT_EQ(element->GetName(), L"Property");
-
-    // Property
-    EXPECT_EQ(element->GetProperties().size(), (size_t)3);
-    EXPECT_EQ((int64_t)element->GetProperties().at(0)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
-    EXPECT_EQ(element->GetProperties().at(0)->GetPropertyName(), L"AddWorkspace");
-    EXPECT_EQ(element->GetProperties().at(0)->GetEnum(), L"AddWorkspace");
-    EXPECT_EQ(element->GetProperties().at(0)->GetClassProperties().size(), (size_t)1);
-    EXPECT_EQ(element->GetProperties().at(0)->GetClassProperties().at(0)->GetMacro(), L"GETSET(std::wstring, Name, L\"\")");
-    EXPECT_EQ(element->GetProperties().at(0)->GetClassProperties().at(0)->GetPropertyName(), L"Name");
-    EXPECT_EQ(element->GetProperties().at(0)->GetClassProperties().at(0)->GetType1(), L"std::wstring");
-    EXPECT_EQ(element->GetProperties().at(0)->GetClassAssignments().size(), (size_t)0);
-    EXPECT_EQ((int64_t)element->GetProperties().at(1)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
-    EXPECT_EQ(element->GetProperties().at(1)->GetPropertyName(), L"DoWorkNormalProperty");
-    EXPECT_EQ(element->GetProperties().at(1)->GetEnum(), L"DoWorkNormalProperty");
-    EXPECT_EQ(element->GetProperties().at(1)->GetClassProperties().size(), (size_t)2);
-    EXPECT_EQ(element->GetProperties().at(1)->GetClassProperties().at(0)->GetMacro(), L"GETSET(std::wstring, Name, L\"\")");
-    EXPECT_EQ(element->GetProperties().at(1)->GetClassProperties().at(1)->GetMacro(), L"GETSET(State, State, State::Busy)");
-    EXPECT_EQ(element->GetProperties().at(1)->GetClassAssignments().size(), (size_t)2);
-    EXPECT_EQ(element->GetProperties().at(1)->GetClassAssignments().at(0), L"");
-    EXPECT_EQ(element->GetProperties().at(1)->GetClassAssignments().at(1), L"State::Busy");
-    EXPECT_EQ((int64_t)element->GetProperties().at(2)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
-    EXPECT_EQ(element->GetProperties().at(2)->GetPropertyName(), L"DeleteWorkspace");
-    EXPECT_EQ(element->GetProperties().at(2)->GetEnum(), L"DeleteWorkspace");
-    EXPECT_EQ(element->GetProperties().at(2)->GetClassProperties().size(), (size_t)0);
-    EXPECT_EQ(element->GetProperties().at(2)->GetClassAssignments().size(), (size_t)0);
+    EXPECT_EQ((int64_t)element->GetProperties().at(5)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
+    EXPECT_EQ(element->GetProperties().at(5)->GetType1(), L"GitLog");
+    EXPECT_EQ(element->GetProperties().at(5)->GetPropertyName(), L"DeleteGitLog");
 }

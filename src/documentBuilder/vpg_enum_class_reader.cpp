@@ -222,7 +222,11 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
         } else if (IsStartWith(property->_Macro, L"ACTION", pos)) {
             property->_PropertyType = VPGEnumClassPropertyType::Action;
 
-            property->_PropertyName = _GetType(property->_Macro, pos); // First element
+            property->_PropertyName = _GetType(property->_Macro, pos);
+            if (property->_Macro[pos] == L',')  {
+                pos++;
+                property->_Type1 = _GetPropertyName(property->_Macro, pos);
+            }
         } else {
             property->_PropertyType = VPGEnumClassPropertyType::Property;
 
@@ -280,26 +284,6 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
             else if (IsEqual(attribute, attributeToken + L"Inherit", true))
                 property->SetIsInherit(true);
             // Action
-            else if (IsStartWith(attribute, attributeToken + L"Class", 0, true)) {
-                auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Class");
-                assert(jsonAttributes != nullptr);
-                if (jsonAttributes->IsContainKey(L"Properties")) {
-                    auto classProperties = jsonAttributes->GetArray(L"Properties");
-                    if (!classProperties.empty()) {
-                        for (auto const &classProperty : classProperties) {
-                            std::wstring propertyMacro = classProperty->GetArrayElementString();
-                            auto tmpProperty = std::make_shared<VPGEnumClassProperty>();
-                            _AssignEnumClassProperty(propertyMacro, tmpProperty);
-                            property->InsertClassProperties(tmpProperty);
-                        }
-                        if (jsonAttributes->IsContainKey(L"Assignments")) {
-                            auto classAssignments = jsonAttributes->GetArray(L"Assignments");
-                            for (auto const &classAssignment : classAssignments)
-                                property->InsertClassAssignments(classAssignment->GetArrayElementString());
-                        }
-                    }
-                }
-            }
             else if (IsEqual(attribute, attributeToken + L"NoHistory", true))
                 property->SetIsNoHistory(true);
             // Json
@@ -438,6 +422,9 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
             for (auto const &attribute : attributes) {
                 if (IsStartWith(attribute, attributeToken + L"Form", 0, true)) {
                     enumClass->_Type = VPGEnumClassType::Form;
+                    command = L"";
+                } else if (IsStartWith(attribute, attributeToken + L"ActionArgument", 0, true)) {
+                    enumClass->_Type = VPGEnumClassType::ActionArgument;
                     command = L"";
                 } else if (IsStartWith(attribute, attributeToken + L"Inherit", 0, true)) {
                     auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Inherit");

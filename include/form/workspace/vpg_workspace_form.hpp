@@ -43,7 +43,7 @@ class VPGWorkspaceForm : public BaseForm, public BaseJsonObject
 
         virtual void InitializeComponents() const override;
 
-        virtual void DoAction(const int64_t &formProperty) override;
+        virtual void DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;
 
         // <vcc:customVPGWorkspaceFormPublicFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGWorkspaceFormPublicFunctions>

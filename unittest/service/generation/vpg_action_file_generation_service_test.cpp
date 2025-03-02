@@ -165,12 +165,8 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile)
         "//@@Form\r\n"
         "enum class VPGGitFormProperty\r\n"
         "{\r\n"
-        "    AddWorkspace // ACTION(AddWorkspace) @@Class { \"Properties\" : [ \"GETSET(std::wstring, Name, L\\\"\\\")\" ]\r\n"
-        "    , WorkNormalProperty // ACTION(WorkNormalProperty) @@Class { \"Properties\" : [ \"GETSET(std::wstring, Name, L\\\"\\\")\", \"GETSET(State, State, State::Busy)\" ], \"Assignments\": [\"\", \"State::Busy\"] } }\r\n"
-        "    , WorkObject // ACTION(WorkObject) @@Class { \"Properties\" : [ \"GETSET_SPTR_NULL(LogConfig, LogConfig)\" , \"GETSET(std::wstring, Name, L\\\"\\\")\"], \"Assignments\": [\"_LogConfig\", \"State::Busy\"] }\r\n"
-        "    , WorkList // ACTION(WorkList) @@Class { \"Properties\" : [ \"VECTOR(double, Vector)\" , \"MAP(std::wstring, std::wstring, Map)\", \"ORDERED_MAP(int64_t, int64_t, OrderedMap)\"], \"Assignments\": [ \"{1, 2}\", \"{ std::make_shared(1,2), std::make_shared(2,3) }\" ]] }\r\n"
-        "    , WorkListObject // ACTION(WorkListObject) @@Class { \"Properties\" : [ \"VECTOR_SPTR(LogConfig, Vector)\" , \"MAP_SPTR_R(std::wstring, LogConfig, Map)\", \"ORDERED_MAP_SPTR_R(int64_t, LogConfig, OrderedMap)\"], \"Assignments\": [ \"{}\", \"{}\" ]] }\r\n"
-        "    , DeleteWorkspace // ACTION(DeleteWorkspace)\r\n"
+        "    AddWorkspace // ACTION(AddWorkspace)\r\n"
+        "    , DeleteWorkspace // ACTION_WITH_ARG_SPTR(DeleteWorkspace, VPGGitFormDeleteWorkspaceArgument)\r\n"
         "};\r\n"
         "\r\n";
 
@@ -178,26 +174,20 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::vector<std::wstring> hppResult = {
-            GetHppClass(L"AddWorkspace", { L"GETSET(std::wstring, Name, L\"\")" }, L"std::wstring name"),
-            GetHppClass(L"WorkNormalProperty", { L"GETSET(std::wstring, Name, L\"\")", L"GETSET(State, State, State::Busy)" }, L"std::wstring name, State state"),
-            GetHppClass(L"WorkObject", { L"GETSET_SPTR_NULL(LogConfig, LogConfig)" , L"GETSET(std::wstring, Name, L\"\")" }, L"std::shared_ptr<LogConfig> logConfig, std::wstring name"),
-            GetHppClass(L"WorkList", { L"VECTOR(double, Vector)" , L"MAP(std::wstring, std::wstring, Map)", L"ORDERED_MAP(int64_t, int64_t, OrderedMap)" }, L"std::vector<double> vector, std::map<std::wstring, std::wstring> map, std::vector<std::pair<int64_t, int64_t>> orderedMap"),
-            GetHppClass(L"WorkListObject", { L"VECTOR_SPTR(LogConfig, Vector)" , L"MAP_SPTR_R(std::wstring, LogConfig, Map)", L"ORDERED_MAP_SPTR_R(int64_t, LogConfig, OrderedMap)" }, L"std::vector<std::shared_ptr<LogConfig>> vector, std::map<std::wstring, std::shared_ptr<LogConfig>> map, std::vector<std::pair<int64_t, std::shared_ptr<LogConfig>>> orderedMap"),
-            GetHppClass(L"DeleteWorkspace" , {}, L"")
+            GetHppClass(L"AddWorkspace", {  }, L""),
+            GetHppClass(L"DeleteWorkspace" , { L"GETSET_SPTR_NULL(VPGGitFormDeleteWorkspaceArgument, Argument)" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")
     };
 
     std::vector<std::wstring> cppResult = {
-            GetCppClass(L"AddWorkspace", { L"_Name = name;" }, L"std::wstring name"),
-            GetCppClass(L"WorkNormalProperty", { L"_Name = name;", L"_State = state;" }, L"std::wstring name, State state"),
-            GetCppClass(L"WorkObject", { L"_LogConfig = logConfig;" , L"_Name = name;" }, L"std::shared_ptr<LogConfig> logConfig, std::wstring name"),
-            GetCppClass(L"WorkList", { L"_Vector = vector;" , L"_Map = map;", L"_OrderedMap = orderedMap;" }, L"std::vector<double> vector, std::map<std::wstring, std::wstring> map, std::vector<std::pair<int64_t, int64_t>> orderedMap"),
-            GetCppClass(L"WorkListObject", { L"_Vector = vector;" , L"_Map = map;", L"_OrderedMap = orderedMap;" }, L"std::vector<std::shared_ptr<LogConfig>> vector, std::map<std::wstring, std::shared_ptr<LogConfig>> map, std::vector<std::pair<int64_t, std::shared_ptr<LogConfig>>> orderedMap"),
-            GetCppClass(L"DeleteWorkspace" , {}, L"")
+            GetCppClass(L"AddWorkspace", { }, L""),
+            GetCppClass(L"DeleteWorkspace" , { L"_Argument = argument;" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")
     };
 
     std::map<std::wstring, std::wstring> classPathMapping;
     classPathMapping.insert(std::make_pair(L"State", L"state.hpp"));
     classPathMapping.insert(std::make_pair(L"LogConfig", L"log_config.hpp"));
+    classPathMapping.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgument", L"vpg_git_form.hpp"));
+    classPathMapping.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgumentProperty", L"vpg_git_form.hpp"));
 
     std::vector<std::wstring> hppClass, cppClass;
     std::set<std::wstring> sytemIncludeFiles;
@@ -212,13 +202,11 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
 {
     std::wstring enumClass = L""
         "#pragma once\r\n"
-        "\r\n"
         "//@@Form\r\n"
         "enum class VPGGitFormProperty\r\n"
         "{\r\n"
-        "    AddWorkspace // ACTION(AddWorkspace) @@Class { \"Properties\" : [ \"GETSET(std::wstring, Name, L\\\"\\\")\" ]\r\n"
-        "    , WorkObject // ACTION(WorkObject) @@Class { \"Properties\" : [ \"GETSET_SPTR_NULL(LogConfig, LogConfig)\" , \"GETSET(State, State, State::Busy)\" ], \"Assignments\": [\"_LogConfig\", \"State::Busy\"] }\r\n"
-        "    , WorkListObject // ACTION(WorkListObject) @@Class { \"Properties\" : [ \"VECTOR_SPTR(LogConfig, Vector)\" , \"MAP_SPTR_R(std::wstring, LogConfig, Map)\", \"ORDERED_MAP_SPTR_R(int64_t, LogConfig, OrderedMap)\"], \"Assignments\": [ \"{}\", \"{}\" ]] }\r\n"
+        "    AddWorkspace // ACTION(AddWorkspace)\r\n"
+        "    , DeleteWorkspace // ACTION_WITH_ARG_SPTR(DeleteWorkspace, VPGGitFormDeleteWorkspaceArgument)\r\n"
         "};\r\n"
         "\r\n";
 
@@ -229,6 +217,8 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
     std::map<std::wstring, std::wstring> classPathMapping;
     classPathMapping.insert(std::make_pair(L"State", L"state.hpp"));
     classPathMapping.insert(std::make_pair(L"LogConfig", L"log_config.hpp"));
+    classPathMapping.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgument", L"vpg_git_form.hpp"));
+    classPathMapping.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgumentProperty", L"vpg_git_form.hpp"));
 
     std::vector<std::wstring> hppClass, cppClass;
     std::set<std::wstring> sytemIncludeFiles;
@@ -240,10 +230,8 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
 
     EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.hpp"})));
     EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.cpp"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_object.hpp"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_object.cpp"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_list_object.hpp"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_list_object.cpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.hpp"})));
+    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.cpp"})));
 
     std::wstring hppHeader = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         L"#pragma once\r\n"
@@ -267,7 +255,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
             "#include \"i_object.hpp\"\r\n"
             "#include \"log_config.hpp\"\r\n"
             + customPropertyHeader
-            + GetHppClass(L"AddWorkspace", { L"GETSET(std::wstring, Name, L\"\")" }, L"std::wstring name"));
+            + GetHppClass(L"AddWorkspace", { }, L""));
     EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.cpp"})),
             cppHeader
             + L"#include \"vpg_git_form_add_workspace.hpp\"\r\n"
@@ -280,10 +268,10 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
             "#include \"i_object.hpp\"\r\n"
             "#include \"log_config.hpp\"\r\n"
             + customPropertyHeader
-            + GetCppClass(L"AddWorkspace", { L"_Name = name;" }, L"std::wstring name")
+            + GetCppClass(L"AddWorkspace", { }, L"")
             + customFooter);
 
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_object.hpp"})),
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.hpp"})),
             hppHeader
             + L"#include <memory>\r\n"
             "#include <string>\r\n"
@@ -291,12 +279,12 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
             "#include \"base_action.hpp\"\r\n"
             "#include \"i_object.hpp\"\r\n"
             "#include \"log_config.hpp\"\r\n"
-            "#include \"state.hpp\"\r\n"
+            "#include \"vpg_git_form.hpp\"\r\n"
             + customPropertyHeader
-            + GetHppClass(L"WorkObject", { L"GETSET_SPTR_NULL(LogConfig, LogConfig)" , L"GETSET(State, State, State::Busy)" }, L"std::shared_ptr<LogConfig> logConfig, State state"));
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_object.cpp"})),
+            + GetHppClass(L"DeleteWorkspace" , { L"GETSET_SPTR_NULL(VPGGitFormDeleteWorkspaceArgument, Argument)" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument"));
+    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.cpp"})),
             cppHeader
-            + L"#include \"vpg_git_form_work_object.hpp\"\r\n"
+            + L"#include \"vpg_git_form_delete_workspace.hpp\"\r\n"
             "\r\n"
             "#include <memory>\r\n"
             "#include <string>\r\n"
@@ -305,37 +293,8 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
             "#include \"exception_macro.hpp\"\r\n"
             "#include \"i_object.hpp\"\r\n"
             "#include \"log_config.hpp\"\r\n"
-            "#include \"state.hpp\"\r\n"
+            "#include \"vpg_git_form.hpp\"\r\n"
             + customPropertyHeader
-            + GetCppClass(L"WorkObject", { L"_LogConfig = logConfig;" , L"_State = state;" }, L"std::shared_ptr<LogConfig> logConfig, State state")
-            + customFooter);
-
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_list_object.hpp"})),
-            hppHeader
-            + L"#include <map>\r\n"
-            "#include <memory>\r\n"
-            "#include <string>\r\n"
-            "#include <vector>\r\n"
-            "\r\n"
-            "#include \"base_action.hpp\"\r\n"
-            "#include \"i_object.hpp\"\r\n"
-            "#include \"log_config.hpp\"\r\n"
-            + customPropertyHeader
-            + GetHppClass(L"WorkListObject", { L"VECTOR_SPTR(LogConfig, Vector)" , L"MAP_SPTR_R(std::wstring, LogConfig, Map)", L"ORDERED_MAP_SPTR_R(int64_t, LogConfig, OrderedMap)" }, L"std::vector<std::shared_ptr<LogConfig>> vector, std::map<std::wstring, std::shared_ptr<LogConfig>> map, std::vector<std::pair<int64_t, std::shared_ptr<LogConfig>>> orderedMap"));
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_work_list_object.cpp"})),
-            cppHeader
-            + L"#include \"vpg_git_form_work_list_object.hpp\"\r\n"
-            "\r\n"
-            "#include <map>\r\n"
-            "#include <memory>\r\n"
-            "#include <string>\r\n"
-            "#include <vector>\r\n"
-            "\r\n"
-            "#include \"base_action.hpp\"\r\n"
-            "#include \"exception_macro.hpp\"\r\n"
-            "#include \"i_object.hpp\"\r\n"
-            "#include \"log_config.hpp\"\r\n"
-            + customPropertyHeader
-            + GetCppClass(L"WorkListObject", { L"_Vector = vector;" , L"_Map = map;", L"_OrderedMap = orderedMap;" }, L"std::vector<std::shared_ptr<LogConfig>> vector, std::map<std::wstring, std::shared_ptr<LogConfig>> map, std::vector<std::pair<int64_t, std::shared_ptr<LogConfig>>> orderedMap")
+            + GetCppClass(L"DeleteWorkspace" , { L"_Argument = argument;" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")
             + customFooter);
 }

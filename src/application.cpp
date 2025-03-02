@@ -2,11 +2,14 @@
 
 #include <assert.h>
 #include <map>
+#include <memory>
+#include <set>
 
 #include "base_form.hpp"
 #include "exception_macro.hpp"
 #include "object_factory.hpp"
 #include "object_type.hpp"
+#include "set_helper.hpp"
 
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
 // </vcc:customHeader>
@@ -66,12 +69,24 @@ std::shared_ptr<IObject> Application::CreateForm(const ObjectType &objectType)
     return nullptr;
 }
 
-void Application::DoFormAction(IObject *form, const int64_t &formProperty)
+std::shared_ptr<IObject> Application::CreateActionArgument(const ObjectType &objectType)
+{
+    TRY
+        auto actionArgument = ObjectFactory::Create(objectType);
+        application->_ActionArguments.insert(actionArgument);
+        return actionArgument;
+    CATCH
+    return nullptr;
+}
+
+void Application::DoFormAction(IObject *form, const int64_t &formProperty, IObject *argument)
 {
     TRY
         if (form == nullptr)
             return;
-        GetIFormPtrFromIObject(form)->DoAction(formProperty);
+        GetIFormPtrFromIObject(form)->DoAction(formProperty, argument != nullptr ? argument->SharedPtr() : nullptr);
+        if (argument != nullptr)
+            RemoveIObjectAll(application->_ActionArguments, argument);
     CATCH
 }
 

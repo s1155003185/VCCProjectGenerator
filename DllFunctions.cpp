@@ -57,6 +57,14 @@ bool ApplicationCloseForm(void *form, bool isForce)
     return false;
 }
 
+void *ApplicationCreateActionArgument(int64_t objectType)
+{
+    TRY
+        return Application::CreateActionArgument(static_cast<ObjectType>(objectType)).get();
+    CATCH
+    return nullptr;
+}
+
 void *ApplicationCreateForm(int64_t objectType)
 {
     TRY
@@ -65,10 +73,10 @@ void *ApplicationCreateForm(int64_t objectType)
     return nullptr;
 }
 
-void ApplicationDoFormAction(void *form, int64_t formProperty)
+void ApplicationDoFormAction(void *form, int64_t formProperty, void *argument)
 {
     TRY
-        Application::DoFormAction(static_cast<IObject *>(form), formProperty);
+        Application::DoFormAction(static_cast<IObject *>(form), formProperty, static_cast<IObject *>(argument));
     CATCH
 }
 

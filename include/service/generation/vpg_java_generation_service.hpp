@@ -54,7 +54,7 @@ class VPGJavaGenerationService
     
         // Form Action
         static std::wstring GenerateFormAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass);
-        static std::wstring GenerateFormCustomAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass);
+        static std::wstring GenerateFormCustomAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles);
     public:
         static void GenerateJavaBridge(const LogConfig *logConfig, const std::wstring &targetWorkspace, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option);
         

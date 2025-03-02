@@ -85,7 +85,7 @@ void VPGWorkspaceForm::InitializeComponents() const
     CATCH
 }
 
-void VPGWorkspaceForm::DoAction(const int64_t &formProperty)
+void VPGWorkspaceForm::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> /*argument*/)
 {
     TRY
         switch(static_cast<VPGWorkspaceFormProperty>(formProperty))

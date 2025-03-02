@@ -21,6 +21,7 @@ enum class VPGEnumClassType
 {
     Object
     , Form
+    , ActionArgument
 };
 
 enum class VPGEnumClassPropertyType
@@ -60,10 +61,8 @@ class VPGEnumClassProperty : public BaseObject
     GETSET(bool, IsObject, false);
     GETSET(VPGEnumClassPropertyAccessMode, AccessMode, VPGEnumClassPropertyAccessMode::ReadWrite);
     GETSET(bool, IsInherit, false);
-
+    
     // Action
-    VECTOR_SPTR(VPGEnumClassProperty, ClassProperties);
-    VECTOR(std::wstring, ClassAssignments);
     GETSET(bool, IsNoHistory, false);
 
     // Json

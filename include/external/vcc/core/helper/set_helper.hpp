@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+#include <memory>
 #include <set>
 #include <string>
 
@@ -41,21 +43,44 @@ namespace vcc
     template <typename T>
     inline void RemoveElement(std::set<T> &sourceSet, const T &obj)
     {
-        sourceSet.erase(std::remove_if(sourceSet.begin(), sourceSet.end(),
-            [&](const T &element) {
-                return element == obj;
-            }), sourceSet.end());
+        for (auto it = sourceSet.begin(); it != sourceSet.end(); ) {
+            if (*it == obj) {
+                it = sourceSet.erase(it);
+                break;
+            }
+        }
+    }
+    
+    template <typename T>
+    inline void RemoveElementAll(std::set<T> &sourceSet, const T &obj)
+    {
+        for (auto it = sourceSet.begin(); it != sourceSet.end(); ) {
+            if (*it == obj)
+                it = sourceSet.erase(it);
+            else
+                it++;
+        }
+    }
+    
+    template <typename T>
+    inline void RemoveIObject(std::set<std::shared_ptr<T>> &sourceSet, const IObject *obj)
+    {
+        for (auto it = sourceSet.begin(); it != sourceSet.end(); ) {
+            if ((*it)->GetObjectId() == obj->GetObjectId()) {
+                it = sourceSet.erase(it);
+                break;
+            }
+        }
     }
 
-    // template <typename T>
-    // inline void RemoveIObject(std::set<std::shared_ptr<T>> &sourceSet, const std::shared_ptr<IObject> &obj)
-    // {
-    //     auto derivedObj = std::dynamic_pointer_cast<T>(obj);        
-    //     if (derivedObj) {
-    //         sourceSet.erase(std::remove_if(sourceSet.begin(), sourceSet.end(),
-    //             [&](const std::shared_ptr<T> &element) {
-    //                 return element == derivedObj;
-    //             }), sourceSet.end());
-    //     }
-    // }
+    template <typename T>
+    inline void RemoveIObjectAll(std::set<std::shared_ptr<T>> &sourceSet, const IObject *obj)
+    {
+        for (auto it = sourceSet.begin(); it != sourceSet.end(); ) {
+            if ((*it)->GetObjectId() == obj->GetObjectId())
+                it = sourceSet.erase(it);
+            else
+                it++;
+        }
+    }
 };
