@@ -775,7 +775,7 @@ Note:
     Command used in VCC generator, can be any text in xxx without @@
 
 #### Field Attribute
-Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Class { "Properties\ : [ "GETSET(std::wstring, Name, L\"\")", "GETSET(int64_t, Age, 0)" ], "Assignment": [ \"Sam\", \"6\" ] }] [@@NoHistory] [@@NoJson] [@@Command xxx]
+Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Command xxx]
 
 {...}: Compulsory
 []: Optional
@@ -830,17 +830,6 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@Class { "Properties\ : [ "GET
 
 [@@Inherit]
     If stated, generate will not generate Getter and Setter, Manager, Action, etc.
-
-[@@Class { "Properties\ : [ "GETSET(std::wstring, Name, L\"\")", "GETSET(int64_t, Age, 0)" ], "Assignments": [ \"Sam\", \"6\" ] }]
-    Action Only.
-    Option:
-        Properties
-            Value is array of {ClassMacro}. As it is in json string, special characters need to be escaped.
-
-        Assignments
-            Value is array of values that should be initialized when creating object. Number of elements should be the same as that of Properties.
-            If not stated, Action() will be genrated.
-            If stated, Action(L"Sam", 6) will be generated.
 
 [@@NoHistory]
     Action Only.

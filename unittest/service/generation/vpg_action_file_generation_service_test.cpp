@@ -165,7 +165,7 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile)
         "//@@Form\r\n"
         "enum class VPGGitFormProperty\r\n"
         "{\r\n"
-        "    AddWorkspace // ACTION(AddWorkspace) @@Class { \"Properties\" : [ \"GETSET(std::wstring, Name, L\\\"\\\")\" ]\r\n"
+        "    AddWorkspace // ACTION(AddWorkspace, std::wstring)\r\n"
         "    , WorkNormalProperty // ACTION(WorkNormalProperty) @@Class { \"Properties\" : [ \"GETSET(std::wstring, Name, L\\\"\\\")\", \"GETSET(State, State, State::Busy)\" ], \"Assignments\": [\"\", \"State::Busy\"] } }\r\n"
         "    , WorkObject // ACTION(WorkObject) @@Class { \"Properties\" : [ \"GETSET_SPTR_NULL(LogConfig, LogConfig)\" , \"GETSET(std::wstring, Name, L\\\"\\\")\"], \"Assignments\": [\"_LogConfig\", \"State::Busy\"] }\r\n"
         "    , WorkList // ACTION(WorkList) @@Class { \"Properties\" : [ \"VECTOR(double, Vector)\" , \"MAP(std::wstring, std::wstring, Map)\", \"ORDERED_MAP(int64_t, int64_t, OrderedMap)\"], \"Assignments\": [ \"{1, 2}\", \"{ std::make_shared(1,2), std::make_shared(2,3) }\" ]] }\r\n"
