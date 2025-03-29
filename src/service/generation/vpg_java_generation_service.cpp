@@ -907,7 +907,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
         importFiles.insert(GetJavaPactkage(option->GetDllBridgeDirectory(), L"", L"DLL Interface Directory") + L"." + (!projectPrefix.empty() ? projectPrefix : L"") + L"DllFunctions");
         importFiles.insert(GetJavaPactkage(option->GetTypeDirectory(), middlePath, L"Type Directory") + L"." + enumClass->GetName());
 
-        if (enumClass->GetType() == VPGEnumClassType::Form) {
+        if (enumClass->GetType() == VPGEnumClassType::Form || enumClass->GetType() == VPGEnumClassType::ActionArgument) {
             std::wstring objectTypeClass = projectPrefix + L"ObjectType";
             if (importFileMap.find(objectTypeClass) != importFileMap.end())
                 importFiles.insert(importFileMap.find(objectTypeClass)->second + L"." + objectTypeClass);
@@ -1076,8 +1076,13 @@ std::wstring VPGJavaGenerationService::GenerateFormCustomAction(const std::wstri
 
             // Only support SPTR
             std::wstring type = property->GetType1();
-            if (!IsBlank(type) && IsCapital(type) && importFileMap.find(type) != importFileMap.end())
+            if (!IsBlank(type) && IsCapital(type) && importFileMap.find(type) != importFileMap.end()) {
                 importFiles.insert(importFileMap.find(type)->second + L"." + type);
+
+                std::wstring objectTypeClass = projectPrefix + L"ObjectType";
+                if (importFileMap.find(objectTypeClass) != importFileMap.end())
+                    importFiles.insert(importFileMap.find(objectTypeClass)->second + L"." + objectTypeClass);
+            }
 
             std::wstring functionName = L"do" + property->GetPropertyName();
             formActions.insert(std::make_pair(functionName,

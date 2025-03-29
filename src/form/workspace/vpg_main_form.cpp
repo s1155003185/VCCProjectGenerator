@@ -121,6 +121,13 @@ void VPGMainFormAddWorkspaceForm::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormAddWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
+        auto propertyAccessor = PropertyAccessorFactory::Create(_ParentObject);
+        propertyAccessor->ReadWriteLock();
+        auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
+        auto workspaceForm = std::make_shared<VPGWorkspaceForm>();
+        workspaceForm->SetName(_Argument->GetName());
+        form->InsertWorkspaceForms(workspaceForm);
+        propertyAccessor->Unlock();
         // </vcc:VPGMainFormAddWorkspaceFormOnRedo>
     CATCH
 }
@@ -296,7 +303,7 @@ void VPGMainForm::DoInitialize()
     TRY
         auto action = std::make_shared<VPGMainFormInitialize>(_LogConfig, SharedPtr());
         // <vcc:VPGMainFormDoInitialize sync="RESERVE" gen="RESERVE">
-        // // </vcc:VPGMainFormDoInitialize>
+        // </vcc:VPGMainFormDoInitialize>
         ExecuteAction(action, true);
     CATCH
 }
@@ -306,7 +313,7 @@ void VPGMainForm::DoAddWorkspaceForm(std::shared_ptr<VPGMainFormAddWorkspaceForm
     TRY
         auto action = std::make_shared<VPGMainFormAddWorkspaceForm>(_LogConfig, SharedPtr(), argument);
         // <vcc:VPGMainFormDoAddWorkspaceForm sync="RESERVE" gen="RESERVE">
-        // // </vcc:VPGMainFormDoAddWorkspaceForm>
+        // </vcc:VPGMainFormDoAddWorkspaceForm>
         ExecuteAction(action, true);
     CATCH
 }
@@ -316,7 +323,7 @@ void VPGMainForm::DoDeleteWorkspaceForm(std::shared_ptr<VPGMainFormDeleteWorkspa
     TRY
         auto action = std::make_shared<VPGMainFormDeleteWorkspaceForm>(_LogConfig, SharedPtr(), argument);
         // <vcc:VPGMainFormDoDeleteWorkspaceForm sync="RESERVE" gen="RESERVE">
-        // // </vcc:VPGMainFormDoDeleteWorkspaceForm>
+        // </vcc:VPGMainFormDoDeleteWorkspaceForm>
         ExecuteAction(action, true);
     CATCH
 }
@@ -326,7 +333,7 @@ void VPGMainForm::DoRenameWorkspaceForm(std::shared_ptr<VPGMainFormRenameWorkspa
     TRY
         auto action = std::make_shared<VPGMainFormRenameWorkspaceForm>(_LogConfig, SharedPtr(), argument);
         // <vcc:VPGMainFormDoRenameWorkspaceForm sync="RESERVE" gen="RESERVE">
-        // // </vcc:VPGMainFormDoRenameWorkspaceForm>
+        // </vcc:VPGMainFormDoRenameWorkspaceForm>
         ExecuteAction(action, true);
     CATCH
 }
