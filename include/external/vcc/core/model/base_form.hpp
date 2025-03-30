@@ -1,10 +1,13 @@
 #pragma once
 
-#include "i_form.hpp"
+#include <memory>
+
 #include "action_manager.hpp"
 #include "base_form.hpp"
 #include "base_object.hpp"
 #include "class_macro.hpp"
+#include "i_form.hpp"
+#include "i_result.hpp"
 #include "log_config.hpp"
 #include "object_type.hpp"
 #include "state.hpp"
@@ -54,15 +57,16 @@ namespace vcc
         virtual void InitializeValue() const override;
         
         // Action
-        virtual void ExecuteAction(std::shared_ptr<IAction> action, bool isNoHistory) override;
+        virtual std::shared_ptr<IResult> ExecuteAction(std::shared_ptr<IAction> action, bool isNoHistory) override;
+        virtual int64_t GetActionCurrentSeqNo() const override;
         virtual int64_t GetActionFirstSeqNo() const override;
         virtual int64_t GetActionLastSeqNo() const override;
         
-        virtual int64_t RedoAction(const int64_t &noOfStep = 1) override;
-        virtual int64_t RedoActionToSeqNo(const int64_t &seqNo) override;
+        virtual std::shared_ptr<IResult> RedoAction(const int64_t &noOfStep = 1) override;
+        virtual std::shared_ptr<IResult> RedoActionToSeqNo(const int64_t &seqNo) override;
 
-        virtual int64_t UndoAction(const int64_t &noOfStep = 1) override;
-        virtual int64_t UndoActionToSeqNo(const int64_t &seqNo) override;
+        virtual std::shared_ptr<IResult> UndoAction(const int64_t &noOfStep = 1) override;
+        virtual std::shared_ptr<IResult> UndoActionToSeqNo(const int64_t &seqNo) override;
 
         virtual int64_t ClearAction() const override;
         virtual int64_t TruncateAction() const override;

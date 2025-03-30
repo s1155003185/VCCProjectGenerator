@@ -11,6 +11,7 @@
 #include "class_macro.hpp"
 #include "i_document.hpp"
 #include "i_object.hpp"
+#include "i_result.hpp"
 #include "json.hpp"
 #include "log_config.hpp"
 #include "object_type.hpp"
@@ -81,7 +82,7 @@ class VPGMainFormInitialize : public BaseAction
         virtual std::wstring GetRedoMessageStart() const override;
         virtual std::wstring GetRedoMessageComplete() const override;
 
-        virtual void OnRedo() override;
+        virtual std::shared_ptr<IResult> OnRedo() override;
 
         // <vcc:customVPGMainFormInitializeProtectedFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormInitializeProtectedFunctions>
@@ -110,7 +111,7 @@ class VPGMainFormAddWorkspaceForm : public BaseAction
         virtual std::wstring GetRedoMessageStart() const override;
         virtual std::wstring GetRedoMessageComplete() const override;
 
-        virtual void OnRedo() override;
+        virtual std::shared_ptr<IResult> OnRedo() override;
 
         // <vcc:customVPGMainFormAddWorkspaceFormProtectedFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormAddWorkspaceFormProtectedFunctions>
@@ -140,7 +141,7 @@ class VPGMainFormDeleteWorkspaceForm : public BaseAction
         virtual std::wstring GetRedoMessageStart() const override;
         virtual std::wstring GetRedoMessageComplete() const override;
 
-        virtual void OnRedo() override;
+        virtual std::shared_ptr<IResult> OnRedo() override;
 
         // <vcc:customVPGMainFormDeleteWorkspaceFormProtectedFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormDeleteWorkspaceFormProtectedFunctions>
@@ -170,7 +171,7 @@ class VPGMainFormRenameWorkspaceForm : public BaseAction
         virtual std::wstring GetRedoMessageStart() const override;
         virtual std::wstring GetRedoMessageComplete() const override;
 
-        virtual void OnRedo() override;
+        virtual std::shared_ptr<IResult> OnRedo() override;
 
         // <vcc:customVPGMainFormRenameWorkspaceFormProtectedFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormRenameWorkspaceFormProtectedFunctions>
@@ -215,7 +216,7 @@ class VPGMainForm : public BaseForm, public BaseJsonObject
 
         virtual void InitializeComponents() const override;
 
-        virtual void DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;
+        virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;
 
         // <vcc:customVPGMainFormPublicFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormPublicFunctions>

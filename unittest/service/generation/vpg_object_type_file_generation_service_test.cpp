@@ -40,13 +40,14 @@ TEST_F(VPGObjectTypeFileGenerationServiceTest, Empty)
     std::wstring content = ReadFile(this->GetFilePathHpp());
     std::wstring expectedResult = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         L"#pragma once\r\n"
-        L"\r\n"
-        L"enum class ObjectType\r\n"
-        L"{\r\n"
-        L"    NA\r\n"
-        L"    // <vcc:customObjectTypes sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        L"    // </vcc:customObjectTypes>\r\n"
-        L"};\r\n";
+        "\r\n"
+        "enum class ObjectType\r\n"
+        "{\r\n"
+        "    NA\r\n"
+        "    , OperationResult\r\n"
+        "    // <vcc:customObjectTypes sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "    // </vcc:customObjectTypes>\r\n"
+        "};\r\n";
     EXPECT_EQ(content, expectedResult);
 }
 
@@ -60,14 +61,15 @@ TEST_F(VPGObjectTypeFileGenerationServiceTest, Normal)
     std::wstring content = ReadFile(this->GetFilePathHpp());
     std::wstring expectedResult = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         L"#pragma once\r\n"
-        L"\r\n"
-        L"enum class ObjectType\r\n"
-        L"{\r\n"
-        L"    NA\r\n"
-        L"    , Abc\r\n"
-        L"    , Def\r\n"
-        L"    // <vcc:customObjectTypes sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        L"    // </vcc:customObjectTypes>\r\n"
-        L"};\r\n";
+        "\r\n"
+        "enum class ObjectType\r\n"
+        "{\r\n"
+        "    NA\r\n"
+        "    , Abc\r\n"
+        "    , Def\r\n"
+        "    , OperationResult\r\n"
+        "    // <vcc:customObjectTypes sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "    // </vcc:customObjectTypes>\r\n"
+        "};\r\n";
     EXPECT_EQ(content, expectedResult);
 }

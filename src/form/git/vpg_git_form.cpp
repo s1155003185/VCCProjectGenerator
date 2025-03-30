@@ -67,7 +67,7 @@ void VPGGitForm::InitializeComponents() const
     CATCH
 }
 
-void VPGGitForm::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> /*argument*/)
+std::shared_ptr<IResult> VPGGitForm::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> /*argument*/)
 {
     TRY
         switch(static_cast<VPGGitFormProperty>(formProperty))
@@ -77,6 +77,7 @@ void VPGGitForm::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> 
             break;
         }
     CATCH
+    return nullptr;
 }
 
 // <vcc:customFunctions sync="RESERVE" gen="RESERVE">

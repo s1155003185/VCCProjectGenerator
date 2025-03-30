@@ -5,7 +5,9 @@
 #include <string>
 
 #include "exception_macro.hpp"
+#include "i_result.hpp"
 #include "log_service.hpp"
+#include "operation_result.hpp"
 #include "string_helper.hpp"
 #include "thread_manager.hpp"
 
@@ -74,21 +76,25 @@ namespace vcc
         _SeqNo = seqNo; 
     }
 
-    void BaseAction::Redo() 
+    std::shared_ptr<IResult> BaseAction::Redo() 
     {
         TRY
             LogRedoStart();
-            OnRedo();
+            auto result = OnRedo();
             LogRedoComplete();
-        CATCH
+            return result;
+        CATCH_RETURN_RESULT(OperationResult)
+        return std::make_shared<OperationResult>();
     }
 
-    void BaseAction::Undo()
+    std::shared_ptr<IResult> BaseAction::Undo()
     {
         TRY
             LogUndoStart();
-            OnUndo();
+            auto result = OnUndo();
             LogUndoComplete();
-        CATCH
+            return result;
+        CATCH_RETURN_RESULT(OperationResult)
+        return std::make_shared<OperationResult>();
     }
 }

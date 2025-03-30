@@ -55,8 +55,8 @@ std::wstring GetHppClass(const std::wstring &actionName, const std::vector<std::
             "        virtual std::wstring GetUndoMessageStart() const override;\r\n"
             "        virtual std::wstring GetUndoMessageComplete() const override;\r\n"
             "\r\n"
-            "        virtual void OnRedo() override;\r\n"
-            "        virtual void OnUndo() override;\r\n"
+            "        virtual std::shared_ptr<IResult> OnRedo() override;\r\n"
+            "        virtual std::shared_ptr<IResult> OnUndo() override;\r\n"
             "\r\n"
             "        // <vcc:customVPGGitForm" + actionName + L"ProtectedFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
             "        // </vcc:customVPGGitForm" + actionName + L"ProtectedFunctions>\r\n"
@@ -137,20 +137,22 @@ std::wstring GetCppClass(const std::wstring &actionName, const std::vector<std::
             "    return L\"\";\r\n"
             "}\r\n"
             "\r\n"
-            "void VPGGitForm" + actionName + L"::OnRedo()\r\n"
+            "std::shared_ptr<IResult> VPGGitForm" + actionName + L"::OnRedo()\r\n"
             "{\r\n"
             "    TRY\r\n"
             "        // <vcc:VPGGitForm" + actionName + L"OnRedo sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
             "        // </vcc:VPGGitForm" + actionName + L"OnRedo>\r\n"
-            "    CATCH\r\n"
+            "    CATCH_RETURN_RESULT(OperationResult)\r\n"
+            "    return std::make_shared<OperationResult>();\r\n"
             "}\r\n"
             "\r\n"
-            "void VPGGitForm" + actionName + L"::OnUndo()\r\n"
+            "std::shared_ptr<IResult> VPGGitForm" + actionName + L"::OnUndo()\r\n"
             "{\r\n"
             "    TRY\r\n"
             "        // <vcc:VPGGitForm" + actionName + L"OnUndo sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
             "        // </vcc:VPGGitForm" + actionName + L"OnUndo>\r\n"
-            "    CATCH\r\n"
+            "    CATCH_RETURN_RESULT(OperationResult)\r\n"
+            "    return std::make_shared<OperationResult>();\r\n"
             "}\r\n";
         return action;
     CATCH
@@ -217,6 +219,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
     std::map<std::wstring, std::wstring> classPathMapping;
     classPathMapping.insert(std::make_pair(L"State", L"state.hpp"));
     classPathMapping.insert(std::make_pair(L"LogConfig", L"log_config.hpp"));
+    classPathMapping.insert(std::make_pair(L"OperationResult", L"operation_result.hpp"));
     classPathMapping.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgument", L"vpg_git_form.hpp"));
     classPathMapping.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgumentProperty", L"vpg_git_form.hpp"));
 
@@ -253,6 +256,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
             "\r\n"
             "#include \"base_action.hpp\"\r\n"
             "#include \"i_object.hpp\"\r\n"
+            "#include \"i_result.hpp\"\r\n"
             "#include \"log_config.hpp\"\r\n"
             + customPropertyHeader
             + GetHppClass(L"AddWorkspace", { }, L""));
@@ -266,7 +270,9 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
             "#include \"base_action.hpp\"\r\n"
             "#include \"exception_macro.hpp\"\r\n"
             "#include \"i_object.hpp\"\r\n"
+            "#include \"i_result.hpp\"\r\n"
             "#include \"log_config.hpp\"\r\n"
+            "#include \"operation_result.hpp\"\r\n"
             + customPropertyHeader
             + GetCppClass(L"AddWorkspace", { }, L"")
             + customFooter);
@@ -278,6 +284,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
             "\r\n"
             "#include \"base_action.hpp\"\r\n"
             "#include \"i_object.hpp\"\r\n"
+            "#include \"i_result.hpp\"\r\n"
             "#include \"log_config.hpp\"\r\n"
             "#include \"vpg_git_form.hpp\"\r\n"
             + customPropertyHeader
@@ -292,7 +299,9 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
             "#include \"base_action.hpp\"\r\n"
             "#include \"exception_macro.hpp\"\r\n"
             "#include \"i_object.hpp\"\r\n"
+            "#include \"i_result.hpp\"\r\n"
             "#include \"log_config.hpp\"\r\n"
+            "#include \"operation_result.hpp\"\r\n"
             "#include \"vpg_git_form.hpp\"\r\n"
             + customPropertyHeader
             + GetCppClass(L"DeleteWorkspace" , { L"_Argument = argument;" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")

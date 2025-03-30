@@ -12,6 +12,7 @@ enum class ObjectType
     , MainFormAddWorkspaceFormArgument
     , MainFormDeleteWorkspaceFormArgument
     , MainFormRenameWorkspaceFormArgument
+    , OperationResult
     , WorkspaceForm
     // <vcc:customObjectTypes sync="RESERVE" gen="RESERVE">
     // </vcc:customObjectTypes>

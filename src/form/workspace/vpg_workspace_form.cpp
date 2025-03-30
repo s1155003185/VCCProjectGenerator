@@ -85,7 +85,7 @@ void VPGWorkspaceForm::InitializeComponents() const
     CATCH
 }
 
-void VPGWorkspaceForm::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> /*argument*/)
+std::shared_ptr<IResult> VPGWorkspaceForm::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> /*argument*/)
 {
     TRY
         switch(static_cast<VPGWorkspaceFormProperty>(formProperty))
@@ -95,6 +95,7 @@ void VPGWorkspaceForm::DoAction(const int64_t &formProperty, std::shared_ptr<IOb
             break;
         }
     CATCH
+    return nullptr;
 }
 
 // <vcc:customFunctions sync="RESERVE" gen="RESERVE">

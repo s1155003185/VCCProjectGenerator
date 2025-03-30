@@ -73,11 +73,27 @@ void *ApplicationCreateForm(int64_t objectType)
     return nullptr;
 }
 
-void ApplicationDoFormAction(void *form, int64_t formProperty, void *argument)
+void *ApplicationDoFormAction(void *form, int64_t formProperty, void *argument)
 {
     TRY
-        Application::DoFormAction(static_cast<IObject *>(form), formProperty, static_cast<IObject *>(argument));
+        return Application::DoFormAction(static_cast<IObject *>(form), formProperty, static_cast<IObject *>(argument)).get();
     CATCH
+    return nullptr;
+}
+
+void ApplicationEraseResult(void *result)
+{
+    TRY
+        Application::EraseResult(static_cast<IObject *>(result));
+    CATCH
+}
+
+int64_t ApplicationGetFormActionCurrentSeqNo(void *form)
+{
+    TRY
+        return Application::GetFormActionCurrentSeqNo(static_cast<IObject *>(form));
+    CATCH
+    return -1;
 }
 
 int64_t ApplicationGetFormActionFirstSeqNo(void *form)
@@ -96,6 +112,32 @@ int64_t ApplicationGetFormActionLastSeqNo(void *form)
     return -1;
 }
 
+int64_t ApplicationGetResultErrorCode(void *result)
+{
+    TRY
+        return Application::GetResultErrorCode(static_cast<IObject *>(result));
+    CATCH
+    return 0;
+}
+
+void ApplicationGetResultMessage(void *result, wchar_t **value)
+{
+    TRY
+        std::wstring message = Application::GetResultMessage(static_cast<IObject *>(result));
+        size_t size = (message.length() + 1) * sizeof(wchar_t);
+        *value = static_cast<wchar_t*>(malloc(size));
+        wcscpy(*value, message.c_str());
+    CATCH
+}
+
+bool ApplicationIsErrorResult(void *result)
+{
+    TRY
+        return Application::IsErrorResult(static_cast<IObject *>(result));
+    CATCH
+    return false;
+}
+
 bool ApplicationIsFormClosed(void *form)
 {
     TRY
@@ -112,20 +154,26 @@ bool ApplicationIsFormClosable(void *form)
     return false;
 }
 
-int64_t ApplicationRedoFormAction(void *form, int64_t noOfStep)
+bool ApplicationIsWarningResult(void *result)
 {
     TRY
-        return Application::RedoFormAction(static_cast<IObject *>(form), noOfStep);
+        return Application::IsWarningResult(static_cast<IObject *>(result));
     CATCH
-    return -1;
+    return false;
 }
 
-int64_t ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo)
+void ApplicationRedoFormAction(void *form, int64_t noOfStep)
 {
     TRY
-        return Application::RedoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);
+        Application::RedoFormAction(static_cast<IObject *>(form), noOfStep);
     CATCH
-    return -1;
+}
+
+void ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo)
+{
+    TRY
+        Application::RedoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);
+    CATCH
 }
 
 void ApplicationStart()
@@ -143,20 +191,18 @@ int64_t ApplicationTruncateFormAction(void *form)
     return -1;
 }
 
-int64_t ApplicationUndoFormAction(void *form, int64_t noOfStep)
+void ApplicationUndoFormAction(void *form, int64_t noOfStep)
 {
     TRY
-        return Application::UndoFormAction(static_cast<IObject *>(form), noOfStep);
+        Application::UndoFormAction(static_cast<IObject *>(form), noOfStep);
     CATCH
-    return -1;
 }
 
-int64_t ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo)
+void ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo)
 {
     TRY
-        return Application::UndoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);
+        Application::UndoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);
     CATCH
-    return -1;
 }
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(bool, Bool, false)
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(char, Char, L'\0')

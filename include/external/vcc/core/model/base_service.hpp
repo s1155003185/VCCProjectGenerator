@@ -1,7 +1,6 @@
 #pragma once
-#include "i_service.hpp"
 
-#include "class_macro.hpp"
+#include "i_service.hpp"
 
 namespace vcc
 {

@@ -1,6 +1,16 @@
 # Change Log
 
-## [Unreleased] - Review - Action With Argument
+## [Unreleased] - Review - Action With Return
+- Git Manager Enhancement
+- Export function name to lowercase with underscore
+- Group vcc.json
+- TODO: Support Callback in argument
+- TODO: Support Structure
+- TODO: Support Set for GETSET
+
+### [v0.3.4] - 2025-04-21: Review - Action Return OperationResult
+- Action support return Result - Add Class tag @@Result and Field tag @@Result
+- Add OperationResult to return Error Code and Message (Also auto generate at Java Project)
 
 ### [v0.3.3] - 2025-03-30: Review - Action Argument
 - Review folder and file naming rules. C++ folder must be lowercase without any seperator and file must be lower case with seperator. Java folder must be lowercase without any seperator and file must be having same name as class name

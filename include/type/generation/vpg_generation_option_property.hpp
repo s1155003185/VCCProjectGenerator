@@ -38,6 +38,10 @@ enum class VPGGenerationOptionProperty
     ProjectNameExe, // GETSET(std::wstring, ProjectNameExe, L"VCCModule") @@Command Need to assign Default Name first to pass validation
     IsGit, // GETSET(bool, IsGit, false)
 
+    // Generation Properties
+    IsResultThrowException, // GETSET(bool, IsResultThrowException, false)
+
+    // Unittest
     IsExcludeUnittest, // GETSET(bool, IsExcludeUnittest, false)
     IsExcludeVCCUnitTest, // GETSET(bool, IsExcludeVCCUnitTest, false)
 

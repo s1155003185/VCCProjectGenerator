@@ -13,6 +13,7 @@
 #include "vpg_class_helper.hpp"
 #include "vpg_enum_class.hpp"
 #include "vpg_file_sync_service.hpp"
+#include "vpg_generation_option.hpp"
 #include "vpg_include_path_service.hpp"
 #include "vpg_tag_helper.hpp"
 
@@ -306,15 +307,25 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
         // ------------------------------------------------------------------------------------------ //
         switch (enumClass->GetType())
         {
+        case VPGEnumClassType::ActionArgument:
+            projectFileList.insert(L"base_action_argument.hpp");
+            break;
+        case VPGEnumClassType::Form:
+            systemFileList.insert(L"memory");
+
+            projectFileList.insert(L"base_form.hpp");
+            projectFileList.insert(L"i_result.hpp");
+            isContainForm = true;
+            break;
         case VPGEnumClassType::Object:
             projectFileList.insert(L"base_object.hpp");
             break;
-        case VPGEnumClassType::Form:
-            projectFileList.insert(L"base_form.hpp");
-            isContainForm = true;
-            break;
-        case VPGEnumClassType::ActionArgument:
-            projectFileList.insert(L"base_action_argument.hpp");
+        case VPGEnumClassType::Result:
+            systemFileList.insert(L"string");
+            systemFileList.insert(L"memory");
+
+            projectFileList.insert(L"base_result.hpp");
+            projectFileList.insert(L"exception_type.hpp");
             break;
         default:
             break;
@@ -411,6 +422,9 @@ std::wstring VPGObjectFileGenerationService::GetHppConstructor(const VPGEnumClas
         // Constructor
         if (enumClass->GetType() == VPGEnumClassType::Form) {
             result += INDENT + INDENT + className + L"();\r\n";
+        } else if (enumClass->GetType() == VPGEnumClassType::Result) {
+            result += INDENT + INDENT + className + L"() : " + className + L"(ExceptionType::NoError, L\"\") {}\r\n"
+                + INDENT + INDENT + className + L"(const ExceptionType &exceptionType, const std::wstring &errorMessage) : BaseResult(ObjectType::" +  className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L", exceptionType, errorMessage) {}\r\n";
         } else {
             if (!IsBlank(enumClass->GetInheritClass()))
                 result += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"()\r\n"
@@ -498,15 +512,28 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicJsonFunctions(const VPG
     return result;
 }
 
-std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnumClass *enumClass)
+std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnumClass *enumClass, const VPGGenerationOption *option)
 {
     std::wstring result = L"";
     TRY
-        if (enumClass->GetType() == VPGEnumClassType::Form) {
+        switch (enumClass->GetType())
+        {
+        case VPGEnumClassType::Form:
             result += L"\r\n"
                 + INDENT + INDENT + L"virtual void InitializeComponents() const override;\r\n"
                 "\r\n"
-                + INDENT + INDENT + L"virtual void DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;\r\n";
+                + INDENT + INDENT + L"virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;\r\n";
+            break;
+        case VPGEnumClassType::Result:
+            if (option->GetIsResultThrowException())
+                result += L"\r\n"
+                    + INDENT + INDENT + L"virtual bool IsThrowException() const override\r\n"
+                    + INDENT + INDENT + L"{\r\n"
+                    + INDENT + INDENT + INDENT + L"return true;\r\n"
+                    + INDENT + INDENT + L"}\r\n";
+            break;
+        default:
+            break;
         }
     CATCH
     return result;
@@ -525,7 +552,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicCustomFunctions(const V
     return result;    
 }
 
-std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass* enumClass, const std::wstring &classPrefix)
+std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass* enumClass, const VPGGenerationOption *option)
 {
     std::wstring result = L"";
     TRY
@@ -537,12 +564,21 @@ std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass
             inheritClass += L", public BaseJsonObject";
 
         std::wstring baseClassName = L"";
-        if (enumClass->GetType() == VPGEnumClassType::Form)
-            baseClassName = L"BaseForm";
-        else if (enumClass->GetType() == VPGEnumClassType::ActionArgument)
+        switch (enumClass->GetType())
+        {
+        case VPGEnumClassType::ActionArgument:
             baseClassName = L"BaseActionArgument";
-        else
+            break;
+        case VPGEnumClassType::Form:
+            baseClassName = L"BaseForm";
+            break;
+        case VPGEnumClassType::Result:
+            baseClassName = L"BaseResult";
+            break;
+        default:
             baseClassName = L"BaseObject";
+            break;
+        }
         if (!IsBlank(enumClass->GetInheritClass()))
             baseClassName = enumClass->GetInheritClass();                
         std::wstring baseClassNameWithoutQuote = baseClassName;
@@ -557,10 +593,10 @@ std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass
             + GetHppProtectedFunctions(enumClass, className)
             + L"\r\n"
             + INDENT + L"public:\r\n"
-            + GetHppConstructor(enumClass, classPrefix, className, baseClassNameWithoutQuote)
+            + GetHppConstructor(enumClass, option->GetProjectPrefix(), className, baseClassNameWithoutQuote)
             + GetHppPublicCloneFunctions(enumClass, className)
             + GetHppPublicJsonFunctions(enumClass)
-            + GetHppPublicFunctions(enumClass)
+            + GetHppPublicFunctions(enumClass, option)
             + GetHppPublicCustomFunctions(enumClass, className)
             + L"};\r\n";
     CATCH
@@ -568,7 +604,7 @@ std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass
 }
 
 void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
-    const std::wstring &classPrefix,
+    const VPGGenerationOption *option,
     const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
     const std::wstring &objectFilePathHpp,
     const std::wstring &formFilePathHpp,
@@ -593,6 +629,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
             abstractEnumClassList,
             classInCurrentFileList);
         
+        std::wstring classPrefix = option->GetProjectPrefix();
         std::wstring filePathHpp = isContainForm && !formFilePathHpp.empty() ? formFilePathHpp : objectFilePathHpp;
         LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file: " + filePathHpp);
 
@@ -649,7 +686,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
         for (auto const &enumClass : enumClassList) {
             if (!IsPropertyClass(enumClass->GetName(), L"") || enumClass->GetType() != VPGEnumClassType::ActionArgument)
                 continue;
-            content += GenerateHppClass(enumClass.get(), classPrefix);
+            content += GenerateHppClass(enumClass.get(), option);
         }
 
         // 2. Generate Action
@@ -661,7 +698,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
         for (auto const &enumClass : enumClassList) {
             if (!IsPropertyClass(enumClass->GetName(), L"") || enumClass->GetType() == VPGEnumClassType::ActionArgument)
                 continue;
-            content += GenerateHppClass(enumClass.get(), classPrefix);
+            content += GenerateHppClass(enumClass.get(), option);
         }
         
         // ------------------------------------------------------------------------------------------ //
@@ -689,6 +726,7 @@ void VPGObjectFileGenerationService::GetCppIncludeFiles(
         systemIncludeFiles.insert(L"memory");
         
         customIncludeFiles.insert(L"exception_macro.hpp");
+        customIncludeFiles.insert(L"i_result.hpp");
 
         for (auto const &enumClass : enumClassList) {
             if (!IsPropertyClass(enumClass->GetName(), L""))
@@ -1032,7 +1070,7 @@ std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *en
             }
 
             result += L"\r\n"
-                "void " + className + L"::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> " + (isContainArgument ? L"argument" : L"/*argument*/") + L")\r\n"
+                "std::shared_ptr<IResult> " + className + L"::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> " + (isContainArgument ? L"argument" : L"/*argument*/") + L")\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + L"switch(static_cast<" + enumClass->GetName() + L">(formProperty))\r\n"
@@ -1041,14 +1079,14 @@ std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *en
                 if (property->GetPropertyType() != VPGEnumClassPropertyType::Action)
                     continue;
                 result += INDENT + INDENT + L"case " + enumClass->GetName() + L"::" + property->GetEnum() + L":\r\n"
-                    + INDENT + INDENT + INDENT + L"Do" + property->GetPropertyName() + L"(" + (!property->GetType1().empty() ? (L"std::dynamic_pointer_cast<" + property->GetType1() + L">(argument)") : L"") + L");\r\n"
-                    + INDENT + INDENT + INDENT + L"break;\r\n";
+                    + INDENT + INDENT + INDENT + L"return Do" + property->GetPropertyName() + L"(" + (!property->GetType1().empty() ? (L"std::dynamic_pointer_cast<" + property->GetType1() + L">(argument)") : L"") + L");\r\n";
             }
             result += INDENT + INDENT + L"default:\r\n"
                 + INDENT + INDENT + INDENT + L"assert(false);\r\n"
                 + INDENT + INDENT + INDENT + L"break;\r\n"
                 + INDENT + INDENT + L"}\r\n"
                 + INDENT + L"CATCH\r\n"
+                + INDENT + L"return nullptr;\r\n"
                 "}\r\n";
 
             for (auto const &property : enumClass->GetProperties()) {
@@ -1067,14 +1105,15 @@ std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *en
 
                 std::wstring functionName = L"Do" + property->GetPropertyName();
                 result += L"\r\n"
-                    "void " + className + L"::" + functionName + L"(" + argumentList + L")\r\n"
+                    "std::shared_ptr<IResult> " + className + L"::" + functionName + L"(" + argumentList + L")\r\n"
                     "{\r\n"
                     + INDENT + L"TRY\r\n"
                     + INDENT + INDENT + L"auto action = std::make_shared<" + GetActionClassName(enumClass, property.get()) + L">(" + assignmentStr + L");\r\n"
                     + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", className, functionName) + L"\r\n"
                     + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", className, functionName) + L"\r\n"
-                    + INDENT + INDENT + L"ExecuteAction(action, " + (property->GetIsNoHistory() ? L"true" : L"false") + L");\r\n"
+                    + INDENT + INDENT + L"return ExecuteAction(action, " + (property->GetIsNoHistory() ? L"true" : L"false") + L");\r\n"
                     + INDENT + L"CATCH\r\n"
+                    + INDENT + L"return nullptr;\r\n"
                     "}\r\n";
             }
         }

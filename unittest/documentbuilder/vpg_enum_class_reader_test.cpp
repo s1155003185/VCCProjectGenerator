@@ -565,6 +565,7 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
         "    Manager3, // MANAGER_SPTR_PARENT(GitManager, GitManager3, GitBaseManager)\r\n"
         "    Action1, // ACTION(AddGitLog) \r\n"
         "    Action2, // ACTION_WITH_ARG_SPTR(DeleteGitLog, GitLog) \r\n"
+        "    Action3 // ACTION_WITH_ARG_SPTR(ModifyGitLog, GitLog) @@ActionResult { \"Redo.Class\" : \"RedoActionResult\", \"Undo.Class\" : \"UndoActionResult\" }\r\n"
         "};\r\n";
     std::vector<std::shared_ptr<VPGEnumClass>> results;
     VPGGlobal::GetEnumClassReader()->Parse(code, results);
@@ -574,7 +575,7 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
     EXPECT_EQ(element->GetName(), L"Property");
 
     // Property
-    EXPECT_EQ(element->GetProperties().size(), (size_t)6);
+    EXPECT_EQ(element->GetProperties().size(), (size_t)7);
     EXPECT_EQ((int64_t)element->GetProperties().at(0)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Property);
     EXPECT_EQ(element->GetProperties().at(0)->GetType1(), L"std::wstring");
     EXPECT_EQ(element->GetProperties().at(0)->GetPropertyName(), L"Property");
@@ -592,7 +593,16 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
     EXPECT_EQ((int64_t)element->GetProperties().at(4)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
     EXPECT_EQ(element->GetProperties().at(4)->GetType1(), L"");
     EXPECT_EQ(element->GetProperties().at(4)->GetPropertyName(), L"AddGitLog");
+    EXPECT_EQ(element->GetProperties().at(4)->GetActionResultRedoClass(), L"OperationResult");
+    EXPECT_EQ(element->GetProperties().at(4)->GetActionResultUndoClass(), L"OperationResult");
     EXPECT_EQ((int64_t)element->GetProperties().at(5)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
     EXPECT_EQ(element->GetProperties().at(5)->GetType1(), L"GitLog");
     EXPECT_EQ(element->GetProperties().at(5)->GetPropertyName(), L"DeleteGitLog");
+    EXPECT_EQ(element->GetProperties().at(5)->GetActionResultRedoClass(), L"OperationResult");
+    EXPECT_EQ(element->GetProperties().at(5)->GetActionResultUndoClass(), L"OperationResult");
+    EXPECT_EQ((int64_t)element->GetProperties().at(6)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
+    EXPECT_EQ(element->GetProperties().at(6)->GetType1(), L"GitLog");
+    EXPECT_EQ(element->GetProperties().at(6)->GetPropertyName(), L"ModifyGitLog");
+    EXPECT_EQ(element->GetProperties().at(6)->GetActionResultRedoClass(), L"RedoActionResult");
+    EXPECT_EQ(element->GetProperties().at(6)->GetActionResultUndoClass(), L"UndoActionResult");
 }

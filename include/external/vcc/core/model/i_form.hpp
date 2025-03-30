@@ -4,6 +4,7 @@
 
 #include "action_manager.hpp"
 #include "i_object.hpp"
+#include "i_result.hpp"
 #include "log_config.hpp"
 #include "state.hpp"
 #include "thread_manager.hpp"
@@ -48,16 +49,17 @@ namespace vcc
             virtual void InitializeValue() const = 0;
 
             // Action
-            virtual void DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) = 0;
-            virtual void ExecuteAction(std::shared_ptr<IAction> action, bool isNoHistory) = 0;
+            virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) = 0;
+            virtual std::shared_ptr<IResult> ExecuteAction(std::shared_ptr<IAction> action, bool isNoHistory) = 0;
+            virtual int64_t GetActionCurrentSeqNo() const = 0;
             virtual int64_t GetActionFirstSeqNo() const = 0;
             virtual int64_t GetActionLastSeqNo() const = 0;
             
-            virtual int64_t RedoAction(const int64_t &noOfStep = 1) = 0;
-            virtual int64_t RedoActionToSeqNo(const int64_t &seqNo) = 0;
+            virtual std::shared_ptr<IResult> RedoAction(const int64_t &noOfStep = 1) = 0;
+            virtual std::shared_ptr<IResult> RedoActionToSeqNo(const int64_t &seqNo) = 0;
 
-            virtual int64_t UndoAction(const int64_t &noOfStep = 1) = 0;
-            virtual int64_t UndoActionToSeqNo(const int64_t &seqNo) = 0;
+            virtual std::shared_ptr<IResult> UndoAction(const int64_t &noOfStep = 1) = 0;
+            virtual std::shared_ptr<IResult> UndoActionToSeqNo(const int64_t &seqNo) = 0;
 
             virtual int64_t ClearAction() const = 0;
             virtual int64_t TruncateAction() const = 0;

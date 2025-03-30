@@ -296,6 +296,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
         "import java.util.Set;\r\n"
         "\r\n"
         "public class VPGTypeB {\r\n"
+        "\r\n"
         "    public Pointer Handle = null;\r\n"
         "\r\n"
         "    public VPGTypeB(Pointer handle) {\r\n"
@@ -681,6 +682,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
         "import com.vcc.type.VPGGitFormProperty;\r\n"
         "\r\n"
         "public class VPGGitForm {\r\n"
+        "\r\n"
         "    public Pointer Handle = null;\r\n"
         "\r\n"
         "    public VPGGitForm(Pointer handle) {\r\n"
@@ -710,6 +712,10 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
         "        VPGDllFunctions.Instance.ApplicationCloseForm(Handle, isForce);\r\n"
         "    }\r\n"
         "\r\n"
+        "    public long getActionCurrentSeqNo() {\r\n"
+        "        return VPGDllFunctions.Instance.ApplicationGetFormActionCurrentSeqNo(Handle);\r\n"
+        "    }\r\n"
+        "\r\n"
         "    public long getActionFirstSeqNo() {\r\n"
         "        return VPGDllFunctions.Instance.ApplicationGetFormActionFirstSeqNo(Handle);\r\n"
         "    }\r\n"
@@ -726,24 +732,67 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
         "        return VPGDllFunctions.Instance.ApplicationIsFormClosed(Handle);\r\n"
         "    }\r\n"
         "\r\n"
-        "    public long redo(long noOfStep) {\r\n"
-        "        return VPGDllFunctions.Instance.ApplicationRedoFormAction(Handle, noOfStep);\r\n"
+        "    public void redo(long noOfStep) {\r\n"
+        "        VPGDllFunctions.Instance.ApplicationRedoFormAction(Handle, noOfStep);\r\n"
         "    }\r\n"
         "\r\n"
-        "    public long redoToSeqNo(long seqNo) {\r\n"
-        "        return VPGDllFunctions.Instance.ApplicationRedoFormActionToSeqNo(Handle, seqNo);\r\n"
+        "    public void redoToSeqNo(long seqNo) {\r\n"
+        "        VPGDllFunctions.Instance.ApplicationRedoFormActionToSeqNo(Handle, seqNo);\r\n"
         "    }\r\n"
         "\r\n"
         "    public long truncateAction() {\r\n"
         "        return VPGDllFunctions.Instance.ApplicationTruncateFormAction(Handle);\r\n"
         "    }\r\n"
         "\r\n"
-        "    public long undo(long noOfStep) {\r\n"
-        "        return VPGDllFunctions.Instance.ApplicationUndoFormAction(Handle, noOfStep);\r\n"
+        "    public void undo(long noOfStep) {\r\n"
+        "        VPGDllFunctions.Instance.ApplicationUndoFormAction(Handle, noOfStep);\r\n"
         "    }\r\n"
         "\r\n"
-        "    public long undoToSeqNo(long seqNo) {\r\n"
-        "        return VPGDllFunctions.Instance.ApplicationUndoFormActionToSeqNo(Handle, seqNo);\r\n"
+        "    public void undoToSeqNo(long seqNo) {\r\n"
+        "        VPGDllFunctions.Instance.ApplicationUndoFormActionToSeqNo(Handle, seqNo);\r\n"
+        "    }\r\n"
+        "    // </editor-fold>\r\n"
+        "}\r\n");
+}
+
+TEST_F(VPGJavaGenerationServiceTest, GenerateResult)
+{
+    std::wstring enumClass =
+        L"#param once\r\n"
+        "// @@Result\r\n"
+        "enum class VPGGitResultProperty {\r\n"
+        "    Log // GETSET_SPTR_NULL(VPGGitLog, Log)\r\n"
+        "};\r\n";
+
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+
+    std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
+    typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));
+    std::wstring filePath = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGGitLog.java"});
+    VPGJavaGenerationService::GenerateObject(this->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm, this->GetOption().get(), this->GetJavaOption().get());
+    
+    EXPECT_TRUE(IsFilePresent(filePath));
+    EXPECT_EQ(ReadFile(filePath),
+        L"package com.vcc.module;\r\n"
+        "\r\n"
+        "import com.sun.jna.Pointer;\r\n"
+        "import com.vcc.test.VPGDllFunctions;\r\n"
+        "import com.vcc.type.VPGGitResultProperty;\r\n"
+        "\r\n"
+        "public class VPGGitResult extends VPGOperationResult {\r\n"
+        "\r\n"
+        "    public VPGGitResult(Pointer handle) {\r\n"
+        "        super(handle);\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    // <editor-fold defaultstate=\"collapsed\" desc=\"Generated Properties\">\r\n"
+        "    public VPGGitLog getLog() {\r\n"
+        "        return new VPGGitLog(VPGDllFunctions.Instance.ReadObject(Handle, VPGGitResultProperty.Log.getValue()));\r\n"
+        "    }\r\n"
+        "\r\n"
+        "    public void setLog(VPGGitLog value) {\r\n"
+        "        VPGDllFunctions.Instance.WriteObject(Handle, VPGGitResultProperty.Log.getValue(), value.Handle);\r\n"
         "    }\r\n"
         "    // </editor-fold>\r\n"
         "}\r\n");

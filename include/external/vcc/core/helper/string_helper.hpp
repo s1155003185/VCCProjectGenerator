@@ -52,7 +52,9 @@ namespace vcc
 	bool IsStartWithTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos = 0);
 	bool IsEndWith(const std::wstring &str, const std::wstring &suffix);
 
-	std::vector<std::wstring> SplitString(std::wstring str, const std::vector<std::wstring> &delimiters,
+	std::vector<std::wstring> SplitString(const std::wstring &str, const std::vector<std::wstring> &delimiters,
+		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
+	std::vector<std::wstring> SplitStringBySpace(const std::wstring &str,
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
 	std::vector<std::wstring> SplitStringByLine(const std::wstring &str);
 	std::vector<std::wstring> SplitStringByUpperCase(const std::wstring &str, bool splitDigit, bool splitSpecialChar);

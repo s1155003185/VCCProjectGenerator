@@ -2,13 +2,13 @@
 #include "base_manager.hpp"
 
 #include <memory>
-#include <mutex>
 #include <shared_mutex>
 #include <stdint.h>
 
 #include "base_action.hpp"
 #include "class_macro.hpp"
 #include "i_action.hpp"
+#include "i_result.hpp"
 
 namespace vcc
 {
@@ -20,11 +20,9 @@ namespace vcc
         GETSET(int64_t, MaxSeqNo, -1)
 
     private:
-        //mutable std::shared_mutex _mutex;
-
         int64_t _GetFirstSeqNo(const bool &fromBeginning) const;
-        int64_t _Redo(const int64_t &noOfStep) const;
-        int64_t _Undo(const int64_t &noOfStep) const;
+        std::shared_ptr<IResult> _Redo(const int64_t &noOfStep) const;
+        std::shared_ptr<IResult> _Undo(const int64_t &noOfStep) const;
         int64_t _RemoveAction(const int64_t &noOfAction, const bool &fromBeginning) const;
         int64_t _ChopActionListToSize(const int64_t &size, const bool &fromBeginning) const;
         int64_t _Clear() const;
@@ -36,13 +34,13 @@ namespace vcc
         int64_t GetFirstSeqNo() const;
         int64_t GetLastSeqNo() const;
 
-        int64_t DoAction(std::shared_ptr<IAction> action) const;
+        std::shared_ptr<IResult> DoAction(std::shared_ptr<IAction> action) const;
         
-        int64_t Redo(const int64_t &noOfStep = 1) const;
-        int64_t RedoToSeqNo(const int64_t &seqNo) const;
+        std::shared_ptr<IResult> Redo(const int64_t &noOfStep = 1) const;
+        std::shared_ptr<IResult> RedoToSeqNo(const int64_t &seqNo) const;
 
-        int64_t Undo(const int64_t &noOfStep = 1) const;
-        int64_t UndoToSeqNo(const int64_t &seqNo) const;
+        std::shared_ptr<IResult> Undo(const int64_t &noOfStep = 1) const;
+        std::shared_ptr<IResult> UndoToSeqNo(const int64_t &seqNo) const;
         
         int64_t ChopActionListToSize(const int64_t &size) const;
 

@@ -11,9 +11,11 @@
 #include "i_document.hpp"
 #include "i_document_builder.hpp"
 #include "i_object.hpp"
+#include "i_result.hpp"
 #include "json.hpp"
 #include "log_config.hpp"
 #include "number_helper.hpp"
+#include "operation_result.hpp"
 #include "string_helper.hpp"
 #include "vpg_main_form_property.hpp"
 #include "vpg_workspace_form.hpp"
@@ -55,7 +57,7 @@ std::wstring VPGMainFormInitialize::GetRedoMessageComplete() const
     return L"";
 }
 
-void VPGMainFormInitialize::OnRedo()
+std::shared_ptr<IResult> VPGMainFormInitialize::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormInitializeOnRedo sync="RESERVE" gen="RESERVE">
@@ -81,7 +83,8 @@ void VPGMainFormInitialize::OnRedo()
         }
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormInitializeOnRedo>
-    CATCH
+    CATCH_RETURN_RESULT(OperationResult)
+    return std::make_shared<OperationResult>();
 }
 
 VPGMainFormAddWorkspaceForm::VPGMainFormAddWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()
@@ -117,7 +120,7 @@ std::wstring VPGMainFormAddWorkspaceForm::GetRedoMessageComplete() const
     return L"";
 }
 
-void VPGMainFormAddWorkspaceForm::OnRedo()
+std::shared_ptr<IResult> VPGMainFormAddWorkspaceForm::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormAddWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
@@ -129,7 +132,8 @@ void VPGMainFormAddWorkspaceForm::OnRedo()
         form->InsertWorkspaceForms(workspaceForm);
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormAddWorkspaceFormOnRedo>
-    CATCH
+    CATCH_RETURN_RESULT(OperationResult)
+    return std::make_shared<OperationResult>();
 }
 
 VPGMainFormDeleteWorkspaceForm::VPGMainFormDeleteWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()
@@ -165,12 +169,13 @@ std::wstring VPGMainFormDeleteWorkspaceForm::GetRedoMessageComplete() const
     return L"";
 }
 
-void VPGMainFormDeleteWorkspaceForm::OnRedo()
+std::shared_ptr<IResult> VPGMainFormDeleteWorkspaceForm::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormDeleteWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormDeleteWorkspaceFormOnRedo>
-    CATCH
+    CATCH_RETURN_RESULT(OperationResult)
+    return std::make_shared<OperationResult>();
 }
 
 VPGMainFormRenameWorkspaceForm::VPGMainFormRenameWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()
@@ -206,12 +211,13 @@ std::wstring VPGMainFormRenameWorkspaceForm::GetRedoMessageComplete() const
     return L"";
 }
 
-void VPGMainFormRenameWorkspaceForm::OnRedo()
+std::shared_ptr<IResult> VPGMainFormRenameWorkspaceForm::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormRenameWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormRenameWorkspaceFormOnRedo>
-    CATCH
+    CATCH_RETURN_RESULT(OperationResult)
+    return std::make_shared<OperationResult>();
 }
 
 VPGMainForm::VPGMainForm() : BaseForm()
@@ -274,68 +280,69 @@ void VPGMainForm::InitializeComponents() const
     CATCH
 }
 
-void VPGMainForm::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument)
+std::shared_ptr<IResult> VPGMainForm::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument)
 {
     TRY
         switch(static_cast<VPGMainFormProperty>(formProperty))
         {
         case VPGMainFormProperty::Initialize:
-            DoInitialize();
-            break;
+            return DoInitialize();
         case VPGMainFormProperty::AddWorkspaceForm:
-            DoAddWorkspaceForm(std::dynamic_pointer_cast<VPGMainFormAddWorkspaceFormArgument>(argument));
-            break;
+            return DoAddWorkspaceForm(std::dynamic_pointer_cast<VPGMainFormAddWorkspaceFormArgument>(argument));
         case VPGMainFormProperty::DeleteWorkspaceForm:
-            DoDeleteWorkspaceForm(std::dynamic_pointer_cast<VPGMainFormDeleteWorkspaceFormArgument>(argument));
-            break;
+            return DoDeleteWorkspaceForm(std::dynamic_pointer_cast<VPGMainFormDeleteWorkspaceFormArgument>(argument));
         case VPGMainFormProperty::RenameWorkspaceForm:
-            DoRenameWorkspaceForm(std::dynamic_pointer_cast<VPGMainFormRenameWorkspaceFormArgument>(argument));
-            break;
+            return DoRenameWorkspaceForm(std::dynamic_pointer_cast<VPGMainFormRenameWorkspaceFormArgument>(argument));
         default:
             assert(false);
             break;
         }
     CATCH
+    return nullptr;
 }
 
-void VPGMainForm::DoInitialize()
+std::shared_ptr<IResult> VPGMainForm::DoInitialize()
 {
     TRY
         auto action = std::make_shared<VPGMainFormInitialize>(_LogConfig, SharedPtr());
         // <vcc:VPGMainFormDoInitialize sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormDoInitialize>
-        ExecuteAction(action, true);
+        return ExecuteAction(action, true);
     CATCH
+    return nullptr;
 }
 
-void VPGMainForm::DoAddWorkspaceForm(std::shared_ptr<VPGMainFormAddWorkspaceFormArgument> argument)
+std::shared_ptr<IResult> VPGMainForm::DoAddWorkspaceForm(std::shared_ptr<VPGMainFormAddWorkspaceFormArgument> argument)
 {
     TRY
         auto action = std::make_shared<VPGMainFormAddWorkspaceForm>(_LogConfig, SharedPtr(), argument);
         // <vcc:VPGMainFormDoAddWorkspaceForm sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormDoAddWorkspaceForm>
-        ExecuteAction(action, true);
+        return ExecuteAction(action, true);
     CATCH
+    return nullptr;
 }
 
-void VPGMainForm::DoDeleteWorkspaceForm(std::shared_ptr<VPGMainFormDeleteWorkspaceFormArgument> argument)
+std::shared_ptr<IResult> VPGMainForm::DoDeleteWorkspaceForm(std::shared_ptr<VPGMainFormDeleteWorkspaceFormArgument> argument)
 {
     TRY
         auto action = std::make_shared<VPGMainFormDeleteWorkspaceForm>(_LogConfig, SharedPtr(), argument);
         // <vcc:VPGMainFormDoDeleteWorkspaceForm sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormDoDeleteWorkspaceForm>
-        ExecuteAction(action, true);
+        return ExecuteAction(action, true);
     CATCH
+    return nullptr;
 }
 
-void VPGMainForm::DoRenameWorkspaceForm(std::shared_ptr<VPGMainFormRenameWorkspaceFormArgument> argument)
+std::shared_ptr<IResult> VPGMainForm::DoRenameWorkspaceForm(std::shared_ptr<VPGMainFormRenameWorkspaceFormArgument> argument)
 {
     TRY
         auto action = std::make_shared<VPGMainFormRenameWorkspaceForm>(_LogConfig, SharedPtr(), argument);
         // <vcc:VPGMainFormDoRenameWorkspaceForm sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormDoRenameWorkspaceForm>
-        ExecuteAction(action, true);
+        return ExecuteAction(action, true);
     CATCH
+    return nullptr;
 }
 
 // <vcc:customFunctions sync="RESERVE" gen="RESERVE">

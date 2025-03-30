@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "exception.hpp"
+#include "i_result.hpp"
 #include "map_helper.hpp"
 #include "vector_helper.hpp"
 
@@ -215,9 +216,9 @@ namespace vcc
     //------------------------------------------------------------------------------------------------------//
     #define ACTION(name) \
         public: \
-            virtual void Do##name();
+            virtual std::shared_ptr<IResult> Do##name();
             
     #define ACTION_WITH_ARG_SPTR(name, type) \
         public: \
-            virtual void Do##name(std::shared_ptr<type> value);
+            virtual std::shared_ptr<IResult> Do##name(std::shared_ptr<type> value);
 }

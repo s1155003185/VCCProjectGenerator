@@ -48,6 +48,7 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
             std::set<std::wstring> customIncludeFiles;
             customIncludeFiles.insert(L"base_action.hpp");
             customIncludeFiles.insert(L"i_object.hpp");
+            customIncludeFiles.insert(L"i_result.hpp");
             customIncludeFiles.insert(L"log_config.hpp");
 
             // class name
@@ -89,10 +90,10 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
                     + INDENT + INDENT + L"virtual std::wstring GetUndoMessageComplete() const override;\r\n";
                 
             action += L"\r\n"
-                + INDENT + INDENT + L"virtual void OnRedo() override;\r\n";
+                + INDENT + INDENT + L"virtual std::shared_ptr<IResult> OnRedo() override;\r\n";
 
             if (!property->GetIsNoHistory())
-                action += INDENT + INDENT + L"virtual void OnUndo() override;\r\n";
+                action += INDENT + INDENT + L"virtual std::shared_ptr<IResult> OnUndo() override;\r\n";
             
             action += L"\r\n"
                 + INDENT + INDENT + GetVccTagHeaderCustomClassProtectedFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
@@ -176,6 +177,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
             customIncludeFiles.insert(L"exception_macro.hpp");
             customIncludeFiles.insert(L"i_object.hpp");
             customIncludeFiles.insert(L"log_config.hpp");
+            customIncludeFiles.insert(L"i_result.hpp");
 
             // class name
             std::wstring actionClassName = className + property->GetPropertyName();
@@ -198,6 +200,11 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 assignmentStr += L"std::shared_ptr<" + property->GetType1() + L"> argument";
                 propertyAssignments.push_back(L"_Argument = argument");
             }
+            if (!IsBlank(property->GetActionResultRedoClass()))
+                customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, property->GetActionResultRedoClass()));
+            if (!IsBlank(property->GetActionResultUndoClass()))
+                customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, property->GetActionResultUndoClass()));
+
 
             std::wstring action = actionClassName + L"::" + actionClassName + L"(" + assignmentStrSimple + L") : BaseAction()\r\n"
             "{\r\n";
@@ -255,24 +262,29 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                     + INDENT + L"return L\"\";\r\n"
                     "}\r\n";
 
+            std::wstring redoReturnClass = !IsBlank(property->GetActionResultRedoClass()) ? property->GetActionResultRedoClass() : L"OperationResult";
             action += L"\r\n"
-                "void " + actionClassName + L"::OnRedo()\r\n"
+                "std::shared_ptr<IResult> " + actionClassName + L"::OnRedo()\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
                 + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
-                + INDENT + L"CATCH\r\n"
+                + INDENT + L"CATCH_RETURN_RESULT(" + redoReturnClass + L")\r\n"
+                + INDENT + L"return std::make_shared<" + redoReturnClass + L">();\r\n"
                 "}\r\n";
 
-            if (!property->GetIsNoHistory())
+            if (!property->GetIsNoHistory()) {
+                std::wstring undoReturnClass = !IsBlank(property->GetActionResultUndoClass()) ? property->GetActionResultUndoClass() : L"OperationResult";
                 action += L"\r\n"
-                    "void " + actionClassName + L"::OnUndo()\r\n"
+                    "std::shared_ptr<IResult> " + actionClassName + L"::OnUndo()\r\n"
                     "{\r\n"
                     + INDENT + L"TRY\r\n"
                     + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
                     + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
-                    + INDENT + L"CATCH\r\n"
+                    + INDENT + L"CATCH_RETURN_RESULT(" + undoReturnClass + L")\r\n"
+                    + INDENT + L"return std::make_shared<" + undoReturnClass + L">();\r\n"
                     "}\r\n";
+            }
 
             if (isSeperateFile) {
                 // Generate to seperate files

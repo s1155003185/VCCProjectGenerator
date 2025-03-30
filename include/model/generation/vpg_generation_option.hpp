@@ -49,6 +49,7 @@ class VPGGenerationOption : public BaseObject, public BaseJsonObject
     GETSET(std::wstring, ProjectNameDll, L"libVCCModule")
     GETSET(std::wstring, ProjectNameExe, L"VCCModule")
     GETSET(bool, IsGit, false)
+    GETSET(bool, IsResultThrowException, false)
     GETSET(bool, IsExcludeUnittest, false)
     GETSET(bool, IsExcludeVCCUnitTest, false)
     GETSET(std::wstring, TypeWorkspace, L"include/type")

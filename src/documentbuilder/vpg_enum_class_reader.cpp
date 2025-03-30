@@ -14,7 +14,7 @@
 
 using namespace vcc;
 
-const std::wstring attributeToken = L"@@";
+const std::wstring attributePrefix = L"@@";
 std::mutex _mutex;
 
 VPGEnumClassReader::VPGEnumClassReader(const std::set<std::wstring> &classMacroList) 
@@ -173,22 +173,22 @@ std::vector<std::wstring> VPGEnumClassReader::GetAttribute(const std::wstring &s
         size_t pos = 0;
         GetNextCharPos(str, pos, true);
 
-        if (!IsStartWith(str, attributeToken, pos))
+        if (!IsStartWith(str, attributePrefix, pos))
             return result;
         
-        std::vector<std::wstring> tokens = SplitString(str.substr(pos), { attributeToken });
+        std::vector<std::wstring> tokens = SplitString(str.substr(pos), { attributePrefix });
         for (auto &token : tokens) {
             Trim(token);
             if (token.empty())
                 continue;
             
-            result.push_back(attributeToken + token);
+            result.push_back(attributePrefix + token);
         }
     CATCH
     return result;
 }
 
-void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCommand, std::shared_ptr<VPGEnumClassProperty> property) const
+void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass, const std::wstring &propertyCommand, std::shared_ptr<VPGEnumClassProperty> property) const
 {
     TRY
         size_t pos = 0;
@@ -272,26 +272,39 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
         // split Remain
         std::vector<std::wstring> attributes = GetAttribute(remainStr);
         for (auto const &attribute : attributes) {
+            std::vector<std::wstring> attributeTokes = SplitStringBySpace(attribute);
+            std::wstring attributeToken = !attributeTokes.empty() ? attributeTokes[0] : L"";
             // Privilege
-            if (IsEqual(attribute, attributeToken + L"ReadOnly", true))
+            if (IsEqual(attributeToken, attributePrefix + L"ReadOnly", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::ReadOnly;
-            else if (IsEqual(attribute, attributeToken + L"WriteOnly", true))
+            else if (IsEqual(attributeToken, attributePrefix + L"WriteOnly", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::WriteOnly;
-            else if (IsEqual(attribute, attributeToken + L"ReadWrite", true))
+            else if (IsEqual(attributeToken, attributePrefix + L"ReadWrite", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::ReadWrite;
-            else if (IsEqual(attribute, attributeToken + L"NoAccess", true))
+            else if (IsEqual(attributeToken, attributePrefix + L"NoAccess", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::NoAccess;
-            else if (IsEqual(attribute, attributeToken + L"Inherit", true))
+            else if (IsEqual(attributeToken, attributePrefix + L"Inherit", true))
                 property->SetIsInherit(true);
             // Action
-            else if (IsEqual(attribute, attributeToken + L"NoHistory", true))
+            else if (IsEqual(attributeToken, attributePrefix + L"NoHistory", true))
                 property->SetIsNoHistory(true);
+            else if (IsEqual(attributeToken, attributePrefix + L"ActionResult", true)) {
+                auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"ActionResult");
+                if (jsonAttributes == nullptr
+                    || !((jsonAttributes->IsContainKey(L"Redo.Class") && !IsBlank(jsonAttributes->GetString(L"Redo.Class")))
+                        || (jsonAttributes->IsContainKey(L"Undo.Class") && !IsBlank(jsonAttributes->GetString(L"Undo.Class")))))
+                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Enum Class " + enumClass->_Name + L" has attribute @@ActionResult but missing Attribute \"Redo.Class\" or \"Undo.Class\"");
+                if (jsonAttributes->IsContainKey(L"Redo.Class") && !IsBlank(jsonAttributes->GetString(L"Redo.Class")))
+                    property->_ActionResultRedoClass = jsonAttributes->GetString(L"Redo.Class");
+                if (jsonAttributes->IsContainKey(L"Undo.Class") && !IsBlank(jsonAttributes->GetString(L"Undo.Class")))
+                    property->_ActionResultUndoClass = jsonAttributes->GetString(L"Undo.Class");
+            }
             // Json
-            else if (IsEqual(attribute, attributeToken + L"NoJson", true))
+            else if (IsEqual(attributeToken, attributePrefix + L"NoJson", true))
                 property->SetIsNoJson(true);
             // Command
-            else if (IsEqual(attribute, attributeToken + L"Command", true)) {
-                std::wstring commandToken = attributeToken + L"Command";
+            else if (IsEqual(attributeToken, attributePrefix + L"Command", true)) {
+                std::wstring commandToken = attributePrefix + L"Command";
                 commandToken = attribute.substr(commandToken.length());
                 Trim(commandToken);
                 property->SetCommand(commandToken);
@@ -336,7 +349,7 @@ std::wstring VPGEnumClassReader::_GetCommand(const std::wstring &cppCode, const 
     return result;
 }
 
-void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass) const
+void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass> enumClass) const
 {
     TRY
         _EnumValue = -1;
@@ -375,7 +388,7 @@ void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &p
             if (cppCode[pos] == L',')
                 GetNextCharPos(cppCode, pos, false);
             if (IsStartWith(cppCode, L"//", pos) || IsStartWith(cppCode, L"/*", pos)) {
-                _AssignEnumClassProperty(_GetCommand(cppCode, false, pos), property);
+                _AssignEnumClassProperty(enumClass.get(), _GetCommand(cppCode, false, pos), property);
                 GetNextCharPos(cppCode, pos, false);
             }
             if (cppCode[pos] == L',')
@@ -420,14 +433,17 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
             std::vector<std::wstring> attributes = GetAttribute(enumClass->_Command);
             std::wstring command = L"";
             for (auto const &attribute : attributes) {
-                if (IsStartWith(attribute, attributeToken + L"Form", 0, true)) {
+                if (IsStartWith(attribute, attributePrefix + L"Form", 0, true)) {
                     enumClass->_Type = VPGEnumClassType::Form;
                     command = L"";
-                } else if (IsStartWith(attribute, attributeToken + L"ActionArgument", 0, true)) {
+                } else if (IsStartWith(attribute, attributePrefix + L"ActionArgument", 0, true)) {
                     enumClass->_Type = VPGEnumClassType::ActionArgument;
                     command = L"";
-                } else if (IsStartWith(attribute, attributeToken + L"Inherit", 0, true)) {
-                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Inherit");
+                } else if (IsStartWith(attribute, attributePrefix + L"Result", 0, true)) {
+                    enumClass->_Type = VPGEnumClassType::Result;
+                    command = L"";
+                }  else if (IsStartWith(attribute, attributePrefix + L"Inherit", 0, true)) {
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"Inherit");
                     assert(jsonAttributes != nullptr);
                     std::wstring className = jsonAttributes->GetString(L"Class");
                     if (IsBlank(className))
@@ -435,31 +451,31 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
                     enumClass->_InheritClass = className;
                 
                     command = L"";
-                } else if (IsStartWith(attribute, attributeToken + L"Log", 0, true)) {
-                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Log");
+                } else if (IsStartWith(attribute, attributePrefix + L"Log", 0, true)) {
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"Log");
                     if (jsonAttributes != nullptr)
                         enumClass->_IsLogConfigIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
-                } else if (IsStartWith(attribute, attributeToken + L"Action", 0, true)) {
-                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Action");
+                } else if (IsStartWith(attribute, attributePrefix + L"Action", 0, true)) {
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"Action");
                     if (jsonAttributes != nullptr)
                         enumClass->_IsActionManagerIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
-                } else if (IsStartWith(attribute, attributeToken + L"Thread", 0, true)) {
-                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Thread");
+                } else if (IsStartWith(attribute, attributePrefix + L"Thread", 0, true)) {
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"Thread");
                     if (jsonAttributes != nullptr)
                         enumClass->_IsThreadManagerIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
-                } else if (IsStartWith(attribute, attributeToken + L"Json", 0, true)) {
+                } else if (IsStartWith(attribute, attributePrefix + L"Json", 0, true)) {
                     enumClass->_IsJson = true;
-                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Json");
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"Json");
                     if (jsonAttributes != nullptr) {
                         for (auto const &key : jsonAttributes->GetKeys())
                             enumClass->InsertJsonAttributesAtKey(key, jsonAttributes->GetString(key));
                     }
                     command = L"";
-                } else if (IsStartWith(attribute, attributeToken + L"Command", 0, true)) {
-                    std::wstring commandToken = attributeToken + L"Command";
+                } else if (IsStartWith(attribute, attributePrefix + L"Command", 0, true)) {
+                    std::wstring commandToken = attributePrefix + L"Command";
                     commandToken = attribute.substr(commandToken.length());
                     Trim(commandToken);
                     command = commandToken;

@@ -5,6 +5,7 @@
 
 #include "exception.hpp"
 #include "i_exception.hpp"
+#include "i_result.hpp"
 #include "log_service.hpp"
 
 namespace vcc
@@ -18,16 +19,30 @@ namespace vcc
         else
             throw Exception(ExceptionType::CustomError, prefix + str2wstr(std::string(e.what())));
     }
+    
+    template<typename ResultClass>
+    inline std::shared_ptr<IResult> ____HandleResult(const std::exception &e, const std::wstring &file, const std::wstring &line)
+    {
+        std::wstring prefix = !IsBlank(file) && !IsBlank(line) ? (file + L":" + line + L":\r\n") : L"";
+        const IException *ie = dynamic_cast<const IException *>(&e); 
+        if (ie != nullptr)
+            return std::make_shared<ResultClass>(ie->GetErrorType(), prefix + ie->GetErrorMessage());
+        else
+            return std::make_shared<ResultClass>(ExceptionType::CustomError, prefix + str2wstr(std::string(e.what())));
+    }
 
     #ifdef __DEBUGLOG__
     #define THROW_EXCEPTION(e) THROW_EXCEPTION_DEBUG(e)
     #define THROW_EXCEPTION_MSG(exceptionType, message) THROW_EXCEPTION_STACK_TRACE(exceptionType, message)
+    #define CATCH_RETURN_RESULT(resultClass)  CATCH_RETURN_RESULT_DEBUG(resultClass)
     #else
     #define THROW_EXCEPTION(e) ____HandleException(e, L"", L"")
     #define THROW_EXCEPTION_MSG(exceptionType, message) throw Exception(exceptionType, message)
+    #define CATCH_RETURN_RESULT(resultClass)  } catch (const std::exception &e) { return ____HandleResult<resultClass>(e, L"", L""); }
     #endif
 
     #define THROW_EXCEPTION_DEBUG(e) ____HandleException(e, str2wstr(__FILE__), std::to_wstring(__LINE__))
+    #define CATCH_RETURN_RESULT_DEBUG(resultClass)  } catch (const std::exception &e) { return ____HandleResult<resultClass>(e, str2wstr(__FILE__), std::to_wstring(__LINE__)); }
 
     #define THROW_EXCEPTION_STACK_TRACE(exceptionType, message) \
         throw Exception(exceptionType, str2wstr(__FILE__) + L":" + std::to_wstring(__LINE__) + L":\r\n" + message)

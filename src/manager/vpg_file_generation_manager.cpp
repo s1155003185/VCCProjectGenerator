@@ -196,10 +196,17 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
         //Generate Object Type, Object Class, PropertyAccessor,
         // 1. get all files from directory
         // 2. get all properties with enum class Prefix + Class + Property
-        std::wstring filePrefix = projPrefix;
-        ToLower(filePrefix);
-
         LogService::LogInfo(logConfig, logId, L"Generate property start.");
+        
+        // Generate OperationResult
+        for (auto const &exportOption : option->GetExports()) {
+            if (exportOption->GetInterface() == VPGGenerationOptionInterfaceType::Java) {
+                VPGJavaGenerationService::GenerateOperationResult(logConfig, projPrefix, exportOption.get(),
+                    typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm);
+            }
+        }
+        std::wstring filePrefix = projPrefix;
+        ToLower(filePrefix);        
         std::set<std::wstring> objectTypes;
         std::set<std::wstring> objectFileNames, propertyAccessorFileNames;
         auto dllOption = std::make_shared<VPGDllFileGenerationServiceOption>();
@@ -283,7 +290,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
                     std::wstring actionFolderHpp = !option->GetActionDirectoryHpp().empty() ? GetConcatPath(projWorkspace, option->GetActionDirectoryHpp(), middlePath, L"") : L"";
                     std::wstring actionFolderCpp = !option->GetActionDirectoryCpp().empty() ? GetConcatPath(projWorkspace, option->GetActionDirectoryCpp(), middlePath, L"") : L"";
                     
-                    VPGObjectFileGenerationService::GenerateHpp(logConfig, projPrefix, _IncludeFiles, GetConcatPath(projWorkspace, option->GetObjectDirectoryHpp(), middlePath, objectFileName + L".hpp"), fileObjectDirectoryHpp, actionFolderHpp, objectEnumClassList);
+                    VPGObjectFileGenerationService::GenerateHpp(logConfig, option, _IncludeFiles, GetConcatPath(projWorkspace, option->GetObjectDirectoryHpp(), middlePath, objectFileName + L".hpp"), fileObjectDirectoryHpp, actionFolderHpp, objectEnumClassList);
                     VPGObjectFileGenerationService::GenerateCpp(logConfig, projPrefix, _IncludeFiles, _EnumClasses, GetConcatPath(projWorkspace, option->GetObjectDirectoryCpp(), middlePath, objectFileName + L".cpp"), fileObjectDirectoryCpp, actionFolderCpp, objectEnumClassList);
                 }
                 if (!propertyAccessorDirectoryHpp.empty() && !propertyAccessorDirectoryCpp.empty()) {

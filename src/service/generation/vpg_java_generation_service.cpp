@@ -77,6 +77,43 @@ std::wstring VPGJavaGenerationService::GetJavaPactkageObject(const VPGEnumClass 
     return result;
 }
 
+std::map<std::wstring, std::wstring> VPGJavaGenerationService::GetImportFileMap(const std::wstring &projectPrefix, const VPGGenerationOptionExport *option, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapObject, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapForm)
+{
+    std::map<std::wstring, std::wstring> importFileMap;
+    TRY
+        for (auto const &relativePath : typeWorkspaceClassRelativePathMapObject) {
+            std::wstring enumClassName = relativePath.first;
+            if (!projectPrefix .empty() && !IsStartWith(enumClassName, projectPrefix))
+                enumClassName = projectPrefix  + enumClassName;
+            importFileMap.insert(std::make_pair(enumClassName, GetJavaPactkage(option->GetTypeDirectory(), relativePath.second, L"Type Directory")));
+            if (IsEndWith(enumClassName, propertyClassNameSuffix)) {
+                std::wstring tmpObjectName = enumClassName.substr(0, enumClassName.size() - propertyClassNameSuffix.size());
+                importFileMap.insert(std::make_pair(tmpObjectName, GetJavaPactkage(option->GetObjectDirectory(), relativePath.second, L"Object Directory")));
+            }
+        }
+        for (auto const &relativePath : typeWorkspaceClassRelativePathMapForm) {
+            std::wstring enumClassName = relativePath.first;
+            if (!projectPrefix .empty() && !IsStartWith(enumClassName, projectPrefix ))
+                enumClassName = projectPrefix  + enumClassName;
+            importFileMap.insert(std::make_pair(enumClassName, GetJavaPactkage(option->GetTypeDirectory(), relativePath.second, L"Type Directory")));
+            if (IsEndWith(enumClassName, propertyClassNameSuffix)) {
+                std::wstring tmpObjectName = enumClassName.substr(0, enumClassName.size() - propertyClassNameSuffix.size());
+                std::wstring directory = !IsBlank(option->GetFormDirectory()) ? option->GetFormDirectory() : option->GetObjectDirectory();
+                importFileMap.insert(std::make_pair(tmpObjectName, GetJavaPactkage(directory, relativePath.second, L"Form Directory")));
+            }
+        }
+    CATCH
+    return importFileMap;
+}
+
+std::wstring VPGJavaGenerationService::GetOperationResultFilePath(const std::wstring &projectPrefix, const VPGGenerationOptionExport *option)
+{
+    TRY
+        return ConcatPaths({ option->GetObjectDirectory(), projectPrefix + L"OperationResult.java" });
+    CATCH
+    return L"";
+}
+
 std::wstring VPGJavaGenerationService::GetPropertyAccessorCppToJavaConvertedType(const std::wstring &cppType)
 {
     std::wstring result = L"";
@@ -904,13 +941,18 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
         
         std::set<std::wstring> importFiles;
         importFiles.insert(L"com.sun.jna.Pointer");
-        importFiles.insert(GetJavaPactkage(option->GetDllBridgeDirectory(), L"", L"DLL Interface Directory") + L"." + (!projectPrefix.empty() ? projectPrefix : L"") + L"DllFunctions");
+        importFiles.insert(GetJavaPactkage(option->GetDllBridgeDirectory(), L"", L"DLL Interface Directory") + L"." + projectPrefix  + L"DllFunctions");
         importFiles.insert(GetJavaPactkage(option->GetTypeDirectory(), middlePath, L"Type Directory") + L"." + enumClass->GetName());
 
         if (enumClass->GetType() == VPGEnumClassType::Form || enumClass->GetType() == VPGEnumClassType::ActionArgument) {
             std::wstring objectTypeClass = projectPrefix + L"ObjectType";
             if (importFileMap.find(objectTypeClass) != importFileMap.end())
                 importFiles.insert(importFileMap.find(objectTypeClass)->second + L"." + objectTypeClass);
+        }
+
+        std::wstring operationResultClass = projectPrefix  + L"OperationResult";
+        if (enumClass->GetType() == VPGEnumClassType::Result) {
+            importFiles.insert(GetJavaPactkage(option->GetObjectDirectory(), L"", L"Object Directory") + L"." + operationResultClass);
         }
 
         // Property
@@ -935,7 +977,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
                 + INDENT + formActionStr
                 + INDENT + L"// </editor-fold>\r\n";
         }
-        std::wstring  formCustomActionStr = VPGJavaGenerationService::GenerateFormCustomAction(projectPrefix, enumClass, importFileMap, importFiles);
+        std::wstring  formCustomActionStr = VPGJavaGenerationService::GenerateFormCustomAction(projectPrefix, enumClass, option->GetObjectDirectory(), importFileMap, importFiles);
         if (!formCustomActionStr.empty()) {
             LTrim(formCustomActionStr);
             formCustomActionStr = L"\r\n"
@@ -953,13 +995,24 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
                 continue;
             result += L"import " + str + L";\r\n";
         }
-        result += L"\r\n"
-            "public class " + objectName + L" {\r\n"
-            + INDENT + L"public Pointer Handle = null;\r\n"
-            "\r\n"
-            + INDENT + L"public " + objectName + L"(Pointer handle) {\r\n"
-            + INDENT + INDENT + L"this.Handle = handle;\r\n"
-            + INDENT + L"}\r\n";
+
+        if (enumClass->GetType() == VPGEnumClassType::Result) {
+            result += L"\r\n"
+                "public class " + objectName + L" extends " + operationResultClass + L" {\r\n"
+                "\r\n"
+                + INDENT + L"public " + objectName + L"(Pointer handle) {\r\n"
+                + INDENT + INDENT + L"super(handle);\r\n"
+                + INDENT + L"}\r\n";
+        } else {
+            result += L"\r\n"
+                "public class " + objectName + L" {\r\n"
+                "\r\n"
+                + INDENT + L"public Pointer Handle = null;\r\n"
+                "\r\n"
+                + INDENT + L"public " + objectName + L"(Pointer handle) {\r\n"
+                + INDENT + INDENT + L"this.Handle = handle;\r\n"
+                + INDENT + L"}\r\n";
+        }
 
         // Special Constructor
         switch (enumClass->GetType())
@@ -987,6 +1040,60 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
     return result;
 }
 
+std::wstring VPGJavaGenerationService::GenerateOperationResultContent(const std::wstring &projectPrefix, const VPGGenerationOptionExport *option, const std::map<std::wstring, std::wstring> &importFileMap)
+{
+    std::wstring result = L"";
+    TRY
+        std::set<std::wstring> importFiles;
+        importFiles.insert(L"com.sun.jna.Pointer");
+        importFiles.insert(L"com.sun.jna.ptr.PointerByReference");
+
+        std::wstring dllInterfaceClass = projectPrefix  + L"DllFunctions";
+        importFiles.insert(GetJavaPactkage(option->GetDllBridgeDirectory(), L"", L"DLL Interface Directory") + L"." + dllInterfaceClass);
+        
+        std::wstring exceptionTypeClass = projectPrefix  + L"ExceptionType";
+        if (importFileMap.find(exceptionTypeClass) != importFileMap.end())
+            importFiles.insert(importFileMap.find(exceptionTypeClass)->second + L"." + exceptionTypeClass);
+
+        result = L"package " + GetJavaPactkage(option->GetObjectDirectory(), L"", L"Object Directory") + L";\r\n"
+            "\r\n";
+            
+        for (auto const &str : importFiles)
+            result += L"import " + str + L";\r\n";
+
+        result += L"\r\n"
+            "public class " + projectPrefix + L"OperationResult {\r\n"
+            + INDENT + L"public Pointer Handle = null;\r\n"
+            "\r\n"
+            + INDENT + L"public " + projectPrefix + L"OperationResult(Pointer handle) {\r\n"
+            + INDENT + INDENT + L"this.Handle = handle;\r\n"
+            + INDENT + L"}\r\n"
+            "\r\n"
+            + INDENT + L"public " + exceptionTypeClass + L" getExceptionType() {\r\n"
+            + INDENT + INDENT + L"return " + exceptionTypeClass + L".parse((int)" + dllInterfaceClass + L".Instance.ApplicationGetResultErrorCode(Handle));\r\n"
+            + INDENT + L"}\r\n"
+            "\r\n"
+            + INDENT + L"public String getMessage() {\r\n"
+            + INDENT + INDENT + L"PointerByReference result = new PointerByReference();\r\n"
+            + INDENT + INDENT + dllInterfaceClass + L".Instance.ApplicationGetResultMessage(Handle, result);\r\n"
+            + INDENT + INDENT + L"return result.getValue().getWideString(0);\r\n"
+            + INDENT + L"}\r\n"
+            + INDENT + L"public boolean isError() {\r\n"
+            + INDENT + INDENT + L"return " + dllInterfaceClass + L".Instance.ApplicationIsErrorResult(Handle);\r\n"
+            + INDENT + L"}\r\n"
+            "\r\n"
+            + INDENT + L"public boolean isWarning() {\r\n"
+            + INDENT + INDENT + L"return " + dllInterfaceClass + L".Instance.ApplicationIsWarningResult(Handle);\r\n"
+            + INDENT + L"}\r\n"
+            "\r\n"
+            + INDENT + L"public void close() {\r\n"
+            + INDENT + INDENT + dllInterfaceClass + L".Instance.ApplicationEraseResult(Handle);\r\n"
+            + INDENT + L"}\r\n"
+            "}\r\n";
+    CATCH
+    return result;
+}
+
 std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass)
 {
     assert(enumClass != nullptr);
@@ -997,6 +1104,10 @@ std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &pr
     TRY
         std::map<std::wstring, std::wstring> formActions;
         // Form Action
+        formActions.insert(std::make_pair(L"getActionCurrentSeqNo",
+            L"public long getActionCurrentSeqNo() {\r\n"
+            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationGetFormActionCurrentSeqNo(Handle);\r\n"
+            "}\r\n"));
         formActions.insert(std::make_pair(L"getActionFirstSeqNo",
             L"public long getActionFirstSeqNo() {\r\n"
             + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationGetFormActionFirstSeqNo(Handle);\r\n"
@@ -1007,21 +1118,21 @@ std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &pr
             "}\r\n"));
 
         formActions.insert(std::make_pair(L"redo", 
-            L"public long redo(long noOfStep) {\r\n"
-            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationRedoFormAction(Handle, noOfStep);\r\n"
+            L"public void redo(long noOfStep) {\r\n"
+            + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationRedoFormAction(Handle, noOfStep);\r\n"
             "}\r\n"));
         formActions.insert(std::make_pair(L"redoToSeqNo",
-            L"public long redoToSeqNo(long seqNo) {\r\n"
-            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationRedoFormActionToSeqNo(Handle, seqNo);\r\n"
+            L"public void redoToSeqNo(long seqNo) {\r\n"
+            + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationRedoFormActionToSeqNo(Handle, seqNo);\r\n"
             "}\r\n"));
     
         formActions.insert(std::make_pair(L"undo", 
-            L"public long undo(long noOfStep) {\r\n"
-            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationUndoFormAction(Handle, noOfStep);\r\n"
+            L"public void undo(long noOfStep) {\r\n"
+            + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationUndoFormAction(Handle, noOfStep);\r\n"
             "}\r\n"));
         formActions.insert(std::make_pair(L"undoToSeqNo",
-            L"public long undoToSeqNo(long seqNo) {\r\n"
-            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationUndoFormActionToSeqNo(Handle, seqNo);\r\n"
+            L"public void undoToSeqNo(long seqNo) {\r\n"
+            + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationUndoFormActionToSeqNo(Handle, seqNo);\r\n"
             "}\r\n"));
             
         formActions.insert(std::make_pair(L"clearAction", 
@@ -1061,7 +1172,9 @@ std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &pr
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateFormCustomAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles)
+#include <iostream>
+std::wstring VPGJavaGenerationService::GenerateFormCustomAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &optionResultParent,
+    const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles)
 {
     assert(enumClass != nullptr);
     if (enumClass->GetType() != VPGEnumClassType::Form)
@@ -1085,9 +1198,19 @@ std::wstring VPGJavaGenerationService::GenerateFormCustomAction(const std::wstri
             }
 
             std::wstring functionName = L"do" + property->GetPropertyName();
+            std::wstring resultClass = L"";
+            if (!IsBlank(property->GetActionResultRedoClass()) && property->GetActionResultRedoClass() != L"OperationResult" && property->GetActionResultRedoClass() != projectPrefix + L"OperationResult") {
+                resultClass = property->GetActionResultRedoClass();
+                if (importFileMap.find(resultClass) != importFileMap.end())
+                    importFiles.insert(importFileMap.find(property->GetActionResultRedoClass())->second + L"." + resultClass);
+            } else {
+                resultClass = projectPrefix + L"OperationResult";
+                importFiles.insert(GetJavaPactkage(optionResultParent, L"", L"Object Directory") + L"." + resultClass);
+            }
+
             formActions.insert(std::make_pair(functionName,
-                L"public void " + functionName + L"(" + (!type.empty() ? (type + L" argument") : L"") + L") {\r\n"
-                + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationDoFormAction(Handle, " + enumClass->GetName() + L"." + property->GetEnum() + L".getValue(), " + (!type.empty() ? L"argument.Handle" : L"null") + L");\r\n"
+                L"public " + resultClass + L" " + functionName + L"(" + (!type.empty() ? (type + L" argument") : L"") + L") {\r\n"
+                + INDENT + L"return new " + resultClass + L"(" + projectPrefix + L"DllFunctions.Instance.ApplicationDoFormAction(Handle, " + enumClass->GetName() + L"." + property->GetEnum() + L".getValue(), " + (!type.empty() ? L"argument.Handle" : L"null") + L"));\r\n"
                 "}\r\n"));
         }
         
@@ -1136,31 +1259,22 @@ void VPGJavaGenerationService::GenerateObject(const LogConfig *logConfig, const 
         std::wstring objectName = enumClass->GetName();
         if (!IsEndWith(objectName, propertyClassNameSuffix))
             return;
-
-        std::map<std::wstring, std::wstring> importFileMap;
-        for (auto const &relativePath : typeWorkspaceClassRelativePathMapObject) {
-            std::wstring enumClassName = relativePath.first;
-            if (!option->GetProjectPrefix().empty() && !IsStartWith(enumClassName, option->GetProjectPrefix()))
-                enumClassName = option->GetProjectPrefix() + enumClassName;
-            importFileMap.insert(std::make_pair(enumClassName, GetJavaPactkage(javaOption->GetTypeDirectory(), relativePath.second, L"Type Directory")));
-            if (IsEndWith(enumClassName, propertyClassNameSuffix)) {
-                std::wstring tmpObjectName = enumClassName.substr(0, enumClassName.size() - propertyClassNameSuffix.size());
-                importFileMap.insert(std::make_pair(tmpObjectName, GetJavaPactkage(javaOption->GetObjectDirectory(), relativePath.second, L"Object Directory")));
-            }
-        }
-        for (auto const &relativePath : typeWorkspaceClassRelativePathMapForm) {
-            std::wstring enumClassName = relativePath.first;
-            if (!option->GetProjectPrefix().empty() && !IsStartWith(enumClassName, option->GetProjectPrefix()))
-                enumClassName = option->GetProjectPrefix() + enumClassName;
-            importFileMap.insert(std::make_pair(enumClassName, GetJavaPactkage(javaOption->GetTypeDirectory(), relativePath.second, L"Type Directory")));
-            if (IsEndWith(enumClassName, propertyClassNameSuffix)) {
-                std::wstring tmpObjectName = enumClassName.substr(0, enumClassName.size() - propertyClassNameSuffix.size());
-                std::wstring directory = !IsBlank(javaOption->GetFormDirectory()) ? javaOption->GetFormDirectory() : javaOption->GetObjectDirectory();
-                importFileMap.insert(std::make_pair(tmpObjectName, GetJavaPactkage(directory, relativePath.second, L"Form Directory")));
-            }
-        }
         LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class: " + tmpFilePath);
-        WriteFile(tmpFilePath, VPGJavaGenerationService::GenerateObjectContent(option->GetProjectPrefix(), enumClass, cppMiddlePath, importFileMap, javaOption), true);
+        WriteFile(tmpFilePath, VPGJavaGenerationService::GenerateObjectContent(option->GetProjectPrefix(), enumClass, cppMiddlePath, GetImportFileMap(option->GetProjectPrefix(), javaOption, typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm), javaOption), true);
         LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class completed.");
+    CATCH
+}
+
+void VPGJavaGenerationService::GenerateOperationResult(const LogConfig *logConfig, const std::wstring &projectPrefix, const VPGGenerationOptionExport *option,
+    const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapObject, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapForm)
+{
+    TRY
+        if (option == nullptr || option->GetInterface() != VPGGenerationOptionInterfaceType::Java || IsBlank(option->GetObjectDirectory()))
+            return;
+        std::wstring filePath = ConcatPaths({option->GetWorkspace(), GetOperationResultFilePath(projectPrefix, option)});
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class: " + filePath);
+        WriteFile(filePath, GenerateOperationResultContent(projectPrefix, option, GetImportFileMap(projectPrefix, option, typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm)), true);
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class completed.");
+        return;
     CATCH
 }

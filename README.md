@@ -6,15 +6,16 @@ Maintain those standard already stable long time ago. No reason to implement twi
 Current Stage Objective: Start VCC Project Manager (Multi Project Handling), including Java Interface, Thread, Form, Action, Git.
 
 Note: Still in initialize version. This is the last subversion before alpha release. Reviewing function name.
+Note: Pending to support Callback, Structure. But not first prior.
 
 Please go to following session to see how to create VCC Project to generate c++ dll with Java Interface
 - Tutorial for Create VCC DLL Project to generate dll with Java Interface
 
 ## What's new
-Initialize Git Manager
+Action with Argument and Result
 
 ## What's next
-Git Manager, Action Add Argument
+Git Manager
 
 ## Features
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
@@ -316,6 +317,7 @@ Sample
     "ProjectNameDll": "libvpg",
     "ProjectNameExe": "vpg",
     "IsGit": true,
+    "IsResultThrowException": false,
     "IsExcludeUnittest": false,
     "IsExcludeVCCUnitTest": false,
     "TypeWorkspace": "include/type",
@@ -388,6 +390,10 @@ ProjectNameExe
 
 IsGit
     If true, then generate .gitignore. (Pending to init git)
+
+IsResultThrowException
+    If true, throw exception if executing action with errors.
+    If false, return Result class.
 
 IsExcludeUnittest
     If true, then skip update unittest/
@@ -713,7 +719,7 @@ Note:
     e.g. VPGPersionProperty
 
 #### Class Attribute
-// [@@Form] [@@ActionArgument] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsIndependent": true }] [@@Action { "IsIndependent": true }] [@@Thread { "IsIndependent": true } ] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Command xxx]
+// [@@Form] [@@ActionArgument] [@@Result] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsIndependent": true }] [@@Action { "IsIndependent": true }] [@@Thread { "IsIndependent": true } ] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Command xxx]
 
 []: Optional
 @@: Key for attributes. Need to state for attribute
@@ -725,7 +731,11 @@ Note:
 
 [@@ActionArgument]
     This Class is an Action Argument.
-    Action only. It will generated in the same file with Action
+    Action only. It will generated in the same file with Action.
+
+[@@Result]
+    This Class is a Result Class.
+    Action only. It inherits BaseResult to return Error Code and Error Message.
     
 [@@Inherit { "Class": "ClassName" }]
     Generate Class that inherit ClassName
@@ -781,7 +791,7 @@ Note:
     Command used in VCC generator, can be any text in xxx without @@
 
 #### Field Attribute
-Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Command xxx]
+Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@ActionResult { "Redo.Class": "ClassName", "Undo.Class" : "ClassName" }] [@@Command xxx]
 
 {...}: Compulsory
 []: Optional
@@ -818,6 +828,7 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Comm
         | MANAGER_SPTR_PARENT(type, name, parentClass) |  Manager. If value is nullptr, then will use parentClass->Get##name(), else will use local manager. Please ensure parentClass is Form also and have same type. Initialize as nullptr at Initialize(). | MANAGER_SPTR_NULL(GitManager, GitManager1, GitBaseManager) |
 
     Current Option for Action:
+        If action has error, then will not add to action list in ActionManager but throw exception or return result.
         | Macro | Description | Example |
         | --- | --- | --- |
         | ACTION(name) | Generator will create void Do##name() and generate Action Class. Please handle logic in .cpp file. | ACTION(AddWorkspace) |
@@ -846,6 +857,14 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Comm
     For class declare @@Json Only.
     Will not generate Json for current property.
     For those temp properties that do not need to be recored.
+
+[@@ActionResult { "Redo.Class": "ClassName", "Undo.Class" : "ClassName" }]
+    For Action Only.
+    ClassName must have tag @@ActionResult.
+    If not stated, Action will return OperationResult which contains ErrorCode and ErrorMessage Only.    
+    Attributes:
+        Redo.Class: Return Class for Do or Redo.
+        Undo.Class: Return Class for Undo.
 
 [@@Command xxx]
     Command used in VCC generator, can be any text in xxx without @@
@@ -1145,6 +1164,10 @@ X(Twitter) @VCCProject
 
 ****
 ## Release Log
+
+### [v0.3.4] - 2025-04-21: Review - Action Return OperationResult
+- Action support return Result - Add Class tag @@Result and Field tag @@Result
+- Add OperationResult to return Error Code and Message (Also auto generate at Java Project)
 
 ### [v0.3.3] - 2025-03-30: Review - Action Argument
 - Review folder and file naming rules. C++ folder must be lowercase without any seperator and file must be lower case with seperator. Java folder must be lowercase without any seperator and file must be having same name as class name

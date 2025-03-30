@@ -264,6 +264,8 @@ bool VPGGenerationOptionPropertyAccessor::_ReadBool(const int64_t &objectPropert
             return obj->GetIsExcludeVCCUnitTest();
         case VPGGenerationOptionProperty::IsGit:
             return obj->GetIsGit();
+        case VPGGenerationOptionProperty::IsResultThrowException:
+            return obj->GetIsResultThrowException();
         default:
             assert(false);
         }
@@ -302,6 +304,9 @@ void VPGGenerationOptionPropertyAccessor::_WriteBool(const int64_t &objectProper
             break;
         case VPGGenerationOptionProperty::IsGit:
             obj->SetIsGit(value);
+            break;
+        case VPGGenerationOptionProperty::IsResultThrowException:
+            obj->SetIsResultThrowException(value);
             break;
         default:
             assert(false);
