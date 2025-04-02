@@ -713,7 +713,7 @@ Note:
     e.g. VPGPersionProperty
 
 #### Class Attribute
-// [@@Form] [@@ActionArgument] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsIndependent": true }] [@@Action { "IsIndependent": true }] [@@Thread { "IsIndependent": true } ] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Command xxx]
+// [@@Form] [@@ActionArgument] [@@Result] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsIndependent": true }] [@@Action { "IsIndependent": true }] [@@Thread { "IsIndependent": true } ] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Command xxx]
 
 []: Optional
 @@: Key for attributes. Need to state for attribute
@@ -725,7 +725,11 @@ Note:
 
 [@@ActionArgument]
     This Class is an Action Argument.
-    Action only. It will generated in the same file with Action
+    Action only. It will generated in the same file with Action.
+
+[@@Result]
+    This Class is a Result Class.
+    Action only. It inherits BaseResult to return Error Code and Error Message.
     
 [@@Inherit { "Class": "ClassName" }]
     Generate Class that inherit ClassName
@@ -781,7 +785,7 @@ Note:
     Command used in VCC generator, can be any text in xxx without @@
 
 #### Field Attribute
-Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Command xxx]
+Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Result { "Redo.Class": "ClassName", "Undo.Class" : "ClassName" }] [@@Command xxx]
 
 {...}: Compulsory
 []: Optional
@@ -846,6 +850,14 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Comm
     For class declare @@Json Only.
     Will not generate Json for current property.
     For those temp properties that do not need to be recored.
+
+[@@Result { "Redo.Class": "ClassName", "Undo.Class" : "ClassName" }]
+    For Action Only.
+    ClassName must have tag @@Result.
+    If not stated, Action will return OperationResult which contains ErrorCode and ErrorMessage Only.    
+    Attributes:
+        Redo.Class: Return Class for Do or Redo.
+        Undo.Class: Return Class for Undo.
 
 [@@Command xxx]
     Command used in VCC generator, can be any text in xxx without @@
