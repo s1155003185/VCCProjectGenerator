@@ -31,6 +31,9 @@ void VPGObjectTypeFileGenerationService::Generate(const LogConfig *logConfig, co
                 }
             }
         }
+
+        std::set<std::wstring> overallPropertyTypes = propertyTypes;
+        overallPropertyTypes.insert(L"OperationResult");
         
         std::wstring content = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
             "#pragma once\r\n"
@@ -38,8 +41,8 @@ void VPGObjectTypeFileGenerationService::Generate(const LogConfig *logConfig, co
             "enum class ObjectType\r\n"
             "{\r\n"
             + INDENT + L"NA\r\n";
-        if (!propertyTypes.empty())
-            content += INDENT + L", " + Concat(propertyTypes, L"\r\n" + INDENT + L", ") + L"\r\n";
+        if (!overallPropertyTypes.empty())
+            content += INDENT + L", " + Concat(overallPropertyTypes, L"\r\n" + INDENT + L", ") + L"\r\n";
         
         if (!IsBlank(customContent))
             content += INDENT + customContent + L"\r\n";
