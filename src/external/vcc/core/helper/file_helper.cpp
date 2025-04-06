@@ -227,8 +227,8 @@ namespace vcc
             ValidateFile(pathA);
             ValidateFile(pathB);
 
-            std::ifstream f1(pathA.c_str(), std::ifstream::binary|std::ifstream::ate);
-            std::ifstream f2(pathB.c_str(), std::ifstream::binary|std::ifstream::ate);
+            std::ifstream f1(PATH(pathA), std::ifstream::binary|std::ifstream::ate);
+            std::ifstream f2(PATH(pathB), std::ifstream::binary|std::ifstream::ate);
 
             if (f1.fail() || f2.fail())
                 return false;
@@ -341,7 +341,7 @@ namespace vcc
         TRY
             ValidateFile(filePath);
 
-            std::wifstream fileStream(filePath.c_str(), std::ios_base::binary);
+            std::wifstream fileStream(PATH(filePath), std::ios_base::binary);
             if (!fileStream)
                 THROW_EXCEPTION_MSG(ExceptionType::FileCannotOpen, L"Cannot Open File " + filePath);
             
@@ -358,7 +358,7 @@ namespace vcc
         TRY
             ValidateFile(filePath);
 
-            std::wifstream fileStream(filePath.c_str(), std::ios_base::in);
+            std::wifstream fileStream(PATH(filePath), std::ios_base::in);
             std::wstring line;
             while (std::getline(fileStream, line)) {
                 action(line);
@@ -372,7 +372,7 @@ namespace vcc
         TRY
             ValidateFile(filePath);
 
-            std::wifstream fileStream(filePath.c_str(), std::ios_base::in);
+            std::wifstream fileStream(PATH(filePath), std::ios_base::in);
             std::wstring line, result;
             int cnt = 0;
             while (std::getline(fileStream, line))
@@ -404,7 +404,7 @@ namespace vcc
                     THROW_EXCEPTION_MSG(ExceptionType::DirectoryCannotCreate, dir.wstring() + L"Directory not found.");
             }
 
-            std::wofstream file(filePath.c_str(), std::ios::out | std::ios::binary);
+            std::wofstream file(PATH(filePath), std::ios::out | std::ios::binary);
             if (file.is_open()) {
                 file << content;
                 file.close();
