@@ -48,6 +48,7 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
             std::set<std::wstring> customIncludeFiles;
             customIncludeFiles.insert(L"base_action.hpp");
             customIncludeFiles.insert(L"i_object.hpp");
+            customIncludeFiles.insert(L"i_result.hpp");
             customIncludeFiles.insert(L"log_config.hpp");
 
             // class name
@@ -89,10 +90,10 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
                     + INDENT + INDENT + L"virtual std::wstring GetUndoMessageComplete() const override;\r\n";
                 
             action += L"\r\n"
-                + INDENT + INDENT + L"virtual void OnRedo() override;\r\n";
+                + INDENT + INDENT + L"virtual std::shared_ptr<IResult> OnRedo() override;\r\n";
 
             if (!property->GetIsNoHistory())
-                action += INDENT + INDENT + L"virtual void OnUndo() override;\r\n";
+                action += INDENT + INDENT + L"virtual std::shared_ptr<IResult> OnUndo() override;\r\n";
             
             action += L"\r\n"
                 + INDENT + INDENT + GetVccTagHeaderCustomClassProtectedFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
@@ -176,6 +177,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
             customIncludeFiles.insert(L"exception_macro.hpp");
             customIncludeFiles.insert(L"i_object.hpp");
             customIncludeFiles.insert(L"log_config.hpp");
+            customIncludeFiles.insert(L"i_result.hpp");
 
             // class name
             std::wstring actionClassName = className + property->GetPropertyName();
@@ -256,22 +258,24 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                     "}\r\n";
 
             action += L"\r\n"
-                "void " + actionClassName + L"::OnRedo()\r\n"
+                "std::shared_ptr<IResult> " + actionClassName + L"::OnRedo()\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
                 + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
                 + INDENT + L"CATCH\r\n"
+                + INDENT + L"nullptr;\r\n"
                 "}\r\n";
 
             if (!property->GetIsNoHistory())
                 action += L"\r\n"
-                    "void " + actionClassName + L"::OnUndo()\r\n"
+                    "std::shared_ptr<IResult> " + actionClassName + L"::OnUndo()\r\n"
                     "{\r\n"
                     + INDENT + L"TRY\r\n"
                     + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
                     + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
                     + INDENT + L"CATCH\r\n"
+                    + INDENT + L"nullptr;\r\n"
                     "}\r\n";
 
             if (isSeperateFile) {
