@@ -263,8 +263,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
                 + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
-                + INDENT + L"CATCH\r\n"
-                + INDENT + L"nullptr;\r\n"
+                + INDENT + L"return CATCH_RESULT(" + (!IsBlank(property->GetActionResultUndoClass()) ? property->GetActionResultUndoClass() : L"OperationResult") + L")\r\n"
                 "}\r\n";
 
             if (!property->GetIsNoHistory())
@@ -274,8 +273,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                     + INDENT + L"TRY\r\n"
                     + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
                     + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
-                    + INDENT + L"CATCH\r\n"
-                    + INDENT + L"nullptr;\r\n"
+                    + INDENT + L"return CATCH_RESULT(" + (!IsBlank(property->GetActionResultUndoClass()) ? property->GetActionResultUndoClass() : L"OperationResult") + L")\r\n"
                     "}\r\n";
 
             if (isSeperateFile) {
