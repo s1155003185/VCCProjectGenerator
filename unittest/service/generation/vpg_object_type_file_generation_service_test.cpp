@@ -44,6 +44,7 @@ TEST_F(VPGObjectTypeFileGenerationServiceTest, Empty)
         L"enum class ObjectType\r\n"
         L"{\r\n"
         L"    NA\r\n"
+        "     , OperationResult\r\n"
         L"    // <vcc:customObjectTypes sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         L"    // </vcc:customObjectTypes>\r\n"
         L"};\r\n";
@@ -66,6 +67,7 @@ TEST_F(VPGObjectTypeFileGenerationServiceTest, Normal)
         L"    NA\r\n"
         L"    , Abc\r\n"
         L"    , Def\r\n"
+        "     , OperationResult\r\n"
         L"    // <vcc:customObjectTypes sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         L"    // </vcc:customObjectTypes>\r\n"
         L"};\r\n";

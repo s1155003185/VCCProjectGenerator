@@ -134,8 +134,9 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    NA\r\n"
         "    , Object\r\n"
         "    , ObjectPtr\r\n"
-        L"    // <vcc:customObjectTypes sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        L"    // </vcc:customObjectTypes>\r\n"
+        "    , OperationResult\r\n"
+        "    // <vcc:customObjectTypes sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "    // </vcc:customObjectTypes>\r\n"
         "};\r\n");
 
     // ------------------------------------------------------------------------------------------ //
