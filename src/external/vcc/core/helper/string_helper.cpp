@@ -254,7 +254,7 @@ namespace vcc
 		return false;
 	}
 
-	std::vector<std::wstring> SplitString(std::wstring str, const std::vector<std::wstring> &delimiters,
+	std::vector<std::wstring> SplitString(const std::wstring &str, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
 	{
 		std::vector<std::wstring> results;
@@ -281,6 +281,72 @@ namespace vcc
 						}
 					}
 					pos += currentDelimiter.length();
+				} else {
+					// 1. if have quotes, check if it is escape chars
+					// 2. if have quotes, check if it is close quote
+					// 3. check if it is open quotes, if yes, then add to quote
+					// Last. None of above, then pos++
+					if (!quotes.empty()) {
+						if (!quoteEscapeList.empty()) {
+							std::wstring escapeChar = quoteEscapeList[quotes[quotes.size() - 1]];
+							if (!escapeChar.empty() && IsStartWith(str, escapeChar, pos)) {
+								pos += escapeChar.length();
+								currentStr += escapeChar + str[pos];
+								pos++; // for escaped char
+								continue;
+							}
+						}
+						std::wstring closeQuote = quoteCloseList[quotes[quotes.size() - 1]];
+						if (!closeQuote.empty() && IsStartWith(str, closeQuote, pos)) {
+							pos += closeQuote.length();
+							currentStr += closeQuote;
+							quotes.pop_back();
+							continue;
+						}
+					}
+					std::wstring currentQuoteOpen = L"";
+					for (size_t i = 0; i < quoteOpenList.size(); i++) {
+						std::wstring quoteOpen = quoteOpenList[i];
+						if (IsStartWith(str, quoteOpen, pos)) {
+							currentQuoteOpen = quoteOpen;
+							quotes.push_back(i);
+							break;
+						}
+					}
+					if (!currentQuoteOpen.empty()) {
+						pos += currentQuoteOpen.length();
+						currentStr += currentQuoteOpen;
+					} else {
+						currentStr += std::wstring(1, str[pos]);
+						pos++;
+					}
+				}
+			}
+			if (!currentStr.empty() || !results.empty())
+				results.push_back(currentStr);
+        CATCH
+		return results;
+	}
+	
+	std::vector<std::wstring> SplitStringBySpace(const std::wstring &str,
+		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
+	{
+		std::vector<std::wstring> results;
+		if (str.empty())
+			return results;
+
+		TRY
+			if (!(quoteOpenList.size() == quoteCloseList.size() && (quoteEscapeList.empty() || quoteCloseList.size() == quoteEscapeList.size())))
+				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Command Open, Close, Escape List having different size.");
+
+			std::vector<size_t> quotes;
+			size_t pos = 0;
+			std::wstring currentStr = L"";
+			while (pos < str.length()) {
+				if (quotes.empty() &&  std::iswspace(str[pos])) {
+					results.push_back(currentStr);
+					currentStr = L"";
+					pos += 1; // space char length
 				} else {
 					// 1. if have quotes, check if it is escape chars
 					// 2. if have quotes, check if it is close quote

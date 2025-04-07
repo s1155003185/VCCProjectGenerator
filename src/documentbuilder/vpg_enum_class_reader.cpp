@@ -14,7 +14,7 @@
 
 using namespace vcc;
 
-const std::wstring attributeToken = L"@@";
+const std::wstring attributePrefix = L"@@";
 std::mutex _mutex;
 
 VPGEnumClassReader::VPGEnumClassReader(const std::set<std::wstring> &classMacroList) 
@@ -173,16 +173,16 @@ std::vector<std::wstring> VPGEnumClassReader::GetAttribute(const std::wstring &s
         size_t pos = 0;
         GetNextCharPos(str, pos, true);
 
-        if (!IsStartWith(str, attributeToken, pos))
+        if (!IsStartWith(str, attributePrefix, pos))
             return result;
         
-        std::vector<std::wstring> tokens = SplitString(str.substr(pos), { attributeToken });
+        std::vector<std::wstring> tokens = SplitString(str.substr(pos), { attributePrefix });
         for (auto &token : tokens) {
             Trim(token);
             if (token.empty())
                 continue;
             
-            result.push_back(attributeToken + token);
+            result.push_back(attributePrefix + token);
         }
     CATCH
     return result;
@@ -272,23 +272,25 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
         // split Remain
         std::vector<std::wstring> attributes = GetAttribute(remainStr);
         for (auto const &attribute : attributes) {
+            std::vector<std::wstring> attributeTokes = SplitStringBySpace(attribute);
+            std::wstring attributeToken = !attributeTokes.empty() ? attributeTokes[0] : L"";
             // Privilege
-            if (IsEqual(attribute, attributeToken + L"ReadOnly", true))
+            if (IsEqual(attributeToken, attributePrefix + L"ReadOnly", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::ReadOnly;
-            else if (IsEqual(attribute, attributeToken + L"WriteOnly", true))
+            else if (IsEqual(attributeToken, attributePrefix + L"WriteOnly", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::WriteOnly;
-            else if (IsEqual(attribute, attributeToken + L"ReadWrite", true))
+            else if (IsEqual(attributeToken, attributePrefix + L"ReadWrite", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::ReadWrite;
-            else if (IsEqual(attribute, attributeToken + L"NoAccess", true))
+            else if (IsEqual(attributeToken, attributePrefix + L"NoAccess", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::NoAccess;
-            else if (IsEqual(attribute, attributeToken + L"Inherit", true))
+            else if (IsEqual(attributeToken, attributePrefix + L"Inherit", true))
                 property->SetIsInherit(true);
             // Action
-            else if (IsEqual(attribute, attributeToken + L"NoHistory", true))
+            else if (IsEqual(attributeToken, attributePrefix + L"NoHistory", true))
                 property->SetIsNoHistory(true);
-            else if (IsEqual(attribute, attributeToken + L"ActionResult", true)) {
-                auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"ActionResult");
-                bool isHavingClassName = jsonAttributes == nullptr;
+            else if (IsEqual(attributeToken, attributePrefix + L"ActionResult", true)) {
+                auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"ActionResult");
+                bool isHavingClassName = jsonAttributes != nullptr;
                 if (isHavingClassName) {
                     std::wstring className = jsonAttributes->GetString(L"Class");
                     if (IsBlank(className))
@@ -300,11 +302,11 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
                     THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Enum Class " + enumClass->_Name + L" has attribute @@ActionResult but missing Attribute \"Class\"");
             }
             // Json
-            else if (IsEqual(attribute, attributeToken + L"NoJson", true))
+            else if (IsEqual(attributeToken, attributePrefix + L"NoJson", true))
                 property->SetIsNoJson(true);
             // Command
-            else if (IsEqual(attribute, attributeToken + L"Command", true)) {
-                std::wstring commandToken = attributeToken + L"Command";
+            else if (IsEqual(attributeToken, attributePrefix + L"Command", true)) {
+                std::wstring commandToken = attributePrefix + L"Command";
                 commandToken = attribute.substr(commandToken.length());
                 Trim(commandToken);
                 property->SetCommand(commandToken);
@@ -433,17 +435,17 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
             std::vector<std::wstring> attributes = GetAttribute(enumClass->_Command);
             std::wstring command = L"";
             for (auto const &attribute : attributes) {
-                if (IsStartWith(attribute, attributeToken + L"Form", 0, true)) {
+                if (IsStartWith(attribute, attributePrefix + L"Form", 0, true)) {
                     enumClass->_Type = VPGEnumClassType::Form;
                     command = L"";
-                } else if (IsStartWith(attribute, attributeToken + L"ActionArgument", 0, true)) {
+                } else if (IsStartWith(attribute, attributePrefix + L"ActionArgument", 0, true)) {
                     enumClass->_Type = VPGEnumClassType::ActionArgument;
                     command = L"";
-                } else if (IsStartWith(attribute, attributeToken + L"Result", 0, true)) {
+                } else if (IsStartWith(attribute, attributePrefix + L"Result", 0, true)) {
                     enumClass->_Type = VPGEnumClassType::Result;
                     command = L"";
-                }  else if (IsStartWith(attribute, attributeToken + L"Inherit", 0, true)) {
-                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Inherit");
+                }  else if (IsStartWith(attribute, attributePrefix + L"Inherit", 0, true)) {
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"Inherit");
                     assert(jsonAttributes != nullptr);
                     std::wstring className = jsonAttributes->GetString(L"Class");
                     if (IsBlank(className))
@@ -451,31 +453,31 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
                     enumClass->_InheritClass = className;
                 
                     command = L"";
-                } else if (IsStartWith(attribute, attributeToken + L"Log", 0, true)) {
-                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Log");
+                } else if (IsStartWith(attribute, attributePrefix + L"Log", 0, true)) {
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"Log");
                     if (jsonAttributes != nullptr)
                         enumClass->_IsLogConfigIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
-                } else if (IsStartWith(attribute, attributeToken + L"Action", 0, true)) {
-                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Action");
+                } else if (IsStartWith(attribute, attributePrefix + L"Action", 0, true)) {
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"Action");
                     if (jsonAttributes != nullptr)
                         enumClass->_IsActionManagerIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
-                } else if (IsStartWith(attribute, attributeToken + L"Thread", 0, true)) {
-                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Thread");
+                } else if (IsStartWith(attribute, attributePrefix + L"Thread", 0, true)) {
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"Thread");
                     if (jsonAttributes != nullptr)
                         enumClass->_IsThreadManagerIndependent = jsonAttributes->GetBool(L"IsIndependent");
                     command = L"";
-                } else if (IsStartWith(attribute, attributeToken + L"Json", 0, true)) {
+                } else if (IsStartWith(attribute, attributePrefix + L"Json", 0, true)) {
                     enumClass->_IsJson = true;
-                    auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Json");
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"Json");
                     if (jsonAttributes != nullptr) {
                         for (auto const &key : jsonAttributes->GetKeys())
                             enumClass->InsertJsonAttributesAtKey(key, jsonAttributes->GetString(key));
                     }
                     command = L"";
-                } else if (IsStartWith(attribute, attributeToken + L"Command", 0, true)) {
-                    std::wstring commandToken = attributeToken + L"Command";
+                } else if (IsStartWith(attribute, attributePrefix + L"Command", 0, true)) {
+                    std::wstring commandToken = attributePrefix + L"Command";
                     commandToken = attribute.substr(commandToken.length());
                     Trim(commandToken);
                     command = commandToken;
