@@ -286,8 +286,8 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
             // Action
             else if (IsEqual(attribute, attributeToken + L"NoHistory", true))
                 property->SetIsNoHistory(true);
-            else if (IsEqual(attribute, attributeToken + L"Result", true)) {
-                auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Result");
+            else if (IsEqual(attribute, attributeToken + L"ActionResult", true)) {
+                auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"ActionResult");
                 bool isHavingClassName = jsonAttributes == nullptr;
                 if (isHavingClassName) {
                     std::wstring className = jsonAttributes->GetString(L"Class");
@@ -297,8 +297,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
                         property->_ActionResultClass = className;
                 }
                 if (!isHavingClassName)
-                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Enum Class " + enumClass->_Name + L" has attribute @@Result but missing Attribute \"Class\"");
-                
+                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Enum Class " + enumClass->_Name + L" has attribute @@ActionResult but missing Attribute \"Class\"");
             }
             // Json
             else if (IsEqual(attribute, attributeToken + L"NoJson", true))

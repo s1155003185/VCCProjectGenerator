@@ -565,7 +565,7 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
         "    Manager3, // MANAGER_SPTR_PARENT(GitManager, GitManager3, GitBaseManager)\r\n"
         "    Action1, // ACTION(AddGitLog) \r\n"
         "    Action2, // ACTION_WITH_ARG_SPTR(DeleteGitLog, GitLog) \r\n"
-        "    Action3 // ACTION_WITH_ARG_SPTR(ModifyGitLog, GitLog) @@Result { \"Class\" : \"ActionResult\" }\r\n"
+        "    Action3 // ACTION_WITH_ARG_SPTR(ModifyGitLog, GitLog) @@ActionResult { \"Class\" : \"ActionResult\" }\r\n"
         "};\r\n";
     std::vector<std::shared_ptr<VPGEnumClass>> results;
     VPGGlobal::GetEnumClassReader()->Parse(code, results);

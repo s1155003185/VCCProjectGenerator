@@ -785,7 +785,7 @@ Note:
     Command used in VCC generator, can be any text in xxx without @@
 
 #### Field Attribute
-Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Result { "Redo.Class": "ClassName", "Undo.Class" : "ClassName" }] [@@Command xxx]
+Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@ActionResult { "Redo.Class": "ClassName", "Undo.Class" : "ClassName" }] [@@Command xxx]
 
 {...}: Compulsory
 []: Optional
@@ -851,9 +851,9 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Resu
     Will not generate Json for current property.
     For those temp properties that do not need to be recored.
 
-[@@Result { "Redo.Class": "ClassName", "Undo.Class" : "ClassName" }]
+[@@ActionResult { "Redo.Class": "ClassName", "Undo.Class" : "ClassName" }]
     For Action Only.
-    ClassName must have tag @@Result.
+    ClassName must have tag @@ActionResult.
     If not stated, Action will return OperationResult which contains ErrorCode and ErrorMessage Only.    
     Attributes:
         Redo.Class: Return Class for Do or Redo.
