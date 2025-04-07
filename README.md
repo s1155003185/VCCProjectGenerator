@@ -6,15 +6,16 @@ Maintain those standard already stable long time ago. No reason to implement twi
 Current Stage Objective: Start VCC Project Manager (Multi Project Handling), including Java Interface, Thread, Form, Action, Git.
 
 Note: Still in initialize version. This is the last subversion before alpha release. Reviewing function name.
+Note: Pending to support Callback, Structure. But not first prior.
 
 Please go to following session to see how to create VCC Project to generate c++ dll with Java Interface
 - Tutorial for Create VCC DLL Project to generate dll with Java Interface
 
 ## What's new
-Initialize Git Manager
+Action with Argument and Result
 
 ## What's next
-Git Manager, Action Add Argument
+Git Manager
 
 ## Features
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
