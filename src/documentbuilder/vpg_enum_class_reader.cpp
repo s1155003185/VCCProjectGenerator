@@ -290,16 +290,14 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
                 property->SetIsNoHistory(true);
             else if (IsEqual(attributeToken, attributePrefix + L"ActionResult", true)) {
                 auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"ActionResult");
-                bool isHavingClassName = jsonAttributes != nullptr;
-                if (isHavingClassName) {
-                    std::wstring className = jsonAttributes->GetString(L"Class");
-                    if (IsBlank(className))
-                        isHavingClassName = false;
-                    else
-                        property->_ActionResultClass = className;
-                }
-                if (!isHavingClassName)
-                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Enum Class " + enumClass->_Name + L" has attribute @@ActionResult but missing Attribute \"Class\"");
+                if (jsonAttributes == nullptr
+                    || !((jsonAttributes->IsContainKey(L"Redo.Class") && !IsBlank(jsonAttributes->GetString(L"Redo.Class")))
+                        || (jsonAttributes->IsContainKey(L"Undo.Class") && !IsBlank(jsonAttributes->GetString(L"Undo.Class")))))
+                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Enum Class " + enumClass->_Name + L" has attribute @@ActionResult but missing Attribute \"Redo.Class\" or \"Undo.Class\"");
+                if (jsonAttributes->IsContainKey(L"Redo.Class") && !IsBlank(jsonAttributes->GetString(L"Redo.Class")))
+                    property->_ActionResultRedoClass = jsonAttributes->GetString(L"Redo.Class");
+                if (jsonAttributes->IsContainKey(L"Undo.Class") && !IsBlank(jsonAttributes->GetString(L"Undo.Class")))
+                    property->_ActionResultUndoClass = jsonAttributes->GetString(L"Undo.Class");
             }
             // Json
             else if (IsEqual(attributeToken, attributePrefix + L"NoJson", true))

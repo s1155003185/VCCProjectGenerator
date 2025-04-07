@@ -65,7 +65,8 @@ class VPGEnumClassProperty : public BaseObject
     
     // Action
     GETSET(bool, IsNoHistory, false);
-    GETSET(std::wstring, ActionResultClass, L"OperationResult")
+    GETSET(std::wstring, ActionResultRedoClass, L"OperationResult")
+    GETSET(std::wstring, ActionResultUndoClass, L"OperationResult")
 
     // Json
     GETSET(bool, IsNoJson, false)
