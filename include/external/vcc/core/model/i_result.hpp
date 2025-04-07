@@ -1,8 +1,8 @@
 #pragma once
 
-#include "exception_type.hpp"
-
 #include <string>
+
+#include "exception_type.hpp"
 
 namespace vcc
 {

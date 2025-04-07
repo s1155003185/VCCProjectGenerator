@@ -14,6 +14,11 @@ namespace vcc
             mutable std::wstring _ErrorMessage = L"";
 
             BaseResult(const ObjectType &type) : BaseObject(type) {}
+            BaseResult(const ObjectType &type, const ExceptionType &exceptionType, const std::wstring &errorMessage) : BaseResult(type)
+            {
+                _ExceptionType = exceptionType;
+                _ErrorMessage = errorMessage;
+            }
             virtual ~BaseResult() {}
 
         public:
