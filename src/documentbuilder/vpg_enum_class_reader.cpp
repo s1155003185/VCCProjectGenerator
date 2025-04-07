@@ -188,7 +188,7 @@ std::vector<std::wstring> VPGEnumClassReader::GetAttribute(const std::wstring &s
     return result;
 }
 
-void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCommand, std::shared_ptr<VPGEnumClassProperty> property) const
+void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass, const std::wstring &propertyCommand, std::shared_ptr<VPGEnumClassProperty> property) const
 {
     TRY
         size_t pos = 0;
@@ -286,6 +286,20 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const std::wstring &propertyCo
             // Action
             else if (IsEqual(attribute, attributeToken + L"NoHistory", true))
                 property->SetIsNoHistory(true);
+            else if (IsEqual(attribute, attributeToken + L"Result", true)) {
+                auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Result");
+                bool isHavingClassName = jsonAttributes == nullptr;
+                if (isHavingClassName) {
+                    std::wstring className = jsonAttributes->GetString(L"Class");
+                    if (IsBlank(className))
+                        isHavingClassName = false;
+                    else
+                        property->_ActionResultClass = className;
+                }
+                if (!isHavingClassName)
+                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Enum Class " + enumClass->_Name + L" has attribute @@Result but missing Attribute \"Class\"");
+                
+            }
             // Json
             else if (IsEqual(attribute, attributeToken + L"NoJson", true))
                 property->SetIsNoJson(true);
@@ -336,7 +350,7 @@ std::wstring VPGEnumClassReader::_GetCommand(const std::wstring &cppCode, const 
     return result;
 }
 
-void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass) const
+void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass> enumClass) const
 {
     TRY
         _EnumValue = -1;
@@ -375,7 +389,7 @@ void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &p
             if (cppCode[pos] == L',')
                 GetNextCharPos(cppCode, pos, false);
             if (IsStartWith(cppCode, L"//", pos) || IsStartWith(cppCode, L"/*", pos)) {
-                _AssignEnumClassProperty(_GetCommand(cppCode, false, pos), property);
+                _AssignEnumClassProperty(enumClass.get(), _GetCommand(cppCode, false, pos), property);
                 GetNextCharPos(cppCode, pos, false);
             }
             if (cppCode[pos] == L',')
@@ -426,7 +440,10 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
                 } else if (IsStartWith(attribute, attributeToken + L"ActionArgument", 0, true)) {
                     enumClass->_Type = VPGEnumClassType::ActionArgument;
                     command = L"";
-                } else if (IsStartWith(attribute, attributeToken + L"Inherit", 0, true)) {
+                } else if (IsStartWith(attribute, attributeToken + L"Result", 0, true)) {
+                    enumClass->_Type = VPGEnumClassType::Result;
+                    command = L"";
+                }  else if (IsStartWith(attribute, attributeToken + L"Inherit", 0, true)) {
                     auto jsonAttributes = GetJsonAttributes(attribute, attributeToken + L"Inherit");
                     assert(jsonAttributes != nullptr);
                     std::wstring className = jsonAttributes->GetString(L"Class");
