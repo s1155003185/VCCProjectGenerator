@@ -1275,6 +1275,52 @@ TEST_F(VPGObjectFileGenerationServiceTest, ActionArgument)
         "};\r\n");
 }
 
+TEST_F(VPGObjectFileGenerationServiceTest, Result)
+{
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "// @@Result\r\n"
+        "enum class VPGActionResultProperty\r\n"
+        "{\r\n"
+        "    EnumA // GETSET(bool, EnumA, false)\r\n"
+        "};\r\n";
+    WriteFile(ConcatPaths({this->_Workspace, L"vcc_action_result_property.hpp"}), enumClass, true);
+
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+
+    std::wstring classPrefix = L"VPG";
+    std::map<std::wstring, std::wstring> projectClassIncludeFiles;
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
+        this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
+
+    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), 
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#pragma once\r\n"
+        "\r\n"
+        "#include \"base_result.hpp\"\r\n"
+        "#include \"class_macro.hpp\"\r\n"
+        "#include \"object_type.hpp\"\r\n"
+        "\r\n"
+        "using namespace vcc;\r\n"
+        "\r\n"
+        "class VPGActionResult : public BaseResult\r\n"
+        "{\r\n"
+        "    GETSET(bool, EnumA, false)\r\n"
+        "\r\n"
+        "    public:\r\n"
+        "        VPGActionResult() : BaseResult(ObjectType::ActionResult) {}\r\n"
+        "        virtual ~VPGActionResult() {}\r\n"
+        "\r\n"
+        "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
+        "        {\r\n"
+        "            return std::make_shared<VPGActionResult>(*this);\r\n"
+        "        }\r\n"
+        "};\r\n");
+}
+
 TEST_F(VPGObjectFileGenerationServiceTest, Json)
 {
     std::wstring enumClass = L""

@@ -306,15 +306,18 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
         // ------------------------------------------------------------------------------------------ //
         switch (enumClass->GetType())
         {
-        case VPGEnumClassType::Object:
-            projectFileList.insert(L"base_object.hpp");
+        case VPGEnumClassType::ActionArgument:
+            projectFileList.insert(L"base_action_argument.hpp");
             break;
         case VPGEnumClassType::Form:
             projectFileList.insert(L"base_form.hpp");
             isContainForm = true;
             break;
-        case VPGEnumClassType::ActionArgument:
-            projectFileList.insert(L"base_action_argument.hpp");
+        case VPGEnumClassType::Object:
+            projectFileList.insert(L"base_object.hpp");
+            break;
+        case VPGEnumClassType::Result:
+            projectFileList.insert(L"base_result.hpp");
             break;
         default:
             break;
@@ -537,12 +540,21 @@ std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass
             inheritClass += L", public BaseJsonObject";
 
         std::wstring baseClassName = L"";
-        if (enumClass->GetType() == VPGEnumClassType::Form)
-            baseClassName = L"BaseForm";
-        else if (enumClass->GetType() == VPGEnumClassType::ActionArgument)
+        switch (enumClass->GetType())
+        {
+        case VPGEnumClassType::ActionArgument:
             baseClassName = L"BaseActionArgument";
-        else
+            break;
+        case VPGEnumClassType::Form:
+            baseClassName = L"BaseForm";
+            break;
+        case VPGEnumClassType::Result:
+            baseClassName = L"BaseResult";
+            break;
+        default:
             baseClassName = L"BaseObject";
+            break;
+        }
         if (!IsBlank(enumClass->GetInheritClass()))
             baseClassName = enumClass->GetInheritClass();                
         std::wstring baseClassNameWithoutQuote = baseClassName;
