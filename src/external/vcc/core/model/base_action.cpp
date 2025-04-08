@@ -6,6 +6,7 @@
 
 #include "exception_macro.hpp"
 #include "log_service.hpp"
+#include "operation_result.hpp"
 #include "string_helper.hpp"
 #include "thread_manager.hpp"
 
@@ -80,7 +81,8 @@ namespace vcc
             LogRedoStart();
             OnRedo();
             LogRedoComplete();
-        CATCH
+        CATCH_RETURN_RESULT(OperationResult)
+        return std::make_shared<OperationResult>();
     }
 
     std::shared_ptr<IResult> BaseAction::Undo()
@@ -90,6 +92,7 @@ namespace vcc
             auto result = OnUndo();
             LogUndoComplete();
             return result;
-        CATCH
+        CATCH_RETURN_RESULT(OperationResult)
+        return std::make_shared<OperationResult>();
     }
 }
