@@ -6,7 +6,8 @@
 - Export function name to lowercase with underscore
 - Add OperationResult
 - TODO: Support Callback in argument
-- TODO: Support parse Structure for GETSET
+- TODO: Support Structure
+- TODO: Support Set for GETSET
 
 ### [v0.3.3] - 2025-03-30: Review - Action Argument
 - Review folder and file naming rules. C++ folder must be lowercase without any seperator and file must be lower case with seperator. Java folder must be lowercase without any seperator and file must be having same name as class name
