@@ -262,24 +262,29 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                     + INDENT + L"return L\"\";\r\n"
                     "}\r\n";
 
+            std::wstring redoReturnClass = !IsBlank(property->GetActionResultRedoClass()) ? property->GetActionResultRedoClass() : L"OperationResult";
             action += L"\r\n"
                 "std::shared_ptr<IResult> " + actionClassName + L"::OnRedo()\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
                 + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
-                + INDENT + L"return CATCH_RESULT(" + (!IsBlank(property->GetActionResultUndoClass()) ? property->GetActionResultUndoClass() : L"OperationResult") + L")\r\n"
+                + INDENT + L"CATCH_RETURN_RESULT(" + redoReturnClass + L")\r\n"
+                + INDENT + L"return std::make_shared<" + redoReturnClass + L">();\r\n"
                 "}\r\n";
 
-            if (!property->GetIsNoHistory())
+            if (!property->GetIsNoHistory()) {
+                std::wstring undoReturnClass = !IsBlank(property->GetActionResultUndoClass()) ? property->GetActionResultUndoClass() : L"OperationResult";
                 action += L"\r\n"
                     "std::shared_ptr<IResult> " + actionClassName + L"::OnUndo()\r\n"
                     "{\r\n"
                     + INDENT + L"TRY\r\n"
                     + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
                     + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
-                    + INDENT + L"return CATCH_RESULT(" + (!IsBlank(property->GetActionResultUndoClass()) ? property->GetActionResultUndoClass() : L"OperationResult") + L")\r\n"
+                    + INDENT + L"CATCH_RETURN_RESULT(" + undoReturnClass + L")\r\n"
+                    + INDENT + L"return std::make_shared<" + undoReturnClass + L">();\r\n"
                     "}\r\n";
+            }
 
             if (isSeperateFile) {
                 // Generate to seperate files

@@ -11,9 +11,11 @@
 #include "i_document.hpp"
 #include "i_document_builder.hpp"
 #include "i_object.hpp"
+#include "i_result.hpp"
 #include "json.hpp"
 #include "log_config.hpp"
 #include "number_helper.hpp"
+#include "operation_result.hpp"
 #include "string_helper.hpp"
 #include "vpg_main_form_property.hpp"
 #include "vpg_workspace_form.hpp"
@@ -55,7 +57,7 @@ std::wstring VPGMainFormInitialize::GetRedoMessageComplete() const
     return L"";
 }
 
-void VPGMainFormInitialize::OnRedo()
+std::shared_ptr<IResult> VPGMainFormInitialize::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormInitializeOnRedo sync="RESERVE" gen="RESERVE">
@@ -81,7 +83,7 @@ void VPGMainFormInitialize::OnRedo()
         }
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormInitializeOnRedo>
-    CATCH
+    CATCH_RETURN_RESULT(OperationResult)
 }
 
 VPGMainFormAddWorkspaceForm::VPGMainFormAddWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()
@@ -117,7 +119,7 @@ std::wstring VPGMainFormAddWorkspaceForm::GetRedoMessageComplete() const
     return L"";
 }
 
-void VPGMainFormAddWorkspaceForm::OnRedo()
+std::shared_ptr<IResult> VPGMainFormAddWorkspaceForm::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormAddWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
@@ -129,7 +131,7 @@ void VPGMainFormAddWorkspaceForm::OnRedo()
         form->InsertWorkspaceForms(workspaceForm);
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormAddWorkspaceFormOnRedo>
-    CATCH
+    CATCH_RETURN_RESULT(OperationResult)
 }
 
 VPGMainFormDeleteWorkspaceForm::VPGMainFormDeleteWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()
@@ -165,12 +167,12 @@ std::wstring VPGMainFormDeleteWorkspaceForm::GetRedoMessageComplete() const
     return L"";
 }
 
-void VPGMainFormDeleteWorkspaceForm::OnRedo()
+std::shared_ptr<IResult> VPGMainFormDeleteWorkspaceForm::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormDeleteWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormDeleteWorkspaceFormOnRedo>
-    CATCH
+    CATCH_RETURN_RESULT(OperationResult)
 }
 
 VPGMainFormRenameWorkspaceForm::VPGMainFormRenameWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()
@@ -206,12 +208,13 @@ std::wstring VPGMainFormRenameWorkspaceForm::GetRedoMessageComplete() const
     return L"";
 }
 
-void VPGMainFormRenameWorkspaceForm::OnRedo()
+std::shared_ptr<IResult> VPGMainFormRenameWorkspaceForm::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormRenameWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormRenameWorkspaceFormOnRedo>
-    CATCH
+    CATCH_RETURN_RESULT(OperationResult)
+    return nullptr;
 }
 
 VPGMainForm::VPGMainForm() : BaseForm()

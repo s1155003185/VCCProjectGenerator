@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 
+#include "i_result.hpp"
 #include "log_config.hpp"
 
 namespace vcc
@@ -13,8 +14,8 @@ namespace vcc
         IAction() {}
         virtual ~IAction() {}
 
-        virtual void OnRedo() = 0;
-        virtual void OnUndo() = 0;
+        virtual std::shared_ptr<IResult> OnRedo() = 0;
+        virtual std::shared_ptr<IResult> OnUndo() = 0;
 
         virtual std::wstring GetRedoMessageStart() const = 0;
         virtual std::wstring GetRedoMessageComplete() const = 0;
@@ -29,7 +30,7 @@ namespace vcc
         virtual void SetSeqNo(const size_t &seqNo) const = 0;
         virtual size_t GetSeqNo() const = 0;
         
-        virtual void Redo() = 0;
-        virtual void Undo() = 0;
+        virtual std::shared_ptr<IResult> Redo() = 0;
+        virtual std::shared_ptr<IResult> Undo() = 0;
     };
 }
