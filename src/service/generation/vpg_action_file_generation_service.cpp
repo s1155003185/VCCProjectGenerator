@@ -200,6 +200,11 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 assignmentStr += L"std::shared_ptr<" + property->GetType1() + L"> argument";
                 propertyAssignments.push_back(L"_Argument = argument");
             }
+            if (!IsBlank(property->GetActionResultRedoClass()))
+                customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, property->GetActionResultRedoClass()));
+            if (!IsBlank(property->GetActionResultUndoClass()))
+                customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, property->GetActionResultUndoClass()));
+
 
             std::wstring action = actionClassName + L"::" + actionClassName + L"(" + assignmentStrSimple + L") : BaseAction()\r\n"
             "{\r\n";
