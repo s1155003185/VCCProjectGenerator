@@ -74,7 +74,7 @@ namespace vcc
         _SeqNo = seqNo; 
     }
 
-    void BaseAction::Redo() 
+    std::shared_ptr<IResult> BaseAction::Redo() 
     {
         TRY
             LogRedoStart();
@@ -83,12 +83,13 @@ namespace vcc
         CATCH
     }
 
-    void BaseAction::Undo()
+    std::shared_ptr<IResult> BaseAction::Undo()
     {
         TRY
             LogUndoStart();
-            OnUndo();
+            auto result = OnUndo();
             LogUndoComplete();
+            return result;
         CATCH
     }
 }
