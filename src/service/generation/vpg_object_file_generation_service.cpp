@@ -318,6 +318,7 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
             break;
         case VPGEnumClassType::Result:
             projectFileList.insert(L"base_result.hpp");
+            projectFileList.insert(L"exception_type.hpp");
             break;
         default:
             break;
@@ -414,6 +415,9 @@ std::wstring VPGObjectFileGenerationService::GetHppConstructor(const VPGEnumClas
         // Constructor
         if (enumClass->GetType() == VPGEnumClassType::Form) {
             result += INDENT + INDENT + className + L"();\r\n";
+        } else if (enumClass->GetType() == VPGEnumClassType::Result) {
+            result += INDENT + INDENT + className + L"() : " + className + L"(ExceptionType::NoError, L"") {}\r\n"
+                + INDENT + INDENT + className + L"(const ExceptionType &exceptionType, const std::wstring &errorMessage) : BaseResult(ObjectType::" +  className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L", exceptionType, errorMessage) {}\r\n";
         } else {
             if (!IsBlank(enumClass->GetInheritClass()))
                 result += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"()\r\n"
