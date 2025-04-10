@@ -5,6 +5,7 @@
 #include <string>
 
 #include "exception_macro.hpp"
+#include "i_result.hpp"
 #include "log_service.hpp"
 #include "operation_result.hpp"
 #include "string_helper.hpp"
