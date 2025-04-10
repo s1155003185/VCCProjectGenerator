@@ -7,6 +7,7 @@
 
 #include "base_form.hpp"
 #include "exception_macro.hpp"
+#include "i_object.hpp"
 #include "object_factory.hpp"
 #include "object_type.hpp"
 #include "set_helper.hpp"
@@ -69,6 +70,13 @@ std::shared_ptr<IObject> Application::CreateForm(const ObjectType &objectType)
     return nullptr;
 }
 
+void Application::EraseResult(IObject *result)
+{
+    TRY
+        RemoveIObjectAll(application->_Results, result);
+    CATCH
+}
+
 std::shared_ptr<IObject> Application::CreateActionArgument(const ObjectType &objectType)
 {
     TRY
@@ -79,15 +87,16 @@ std::shared_ptr<IObject> Application::CreateActionArgument(const ObjectType &obj
     return nullptr;
 }
 
-void Application::DoFormAction(IObject *form, const int64_t &formProperty, IObject *argument)
+std::shared_ptr<IObject> Application::DoFormAction(IObject *form, const int64_t &formProperty, IObject *argument)
 {
     TRY
         if (form == nullptr)
-            return;
+            return nullptr;
         GetIFormPtrFromIObject(form)->DoAction(formProperty, argument != nullptr ? argument->SharedPtr() : nullptr);
         if (argument != nullptr)
             RemoveIObjectAll(application->_ActionArguments, argument);
     CATCH
+    return nullptr;
 }
 
 int64_t Application::GetFormActionFirstSeqNo(IObject *form)

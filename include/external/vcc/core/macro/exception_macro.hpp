@@ -42,7 +42,7 @@ namespace vcc
     #endif
 
     #define THROW_EXCEPTION_DEBUG(e) ____HandleException(e, str2wstr(__FILE__), std::to_wstring(__LINE__))
-    #define CATCH_RETURN_RESULT_DEBUG(resultClass)  } catch (const std::exception &e) { return ____HandleResult<resultClass>(e, Lstr2wstr(__FILE__), std::to_wstring(__LINE__)); }
+    #define CATCH_RETURN_RESULT_DEBUG(resultClass)  } catch (const std::exception &e) { return ____HandleResult<resultClass>(e, str2wstr(__FILE__), std::to_wstring(__LINE__)); }
 
     #define THROW_EXCEPTION_STACK_TRACE(exceptionType, message) \
         throw Exception(exceptionType, str2wstr(__FILE__) + L":" + std::to_wstring(__LINE__) + L":\r\n" + message)

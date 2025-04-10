@@ -19,6 +19,7 @@ class Application : public BaseForm
     private:
         std::set<std::shared_ptr<IObject>> _Forms;
         std::set<std::shared_ptr<IObject>> _ActionArguments;
+        std::set<std::shared_ptr<IObject>> _Results;
 
         static std::shared_ptr<IObject> GetFormSharedPtr(IObject *IObject);
         static IForm *GetIFormPtrFromIObject(IObject *obj);
@@ -44,10 +45,13 @@ class Application : public BaseForm
 
         // Create Form
         static std::shared_ptr<IObject> CreateForm(const ObjectType &objectType);
+        
+        // Result
+        static void EraseResult(IObject *result);
 
         // Form Action
         static std::shared_ptr<IObject> CreateActionArgument(const ObjectType &objectType);
-        static void DoFormAction(IObject *form, const int64_t &formProperty, IObject *argument);
+        static std::shared_ptr<IObject> DoFormAction(IObject *form, const int64_t &formProperty, IObject *argument);
         static int64_t GetFormActionFirstSeqNo(IObject *form);
         static int64_t GetFormActionLastSeqNo(IObject *form);
         
