@@ -99,6 +99,16 @@ std::shared_ptr<IObject> Application::DoFormAction(IObject *form, const int64_t 
     return nullptr;
 }
 
+int64_t Application::GetFormActionCurrentSeqNo(IObject *form)
+{
+    TRY
+        if (form == nullptr)
+            return -1;
+        return GetIFormPtrFromIObject(form)->GetActionCurrentSeqNo();
+    CATCH
+    return -1;
+}
+
 int64_t Application::GetFormActionFirstSeqNo(IObject *form)
 {
     TRY

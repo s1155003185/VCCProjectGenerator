@@ -52,6 +52,7 @@ class Application : public BaseForm
         // Form Action
         static std::shared_ptr<IObject> CreateActionArgument(const ObjectType &objectType);
         static std::shared_ptr<IObject> DoFormAction(IObject *form, const int64_t &formProperty, IObject *argument);
+        static int64_t GetFormActionCurrentSeqNo(IObject *form);
         static int64_t GetFormActionFirstSeqNo(IObject *form);
         static int64_t GetFormActionLastSeqNo(IObject *form);
         

@@ -31,6 +31,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFil
         functionMap.insert(std::make_pair(L"ApplicationCreateActionArgument", L"DLLEXPORT void *ApplicationCreateActionArgument(int64_t objectType);\r\n"));
 
         functionMap.insert(std::make_pair(L"ApplicationDoFormAction", L"DLLEXPORT void ApplicationDoFormAction(void *form, int64_t formProperty, void *argument);\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationGetFormActionCurrentSeqNo", L"DLLEXPORT int64_t ApplicationGetFormActionCurrentSeqNo(void *form);\r\n"));
         functionMap.insert(std::make_pair(L"ApplicationGetFormActionFirstSeqNo", L"DLLEXPORT int64_t ApplicationGetFormActionFirstSeqNo(void *form);\r\n"));
         functionMap.insert(std::make_pair(L"ApplicationGetFormActionLastSeqNo", L"DLLEXPORT int64_t ApplicationGetFormActionLastSeqNo(void *form);\r\n"));
 
@@ -106,6 +107,14 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             "        Application::DoFormAction(static_cast<IObject *>(form), formProperty, static_cast<IObject *>(argument));\r\n"
             "    CATCH\r\n"
             "}\r\n"));
+            functionMap.insert(std::make_pair(L"ApplicationGetFormActionCurrentSeqNo",
+                L"int64_t ApplicationGetFormActionCurrentSeqNo(void *form)\r\n"
+                "{\r\n"
+                "    TRY\r\n"
+                "        return Application::GetFormActionCurrentSeqNo(static_cast<IObject *>(form));\r\n"
+                "    CATCH\r\n"
+                "    return -1;\r\n"
+                "}\r\n"));
         functionMap.insert(std::make_pair(L"ApplicationGetFormActionFirstSeqNo",
             L"int64_t ApplicationGetFormActionFirstSeqNo(void *form)\r\n"
             "{\r\n"

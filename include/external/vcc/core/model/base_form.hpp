@@ -55,6 +55,7 @@ namespace vcc
         
         // Action
         virtual void ExecuteAction(std::shared_ptr<IAction> action, bool isNoHistory) override;
+        virtual int64_t GetActionCurrentSeqNo() const override;
         virtual int64_t GetActionFirstSeqNo() const override;
         virtual int64_t GetActionLastSeqNo() const override;
         

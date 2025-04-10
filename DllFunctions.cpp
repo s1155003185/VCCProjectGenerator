@@ -80,6 +80,14 @@ void ApplicationDoFormAction(void *form, int64_t formProperty, void *argument)
     CATCH
 }
 
+int64_t ApplicationGetFormActionCurrentSeqNo(void *form)
+{
+    TRY
+        return Application::GetFormActionCurrentSeqNo(static_cast<IObject *>(form));
+    CATCH
+    return -1;
+}
+
 int64_t ApplicationGetFormActionFirstSeqNo(void *form)
 {
     TRY

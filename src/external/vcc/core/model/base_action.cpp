@@ -80,8 +80,9 @@ namespace vcc
     {
         TRY
             LogRedoStart();
-            OnRedo();
+            auto result = OnRedo();
             LogRedoComplete();
+            return result;
         CATCH_RETURN_RESULT(OperationResult)
         return std::make_shared<OperationResult>();
     }

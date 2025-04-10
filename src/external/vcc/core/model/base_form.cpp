@@ -110,6 +110,16 @@ namespace vcc
         CATCH
     }
     
+    int64_t BaseForm::GetActionCurrentSeqNo() const
+    {
+        TRY
+            auto actionManager = GetActionManager();
+            if (actionManager != nullptr)
+                return actionManager->GetCurrentSeqNo();
+        CATCH
+        return -1;
+    }
+    
     int64_t BaseForm::GetActionFirstSeqNo() const
     {
         TRY

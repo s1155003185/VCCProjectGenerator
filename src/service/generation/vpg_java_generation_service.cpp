@@ -997,6 +997,10 @@ std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &pr
     TRY
         std::map<std::wstring, std::wstring> formActions;
         // Form Action
+        formActions.insert(std::make_pair(L"getActionCurrentSeqNo",
+            L"public long getActionFirstSeqNo() {\r\n"
+            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationGetFormActionCurrentSeqNo(Handle);\r\n"
+            "}\r\n"));
         formActions.insert(std::make_pair(L"getActionFirstSeqNo",
             L"public long getActionFirstSeqNo() {\r\n"
             + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationGetFormActionFirstSeqNo(Handle);\r\n"
