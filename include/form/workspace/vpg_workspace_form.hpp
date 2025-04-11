@@ -1,12 +1,14 @@
 // <vcc:vccproj sync="FULL" gen="FULL"/>
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "base_form.hpp"
 #include "base_json_object.hpp"
 #include "class_macro.hpp"
 #include "i_document.hpp"
+#include "i_result.hpp"
 #include "json.hpp"
 #include "object_type.hpp"
 #include "vpg_git_form.hpp"
