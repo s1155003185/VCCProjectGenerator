@@ -123,7 +123,7 @@ bool ApplicationIsFormClosable(void *form)
 int64_t ApplicationRedoFormAction(void *form, int64_t noOfStep)
 {
     TRY
-        return Application::RedoFormAction(static_cast<IObject *>(form), noOfStep);
+        // return Application::RedoFormAction(static_cast<IObject *>(form), noOfStep);
     CATCH
     return -1;
 }
@@ -131,7 +131,7 @@ int64_t ApplicationRedoFormAction(void *form, int64_t noOfStep)
 int64_t ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo)
 {
     TRY
-        return Application::RedoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);
+        // return Application::RedoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);
     CATCH
     return -1;
 }
@@ -154,7 +154,7 @@ int64_t ApplicationTruncateFormAction(void *form)
 int64_t ApplicationUndoFormAction(void *form, int64_t noOfStep)
 {
     TRY
-        return Application::UndoFormAction(static_cast<IObject *>(form), noOfStep);
+        // return Application::UndoFormAction(static_cast<IObject *>(form), noOfStep);
     CATCH
     return -1;
 }
@@ -162,7 +162,7 @@ int64_t ApplicationUndoFormAction(void *form, int64_t noOfStep)
 int64_t ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo)
 {
     TRY
-        return Application::UndoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);
+        //return Application::UndoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);
     CATCH
     return -1;
 }

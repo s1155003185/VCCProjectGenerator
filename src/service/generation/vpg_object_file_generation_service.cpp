@@ -310,7 +310,10 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
             projectFileList.insert(L"base_action_argument.hpp");
             break;
         case VPGEnumClassType::Form:
+            systemFileList.insert(L"memory");
+
             projectFileList.insert(L"base_form.hpp");
+            projectFileList.insert(L"i_result.hpp");
             isContainForm = true;
             break;
         case VPGEnumClassType::Object:
@@ -516,7 +519,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnum
             result += L"\r\n"
                 + INDENT + INDENT + L"virtual void InitializeComponents() const override;\r\n"
                 "\r\n"
-                + INDENT + INDENT + L"virtual void DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;\r\n";
+                + INDENT + INDENT + L"virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;\r\n";
         }
     CATCH
     return result;
@@ -1051,7 +1054,7 @@ std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *en
             }
 
             result += L"\r\n"
-                "void " + className + L"::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> " + (isContainArgument ? L"argument" : L"/*argument*/") + L")\r\n"
+                "std::shared_ptr<IResult> " + className + L"::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> " + (isContainArgument ? L"argument" : L"/*argument*/") + L")\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + L"switch(static_cast<" + enumClass->GetName() + L">(formProperty))\r\n"

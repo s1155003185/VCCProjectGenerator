@@ -374,7 +374,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form)
         "\r\n"
         "        virtual void InitializeComponents() const override;\r\n"
         "\r\n"
-        "        virtual void DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;\r\n"
+        "        virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;\r\n"
         "\r\n"
         "        // <vcc:customVPGGitFormPublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "        // </vcc:customVPGGitFormPublicFunctions>\r\n"

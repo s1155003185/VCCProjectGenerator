@@ -280,7 +280,7 @@ void VPGMainForm::InitializeComponents() const
     CATCH
 }
 
-void VPGMainForm::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument)
+std::shared_ptr<IResult> VPGMainForm::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument)
 {
     TRY
         switch(static_cast<VPGMainFormProperty>(formProperty))

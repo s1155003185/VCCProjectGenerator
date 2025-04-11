@@ -23,6 +23,7 @@ class Application : public BaseForm
 
         static std::shared_ptr<IObject> GetFormSharedPtr(IObject *IObject);
         static IForm *GetIFormPtrFromIObject(IObject *obj);
+        static IObject *GetIObjectPtrFromIResult(IResult *obj);
 
         // <vcc:customApplicationProperties sync="RESERVE" gen="RESERVE">
         // </vcc:customApplicationProperties>
@@ -56,11 +57,11 @@ class Application : public BaseForm
         static int64_t GetFormActionFirstSeqNo(IObject *form);
         static int64_t GetFormActionLastSeqNo(IObject *form);
         
-        static int64_t RedoFormAction(IObject *form, const int64_t &noOfStep = 1);
-        static int64_t RedoFormActionToSeqNo(IObject *form, const int64_t &seqNo);
+        static std::shared_ptr<IObject> RedoFormAction(IObject *form, const int64_t &noOfStep = 1);
+        static std::shared_ptr<IObject> RedoFormActionToSeqNo(IObject *form, const int64_t &seqNo);
 
-        static int64_t UndoFormAction(IObject *form, const int64_t &noOfStep = 1);
-        static int64_t UndoFormActionToSeqNo(IObject *form, const int64_t &seqNo);
+        static std::shared_ptr<IObject> UndoFormAction(IObject *form, const int64_t &noOfStep = 1);
+        static std::shared_ptr<IObject> UndoFormActionToSeqNo(IObject *form, const int64_t &seqNo);
 
         static int64_t ClearFormAction(IObject *form);
         static int64_t TruncateFormAction(IObject *form);
@@ -72,7 +73,7 @@ class Application : public BaseForm
 
         // Useless
         virtual std::shared_ptr<IObject> Clone() const override { return nullptr; }
-        virtual void DoAction(const int64_t &/*formProperty*/, std::shared_ptr<IObject> /*argument*/) override {}
+        virtual std::shared_ptr<IResult> DoAction(const int64_t &/*formProperty*/, std::shared_ptr<IObject> /*argument*/) override { return nullptr; }
 
         // <vcc:customApplicationPublicFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customApplicationPublicFunctions>

@@ -216,7 +216,7 @@ class VPGMainForm : public BaseForm, public BaseJsonObject
 
         virtual void InitializeComponents() const override;
 
-        virtual void DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;
+        virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;
 
         // <vcc:customVPGMainFormPublicFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormPublicFunctions>
