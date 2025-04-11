@@ -317,6 +317,9 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
             projectFileList.insert(L"base_object.hpp");
             break;
         case VPGEnumClassType::Result:
+            systemFileList.insert(L"string");
+            systemFileList.insert(L"memory");
+
             projectFileList.insert(L"base_result.hpp");
             projectFileList.insert(L"exception_type.hpp");
             break;
