@@ -90,6 +90,15 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             "    return nullptr;\r\n"
             "}\r\n"));
             
+        // Result
+        functionMap.insert(std::make_pair(L"ApplicationEraseResult",
+            L"void ApplicationEraseResult(void * result)\r\n"
+            "{\r\n"
+            "    TRY\r\n"
+            "        Application::EraseResult(static_cast<IObject *>(result));\r\n"
+            "    CATCH\r\n"
+            "}\r\n"));
+            
         // Form Action
         functionMap.insert(std::make_pair(L"ApplicationCreateActionArgument",
             L"void *ApplicationCreateActionArgument(int64_t objectType)\r\n"
