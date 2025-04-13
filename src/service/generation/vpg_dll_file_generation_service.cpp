@@ -27,6 +27,9 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFil
         // Initialize Form
         functionMap.insert(std::make_pair(L"ApplicationCreateForm", L"DLLEXPORT void *ApplicationCreateForm(int64_t objectType);\r\n"));
         
+        // Result
+        functionMap.insert(std::make_pair(L"ApplicationEraseResult", L"DLLEXPORT void ApplicationEraseResult(void *result);\r\n"));
+
         // Form Action
         functionMap.insert(std::make_pair(L"ApplicationCreateActionArgument", L"DLLEXPORT void *ApplicationCreateActionArgument(int64_t objectType);\r\n"));
 
@@ -92,7 +95,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             
         // Result
         functionMap.insert(std::make_pair(L"ApplicationEraseResult",
-            L"void ApplicationEraseResult(void * result)\r\n"
+            L"void ApplicationEraseResult(void *result)\r\n"
             "{\r\n"
             "    TRY\r\n"
             "        Application::EraseResult(static_cast<IObject *>(result));\r\n"
