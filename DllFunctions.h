@@ -31,6 +31,7 @@ DLLEXPORT bool ApplicationCloseForm(void *form, bool isForce);
 DLLEXPORT void *ApplicationCreateActionArgument(int64_t objectType);
 DLLEXPORT void *ApplicationCreateForm(int64_t objectType);
 DLLEXPORT void *ApplicationDoFormAction(void *form, int64_t formProperty, void *argument);
+DLLEXPORT void ApplicationEraseResult(void *result);
 DLLEXPORT int64_t ApplicationGetFormActionCurrentSeqNo(void *form);
 DLLEXPORT int64_t ApplicationGetFormActionFirstSeqNo(void *form);
 DLLEXPORT int64_t ApplicationGetFormActionLastSeqNo(void *form);

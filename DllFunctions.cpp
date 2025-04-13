@@ -81,6 +81,13 @@ void *ApplicationDoFormAction(void *form, int64_t formProperty, void *argument)
     return nullptr;
 }
 
+void ApplicationEraseResult(void *result)
+{
+    TRY
+        Application::EraseResult(static_cast<IObject *>(result));
+    CATCH
+}
+
 int64_t ApplicationGetFormActionCurrentSeqNo(void *form)
 {
     TRY
