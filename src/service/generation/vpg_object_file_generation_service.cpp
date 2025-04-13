@@ -422,7 +422,7 @@ std::wstring VPGObjectFileGenerationService::GetHppConstructor(const VPGEnumClas
         if (enumClass->GetType() == VPGEnumClassType::Form) {
             result += INDENT + INDENT + className + L"();\r\n";
         } else if (enumClass->GetType() == VPGEnumClassType::Result) {
-            result += INDENT + INDENT + className + L"() : " + className + L"(ExceptionType::NoError, L"") {}\r\n"
+            result += INDENT + INDENT + className + L"() : " + className + L"(ExceptionType::NoError, L\"\") {}\r\n"
                 + INDENT + INDENT + className + L"(const ExceptionType &exceptionType, const std::wstring &errorMessage) : BaseResult(ObjectType::" +  className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L", exceptionType, errorMessage) {}\r\n";
         } else {
             if (!IsBlank(enumClass->GetInheritClass()))
