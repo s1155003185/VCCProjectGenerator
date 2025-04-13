@@ -84,7 +84,7 @@ std::shared_ptr<IResult> VPGMainFormInitialize::OnRedo()
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormInitializeOnRedo>
     CATCH_RETURN_RESULT(OperationResult)
-    return std::make_shared<OperationResult>();
+    return nullptr;
 }
 
 VPGMainFormAddWorkspaceForm::VPGMainFormAddWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()
@@ -133,7 +133,7 @@ std::shared_ptr<IResult> VPGMainFormAddWorkspaceForm::OnRedo()
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormAddWorkspaceFormOnRedo>
     CATCH_RETURN_RESULT(OperationResult)
-    return std::make_shared<OperationResult>();
+    return nullptr;
 }
 
 VPGMainFormDeleteWorkspaceForm::VPGMainFormDeleteWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()
@@ -175,7 +175,7 @@ std::shared_ptr<IResult> VPGMainFormDeleteWorkspaceForm::OnRedo()
         // <vcc:VPGMainFormDeleteWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormDeleteWorkspaceFormOnRedo>
     CATCH_RETURN_RESULT(OperationResult)
-    return std::make_shared<OperationResult>();
+    return nullptr;
 }
 
 VPGMainFormRenameWorkspaceForm::VPGMainFormRenameWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()
@@ -217,7 +217,7 @@ std::shared_ptr<IResult> VPGMainFormRenameWorkspaceForm::OnRedo()
         // <vcc:VPGMainFormRenameWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormRenameWorkspaceFormOnRedo>
     CATCH_RETURN_RESULT(OperationResult)
-    return std::make_shared<OperationResult>();
+    return nullptr;
 }
 
 VPGMainForm::VPGMainForm() : BaseForm()
