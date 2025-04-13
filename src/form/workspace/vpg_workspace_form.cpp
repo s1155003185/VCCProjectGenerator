@@ -95,6 +95,7 @@ std::shared_ptr<IResult> VPGWorkspaceForm::DoAction(const int64_t &formProperty,
             break;
         }
     CATCH
+    return nullptr;
 }
 
 // <vcc:customFunctions sync="RESERVE" gen="RESERVE">

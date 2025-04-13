@@ -77,6 +77,7 @@ std::shared_ptr<IResult> VPGGitForm::DoAction(const int64_t &formProperty, std::
             break;
         }
     CATCH
+    return nullptr;
 }
 
 // <vcc:customFunctions sync="RESERVE" gen="RESERVE">

@@ -302,6 +302,7 @@ std::shared_ptr<IResult> VPGMainForm::DoAction(const int64_t &formProperty, std:
             break;
         }
     CATCH
+    return nullptr;
 }
 
 void VPGMainForm::DoInitialize()

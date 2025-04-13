@@ -104,11 +104,11 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"void *ApplicationDoFormAction(void *form, int64_t formProperty, void *argument)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::DoFormAction(static_cast<IObject *>(form), formProperty, static_cast<IObject *>(argument));\r\n"
+            "        return Application::DoFormAction(static_cast<IObject *>(form), formProperty, static_cast<IObject *>(argument)).get();\r\n"
             "    CATCH\r\n"
             "    return nullptr;\r\n"
             "}\r\n"));
-            functionMap.insert(std::make_pair(L"ApplicationGetFormActionCurrentSeqNo",
+        functionMap.insert(std::make_pair(L"ApplicationGetFormActionCurrentSeqNo",
                 L"int64_t ApplicationGetFormActionCurrentSeqNo(void *form)\r\n"
                 "{\r\n"
                 "    TRY\r\n"
@@ -137,7 +137,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"void *ApplicationRedoFormAction(void *form, int64_t noOfStep)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::RedoFormAction(static_cast<IObject *>(form), noOfStep);\r\n"
+            "        return Application::RedoFormAction(static_cast<IObject *>(form), noOfStep).get();\r\n"
             "    CATCH\r\n"
             "    return nullptr;\r\n"
             "}\r\n"));
@@ -145,7 +145,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"void *ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::RedoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);\r\n"
+            "        return Application::RedoFormActionToSeqNo(static_cast<IObject *>(form), seqNo).get();\r\n"
             "    CATCH\r\n"
             "    return nullptr;\r\n"
             "}\r\n"));
@@ -155,7 +155,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"void *ApplicationUndoFormAction(void *form, int64_t noOfStep)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::UndoFormAction(static_cast<IObject *>(form), noOfStep);\r\n"
+            "        return Application::UndoFormAction(static_cast<IObject *>(form), noOfStep).get();\r\n"
             "    CATCH\r\n"
             "    return nullptr;\r\n"
             "}\r\n"));
@@ -163,7 +163,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"void *ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::UndoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);\r\n"
+            "        return Application::UndoFormActionToSeqNo(static_cast<IObject *>(form), seqNo).get();\r\n"
             "    CATCH\r\n"
             "    return nullptr;\r\n"
             "}\r\n"));

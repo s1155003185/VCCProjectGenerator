@@ -1071,6 +1071,7 @@ std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *en
                 + INDENT + INDENT + INDENT + L"break;\r\n"
                 + INDENT + INDENT + L"}\r\n"
                 + INDENT + L"CATCH\r\n"
+                + INDENT + L"return nullptr;\r\n"
                 "}\r\n";
 
             for (auto const &property : enumClass->GetProperties()) {

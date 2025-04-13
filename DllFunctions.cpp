@@ -76,7 +76,7 @@ void *ApplicationCreateForm(int64_t objectType)
 void *ApplicationDoFormAction(void *form, int64_t formProperty, void *argument)
 {
     TRY
-        return Application::DoFormAction(static_cast<IObject *>(form), formProperty, static_cast<IObject *>(argument));
+        return Application::DoFormAction(static_cast<IObject *>(form), formProperty, static_cast<IObject *>(argument)).get();
     CATCH
     return nullptr;
 }
@@ -124,7 +124,7 @@ bool ApplicationIsFormClosable(void *form)
 void *ApplicationRedoFormAction(void *form, int64_t noOfStep)
 {
     TRY
-        return Application::RedoFormAction(static_cast<IObject *>(form), noOfStep);
+        return Application::RedoFormAction(static_cast<IObject *>(form), noOfStep).get();
     CATCH
     return nullptr;
 }
@@ -132,7 +132,7 @@ void *ApplicationRedoFormAction(void *form, int64_t noOfStep)
 void *ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo)
 {
     TRY
-        return Application::RedoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);
+        return Application::RedoFormActionToSeqNo(static_cast<IObject *>(form), seqNo).get();
     CATCH
     return nullptr;
 }
@@ -155,7 +155,7 @@ int64_t ApplicationTruncateFormAction(void *form)
 void *ApplicationUndoFormAction(void *form, int64_t noOfStep)
 {
     TRY
-        return Application::UndoFormAction(static_cast<IObject *>(form), noOfStep);
+        return Application::UndoFormAction(static_cast<IObject *>(form), noOfStep).get();
     CATCH
     return nullptr;
 }
@@ -163,7 +163,7 @@ void *ApplicationUndoFormAction(void *form, int64_t noOfStep)
 void *ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo)
 {
     TRY
-        return Application::UndoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);
+        return Application::UndoFormActionToSeqNo(static_cast<IObject *>(form), seqNo).get();
     CATCH
     return nullptr;
 }
