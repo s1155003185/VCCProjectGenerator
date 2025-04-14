@@ -698,7 +698,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
         for (auto const &enumClass : enumClassList) {
             if (!IsPropertyClass(enumClass->GetName(), L"") || enumClass->GetType() == VPGEnumClassType::ActionArgument)
                 continue;
-            content += GenerateHppClass(enumClass.get(), classPrefix);
+            content += GenerateHppClass(enumClass.get(), option);
         }
         
         // ------------------------------------------------------------------------------------------ //
