@@ -108,23 +108,27 @@ namespace vcc
     {
         TRY
             //std::unique_lock lock(_mutex);
-            // 1. Remove the action after index
-            // 2. Refresh maxSeqNo to last no
-            // 2. Append action
-            // 3. Do Action
-            // 4. Current Index + 1
+            // 1. Execute Action If error then throw exception
+            // 2. Remove the action after index
+            // 3. Refresh maxSeqNo to last no
+            // 4. Append action
+            // 5. Current Index + 1
+            auto result = action->Redo();
+            if (result->IsError()) {
+                if (result->IsThrowException())
+                    THROW_EXCEPTION_MSG(result->GetExceptionType(), result->GetErrorMessage());
+                return result;
+            }
+
             auto baseAction = std::dynamic_pointer_cast<BaseAction>(action);
             assert(baseAction != nullptr);
-
             _RemoveAction(_GetFirstSeqNo(false) - _CurrentSeqNo, false);
             if (_Actions.size() > 0)
                 _MaxSeqNo = _GetFirstSeqNo(false);
-            int64_t nextSeqNo = _MaxSeqNo + 1;
+            int64_t nextSeqNo = _MaxSeqNo++;
             action->SetSeqNo(nextSeqNo);
             _Actions.emplace(nextSeqNo, baseAction);
-            auto result = action->Redo();
             _MaxSeqNo = _CurrentSeqNo = _GetFirstSeqNo(false);
-
             _ChopActionListToSize(_MaxActionListSize, true);
             return result;
         CATCH
