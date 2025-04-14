@@ -77,6 +77,14 @@ std::wstring VPGJavaGenerationService::GetJavaPactkageObject(const VPGEnumClass 
     return result;
 }
 
+std::wstring VPGJavaGenerationService::GetOperationResultFilePath(const std::wstring &projectPrefix, const VPGGenerationOptionExport *option)
+{
+    TRY
+        return ConcatPaths({ option->GetObjectDirectory(), projectPrefix + L"OperationResult.java" });
+    CATCH
+    return L"";
+}
+
 std::wstring VPGJavaGenerationService::GetPropertyAccessorCppToJavaConvertedType(const std::wstring &cppType)
 {
     std::wstring result = L"";
@@ -987,6 +995,15 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
     return result;
 }
 
+std::wstring VPGJavaGenerationService::GenerateOperationResultContent(const std::wstring &projectPrefix, const VPGGenerationOptionExport *option)
+{
+    std::wstring result = L"";
+    TRY
+
+    CATCH
+    return result;
+}
+
 std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass)
 {
     assert(enumClass != nullptr);
@@ -1175,11 +1192,9 @@ void VPGJavaGenerationService::GenerateOperationResult(const LogConfig *logConfi
         if (option == nullptr || option->GetInterface() != VPGGenerationOptionInterfaceType::Java || IsBlank(option->GetObjectDirectory()))
             return;
 
-        std::wstring filePath = ConcatPaths({ option->GetObjectDirectory(), projectPrefix + L"OperationResult.java" });
+        std::wstring filePath = GetOperationResultFilePath(projectPrefix, option);
         LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class: " + filePath);
-        std::wstring content = L"";
-
-        WriteFile(filePath, content, true);
+        WriteFile(filePath, GenerateOperationResultContent(projectPrefix, option), true);
         LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class completed.");
         return;
     CATCH
