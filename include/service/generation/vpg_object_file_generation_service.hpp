@@ -7,6 +7,7 @@
 
 #include "log_config.hpp"
 #include "vpg_enum_class.hpp"
+#include "vpg_generation_option.hpp"
 
 using namespace vcc;
 
@@ -46,7 +47,7 @@ class VPGObjectFileGenerationService
         static std::wstring GetHppProtectedFunctions(const VPGEnumClass *enumClass, const std::wstring &className);
         static std::wstring GetHppPublicCloneFunctions(const VPGEnumClass *enumClass, const std::wstring &className);
         static std::wstring GetHppPublicJsonFunctions(const VPGEnumClass *enumClass);
-        static std::wstring GetHppPublicFunctions(const VPGEnumClass *enumClass);
+        static std::wstring GetHppPublicFunctions(const VPGEnumClass *enumClass, const VPGGenerationOption *option);
         static std::wstring GetHppPublicCustomFunctions(const VPGEnumClass *enumClass, const std::wstring &className);
         
         // Cpp
@@ -72,9 +73,9 @@ class VPGObjectFileGenerationService
         // get #include file name
         static std::wstring GetProjectClassIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::wstring &className);
 
-        static std::wstring GenerateHppClass(const VPGEnumClass* enumClass, const std::wstring &classPrefix);
+        static std::wstring GenerateHppClass(const VPGEnumClass* enumClass, const VPGGenerationOption *option);
         static void GenerateHpp(const LogConfig *logConfig,
-            const std::wstring &classPrefix,
+            const VPGGenerationOption *option,
             const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
             const std::wstring &objectFilePathHpp,
             const std::wstring &formFilePathHpp,

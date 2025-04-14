@@ -39,7 +39,7 @@ enum class VPGGenerationOptionProperty
     IsGit, // GETSET(bool, IsGit, false)
 
     // Generation Properties
-    IsActionThrowException, // GETSET(bool, IsActionThrowException, false)
+    IsResultThrowException, // GETSET(bool, IsResultThrowException, false)
 
     // Unittest
     IsExcludeUnittest, // GETSET(bool, IsExcludeUnittest, false)
