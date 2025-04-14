@@ -131,14 +131,14 @@ bool ApplicationIsFormClosable(void *form)
 void ApplicationRedoFormAction(void *form, int64_t noOfStep)
 {
     TRY
-        Application::RedoFormAction(static_cast<IObject *>(form), noOfStep).get();
+        Application::RedoFormAction(static_cast<IObject *>(form), noOfStep);
     CATCH
 }
 
 void ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo)
 {
     TRY
-        Application::RedoFormActionToSeqNo(static_cast<IObject *>(form), seqNo).get();
+        Application::RedoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);
     CATCH
 }
 
@@ -160,14 +160,14 @@ int64_t ApplicationTruncateFormAction(void *form)
 void ApplicationUndoFormAction(void *form, int64_t noOfStep)
 {
     TRY
-        Application::UndoFormAction(static_cast<IObject *>(form), noOfStep).get();
+        Application::UndoFormAction(static_cast<IObject *>(form), noOfStep);
     CATCH
 }
 
 void ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo)
 {
     TRY
-        Application::UndoFormActionToSeqNo(static_cast<IObject *>(form), seqNo).get();
+        Application::UndoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);
     CATCH
 }
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(bool, Bool, false)

@@ -37,12 +37,12 @@ DLLEXPORT int64_t ApplicationGetFormActionFirstSeqNo(void *form);
 DLLEXPORT int64_t ApplicationGetFormActionLastSeqNo(void *form);
 DLLEXPORT bool ApplicationIsFormClosable(void *form);
 DLLEXPORT bool ApplicationIsFormClosed(void *form);
-DLLEXPORT void *ApplicationRedoFormAction(void *form, int64_t noOfStep);
-DLLEXPORT void *ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo);
+DLLEXPORT void ApplicationRedoFormAction(void *form, int64_t noOfStep);
+DLLEXPORT void ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo);
 DLLEXPORT void ApplicationStart();
 DLLEXPORT int64_t ApplicationTruncateFormAction(void *form);
-DLLEXPORT void *ApplicationUndoFormAction(void *form, int64_t noOfStep);
-DLLEXPORT void *ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo);
+DLLEXPORT void ApplicationUndoFormAction(void *form, int64_t noOfStep);
+DLLEXPORT void ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo);
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(bool, Bool)
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(char, Char)
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER(wchar_t, Wchar)
