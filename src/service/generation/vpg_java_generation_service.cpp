@@ -1168,3 +1168,12 @@ void VPGJavaGenerationService::GenerateObject(const LogConfig *logConfig, const 
         LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class completed.");
     CATCH
 }
+
+void VPGJavaGenerationService::GenerateOperationResult(const LogConfig *logConfig, const VPGGenerationOption *option)
+{
+    TRY
+        std::wstring filePath = L"";
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class: " + filePath);
+        LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class completed.");
+    CATCH
+}
