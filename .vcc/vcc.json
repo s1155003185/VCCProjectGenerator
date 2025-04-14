@@ -8,7 +8,7 @@
     "ProjectNameDll": "libvpg",
     "ProjectNameExe": "vpg",
     "IsGit": true,
-    "IsActionThrowException": false,
+    "IsResultThrowException": false,
     "IsExcludeUnittest": false,
     "IsExcludeVCCUnitTest": false,
     "TypeWorkspace": "include/type",

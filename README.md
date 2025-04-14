@@ -317,7 +317,7 @@ Sample
     "ProjectNameDll": "libvpg",
     "ProjectNameExe": "vpg",
     "IsGit": true,
-    "IsActionThrowException": false,
+    "IsResultThrowException": false,
     "IsExcludeUnittest": false,
     "IsExcludeVCCUnitTest": false,
     "TypeWorkspace": "include/type",
@@ -391,7 +391,7 @@ ProjectNameExe
 IsGit
     If true, then generate .gitignore. (Pending to init git)
 
-IsActionThrowException
+IsResultThrowException
     If true, throw exception if executing action with errors.
     If false, return Result class.
 
