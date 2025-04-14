@@ -148,6 +148,8 @@ std::shared_ptr<Json> VPGGenerationOption::ToJson() const
         json->AddString(ConvertNamingStyle(L"ProjectNameExe", NamingStyle::PascalCase, namestyle), _ProjectNameExe);
         // IsGit
         json->AddBool(ConvertNamingStyle(L"IsGit", NamingStyle::PascalCase, namestyle), _IsGit);
+        // IsActionThrowException
+        json->AddBool(ConvertNamingStyle(L"IsActionThrowException", NamingStyle::PascalCase, namestyle), _IsActionThrowException);
         // IsExcludeUnittest
         json->AddBool(ConvertNamingStyle(L"IsExcludeUnittest", NamingStyle::PascalCase, namestyle), _IsExcludeUnittest);
         // IsExcludeVCCUnitTest
@@ -256,6 +258,9 @@ void VPGGenerationOption::DeserializeJson(std::shared_ptr<IDocument> document) c
         // IsGit
         if (json->IsContainKey(ConvertNamingStyle(L"IsGit", namestyle, NamingStyle::PascalCase)))
             _IsGit = json->GetBool(ConvertNamingStyle(L"IsGit", namestyle, NamingStyle::PascalCase));
+        // IsActionThrowException
+        if (json->IsContainKey(ConvertNamingStyle(L"IsActionThrowException", namestyle, NamingStyle::PascalCase)))
+            _IsActionThrowException = json->GetBool(ConvertNamingStyle(L"IsActionThrowException", namestyle, NamingStyle::PascalCase));
         // IsExcludeUnittest
         if (json->IsContainKey(ConvertNamingStyle(L"IsExcludeUnittest", namestyle, NamingStyle::PascalCase)))
             _IsExcludeUnittest = json->GetBool(ConvertNamingStyle(L"IsExcludeUnittest", namestyle, NamingStyle::PascalCase));

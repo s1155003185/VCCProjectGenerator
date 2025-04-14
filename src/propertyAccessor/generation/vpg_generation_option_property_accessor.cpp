@@ -258,6 +258,8 @@ bool VPGGenerationOptionPropertyAccessor::_ReadBool(const int64_t &objectPropert
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
+        case VPGGenerationOptionProperty::IsActionThrowException:
+            return obj->GetIsActionThrowException();
         case VPGGenerationOptionProperty::IsExcludeUnittest:
             return obj->GetIsExcludeUnittest();
         case VPGGenerationOptionProperty::IsExcludeVCCUnitTest:
@@ -294,6 +296,9 @@ void VPGGenerationOptionPropertyAccessor::_WriteBool(const int64_t &objectProper
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
+        case VPGGenerationOptionProperty::IsActionThrowException:
+            obj->SetIsActionThrowException(value);
+            break;
         case VPGGenerationOptionProperty::IsExcludeUnittest:
             obj->SetIsExcludeUnittest(value);
             break;
