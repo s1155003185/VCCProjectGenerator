@@ -139,44 +139,40 @@ int64_t Application::GetFormActionLastSeqNo(IObject *form)
     return -1;
 }
 
-std::shared_ptr<IObject> Application::RedoFormAction(IObject *form, const int64_t &noOfStep)
+void Application::RedoFormAction(IObject *form, const int64_t &noOfStep)
 {
     TRY
         if (form == nullptr)
-            return nullptr;
-        return GetIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->RedoAction(noOfStep).get())->SharedPtr();
+            return;
+        GetIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->RedoAction(noOfStep).get())->SharedPtr();
     CATCH
-    return nullptr;
 }
 
-std::shared_ptr<IObject> Application::RedoFormActionToSeqNo(IObject *form, const int64_t &seqNo)
+void Application::RedoFormActionToSeqNo(IObject *form, const int64_t &seqNo)
 {
     TRY
         if (form == nullptr)
-            return nullptr;
-        return GetIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->RedoActionToSeqNo(seqNo).get())->SharedPtr();
+            return;
+        GetIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->RedoActionToSeqNo(seqNo).get())->SharedPtr();
     CATCH
-    return nullptr;
 }
 
-std::shared_ptr<IObject> Application::UndoFormAction(IObject *form, const int64_t &noOfStep)
+void Application::UndoFormAction(IObject *form, const int64_t &noOfStep)
 {
     TRY
         if (form == nullptr)
-            return nullptr;
-        return GetIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->UndoAction(noOfStep).get())->SharedPtr();
+            return;
+        GetIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->UndoAction(noOfStep).get())->SharedPtr();
     CATCH
-    return nullptr;
 }
 
-std::shared_ptr<IObject> Application::UndoFormActionToSeqNo(IObject *form, const int64_t &seqNo)
+void Application::UndoFormActionToSeqNo(IObject *form, const int64_t &seqNo)
 {
     TRY
         if (form == nullptr)
-            return nullptr;
-        return GetIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->UndoActionToSeqNo(seqNo).get())->SharedPtr();
+            return;
+        GetIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->UndoActionToSeqNo(seqNo).get())->SharedPtr();
     CATCH
-    return nullptr;
 }
 
 int64_t Application::ClearFormAction(IObject *form)

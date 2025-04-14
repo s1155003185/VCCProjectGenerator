@@ -57,11 +57,11 @@ class Application : public BaseForm
         static int64_t GetFormActionFirstSeqNo(IObject *form);
         static int64_t GetFormActionLastSeqNo(IObject *form);
         
-        static std::shared_ptr<IObject> RedoFormAction(IObject *form, const int64_t &noOfStep = 1);
-        static std::shared_ptr<IObject> RedoFormActionToSeqNo(IObject *form, const int64_t &seqNo);
+        static void RedoFormAction(IObject *form, const int64_t &noOfStep = 1);
+        static void RedoFormActionToSeqNo(IObject *form, const int64_t &seqNo);
 
-        static std::shared_ptr<IObject> UndoFormAction(IObject *form, const int64_t &noOfStep = 1);
-        static std::shared_ptr<IObject> UndoFormActionToSeqNo(IObject *form, const int64_t &seqNo);
+        static void UndoFormAction(IObject *form, const int64_t &noOfStep = 1);
+        static void UndoFormActionToSeqNo(IObject *form, const int64_t &seqNo);
 
         static int64_t ClearFormAction(IObject *form);
         static int64_t TruncateFormAction(IObject *form);

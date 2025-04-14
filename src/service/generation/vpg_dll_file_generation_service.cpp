@@ -38,11 +38,11 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFil
         functionMap.insert(std::make_pair(L"ApplicationGetFormActionFirstSeqNo", L"DLLEXPORT int64_t ApplicationGetFormActionFirstSeqNo(void *form);\r\n"));
         functionMap.insert(std::make_pair(L"ApplicationGetFormActionLastSeqNo", L"DLLEXPORT int64_t ApplicationGetFormActionLastSeqNo(void *form);\r\n"));
 
-        functionMap.insert(std::make_pair(L"ApplicationRedoFormAction", L"DLLEXPORT void *ApplicationRedoFormAction(void *form, int64_t noOfStep);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationRedoFormActionToSeqNo", L"DLLEXPORT void *ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo);\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationRedoFormAction", L"DLLEXPORT void ApplicationRedoFormAction(void *form, int64_t noOfStep);\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationRedoFormActionToSeqNo", L"DLLEXPORT void ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo);\r\n"));
         
-        functionMap.insert(std::make_pair(L"ApplicationUndoFormAction", L"DLLEXPORT void *ApplicationUndoFormAction(void *form, int64_t noOfStep);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationUndoFormActionToSeqNo", L"DLLEXPORT void *ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo);\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationUndoFormAction", L"DLLEXPORT void ApplicationUndoFormAction(void *form, int64_t noOfStep);\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationUndoFormActionToSeqNo", L"DLLEXPORT void ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo);\r\n"));
 
         functionMap.insert(std::make_pair(L"ApplicationClearFormAction", L"DLLEXPORT int64_t ApplicationClearFormAction(void *form);\r\n"));
         functionMap.insert(std::make_pair(L"ApplicationTruncateFormAction", L"DLLEXPORT int64_t ApplicationTruncateFormAction(void *form);\r\n"));
@@ -146,38 +146,34 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             "}\r\n"));
             
         functionMap.insert(std::make_pair(L"ApplicationRedoFormAction",
-            L"void *ApplicationRedoFormAction(void *form, int64_t noOfStep)\r\n"
+            L"void ApplicationRedoFormAction(void *form, int64_t noOfStep)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::RedoFormAction(static_cast<IObject *>(form), noOfStep).get();\r\n"
+            "        Application::RedoFormAction(static_cast<IObject *>(form), noOfStep).get();\r\n"
             "    CATCH\r\n"
-            "    return nullptr;\r\n"
             "}\r\n"));
         functionMap.insert(std::make_pair(L"ApplicationRedoFormActionToSeqNo",
-            L"void *ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo)\r\n"
+            L"void ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::RedoFormActionToSeqNo(static_cast<IObject *>(form), seqNo).get();\r\n"
+            "        Application::RedoFormActionToSeqNo(static_cast<IObject *>(form), seqNo).get();\r\n"
             "    CATCH\r\n"
-            "    return nullptr;\r\n"
             "}\r\n"));
             
             
         functionMap.insert(std::make_pair(L"ApplicationUndoFormAction",
-            L"void *ApplicationUndoFormAction(void *form, int64_t noOfStep)\r\n"
+            L"void ApplicationUndoFormAction(void *form, int64_t noOfStep)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::UndoFormAction(static_cast<IObject *>(form), noOfStep).get();\r\n"
+            "        Application::UndoFormAction(static_cast<IObject *>(form), noOfStep).get();\r\n"
             "    CATCH\r\n"
-            "    return nullptr;\r\n"
             "}\r\n"));
         functionMap.insert(std::make_pair(L"ApplicationUndoFormActionToSeqNo",
-            L"void *ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo)\r\n"
+            L"void ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::UndoFormActionToSeqNo(static_cast<IObject *>(form), seqNo).get();\r\n"
+            "        Application::UndoFormActionToSeqNo(static_cast<IObject *>(form), seqNo).get();\r\n"
             "    CATCH\r\n"
-            "    return nullptr;\r\n"
             "}\r\n"));
 
         functionMap.insert(std::make_pair(L"ApplicationClearFormAction",

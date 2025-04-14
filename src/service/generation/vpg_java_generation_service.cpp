@@ -1011,21 +1011,21 @@ std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &pr
             "}\r\n"));
 
         formActions.insert(std::make_pair(L"redo", 
-            L"public long redo(long noOfStep) {\r\n"
-            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationRedoFormAction(Handle, noOfStep);\r\n"
+            L"public void redo(long noOfStep) {\r\n"
+            + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationRedoFormAction(Handle, noOfStep);\r\n"
             "}\r\n"));
         formActions.insert(std::make_pair(L"redoToSeqNo",
-            L"public long redoToSeqNo(long seqNo) {\r\n"
-            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationRedoFormActionToSeqNo(Handle, seqNo);\r\n"
+            L"public void redoToSeqNo(long seqNo) {\r\n"
+            + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationRedoFormActionToSeqNo(Handle, seqNo);\r\n"
             "}\r\n"));
     
         formActions.insert(std::make_pair(L"undo", 
-            L"public long undo(long noOfStep) {\r\n"
-            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationUndoFormAction(Handle, noOfStep);\r\n"
+            L"public void undo(long noOfStep) {\r\n"
+            + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationUndoFormAction(Handle, noOfStep);\r\n"
             "}\r\n"));
         formActions.insert(std::make_pair(L"undoToSeqNo",
-            L"public long undoToSeqNo(long seqNo) {\r\n"
-            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationUndoFormActionToSeqNo(Handle, seqNo);\r\n"
+            L"public void undoToSeqNo(long seqNo) {\r\n"
+            + INDENT + projectPrefix + L"DllFunctions.Instance.ApplicationUndoFormActionToSeqNo(Handle, seqNo);\r\n"
             "}\r\n"));
             
         formActions.insert(std::make_pair(L"clearAction", 
