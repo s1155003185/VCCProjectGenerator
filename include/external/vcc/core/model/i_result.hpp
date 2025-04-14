@@ -18,5 +18,9 @@ namespace vcc
 
             virtual std::wstring GetErrorMessage() const = 0;
             virtual void SetErrorMessage(const std::wstring &errorMessage) const = 0;
+
+            virtual bool IsError() const = 0;
+            virtual bool IsWarning() const = 0;
+            virtual bool IsThrowException() const = 0;
     };
 }

@@ -41,5 +41,20 @@ namespace vcc
             {
                 _ErrorMessage = errorMessage;
             }
+            
+            virtual bool IsError() const override
+            {
+                return _ExceptionType != ExceptionType::NoError && _ExceptionType != ExceptionType::Warning;
+            }
+
+            virtual bool IsWarning() const override
+            {
+                return _ExceptionType == ExceptionType::Warning;
+            }
+
+            virtual bool IsThrowException() const override
+            {
+                return false;
+            }
     };
 }

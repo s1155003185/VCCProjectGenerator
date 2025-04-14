@@ -59,6 +59,14 @@ IObject *Application::GetIObjectPtrFromIResult(IResult *obj)
     return nullptr;
 }
 
+IResult *Application::GetIResultPtrFromIObject(IObject *obj)
+{
+    TRY
+        return static_cast<BaseResult *>(obj);
+    CATCH
+    return nullptr;
+}
+
 void Application::Run()
 {
     TRY
@@ -77,6 +85,22 @@ std::shared_ptr<IObject> Application::CreateForm(const ObjectType &objectType)
         return form;
     CATCH
     return nullptr;
+}
+
+bool Application::IsErrorResult(IObject *result)
+{
+    TRY
+        return GetIResultPtrFromIObject(result)->IsError();
+    CATCH
+    return false;
+}
+
+bool Application::IsWarningResult(IObject *result)
+{
+    TRY
+        return GetIResultPtrFromIObject(result)->IsWarning();
+    CATCH
+    return false;
 }
 
 void Application::EraseResult(IObject *result)

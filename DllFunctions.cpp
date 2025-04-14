@@ -112,6 +112,14 @@ int64_t ApplicationGetFormActionLastSeqNo(void *form)
     return -1;
 }
 
+bool ApplicationIsErrorResult(void *result)
+{
+    TRY
+        return Application::IsErrorResult(static_cast<IObject *>(result));
+    CATCH
+    return false;
+}
+
 bool ApplicationIsFormClosed(void *form)
 {
     TRY
@@ -124,6 +132,14 @@ bool ApplicationIsFormClosable(void *form)
 {
     TRY
         return Application::IsFormClosable(static_cast<IObject *>(form));
+    CATCH
+    return false;
+}
+
+bool ApplicationIsWarningResult(void *result)
+{
+    TRY
+        return Application::IsWarningResult(static_cast<IObject *>(result));
     CATCH
     return false;
 }

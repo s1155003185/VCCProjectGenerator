@@ -24,6 +24,7 @@ class Application : public BaseForm
         static std::shared_ptr<IObject> GetFormSharedPtr(IObject *IObject);
         static IForm *GetIFormPtrFromIObject(IObject *obj);
         static IObject *GetIObjectPtrFromIResult(IResult *obj);
+        static IResult *GetIResultPtrFromIObject(IObject *obj);
 
         // <vcc:customApplicationProperties sync="RESERVE" gen="RESERVE">
         // </vcc:customApplicationProperties>
@@ -48,6 +49,8 @@ class Application : public BaseForm
         static std::shared_ptr<IObject> CreateForm(const ObjectType &objectType);
         
         // Result
+        static bool IsErrorResult(IObject *result);
+        static bool IsWarningResult(IObject *result);
         static void EraseResult(IObject *result);
 
         // Form Action

@@ -28,6 +28,8 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFil
         functionMap.insert(std::make_pair(L"ApplicationCreateForm", L"DLLEXPORT void *ApplicationCreateForm(int64_t objectType);\r\n"));
         
         // Result
+        functionMap.insert(std::make_pair(L"ApplicationIsErrorResult", L"DLLEXPORT bool ApplicationIsErrorResult(void *result);\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationIsWarningResult", L"DLLEXPORT bool ApplicationIsWarningResult(void *result);\r\n"));
         functionMap.insert(std::make_pair(L"ApplicationEraseResult", L"DLLEXPORT void ApplicationEraseResult(void *result);\r\n"));
 
         // Form Action
@@ -94,6 +96,25 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             "}\r\n"));
             
         // Result
+        
+        functionMap.insert(std::make_pair(L"ApplicationIsErrorResult",
+            L"bool ApplicationIsErrorResult(void *result)\r\n"
+            "{\r\n"
+            "    TRY\r\n"
+            "        return Application::IsErrorResult(static_cast<IObject *>(result));\r\n"
+            "    CATCH\r\n"
+            "    return false;\r\n"
+            "}\r\n"
+        ));
+        functionMap.insert(std::make_pair(L"ApplicationIsWarningResult",
+            L"bool ApplicationIsWarningResult(void *result)\r\n"
+            "{\r\n"
+            "    TRY\r\n"
+            "        return Application::IsWarningResult(static_cast<IObject *>(result));\r\n"
+            "    CATCH\r\n"
+            "    return false;\r\n"
+            "}\r\n"
+        ));
         functionMap.insert(std::make_pair(L"ApplicationEraseResult",
             L"void ApplicationEraseResult(void *result)\r\n"
             "{\r\n"

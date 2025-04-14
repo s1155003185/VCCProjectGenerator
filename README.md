@@ -823,6 +823,7 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Acti
         | MANAGER_SPTR_PARENT(type, name, parentClass) |  Manager. If value is nullptr, then will use parentClass->Get##name(), else will use local manager. Please ensure parentClass is Form also and have same type. Initialize as nullptr at Initialize(). | MANAGER_SPTR_NULL(GitManager, GitManager1, GitBaseManager) |
 
     Current Option for Action:
+        If action has error, then will not add to action list in ActionManager but throw exception or return result.
         | Macro | Description | Example |
         | --- | --- | --- |
         | ACTION(name) | Generator will create void Do##name() and generate Action Class. Please handle logic in .cpp file. | ACTION(AddWorkspace) |
