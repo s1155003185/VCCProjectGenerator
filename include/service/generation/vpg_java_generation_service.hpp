@@ -62,5 +62,5 @@ class VPGJavaGenerationService
         static void GenerateObject(const LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass,
             const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapObject, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapForm,
             const VPGGenerationOption *option, const VPGGenerationOptionExport *javaOption);
-        static void GenerateOperationResult(const LogConfig *logConfig, const VPGGenerationOption *option);
+        static void GenerateOperationResult(const LogConfig *logConfig, const std::wstring &projectPrefix, const VPGGenerationOptionExport *option);
 };

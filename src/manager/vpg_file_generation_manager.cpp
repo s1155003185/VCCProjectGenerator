@@ -196,10 +196,16 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
         //Generate Object Type, Object Class, PropertyAccessor,
         // 1. get all files from directory
         // 2. get all properties with enum class Prefix + Class + Property
-        std::wstring filePrefix = projPrefix;
-        ToLower(filePrefix);
-
         LogService::LogInfo(logConfig, logId, L"Generate property start.");
+        
+        // Generate OperationResult
+        for (auto const &exportOption : option->GetExports()) {
+            if (exportOption->GetInterface() == VPGGenerationOptionInterfaceType::Java) {
+                VPGJavaGenerationService::GenerateOperationResult(logConfig, projPrefix, exportOption.get());
+            }
+        }
+        std::wstring filePrefix = projPrefix;
+        ToLower(filePrefix);        
         std::set<std::wstring> objectTypes;
         std::set<std::wstring> objectFileNames, propertyAccessorFileNames;
         auto dllOption = std::make_shared<VPGDllFileGenerationServiceOption>();

@@ -1169,11 +1169,18 @@ void VPGJavaGenerationService::GenerateObject(const LogConfig *logConfig, const 
     CATCH
 }
 
-void VPGJavaGenerationService::GenerateOperationResult(const LogConfig *logConfig, const VPGGenerationOption *option)
+void VPGJavaGenerationService::GenerateOperationResult(const LogConfig *logConfig, const std::wstring &projectPrefix, const VPGGenerationOptionExport *option)
 {
     TRY
-        std::wstring filePath = L"";
+        if (option == nullptr || option->GetInterface() != VPGGenerationOptionInterfaceType::Java || IsBlank(option->GetObjectDirectory()))
+            return;
+
+        std::wstring filePath = ConcatPaths({ option->GetObjectDirectory(), projectPrefix + L"OperationResult.java" });
         LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class: " + filePath);
+        std::wstring content = L"";
+
+        WriteFile(filePath, content, true);
         LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class completed.");
+        return;
     CATCH
 }
