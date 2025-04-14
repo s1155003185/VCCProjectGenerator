@@ -529,7 +529,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnum
                 result += L"\r\n"
                     + INDENT + INDENT + L"virtual bool IsThrowException() const override\r\n"
                     + INDENT + INDENT + L"{\r\n"
-                    + INDENT + INDENT + INDENT + L" return true;\r\n"
+                    + INDENT + INDENT + INDENT + L"return true;\r\n"
                     + INDENT + INDENT + L"}\r\n";
             break;
         default:

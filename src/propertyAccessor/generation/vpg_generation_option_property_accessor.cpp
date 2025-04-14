@@ -258,14 +258,14 @@ bool VPGGenerationOptionPropertyAccessor::_ReadBool(const int64_t &objectPropert
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
-        case VPGGenerationOptionProperty::IsResultThrowException:
-            return obj->GetIsResultThrowException();
         case VPGGenerationOptionProperty::IsExcludeUnittest:
             return obj->GetIsExcludeUnittest();
         case VPGGenerationOptionProperty::IsExcludeVCCUnitTest:
             return obj->GetIsExcludeVCCUnitTest();
         case VPGGenerationOptionProperty::IsGit:
             return obj->GetIsGit();
+        case VPGGenerationOptionProperty::IsResultThrowException:
+            return obj->GetIsResultThrowException();
         default:
             assert(false);
         }
@@ -296,9 +296,6 @@ void VPGGenerationOptionPropertyAccessor::_WriteBool(const int64_t &objectProper
         assert(obj != nullptr);
         switch(static_cast<VPGGenerationOptionProperty>(objectProperty))
         {
-        case VPGGenerationOptionProperty::IsResultThrowException:
-            obj->SetIsResultThrowException(value);
-            break;
         case VPGGenerationOptionProperty::IsExcludeUnittest:
             obj->SetIsExcludeUnittest(value);
             break;
@@ -307,6 +304,9 @@ void VPGGenerationOptionPropertyAccessor::_WriteBool(const int64_t &objectProper
             break;
         case VPGGenerationOptionProperty::IsGit:
             obj->SetIsGit(value);
+            break;
+        case VPGGenerationOptionProperty::IsResultThrowException:
+            obj->SetIsResultThrowException(value);
             break;
         default:
             assert(false);
