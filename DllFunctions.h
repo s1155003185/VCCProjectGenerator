@@ -35,6 +35,8 @@ DLLEXPORT void ApplicationEraseResult(void *result);
 DLLEXPORT int64_t ApplicationGetFormActionCurrentSeqNo(void *form);
 DLLEXPORT int64_t ApplicationGetFormActionFirstSeqNo(void *form);
 DLLEXPORT int64_t ApplicationGetFormActionLastSeqNo(void *form);
+DLLEXPORT int64_t ApplicationGetResultErrorCode(void *result);
+DLLEXPORT void ApplicationGetResultMessage(void *result, wchar_t **value);
 DLLEXPORT bool ApplicationIsErrorResult(void *result);
 DLLEXPORT bool ApplicationIsFormClosable(void *form);
 DLLEXPORT bool ApplicationIsFormClosed(void *form);

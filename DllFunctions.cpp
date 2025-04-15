@@ -112,6 +112,24 @@ int64_t ApplicationGetFormActionLastSeqNo(void *form)
     return -1;
 }
 
+int64_t ApplicationGetResultErrorCode(void *result)
+{
+    TRY
+        return Application::GetResultErrorCode(static_cast<IObject *>(result));
+    CATCH
+    return 0;
+}
+
+void ApplicationGetResultMessage(void *result, wchar_t **value)
+{
+    TRY
+        std::wstring message = Application::GetResultMessage(static_cast<IObject *>(result));
+        size_t size = (message.length() + 1) * sizeof(wchar_t);
+        *value = static_cast<wchar_t*>(malloc(size));
+        wcscpy(*value, message.c_str());
+    CATCH
+}
+
 bool ApplicationIsErrorResult(void *result)
 {
     TRY

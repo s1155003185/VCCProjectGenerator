@@ -28,6 +28,8 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFil
         functionMap.insert(std::make_pair(L"ApplicationCreateForm", L"DLLEXPORT void *ApplicationCreateForm(int64_t objectType);\r\n"));
         
         // Result
+        functionMap.insert(std::make_pair(L"ApplicationGetResultErrorCode", L"DLLEXPORT int64_t ApplicationGetResultErrorCode(void *result);\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationGetResultMessage", L"DLLEXPORT void ApplicationGetResultMessage(void *result, wchar_t **value);\r\n"));
         functionMap.insert(std::make_pair(L"ApplicationIsErrorResult", L"DLLEXPORT bool ApplicationIsErrorResult(void *result);\r\n"));
         functionMap.insert(std::make_pair(L"ApplicationIsWarningResult", L"DLLEXPORT bool ApplicationIsWarningResult(void *result);\r\n"));
         functionMap.insert(std::make_pair(L"ApplicationEraseResult", L"DLLEXPORT void ApplicationEraseResult(void *result);\r\n"));
@@ -96,6 +98,24 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             "}\r\n"));
             
         // Result
+        functionMap.insert(std::make_pair(L"ApplicationGetResultErrorCode",
+            L"int64_t ApplicationGetResultErrorCode(void *result)\r\n"
+            "{\r\n"
+            "    TRY\r\n"
+            "        return Application::GetResultErrorCode(static_cast<IObject *>(result));\r\n"
+            "    CATCH\r\n"
+            "    return 0;\r\n"
+            "}\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationGetResultMessage",
+            L"void ApplicationGetResultMessage(void *result, wchar_t **value)\r\n"
+            "{\r\n"
+            "    TRY\r\n"
+            "        std::wstring message = Application::GetResultMessage(static_cast<IObject *>(result));\r\n"
+            "        size_t size = (message.length() + 1) * sizeof(wchar_t);\r\n"
+            "        *value = static_cast<wchar_t*>(malloc(size));\r\n"
+            "        wcscpy(*value, message.c_str());\r\n"
+            "    CATCH\r\n"
+            "}\r\n"));
         
         functionMap.insert(std::make_pair(L"ApplicationIsErrorResult",
             L"bool ApplicationIsErrorResult(void *result)\r\n"
