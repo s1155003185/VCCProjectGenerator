@@ -999,7 +999,7 @@ std::wstring VPGJavaGenerationService::GenerateOperationResultContent(const std:
 {
     std::wstring result = L"";
     TRY
-
+        result = L"";
     CATCH
     return result;
 }

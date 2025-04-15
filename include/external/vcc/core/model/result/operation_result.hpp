@@ -13,7 +13,7 @@ namespace vcc
     {
         public:
             OperationResult() : OperationResult(ExceptionType::NoError, L"") {}
-            OperationResult(const ExceptionType &exceptionType, const std::wstring &errorMessage) : BaseResult(ObjectType::OperationResult, exceptionType, errorMessage) {}
+            OperationResult(const ExceptionType &exceptionType, const std::wstring &message) : BaseResult(ObjectType::OperationResult, exceptionType, message) {}
             virtual ~OperationResult() {}
             
             virtual std::shared_ptr<IObject> Clone() const override

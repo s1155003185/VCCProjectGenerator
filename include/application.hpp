@@ -49,6 +49,8 @@ class Application : public BaseForm
         static std::shared_ptr<IObject> CreateForm(const ObjectType &objectType);
         
         // Result
+        static int64_t GetResultErrorCode(IObject *result);
+        static std::wstring GetResultMessage(IObject *result);
         static bool IsErrorResult(IObject *result);
         static bool IsWarningResult(IObject *result);
         static void EraseResult(IObject *result);

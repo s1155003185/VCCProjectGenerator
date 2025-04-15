@@ -11,13 +11,13 @@ namespace vcc
     {
         protected:
             mutable ExceptionType _ExceptionType = ExceptionType::NoError;
-            mutable std::wstring _ErrorMessage = L"";
+            mutable std::wstring _Message = L"";
 
             BaseResult(const ObjectType &type) : BaseObject(type) {}
-            BaseResult(const ObjectType &type, const ExceptionType &exceptionType, const std::wstring &errorMessage) : BaseResult(type)
+            BaseResult(const ObjectType &type, const ExceptionType &exceptionType, const std::wstring &message) : BaseResult(type)
             {
                 _ExceptionType = exceptionType;
-                _ErrorMessage = errorMessage;
+                _Message = message;
             }
             virtual ~BaseResult() {}
 
@@ -32,14 +32,14 @@ namespace vcc
                 _ExceptionType = exceptionType;
             }
 
-            virtual std::wstring GetErrorMessage() const override
+            virtual std::wstring GetMessage() const override
             {
-                return _ErrorMessage;
+                return _Message;
             }
 
-            virtual void SetErrorMessage(const std::wstring &errorMessage) const override
+            virtual void SetMessage(const std::wstring &message) const override
             {
-                _ErrorMessage = errorMessage;
+                _Message = message;
             }
             
             virtual bool IsError() const override

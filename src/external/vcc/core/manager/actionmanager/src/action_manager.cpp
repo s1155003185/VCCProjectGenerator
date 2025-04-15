@@ -116,7 +116,7 @@ namespace vcc
             auto result = action->Redo();
             if (result->IsError()) {
                 if (result->IsThrowException())
-                    THROW_EXCEPTION_MSG(result->GetExceptionType(), result->GetErrorMessage());
+                    THROW_EXCEPTION_MSG(result->GetExceptionType(), result->GetMessage());
                 return result;
             }
 

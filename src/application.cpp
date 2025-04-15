@@ -87,6 +87,22 @@ std::shared_ptr<IObject> Application::CreateForm(const ObjectType &objectType)
     return nullptr;
 }
 
+int64_t Application::GetResultErrorCode(IObject *result)
+{
+    TRY
+        return static_cast<int64_t>(GetIResultPtrFromIObject(result)->GetExceptionType());
+    CATCH
+    return -1;
+}
+
+std::wstring Application::GetResultMessage(IObject *result)
+{
+    TRY
+        return GetIResultPtrFromIObject(result)->GetMessage();
+    CATCH
+    return L"";
+}
+
 bool Application::IsErrorResult(IObject *result)
 {
     TRY
