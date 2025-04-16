@@ -1978,15 +1978,16 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
-    std::wstring classPrefix = L"VPG";
+    auto option = std::make_shared<VPGGenerationOption>();
+    option->SetProjectPrefix(L"VPG");
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
 
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObject", L"vcc_object.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"JsonInternalType", L"json.hpp"));
 
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
+    VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", _IncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
     EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
