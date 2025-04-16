@@ -201,7 +201,8 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
         // Generate OperationResult
         for (auto const &exportOption : option->GetExports()) {
             if (exportOption->GetInterface() == VPGGenerationOptionInterfaceType::Java) {
-                VPGJavaGenerationService::GenerateOperationResult(logConfig, projPrefix, exportOption.get());
+                VPGJavaGenerationService::GenerateOperationResult(logConfig, projPrefix, exportOption.get(),
+                    typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm);
             }
         }
         std::wstring filePrefix = projPrefix;
