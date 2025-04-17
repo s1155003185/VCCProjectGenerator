@@ -1,11 +1,13 @@
 #include <gtest/gtest.h>
 
 #include <map>
+#include <memory>
 #include <string>
 
 #include "i_action.hpp"
 #include "base_action.hpp"
 #include "action_manager.hpp"
+#include "operation_result.hpp"
 
 using namespace vcc;
 
