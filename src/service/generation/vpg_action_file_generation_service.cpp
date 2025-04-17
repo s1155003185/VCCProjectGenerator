@@ -270,7 +270,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
                 + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
                 + INDENT + L"CATCH_RETURN_RESULT(" + redoReturnClass + L")\r\n"
-                + INDENT + L"return nullptr;\r\n"
+                + INDENT + L"return std::make_shared<" + redoReturnClass + L">();\r\n"
                 "}\r\n";
 
             if (!property->GetIsNoHistory()) {
@@ -282,7 +282,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                     + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
                     + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
                     + INDENT + L"CATCH_RETURN_RESULT(" + undoReturnClass + L")\r\n"
-                    + INDENT + L"return nullptr;\r\n"
+                    + INDENT + L"return std::make_shared<" + undoReturnClass + L">();\r\n"
                     "}\r\n";
             }
 
