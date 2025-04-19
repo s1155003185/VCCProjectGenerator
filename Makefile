@@ -60,13 +60,13 @@ IS_EXCLUDE_UNITTEST := N
 #---------- Export ----------------#
 #----------------------------------#
 ifeq ($(OS),Windows_NT)
-EXPORT_DLL_DIR :=  ..\\VCCProjectManagerBasic\\src\\main\\resources
+EXPORT_DLL_DIR :=  ..\\test\\src\\main\\resources
 EXPORT_EXE_DIR := 
-EXPORT_EXTERNAL_LIB :=  ..\\VCCProjectManagerBasic\\src\\main\\resources
+EXPORT_EXTERNAL_LIB :=  ..\\test\\src\\main\\resources
 else
-EXPORT_DLL_DIR :=  ../VCCProjectManagerBasic/src/main/resources
+EXPORT_DLL_DIR :=  ../test/src/main/resources
 EXPORT_EXE_DIR := 
-EXPORT_EXTERNAL_LIB :=  ../VCCProjectManagerBasic/src/main/resources
+EXPORT_EXTERNAL_LIB :=  ../test/src/main/resources
 endif
 # </vcc:export>
 # <vcc:property sync="ALERT" gen="ALERT">

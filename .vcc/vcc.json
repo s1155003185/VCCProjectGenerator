@@ -34,7 +34,7 @@
     "Exports": [
         {
             "Interface": "Java",
-            "Workspace": "../test",
+            "Workspace": "../VCCProjectManager",
             "IsExportExternalLib": true,
             "ExportDirectoryDll": "src/main/resources",
             "ExportDirectoryExe": "",
