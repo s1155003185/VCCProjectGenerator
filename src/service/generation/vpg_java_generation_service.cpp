@@ -10,8 +10,8 @@
 
 #include "vpg_class_helper.hpp"
 #include "vpg_file_generation_manager.hpp"
-#include "vpg_generation_option.hpp"
-#include "vpg_generation_option_interface_type.hpp"
+#include "vpg_config.hpp"
+#include "vpg_config_interface_type.hpp"
 #include "vpg_property_accessor_generation_service.hpp"
 
 using namespace vcc;
@@ -29,11 +29,11 @@ const std::wstring dllInterfaceExportPropertyAccessorString = L"PROPERTY_ACCESSO
 const std::wstring dllInterfaceExportPropertyAccessorObject = L"PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_OBJECT";
 const std::wstring dllInterfaceExportPropertyAccessorContainer = L"PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_CONTAINER";
 
-std::shared_ptr<VPGGenerationOptionExport> VPGJavaGenerationService::GetJavaOption(const VPGGenerationOption *option)
+std::shared_ptr<VPGConfigExport> VPGJavaGenerationService::GetJavaOption(const VPGConfig *option)
 {
     TRY
         for (auto element : option->GetExports()) {
-            if (element->GetInterface() == VPGGenerationOptionInterfaceType::Java) {
+            if (element->GetInterface() == VPGConfigInterfaceType::Java) {
                 return element;
             }
         }
@@ -61,7 +61,7 @@ std::wstring VPGJavaGenerationService::GetJavaPactkage(const std::wstring &path,
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GetJavaPactkageObject(const VPGEnumClass *enumClass, const VPGGenerationOptionExport *option, const std::wstring &middlePath)
+std::wstring VPGJavaGenerationService::GetJavaPactkageObject(const VPGEnumClass *enumClass, const VPGConfigExport *option, const std::wstring &middlePath)
 {
     std::wstring result = L"";
     TRY
@@ -77,7 +77,7 @@ std::wstring VPGJavaGenerationService::GetJavaPactkageObject(const VPGEnumClass 
     return result;
 }
 
-std::map<std::wstring, std::wstring> VPGJavaGenerationService::GetImportFileMap(const std::wstring &projectPrefix, const VPGGenerationOptionExport *option, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapObject, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapForm)
+std::map<std::wstring, std::wstring> VPGJavaGenerationService::GetImportFileMap(const std::wstring &projectPrefix, const VPGConfigExport *option, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapObject, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapForm)
 {
     std::map<std::wstring, std::wstring> importFileMap;
     TRY
@@ -106,7 +106,7 @@ std::map<std::wstring, std::wstring> VPGJavaGenerationService::GetImportFileMap(
     return importFileMap;
 }
 
-std::wstring VPGJavaGenerationService::GetOperationResultFilePath(const std::wstring &projectPrefix, const VPGGenerationOptionExport *option)
+std::wstring VPGJavaGenerationService::GetOperationResultFilePath(const std::wstring &projectPrefix, const VPGConfigExport *option)
 {
     TRY
         return ConcatPaths({ option->GetObjectDirectory(), projectPrefix + L"OperationResult.java" });
@@ -192,7 +192,7 @@ std::wstring VPGJavaGenerationService::GetJavaGetterSetterJavaTypeToJavaCaptialT
     return L"";
 }
 
-std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstring &content, const VPGGenerationOption *option)
+std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstring &content, const VPGConfig *option)
 {
     std::wstring result = L"";
     TRY
@@ -395,7 +395,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
     return result;
 }
 
-void VPGJavaGenerationService::GenerateJavaBridge(const LogConfig *logConfig, const std::wstring &targetWorkspace, const std::wstring &dllInterfacehppFilePath, const VPGGenerationOption *option)
+void VPGJavaGenerationService::GenerateJavaBridge(const LogConfig *logConfig, const std::wstring &targetWorkspace, const std::wstring &dllInterfacehppFilePath, const VPGConfig *option)
 {
     TRY
         assert(option != nullptr);
@@ -418,7 +418,7 @@ void VPGJavaGenerationService::GenerateJavaBridge(const LogConfig *logConfig, co
     CATCH
 }
 
-std::wstring VPGJavaGenerationService::GenerateEnumContent(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &middlePath, const VPGGenerationOptionExport *option)
+std::wstring VPGJavaGenerationService::GenerateEnumContent(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &middlePath, const VPGConfigExport *option)
 {
     std::wstring result = L"";
     TRY
@@ -929,7 +929,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetter(const std::wst
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &middlePath, const std::map<std::wstring, std::wstring> &importFileMap, const VPGGenerationOptionExport *option)
+std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &middlePath, const std::map<std::wstring, std::wstring> &importFileMap, const VPGConfigExport *option)
 {
     std::wstring result = L"";
     TRY
@@ -1040,7 +1040,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateOperationResultContent(const std::wstring &projectPrefix, const VPGGenerationOptionExport *option, const std::map<std::wstring, std::wstring> &importFileMap)
+std::wstring VPGJavaGenerationService::GenerateOperationResultContent(const std::wstring &projectPrefix, const VPGConfigExport *option, const std::map<std::wstring, std::wstring> &importFileMap)
 {
     std::wstring result = L"";
     TRY
@@ -1226,7 +1226,7 @@ std::wstring VPGJavaGenerationService::GenerateFormCustomAction(const std::wstri
     return result;
 }
 
-void VPGJavaGenerationService::GenerateEnum(const LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass, const VPGGenerationOption *option, const VPGGenerationOptionExport *javaOption)
+void VPGJavaGenerationService::GenerateEnum(const LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass, const VPGConfig *option, const VPGConfigExport *javaOption)
 {
     TRY
         assert(option != nullptr);
@@ -1245,7 +1245,7 @@ void VPGJavaGenerationService::GenerateEnum(const LogConfig *logConfig, const st
 
 void VPGJavaGenerationService::GenerateObject(const LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass,
     const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapObject, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapForm,
-    const VPGGenerationOption *option, const VPGGenerationOptionExport *javaOption)
+    const VPGConfig *option, const VPGConfigExport *javaOption)
 {
     TRY
         assert(option != nullptr);
@@ -1265,11 +1265,11 @@ void VPGJavaGenerationService::GenerateObject(const LogConfig *logConfig, const 
     CATCH
 }
 
-void VPGJavaGenerationService::GenerateOperationResult(const LogConfig *logConfig, const std::wstring &projectPrefix, const VPGGenerationOptionExport *option,
+void VPGJavaGenerationService::GenerateOperationResult(const LogConfig *logConfig, const std::wstring &projectPrefix, const VPGConfigExport *option,
     const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapObject, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapForm)
 {
     TRY
-        if (option == nullptr || option->GetInterface() != VPGGenerationOptionInterfaceType::Java || IsBlank(option->GetObjectDirectory()))
+        if (option == nullptr || option->GetInterface() != VPGConfigInterfaceType::Java || IsBlank(option->GetObjectDirectory()))
             return;
         std::wstring filePath = ConcatPaths({option->GetWorkspace(), GetOperationResultFilePath(projectPrefix, option)});
         LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class: " + filePath);

@@ -16,9 +16,9 @@ class VPGJavaGenerationServiceTest : public testing::Test
 {
     GETSET_SPTR(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGJavaGenerationServiceTest/");
-    GETSET_SPTR_NULL(VPGGenerationOptionExport, JavaOption);
+    GETSET_SPTR_NULL(VPGConfigExport, JavaOption);
     
-    GETSET_SPTR_NULL(VPGGenerationOption, Option);
+    GETSET_SPTR_NULL(VPGConfig, Option);
     
     public:
         void SetUp() override
@@ -26,14 +26,15 @@ class VPGJavaGenerationServiceTest : public testing::Test
             this->_LogConfig->SetIsConsoleLog(false);
 
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
-
-            _Option = std::make_shared<VPGGenerationOption>();
+            _Option = std::make_shared<VPGConfig>();
             _Option->SetProjectPrefix(L"VPG");
-            _Option->SetTypeWorkspace(_Workspace);
+            if (_Option->GetInput() == nullptr)
+                _Option->SetInput(std::make_shared<VPGConfigInput>());
+            _Option->GetInput()->SetTypeWorkspace(_Workspace);
 
-            _JavaOption = std::make_shared<VPGGenerationOptionExport>();
+            _JavaOption = std::make_shared<VPGConfigExport>();
             _Option->InsertExports(_JavaOption);
-            _JavaOption->SetInterface(VPGGenerationOptionInterfaceType::Java);
+            _JavaOption->SetInterface(VPGConfigInterfaceType::Java);
             _JavaOption->SetWorkspace(_Workspace);
             _JavaOption->SetDllBridgeDirectory(L"src/main/java/com/vcc/test/");
             _JavaOption->SetTypeDirectory(L"src/main/java/com/vcc/type");

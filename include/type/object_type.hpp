@@ -4,8 +4,12 @@
 enum class ObjectType
 {
     NA
-    , GenerationOption
-    , GenerationOptionExport
+    , Config
+    , ConfigBehavior
+    , ConfigExport
+    , ConfigInput
+    , ConfigOutput
+    , ConfigTemplate
     , GitForm
     , GitLog
     , MainForm

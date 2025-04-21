@@ -12,7 +12,8 @@ Please go to following session to see how to create VCC Project to generate c++ 
 - Tutorial for Create VCC DLL Project to generate dll with Java Interface
 
 ## What's new
-Action with Argument and Result
+Group items of vcc.json
+* User need to review vcc.json
 
 ## What's next
 Git Manager
@@ -308,35 +309,43 @@ Path in the project is recommaneded to be in Camel Case. So, when export to java
 Sample
 ```
 {
-    "Version": "v0.2.4",
+    "Version": "v0.3.4",
     "ProjectType": "VccModule",
-    "TemplateGitUrl": "https://github.com/s1155003185/VCCModule.git",
-    "TemplateWorkspace": "${userHome}/Documents/vcc/VCCModule",
     "ProjectPrefix": "VPG",
     "ProjectName": "VCCProjGenerator",
     "ProjectNameDll": "libvpg",
     "ProjectNameExe": "vpg",
     "IsGit": true,
-    "IsResultThrowException": false,
-    "IsExcludeUnittest": false,
-    "IsExcludeVCCUnitTest": false,
-    "TypeWorkspace": "include/type",
-    "ExceptionTypeDirectory": "include/type",
-    "ObjectTypeDirectory": "include/type",
-    "ApplicationDirectoryHpp": "include",
-    "ApplicationDirectoryCpp": "src",
-    "ActionDirectoryHpp": "include/action",
-    "ActionDirectoryCpp": "src/action",
-    "FormDirectoryHpp": "include/form",
-    "FormDirectoryCpp": "src/form",
-    "ObjectDirectoryHpp": "include/model",
-    "ObjectDirectoryCpp": "src/model",
-    "PropertyAccessorDirectoryHpp": "include/propertyAccessor",
-    "PropertyAccessorDirectoryCpp": "src/propertyAccessor",
-    "ObjectFactoryDirectoryHpp": "include/factory",
-    "ObjectFactoryDirectoryCpp": "src/factory",
-    "PropertyAccessorFactoryDirectoryHpp": "include/factory",
-    "PropertyAccessorFactoryDirectoryCpp": "src/factory",
+    "Template": {
+        "Url": "https://github.com/s1155003185/VCCModule.git",
+        "Workspace": "${userHome}/Documents/vcc/VCCModule",
+        "IsExcludeUnittest": false,
+        "IsExcludeVCCUnitTest": false
+    },
+    "Behavior": {
+        "IsResultThrowException": false
+    },
+    "Input": {
+        "TypeWorkspace": "include/type"
+    },
+    "Output": {
+        "ExceptionTypeDirectory": "include/type",
+        "ObjectTypeDirectory": "include/type",
+        "ApplicationDirectoryHpp": "include",
+        "ApplicationDirectoryCpp": "src",
+        "ActionDirectoryHpp": "",
+        "ActionDirectoryCpp": "",
+        "FormDirectoryHpp": "include/form",
+        "FormDirectoryCpp": "src/form",
+        "ObjectDirectoryHpp": "include/model",
+        "ObjectDirectoryCpp": "src/model",
+        "PropertyAccessorDirectoryHpp": "include/propertyaccessor",
+        "PropertyAccessorDirectoryCpp": "src/propertyaccessor",
+        "ObjectFactoryDirectoryHpp": "include/factory",
+        "ObjectFactoryDirectoryCpp": "src/factory",
+        "PropertyAccessorFactoryDirectoryHpp": "include/factory",
+        "PropertyAccessorFactoryDirectoryCpp": "src/factory"
+    },
     "Plugins": [
         "vcc/versioning/git"
     ],
@@ -357,18 +366,12 @@ Sample
 ```
 
 #### Properies
+##### General
 Version
     ReadOnly. Current VCCModule Version. VCCProjectGenerator and VCCModel version must be the same.
 
 ProjectType
     VCCModule. Reserve for other project type, such as Java and Swift.
-
-TemplateGitUrl
-    Template Git source.
-
-TemplateWorkspace
-    Template workspace. Update mode will update current resource from the source in Template workspace.
-    By default, value is "${userHome}/Documents/vcc/VCCModule". Generator will auto update ${userHome} to user home path.
 
 ProjectPrefix
     In generation mode, generator only read file with that prefix and generate class with that prefix. It is used to distinguish different project if having multi dll.
@@ -377,7 +380,6 @@ ProjectPrefix
 
 ProjectName
     Project name. Update mode will also update Makefile.
-
 
 ProjectNameDll
     DLL name. If does not compile dll, keep it empty.
@@ -391,9 +393,13 @@ ProjectNameExe
 IsGit
     If true, then generate .gitignore. (Pending to init git)
 
-IsResultThrowException
-    If true, throw exception if executing action with errors.
-    If false, return Result class.
+##### Template
+TemplateGitUrl
+    Template Git source.
+
+TemplateWorkspace
+    Template workspace. Update mode will update current resource from the source in Template workspace.
+    By default, value is "${userHome}/Documents/vcc/VCCModule". Generator will auto update ${userHome} to user home path.
 
 IsExcludeUnittest
     If true, then skip update unittest/
@@ -401,9 +407,16 @@ IsExcludeUnittest
 IsExcludeVCCUnitTest
     If true, then skip update unittest/External/VCC/
 
+##### Behavior
+IsResultThrowException
+    If true, throw exception if executing action with errors.
+    If false, return Result class.
+
+##### Input
 TypeWorkspace
     In Generation mode, Generator will search files with suffix *_property.hpp to create Class, Property Accessor etc. Detail: Generation Rule.
 
+##### Output
 ExceptionTypeDirectory, ObjectTypeDirectory
     Mandatory.
     The location to export exception_type.hpp, object_type.hpp
@@ -439,11 +452,13 @@ PropertyAccessorFactoryDirectoryHpp, PropertyAccessorFactoryDirectoryCpp
     Optional. Empty for no generation.
     In Generation mode, Property Accessor Factory file is generated here.
 
+##### Plugins
 Plugins
     In Update mode, Generator will copy folders under include/External, src/External, unittest/External to workspace.
     Option:
         vcc/versioning/git
 
+##### Exports
 Exports
     In Update Mode, Generator will update Makefile so that dll, exe will be copied after make release. Note: JNA cannot read debug mode dll.
     In Generate Mode, Generator will generate class, enum, bridge according to TypeWorkspace stated above.

@@ -50,7 +50,7 @@ class VPGObjectFileGenerationServiceTest : public testing::Test
 
 TEST_F(VPGObjectFileGenerationServiceTest, Empty)
 {
-    auto option = std::make_shared<VPGGenerationOption>();
+    auto option = std::make_shared<VPGConfig>();
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
@@ -75,7 +75,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
-    auto option = std::make_shared<VPGGenerationOption>();
+    auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
@@ -128,7 +128,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Object)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
-    auto option = std::make_shared<VPGGenerationOption>();
+    auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
@@ -198,7 +198,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritClass)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
-    auto option = std::make_shared<VPGGenerationOption>();
+    auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"GitLog", L"git_service.hpp"));
@@ -263,7 +263,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Multi)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
-    auto option = std::make_shared<VPGGenerationOption>();
+    auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
@@ -333,7 +333,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
-    auto option = std::make_shared<VPGGenerationOption>();
+    auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     //projectClassIncludeFiles.insert(std::make_pair(L"GitLog", L"git_service.hpp"));
@@ -468,7 +468,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormWithIndependentManager)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
-    auto option = std::make_shared<VPGGenerationOption>();
+    auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
@@ -606,7 +606,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritForm)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
-    auto option = std::make_shared<VPGGenerationOption>();
+    auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"GitBaseForm", L"git_form.hpp"));
@@ -742,7 +742,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
-    auto option = std::make_shared<VPGGenerationOption>();
+    auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
@@ -919,7 +919,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
-    auto option = std::make_shared<VPGGenerationOption>();
+    auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgument", L"vpg_git_form.hpp"));
@@ -1284,7 +1284,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, ActionArgument)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
-    auto option = std::make_shared<VPGGenerationOption>();
+    auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
@@ -1333,7 +1333,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Result)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
-    auto option = std::make_shared<VPGGenerationOption>();
+    auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
@@ -1403,7 +1403,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
-    auto option = std::make_shared<VPGGenerationOption>();
+    auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObject", L"vcc_object.hpp"));
@@ -1626,7 +1626,10 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "            tmpOrderedMap->AddInt(std::to_wstring(element.first), element.second);\r\n"
         "        }\r\n"
         "        // Object\r\n"
-        "        json->AddObject(ConvertNamingStyle(L\"Object\", NamingStyle::PascalCase, namestyle), _Object->ToJson());\r\n"
+        "        if (_Object != nullptr)\r\n"
+        "            json->AddObject(ConvertNamingStyle(L\"Object\", NamingStyle::PascalCase, namestyle), _Object->ToJson());\r\n"
+        "        else\r\n"
+        "            json->AddNull(ConvertNamingStyle(L\"Object\", NamingStyle::PascalCase, namestyle));\r\n"
         "        // VectorObject\r\n"
         "        auto tmpVectorObject = std::make_shared<Json>();\r\n"
         "        json->AddArray(ConvertNamingStyle(L\"VectorObject\", NamingStyle::PascalCase, namestyle), tmpVectorObject);\r\n"
@@ -1864,7 +1867,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
-    auto option = std::make_shared<VPGGenerationOption>();
+    auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObject", L"vcc_object.hpp"));
@@ -1973,7 +1976,10 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
         "        NamingStyle namestyle = NamingStyle::PascalCase;\r\n"
         "        auto json = std::make_unique<Json>();\r\n"
         "        // Object\r\n"
-        "        json->AddObject(ConvertNamingStyle(L\"Object\", NamingStyle::PascalCase, namestyle), _Object->ToJson());\r\n"
+        "        if (_Object != nullptr)\r\n"
+        "            json->AddObject(ConvertNamingStyle(L\"Object\", NamingStyle::PascalCase, namestyle), _Object->ToJson());\r\n"
+        "        else\r\n"
+        "            json->AddNull(ConvertNamingStyle(L\"Object\", NamingStyle::PascalCase, namestyle));\r\n"
         "        return json;\r\n"
         "    CATCH\r\n"
         "    return nullptr;\r\n"
@@ -2030,7 +2036,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
-    auto option = std::make_shared<VPGGenerationOption>();
+    auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObject", L"vcc_object.hpp"));
@@ -2183,7 +2189,10 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
         "            tmpOrderedMap->AddInt(std::to_wstring(element.first), element.second);\r\n"
         "        }\r\n"
         "        // Object\r\n"
-        "        json->AddObject(ConvertNamingStyle(L\"Object\", NamingStyle::PascalCase, namestyle), _Object->ToJson());\r\n"
+        "        if (_Object != nullptr)\r\n"
+        "            json->AddObject(ConvertNamingStyle(L\"Object\", NamingStyle::PascalCase, namestyle), _Object->ToJson());\r\n"
+        "        else\r\n"
+        "            json->AddNull(ConvertNamingStyle(L\"Object\", NamingStyle::PascalCase, namestyle));\r\n"
         "        // VectorObject\r\n"
         "        auto tmpVectorObject = std::make_shared<Json>();\r\n"
         "        json->AddArray(ConvertNamingStyle(L\"VectorObject\", NamingStyle::PascalCase, namestyle), tmpVectorObject);\r\n"

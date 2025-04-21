@@ -12,7 +12,7 @@ class VPGVccGenerationManager : public VPGBaseGenerationManager
 {
     public:
         VPGVccGenerationManager() : VPGVccGenerationManager(nullptr, L"", nullptr) {}
-        VPGVccGenerationManager(std::shared_ptr<LogConfig> logConfig, std::wstring workspace, std::shared_ptr<VPGGenerationOption> option) : VPGBaseGenerationManager(logConfig, workspace, option) {}
+        VPGVccGenerationManager(std::shared_ptr<LogConfig> logConfig, std::wstring workspace, std::shared_ptr<VPGConfig> option) : VPGBaseGenerationManager(logConfig, workspace, option) {}
         virtual ~VPGVccGenerationManager() {}
 
         virtual std::shared_ptr<IObject> Clone() const override

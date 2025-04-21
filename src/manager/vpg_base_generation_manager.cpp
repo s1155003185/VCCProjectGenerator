@@ -15,15 +15,14 @@
 #include "vpg_code_reader.hpp"
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_file_sync_service.hpp"
-#include "vpg_generation_option.hpp"
+#include "vpg_config.hpp"
 #include "vpg_global.hpp"
 #include "vpg_project_type.hpp"
 
 void VPGBaseGenerationManager::ValidateOption() const
 {
     TRY
-        if (IsBlank(_Option->GetTemplateWorkspace()))
-            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Template Workspace is emtpy.");
+        VALIDATE(L"Template Workspace is emtpy.", (_Option->GetTemplate() != nullptr && !IsBlank(_Option->GetTemplate()->GetWorkspace())));
         if (IsBlank(_Workspace))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace is emtpy.");
         if (IsBlank(_Option->GetProjectName()))
@@ -59,7 +58,7 @@ void VPGBaseGenerationManager::CreateWorkspaceDirectory() const
         checkList.push_back(L"src");
 
         // unittest
-        if (!_Option->GetIsExcludeUnittest())
+        if (_Option->GetTemplate() == nullptr || !_Option->GetTemplate()->GetIsExcludeUnittest())
             checkList.push_back(unittestFolderName);
         
         for (auto path : checkList) {
@@ -77,7 +76,7 @@ void VPGBaseGenerationManager::CreateBasicProject() const
         ValidateOption();
         this->CreateWorkspaceDirectory();
 
-        std::wstring src = VPGGlobal::GetConvertedPath(_Option->GetTemplateWorkspace());
+        std::wstring src = VPGGlobal::GetConvertedPath(_Option->GetTemplate()->GetWorkspace());
         std::wstring dest = _Workspace;
         if (_Option->GetIsGit()) {
             CopyFile(ConcatPaths({src, L".gitignore"}), ConcatPaths({dest, L".gitignore"}), true);
@@ -90,7 +89,7 @@ void VPGBaseGenerationManager::CreateBasicProject() const
             CopyFile(ConcatPaths({src, L"DllFunctions.cpp"}), ConcatPaths({dest, L"DllFunctions.cpp"}), true);
             CopyFile(ConcatPaths({src, L"DllFunctions.h"}), ConcatPaths({dest, L"DllFunctions.h"}), true);
         }
-        if (!_Option->GetIsExcludeUnittest()) {
+        if (_Option->GetTemplate() == nullptr || !_Option->GetTemplate()->GetIsExcludeUnittest()) {
             CopyFile(ConcatPaths({src, unittestFolderName, L"gtest_main.cpp"}), ConcatPaths({dest, unittestFolderName, L"gtest_main.cpp"}), true);
 
             if (!IsBlank(_Option->GetProjectNameDll())) {
@@ -218,7 +217,7 @@ std::wstring VPGBaseGenerationManager::AdjustMakefile(const std::wstring &fileCo
                 std::wstring projName = !IsBlank(_Option->GetProjectName()) ? (L" " + _Option->GetProjectName()) : L"";
                 std::wstring dllName = !IsBlank(_Option->GetProjectNameDll()) ? (L" " + _Option->GetProjectNameDll()) : L"";
                 std::wstring exeName = !IsBlank(_Option->GetProjectNameExe()) ? (L" " + _Option->GetProjectNameExe()) : L"";
-                std::wstring IsExcludeUnittest = _Option->GetIsExcludeUnittest() ? L" Y" : L" N";
+                std::wstring IsExcludeUnittest = _Option->GetTemplate() != nullptr && _Option->GetTemplate()->GetIsExcludeUnittest() ? L" Y" : L" N";
         
                 result += L"# <vcc:name sync=\"ALERT\" gen=\"ALERT\">\r\n";
                 result += L"#----------------------------------#\r\n";
@@ -288,7 +287,7 @@ std::wstring VPGBaseGenerationManager::AdjustVSCodeLaunchJson(const std::wstring
 {
     TRY
         std::wstring programPath = L"${workspaceFolder}/bin/Debug/unittest";
-        if (_Option->GetIsExcludeUnittest() && !_Option->GetProjectNameExe().empty()) {
+        if (_Option->GetTemplate() != nullptr && _Option->GetTemplate()->GetIsExcludeUnittest() && !_Option->GetProjectNameExe().empty()) {
             std::wstring projectName = _Option->GetProjectNameExe();
             #ifdef __WIN32
             projectName += L".exe";

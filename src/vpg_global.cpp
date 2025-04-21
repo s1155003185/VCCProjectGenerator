@@ -24,7 +24,7 @@ std::shared_ptr<VPGFileGenerationManager> VPGGlobal::_FileGenerationManager = nu
 
 std::wstring VPGGlobal::GetVersion()
 {
-    return L"v0.3.4";
+    return L"v0.3.5";
 }
 
 std::wstring VPGGlobal::GetVccLocalResponseFolder()

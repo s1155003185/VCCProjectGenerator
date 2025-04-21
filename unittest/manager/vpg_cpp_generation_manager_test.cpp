@@ -15,7 +15,7 @@ using namespace vcc;
 class VPGCppGenerationManagerTest : public testing::Test 
 {
     GETSET_SPTR(LogConfig, LogConfig);
-    GETSET_SPTR(VPGGenerationOption, Option);
+    GETSET_SPTR(VPGConfig, Option);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGCppGenerationManagerTest/");
     GETSET(std::wstring, WorkspaceSource, L"");
     GETSET(std::wstring, WorkspaceTarget, L"");
@@ -43,11 +43,13 @@ class VPGCppGenerationManagerTest : public testing::Test
             // option for initialize source
             this->_Manager->SetWorkspace(this->GetWorkspaceSource());
             this->_Option->SetProjectType(VPGProjectType::CppComplex);
-            this->_Option->SetTemplateWorkspace(L".");
+            if (this->_Option->GetTemplate() == nullptr)
+                this->_Option->SetTemplate(std::make_shared<VPGConfigTemplate>());
+            this->_Option->GetTemplate()->SetWorkspace(L".");
             this->_Option->SetProjectName(L"VCCProjGenerator");
             this->_Option->SetProjectNameDll(L"libvpg");
             this->_Option->SetProjectNameExe(L"vpg");
-            this->_Option->SetIsExcludeUnittest(false);
+            this->_Option->GetTemplate()->SetIsExcludeUnittest(false);
             this->_Manager->CreateBasicProject();
             // replace main so that the project can be compile
             std::wstring mainFilePath = ConcatPaths({this->GetWorkspaceSource(), L"main.cpp"});
@@ -57,11 +59,13 @@ class VPGCppGenerationManagerTest : public testing::Test
 
             // option for testing
             this->_Manager->SetWorkspace(this->GetWorkspaceTarget());
-            this->_Option->SetTemplateWorkspace(this->GetWorkspaceSource());
+            if (this->_Option->GetTemplate() == nullptr)
+                this->_Option->SetTemplate(std::make_shared<VPGConfigTemplate>());
+            this->_Option->GetTemplate()->SetWorkspace(this->GetWorkspaceSource());
             this->_Option->SetProjectNameExe(L"CPPProject");
             this->_Option->SetProjectNameDll(L"CPPDllProject");
             this->_Option->SetProjectName(L"ProjectName");
-            this->_Option->SetIsExcludeUnittest(false);
+            this->_Option->GetTemplate()->SetIsExcludeUnittest(false);
         }
 
         void TearDown() override
@@ -80,7 +84,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     this->_Option->SetProjectNameExe(L"CPPProject");
     this->_Option->SetProjectNameDll(L"CPPDllProject");
     this->_Option->SetProjectName(L"ProjectName");
-    this->_Option->SetIsExcludeUnittest(false);
+    this->_Option->GetTemplate()->SetIsExcludeUnittest(false);
     this->_Option->SetProjectType(VPGProjectType::CppComplex);
     this->GetManager()->Add();
     EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L".vscode/launch.json"})));
@@ -109,7 +113,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     this->_Option->SetProjectNameExe(L"CPPProject");
     this->_Option->SetProjectNameDll(L"");
     this->_Option->SetProjectName(L"ProjectName");
-    this->_Option->SetIsExcludeUnittest(false);
+    this->_Option->GetTemplate()->SetIsExcludeUnittest(false);
     this->GetManager()->Add();
     EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L".vscode/launch.json"})));
     EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L".vscode/tasks.json"})));
@@ -138,7 +142,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     this->_Option->SetProjectNameExe(L"");
     this->_Option->SetProjectNameDll(L"CPPDllProject");
     this->_Option->SetProjectName(L"ProjectName");
-    this->_Option->SetIsExcludeUnittest(false);
+    this->_Option->GetTemplate()->SetIsExcludeUnittest(false);
     this->GetManager()->Add();
     EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L".vscode/launch.json"})));
     EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L".vscode/tasks.json"})));
@@ -167,7 +171,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     this->_Option->SetProjectNameExe(L"CPPProject");
     this->_Option->SetProjectNameDll(L"CPPDllProject");
     this->_Option->SetProjectName(L"ProjectName");
-    this->_Option->SetIsExcludeUnittest(true);
+    this->_Option->GetTemplate()->SetIsExcludeUnittest(true);
     this->GetManager()->Add();
     EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L".vscode/launch.json"})));
     EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L".vscode/tasks.json"})));

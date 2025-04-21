@@ -20,7 +20,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
     GETSET(std::wstring, WorkspaceSource, L"");
     GETSET(std::wstring, WorkspaceTarget, L"");
     
-    GETSET_SPTR(VPGGenerationOption, Option)
+    GETSET_SPTR(VPGConfig, Option)
     // Cannot use VPGBaseGenerationManager directly as it needs template
     MANAGER_SPTR(VPGCppGenerationManager, Manager, _LogConfig, L"", _Option);
     
@@ -60,7 +60,8 @@ class VPGBaseGenerationManagerTest : public testing::Test
             this->_WorkspaceTarget = this->_Workspace + L"Target";
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
-            _Option->SetTemplateWorkspace(L"A");
+            _Option->SetTemplate(std::make_shared<VPGConfigTemplate>());
+            _Option->GetTemplate()->SetWorkspace(L"A");
             _Manager->SetWorkspace(L"B");
 
             std::wstring makeFileStr = L"hi\r\n";
@@ -82,11 +83,11 @@ class VPGBaseGenerationManagerTest : public testing::Test
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
         }
 
-        std::wstring GetResultStr(const VPGGenerationOption *_Option) {
+        std::wstring GetResultStr(const VPGConfig *_Option) {
             std::wstring projName = !IsBlank(_Option->GetProjectName()) ? (L" " + _Option->GetProjectName()) : L"";
             std::wstring dllName = !IsBlank(_Option->GetProjectNameDll()) ? (L" " + _Option->GetProjectNameDll()) : L"";
             std::wstring exeName = !IsBlank(_Option->GetProjectNameExe()) ? (L" " + _Option->GetProjectNameExe()) : L"";
-            std::wstring IsExcludeUnittest = _Option->GetIsExcludeUnittest() ? L" Y" : L" N";
+            std::wstring IsExcludeUnittest = _Option->GetTemplate()->GetIsExcludeUnittest() ? L" Y" : L" N";
             std::wstring makeFileStr = L"hi\r\n";
             makeFileStr += L"# <vcc:name sync=\"ALERT\" gen=\"ALERT\">\r\n";
             makeFileStr += L"#----------------------------------#\r\n";
@@ -218,7 +219,7 @@ TEST_F(VPGBaseGenerationManagerTest, DllTestFileContent)
     _Option->SetProjectName(L"libvpg");
     _Option->SetProjectNameDll(L"libvpg");
     _Option->SetProjectNameExe(L"libvpg");
-    _Option->SetIsExcludeUnittest(false);
+    _Option->GetTemplate()->SetIsExcludeUnittest(false);
     std::wstring originalText  = ReadFile(L"unittest/Dll/dll_test.cpp");
     std::wstring result = originalText;
     this->GetManager()->GetDLLTestFileContent(result);
@@ -232,7 +233,7 @@ TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_Complex)
     _Option->SetProjectName(L"ProjectName");
     _Option->SetProjectNameDll(L"DllName");
     _Option->SetProjectNameExe(L"ExeName");
-    _Option->SetIsExcludeUnittest(false);
+    _Option->GetTemplate()->SetIsExcludeUnittest(false);
     std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
     EXPECT_EQ(result, GetResultStr(_Option.get()));
 }
@@ -242,7 +243,7 @@ TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_DLLOnly)
     _Option->SetProjectName(L"ProjectName");
     _Option->SetProjectNameDll(L"DllName");
     _Option->SetProjectNameExe(L"");
-    _Option->SetIsExcludeUnittest(false);
+    _Option->GetTemplate()->SetIsExcludeUnittest(false);
     std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
     EXPECT_EQ(result, GetResultStr(_Option.get()));
 }
@@ -252,7 +253,7 @@ TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_EXEOnly)
     _Option->SetProjectName(L"ProjectName");
     _Option->SetProjectNameDll(L"");
     _Option->SetProjectNameExe(L"ExeName");
-    _Option->SetIsExcludeUnittest(false);
+    _Option->GetTemplate()->SetIsExcludeUnittest(false);
     std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
     EXPECT_EQ(result, GetResultStr(_Option.get()));
 }
@@ -262,7 +263,7 @@ TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_NoGtest)
     _Option->SetProjectName(L"ProjectName");
     _Option->SetProjectNameDll(L"DllName");
     _Option->SetProjectNameExe(L"ExeName");
-    _Option->SetIsExcludeUnittest(true);
+    _Option->GetTemplate()->SetIsExcludeUnittest(true);
     std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
     EXPECT_EQ(result, GetResultStr(_Option.get()));
 }

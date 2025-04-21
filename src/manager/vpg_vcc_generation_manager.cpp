@@ -29,24 +29,24 @@ std::vector<std::wstring> VPGVccGenerationManager::GetUpdateList() const
     // application
     
     // type
-    result.push_back(ConcatPaths({_Option->GetExceptionTypeDirectory(), L"exception_type.hpp"}));
-    result.push_back(ConcatPaths({_Option->GetObjectTypeDirectory(), L"object_type.hpp"}));
+    result.push_back(ConcatPaths({_Option->GetOutput() != nullptr ? _Option->GetOutput()->GetExceptionTypeDirectory() : L"", L"exception_type.hpp"}));
+    result.push_back(ConcatPaths({_Option->GetOutput() != nullptr ? _Option->GetOutput()->GetObjectTypeDirectory() : L"", L"object_type.hpp"}));
     
     // application
-    if (!IsBlank(_Option->GetApplicationDirectoryHpp()))
-        result.push_back(ConcatPaths({_Option->GetApplicationDirectoryHpp(), L"application.hpp"}));
-    if (!IsBlank(_Option->GetApplicationDirectoryCpp()))
-        result.push_back(ConcatPaths({_Option->GetApplicationDirectoryCpp(), L"application.cpp"}));
+    if (_Option->GetOutput() != nullptr && !IsBlank(_Option->GetOutput()->GetApplicationDirectoryHpp()))
+        result.push_back(ConcatPaths({_Option->GetOutput()->GetApplicationDirectoryHpp(), L"application.hpp"}));
+    if (_Option->GetOutput() != nullptr && !IsBlank(_Option->GetOutput()->GetApplicationDirectoryCpp()))
+        result.push_back(ConcatPaths({_Option->GetOutput()->GetApplicationDirectoryCpp(), L"application.cpp"}));
 
     // factory
-    if (!IsBlank(_Option->GetObjectFactoryDirectoryHpp()))
-        result.push_back(ConcatPaths({_Option->GetObjectFactoryDirectoryHpp(), L"object_factory.hpp"}));
-    if (!IsBlank(_Option->GetObjectFactoryDirectoryCpp()))
-        result.push_back(ConcatPaths({_Option->GetObjectFactoryDirectoryCpp(), L"object_factory.cpp"}));
-    if (!IsBlank(_Option->GetPropertyAccessorFactoryDirectoryHpp()))
-        result.push_back(ConcatPaths({_Option->GetPropertyAccessorFactoryDirectoryHpp(), L"property_accessor_factory.hpp"}));
-    if (!IsBlank(_Option->GetPropertyAccessorFactoryDirectoryCpp()))
-        result.push_back(ConcatPaths({_Option->GetPropertyAccessorFactoryDirectoryCpp(), L"property_accessor_factory.cpp"}));
+    if (_Option->GetOutput() != nullptr && !IsBlank(_Option->GetOutput()->GetObjectFactoryDirectoryHpp()))
+        result.push_back(ConcatPaths({_Option->GetOutput()->GetObjectFactoryDirectoryHpp(), L"object_factory.hpp"}));
+    if (_Option->GetOutput() != nullptr && !IsBlank(_Option->GetOutput()->GetObjectFactoryDirectoryCpp()))
+        result.push_back(ConcatPaths({_Option->GetOutput()->GetObjectFactoryDirectoryCpp(), L"object_factory.cpp"}));
+    if (_Option->GetOutput() != nullptr && !IsBlank(_Option->GetOutput()->GetPropertyAccessorFactoryDirectoryHpp()))
+        result.push_back(ConcatPaths({_Option->GetOutput()->GetPropertyAccessorFactoryDirectoryHpp(), L"property_accessor_factory.hpp"}));
+    if (_Option->GetOutput() != nullptr && !IsBlank(_Option->GetOutput()->GetPropertyAccessorFactoryDirectoryCpp()))
+        result.push_back(ConcatPaths({_Option->GetOutput()->GetPropertyAccessorFactoryDirectoryCpp(), L"property_accessor_factory.cpp"}));
 
     // plugins
     for (auto const &str : _Option->GetPlugins()) {
@@ -59,12 +59,14 @@ std::vector<std::wstring> VPGVccGenerationManager::GetUpdateList() const
 std::vector<std::wstring> VPGVccGenerationManager::GetUpdateUnitTestList() const
 {
     std::vector<std::wstring> result;
-    if (!_Option->GetIsExcludeVCCUnitTest())
+    bool isExcludeUnittest = _Option->GetTemplate() != nullptr && _Option->GetTemplate()->GetIsExcludeUnittest();
+    bool isExcludeVCCUnittest = _Option->GetTemplate() != nullptr && _Option->GetTemplate()->GetIsExcludeVCCUnitTest();
+    if (!isExcludeVCCUnittest)
         result.push_back(L"external/vcc/core/*");
 
     for (auto const &str : _Option->GetPlugins()) {
-        if (!_Option->GetIsExcludeUnittest()) {
-            if (!(str.starts_with(L"vcc") && _Option->GetIsExcludeVCCUnitTest()))
+        if (_Option->GetTemplate() == nullptr || !isExcludeUnittest) {
+            if (!(IsStartWith(str, L"vcc") && isExcludeVCCUnittest))
                 result.push_back(ConcatPaths({L"external/", str, L"*"}));
         }
     }
@@ -77,8 +79,18 @@ void VPGVccGenerationManager::CreateVccJson(bool isNew) const
         auto jsonBuilder = std::make_unique<JsonBuilder>();
         jsonBuilder->SetIsBeautify(true);
         _Option->SetVersion(VPGGlobal::GetVersion());
-        if (isNew)
-            _Option->InsertExports(std::make_shared<VPGGenerationOptionExport>());
+        if (isNew) {
+            if (_Option->GetTemplate() == nullptr)
+                _Option->SetTemplate(std::make_shared<VPGConfigTemplate>());
+            if (_Option->GetBehavior() == nullptr)
+                _Option->SetBehavior(std::make_shared<VPGConfigBehavior>());
+            if (_Option->GetInput() == nullptr)
+                _Option->SetInput(std::make_shared<VPGConfigInput>());
+            if (_Option->GetOutput() == nullptr)
+                _Option->SetOutput(std::make_shared<VPGConfigOutput>());
+            if (_Option->GetExports().empty())
+                _Option->InsertExports(std::make_shared<VPGConfigExport>());
+        }
         WriteFile(ConcatPaths({_Workspace, VPGGlobal::GetVccJsonFileName()}), _Option->SerializeJson(jsonBuilder.get()), true);
     CATCH
 }
@@ -97,8 +109,9 @@ void VPGVccGenerationManager::ReadVccJson() const
 void VPGVccGenerationManager::Add() const
 {
     TRY
+        assert(_Option->GetTemplate() != nullptr);
         VPGBaseGenerationManager::CreateBasicProject();
-        std::wstring src = VPGGlobal::GetConvertedPath(_Option->GetTemplateWorkspace());
+        std::wstring src = VPGGlobal::GetConvertedPath(_Option->GetTemplate()->GetWorkspace());
         std::wstring dest = _Workspace;
         LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Copy Project to " + dest + L" ...");
         CopyDirectoryOption copyDirectoryOption;
@@ -110,7 +123,7 @@ void VPGVccGenerationManager::Add() const
         CopyDirectory(src, dest, &copyDirectoryOption);
 
         // handle unittest in next loop as unit test name can be changed
-        if (!_Option->GetIsExcludeUnittest()) {
+        if (_Option->GetTemplate() == nullptr || !_Option->GetTemplate()->GetIsExcludeUnittest()) {
             copyDirectoryOption.ClearIncludeFileFilters();
             for (auto const &str : GetUpdateUnitTestList())
                 copyDirectoryOption.InsertIncludeFileFilters(str);
@@ -129,7 +142,8 @@ void VPGVccGenerationManager::Update() const
     TRY
         ReadVccJson();
 
-        std::wstring src = VPGGlobal::GetConvertedPath(_Option->GetTemplateWorkspace());
+        assert(_Option->GetTemplate() != nullptr);
+        std::wstring src = VPGGlobal::GetConvertedPath(_Option->GetTemplate()->GetWorkspace());
         std::wstring dest = _Workspace;
         
         LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Sync Project ...");
@@ -138,7 +152,7 @@ void VPGVccGenerationManager::Update() const
 
         SyncWorkspace(this->_LogConfig.get(), src, dest, GetUpdateList(), {});
         
-        if (!_Option->GetIsExcludeUnittest()) {
+        if (_Option->GetTemplate() == nullptr || !_Option->GetTemplate()->GetIsExcludeUnittest()) {
             auto list = GetUpdateUnitTestList();
             if (!list.empty())
                 SyncWorkspace(this->_LogConfig.get(), ConcatPaths({src, unittestFolderName}), ConcatPaths({dest, unittestFolderName}), list, {});

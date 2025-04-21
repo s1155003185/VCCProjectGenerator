@@ -8,7 +8,7 @@
 #include "class_macro.hpp"
 #include "i_vpg_generation_manager.hpp"
 #include "log_config.hpp"
-#include "vpg_generation_option.hpp"
+#include "vpg_config.hpp"
 #include "vpg_project_type.hpp"
 
 using namespace vcc;
@@ -17,7 +17,7 @@ class VPGProcessManager : public BaseManager
 {
     // project
     GETSET(std::wstring, Workspace, L"");
-    GETSET_SPTR(VPGGenerationOption, Option);
+    GETSET_SPTR(VPGConfig, Option);
 
     private:
         std::shared_ptr<IVPGGenerationManager> GetGenerationManager();

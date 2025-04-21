@@ -5,7 +5,7 @@
 #include "base_manager.hpp"
 #include "exception_macro.hpp"
 #include "i_vpg_generation_manager.hpp"
-#include "vpg_generation_option.hpp"
+#include "vpg_config.hpp"
 
 using namespace vcc;
 
@@ -15,12 +15,12 @@ const std::wstring unittestFolderName = L"unittest";
 class VPGBaseGenerationManager : public BaseManager, public IVPGGenerationManager
 {
     GETSET(std::wstring, Workspace, L"");
-    GETSET_SPTR(VPGGenerationOption, Option);
+    GETSET_SPTR(VPGConfig, Option);
     
     protected:
         void ValidateOption() const;
     public:
-        VPGBaseGenerationManager(std::shared_ptr<LogConfig> logConfig, std::wstring &workspace, std::shared_ptr<VPGGenerationOption> option) : BaseManager(logConfig)
+        VPGBaseGenerationManager(std::shared_ptr<LogConfig> logConfig, std::wstring &workspace, std::shared_ptr<VPGConfig> option) : BaseManager(logConfig)
         { 
             this->_Workspace = workspace;
             assert(option != nullptr);

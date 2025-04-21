@@ -1,12 +1,14 @@
 # Change Log
 
-## [Unreleased] - Review - Action With Return
+## [Unreleased] - Review - vcc.json and export interface
 - Git Manager Enhancement
 - Export function name to lowercase with underscore
 - Group vcc.json
 - TODO: Support Callback in argument
 - TODO: Support Structure
 - TODO: Support Set for GETSET
+- TODO: Review usage of const
+- TODO: Support GET_CUSTOM, SET_CUSTOM
 
 ### [v0.3.4] - 2025-04-21: Review - Action Return OperationResult
 - Action support return Result - Add Class tag @@Result and Field tag @@Result

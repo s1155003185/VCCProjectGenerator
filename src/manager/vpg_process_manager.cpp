@@ -13,7 +13,7 @@
 #include "vector_helper.hpp"
 #include "vpg_global.hpp"
 #include "vpg_cpp_generation_manager.hpp"
-#include "vpg_generation_option.hpp"
+#include "vpg_config.hpp"
 #include "vpg_project_type.hpp"
 #include "vpg_vcc_generation_manager.hpp"
 
@@ -30,12 +30,12 @@ void VPGProcessManager::VerifyLocalResponse()
     TRY
         // 1. Check if source file exists, if not exist then clone
         // 2. Check if version != branch, then checkout
-        // std::wstring localResponseDirectory = VPGGlobal::GetConvertedPath(_Option->GetTemplateWorkspace());
+        // std::wstring localResponseDirectory = VPGGlobal::GetConvertedPath(_Option->GetWorkspace());
         // if (IsBlank(localResponseDirectory))
         //     localResponseDirectory = VPGGlobal::GetConvertedPath(VPGGlobal::GetVccLocalResponseFolder());
         std::wstring localResponseDirectoryBase = VPGGlobal::GetConvertedPath(VPGGlobal::GetVccLocalResponseFolder());
         std::wstring localResponseDirectoryProject = VPGGlobal::GetConvertedPath(VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType()));
-        std::wstring gitUrl = _Option->GetTemplateGitUrl();
+        std::wstring gitUrl = _Option->GetTemplate() != nullptr ? _Option->GetTemplate()->GetUrl() : L"";
 
         LogService::LogInfo(this->GetLogConfig().get(), L"", L"Check VCC Local response existance: " + localResponseDirectoryProject);
         bool isNeedToCloneGitResponse = false;
@@ -215,6 +215,10 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
             return;        
         }
 
+        // ensure no nullptr
+        if (_Option->GetTemplate() == nullptr)
+            _Option->SetTemplate(std::make_shared<VPGConfigTemplate>());
+        
         for (size_t i = 2; i < cmds.size(); i++) {
             std::wstring cmd = cmds[i];
             if (!IsStartWith(cmd, L"-")) {
@@ -268,9 +272,9 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
             } else {
                 // double tag, no second argument
                 if (cmd == L"--ExcludeUnitTest")
-                    _Option->SetIsExcludeUnittest(true);
+                    _Option->GetTemplate()->SetIsExcludeUnittest(true);
                 else if (cmd == L"--ExcludeExternalUnitTest")
-                    _Option->SetIsExcludeVCCUnitTest(true);
+                    _Option->GetTemplate()->SetIsExcludeVCCUnitTest(true);
                 else
                     THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknown argument " + cmd);
             }
@@ -307,10 +311,10 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
             _Option->SetProjectType(VPGProjectType::VccComplex);
         }
 
-        std::wstring localResponseDirectory = !_Option->GetTemplateWorkspace().empty() ? _Option->GetTemplateWorkspace() : VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType());
-        std::wstring gitUrl = !_Option->GetTemplateGitUrl().empty() ? _Option->GetTemplateGitUrl() : VPGGlobal::GetProjecURL(_Option->GetProjectType());
-        _Option->SetTemplateWorkspace(localResponseDirectory);
-        _Option->SetTemplateGitUrl(gitUrl);
+        std::wstring localResponseDirectory = _Option->GetTemplate() != nullptr && !IsBlank(_Option->GetTemplate()->GetWorkspace()) ? _Option->GetTemplate()->GetWorkspace() : VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType());
+        std::wstring gitUrl = _Option->GetTemplate() != nullptr && !IsBlank(_Option->GetTemplate()->GetUrl()) ? _Option->GetTemplate()->GetUrl() : VPGGlobal::GetProjecURL(_Option->GetProjectType());
+        _Option->GetTemplate()->SetWorkspace(localResponseDirectory);
+        _Option->GetTemplate()->SetUrl(gitUrl);
 
         if (mode == L"-Add")
             this->Add();

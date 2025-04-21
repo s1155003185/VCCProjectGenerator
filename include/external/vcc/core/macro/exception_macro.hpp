@@ -53,5 +53,5 @@ namespace vcc
     #define CATCH_MSG(exceptionType, message) } catch (const std::exception &e) { THROW_EXCEPTION_MSG(exceptionType, message); }
 
     // Validation
-    #define VALIDATE(msg, ...) if (!__VA_ARGS__) THROW_EXCEPTION_MSG(ExceptionType::ArgumentNotValid, msg);
+    #define VALIDATE(msg, ...) if (!(__VA_ARGS__)) THROW_EXCEPTION_MSG(ExceptionType::ArgumentNotValid, msg);
 }

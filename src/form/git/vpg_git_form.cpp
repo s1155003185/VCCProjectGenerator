@@ -9,6 +9,7 @@
 #include "exception_macro.hpp"
 #include "i_document.hpp"
 #include "i_document_builder.hpp"
+#include "i_result.hpp"
 #include "json.hpp"
 #include "number_helper.hpp"
 #include "string_helper.hpp"

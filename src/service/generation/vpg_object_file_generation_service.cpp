@@ -13,7 +13,7 @@
 #include "vpg_class_helper.hpp"
 #include "vpg_enum_class.hpp"
 #include "vpg_file_sync_service.hpp"
-#include "vpg_generation_option.hpp"
+#include "vpg_config.hpp"
 #include "vpg_include_path_service.hpp"
 #include "vpg_tag_helper.hpp"
 
@@ -138,11 +138,15 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetObjectToJson(const 
     std::vector<std::wstring> result;
     TRY
         std::wstring arrayStr = isArray ? L"Array" : L"";
-        std::wstring convertedPropertyName = isMap ? (propertyName + L", ") : (!isArray ? (L"ConvertNamingStyle(L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, propertyName) + L", NamingStyle::PascalCase, namestyle), ") : L"");
+        std::wstring convertedPropertyNameNoComma = isMap ? propertyName : (!isArray ? (L"ConvertNamingStyle(L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, propertyName) + L", NamingStyle::PascalCase, namestyle)") : L"");
+        std::wstring convertedPropertyName = !convertedPropertyNameNoComma.empty() ? (convertedPropertyNameNoComma + L", ") : L"";
         std::wstring currentPropertyName = isMap ? L"element.second" : ((!isArray ? L"_" : L"") + propertyName);
         if (IsContain(macro, L"SPTR")) {
             // Object
-            result.push_back(parentName + L"->Add" + arrayStr + L"Object(" + convertedPropertyName + currentPropertyName + L"->ToJson());");
+            result.push_back(L"if (" +currentPropertyName + L" != nullptr)");
+            result.push_back(INDENT + parentName + L"->Add" + arrayStr + L"Object(" + convertedPropertyName + currentPropertyName + L"->ToJson());");
+            result.push_back(L"else");
+            result.push_back(INDENT + parentName + L"->Add" + arrayStr + L"Null(" + convertedPropertyNameNoComma + L");");
         } else if (IsCapital(type)) {
             // Enum
             std::wstring tmpPropertyName = L"";
@@ -512,7 +516,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicJsonFunctions(const VPG
     return result;
 }
 
-std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnumClass *enumClass, const VPGGenerationOption *option)
+std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnumClass *enumClass, const VPGConfig *option)
 {
     std::wstring result = L"";
     TRY
@@ -525,7 +529,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnum
                 + INDENT + INDENT + L"virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;\r\n";
             break;
         case VPGEnumClassType::Result:
-            if (option->GetIsResultThrowException())
+            if (option->GetBehavior() != nullptr && option->GetBehavior()->GetIsResultThrowException())
                 result += L"\r\n"
                     + INDENT + INDENT + L"virtual bool IsThrowException() const override\r\n"
                     + INDENT + INDENT + L"{\r\n"
@@ -552,7 +556,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicCustomFunctions(const V
     return result;    
 }
 
-std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass* enumClass, const VPGGenerationOption *option)
+std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass* enumClass, const VPGConfig *option)
 {
     std::wstring result = L"";
     TRY
@@ -604,7 +608,7 @@ std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass
 }
 
 void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
-    const VPGGenerationOption *option,
+    const VPGConfig *option,
     const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
     const std::wstring &objectFilePathHpp,
     const std::wstring &formFilePathHpp,
