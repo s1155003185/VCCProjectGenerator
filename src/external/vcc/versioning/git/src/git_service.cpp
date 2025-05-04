@@ -466,7 +466,7 @@ namespace vcc
                     continue;
                 auto log = std::make_shared<GitLog>();
                 if (pos > 0) {
-                    log->SetColumnIndex((size_t)std::floor(pos/2));
+                    log->SetColumnIndex((size_t)floor(pos/2));
                 } else
                     log->SetColumnIndex(0);
                 std::wregex pattern(L"\\(([^)]+)\\)");

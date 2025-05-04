@@ -1180,6 +1180,9 @@ X(Twitter) @VCCProject
 ****
 ## Release Log
 
+### [v0.3.5] - 2025-05-05: Review - vcc.json Grouping
+- Group vcc.json
+
 ### [v0.3.4] - 2025-04-21: Review - Action Return OperationResult
 - Action support return Result - Add Class tag @@Result and Field tag @@Result
 - Add OperationResult to return Error Code and Message (Also auto generate at Java Project)
