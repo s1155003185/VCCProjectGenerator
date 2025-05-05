@@ -14,7 +14,7 @@ using namespace vcc;
 
 class VPGProcessManagerTest : public testing::Test 
 {
-    MANAGER_SPTR(VPGProcessManager, Manager, nullptr);
+    MANAGER_SPTR_NULL(VPGProcessManager, Manager);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGProcessManagerTest/");
 
     GETSET(std::wstring, TestFolder, L"../VPGProcessManagerTest_VCCTestProject");
@@ -27,6 +27,7 @@ class VPGProcessManagerTest : public testing::Test
             //auto logConfig = std::make_shared<LogConfig>(LogConfigType::None);
             //logConfig->SetIsConsoleLog(true);
             //this->_Manager->SetLogConfig(logConfig);
+            _Manager = std::make_shared<VPGProcessManager>(nullptr);
         }
 
         void TearDown() override

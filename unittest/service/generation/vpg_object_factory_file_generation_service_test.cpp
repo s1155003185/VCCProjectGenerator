@@ -13,7 +13,7 @@ using namespace vcc;
 
 class VPGObjectFactoryFileGenerationServiceTest : public testing::Test 
 {
-    GETSET_SPTR(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGObjectFactoryFileGenerationServiceTest/");
     
     GETSET(std::wstring, FilePathHpp, L"");
@@ -24,6 +24,7 @@ class VPGObjectFactoryFileGenerationServiceTest : public testing::Test
     public:
         void SetUp() override
         {
+            this->_LogConfig = std::make_shared<LogConfig>();
             this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 

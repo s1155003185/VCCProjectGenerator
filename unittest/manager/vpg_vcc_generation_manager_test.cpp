@@ -15,8 +15,8 @@ using namespace vcc;
 
 class VPGVccGenerationManagerTest : public testing::Test 
 {
-    GETSET_SPTR(LogConfig, LogConfig);
-    GETSET_SPTR(VPGConfig, Option);
+    GETSET_SPTR_NULL(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(VPGConfig, Option);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGVccGenerationManagerTest/");
     GETSET(std::wstring, WorkspaceSource, L"");
     GETSET(std::wstring, WorkspaceTarget, L"");
@@ -24,7 +24,7 @@ class VPGVccGenerationManagerTest : public testing::Test
     GETSET(std::wstring, TestFolder, L"../VPGVccGenerationManagerTest_VCCTestProject");
     GETSET(bool, IsCopyDebugFolderToTestFolder, false);
 
-    MANAGER_SPTR(VPGVccGenerationManager, Manager, _LogConfig, L"", _Option);
+    MANAGER_SPTR_NULL(VPGVccGenerationManager, Manager);
 
     public:
         void SetUp() override
@@ -32,6 +32,7 @@ class VPGVccGenerationManagerTest : public testing::Test
             this->_WorkspaceSource = this->_Workspace + L"Source";
             this->_WorkspaceTarget = this->_Workspace + L"Target";
 
+            this->_LogConfig = std::make_shared<LogConfig>();
             this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
@@ -39,15 +40,9 @@ class VPGVccGenerationManagerTest : public testing::Test
             CreateDirectory(this->GetWorkspaceSource());
             CreateDirectory(this->GetWorkspaceTarget());
 
-            if (_Option->GetTemplate() == nullptr)
-                _Option->SetTemplate(std::make_shared<VPGConfigTemplate>());
-            if (_Option->GetBehavior() == nullptr)
-                _Option->SetBehavior(std::make_shared<VPGConfigBehavior>());
-            if (_Option->GetInput() == nullptr)
-                _Option->SetInput(std::make_shared<VPGConfigInput>());
-            if (_Option->GetOutput() == nullptr)
-                _Option->SetOutput(std::make_shared<VPGConfigOutput>());
+            _Option = std::make_shared<VPGConfig>();
             // option for initialize source
+            this->_Manager = std::make_shared<VPGVccGenerationManager>(_LogConfig, L"", _Option);
             this->_Manager->SetWorkspace(this->GetWorkspaceSource());
             this->_Option->SetProjectType(VPGProjectType::VccComplex);
             this->_Option->GetTemplate()->SetWorkspace(L".");

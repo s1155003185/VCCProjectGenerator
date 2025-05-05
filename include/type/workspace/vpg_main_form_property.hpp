@@ -23,8 +23,8 @@ enum class VPGMainFormRenameWorkspaceFormArgumentProperty
 enum class VPGMainFormProperty
 {
     WorkspaceForms // VECTOR_SPTR(VPGWorkspaceForm, WorkspaceForms)
-    , Initialize // ACTION(Initialize) @@NoHistory
-    , AddWorkspaceForm // ACTION_WITH_ARG_SPTR(AddWorkspaceForm, VPGMainFormAddWorkspaceFormArgument) @@NoHistory
-    , DeleteWorkspaceForm // ACTION_WITH_ARG_SPTR(DeleteWorkspaceForm, VPGMainFormDeleteWorkspaceFormArgument) @@NoHistory
-    , RenameWorkspaceForm // ACTION_WITH_ARG_SPTR(RenameWorkspaceForm, VPGMainFormRenameWorkspaceFormArgument) @@NoHistory
+    , Initialize // ACTION(Initialize)
+    , AddWorkspaceForm // ACTION_WITH_ARG_SPTR(AddWorkspaceForm, VPGMainFormAddWorkspaceFormArgument)
+    , DeleteWorkspaceForm // ACTION_WITH_ARG_SPTR(DeleteWorkspaceForm, VPGMainFormDeleteWorkspaceFormArgument)
+    , RenameWorkspaceForm // ACTION_WITH_ARG_SPTR(RenameWorkspaceForm, VPGMainFormRenameWorkspaceFormArgument)
 };

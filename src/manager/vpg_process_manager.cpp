@@ -281,12 +281,6 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
         }
 
         if (mode == L"-Add") {
-            // need to initialize input and output
-            if (_Option->GetInput() == nullptr)
-                _Option->SetInput(std::make_shared<VPGConfigInput>());
-            if (_Option->GetOutput() == nullptr)
-                _Option->SetOutput(std::make_shared<VPGConfigOutput>());
-
             // adjust option based on ProjectType
             switch (_Option->GetProjectType())
             {

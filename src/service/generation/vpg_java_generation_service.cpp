@@ -11,7 +11,7 @@
 #include "vpg_class_helper.hpp"
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_config.hpp"
-#include "vpg_config_interface_type.hpp"
+#include "vpg_config_type.hpp"
 #include "vpg_property_accessor_generation_service.hpp"
 
 using namespace vcc;

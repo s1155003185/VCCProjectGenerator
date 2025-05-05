@@ -246,6 +246,17 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
             std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
             std::vector<std::shared_ptr<VPGEnumClass>> objectEnumClassList;
             enumClassReader.Parse(fileContent, enumClassList);
+            // ------------------------------------------------------------------------------------------ //
+            //                              Override Enum Class based on vcc.json                         //
+            // ------------------------------------------------------------------------------------------ //
+            if (option->GetBehavior()->GetActionHistoryType() == VPGConfigActionHistoryType::NoHistory) {
+                for (auto enumClass : enumClassList)
+                    for (auto property : enumClass->GetProperties())
+                        property->SetIsNoHistory(true);
+            }
+            // ------------------------------------------------------------------------------------------ //
+            //                              Procedure Start                                               //
+            // ------------------------------------------------------------------------------------------ //
             for (auto const &enumClass : enumClassList) {
                 std::wstring className = GetClassNameFromPropertyClassName(enumClass->GetName());
                 if (projPrefix.empty() || IsPropertyClass(enumClass->GetName(), projPrefix)) {

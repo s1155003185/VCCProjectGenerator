@@ -14,7 +14,8 @@ enum class VPGConfigTemplateProperty
 // @@json
 enum class VPGConfigBehaviorProperty
 {
-    IsResultThrowException // GETSET(bool, IsResultThrowException, false)
+    ActionHistoryType, // GETSET(VPGConfigActionHistoryType, ActionHistoryType, VPGConfigActionHistoryType::NoHistory)
+    IsActionResultThrowException // GETSET(bool, IsActionResultThrowException, false)
 };
 
 // @@json
@@ -81,13 +82,13 @@ enum class VPGConfigProperty
     // --------------------------------------------------
     // Config
     // --------------------------------------------------
-    Template, // GETSET_SPTR_NULL(VPGConfigTemplate, Template)
+    Template, // GETSET_SPTR(VPGConfigTemplate, Template)
     
-    Behavior, // GETSET_SPTR_NULL(VPGConfigBehavior, Behavior)
+    Behavior, // GETSET_SPTR(VPGConfigBehavior, Behavior)
 
-    Input, // GETSET_SPTR_NULL(VPGConfigInput, Input)
+    Input, // GETSET_SPTR(VPGConfigInput, Input)
 
-    Ouput, // GETSET_SPTR_NULL(VPGConfigOutput, Output)
+    Ouput, // GETSET_SPTR(VPGConfigOutput, Output)
 
     Plugins, // VECTOR(std::wstring, Plugins)
 

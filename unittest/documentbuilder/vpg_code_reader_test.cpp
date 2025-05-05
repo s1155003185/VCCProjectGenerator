@@ -8,12 +8,12 @@
 
 class VPGCodeReaderTest : public testing::Test 
 {
-    MANAGER_SPTR(VPGCodeReader, Reader, L"//")
+    MANAGER_SPTR_NULL(VPGCodeReader, Reader)
     public:
 
         void SetUp() override
         {
-
+            _Reader = std::make_shared<VPGCodeReader>(L"//");
         }
 
         void TearDown() override

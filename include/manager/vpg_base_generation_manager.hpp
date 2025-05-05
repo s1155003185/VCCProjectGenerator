@@ -15,7 +15,10 @@ const std::wstring unittestFolderName = L"unittest";
 class VPGBaseGenerationManager : public BaseManager, public IVPGGenerationManager
 {
     GETSET(std::wstring, Workspace, L"");
-    GETSET_SPTR(VPGConfig, Option);
+    GETSET_SPTR_NULL(VPGConfig, Option);
+    
+    private:
+        VPGBaseGenerationManager() = default;
     
     protected:
         void ValidateOption() const;

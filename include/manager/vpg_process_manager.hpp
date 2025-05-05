@@ -17,13 +17,18 @@ class VPGProcessManager : public BaseManager
 {
     // project
     GETSET(std::wstring, Workspace, L"");
-    GETSET_SPTR(VPGConfig, Option);
+    GETSET_SPTR_NULL(VPGConfig, Option);
 
     private:
+        VPGProcessManager() = default;
         std::shared_ptr<IVPGGenerationManager> GetGenerationManager();
 
     public:
-        VPGProcessManager(std::shared_ptr<LogConfig> logConfig) : BaseManager(logConfig) {};
+        VPGProcessManager(std::shared_ptr<LogConfig> logConfig) : BaseManager(logConfig)
+        {
+            this->_Option = std::make_shared<VPGConfig>();
+        }
+        
         ~VPGProcessManager() {};
 
         virtual std::shared_ptr<IObject> Clone() const override

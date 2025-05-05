@@ -13,7 +13,8 @@
         "IsExcludeVCCUnitTest": false
     },
     "Behavior": {
-        "IsResultThrowException": false
+        "ActionHistoryType": "NoHistory",
+        "IsActionResultThrowException": false
     },
     "Input": {
         "TypeWorkspace": "include/type"

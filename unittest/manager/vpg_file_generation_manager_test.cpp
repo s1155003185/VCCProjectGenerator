@@ -14,7 +14,7 @@
 
 class VPGFileGenerationManagerTest : public testing::Test 
 {
-    GETSET_SPTR(LogConfig, LogConfig, LogConfigInitialType::None);
+    GETSET_SPTR_NULL(LogConfig, LogConfig);
 
     GETSET(std::wstring, Workspace, L"bin/Debug/FileGenerationServiceTest");
     GETSET(std::wstring, WorkspaceSource, L"");
@@ -52,6 +52,7 @@ class VPGFileGenerationManagerTest : public testing::Test
 
         void SetUp() override
         {
+            this->_LogConfig = std::make_shared<LogConfig>(LogConfigInitialType::None);
             this->_WorkspaceSource = ConcatPaths({this->_Workspace, L"Source"});
             this->_WorkspaceTarget = ConcatPaths({this->_Workspace, L"Target"});
 
@@ -105,14 +106,10 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     VPGGlobal::GetFileGenerationManager()->SetWorkspace(L"");
     VPGConfig option;
     option.SetProjectPrefix(L"VCC");
-    if (option.GetTemplate() == nullptr)
-        option.SetTemplate(std::make_shared<VPGConfigTemplate>());
     option.GetTemplate()->SetWorkspace(L"");
     if (option.GetInput() == nullptr)
         option.SetInput(std::make_shared<VPGConfigInput>());
     option.GetInput()->SetTypeWorkspace(this->GetWorkspaceSource());
-    if (option.GetOutput() == nullptr)
-        option.SetOutput(std::make_shared<VPGConfigOutput>());
     option.GetOutput()->SetObjectTypeDirectory(this->GetWorkspaceTarget());
     
     option.GetOutput()->SetObjectDirectoryHpp(this->GetWorkspaceTarget());
@@ -188,7 +185,12 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         + INDENT + L"SET_SPTR(Json, EnumD)\r\n"
         + L"\r\n"
         + INDENT + L"public:\r\n"
-        + INDENT + INDENT + L"VCCObjectPtr() : BaseObject(ObjectType::ObjectPtr) {}\r\n"
+        + INDENT + INDENT + L"VCCObjectPtr() : BaseObject(ObjectType::ObjectPtr)\r\n"
+        + INDENT + INDENT + L"{\r\n"
+        + INDENT + INDENT + INDENT + L"_EnumA = std::make_shared<Json>();\r\n"
+        + INDENT + INDENT + INDENT + L"_EnumB = std::make_shared<Json>(1, 2, 3);\r\n"
+        + INDENT + INDENT + L"}\r\n"
+        "\r\n"
         + INDENT + INDENT + L"virtual ~VCCObjectPtr() {}\r\n"
         + L"\r\n"
         + INDENT + INDENT + L"virtual std::shared_ptr<IObject> Clone() const override\r\n"

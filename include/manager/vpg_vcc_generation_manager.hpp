@@ -10,6 +10,9 @@ using namespace vcc;
 
 class VPGVccGenerationManager : public VPGBaseGenerationManager
 {
+    private:
+        std::wstring AdjustAppliationCpp(const std::wstring &fileContent) const;
+        
     public:
         VPGVccGenerationManager() : VPGVccGenerationManager(nullptr, L"", nullptr) {}
         VPGVccGenerationManager(std::shared_ptr<LogConfig> logConfig, std::wstring workspace, std::shared_ptr<VPGConfig> option) : VPGBaseGenerationManager(logConfig, workspace, option) {}

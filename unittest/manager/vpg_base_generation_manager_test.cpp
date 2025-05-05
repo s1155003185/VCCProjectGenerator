@@ -15,14 +15,14 @@ using namespace vcc;
 
 class VPGBaseGenerationManagerTest : public testing::Test 
 {
-    GETSET_SPTR(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGBaseGenerationManagerTest/");
     GETSET(std::wstring, WorkspaceSource, L"");
     GETSET(std::wstring, WorkspaceTarget, L"");
     
-    GETSET_SPTR(VPGConfig, Option)
+    GETSET_SPTR_NULL(VPGConfig, Option)
     // Cannot use VPGBaseGenerationManager directly as it needs template
-    MANAGER_SPTR(VPGCppGenerationManager, Manager, _LogConfig, L"", _Option);
+    MANAGER_SPTR_NULL(VPGCppGenerationManager, Manager);
     
     GETSET(std::wstring, FileContent, L"");
     
@@ -55,13 +55,15 @@ class VPGBaseGenerationManagerTest : public testing::Test
     public:
         void SetUp() override
         {
+            this->_LogConfig = std::make_shared<LogConfig>();
             this->_LogConfig->SetIsConsoleLog(false);
             this->_WorkspaceSource = this->_Workspace + L"Source";
             this->_WorkspaceTarget = this->_Workspace + L"Target";
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
-            _Option->SetTemplate(std::make_shared<VPGConfigTemplate>());
+            _Option = std::make_shared<VPGConfig>();
             _Option->GetTemplate()->SetWorkspace(L"A");
+            _Manager = std::make_shared<VPGCppGenerationManager>(_LogConfig, L"", _Option);
             _Manager->SetWorkspace(L"B");
 
             std::wstring makeFileStr = L"hi\r\n";

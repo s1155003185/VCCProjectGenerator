@@ -86,6 +86,8 @@ class VPGEnumClassProperty : public BaseObject
         bool GetIsOrderedMap() const { return _GetSetType == VPGEnumClassGetSetType::OrderedMap; }
         bool GetIsSet() const { return _GetSetType == VPGEnumClassGetSetType::Set; }
         bool GetIsCollection() const { return GetIsVector() || GetIsMap() || GetIsOrderedMap() || GetIsSet(); }
+
+        bool GetIsInitializeInClassConstructorNeeded() const { return IsStartWith(_Macro, L"GETSET_SPTR(") || IsStartWith(_Macro, L"MANAGER_SPTR("); }
 };
 
 class VPGEnumClass : public BaseObject
@@ -111,7 +113,6 @@ class VPGEnumClass : public BaseObject
     MAP(std::wstring, std::wstring, JsonAttributes)
     GETSET(std::wstring, InheritClass, L"")
     MAP(std::wstring, std::wstring, InheritClassAttributes)
-
 
     public:
         VPGEnumClass() : BaseObject() {}

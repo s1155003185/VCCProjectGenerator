@@ -8,8 +8,8 @@
 #include "i_object.hpp"
 #include "property_accessor_macro.hpp"
 #include "vpg_config.hpp"
-#include "vpg_config_interface_type.hpp"
 #include "vpg_config_property.hpp"
+#include "vpg_config_type.hpp"
 #include "vpg_project_type.hpp"
 
 using namespace vcc;
@@ -21,8 +21,8 @@ bool VPGConfigBehaviorPropertyAccessor::_ReadBool(const int64_t &objectProperty)
         assert(obj != nullptr);
         switch(static_cast<VPGConfigBehaviorProperty>(objectProperty))
         {
-        case VPGConfigBehaviorProperty::IsResultThrowException:
-            return obj->GetIsResultThrowException();
+        case VPGConfigBehaviorProperty::IsActionResultThrowException:
+            return obj->GetIsActionResultThrowException();
         default:
             assert(false);
         }
@@ -53,8 +53,8 @@ void VPGConfigBehaviorPropertyAccessor::_WriteBool(const int64_t &objectProperty
         assert(obj != nullptr);
         switch(static_cast<VPGConfigBehaviorProperty>(objectProperty))
         {
-        case VPGConfigBehaviorProperty::IsResultThrowException:
-            obj->SetIsResultThrowException(value);
+        case VPGConfigBehaviorProperty::IsActionResultThrowException:
+            obj->SetIsActionResultThrowException(value);
             break;
         default:
             assert(false);
@@ -77,6 +77,75 @@ void VPGConfigBehaviorPropertyAccessor::_WriteBoolAtKey(const int64_t &objectPro
 }
 
 void VPGConfigBehaviorPropertyAccessor::_InsertBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+long VPGConfigBehaviorPropertyAccessor::_ReadLong(const int64_t &objectProperty) const
+{
+    TRY
+        auto obj = std::static_pointer_cast<VPGConfigBehavior>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGConfigBehaviorProperty>(objectProperty))
+        {
+        case VPGConfigBehaviorProperty::ActionHistoryType:
+            return static_cast<long>(obj->GetActionHistoryType());
+        default:
+            assert(false);
+        }
+    CATCH
+    return 0L;
+}
+
+long VPGConfigBehaviorPropertyAccessor::_ReadLongAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return 0L;
+}
+
+long VPGConfigBehaviorPropertyAccessor::_ReadLongAtKey(const int64_t &objectProperty, const void */*key*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return 0L;
+}
+
+void VPGConfigBehaviorPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long &value) const
+{
+    TRY
+        auto obj = std::static_pointer_cast<VPGConfigBehavior>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGConfigBehaviorProperty>(objectProperty))
+        {
+        case VPGConfigBehaviorProperty::ActionHistoryType:
+            obj->SetActionHistoryType(static_cast<VPGConfigActionHistoryType>(value));
+            break;
+        default:
+            assert(false);
+        }
+    CATCH
+}
+
+void VPGConfigBehaviorPropertyAccessor::_WriteLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGConfigBehaviorPropertyAccessor::_WriteLongAtKey(const int64_t &objectProperty, const long &/*value*/, const void */*key*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGConfigBehaviorPropertyAccessor::_InsertLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND

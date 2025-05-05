@@ -907,7 +907,7 @@ namespace vcc
                 return branches;
             std::vector<std::wstring> lines = SplitStringByLine(str);
             for (const std::wstring &line : lines) {
-                if (SplitString(str, { L" ", L"\t" }).size() > 2) {
+                if (SplitString(line, { L" ", L"\t" }).size() > 2) {
                     auto branch = std::make_shared<GitBranch>();
                     ParseGitBranch(line, branch);
                     branches.push_back(branch);

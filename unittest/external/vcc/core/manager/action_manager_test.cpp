@@ -34,7 +34,7 @@ class ActionManagerTestClass final : public BaseAction
 class ActionManagerTest : public testing::Test 
 {
     private:
-        MANAGER_SPTR(ActionManager, Manager, nullptr);
+        MANAGER_SPTR_NULL(ActionManager, Manager);
 
     public:
         std::shared_ptr<BaseAction> CreateAction(int index)
@@ -54,6 +54,7 @@ class ActionManagerTest : public testing::Test
 
         void SetUp() override
         {
+            _Manager = std::make_shared<ActionManager>(nullptr);
             this->_Manager->SetMaxActionListSize(10);
         }
 

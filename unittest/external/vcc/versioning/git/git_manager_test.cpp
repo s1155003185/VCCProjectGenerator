@@ -7,11 +7,12 @@ using namespace vcc;
 class GitManagerTest : public testing::Test 
 {
     private:
-        MANAGER_SPTR(GitManager, Manager, nullptr);
+        MANAGER_SPTR_NULL(GitManager, Manager);
 
     public:
         void SetUp() override
         {
+            _Manager = std::make_shared<GitManager>(nullptr);
         }
 
         void TearDown() override

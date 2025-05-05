@@ -8,7 +8,7 @@
 #include "i_document.hpp"
 #include "json.hpp"
 #include "object_type.hpp"
-#include "vpg_config_interface_type.hpp"
+#include "vpg_config_type.hpp"
 #include "vpg_project_type.hpp"
 
 using namespace vcc;
@@ -35,7 +35,8 @@ class VPGConfigTemplate : public BaseObject, public BaseJsonObject
 
 class VPGConfigBehavior : public BaseObject, public BaseJsonObject
 {
-    GETSET(bool, IsResultThrowException, false)
+    GETSET(VPGConfigActionHistoryType, ActionHistoryType, VPGConfigActionHistoryType::NoHistory)
+    GETSET(bool, IsActionResultThrowException, false)
 
     public:
         VPGConfigBehavior() : BaseObject(ObjectType::ConfigBehavior) {}
@@ -133,15 +134,22 @@ class VPGConfig : public BaseObject, public BaseJsonObject
     GETSET(std::wstring, ProjectNameDll, L"libVCCModule")
     GETSET(std::wstring, ProjectNameExe, L"VCCModule")
     GETSET(bool, IsGit, false)
-    GETSET_SPTR_NULL(VPGConfigTemplate, Template)
-    GETSET_SPTR_NULL(VPGConfigBehavior, Behavior)
-    GETSET_SPTR_NULL(VPGConfigInput, Input)
-    GETSET_SPTR_NULL(VPGConfigOutput, Output)
+    GETSET_SPTR(VPGConfigTemplate, Template)
+    GETSET_SPTR(VPGConfigBehavior, Behavior)
+    GETSET_SPTR(VPGConfigInput, Input)
+    GETSET_SPTR(VPGConfigOutput, Output)
     VECTOR(std::wstring, Plugins)
     VECTOR_SPTR(VPGConfigExport, Exports)
 
     public:
-        VPGConfig() : BaseObject(ObjectType::Config) {}
+        VPGConfig() : BaseObject(ObjectType::Config)
+        {
+            _Template = std::make_shared<VPGConfigTemplate>();
+            _Behavior = std::make_shared<VPGConfigBehavior>();
+            _Input = std::make_shared<VPGConfigInput>();
+            _Output = std::make_shared<VPGConfigOutput>();
+        }
+
         virtual ~VPGConfig() {}
 
         virtual std::shared_ptr<IObject> Clone() const override

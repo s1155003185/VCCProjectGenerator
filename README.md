@@ -323,7 +323,8 @@ Sample
         "IsExcludeVCCUnitTest": false
     },
     "Behavior": {
-        "IsResultThrowException": false
+        "ActionHistoryType": "Global",
+        "IsActionResultThrowException": false
     },
     "Input": {
         "TypeWorkspace": "include/type"
@@ -408,7 +409,13 @@ IsExcludeVCCUnitTest
     If true, then skip update unittest/External/VCC/
 
 ##### Behavior
-IsResultThrowException
+ActionHistoryType
+    Value:
+        NoHistory: Cannot use Undo in project.
+        Local: No Global History. User needs to define @@Action { "IsIndependent": true } in some class.
+        Global: Global History. Add ActionManager in appliation.cpp.
+
+IsActionResultThrowException
     If true, throw exception if executing action with errors.
     If false, return Result class.
 
@@ -824,7 +831,7 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Acti
         | Macro | Description | Example |
         | --- | --- | --- |
         | GETSET(type, name, defaultValue) |  Normal Type and Enum.  | GETSET(std::wstring, Name, L"") |
-        | GETSET_SPTR(type, name, ...) | Object. Initialize in class definition. It may cause infinite loop when class initializaion. Please use GETSET_SPTR_NULL. | GETSET_SPTR(GitOption, Name, _LogConfig, L"Remark") |
+        | GETSET_SPTR(type, name, ...) | Object. Initialize in class constructor. The inialization is in order. | GETSET_SPTR(GitOption, Name, _LogConfig, L"Remark") |
         | GETSET_SPTR_NULL(type, name) | Object and initialize as nullptr. Please initialize it after class creation. | GETSET_SPTR_NULL(GitOption, Name) |
         | VECTOR(type, name) | std::vector<type>. Vector for Normal Type and Enum. | VECTOR(double, Name) |
         | VECTOR_SPTR(type, name) | std::vecotr<std::shared_ptr<type>>. Vector for Object. | VECTOR_SPTR(GitOption, Name) |
@@ -838,7 +845,7 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Acti
     Current Options for Manager: (Form Only)
         | Macro | Description | Example |
         | --- | --- | --- |
-        | MANAGER_SPTR(type, name, ...) |  Manager. Initialize in class definition. It may cause infinite loop when class initializaion. Please use MANAGER_SPTR_NULL | MANAGER_SPTR(GitManager, GitManager1, _LogConfig) |
+        | MANAGER_SPTR(type, name, ...) |  Manager. Initialize in class constructor. The inialization is in order. | MANAGER_SPTR(GitManager, GitManager1, _LogConfig) |
         | MANAGER_SPTR_NULL(type, name, ...) |  Manager. Initialize at Initialize() | MANAGER_SPTR_NULL(GitManager, GitManager1) |
         | MANAGER_SPTR_PARENT(type, name, parentClass) |  Manager. If value is nullptr, then will use parentClass->Get##name(), else will use local manager. Please ensure parentClass is Form also and have same type. Initialize as nullptr at Initialize(). | MANAGER_SPTR_NULL(GitManager, GitManager1, GitBaseManager) |
 
@@ -848,6 +855,8 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Acti
         | --- | --- | --- |
         | ACTION(name) | Generator will create void Do##name() and generate Action Class. Please handle logic in .cpp file. | ACTION(AddWorkspace) |
         | ACTION_WITH_ARG_SPTR(name, type) | Generator will create void Do##name(type value) and generate Action Class. type must be class name. Argument Class must exists and have class tag @@ActionArgument. | ACTION_WITH_ARG_SPTR(AddWorkspace, VPGAddWorkspaceArgument) |
+
+    Note: Class cannot be initialie in definition. In usage, GETSET_SPTR === GETSET_SPTR_NULL, MANAGER_SPTR === MANAGER_SPTR_NULL. But Generator will generate initailization in class constructor if using GETSET_SPTR or MANAGER_SPTR.
 
 [@@AccessMode]
     Default is @@ReadWrite.

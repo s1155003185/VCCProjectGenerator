@@ -11,7 +11,7 @@
 #include "json.hpp"
 #include "number_helper.hpp"
 #include "string_helper.hpp"
-#include "vpg_config_interface_type.hpp"
+#include "vpg_config_type.hpp"
 #include "vpg_project_type.hpp"
 
 using namespace vcc;
@@ -60,8 +60,26 @@ std::shared_ptr<Json> VPGConfigBehavior::ToJson() const
     TRY
         NamingStyle namestyle = NamingStyle::PascalCase;
         auto json = std::make_unique<Json>();
-        // IsResultThrowException
-        json->AddBool(ConvertNamingStyle(L"IsResultThrowException", NamingStyle::PascalCase, namestyle), _IsResultThrowException);
+        // ActionHistoryType
+        std::wstring actionHistoryTypeValueStr = L"";
+        switch (_ActionHistoryType)
+        {
+        case VPGConfigActionHistoryType::NoHistory:
+            actionHistoryTypeValueStr = L"NoHistory";
+            break;
+        case VPGConfigActionHistoryType::Local:
+            actionHistoryTypeValueStr = L"Local";
+            break;
+        case VPGConfigActionHistoryType::Global:
+            actionHistoryTypeValueStr = L"Global";
+            break;
+        default:
+            assert(false);
+            break;
+        }
+        json->AddString(ConvertNamingStyle(L"ActionHistoryType", NamingStyle::PascalCase, namestyle), actionHistoryTypeValueStr);
+        // IsActionResultThrowException
+        json->AddBool(ConvertNamingStyle(L"IsActionResultThrowException", NamingStyle::PascalCase, namestyle), _IsActionResultThrowException);
         return json;
     CATCH
     return nullptr;
@@ -73,9 +91,24 @@ void VPGConfigBehavior::DeserializeJson(std::shared_ptr<IDocument> document) con
         NamingStyle namestyle = NamingStyle::PascalCase;
         auto json = std::dynamic_pointer_cast<Json>(document);
         assert(json != nullptr);
-        // IsResultThrowException
-        if (json->IsContainKey(ConvertNamingStyle(L"IsResultThrowException", namestyle, NamingStyle::PascalCase)))
-            _IsResultThrowException = json->GetBool(ConvertNamingStyle(L"IsResultThrowException", namestyle, NamingStyle::PascalCase));
+        // ActionHistoryType
+        if (json->IsContainKey(ConvertNamingStyle(L"ActionHistoryType", namestyle, NamingStyle::PascalCase))) {
+            std::wstring valueEnumStr = json->GetString(ConvertNamingStyle(L"ActionHistoryType", namestyle, NamingStyle::PascalCase));
+            std::wstring valueEnumStrUpper = valueEnumStr;
+            ToUpper(valueEnumStrUpper);
+            int64_t valueEnum = -1;
+            if (valueEnumStrUpper == L"NOHISTORY")
+                valueEnum = static_cast<int64_t>(VPGConfigActionHistoryType::NoHistory);
+            else if (valueEnumStrUpper == L"LOCAL")
+                valueEnum = static_cast<int64_t>(VPGConfigActionHistoryType::Local);
+            else if (valueEnumStrUpper == L"GLOBAL")
+                valueEnum = static_cast<int64_t>(VPGConfigActionHistoryType::Global);
+            if (valueEnum > -1)
+                _ActionHistoryType = static_cast<VPGConfigActionHistoryType>(valueEnum);
+        }
+        // IsActionResultThrowException
+        if (json->IsContainKey(ConvertNamingStyle(L"IsActionResultThrowException", namestyle, NamingStyle::PascalCase)))
+            _IsActionResultThrowException = json->GetBool(ConvertNamingStyle(L"IsActionResultThrowException", namestyle, NamingStyle::PascalCase));
     CATCH
 }
 

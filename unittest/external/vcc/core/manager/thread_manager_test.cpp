@@ -7,12 +7,13 @@ using namespace vcc;
 
 class ThreadManagerTest : public testing::Test 
 {
-    MANAGER_SPTR(ThreadManager, Manager, nullptr);
+    MANAGER_SPTR_NULL(ThreadManager, Manager);
     GETSET_SPTR_NULL(LogConfig, LogConfig)
 
     public:
         void SetUp() override
         {
+            _Manager = std::make_shared<ThreadManager>(nullptr);
             _Manager->SetThreadManagementMode(ThreadManagementMode::Join);
             _LogConfig = std::make_shared<LogConfig>(LogConfigInitialType::None);
         }

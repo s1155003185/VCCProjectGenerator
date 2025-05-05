@@ -17,12 +17,13 @@ using namespace vcc;
 
 class GitServiceTest : public testing::Test 
 {
-    GETSET_SPTR(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/Git/");
     public:
 
         void SetUp() override
         {
+            this->_LogConfig = std::make_shared<LogConfig>();
             this->_LogConfig->SetIsConsoleLog(false);
 
             if (IsDirectoryExists(this->GetWorkspace())) {

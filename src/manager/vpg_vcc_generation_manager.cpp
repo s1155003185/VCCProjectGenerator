@@ -16,6 +16,28 @@ using namespace vcc;
 
 #define CLASS_ID L"VPGVccGenerationManager"
 
+std::wstring VPGVccGenerationManager::AdjustAppliationCpp(const std::wstring &fileContent) const
+{
+    std::wstring result = L"";
+    TRY
+        auto elements = std::make_shared<Xml>();
+        VPGCodeReader reader(L"//");
+        reader.Deserialize(fileContent, elements);
+        for (std::shared_ptr<vcc::Xml> element : elements->GetChildren()) {
+            if (element->GetName() == L"vcc:vccconfig") {
+                result += L"// <vcc:vccconfig sync=\"RESERVE\" gen=\"REPLACE\">\r\n";
+                if (_Option->GetBehavior()->GetActionHistoryType() == VPGConfigActionHistoryType::Global)
+                    result += INDENT + INDENT + L"_ActionManager = std::make_shared<ActionManager>(_LogConfig);\r\n";
+                else
+                    result += INDENT + INDENT + L"_ActionManager = nullptr;\r\n";
+                result += INDENT + INDENT + L"// </vcc:vccconfig>";
+            } else
+                result += element->GetFullText();
+        }
+    CATCH
+    return result;
+}
+
 std::vector<std::wstring> VPGVccGenerationManager::GetUpdateList() const
 {
     std::vector<std::wstring> result;
@@ -80,14 +102,6 @@ void VPGVccGenerationManager::CreateVccJson(bool isNew) const
         jsonBuilder->SetIsBeautify(true);
         _Option->SetVersion(VPGGlobal::GetVersion());
         if (isNew) {
-            if (_Option->GetTemplate() == nullptr)
-                _Option->SetTemplate(std::make_shared<VPGConfigTemplate>());
-            if (_Option->GetBehavior() == nullptr)
-                _Option->SetBehavior(std::make_shared<VPGConfigBehavior>());
-            if (_Option->GetInput() == nullptr)
-                _Option->SetInput(std::make_shared<VPGConfigInput>());
-            if (_Option->GetOutput() == nullptr)
-                _Option->SetOutput(std::make_shared<VPGConfigOutput>());
             if (_Option->GetExports().empty())
                 _Option->InsertExports(std::make_shared<VPGConfigExport>());
         }
@@ -168,6 +182,11 @@ void VPGVccGenerationManager::Update() const
         std::wstring makefileContent = ReadFile(ConcatPaths({dest, MakeFileName}));
         WriteFile(makefilePath, this->AdjustMakefile(makefileContent), true);
         
+        // Update application
+        std::wstring applicationFilePath = ConcatPaths({dest, _Option->GetOutput()->GetApplicationDirectoryCpp(), L"application.cpp"});
+        if (IsFilePresent(applicationFilePath))
+            WriteFile(applicationFilePath, this->AdjustAppliationCpp(ReadFile(applicationFilePath)), true);
+
         // Create Json file at the end to force override
         CreateVccJson(false);
         LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Done");        
@@ -187,6 +206,11 @@ void VPGVccGenerationManager::Generate() const
         std::wstring makefileContent = ReadFile(ConcatPaths({_Workspace, MakeFileName}));
         WriteFile(makefilePath, this->AdjustMakefile(makefileContent), true);
         
+        // Update application
+        std::wstring applicationFilePath = ConcatPaths({_Workspace, _Option->GetOutput()->GetApplicationDirectoryCpp(), L"application.cpp"});
+        if (IsFilePresent(applicationFilePath))
+            WriteFile(applicationFilePath, this->AdjustAppliationCpp(ReadFile(applicationFilePath)), true);
+
         auto manager = std::make_unique<VPGFileGenerationManager>(this->_LogConfig, _Workspace);
         LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Generate Project ...");
         manager->GernerateProperty(_LogConfig.get(), _Option.get());

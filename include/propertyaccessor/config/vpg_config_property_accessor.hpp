@@ -20,6 +20,7 @@ class VPGConfigTemplatePropertyAccessor : public BasePropertyAccessor
 class VPGConfigBehaviorPropertyAccessor : public BasePropertyAccessor
 {
     PROPERTY_ACCESSOR_HEADER(bool, Bool)
+    PROPERTY_ACCESSOR_HEADER(long, Long)
 
     public:
         VPGConfigBehaviorPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}

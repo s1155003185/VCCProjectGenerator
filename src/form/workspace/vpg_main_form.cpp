@@ -173,6 +173,14 @@ std::shared_ptr<IResult> VPGMainFormDeleteWorkspaceForm::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormDeleteWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
+        auto propertyAccessor = PropertyAccessorFactory::Create(_ParentObject);
+        propertyAccessor->ReadWriteLock();
+        auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
+        auto index = form->FindWorkspaceForms(_Argument->GetWorkspaceForm());
+        if (index < 0)
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace not found");
+        form->RemoveWorkspaceFormsAtIndex(index);
+        propertyAccessor->Unlock();
         // </vcc:VPGMainFormDeleteWorkspaceFormOnRedo>
     CATCH_RETURN_RESULT(OperationResult)
     return std::make_shared<OperationResult>();

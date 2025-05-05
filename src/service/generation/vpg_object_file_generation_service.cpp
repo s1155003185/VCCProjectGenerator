@@ -430,17 +430,34 @@ std::wstring VPGObjectFileGenerationService::GetHppConstructor(const VPGEnumClas
             result += INDENT + INDENT + className + L"() : " + className + L"(ExceptionType::NoError, L\"\") {}\r\n"
                 + INDENT + INDENT + className + L"(const ExceptionType &exceptionType, const std::wstring &errorMessage) : BaseResult(ObjectType::" +  className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L", exceptionType, errorMessage) {}\r\n";
         } else {
+            std::wstring initializeStr = L"";
+            for (auto property : enumClass->GetProperties()) {
+                if (property->GetIsInitializeInClassConstructorNeeded())
+                    initializeStr += INDENT + INDENT + INDENT + L"_" + property->GetPropertyName() + L" = std::make_shared<" + property->GetType1() + L">(" + property->GetDefaultValue() + L");\r\n";
+            }
+
             if (!IsBlank(enumClass->GetInheritClass()))
                 result += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"()\r\n"
                     + INDENT + INDENT + L"{\r\n"
                     + INDENT + INDENT + INDENT + L"_ObjectType = ObjectType::" +  className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L";\r\n"
+                    + initializeStr
                     + INDENT + INDENT + L"}\r\n";
-            else
-                result += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"(ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L") {}\r\n";
+            else {
+                result += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"(ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L")";
+                if (!initializeStr.empty())
+                    result += L"\r\n"
+                        + INDENT + INDENT + L"{\r\n"
+                        + initializeStr
+                        + INDENT + INDENT;
+                else
+                    result += L" {";
+                result += L"}\r\n";
+                if (!initializeStr.empty())
+                    result += L"\r\n";
+            }
         }
         // Destructor
         result += INDENT + INDENT + L"virtual ~" + className + L"() {}\r\n";
-
     CATCH
     return result;
 }
@@ -529,7 +546,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnum
                 + INDENT + INDENT + L"virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;\r\n";
             break;
         case VPGEnumClassType::Result:
-            if (option->GetBehavior() != nullptr && option->GetBehavior()->GetIsResultThrowException())
+            if (option->GetBehavior() != nullptr && option->GetBehavior()->GetIsActionResultThrowException())
                 result += L"\r\n"
                     + INDENT + INDENT + L"virtual bool IsThrowException() const override\r\n"
                     + INDENT + INDENT + L"{\r\n"
@@ -817,15 +834,20 @@ std::wstring VPGObjectFileGenerationService::GetCppConstructor(const VPGEnumClas
 {
     std::wstring result = L"";
     TRY
-        if (enumClass->GetType() == VPGEnumClassType::Form)
+        if (enumClass->GetType() == VPGEnumClassType::Form) {
             result += L"\r\n"
                 + className + L"::" + className + L"() : " + baseClassNameWithoutQuote + L"()\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
-                + INDENT + INDENT + L"_ObjectType = ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L";\r\n"
-                + INDENT + INDENT + L"Initialize();\r\n"
+                + INDENT + INDENT + L"_ObjectType = ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L";\r\n";
+            for (auto const &property : enumClass->GetProperties()) {
+                if (property->GetIsInitializeInClassConstructorNeeded())
+                    result += INDENT + INDENT + L"_" + property->GetPropertyName() + L" = std::make_shared<" + property->GetType1() + L">(" + property->GetDefaultValue() + L");\r\n";
+            }
+            result += INDENT + INDENT + L"Initialize();\r\n"
                 + INDENT + L"CATCH\r\n"
                 "}\r\n";
+        }
     CATCH
     return result;
 }

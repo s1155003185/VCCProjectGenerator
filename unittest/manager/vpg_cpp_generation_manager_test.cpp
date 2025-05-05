@@ -14,8 +14,8 @@ using namespace vcc;
 
 class VPGCppGenerationManagerTest : public testing::Test 
 {
-    GETSET_SPTR(LogConfig, LogConfig);
-    GETSET_SPTR(VPGConfig, Option);
+    GETSET_SPTR_NULL(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(VPGConfig, Option);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGCppGenerationManagerTest/");
     GETSET(std::wstring, WorkspaceSource, L"");
     GETSET(std::wstring, WorkspaceTarget, L"");
@@ -23,7 +23,7 @@ class VPGCppGenerationManagerTest : public testing::Test
     GETSET(std::wstring, TestFolder, L"../VPGVccGenerationManagerTest_CPPTestProject");
     GETSET(bool, IsCopyDebugFolderToTestFolder, false);
 
-    MANAGER_SPTR(VPGCppGenerationManager, Manager, _LogConfig, L"", _Option);
+    MANAGER_SPTR_NULL(VPGCppGenerationManager, Manager);
 
     public:
         void SetUp() override
@@ -31,6 +31,7 @@ class VPGCppGenerationManagerTest : public testing::Test
             this->_WorkspaceSource = this->_Workspace + L"Source";
             this->_WorkspaceTarget = this->_Workspace + L"Target";
 
+            this->_LogConfig = std::make_shared<LogConfig>();
             this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
             std::filesystem::remove_all(PATH(this->GetWorkspaceSource()));
@@ -41,10 +42,10 @@ class VPGCppGenerationManagerTest : public testing::Test
             CreateDirectory(this->GetWorkspaceTarget());
 
             // option for initialize source
+            _Option = std::make_shared<VPGConfig>();
+            this->_Manager = std::make_shared<VPGCppGenerationManager>(_LogConfig, L"", _Option);
             this->_Manager->SetWorkspace(this->GetWorkspaceSource());
             this->_Option->SetProjectType(VPGProjectType::CppComplex);
-            if (this->_Option->GetTemplate() == nullptr)
-                this->_Option->SetTemplate(std::make_shared<VPGConfigTemplate>());
             this->_Option->GetTemplate()->SetWorkspace(L".");
             this->_Option->SetProjectName(L"VCCProjGenerator");
             this->_Option->SetProjectNameDll(L"libvpg");
@@ -59,8 +60,6 @@ class VPGCppGenerationManagerTest : public testing::Test
 
             // option for testing
             this->_Manager->SetWorkspace(this->GetWorkspaceTarget());
-            if (this->_Option->GetTemplate() == nullptr)
-                this->_Option->SetTemplate(std::make_shared<VPGConfigTemplate>());
             this->_Option->GetTemplate()->SetWorkspace(this->GetWorkspaceSource());
             this->_Option->SetProjectNameExe(L"CPPProject");
             this->_Option->SetProjectNameDll(L"CPPDllProject");

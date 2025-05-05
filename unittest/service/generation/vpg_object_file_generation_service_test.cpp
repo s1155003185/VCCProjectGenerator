@@ -22,7 +22,7 @@ static std::map<std::wstring, std::shared_ptr<VPGEnumClass>> _EnumClasses;
 
 class VPGObjectFileGenerationServiceTest : public testing::Test 
 {
-    GETSET_SPTR(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGObjectFileGenerationServiceTest/");
     GETSET(std::wstring, FilePathHpp, L"");
     GETSET(std::wstring, FilePathCpp, L"");
@@ -32,6 +32,7 @@ class VPGObjectFileGenerationServiceTest : public testing::Test
     public:
         void SetUp() override
         {
+            this->_LogConfig = std::make_shared<LogConfig>();
             this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
@@ -160,7 +161,11 @@ TEST_F(VPGObjectFileGenerationServiceTest, Object)
         "    MAP_SPTR_R(std::wstring, VPGClassB, EnumB)\r\n"
         "\r\n"
         "    public:\r\n"
-        "        VPGObject() : BaseObject(ObjectType::Object) {}\r\n"
+        "        VPGObject() : BaseObject(ObjectType::Object)\r\n"
+        "        {\r\n"
+        "            _EnumA = std::make_shared<VPGClassA>();\r\n"
+        "        }\r\n"
+        "\r\n"
         "        virtual ~VPGObject() {}\r\n"
         "\r\n"
         "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
@@ -836,6 +841,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
         "{\r\n"
         "    TRY\r\n"
         "        _ObjectType = ObjectType::GitForm;\r\n"
+        "        _GitManager1 = std::make_shared<GitManager>(_LogProperty);\r\n"
         "        Initialize();\r\n"
         "    CATCH\r\n"
         "}\r\n"
@@ -1452,7 +1458,11 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "    ORDERED_MAP_SPTR_R(int, VPGObject, OrdredMapObject)\r\n"
         "\r\n"
         "    public:\r\n"
-        "        VPGObject() : BaseObject(ObjectType::Object) {}\r\n"
+        "        VPGObject() : BaseObject(ObjectType::Object)\r\n"
+        "        {\r\n"
+        "            _Object = std::make_shared<VPGObject>();\r\n"
+        "        }\r\n"
+        "\r\n"
         "        virtual ~VPGObject() {}\r\n"
         "\r\n"
         "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
@@ -2083,7 +2093,11 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
         "    ORDERED_MAP_SPTR_R(int, VPGObject, OrdredMapObject)\r\n"
         "\r\n"
         "    public:\r\n"
-        "        VPGObject() : BaseObject(ObjectType::Object) {}\r\n"
+        "        VPGObject() : BaseObject(ObjectType::Object)\r\n"
+        "        {\r\n"
+        "            _Object = std::make_shared<VPGObject>();\r\n"
+        "        }\r\n"
+        "\r\n"
         "        virtual ~VPGObject() {}\r\n"
         "\r\n"
         "        virtual std::shared_ptr<IObject> Clone() const override\r\n"

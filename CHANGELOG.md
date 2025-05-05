@@ -1,6 +1,10 @@
 # Change Log
 
 ## [Unreleased] - Review - Git Manager Enhancement
+- Review GETSET_SPTR and MANAGER_SPTR: initialize in class constructor
+- Update vcc.json IsResultThrowException to IsActionResultThrowException
+- vcc.json supports ActionHistoryType
+- Add tag vccconfig so that setting in project is controlled by vcc.json
 - Git Manager Enhancement
 - TODO: Export function name to lowercase with underscore
 - TODO: Support Callback in argument

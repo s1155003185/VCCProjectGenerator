@@ -27,13 +27,9 @@ namespace vcc
     // object
 
     // Cannot set type as current class, will throw Segmentation fault
-    #define GETSET_SPTR(type, var, ...) \
-    protected: \
-        mutable std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
-    public: \
-        std::shared_ptr<type> Get##var() const { return _##var; } \
-        void Set##var(std::shared_ptr<type> value) const { _##var = value; } \
-        void Clone##var(const IObject *value) const { _##var = value != nullptr ? std::dynamic_pointer_cast<type>(value->Clone()) : nullptr; }
+    // GETSET_SPTR is same as GETSET_SPTR_NULL, but Generator will generate initialization in class construction
+    // Need to handle initialization manually if not using Generator
+    #define GETSET_SPTR(type, var, ...) GETSET_SPTR_NULL(type, var)
 
     #define GETSET_SPTR_NULL(type, var) \
     protected: \
@@ -190,12 +186,9 @@ namespace vcc
     //--------------------------------------------- MANAGER ------------------------------------------------//
     //------------------------------------------------------------------------------------------------------//
     
-    #define MANAGER_SPTR(type, var, ...) \
-    protected: \
-        mutable std::shared_ptr<type> _##var = std::make_shared<type>(__VA_ARGS__); \
-    public: \
-        std::shared_ptr<type> Get##var() const { return _##var; } \
-        void Set##var(std::shared_ptr<type> value) const { _##var = value; }
+    // MANAGER_SPTR is same as MANAGER_SPTR_NULL, but Generator will generate initialization in class construction
+    // Need to handle initialization manually if not using Generator
+    #define MANAGER_SPTR(type, var, ...) MANAGER_SPTR_NULL(type, var, __VA_ARGS__)
         
     #define MANAGER_SPTR_NULL(type, var, ...) \
     protected: \
