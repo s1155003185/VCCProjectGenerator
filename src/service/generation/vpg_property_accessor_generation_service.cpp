@@ -328,13 +328,13 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
                 // value
                 std::wstring returnStr = L"obj->Get" + property->GetPropertyName();
                 if (type == objectToken)
-                    returnStr = L"std::static_pointer_cast<IObject>(" + returnStr + L"AtKey(" + mapGetKey + L")" + (isOrderedMap ? L".second" : L"") + L")";
+                    returnStr = L"std::static_pointer_cast<IObject>(" + returnStr + L"AtKey(" + mapGetKey + L")" + L")";
                 else if (!property->GetType2().empty() && IsCapital(property->GetType2()))
-                    returnStr = L"static_cast<long>(" + returnStr + L"AtKey(" + mapGetKey + L")" + (isOrderedMap ? L".second" : L"") + L")";
+                    returnStr = L"static_cast<long>(" + returnStr + L"AtKey(" + mapGetKey + L")" + L")";
                 else if (property->GetType2() == L"std::string")
-                    returnStr = L"str2wstr(" + returnStr + L"AtKey(" + mapGetKey + L")"+ (isOrderedMap ? L".second" : L"") + L")";
+                    returnStr = L"str2wstr(" + returnStr + L"AtKey(" + mapGetKey + L")" + L")";
                 else
-                    returnStr = returnStr + L"AtKey(" + mapGetKey + L")"+ (isOrderedMap ? L".second" : L"");
+                    returnStr = returnStr + L"AtKey(" + mapGetKey + L")";
                 mapCases.insert(std::make_pair(property->GetEnum(), returnStr));
             }
         }
@@ -428,7 +428,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
                 generalCases.insert(std::make_pair(property->GetEnum(), returnStr));
             }
             // Vector
-            if (property->GetIsVector() || property->GetIsOrderedMap()) {
+            if (property->GetIsVector()) {
                 std::wstring returnStr = L"";
 
                 bool isOrderedMap = property->GetIsOrderedMap();
@@ -470,24 +470,24 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
                     returnStr += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"AtKey(" + mapGetKey + L", std::static_pointer_cast<" + property->GetType2() + L">(value));\r\n"
                         + INDENT + INDENT + INDENT + L"else\r\n"
-                        + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(" + mapGetKey + L", std::static_pointer_cast<" + property->GetType2() + L">(value));\r\n";
+                        + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"AtKey(" + mapGetKey + L", std::static_pointer_cast<" + property->GetType2() + L">(value));\r\n";
                 } else {
                     std::wstring type = property->GetType2();
                     if (!type.empty() && IsCapital(type)) {
                         returnStr += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
                             + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"AtKey(" + mapGetKey + L", static_cast<" + type + L">(value));\r\n"
                             + INDENT + INDENT + INDENT + L"else\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(" + mapGetKey + L", static_cast<" + type + L">(value));\r\n";
+                            + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"AtKey(" + mapGetKey + L", static_cast<" + type + L">(value));\r\n";
                     } else if (type == L"std::string") {
                         returnStr += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
                             + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"AtKey(" + mapGetKey + L", str2wstr(value));\r\n"
                             + INDENT + INDENT + INDENT + L"else\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(" + mapGetKey + L", wstr2str(value));\r\n";
+                            + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"AtKey(" + mapGetKey + L", wstr2str(value));\r\n";
                     } else {
                         returnStr += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
                             + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"AtKey(" + mapGetKey + L", value);\r\n"
                             + INDENT + INDENT + INDENT + L"else\r\n"
-                            + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(" + mapGetKey + L", value);\r\n";
+                            + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"AtKey(" + mapGetKey + L", value);\r\n";
                     }                    
                 }
                 mapCases.insert(std::make_pair(property->GetEnum(), returnStr));
@@ -565,7 +565,7 @@ void VPGPropertyAccessorGenerationService::GenerateInsert(const std::wstring &pr
         std::map<std::wstring, std::wstring> vectorCases;
 
         for (auto const &property : enumClassPropertiesWriteOnly) {
-            if (property->GetIsVector() || property->GetIsOrderedMap()) {
+            if (property->GetIsVector()) {
                 std::wstring returnStr = L"";
 
                 bool isOrderedMap = property->GetIsOrderedMap();
@@ -973,29 +973,17 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
                 if (property->GetIsSet())
                     continue;
 
-                bool isContainer = false;
-                switch (property->GetGetSetType())
-                {
-                case VPGEnumClassGetSetType::Vector:
+                bool isContainer = property->GetIsCollection();
+                if (property->GetIsVector())
                     systemIncludeFiles.insert(L"vector");
-                    isContainer = true;
-                    break;
-                case VPGEnumClassGetSetType::Map:
+                if (property->GetIsMap())
                     systemIncludeFiles.insert(L"map");
-                    isContainer = true;
-                    break;
-                case VPGEnumClassGetSetType::OrderedMap:
+                if (property->GetIsOrderedMap()) {
                     systemIncludeFiles.insert(L"vector");
                     systemIncludeFiles.insert(L"map");
-                    isContainer = true;
-                    break;
-                case VPGEnumClassGetSetType::Set:
-                    systemIncludeFiles.insert(L"set");
-                    isContainer = true;
-                    break;
-                default:
-                    break;
                 }
+                if (property->GetIsSet())
+                    systemIncludeFiles.insert(L"set");
 
                 // container
                 if (isContainer) {

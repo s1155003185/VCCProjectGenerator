@@ -13,6 +13,75 @@
 
 using namespace vcc;
 
+long VPGWorkspaceFormPropertyAccessor::_ReadLong(const int64_t &objectProperty) const
+{
+    TRY
+        auto obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
+        {
+        case VPGWorkspaceFormProperty::TabOrder:
+            return obj->GetTabOrder();
+        default:
+            assert(false);
+        }
+    CATCH
+    return 0L;
+}
+
+long VPGWorkspaceFormPropertyAccessor::_ReadLongAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return 0L;
+}
+
+long VPGWorkspaceFormPropertyAccessor::_ReadLongAtKey(const int64_t &objectProperty, const void */*key*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return 0L;
+}
+
+void VPGWorkspaceFormPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long &value) const
+{
+    TRY
+        auto obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
+        {
+        case VPGWorkspaceFormProperty::TabOrder:
+            obj->SetTabOrder(value);
+            break;
+        default:
+            assert(false);
+        }
+    CATCH
+}
+
+void VPGWorkspaceFormPropertyAccessor::_WriteLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGWorkspaceFormPropertyAccessor::_WriteLongAtKey(const int64_t &objectProperty, const long &/*value*/, const void */*key*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGWorkspaceFormPropertyAccessor::_InsertLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
 std::wstring VPGWorkspaceFormPropertyAccessor::_ReadString(const int64_t &objectProperty) const
 {
     TRY

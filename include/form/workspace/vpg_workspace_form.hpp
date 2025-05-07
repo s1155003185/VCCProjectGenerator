@@ -21,6 +21,7 @@ using namespace vcc;
 class VPGWorkspaceForm : public BaseForm, public BaseJsonObject
 {
     GETSET(std::wstring, Name, L"")
+    GETSET(int64_t, TabOrder, -1)
     VECTOR_SPTR(VPGGitForm, GitForms)
 
     // <vcc:customVPGWorkspaceFormProperties sync="RESERVE" gen="RESERVE">

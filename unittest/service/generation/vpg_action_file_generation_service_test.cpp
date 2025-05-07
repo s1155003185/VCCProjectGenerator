@@ -191,6 +191,7 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile)
     classPathMapping.insert(std::make_pair(L"LogConfig", L"log_config.hpp"));
     classPathMapping.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgument", L"vpg_git_form.hpp"));
     classPathMapping.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgumentProperty", L"vpg_git_form.hpp"));
+    classPathMapping.insert(std::make_pair(L"OperationResult", L"operation_result.hpp"));
 
     std::vector<std::wstring> hppClass, cppClass;
     std::set<std::wstring> sytemIncludeFiles;

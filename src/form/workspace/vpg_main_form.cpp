@@ -67,19 +67,18 @@ std::shared_ptr<IResult> VPGMainFormInitialize::OnRedo()
         form->TruncateAction();
         form->ClearWorkspaceForms();
 
-        auto jsonBuilder = std::make_unique<JsonBuilder>();
-        jsonBuilder->SetIsBeautify(true);
-
         auto configFilePath = VPGGlobal::GetVCCProjectManagerConfigFileFullPath();
         if (IsFilePresent(configFilePath)) {
             TRY
+                auto jsonBuilder = std::make_unique<JsonBuilder>();
+                jsonBuilder->SetIsBeautify(true);
                 form->DeserializeJsonString(jsonBuilder.get(), ReadFile(configFilePath));
             CATCH_MSG(ExceptionType::ParserError, L"File " + configFilePath + L" exists but not vaild. Please adjust / remove the file and try again")
         } else {
             auto workspace = std::make_shared<VPGWorkspaceForm>();
             workspace->SetName(L"Default");
             form->InsertWorkspaceForms(workspace);
-            WriteFile(configFilePath, form->SerializeJson(jsonBuilder.get()), true);
+            form->SaveConfig();
         }
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormInitializeOnRedo>
@@ -130,6 +129,7 @@ std::shared_ptr<IResult> VPGMainFormAddWorkspaceForm::OnRedo()
         auto workspaceForm = std::make_shared<VPGWorkspaceForm>();
         workspaceForm->SetName(_Argument->GetName());
         form->InsertWorkspaceForms(workspaceForm);
+        form->SaveConfig();
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormAddWorkspaceFormOnRedo>
     CATCH_RETURN_RESULT(OperationResult)
@@ -180,6 +180,7 @@ std::shared_ptr<IResult> VPGMainFormDeleteWorkspaceForm::OnRedo()
         if (index < 0)
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace not found");
         form->RemoveWorkspaceFormsAtIndex(index);
+        form->SaveConfig();
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormDeleteWorkspaceFormOnRedo>
     CATCH_RETURN_RESULT(OperationResult)
@@ -251,7 +252,7 @@ std::shared_ptr<Json> VPGMainForm::ToJson() const
         // WorkspaceForms
         auto tmpWorkspaceForms = std::make_shared<Json>();
         json->AddArray(ConvertNamingStyle(L"WorkspaceForms", NamingStyle::PascalCase, namestyle), tmpWorkspaceForms);
-        for (auto const &element : _WorkspaceForms) {
+        for (auto const &element : GetWorkspaceForms()) {
             tmpWorkspaceForms->AddArrayObject(element->ToJson());
         }
         return json;
@@ -354,4 +355,12 @@ std::shared_ptr<IResult> VPGMainForm::DoRenameWorkspaceForm(std::shared_ptr<VPGM
 }
 
 // <vcc:customFunctions sync="RESERVE" gen="RESERVE">
+void VPGMainForm::SaveConfig() const
+{
+    TRY    
+        auto jsonBuilder = std::make_unique<JsonBuilder>();
+        jsonBuilder->SetIsBeautify(true);
+        WriteFile(VPGGlobal::GetVCCProjectManagerConfigFileFullPath(), SerializeJson(jsonBuilder.get()), true);
+    CATCH
+}
 // </vcc:customFunctions>

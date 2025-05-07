@@ -20,7 +20,7 @@ class VPGProcessManager : public BaseManager
     GETSET_SPTR_NULL(VPGConfig, Option);
 
     private:
-        VPGProcessManager() = default;
+        VPGProcessManager() = delete;
         std::shared_ptr<IVPGGenerationManager> GetGenerationManager();
 
     public:

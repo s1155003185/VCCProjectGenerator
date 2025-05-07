@@ -28,13 +28,13 @@ namespace vcc
 
     // Set
     template <typename T>
-    void Set(std::vector<T> &sourceVector, T &obj, const int64_t &index = -1);
+    void Set(std::vector<T> &sourceVector, T obj, const int64_t &index = -1);
     template <typename T>
     void SetIObject(std::vector<std::shared_ptr<T>> &sourceVector, std::shared_ptr<IObject> &obj, const int64_t &index = -1);
 
     // Insert
     template <typename T>
-    void Insert(std::vector<T> &sourceVector, T &obj, const int64_t &index = -1);
+    void Insert(std::vector<T> &sourceVector, T obj, const int64_t &index = -1);
     template <typename T>
     void Insert(std::vector<T> &sourceVector, const std::vector<T> &objs, const int64_t &index = -1);
     template <typename T>
@@ -105,7 +105,7 @@ namespace vcc
     }
 
     template <typename T>
-    void Set(std::vector<T> &sourceVector, T &obj, const int64_t &index)
+    void Set(std::vector<T> &sourceVector, T obj, const int64_t &index)
     {
         if (index >= 0)
             sourceVector[index] = obj;
@@ -125,7 +125,7 @@ namespace vcc
     }
 
     template <typename T>
-    void Insert(std::vector<T> &sourceVector, T &obj, const int64_t &index)
+    void Insert(std::vector<T> &sourceVector, T obj, const int64_t &index)
     {
         if (index >= 0)
             sourceVector.insert(sourceVector.begin() + index, obj);

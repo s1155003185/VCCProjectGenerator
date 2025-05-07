@@ -1064,16 +1064,14 @@ namespace vcc
 			{
 			case EscapeStringType::DoubleQuote: {
 				bool isNeedRemoveHeadAndTail = str.starts_with(L"\"") && str.ends_with(L"\"") && str.length() >= 2;
-				assert(isNeedRemoveHeadAndTail);
 				if (!isNeedRemoveHeadAndTail)
-					THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"String does not start with \"");
+					THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"GetUnescapeStringWithQuote: " + str + L" does not start with \"");
 				break;
 			}
 			case EscapeStringType::SingleQuote: {
 				bool isNeedRemoveHeadAndTail = str.starts_with(L"\'") && str.ends_with(L"\'") && str.length() >= 2;
-				assert(isNeedRemoveHeadAndTail);
 				if (!isNeedRemoveHeadAndTail)
-					THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"String does not start with \'");
+					THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"GetUnescapeStringWithQuote: " + str + L" does not start with \'");
 				break;
 			}
 			default:

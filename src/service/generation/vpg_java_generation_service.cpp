@@ -869,7 +869,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetter(const std::wst
         }
         // not support set
         // container
-        bool isVector = property->GetIsVector() || property->GetIsOrderedMap();
+        bool isVector = property->GetIsVector();
         bool isMap = property->GetIsMap() || property->GetIsOrderedMap();
         bool isSet = property->GetIsSet();
         result += GenerateObjectGetterSetterContainerCount(property, projectPrefix, objectProperty, isVector, isMap, isSet);

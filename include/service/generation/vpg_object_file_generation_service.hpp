@@ -18,7 +18,8 @@ class VPGObjectFileGenerationService
         ~VPGObjectFileGenerationService() {}
 
         // Clone
-        static std::wstring GetCloneFunction(const VPGEnumClass *enumClass, const std::wstring &className, const bool &isCpp);
+        static std::wstring GetCloneFunction(const VPGEnumClass *enumClass, const std::wstring &className, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping, const bool &isCpp);
+        static std::wstring GetConstructorContent(const VPGEnumClass *enumClass, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping, const bool &isHeader);
 
         // Json
         static std::vector<std::wstring> GetObjectToJsonEnumSwitch(const std::wstring &switchVariable, const std::wstring &returnVariable,
@@ -33,6 +34,7 @@ class VPGObjectFileGenerationService
     
         // Hpp
         static void GetHppIncludeFiles(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
+            const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
             const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList,
             bool &isContainForm,
             std::set<std::wstring> &systemFileList,
@@ -41,11 +43,11 @@ class VPGObjectFileGenerationService
             std::set<std::wstring> &abstractEnumClassList,
             std::set<std::wstring> &classInCurrentFileList);
 
-        static std::wstring GetHppConstructor(const VPGEnumClass *enumClass, const std::wstring &classPrefix, const std::wstring &className, const std::wstring &baseClassNameWithoutQuote);
-        static std::wstring GetHppProperties(const VPGEnumClass *enumClass, const std::wstring &className);
+        static std::wstring GetHppConstructor(const VPGEnumClass *enumClass, const std::wstring &classPrefix, const std::wstring &className, const std::wstring &baseClassNameWithoutQuote, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping);
+        static std::wstring GetHppProperties(const VPGEnumClass *enumClass, const std::wstring &className, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping);
         static std::wstring GetHppPrivateFunctions(const VPGEnumClass *enumClass, const std::wstring &className);
         static std::wstring GetHppProtectedFunctions(const VPGEnumClass *enumClass, const std::wstring &className);
-        static std::wstring GetHppPublicCloneFunctions(const VPGEnumClass *enumClass, const std::wstring &className);
+        static std::wstring GetHppPublicCloneFunctions(const VPGEnumClass *enumClass, const std::wstring &className, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping);
         static std::wstring GetHppPublicJsonFunctions(const VPGEnumClass *enumClass);
         static std::wstring GetHppPublicFunctions(const VPGEnumClass *enumClass, const VPGConfig *option);
         static std::wstring GetHppPublicCustomFunctions(const VPGEnumClass *enumClass, const std::wstring &className);
@@ -60,8 +62,8 @@ class VPGObjectFileGenerationService
             std::set<std::wstring> &customIncludeFiles);
 
         static std::wstring GetCppCustomHeader(const bool &isContainForm);
-        static std::wstring GetCppConstructor(const VPGEnumClass *enumClass, const std::wstring &classPrefix, const std::wstring &className, const std::wstring &baseClassNameWithoutQuote);
-        static std::wstring GetCppCloneFunctions(const VPGEnumClass *enumClass, const std::wstring &className);
+        static std::wstring GetCppConstructor(const VPGEnumClass *enumClass, const std::wstring &classPrefix, const std::wstring &className, const std::wstring &baseClassNameWithoutQuote, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping);
+        static std::wstring GetCppCloneFunctions(const VPGEnumClass *enumClass, const std::wstring &className, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping);
         static std::wstring GetCppJsonFunction(const std::wstring &className,
             const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
             const std::shared_ptr<VPGEnumClass> enumClass);
@@ -73,10 +75,11 @@ class VPGObjectFileGenerationService
         // get #include file name
         static std::wstring GetProjectClassIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::wstring &className);
 
-        static std::wstring GenerateHppClass(const VPGEnumClass* enumClass, const VPGConfig *option);
+        static std::wstring GenerateHppClass(const VPGEnumClass* enumClass, const VPGConfig *option, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping);
         static void GenerateHpp(const LogConfig *logConfig,
             const VPGConfig *option,
             const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
+            const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
             const std::wstring &objectFilePathHpp,
             const std::wstring &formFilePathHpp,
             const std::wstring &actionFolderPathHpp,

@@ -39,7 +39,6 @@ std::shared_ptr<IObject> VPGGitForm::Clone() const
 std::shared_ptr<Json> VPGGitForm::ToJson() const
 {
     TRY
-        NamingStyle namestyle = NamingStyle::PascalCase;
         auto json = std::make_unique<Json>();
         return json;
     CATCH
@@ -49,7 +48,6 @@ std::shared_ptr<Json> VPGGitForm::ToJson() const
 void VPGGitForm::DeserializeJson(std::shared_ptr<IDocument> document) const
 {
     TRY
-        NamingStyle namestyle = NamingStyle::PascalCase;
         auto json = std::dynamic_pointer_cast<Json>(document);
         assert(json != nullptr);
     CATCH

@@ -1,17 +1,25 @@
 # Change Log
 
 ## [Unreleased] - Review - Git Manager Enhancement
-- Review GETSET_SPTR and MANAGER_SPTR: initialize in class constructor
-- Update vcc.json IsResultThrowException to IsActionResultThrowException
-- vcc.json supports ActionHistoryType
-- Add tag vccconfig so that setting in project is controlled by vcc.json
 - Git Manager Enhancement
+- TODO: Enum Support custom include files
 - TODO: Export function name to lowercase with underscore
 - TODO: Support Callback in argument
 - TODO: Support Structure
 - TODO: Support Set for GETSET
 - TODO: Review usage of const
-- TODO: Support GET_CUSTOM, SET_CUSTOM
+- TODO: Review RESERVE and REPLACE tag
+
+### [v0.3.6]
+- Review GETSET_SPTR and MANAGER_SPTR: initialize in class constructor
+- Update vcc.json IsResultThrowException to IsActionResultThrowException
+- vcc.json supports ActionHistoryType
+- Add tag vccconfig so that setting in project is controlled by vcc.json
+- Support GETCUSTOM, SETCUSTOM, GETCUSTOM_SPTR, SETCUSTOM_SPTR
+- Support GETSET_VALIDATE, GETSET_VALIDATE_SPTR_NULL, VECTOR_VALIDATE, VECTOR_VALIDATE_SPTR, MAP_VALIDATE, MAP_VALIDATE_SPTR_R, ORDERED_MAP_VALIDATE, ORDERED_MAP_VALIDATE_SPTR_R
+- Support one enum with multi class macro
+- Class Enum supports @@Include @@Private @@Protected
+- Class Property Enum supports @@Initialize
 
 ### [v0.3.5] - 2025-05-05: Review - vcc.json Grouping
 - Group vcc.json

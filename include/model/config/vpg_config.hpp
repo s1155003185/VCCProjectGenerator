@@ -144,10 +144,10 @@ class VPGConfig : public BaseObject, public BaseJsonObject
     public:
         VPGConfig() : BaseObject(ObjectType::Config)
         {
-            _Template = std::make_shared<VPGConfigTemplate>();
             _Behavior = std::make_shared<VPGConfigBehavior>();
             _Input = std::make_shared<VPGConfigInput>();
             _Output = std::make_shared<VPGConfigOutput>();
+            _Template = std::make_shared<VPGConfigTemplate>();
         }
 
         virtual ~VPGConfig() {}
@@ -155,11 +155,11 @@ class VPGConfig : public BaseObject, public BaseJsonObject
         virtual std::shared_ptr<IObject> Clone() const override
         {
             auto obj = std::make_shared<VPGConfig>(*this);
-            obj->CloneTemplate(this->_Template.get());
             obj->CloneBehavior(this->_Behavior.get());
+            obj->CloneExports(this->_Exports);
             obj->CloneInput(this->_Input.get());
             obj->CloneOutput(this->_Output.get());
-            obj->CloneExports(this->_Exports);
+            obj->CloneTemplate(this->_Template.get());
             return obj;
         }
 

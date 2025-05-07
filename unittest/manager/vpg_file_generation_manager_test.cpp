@@ -150,6 +150,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
+        "#include <memory>\r\n"
         "#include <string>\r\n"
         "\r\n"
         "#include \"base_object.hpp\"\r\n"

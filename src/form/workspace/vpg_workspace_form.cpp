@@ -42,11 +42,13 @@ std::shared_ptr<Json> VPGWorkspaceForm::ToJson() const
         NamingStyle namestyle = NamingStyle::PascalCase;
         auto json = std::make_unique<Json>();
         // Name
-        json->AddString(ConvertNamingStyle(L"Name", NamingStyle::PascalCase, namestyle), _Name);
+        json->AddString(ConvertNamingStyle(L"Name", NamingStyle::PascalCase, namestyle), GetName());
+        // TabOrder
+        json->AddInt(ConvertNamingStyle(L"TabOrder", NamingStyle::PascalCase, namestyle), GetTabOrder());
         // GitForms
         auto tmpGitForms = std::make_shared<Json>();
         json->AddArray(ConvertNamingStyle(L"GitForms", NamingStyle::PascalCase, namestyle), tmpGitForms);
-        for (auto const &element : _GitForms) {
+        for (auto const &element : GetGitForms()) {
             tmpGitForms->AddArrayObject(element->ToJson());
         }
         return json;
@@ -62,7 +64,10 @@ void VPGWorkspaceForm::DeserializeJson(std::shared_ptr<IDocument> document) cons
         assert(json != nullptr);
         // Name
         if (json->IsContainKey(ConvertNamingStyle(L"Name", namestyle, NamingStyle::PascalCase)))
-            _Name = json->GetString(ConvertNamingStyle(L"Name", namestyle, NamingStyle::PascalCase));
+            SetName(json->GetString(ConvertNamingStyle(L"Name", namestyle, NamingStyle::PascalCase)));
+        // TabOrder
+        if (json->IsContainKey(ConvertNamingStyle(L"TabOrder", namestyle, NamingStyle::PascalCase)))
+            SetTabOrder(static_cast<int64_t>(json->GetInt64(ConvertNamingStyle(L"TabOrder", namestyle, NamingStyle::PascalCase))));
         // GitForms
         ClearGitForms();
         if (json->IsContainKey(ConvertNamingStyle(L"GitForms", namestyle, NamingStyle::PascalCase))) {

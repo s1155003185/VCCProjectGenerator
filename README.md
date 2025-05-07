@@ -564,6 +564,9 @@ Procedure:
             REPLACE: Replace current project file content by inherited project.
             ALERT: Show different it there is change. Not support at the moment.
 
+        Special Tag:
+            vccconfig: Content will be force updated according to vcc.json in Update Mode and Generate Mode.
+
 ### Generate Rule
 The final objective is that user only need to handle enum class like sql table and logic in service and manager only. Other thing will be auto generate.
 Note: 
@@ -741,7 +744,7 @@ Note:
     e.g. VPGPersionProperty
 
 #### Class Attribute
-// [@@Form] [@@ActionArgument] [@@Result] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsIndependent": true }] [@@Action { "IsIndependent": true }] [@@Thread { "IsIndependent": true } ] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Command xxx]
+// [@@Form] [@@ActionArgument] [@@Result] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsIndependent": true }] [@@Action { "IsIndependent": true }] [@@Thread { "IsIndependent": true } ] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Include {"Files" : [ "a.hpp", "b.hpp" ]}] [@@Private { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } } ] [@@Protected { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } }] [@@Command xxx]
 
 []: Optional
 @@: Key for attributes. Need to state for attribute
@@ -809,11 +812,39 @@ Note:
         Value.DecimalPlaces
             value is number. Declare for decimal places for double and float. If not declare, Json number will be trim tailing 0s.
 
+[@@Include { "SystemFiles": ["string", "vector"], "CustomFiles" : [ "a.hpp", "b.hpp" ]}]
+    Add include files in class files.
+    Attribute:
+        SystemFiles
+            Array of system file names.
+
+        CustomFiles
+            Array of project file names.
+
+[@@Private { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } } ]
+    Class Private.
+    Properties will not be exported in Json. Please also use GETCUSTOM, GETCUSTOM_SPTR, SETCUSTOM, SETCUSTOM_SPTR if export to json is needed.
+    For object, it will inialize at constructer.
+    Attribute:
+        Properties
+            Object of property name and type pair. Can define initalize value using "=" in value.
+            e.g. "_PropertyA": "int64_t=0" will parsed as multable int64_t _PropertyA = 0
+            e.g. "_PropertyB": "VPGGlobal=nullptr" will parsed as multable std::shared_ptr<VPGGlobal> _PropertyB = nullptr;
+
+[@@Protected { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } }]
+    Class Protected.
+    Properties will not be exported in Json. Please also use GETCUSTOM, GETCUSTOM_SPTR, SETCUSTOM, SETCUSTOM_SPTR if export to json is needed.
+    For object, it will inialize at constructer.
+    Attribute:
+        Properties
+            Object of property name and type pair. Can define initalize value using "=" in value.
+            Example same as above case.
+
 [@@Command xxx]
     Command used in VCC generator, can be any text in xxx without @@
 
 #### Field Attribute
-Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@ActionResult { "Redo.Class": "ClassName", "Undo.Class" : "ClassName" }] [@@Command xxx]
+Enum // {ClassMacro} [{ClassMacro}] [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Initialize { "Properties: [\"0\", \"true\"]" }] [@@ActionResult { "Redo.Class": "ClassName", "Undo.Class" : "ClassName" }] [@@Command xxx]
 
 {...}: Compulsory
 []: Optional
@@ -826,19 +857,53 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Acti
     Macro stated in class_macro.hpp. If it is not match with any class macro in class_macro.hpp, the rest will be ignored
     Note: No Initialize method in Class Object (except Form). Otherwise need to handle more than one place after adjustment of properties.
     Please use recreation of object if initialize is needed.
+    Note: Cannot use try catch in MACRO validate. And "exception_macro.hpp" cannot be included in .hpp. It will have compile error. Only "throw" can be used.
+    Note: In argument or customProcedure, use "value" to get argument input.
 
     Current Options for Properties:
+        Custom
         | Macro | Description | Example |
         | --- | --- | --- |
-        | GETSET(type, name, defaultValue) |  Normal Type and Enum.  | GETSET(std::wstring, Name, L"") |
-        | GETSET_SPTR(type, name, ...) | Object. Initialize in class constructor. The inialization is in order. | GETSET_SPTR(GitOption, Name, _LogConfig, L"Remark") |
+        | GETCUSTOM(type, name, customProcedcure) | Getter only. Does not contain real variable. | GETCUSTOM(bool, IsObjectExists, return _Object != nullptr) |
+        | SETCUSTOM(varName, type, customProcedcure) | Setter only. Does not contain real variable. Argument is value. | SETCUSTOM(IsTrue, bool, _IsTrue = (_Object != nullptr) ? true : value; ) |
+        | GETCUSTOM_SPTR(type, name, customProcedcure) | Getter only. Does not contain real variable. | GETCUSTOM_SPTR(GitObject, GitObject, return _Object != nullptr ? _Object : std::shared_ptr<GitObject>(); ) |
+        | SETCUSTOM_SPTR(name, type, customProcedcure) | Setter Only. Does not contain real variable. | SETCUSTOM_SPTR(IsTrue, GitObject, object, _IsTrue = gitObject != nullptr; ) |
+
+        GETSET
+        | Macro | Description | Example |
+        | --- | --- | --- |
+        | GETSET(type, name, defaultValue) |  Normal Type and Enum. | GETSET(std::wstring, Name, L"") |
+        | GETSET_VALIDATE(type, varName, defaultValue, validate) | Normal Type and Enum. | GETSET(std::wstring, Name, L"",if (value.empty() throw std::invalid_argument("Value cannot be empty"));) |
+        | GETSET_SPTR(type, name, ...) | Object. Initialize in class constructor. ... is initialization and should have same order as class constructor. | GETSET_SPTR(GitOption, Name, _LogConfig, L"Remark") |
         | GETSET_SPTR_NULL(type, name) | Object and initialize as nullptr. Please initialize it after class creation. | GETSET_SPTR_NULL(GitOption, Name) |
+        | GETSET_VALIDATE_SPTR_NULL(type, varName, validate) | Object and initialize as nullptr. Please initialize it after class creation. | GETSET_VALIDATE_SPTR_NULL(GitOption, Name, if (value == nullptr) throw std::invalid_argument("Value cannot be null");)  |
+        
+        Note: There is no GETSET_VALIDATE_SPTR as the order of macro argument will become GETSET_VALIDATE_SPTR(type, varName, validation, ...) which is not correct. If initializtion is needed in this case, please use @@Initialize to define default values.
+        
+        VECTOR
+        | Macro | Description | Example |
+        | --- | --- | --- |
         | VECTOR(type, name) | std::vector<type>. Vector for Normal Type and Enum. | VECTOR(double, Name) |
+        | VECTOR_VALIDATE(type, name, validate) | std::vector<type>. Vector for Normal Type and Enum. Validate for each element when insertion. | VECTOR_VALIDATE(double, Name, if (value < 0) throw std::invalid_argument("Value cannot be negative."); ) |
         | VECTOR_SPTR(type, name) | std::vecotr<std::shared_ptr<type>>. Vector for Object. | VECTOR_SPTR(GitOption, Name) |
+        | VECTOR_VALIDATE_SPTR(type, name, validate) | std::vecotr<std::shared_ptr<type>>. Vector for Object. | VECTOR_VALIDATE_SPTR(GitOption, Name, if (value == nullptr) throw std::invalid_argument("Value cannot be nullptr.");) |
+        
+        MAP
+        | Macro | Description | Example |
+        | --- | --- | --- |
         | MAP(type1, type2, name) | Map of Normal Type and Enum. | MAP(std::wstring, double, Name) |
-        | MAP_SPTR_R(type1, type2, name) | Map of Object. Only allow Object at type2. If want to set object at type1, please use int64_t | MAP(type1, type2, name) |
-        | ORDERED_MAP(type1, type2, name) | std::vector<std::pair<type1, type2>>. Allow to use method of vector and map | ORDERED_MAP(type1, type2, name) |
-        | ORDERED_MAP_SPTR_R(type1, type2, name) | std::vector<std::pair<type1, std::shared_ptr<type2>>>. Allow to use method of vector and map | ORDERED_MAP(type1, type2, name) |
+        | MAP_VALIDATE(type1, type2, name, validate) | Map of Normal Type and Enum. Validate value when insertion. | MAP_VALIDATE(std::wstring, double, Name, if (value < 0) throw std::invalid_argument("Value cannot be negative.");) |
+        | MAP_SPTR_R(type1, type2, name) | Map of Object. Only allow Object at type2. If want to set object at type1, please use int64_t. | MAP(std::wstring, GitLog, Log) |
+        | MAP_VALIDATE_SPTR_R(type1, type2, name, validate) | Map of Object. Only allow Object at type2. If want to set object at type1, please use int64_t. Validate value when insertion. | MAP_VALIDATE_SPTR_R(std::wstring, GitLog, Log, if (value == nullptr) throw std::invalid_argument("Value cannot be nullptr.");) |
+        
+        
+        ORDERED_MAP
+        | Macro | Description | Example |
+        | --- | --- | --- |
+        | ORDERED_MAP(type1, type2, name) | std::vector<std::pair<type1, type2>>. Allow to use method of vector and map. | ORDERED_MAP(std::wstring, double, Tax) |
+        | ORDERED_MAP_VALIDATE(type1, type2, name, validate) | std::vector<std::pair<type1, type2>>. Allow to use method of vector and map. Validate value when insertion. | ORDERED_MAP_VALIDATE(std::wstring, double, Tax, if (value < 0) throw std::invalid_argument("Value cannot be negative.");) |
+        | ORDERED_MAP_SPTR_R(type1, type2, name) | std::vector<std::pair<type1, std::shared_ptr<type2>>>. Allow to use method of vector and map. | ORDERED_MAP_SPTR_R(std::wstring, Student, Students) |
+        | ORDERED_MAP_VALIDATE_SPTR_R(type1, type2, name, validate) | std::vector<std::pair<type1, std::shared_ptr<type2>>>. Allow to use method of vector and map. Validate value when insertion. | ORDERED_MAP_VALIDATE_SPTR_R(std::wstring, Student, Students, if (value == nullptr) throw std::invalid_argument("Value cannot be nullptr.");) |
 
         Pending for SET
 
@@ -856,7 +921,12 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Acti
         | ACTION(name) | Generator will create void Do##name() and generate Action Class. Please handle logic in .cpp file. | ACTION(AddWorkspace) |
         | ACTION_WITH_ARG_SPTR(name, type) | Generator will create void Do##name(type value) and generate Action Class. type must be class name. Argument Class must exists and have class tag @@ActionArgument. | ACTION_WITH_ARG_SPTR(AddWorkspace, VPGAddWorkspaceArgument) |
 
-    Note: Class cannot be initialie in definition. In usage, GETSET_SPTR === GETSET_SPTR_NULL, MANAGER_SPTR === MANAGER_SPTR_NULL. But Generator will generate initailization in class constructor if using GETSET_SPTR or MANAGER_SPTR.
+    Note1: Class cannot be initialie in definition. In usage, GETSET_SPTR === GETSET_SPTR_NULL, MANAGER_SPTR === MANAGER_SPTR_NULL. But Generator will generate initailization in class constructor if using GETSET_SPTR or MANAGER_SPTR.
+    Note2: If want to have validation when set property, SETCUSTOM and SETCUSTOM_SPTR can be used.
+    
+[{ClassMacro}]
+    Define second Class Macro. It will share same enum with the first one.
+    As most macro contains both getter and setter, this option is only available for GETCUSTOM, GETCUSTOM_SPTR, SETCUSTOM, SETCUSTOM_SPTR.
 
 [@@AccessMode]
     Default is @@ReadWrite.
@@ -881,6 +951,12 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Acti
     For class declare @@Json Only.
     Will not generate Json for current property.
     For those temp properties that do not need to be recored.
+
+[@@Initialize { "Properties: [\"0\", \"true\"]" }]
+    For inializtion. The value will be inialized in class constructor.
+    If it is basic type, add one default value to array. e.g. ["0", "true", "\L\"Test String\""]
+    If it is Object, add all argument in order. e.g. ["0", "true", "\L\"Test String\""]
+    If it is vector or map, add elements that can be insert to vector or map. E.g. ["std::make_shared<VPGObject>(0)", "std::make_shared<VPGObject>(1)"]
 
 [@@ActionResult { "Redo.Class": "ClassName", "Undo.Class" : "ClassName" }]
     For Action Only.
