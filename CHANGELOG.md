@@ -7,7 +7,8 @@
 - TODO: Support Structure
 - TODO: Support Set for GETSET
 - TODO: Review usage of const
-- TODO: Support GET_CUSTOM, SET_CUSTOM
+- TODO: Support GET_CUSTOM, GETSET_VALIDATE
+- TODO: Review RESERVE and REPLACE tag
 
 ### [v0.3.6]
 - Review GETSET_SPTR and MANAGER_SPTR: initialize in class constructor
