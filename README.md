@@ -564,6 +564,9 @@ Procedure:
             REPLACE: Replace current project file content by inherited project.
             ALERT: Show different it there is change. Not support at the moment.
 
+        Special Tag:
+            vccconfig: Content will be force updated according to vcc.json in Update Mode and Generate Mode.
+
 ### Generate Rule
 The final objective is that user only need to handle enum class like sql table and logic in service and manager only. Other thing will be auto generate.
 Note: 
