@@ -219,5 +219,6 @@ class VPGMainForm : public BaseForm, public BaseJsonObject
         virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;
 
         // <vcc:customVPGMainFormPublicFunctions sync="RESERVE" gen="RESERVE">
+        void SaveConfig() const;
         // </vcc:customVPGMainFormPublicFunctions>
 };
