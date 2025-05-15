@@ -836,10 +836,10 @@ Enum // {ClassMacro} [{ClassMacro}] [@@NoProperty] [@@AccessMode] [@@Inherit] [@
         | GETSET(type, name, defaultValue) |  Normal Type and Enum.  | GETSET(std::wstring, Name, L"") |
         | GETSET_SPTR(type, name, ...) | Object. Initialize in class constructor. The inialization is in order. | GETSET_SPTR(GitOption, Name, _LogConfig, L"Remark") |
         | GETSET_SPTR_NULL(type, name) | Object and initialize as nullptr. Please initialize it after class creation. | GETSET_SPTR_NULL(GitOption, Name) |
-        | GETCUSTOM(type, name, ...) | Normal Type and Enum. Note: not support helper at the moment. | GETCUSTOM(bool, IsObjectExists, return _Object != nullptr) |
-        | GETCUSTOM_SPTR(type, name, ...) | Object. Not generate real properties. Note: not support helper at the moment. | GETCUSTOM_SPTR(GitObject, GitObject, return _Object != nullptr ? _Object : std::shared_ptr<GitObject>(); ) |
-        | SETCUSTOM(name, type, argument, ...) | Normal Type and Enum. Note: not support helper at the moment. | SETCUSTOM(IsTrue, bool, isTrue, _IsTrue = (_Object != nullptr) ? true : isTrue; ) |
-        | SETCUSTOM_SPTR(name, type, argument, ...) | Object. Note: not support helper at the moment. | SETCUSTOM_SPTR(IsTrue, GitObject, gitObject, _IsTrue = gitObject != nullptr; ) |
+        | GETCUSTOM(type, name, ...) | Getter only. Normal Type and Enum. Note: not support helper at the moment. | GETCUSTOM(bool, IsObjectExists, return _Object != nullptr) |
+        | GETCUSTOM_SPTR(type, name, ...) | Getter only. Object. Not generate real properties. Note: not support helper at the moment. | GETCUSTOM_SPTR(GitObject, GitObject, return _Object != nullptr ? _Object : std::shared_ptr<GitObject>(); ) |
+        | SETCUSTOM(name, type, argument, ...) | Setter only. Normal Type and Enum. Note: not support helper at the moment. | SETCUSTOM(IsTrue, bool, isTrue, _IsTrue = (_Object != nullptr) ? true : isTrue; ) |
+        | SETCUSTOM_SPTR(name, type, argument, ...) | Setter Only. Object. Note: not support helper at the moment. | SETCUSTOM_SPTR(IsTrue, GitObject, gitObject, _IsTrue = gitObject != nullptr; ) |
         | VECTOR(type, name) | std::vector<type>. Vector for Normal Type and Enum. | VECTOR(double, Name) |
         | VECTOR_SPTR(type, name) | std::vecotr<std::shared_ptr<type>>. Vector for Object. | VECTOR_SPTR(GitOption, Name) |
         | MAP(type1, type2, name) | Map of Normal Type and Enum. | MAP(std::wstring, double, Name) |
@@ -867,6 +867,8 @@ Enum // {ClassMacro} [{ClassMacro}] [@@NoProperty] [@@AccessMode] [@@Inherit] [@
     Note2: If want to have validation when set property, SETCUSTOM and SETCUSTOM_SPTR can be used.
     
 [{ClassMacro}]
+    Define second Class Macro. It will share same enum with the first one.
+    As most macro contains both getter and setter, this option is only available for GETCUSTOM, GETCUSTOM_SPTR, SETCUSTOM, SETCUSTOM_SPTR.
 
 [@@NoProperty]
     Only available for GETCUSTOM, GETCUSTOM_SPTR, SETCUSTOM, SETCUSTOM_SPTR
