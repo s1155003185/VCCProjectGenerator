@@ -6,6 +6,7 @@
 
 #include "base_object.hpp"
 #include "class_macro.hpp"
+#include "vector_helper.hpp"
 
 using namespace vcc;
 
@@ -33,14 +34,27 @@ enum class VPGEnumClassPropertyType
     , Action
 };
 
-enum class VPGEnumClassGetSetType
+enum class VPGEnumClassMacroType
 {
     NA
-    , General
+    , Getset
+    , GetsetSptr
+    , GetsetSptrNull
+    , Getcustom
+    , GetcustomSptr
     , Vector
-    , Map
-    , OrderedMap
+    , VectorSptr
     , Set
+    , SetSptr
+    , Map
+    , MapSptrR
+    , OrderedMap
+    , OrderedMapSptrR
+    , ManagerSptr
+    , ManagerSptrNull
+    , ManagerSptrParent
+    , Action
+    , ActionWithArgSptr
 };
 
 class VPGEnumClassProperty : public BaseObject
@@ -58,8 +72,9 @@ class VPGEnumClassProperty : public BaseObject
     GETSET(std::wstring, Command, L"");
 
     // Macro
-    GETSET(VPGEnumClassGetSetType, GetSetType, VPGEnumClassGetSetType::NA);
+    GETSET(VPGEnumClassMacroType, MacroType, VPGEnumClassMacroType::NA);
     GETSET(bool, IsObject, false);
+    GETSET(bool, IsNoProperty, false);
     GETSET(VPGEnumClassPropertyAccessMode, AccessMode, VPGEnumClassPropertyAccessMode::ReadWrite);
     GETSET(bool, IsInherit, false);
     
@@ -80,15 +95,16 @@ class VPGEnumClassProperty : public BaseObject
             return std::make_shared<VPGEnumClassProperty>(*this);
         }
 
-        bool GetIsGeneralType() const { return _GetSetType == VPGEnumClassGetSetType::General; }
-        bool GetIsVector() const { return _GetSetType == VPGEnumClassGetSetType::Vector; }
-        bool GetIsMap() const { return _GetSetType == VPGEnumClassGetSetType::Map; }
-        bool GetIsOrderedMap() const { return _GetSetType == VPGEnumClassGetSetType::OrderedMap; }
-        bool GetIsSet() const { return _GetSetType == VPGEnumClassGetSetType::Set; }
+        bool GetIsGeneralType() const { return !GetIsCollection(); }
+        bool GetIsVector() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Vector, VPGEnumClassMacroType::VectorSptr}, _MacroType); }
+        bool GetIsMap() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Map, VPGEnumClassMacroType::MapSptrR}, _MacroType); }
+        bool GetIsOrderedMap() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::OrderedMap, VPGEnumClassMacroType::OrderedMapSptrR}, _MacroType); }
+        bool GetIsSet() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Set, VPGEnumClassMacroType::SetSptr}, _MacroType); }
+        bool GetIsAction() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Action, VPGEnumClassMacroType::ActionWithArgSptr}, _MacroType); }
+        bool GetIsManager() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::ManagerSptr, VPGEnumClassMacroType::ManagerSptrNull, VPGEnumClassMacroType::ManagerSptrParent}, _MacroType); }
         bool GetIsCollection() const { return GetIsVector() || GetIsMap() || GetIsOrderedMap() || GetIsSet(); }
 
-        bool GetIsGenerateClassActualPropertyNeeded() const { return !IsStartWith(_Macro, std::vector<std::wstring>{L"GETCUSTOM(", L"GETCUSTOM_SPTR("}); }
-        bool GetIsInitializeInClassConstructorNeeded() const { return IsStartWith(_Macro, std::vector<std::wstring>{L"GETSET_SPTR(", L"MANAGER_SPTR("}); }
+        bool GetIsInitializeInClassConstructorNeeded() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::GetsetSptr, VPGEnumClassMacroType::ManagerSptr}, _MacroType); }
 };
 
 class VPGEnumClass : public BaseObject

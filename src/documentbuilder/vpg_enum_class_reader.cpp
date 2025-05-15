@@ -230,16 +230,42 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
         } else {
             property->_PropertyType = VPGEnumClassPropertyType::Property;
 
-            if (IsStartWith(property->_Macro, L"VECTOR", pos))
-                property->_GetSetType = VPGEnumClassGetSetType::Vector;
-            else if (IsStartWith(property->_Macro, L"MAP", pos))
-                property->_GetSetType = VPGEnumClassGetSetType::Map;
-            else if (IsStartWith(property->_Macro, L"ORDERED_MAP", pos))
-                property->_GetSetType = VPGEnumClassGetSetType::OrderedMap;
-            else if (IsStartWith(property->_Macro, L"SET", pos))
-                property->_GetSetType = VPGEnumClassGetSetType::Set;
-            else
-                property->_GetSetType = VPGEnumClassGetSetType::General;
+            if (IsStartWith(property->_Macro, L"GETSET(", pos))
+                property->_MacroType = VPGEnumClassMacroType::Getset;
+            else if (IsStartWith(property->_Macro, L"GETSET_SPTR(", pos))
+                property->_MacroType = VPGEnumClassMacroType::GetsetSptr;
+            else if (IsStartWith(property->_Macro, L"GETSET_SPTR_NULL(", pos))
+                property->_MacroType = VPGEnumClassMacroType::GetsetSptrNull;
+            else if (IsStartWith(property->_Macro, L"GETCUSTOM(", pos))
+                property->_MacroType = VPGEnumClassMacroType::Getcustom;
+            else if (IsStartWith(property->_Macro, L"GETCUSTOM_SPTR(", pos))
+                property->_MacroType = VPGEnumClassMacroType::GetcustomSptr;
+            else if (IsStartWith(property->_Macro, L"VECTOR(", pos))
+                property->_MacroType = VPGEnumClassMacroType::Vector;
+            else if (IsStartWith(property->_Macro, L"VECTOR_SPTR(", pos))
+                property->_MacroType = VPGEnumClassMacroType::VectorSptr;
+            else if (IsStartWith(property->_Macro, L"SET(", pos))
+                property->_MacroType = VPGEnumClassMacroType::Set;
+            else if (IsStartWith(property->_Macro, L"SET_SPTR(", pos))
+                property->_MacroType = VPGEnumClassMacroType::SetSptr;
+            else if (IsStartWith(property->_Macro, L"MAP(", pos))
+                property->_MacroType = VPGEnumClassMacroType::Map;
+            else if (IsStartWith(property->_Macro, L"MAP_SPTR_R(", pos))
+                property->_MacroType = VPGEnumClassMacroType::MapSptrR;
+            else if (IsStartWith(property->_Macro, L"ORDERED_MAP(", pos))
+                property->_MacroType = VPGEnumClassMacroType::OrderedMap;
+            else if (IsStartWith(property->_Macro, L"ORDERED_MAP_SPTR_R(", pos))
+                property->_MacroType = VPGEnumClassMacroType::OrderedMapSptrR;
+            else if (IsStartWith(property->_Macro, L"MANAGER_SPTR(", pos))
+                property->_MacroType = VPGEnumClassMacroType::ManagerSptr;
+            else if (IsStartWith(property->_Macro, L"MANAGER_SPTR_NULL(", pos))
+                property->_MacroType = VPGEnumClassMacroType::ManagerSptrNull;
+            else if (IsStartWith(property->_Macro, L"MANAGER_SPTR_PARENT(", pos))
+                property->_MacroType = VPGEnumClassMacroType::ManagerSptrParent;
+            else if (IsStartWith(property->_Macro, L"ACTION(", pos))
+                property->_MacroType = VPGEnumClassMacroType::Action;
+            else if (IsStartWith(property->_Macro, L"ACTION_WITH_ARG_SPTR(", pos))
+                property->_MacroType = VPGEnumClassMacroType::ActionWithArgSptr;
             
             size_t posOfOpenQuote = Find(property->_Macro, L"(");
             if (posOfOpenQuote != std::wstring::npos)
@@ -274,8 +300,11 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
         for (auto const &attribute : attributes) {
             std::vector<std::wstring> attributeTokes = SplitStringBySpace(attribute);
             std::wstring attributeToken = !attributeTokes.empty() ? attributeTokes[0] : L"";
+            // Property
+            if (IsEqual(attributeToken, attributePrefix + L"NoProperty", true))
+                property->_IsNoProperty = true;
             // Privilege
-            if (IsEqual(attributeToken, attributePrefix + L"ReadOnly", true))
+            else if (IsEqual(attributeToken, attributePrefix + L"ReadOnly", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::ReadOnly;
             else if (IsEqual(attributeToken, attributePrefix + L"WriteOnly", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::WriteOnly;
