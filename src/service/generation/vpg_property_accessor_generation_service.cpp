@@ -973,29 +973,17 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
                 if (property->GetIsSet())
                     continue;
 
-                bool isContainer = false;
-                switch (property->GetGetSetType())
-                {
-                case VPGEnumClassGetSetType::Vector:
+                bool isContainer = property->GetIsCollection();
+                if (property->GetIsVector())
                     systemIncludeFiles.insert(L"vector");
-                    isContainer = true;
-                    break;
-                case VPGEnumClassGetSetType::Map:
+                if (property->GetIsMap())
                     systemIncludeFiles.insert(L"map");
-                    isContainer = true;
-                    break;
-                case VPGEnumClassGetSetType::OrderedMap:
+                if (property->GetIsOrderedMap()) {
                     systemIncludeFiles.insert(L"vector");
                     systemIncludeFiles.insert(L"map");
-                    isContainer = true;
-                    break;
-                case VPGEnumClassGetSetType::Set:
-                    systemIncludeFiles.insert(L"set");
-                    isContainer = true;
-                    break;
-                default:
-                    break;
                 }
+                if (property->GetIsSet())
+                    systemIncludeFiles.insert(L"set");
 
                 // container
                 if (isContainer) {
