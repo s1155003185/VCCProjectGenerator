@@ -1,13 +1,15 @@
 # Change Log
 
 ## [Unreleased] - Review - Git Manager Enhancement
+- Support GETCUSTOM, GETCUSTOM_SPTR, SETCUSTOM, SETCUSTOM_SPTR
+- Support one enum with multi class macro
+- Property support @@NoProperty
 - Git Manager Enhancement
 - TODO: Export function name to lowercase with underscore
 - TODO: Support Callback in argument
 - TODO: Support Structure
 - TODO: Support Set for GETSET
 - TODO: Review usage of const
-- TODO: Support GET_CUSTOM, GETSET_VALIDATE
 - TODO: Review RESERVE and REPLACE tag
 
 ### [v0.3.6]

@@ -39,6 +39,16 @@ namespace vcc
         void Set##var(std::shared_ptr<type> value) const { _##var = value; } \
         void Clone##var(const IObject *value) const { _##var = value != nullptr ? std::dynamic_pointer_cast<type>(value->Clone()) : nullptr; }
         
+    // custom
+
+    #define GETCUSTOM(type, var, ...) \
+    public: \
+        type Get##var() const { __VA_ARGS__ }
+
+    #define GETCUSTOM_SPTR(type, var, ...) \
+    public: \
+        std::shared_ptr<type> Get##var() const { __VA_ARGS__ }
+
     // std::vector
     
     #define VECTOR(type, var) \

@@ -87,7 +87,8 @@ class VPGEnumClassProperty : public BaseObject
         bool GetIsSet() const { return _GetSetType == VPGEnumClassGetSetType::Set; }
         bool GetIsCollection() const { return GetIsVector() || GetIsMap() || GetIsOrderedMap() || GetIsSet(); }
 
-        bool GetIsInitializeInClassConstructorNeeded() const { return IsStartWith(_Macro, L"GETSET_SPTR(") || IsStartWith(_Macro, L"MANAGER_SPTR("); }
+        bool GetIsGenerateClassActualPropertyNeeded() const { return !IsStartWith(_Macro, std::vector<std::wstring>{L"GETCUSTOM(", L"GETCUSTOM_SPTR("}); }
+        bool GetIsInitializeInClassConstructorNeeded() const { return IsStartWith(_Macro, std::vector<std::wstring>{L"GETSET_SPTR(", L"MANAGER_SPTR("}); }
 };
 
 class VPGEnumClass : public BaseObject

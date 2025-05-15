@@ -816,7 +816,7 @@ Note:
     Command used in VCC generator, can be any text in xxx without @@
 
 #### Field Attribute
-Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@ActionResult { "Redo.Class": "ClassName", "Undo.Class" : "ClassName" }] [@@Command xxx]
+Enum // {ClassMacro} [{ClassMacro}] [@@NoProperty] [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@ActionResult { "Redo.Class": "ClassName", "Undo.Class" : "ClassName" }] [@@Command xxx]
 
 {...}: Compulsory
 []: Optional
@@ -836,6 +836,10 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Acti
         | GETSET(type, name, defaultValue) |  Normal Type and Enum.  | GETSET(std::wstring, Name, L"") |
         | GETSET_SPTR(type, name, ...) | Object. Initialize in class constructor. The inialization is in order. | GETSET_SPTR(GitOption, Name, _LogConfig, L"Remark") |
         | GETSET_SPTR_NULL(type, name) | Object and initialize as nullptr. Please initialize it after class creation. | GETSET_SPTR_NULL(GitOption, Name) |
+        | GETCUSTOM(type, name, ...) | Normal Type and Enum. Note: not support helper at the moment. | GETCUSTOM(bool, IsObjectExists, return _Object != nullptr) |
+        | GETCUSTOM_SPTR(type, name, ...) | Object. Not generate real properties. Note: not support helper at the moment. | GETCUSTOM_SPTR(GitObject, GitObject, return _Object != nullptr ? _Object : std::shared_ptr<GitObject>(); ) |
+        | SETCUSTOM(name, type, argument, ...) | Normal Type and Enum. Note: not support helper at the moment. | SETCUSTOM(IsTrue, bool, isTrue, _IsTrue = (_Object != nullptr) ? true : isTrue; ) |
+        | SETCUSTOM_SPTR(name, type, argument, ...) | Object. Note: not support helper at the moment. | SETCUSTOM_SPTR(IsTrue, GitObject, gitObject, _IsTrue = gitObject != nullptr; ) |
         | VECTOR(type, name) | std::vector<type>. Vector for Normal Type and Enum. | VECTOR(double, Name) |
         | VECTOR_SPTR(type, name) | std::vecotr<std::shared_ptr<type>>. Vector for Object. | VECTOR_SPTR(GitOption, Name) |
         | MAP(type1, type2, name) | Map of Normal Type and Enum. | MAP(std::wstring, double, Name) |
@@ -859,7 +863,14 @@ Enum // {ClassMacro} [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@Acti
         | ACTION(name) | Generator will create void Do##name() and generate Action Class. Please handle logic in .cpp file. | ACTION(AddWorkspace) |
         | ACTION_WITH_ARG_SPTR(name, type) | Generator will create void Do##name(type value) and generate Action Class. type must be class name. Argument Class must exists and have class tag @@ActionArgument. | ACTION_WITH_ARG_SPTR(AddWorkspace, VPGAddWorkspaceArgument) |
 
-    Note: Class cannot be initialie in definition. In usage, GETSET_SPTR === GETSET_SPTR_NULL, MANAGER_SPTR === MANAGER_SPTR_NULL. But Generator will generate initailization in class constructor if using GETSET_SPTR or MANAGER_SPTR.
+    Note1: Class cannot be initialie in definition. In usage, GETSET_SPTR === GETSET_SPTR_NULL, MANAGER_SPTR === MANAGER_SPTR_NULL. But Generator will generate initailization in class constructor if using GETSET_SPTR or MANAGER_SPTR.
+    Note2: If want to have validation when set property, SETCUSTOM and SETCUSTOM_SPTR can be used.
+    
+[{ClassMacro}]
+
+[@@NoProperty]
+    Only available for GETCUSTOM, GETCUSTOM_SPTR, SETCUSTOM, SETCUSTOM_SPTR
+    If stated, then no property is generated.
 
 [@@AccessMode]
     Default is @@ReadWrite.
