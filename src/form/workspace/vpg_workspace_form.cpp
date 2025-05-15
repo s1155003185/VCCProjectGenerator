@@ -43,6 +43,8 @@ std::shared_ptr<Json> VPGWorkspaceForm::ToJson() const
         auto json = std::make_unique<Json>();
         // Name
         json->AddString(ConvertNamingStyle(L"Name", NamingStyle::PascalCase, namestyle), _Name);
+        // TabOrder
+        json->AddInt(ConvertNamingStyle(L"TabOrder", NamingStyle::PascalCase, namestyle), _TabOrder);
         // GitForms
         auto tmpGitForms = std::make_shared<Json>();
         json->AddArray(ConvertNamingStyle(L"GitForms", NamingStyle::PascalCase, namestyle), tmpGitForms);
@@ -63,6 +65,9 @@ void VPGWorkspaceForm::DeserializeJson(std::shared_ptr<IDocument> document) cons
         // Name
         if (json->IsContainKey(ConvertNamingStyle(L"Name", namestyle, NamingStyle::PascalCase)))
             _Name = json->GetString(ConvertNamingStyle(L"Name", namestyle, NamingStyle::PascalCase));
+        // TabOrder
+        if (json->IsContainKey(ConvertNamingStyle(L"TabOrder", namestyle, NamingStyle::PascalCase)))
+            _TabOrder = static_cast<int64_t>(json->GetInt64(ConvertNamingStyle(L"TabOrder", namestyle, NamingStyle::PascalCase)));
         // GitForms
         ClearGitForms();
         if (json->IsContainKey(ConvertNamingStyle(L"GitForms", namestyle, NamingStyle::PascalCase))) {

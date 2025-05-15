@@ -9,6 +9,7 @@ using namespace vcc;
 
 class VPGWorkspaceFormPropertyAccessor : public BasePropertyAccessor
 {
+    PROPERTY_ACCESSOR_HEADER(long, Long)
     PROPERTY_ACCESSOR_HEADER(std::wstring, String)
     PROPERTY_ACCESSOR_OBJECT_HEADER(std::shared_ptr<IObject>, Object)
 
