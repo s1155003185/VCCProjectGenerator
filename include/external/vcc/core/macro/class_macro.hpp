@@ -49,6 +49,14 @@ namespace vcc
     public: \
         std::shared_ptr<type> Get##var() const { __VA_ARGS__ }
 
+    #define SETCUSTOM(var, type, argumentName, ...) \
+    public: \
+        void Set##var(type argumentName) const { __VA_ARGS__ }
+
+    #define SETCUSTOM_SPTR(var, type, argumentName, ...) \
+    public: \
+        void Set##var(std::shared_ptr<type> argumentName) const { __VA_ARGS__ }
+
     // std::vector
     
     #define VECTOR(type, var) \

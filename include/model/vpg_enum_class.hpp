@@ -42,6 +42,8 @@ enum class VPGEnumClassMacroType
     , GetsetSptrNull
     , Getcustom
     , GetcustomSptr
+    , Setcustom
+    , SetcustomSptr
     , Vector
     , VectorSptr
     , Set
@@ -66,6 +68,7 @@ class VPGEnumClassProperty : public BaseObject
     GETSET(int64_t, EnumValue, 0);
     GETSET(std::wstring, Macro, L"");
     GETSET(std::wstring, Type1, L"");
+    GETSET(std::wstring, ArgumentName1, L"");
     GETSET(std::wstring, Type2, L"");
     GETSET(std::wstring, PropertyName, L"");
     GETSET(std::wstring, DefaultValue, L"");
@@ -73,7 +76,6 @@ class VPGEnumClassProperty : public BaseObject
 
     // Macro
     GETSET(VPGEnumClassMacroType, MacroType, VPGEnumClassMacroType::NA);
-    GETSET(bool, IsObject, false);
     GETSET(bool, IsNoProperty, false);
     GETSET(VPGEnumClassPropertyAccessMode, AccessMode, VPGEnumClassPropertyAccessMode::ReadWrite);
     GETSET(bool, IsInherit, false);
@@ -96,6 +98,7 @@ class VPGEnumClassProperty : public BaseObject
         }
 
         bool GetIsGeneralType() const { return !GetIsCollection(); }
+        bool GetIsObject() const { return _Macro.find(L"(") != std::wstring::npos ? IsContain(_Macro.substr(0, _Macro.find(L"(")), L"_SPTR") : false; }
         bool GetIsVector() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Vector, VPGEnumClassMacroType::VectorSptr}, _MacroType); }
         bool GetIsMap() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Map, VPGEnumClassMacroType::MapSptrR}, _MacroType); }
         bool GetIsOrderedMap() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::OrderedMap, VPGEnumClassMacroType::OrderedMapSptrR}, _MacroType); }
