@@ -203,7 +203,9 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
             Trim(property->_Command);
             return;
         }
-
+        
+        // split macro
+        pos = 0;
         if (IsStartWith(property->_Macro, L"GETSET(", pos))
             property->_MacroType = VPGEnumClassMacroType::Getset;
         else if (IsStartWith(property->_Macro, L"GETSET_SPTR(", pos))
@@ -245,8 +247,6 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
         else if (IsStartWith(property->_Macro, L"ACTION_WITH_ARG_SPTR(", pos))
             property->_MacroType = VPGEnumClassMacroType::ActionWithArgSptr;
         
-        // split macro
-        pos = 0;
         if (IsStartWith(property->_Macro, L"MANAGER", pos)) {
             property->_PropertyType = VPGEnumClassPropertyType::Manager;
 
