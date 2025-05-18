@@ -18,7 +18,7 @@ class VPGBaseGenerationManager : public BaseManager, public IVPGGenerationManage
     GETSET_SPTR_NULL(VPGConfig, Option);
     
     private:
-        VPGBaseGenerationManager() = default;
+        VPGBaseGenerationManager() = delete;
     
     protected:
         void ValidateOption() const;
