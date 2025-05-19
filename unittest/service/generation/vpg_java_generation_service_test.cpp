@@ -271,7 +271,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
         "    VectorDouble = 80, // VECTOR(double, VectorDouble)\r\n"
         "    VectorString, // VECTOR(std::wstring, VectorString)\r\n"
         "    Map, // MAP(int, double, Map)\r\n"
-        "    OrderedMap, // ORDERED_MAP(int, double, OrderedMap\r\n"
+        "    OrderedMap, // ORDERED_MAP(int, double, OrderedMap)\r\n"
         "    VectorObject, // VECTOR_SPTR(VPGTypeB, VectorObject)\r\n"
         "    MapObject, // MAP_SPTR_R(std::wstring, VPGTypeB, MapObject)\r\n"
         "    OrderedMapObject // ORDERED_MAP_SPTR_R(double, VPGTypeB, OrderedMapObject)\r\n" 

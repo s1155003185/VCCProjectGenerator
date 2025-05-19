@@ -80,18 +80,6 @@ std::wstring VPGEnumClassReader::_GetMacro(const std::wstring &propertyCommand, 
         result = propertyCommand.substr(pos, posOfQuote - pos);
         pos += posOfQuote;
         result += GetNextQuotedString(propertyCommand, pos, { L" ", L"\t", L"\r", L"\n" }, { L"\"", L"'", L"{", L"[", L"(", L"/*", L"//" }, { L"\"", L"'", L"}", L"]", L")", L"*/", L"\n" }, { L"\\", L"\\", L"", L"", L"", L"", L"" });
-        
-		// while (pos < propertyCommand.length())
-		// {
-		// 	pos = Find(propertyCommand, L")", pos);
-		// 	if (pos == std::wstring::npos)
-		// 		break;
-        //     if (CountSubstring(propertyCommand.substr(pos), L"\"") % 2 == 0) {
-        //         result = propertyCommand.substr(0, pos + 1);
-        //         break;
-        //     }
-		// 	pos++;
-		// }
         Trim(result);
     CATCH
     return result;
@@ -141,7 +129,7 @@ std::wstring VPGEnumClassReader::_GetDefaultValue(const std::wstring &macroStr, 
     TRY
         size_t endPos = macroStr.find_last_of(L")");
         if (endPos == std::wstring::npos) 
-            THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"GetDefaultValue: Macro ) missing");
+            THROW_EXCEPTION_MSG(ExceptionType::ParserError, macroStr + L": Macro ) missing");
 
         result = macroStr.substr(pos, endPos - pos);
         pos = endPos;
