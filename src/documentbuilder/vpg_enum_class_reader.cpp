@@ -198,7 +198,11 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
                 break;
             macroList.push_back(macro);
         }
+        // remove ) if macro can be found
+        if (pos > 0)
+            pos++;
         std::wstring remainStr = pos < propertyCommand.size() ? propertyCommand.substr(pos) : L"";
+        Trim(remainStr);
         // if Macro is empty, then rollback to pos = 0
         if (macroList.empty()) {
             property->_PropertyType = VPGEnumClassPropertyType::NA;
@@ -206,7 +210,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
             Trim(property->_Command);
             properties.push_back(property);
             return;
-        } 
+        }
         // 2. Create a property and assign all property, then clone and assign macro
         // split Remain
         std::vector<std::wstring> attributes = GetAttribute(remainStr);
