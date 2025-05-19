@@ -247,7 +247,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
         else if (IsStartWith(property->_Macro, L"ACTION_WITH_ARG_SPTR(", pos))
             property->_MacroType = VPGEnumClassMacroType::ActionWithArgSptr;
         
-        if (IsStartWith(property->_Macro, L"MANAGER", pos)) {
+        if (property->GetIsManager()) {
             property->_PropertyType = VPGEnumClassPropertyType::Manager;
 
             property->_Type1 = _GetType(property->_Macro, pos);
@@ -260,7 +260,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
                 pos++;
                 property->_DefaultValue = _GetDefaultValue(property->_Macro, pos);
             }
-        } else if (IsStartWith(property->_Macro, L"ACTION", pos)) {
+        } else if (property->GetIsAction()) {
             property->_PropertyType = VPGEnumClassPropertyType::Action;
 
             property->_PropertyName = _GetType(property->_Macro, pos);
@@ -271,7 +271,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
         } else {
             property->_PropertyType = VPGEnumClassPropertyType::Property;
 
-            if (IsStartWith(property->_Macro, L"MAP", pos) || IsStartWith(property->_Macro, L"ORDERED_MAP", pos)) {
+            if (property->GetIsMap() || property->GetIsOrderedMap()) {
                 property->_Type1 = _GetType(property->_Macro, pos);
                 if (property->_Macro[pos] == L',')  {
                     pos++;
