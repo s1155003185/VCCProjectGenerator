@@ -75,18 +75,23 @@ std::wstring VPGEnumClassReader::_GetMacro(const std::wstring &propertyCommand, 
             pos = 0;
             return result;
         }
+
+        size_t posOfQuote = Find(propertyCommand, L"(", pos);
+        result = propertyCommand.substr(pos, posOfQuote - pos);
+        pos += posOfQuote;
+        result += GetNextQuotedString(propertyCommand, pos, { L" ", L"\t", L"\r", L"\n" }, { L"\"", L"'", L"{", L"[", L"(", L"/*", L"//" }, { L"\"", L"'", L"}", L"]", L")", L"*/", L"\n" }, { L"\\", L"\\", L"", L"", L"", L"", L"" });
         
-		while (pos < propertyCommand.length())
-		{
-			pos = Find(propertyCommand, L")", pos);
-			if (pos == std::wstring::npos)
-				break;
-            if (CountSubstring(propertyCommand.substr(pos), L"\"") % 2 == 0) {
-                result = propertyCommand.substr(0, pos + 1);
-                break;
-            }
-			pos++;
-		}
+		// while (pos < propertyCommand.length())
+		// {
+		// 	pos = Find(propertyCommand, L")", pos);
+		// 	if (pos == std::wstring::npos)
+		// 		break;
+        //     if (CountSubstring(propertyCommand.substr(pos), L"\"") % 2 == 0) {
+        //         result = propertyCommand.substr(0, pos + 1);
+        //         break;
+        //     }
+		// 	pos++;
+		// }
         Trim(result);
     CATCH
     return result;
