@@ -78,7 +78,7 @@ std::wstring VPGEnumClassReader::_GetMacro(const std::wstring &propertyCommand, 
 
         size_t posOfQuote = Find(propertyCommand, L"(", pos);
         result = propertyCommand.substr(pos, posOfQuote - pos);
-        pos += posOfQuote;
+        pos = posOfQuote;
         result += GetNextQuotedString(propertyCommand, pos, { L" ", L"\t", L"\r", L"\n" }, { L"\"", L"'", L"{", L"[", L"(", L"/*", L"//" }, { L"\"", L"'", L"}", L"]", L")", L"*/", L"\n" }, { L"\\", L"\\", L"", L"", L"", L"", L"" });
         Trim(result);
     CATCH
@@ -91,13 +91,13 @@ std::wstring VPGEnumClassReader::_GetType(const std::wstring &macroStr, size_t &
     TRY
         pos = Find(macroStr, L"(");
         if (pos == std::wstring::npos)
-            THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"GetType: Macro ( missing");
+            THROW_EXCEPTION_MSG(ExceptionType::ParserError, macroStr + L": Macro ( missing");
         pos++;
         size_t endPos = Find(macroStr, L",");
         if (endPos == std::wstring::npos) {
             endPos = Find(macroStr, L")");
             if (endPos == std::wstring::npos)
-                THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"GetType: Macro , or ) missing");
+                THROW_EXCEPTION_MSG(ExceptionType::ParserError, macroStr + L": Macro , or ) missing");
         }
         result = macroStr.substr(pos, endPos - pos);
         pos = endPos;
@@ -114,7 +114,7 @@ std::wstring VPGEnumClassReader::_GetPropertyName(const std::wstring &macroStr, 
         if (endPos == std::wstring::npos) {
             endPos = macroStr.find_last_of(L")");
             if (endPos == std::wstring::npos) 
-                THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"GetPropertyName: Macro , or ) missing");
+                THROW_EXCEPTION_MSG(ExceptionType::ParserError, macroStr + L": Macro , or ) missing");
         }
         result = macroStr.substr(pos, endPos - pos);
         pos = endPos;
