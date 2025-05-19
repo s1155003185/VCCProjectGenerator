@@ -493,7 +493,7 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassMultiMacro)
     EXPECT_EQ(element->GetProperties().at(0)->GetEnum(), L"EnumA");
     EXPECT_EQ(element->GetProperties().at(0)->GetMacro(), L"GETCUSTOM(int64_t, EnumA, return 100;)");
     EXPECT_EQ(element->GetProperties().at(0)->GetType1(), L"int64_t");
-    EXPECT_EQ(element->GetProperties().at(3)->GetArgumentName1(), L"");
+    EXPECT_EQ(element->GetProperties().at(0)->GetArgumentName1(), L"");
     EXPECT_EQ(element->GetProperties().at(0)->GetType2(), L"");
     EXPECT_EQ(element->GetProperties().at(0)->GetPropertyName(), L"EnumA");
     EXPECT_EQ(element->GetProperties().at(0)->GetDefaultValue(), L"return 100;");
