@@ -189,8 +189,11 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
         // 1. Get all macro from command
         size_t pos = 0;
         while (true) {
-            std::wstring macro = _GetMacro(propertyCommand, pos);
+            size_t lastPos = pos;
+            std::wstring macro = _GetMacro(propertyCommand, lastPos);
             Trim(macro);
+            if (lastPos != 0)
+                pos = lastPos;
             if (macro.empty())
                 break;
             macroList.push_back(macro);
