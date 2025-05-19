@@ -5,6 +5,7 @@
 - Support one enum with multi class macro
 - Property support @@NoProperty
 - Git Manager Enhancement
+- TODO: Enum Support custom include files
 - TODO: Export function name to lowercase with underscore
 - TODO: Support Callback in argument
 - TODO: Support Structure
