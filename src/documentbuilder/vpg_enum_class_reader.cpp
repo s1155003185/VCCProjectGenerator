@@ -192,15 +192,14 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
             size_t lastPos = pos;
             std::wstring macro = _GetMacro(propertyCommand, lastPos);
             Trim(macro);
-            if (lastPos != 0)
+            if (lastPos != 0) {
                 pos = lastPos;
+                pos++;
+            }
             if (macro.empty())
                 break;
             macroList.push_back(macro);
         }
-        // remove ) if macro can be found
-        if (pos > 0)
-            pos++;
         std::wstring remainStr = pos < propertyCommand.size() ? propertyCommand.substr(pos) : L"";
         Trim(remainStr);
         // if Macro is empty, then rollback to pos = 0
@@ -336,6 +335,21 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
                     if (currentProperty->_Macro[pos] == L',')  {
                         pos++;
                         currentProperty->_PropertyName = _GetDefaultValue(currentProperty->_Macro, pos);
+                    }
+                } else if (currentProperty->GetMacroType() == VPGEnumClassMacroType::Setcustom || currentProperty->GetMacroType() == VPGEnumClassMacroType::SetcustomSptr) {
+                    currentProperty->_PropertyName = _GetType(currentProperty->_Macro, pos);
+    
+                    if (currentProperty->_Macro[pos] == L',')  {
+                        pos++;
+                        currentProperty->_Type1 = _GetPropertyName(currentProperty->_Macro, pos);
+                    }
+                    if (currentProperty->_Macro[pos] == L',')  {
+                        pos++;
+                        currentProperty->_ArgumentName1 = _GetPropertyName(currentProperty->_Macro, pos);
+                    }
+                    if (currentProperty->_Macro[pos] == L',')  {
+                        pos++;
+                        currentProperty->_DefaultValue = _GetDefaultValue(currentProperty->_Macro, pos);
                     }
                 } else {
                     currentProperty->_Type1 = _GetType(currentProperty->_Macro, pos);
