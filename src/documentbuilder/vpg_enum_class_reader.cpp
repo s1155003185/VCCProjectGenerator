@@ -188,9 +188,10 @@ std::vector<std::wstring> VPGEnumClassReader::GetAttribute(const std::wstring &s
     return result;
 }
 
-void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass, const std::wstring &propertyCommand, std::shared_ptr<VPGEnumClassProperty> property) const
+void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass, const std::wstring &propertyCommand, std::vector<std::shared_ptr<VPGEnumClassProperty>> &properties) const
 {
     TRY
+        auto property = std::make_shared<VPGEnumClassProperty>();
         size_t pos = 0;
         property->_Macro = _GetMacro(propertyCommand, pos);
         Trim(property->_Macro);
@@ -201,6 +202,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
             property->_PropertyType = VPGEnumClassPropertyType::NA;
             property->_Command = remainStr;
             Trim(property->_Command);
+            properties.push_back(property);
             return;
         }
         
@@ -339,6 +341,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
                 property->SetCommand(commandToken);
             }
         }
+        properties.push_back(property);
     CATCH
 }
 
@@ -387,13 +390,11 @@ void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &p
                 _GetCommand(cppCode, false, pos);
                 continue;
             }
-            std::wstring name = _GetEnum(cppCode, pos);
-            Trim(name);
-            if (name.empty())
+            std::wstring enumName = _GetEnum(cppCode, pos);
+            Trim(enumName);
+            if (enumName.empty())
                 break;
             
-            auto property = std::make_shared<VPGEnumClassProperty>();
-            property->_Enum = name;
             GetNextCharPos(cppCode, pos, false);
             if (cppCode[pos] == L'=') {
                 std::wstring enumValueStr = L"";
@@ -413,18 +414,27 @@ void VPGEnumClassReader::_ParseProperties(const std::wstring &cppCode, size_t &p
                 GetNextCharPos(cppCode, pos, false);
             }
             _EnumValue++;
-            property->_EnumValue = _EnumValue;
+
             if (cppCode[pos] == L',')
                 GetNextCharPos(cppCode, pos, false);
+            
+            std::vector<std::shared_ptr<VPGEnumClassProperty>> properties;
             if (IsStartWith(cppCode, L"//", pos) || IsStartWith(cppCode, L"/*", pos)) {
-                _AssignEnumClassProperty(enumClass.get(), _GetCommand(cppCode, false, pos), property);
+                _AssignEnumClassProperty(enumClass.get(), _GetCommand(cppCode, false, pos), properties);
                 GetNextCharPos(cppCode, pos, false);
             }
             if (cppCode[pos] == L',')
                 GetNextCharPos(cppCode, pos, false);
 
-            enumClass->_Properties.push_back(property);
-
+            if (properties.empty())
+                properties.push_back(std::make_shared<VPGEnumClassProperty>());
+            
+            for (auto property : properties) {
+                property->_Enum = enumName;
+                property->_EnumValue = _EnumValue;
+            }
+            enumClass->_Properties.insert(enumClass->_Properties.end(), properties.begin(), properties.end());
+            
             if (cppCode[pos] == L'}') {
                 pos--;
                 return;
