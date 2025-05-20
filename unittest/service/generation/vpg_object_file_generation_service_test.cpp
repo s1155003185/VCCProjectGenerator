@@ -178,6 +178,71 @@ TEST_F(VPGObjectFileGenerationServiceTest, Object)
         "};\r\n");
 }
 
+TEST_F(VPGObjectFileGenerationServiceTest, GetSetCustom)
+{
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VCCObjectProperty\r\n"
+        "{\r\n"
+        "    EnumA, // GETCUSTOM(int64_t, EnumA, return 100;)\r\n"
+        "    EnumB, // SETCUSTOM(EnumB , int64_t, argument, return 100;) @@NoProperty\r\n"
+        "    EnumC // GETCUSTOM(int64_t, EnumC, return 100;) SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;) @@NoProperty\r\n"
+        "};\r\n";
+    WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+
+    std::wstring classPrefix = L"VPG";
+    auto option = std::make_shared<VPGConfig>();
+    option->SetProjectPrefix(classPrefix);
+    std::map<std::wstring, std::wstring> projectClassIncludeFiles;
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
+
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+        this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
+    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
+
+    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), 
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+        "#pragma once\r\n"
+        "\r\n"
+        "#include <string>\r\n"
+        "\r\n"
+        "#include \"base_object.hpp\"\r\n"
+        "#include \"class_macro.hpp\"\r\n"
+        "#include \"object_type.hpp\"\r\n"
+        "#include \"vpg_class_a.hpp\"\r\n"
+        "#include \"vpg_class_b.hpp\"\r\n"
+        "\r\n"
+        "using namespace vcc;\r\n"
+        "\r\n"
+        "class VPGObject : public BaseObject\r\n"
+        "{\r\n"
+        "    GETSET_SPTR(VPGClassA, EnumA)\r\n"
+        "    MAP_SPTR_R(std::wstring, VPGClassB, EnumB)\r\n"
+        "\r\n"
+        "    public:\r\n"
+        "        VPGObject() : BaseObject(ObjectType::Object)\r\n"
+        "        {\r\n"
+        "            _EnumA = std::make_shared<VPGClassA>();\r\n"
+        "        }\r\n"
+        "\r\n"
+        "        virtual ~VPGObject() {}\r\n"
+        "\r\n"
+        "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
+        "        {\r\n"
+        "            auto obj = std::make_shared<VPGObject>(*this);\r\n"
+        "            obj->CloneEnumA(this->_EnumA.get());\r\n"
+        "            obj->CloneEnumB(this->_EnumB);\r\n"
+        "            return obj;\r\n"
+        "        }\r\n"
+        "};\r\n");
+}
+
 TEST_F(VPGObjectFileGenerationServiceTest, InheritClass)
 {
     std::wstring enumClass = L""

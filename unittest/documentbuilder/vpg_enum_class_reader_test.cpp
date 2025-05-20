@@ -469,18 +469,14 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
 
 TEST(VPGEnumClassReaderTest, VCCEnumClassMultiMacro)
 {
-    std::wstring code = L""
-        L"#pragma once\r\n"
-        L"\r\n"
-        L"#include <string>\r\n"
-        L"#include <vector>\r\n"
-        L"\r\n"
-        L"enum class VCCObjectProperty\r\n"
-        L"{\r\n"
-        L"    EnumA, // GETCUSTOM(int64_t, EnumA, return 100;)\r\n"
-        L"    EnumB, // SETCUSTOM(EnumB , int64_t, argument, return 100;) @@NoProperty\r\n"
-        L"    EnumC // GETCUSTOM(int64_t, EnumC, return 100;) SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;) @@NoProperty\r\n"
-        L"};\r\n";
+    std::wstring code = L"#pragma once\r\n"
+        ""
+        "enum class VCCObjectProperty\r\n"
+        "{\r\n"
+        "    EnumA, // GETCUSTOM(int64_t, EnumA, return 100;)\r\n"
+        "    EnumB, // SETCUSTOM(EnumB , int64_t, argument, return 100;) @@NoProperty\r\n"
+        "    EnumC // GETCUSTOM(int64_t, EnumC, return 100;) SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;) @@NoProperty\r\n"
+        "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> results;
     VPGGlobal::GetEnumClassReader()->Parse(code, results);
