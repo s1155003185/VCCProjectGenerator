@@ -744,7 +744,7 @@ Note:
     e.g. VPGPersionProperty
 
 #### Class Attribute
-// [@@Form] [@@ActionArgument] [@@Result] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsIndependent": true }] [@@Action { "IsIndependent": true }] [@@Thread { "IsIndependent": true } ] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Include {"Files" : [ "a.hpp", "b.hpp" ]}] [@@Private { "Properties": { "_PropertyA": "int64_t", "_PropertyB": "VPGGlobal" } } ] [@@Protected { "Properties": { "_PropertyA": "int64_t", "_PropertyB": "VPGGlobal" } }] [@@Public { "Properties": { "_PropertyA": "int64_t", "_PropertyB": "VPGGlobal" } }] [@@Command xxx]
+// [@@Form] [@@ActionArgument] [@@Result] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsIndependent": true }] [@@Action { "IsIndependent": true }] [@@Thread { "IsIndependent": true } ] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Include {"Files" : [ "a.hpp", "b.hpp" ]}] [@@Private { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } } ] [@@Protected { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } }] [@@Command xxx]
 
 []: Optional
 @@: Key for attributes. Need to state for attribute
@@ -818,23 +818,20 @@ Note:
         Files
             Array of file names.
 
-[@@Private { "Properties": { "_PropertyA": "int64_t", "_PropertyB": "VPGGlobal" } } ]
+[@@Private { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } } ]
     Class Private.
     Attribute:
         Properties
-            Object of property name and type pair.
+            Object of property name and type pair. Can define initalize value using "=" in value.
+            e.g. "_PropertyA": "int64_t=0" will parsed as multable int64_t _PropertyA = 0
+            e.g. "_PropertyB": "VPGGlobal=nullptr" will parsed as multable std::shared_ptr<VPGGlobal> _PropertyB = nullptr;
 
-[@@Protected { "Properties": { "_PropertyA": "int64_t", "_PropertyB": "VPGGlobal" } }]
+[@@Protected { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } }]
     Class Protected.
     Attribute:
         Properties
-            Object of property name and type pair.
-
-[@@Public { "Properties": { "_PropertyA": "int64_t", "_PropertyB": "VPGGlobal" } }]
-    Class Public.
-    Attribute:
-        Properties
-            Object of property name and type pair.
+            Object of property name and type pair. Can define initalize value using "=" in value.
+            Example same as above case.
 
 [@@Command xxx]
     Command used in VCC generator, can be any text in xxx without @@

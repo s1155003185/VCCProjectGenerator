@@ -124,7 +124,6 @@ class VPGEnumClass : public BaseObject
     // Properties
     MAP(std::wstring, std::wstring, PrivateProperties)
     MAP(std::wstring, std::wstring, ProtectedProperties)
-    MAP(std::wstring, std::wstring, PublicProperties)
 
     // Log
     GETSET(bool, IsLogConfigIndependent, false)

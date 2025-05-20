@@ -534,6 +534,33 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
                             enumClass->InsertJsonAttributesAtKey(key, jsonAttributes->GetString(key));
                     }
                     command = L"";
+                } else if (IsStartWith(attribute, attributePrefix + L"Include", 0, true)) {
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"Include");
+                    if (jsonAttributes != nullptr) {
+                        for (auto const &element : jsonAttributes->GetArray(L"Files"))
+                            enumClass->InsertIncludeFiles(element->GetArrayElementString());
+                    }
+                    command = L"";
+                }  else if (IsStartWith(attribute, attributePrefix + L"Private", 0, true)) {
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"Private");
+                    if (jsonAttributes != nullptr) {
+                        auto element = jsonAttributes->GetObject(L"Private");
+                        if (element != nullptr) {
+                            for (auto const &key : element->GetKeys())
+                                enumClass->InsertPrivatePropertiesAtKey(key, element->GetString(key));
+                        }
+                    }
+                    command = L"";
+                }  else if (IsStartWith(attribute, attributePrefix + L"Protected", 0, true)) {
+                    auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"Protected");
+                    if (jsonAttributes != nullptr) {
+                        auto element = jsonAttributes->GetObject(L"Protected");
+                        if (element != nullptr) {
+                            for (auto const &key : element->GetKeys())
+                                enumClass->InsertProtectedPropertiesAtKey(key, element->GetString(key));
+                        }
+                    }
+                    command = L"";
                 } else if (IsStartWith(attribute, attributePrefix + L"Command", 0, true)) {
                     std::wstring commandToken = attributePrefix + L"Command";
                     commandToken = attribute.substr(commandToken.length());
