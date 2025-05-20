@@ -119,7 +119,8 @@ class VPGEnumClass : public BaseObject
     VECTOR_SPTR(VPGEnumClassProperty, Properties)
 
     // Files
-    VECTOR(std::wstring, IncludeFiles)
+    VECTOR(std::wstring, IncludeSystemFiles)
+    VECTOR(std::wstring, IncludeCustomFiles)
 
     // Properties
     MAP(std::wstring, std::wstring, PrivateProperties)

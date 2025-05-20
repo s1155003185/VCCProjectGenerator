@@ -812,11 +812,14 @@ Note:
         Value.DecimalPlaces
             value is number. Declare for decimal places for double and float. If not declare, Json number will be trim tailing 0s.
 
-[@@Include {"Files" : [ "a.hpp", "b.hpp" ]}]
+[@@Include { "SystemFiles": ["string", "vector"], "CustomFiles" : [ "a.hpp", "b.hpp" ]}]
     Add include files in class files.
     Attribute:
-        Files
-            Array of file names.
+        SystemFiles
+            Array of system file names.
+
+        CustomFiles
+            Array of project file names.
 
 [@@Private { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } } ]
     Class Private.

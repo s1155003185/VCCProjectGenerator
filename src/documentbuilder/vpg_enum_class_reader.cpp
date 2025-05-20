@@ -537,8 +537,12 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
                 } else if (IsStartWith(attribute, attributePrefix + L"Include", 0, true)) {
                     auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"Include");
                     if (jsonAttributes != nullptr) {
-                        for (auto const &element : jsonAttributes->GetArray(L"Files"))
-                            enumClass->InsertIncludeFiles(element->GetArrayElementString());
+                        if (jsonAttributes->IsContainKey(L"SystemFiles"))
+                            for (auto const &element : jsonAttributes->GetArray(L"SystemFiles"))
+                                enumClass->InsertIncludeSystemFiles(element->GetArrayElementString());
+                        if (jsonAttributes->IsContainKey(L"CustomFiles"))
+                            for (auto const &element : jsonAttributes->GetArray(L"CustomFiles"))
+                                enumClass->InsertIncludeCustomFiles(element->GetArrayElementString());
                     }
                     command = L"";
                 }  else if (IsStartWith(attribute, attributePrefix + L"Private", 0, true)) {

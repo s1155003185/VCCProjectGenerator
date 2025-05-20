@@ -299,10 +299,16 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
 
     projectFileList.insert(L"class_macro.hpp");
     projectFileList.insert(L"object_type.hpp");
-
+    
     for (auto const &enumClass : enumClassList) {
         if (!IsPropertyClass(enumClass->GetName(), L""))
             continue;
+
+        // force insert include file list
+        for (auto const &fileName : enumClass->GetIncludeSystemFiles())
+            systemFileList.insert(fileName);
+        for (auto const &fileName : enumClass->GetIncludeCustomFiles())
+            projectFileList.insert(fileName);
 
         std::wstring className = GetClassNameFromPropertyClassName(enumClass->GetName());
         classInCurrentFileList.insert(className);
