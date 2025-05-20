@@ -182,25 +182,25 @@ TEST_F(VPGObjectFileGenerationServiceTest, GetSetCustom)
 {
     std::wstring enumClass = L"#pragma once\r\n"
         "\r\n"
-        "enum class VCCObjectProperty\r\n"
+        "enum class VPGObjectProperty\r\n"
         "{\r\n"
         "    EnumA, // GETCUSTOM(int64_t, EnumA, return 100;)\r\n"
         "    EnumB, // SETCUSTOM(EnumB , int64_t, argument, return 100;) @@NoProperty\r\n"
-        "    EnumC // GETCUSTOM(int64_t, EnumC, return 100;) SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;) @@NoProperty\r\n"
+        "    EnumC, // GETCUSTOM(int64_t, EnumC, return 100;) SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;) @@NoProperty\r\n"
+        "    EnumD, // GETCUSTOM(int64_t, EnumD, return 100;) SETCUSTOM(EnumE, int64_t, enumE, _EnumC = enumC;)\r\n"
+        "    EnumF, // GETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
+        "    EnumG // SETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
         "};\r\n";
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
-
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
@@ -215,15 +215,22 @@ TEST_F(VPGObjectFileGenerationServiceTest, GetSetCustom)
         "#include \"base_object.hpp\"\r\n"
         "#include \"class_macro.hpp\"\r\n"
         "#include \"object_type.hpp\"\r\n"
-        "#include \"vpg_class_a.hpp\"\r\n"
-        "#include \"vpg_class_b.hpp\"\r\n"
         "\r\n"
         "using namespace vcc;\r\n"
         "\r\n"
         "class VPGObject : public BaseObject\r\n"
         "{\r\n"
-        "    GETSET_SPTR(VPGClassA, EnumA)\r\n"
-        "    MAP_SPTR_R(std::wstring, VPGClassB, EnumB)\r\n"
+        "    protected:\r\n"
+        "        multable int64_t _EnumA;\r\n"
+        "    \r\n"
+        "    GETCUSTOM(int64_t, EnumA, return 100;)\r\n"
+        "    SETCUSTOM(EnumB , int64_t, argument, return 100;)\r\n"
+        "    GETCUSTOM(int64_t, EnumC, return 100;)\r\n"
+        "    SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;)\r\n"
+        "    GETCUSTOM(int64_t, EnumD, return 100;)\r\n"
+        "    SETCUSTOM(EnumE, int64_t, enumE, _EnumC = enumC;)\r\n"
+        "    GETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
+        "    SETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
         "\r\n"
         "    public:\r\n"
         "        VPGObject() : BaseObject(ObjectType::Object)\r\n"
