@@ -216,11 +216,8 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
         for (auto const &attribute : attributes) {
             std::vector<std::wstring> attributeTokes = SplitStringBySpace(attribute);
             std::wstring attributeToken = !attributeTokes.empty() ? attributeTokes[0] : L"";
-            // Property
-            if (IsEqual(attributeToken, attributePrefix + L"NoProperty", true))
-                property->_IsNoProperty = true;
             // Privilege
-            else if (IsEqual(attributeToken, attributePrefix + L"ReadOnly", true))
+            if (IsEqual(attributeToken, attributePrefix + L"ReadOnly", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::ReadOnly;
             else if (IsEqual(attributeToken, attributePrefix + L"WriteOnly", true))
                 property->_AccessMode = VPGEnumClassPropertyAccessMode::WriteOnly;

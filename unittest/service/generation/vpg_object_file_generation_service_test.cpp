@@ -194,13 +194,13 @@ TEST_F(VPGObjectFileGenerationServiceTest, GetSetCustom)
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
@@ -210,19 +210,15 @@ TEST_F(VPGObjectFileGenerationServiceTest, GetSetCustom)
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
-        "#include <string>\r\n"
-        "\r\n"
         "#include \"base_object.hpp\"\r\n"
         "#include \"class_macro.hpp\"\r\n"
         "#include \"object_type.hpp\"\r\n"
+        "#include \"vpg_class_a.hpp\"\r\n"
         "\r\n"
         "using namespace vcc;\r\n"
         "\r\n"
         "class VPGObject : public BaseObject\r\n"
         "{\r\n"
-        "    protected:\r\n"
-        "        multable int64_t _EnumA;\r\n"
-        "    \r\n"
         "    GETCUSTOM(int64_t, EnumA, return 100;)\r\n"
         "    SETCUSTOM(EnumB , int64_t, argument, return 100;)\r\n"
         "    GETCUSTOM(int64_t, EnumC, return 100;)\r\n"

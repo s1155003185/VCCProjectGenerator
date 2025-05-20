@@ -495,7 +495,6 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassMultiMacro)
     EXPECT_EQ(element->GetProperties().at(0)->GetDefaultValue(), L"return 100;");
     EXPECT_EQ(element->GetProperties().at(0)->GetCommand(), L"");
     EXPECT_EQ(element->GetProperties().at(0)->GetMacroType(), VPGEnumClassMacroType::Getcustom);
-    EXPECT_EQ(element->GetProperties().at(0)->GetIsNoProperty(), false);
     EXPECT_EQ(element->GetProperties().at(1)->GetEnum(), L"EnumB");
     EXPECT_EQ(element->GetProperties().at(1)->GetMacro(), L"SETCUSTOM(EnumB , int64_t, argument, return 100;)");
     EXPECT_EQ(element->GetProperties().at(1)->GetType1(), L"int64_t");
@@ -505,7 +504,6 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassMultiMacro)
     EXPECT_EQ(element->GetProperties().at(1)->GetDefaultValue(), L"return 100;");
     EXPECT_EQ(element->GetProperties().at(1)->GetCommand(), L"");
     EXPECT_EQ(element->GetProperties().at(1)->GetMacroType(), VPGEnumClassMacroType::Setcustom);
-    EXPECT_EQ(element->GetProperties().at(1)->GetIsNoProperty(), true);
     EXPECT_EQ(element->GetProperties().at(2)->GetEnum(), L"EnumC");
     EXPECT_EQ(element->GetProperties().at(2)->GetMacro(), L"GETCUSTOM(int64_t, EnumC, return 100;)");
     EXPECT_EQ(element->GetProperties().at(2)->GetType1(), L"int64_t");
@@ -515,7 +513,6 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassMultiMacro)
     EXPECT_EQ(element->GetProperties().at(2)->GetDefaultValue(), L"return 100;");
     EXPECT_EQ(element->GetProperties().at(2)->GetCommand(), L"");
     EXPECT_EQ(element->GetProperties().at(2)->GetMacroType(), VPGEnumClassMacroType::Getcustom);
-    EXPECT_EQ(element->GetProperties().at(2)->GetIsNoProperty(), true);
     EXPECT_EQ(element->GetProperties().at(3)->GetEnum(), L"EnumC");
     EXPECT_EQ(element->GetProperties().at(3)->GetMacro(), L"SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;)");
     EXPECT_EQ(element->GetProperties().at(3)->GetType1(), L"int64_t");
@@ -525,7 +522,6 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassMultiMacro)
     EXPECT_EQ(element->GetProperties().at(3)->GetDefaultValue(), L"_EnumC = enumC;");
     EXPECT_EQ(element->GetProperties().at(3)->GetCommand(), L"");
     EXPECT_EQ(element->GetProperties().at(3)->GetMacroType(), VPGEnumClassMacroType::Setcustom);
-    EXPECT_EQ(element->GetProperties().at(3)->GetIsNoProperty(), true);
 }
 
 TEST(VPGEnumClassReaderTest, AccessMode)

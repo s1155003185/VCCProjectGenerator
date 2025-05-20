@@ -76,7 +76,6 @@ class VPGEnumClassProperty : public BaseObject
 
     // Macro
     GETSET(VPGEnumClassMacroType, MacroType, VPGEnumClassMacroType::NA);
-    GETSET(bool, IsNoProperty, false);
     GETSET(VPGEnumClassPropertyAccessMode, AccessMode, VPGEnumClassPropertyAccessMode::ReadWrite);
     GETSET(bool, IsInherit, false);
     
