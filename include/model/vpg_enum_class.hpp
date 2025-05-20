@@ -118,6 +118,14 @@ class VPGEnumClass : public BaseObject
     GETSET(std::wstring, Command, L"")
     VECTOR_SPTR(VPGEnumClassProperty, Properties)
 
+    // Files
+    VECTOR(std::wstring, IncludeFiles)
+
+    // Properties
+    MAP(std::wstring, std::wstring, PrivateProperties)
+    MAP(std::wstring, std::wstring, ProtectedProperties)
+    MAP(std::wstring, std::wstring, PublicProperties)
+
     // Log
     GETSET(bool, IsLogConfigIndependent, false)
 
