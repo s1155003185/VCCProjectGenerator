@@ -547,8 +547,8 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
                     command = L"";
                 }  else if (IsStartWith(attribute, attributePrefix + L"Private", 0, true)) {
                     auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"Private");
-                    if (jsonAttributes != nullptr) {
-                        auto element = jsonAttributes->GetObject(L"Private");
+                    if (jsonAttributes != nullptr && jsonAttributes->IsContainKey(L"Properties")) {
+                        auto element = jsonAttributes->GetObject(L"Properties");
                         if (element != nullptr) {
                             for (auto const &key : element->GetKeys())
                                 enumClass->InsertPrivatePropertiesAtKey(key, element->GetString(key));
@@ -557,8 +557,8 @@ bool VPGEnumClassReader::_ParseClass(const std::wstring &cppCode, size_t &pos, s
                     command = L"";
                 }  else if (IsStartWith(attribute, attributePrefix + L"Protected", 0, true)) {
                     auto jsonAttributes = GetJsonAttributes(attribute, attributePrefix + L"Protected");
-                    if (jsonAttributes != nullptr) {
-                        auto element = jsonAttributes->GetObject(L"Protected");
+                    if (jsonAttributes != nullptr && jsonAttributes->IsContainKey(L"Properties")) {
+                        auto element = jsonAttributes->GetObject(L"Properties");
                         if (element != nullptr) {
                             for (auto const &key : element->GetKeys())
                                 enumClass->InsertProtectedPropertiesAtKey(key, element->GetString(key));
