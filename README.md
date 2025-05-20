@@ -744,7 +744,7 @@ Note:
     e.g. VPGPersionProperty
 
 #### Class Attribute
-// [@@Form] [@@ActionArgument] [@@Result] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsIndependent": true }] [@@Action { "IsIndependent": true }] [@@Thread { "IsIndependent": true } ] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Command xxx]
+// [@@Form] [@@ActionArgument] [@@Result] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsIndependent": true }] [@@Action { "IsIndependent": true }] [@@Thread { "IsIndependent": true } ] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Include {"Files" : [ "a.hpp", "b.hpp" ]}] [@@Private { "Properties": { "_PropertyA": "int64_t", "_PropertyB": "VPGGlobal" } } ] [@@Protected { "Properties": { "_PropertyA": "int64_t", "_PropertyB": "VPGGlobal" } }] [@@Public { "Properties": { "_PropertyA": "int64_t", "_PropertyB": "VPGGlobal" } }] [@@Command xxx]
 
 []: Optional
 @@: Key for attributes. Need to state for attribute
@@ -811,6 +811,30 @@ Note:
 
         Value.DecimalPlaces
             value is number. Declare for decimal places for double and float. If not declare, Json number will be trim tailing 0s.
+
+[@@Include {"Files" : [ "a.hpp", "b.hpp" ]}]
+    Add include files in class files.
+    Attribute:
+        Files
+            Array of file names.
+
+[@@Private { "Properties": { "_PropertyA": "int64_t", "_PropertyB": "VPGGlobal" } } ]
+    Class Private.
+    Attribute:
+        Properties
+            Object of property name and type pair.
+
+[@@Protected { "Properties": { "_PropertyA": "int64_t", "_PropertyB": "VPGGlobal" } }]
+    Class Protected.
+    Attribute:
+        Properties
+            Object of property name and type pair.
+
+[@@Public { "Properties": { "_PropertyA": "int64_t", "_PropertyB": "VPGGlobal" } }]
+    Class Public.
+    Attribute:
+        Properties
+            Object of property name and type pair.
 
 [@@Command xxx]
     Command used in VCC generator, can be any text in xxx without @@

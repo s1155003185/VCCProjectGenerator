@@ -3,6 +3,7 @@
 ## [Unreleased] - Review - Git Manager Enhancement
 - Support GETCUSTOM, GETCUSTOM_SPTR, SETCUSTOM, SETCUSTOM_SPTR
 - Support one enum with multi class macro
+- Class Enum support @@Include @@Private @@Protected @@Public
 - Git Manager Enhancement
 - TODO: Enum Support custom include files
 - TODO: Export function name to lowercase with underscore
