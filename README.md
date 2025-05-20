@@ -816,7 +816,7 @@ Note:
     Command used in VCC generator, can be any text in xxx without @@
 
 #### Field Attribute
-Enum // {ClassMacro} [{ClassMacro}] [@@NoProperty] [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@ActionResult { "Redo.Class": "ClassName", "Undo.Class" : "ClassName" }] [@@Command xxx]
+Enum // {ClassMacro} [{ClassMacro}] [@@AccessMode] [@@Inherit] [@@NoHistory] [@@NoJson] [@@ActionResult { "Redo.Class": "ClassName", "Undo.Class" : "ClassName" }] [@@Command xxx]
 
 {...}: Compulsory
 []: Optional
@@ -836,10 +836,10 @@ Enum // {ClassMacro} [{ClassMacro}] [@@NoProperty] [@@AccessMode] [@@Inherit] [@
         | GETSET(type, name, defaultValue) |  Normal Type and Enum.  | GETSET(std::wstring, Name, L"") |
         | GETSET_SPTR(type, name, ...) | Object. Initialize in class constructor. The inialization is in order. | GETSET_SPTR(GitOption, Name, _LogConfig, L"Remark") |
         | GETSET_SPTR_NULL(type, name) | Object and initialize as nullptr. Please initialize it after class creation. | GETSET_SPTR_NULL(GitOption, Name) |
-        | GETCUSTOM(type, name, ...) | Getter only. Normal Type and Enum. Note: not support helper at the moment. | GETCUSTOM(bool, IsObjectExists, return _Object != nullptr) |
-        | GETCUSTOM_SPTR(type, name, ...) | Getter only. Object. Not generate real properties. Note: not support helper at the moment. | GETCUSTOM_SPTR(GitObject, GitObject, return _Object != nullptr ? _Object : std::shared_ptr<GitObject>(); ) |
-        | SETCUSTOM(name, type, argumentName, ...) | Setter only. Normal Type and Enum. Note: not support helper at the moment. | SETCUSTOM(IsTrue, bool, _IsTrue = (_Object != nullptr) ? true : isTrue; ) |
-        | SETCUSTOM_SPTR(name, type, argumentName, ...) | Setter Only. Object. Note: not support helper at the moment. | SETCUSTOM_SPTR(IsTrue, GitObject, _IsTrue = gitObject != nullptr; ) |
+        | GETCUSTOM(type, name, ...) | Getter only. Does not contain real variable. | GETCUSTOM(bool, IsObjectExists, return _Object != nullptr) |
+        | GETCUSTOM_SPTR(type, name, ...) | Getter only. Does not contain real variable. | GETCUSTOM_SPTR(GitObject, GitObject, return _Object != nullptr ? _Object : std::shared_ptr<GitObject>(); ) |
+        | SETCUSTOM(name, type, argumentName, ...) | Setter only. Does not contain real variable. | SETCUSTOM(IsTrue, bool, isTrue, _IsTrue = (_Object != nullptr) ? true : isTrue; ) |
+        | SETCUSTOM_SPTR(name, type, argumentName, ...) | Setter Only. Does not contain real variable. | SETCUSTOM_SPTR(IsTrue, GitObject, object, _IsTrue = gitObject != nullptr; ) |
         | VECTOR(type, name) | std::vector<type>. Vector for Normal Type and Enum. | VECTOR(double, Name) |
         | VECTOR_SPTR(type, name) | std::vecotr<std::shared_ptr<type>>. Vector for Object. | VECTOR_SPTR(GitOption, Name) |
         | MAP(type1, type2, name) | Map of Normal Type and Enum. | MAP(std::wstring, double, Name) |
@@ -869,10 +869,6 @@ Enum // {ClassMacro} [{ClassMacro}] [@@NoProperty] [@@AccessMode] [@@Inherit] [@
 [{ClassMacro}]
     Define second Class Macro. It will share same enum with the first one.
     As most macro contains both getter and setter, this option is only available for GETCUSTOM, GETCUSTOM_SPTR, SETCUSTOM, SETCUSTOM_SPTR.
-
-[@@NoProperty]
-    Only available for GETCUSTOM, GETCUSTOM_SPTR, SETCUSTOM, SETCUSTOM_SPTR
-    If stated, then no property is generated.
 
 [@@AccessMode]
     Default is @@ReadWrite.
