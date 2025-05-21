@@ -54,7 +54,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Empty)
     auto option = std::make_shared<VPGConfig>();
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);    
     EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
@@ -82,7 +82,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
@@ -136,7 +136,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Object)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
 
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
@@ -201,7 +201,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, GetSetCustom)
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
@@ -268,7 +268,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritClass)
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"GitLog", L"git_service.hpp"));
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
@@ -336,7 +336,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Multi)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
 
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
@@ -402,7 +402,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, IncludeFiles)
     auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
@@ -444,7 +444,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Properties)
         "#pragma once\r\n"
         "\r\n"
         "//@@Private{ \"Properties\": {\"a\":\"int64_t=0\", \"b\":\"VPGObjectB=nullptr\" } }\r\n"
-        "//@@Protected{ \"Properties\": {\"c\":\"VPGObjectC=std::make_shared<VPGObjectC>(1,2,3);\", \"d\":\"VPGObjectD=VPGObjectD::NA\" } }\r\n"
+        "//@@Protected{ \"Properties\": {\"c\":\"VPGObjectC=std::make_shared<VPGObjectC>(1,2,3);\", \"d\":\"ExceptionType=ExceptionType::NA\" } }\r\n"
         "enum class VPGGitLogProperty\r\n"
         "{\r\n"
         "    EnumA // GETSET(std::wstring, EnumA, L\"\") \r\n"
@@ -462,8 +462,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Properties)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectA", L"vpg_class_a.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectB", L"vpg_class_b.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectC", L"vpg_class_c.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectD", L"vpg_class_d.hpp"));
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    projectClassIncludeFiles.insert(std::make_pair(L"ExceptionType", L"exception_type.hpp"));
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
@@ -476,28 +476,27 @@ TEST_F(VPGObjectFileGenerationServiceTest, Properties)
         "\r\n"
         "#include \"base_object.hpp\"\r\n"
         "#include \"class_macro.hpp\"\r\n"
+        "#include \"exception_type.hpp\"\r\n"
         "#include \"object_type.hpp\"\r\n"
-        "#include \"vpg_class_a.hpp\"\r\n"
         "#include \"vpg_class_b.hpp\"\r\n"
         "#include \"vpg_class_c.hpp\"\r\n"
-        "#include \"vpg_class_d.hpp\"\r\n"
         "\r\n"
         "using namespace vcc;\r\n"
         "\r\n"
-        "class VPGGitLog : public GitLog\r\n"
+        "class VPGGitLog : public BaseObject\r\n"
         "{\r\n"
         "    private:\r\n"
-        "        multable int64_t a = 0;\r\n"
-        "        multable std::shared_ptr<VPGObjectB> b = nullptr;\r\n"
+        "        mutable int64_t a = 0;\r\n"
+        "        mutable std::shared_ptr<VPGObjectB> b = nullptr;\r\n"
         "\r\n"
         "    protected:\r\n"
-        "        multable std::shared_ptr<VPGObjectC> c = nullptr;\r\n"
-        "        multable VPGObjectD d = VPGObjectD::NA;\r\n"
+        "        mutable std::shared_ptr<VPGObjectC> c = std::make_shared<VPGObjectC>(1,2,3);\r\n"
+        "        mutable ExceptionType d = ExceptionType::NA;\r\n"
         "\r\n"
         "    GETSET(std::wstring, EnumA, L\"\")\r\n"
         "\r\n"
         "    public:\r\n"
-        "        VPGGitLog() : BaseObject(ObjectType::Object) {}\r\n"
+        "        VPGGitLog() : BaseObject(ObjectType::GitLog) {}\r\n"
         "        virtual ~VPGGitLog() {}\r\n"
         "\r\n"
         "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
@@ -529,7 +528,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form)
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     //projectClassIncludeFiles.insert(std::make_pair(L"GitLog", L"git_service.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
@@ -663,7 +662,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormWithIndependentManager)
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
@@ -802,7 +801,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, InheritForm)
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"GitBaseForm", L"git_form.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
@@ -936,7 +935,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
     auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
@@ -1115,7 +1114,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgument", L"vpg_git_form.hpp"));
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
@@ -1479,7 +1478,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, ActionArgument)
     auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
@@ -1528,7 +1527,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Result)
     auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
     EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
@@ -1600,8 +1599,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObject", L"vcc_object.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"JsonInternalType", L"json.hpp"));
-
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
@@ -2068,8 +2066,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObject", L"vcc_object.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"JsonInternalType", L"json.hpp"));
-
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);
@@ -2238,7 +2235,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObject", L"vcc_object.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"JsonInternalType", L"json.hpp"));
 
-    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles,
+    VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
         this->GetFilePathCpp(), this->GetFilePathCpp(), this->GetActionFolderPathCpp(), enumClassList);

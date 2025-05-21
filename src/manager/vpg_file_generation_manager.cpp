@@ -312,7 +312,7 @@ void VPGFileGenerationManager::GernerateProperty(const LogConfig *logConfig, con
                     std::wstring actionFolderHpp = !IsBlank(actionDirectoryHpp) ? GetConcatPath(projWorkspace, actionDirectoryHpp, middlePath, L"") : L"";
                     std::wstring actionFolderCpp = !IsBlank(actionDirectoryCpp) ? GetConcatPath(projWorkspace, actionDirectoryCpp, middlePath, L"") : L"";
                     
-                    VPGObjectFileGenerationService::GenerateHpp(logConfig, option, _IncludeFiles, GetConcatPath(projWorkspace, objectDirectoryHpp, middlePath, objectFileName + L".hpp"), fileObjectDirectoryHpp, actionFolderHpp, objectEnumClassList);
+                    VPGObjectFileGenerationService::GenerateHpp(logConfig, option, _IncludeFiles, _EnumClasses, GetConcatPath(projWorkspace, objectDirectoryHpp, middlePath, objectFileName + L".hpp"), fileObjectDirectoryHpp, actionFolderHpp, objectEnumClassList);
                     VPGObjectFileGenerationService::GenerateCpp(logConfig, projPrefix, _IncludeFiles, _EnumClasses, GetConcatPath(projWorkspace, objectDirectoryCpp, middlePath, objectFileName + L".cpp"), fileObjectDirectoryCpp, actionFolderCpp, objectEnumClassList);
                 }
                 if (!propertyAccessorDirectoryHpp.empty() && !propertyAccessorDirectoryCpp.empty()) {

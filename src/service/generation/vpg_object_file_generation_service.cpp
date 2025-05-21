@@ -284,6 +284,7 @@ std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const st
 }
 
 void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
+    const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
     const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList,
     bool &isContainForm,
     std::set<std::wstring> &systemFileList,
@@ -358,9 +359,42 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
         }
         
         // ------------------------------------------------------------------------------------------ //
+        //                               Class extra Property                                         //
+        // ------------------------------------------------------------------------------------------ //
+        std::set<std::wstring> extraPropertyList;
+        for (auto const &property : enumClass->GetPrivateProperties()) {
+            std::wstring type = Find(property.second, L"=") != std::wstring::npos ? SplitString(property.second, { L"=" })[0] : property.second;
+            Trim(type);
+            extraPropertyList.insert(type);
+        }
+        for (auto const &property : enumClass->GetProtectedProperties()) {
+            std::wstring type = Find(property.second, L"=") != std::wstring::npos ? SplitString(property.second, { L"=" })[0] : property.second;
+            Trim(type);
+            extraPropertyList.insert(type);
+        }
+        for (auto const &extraProperty : extraPropertyList) {
+            if (IsCapital(extraProperty)) {
+                std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, extraProperty);
+                if (!includeFile.empty()) {
+                    projectFileList.insert(includeFile);
+                    // if not enum class, then need to add memory for shared_ptr
+                    if (enumClassMapping.find(extraProperty) == enumClassMapping.end())
+                        systemFileList.insert(L"memory");
+                }
+                else
+                    THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Class " + extraProperty + L" NOT FOUND");
+            } else {
+                // TODO: need to enable to check all systemn function
+                // system type
+                if (CountSubstring(extraProperty, L"string") > 0)
+                    systemFileList.insert(L"string");
+            }
+        }
+
+        // ------------------------------------------------------------------------------------------ //
         //                               Property Level                                               //
         // ------------------------------------------------------------------------------------------ //
-        for (std::shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
+        for (auto const &property : enumClass->GetProperties()) {
             // handle enum without macro case
             if (property->GetPropertyType() == VPGEnumClassPropertyType::NA || property->GetPropertyType() == VPGEnumClassPropertyType::Action || property->GetIsInherit())
                 continue;
@@ -468,12 +502,51 @@ std::wstring VPGObjectFileGenerationService::GetHppConstructor(const VPGEnumClas
     return result;
 }
 
-std::wstring VPGObjectFileGenerationService::GetHppProperties(const VPGEnumClass *enumClass, const std::wstring &className)
+std::wstring VPGObjectFileGenerationService::GetHppProperties(const VPGEnumClass *enumClass, const std::wstring &className, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping)
 {
     std::wstring result = L"";
     TRY
+        // extra properties - maybe used in custom function, need to be generated first
+        if (!enumClass->GetPrivateProperties().empty())
+            result += INDENT + L"private:\r\n";
+        for (auto const &property : enumClass->GetPrivateProperties()) {
+            std::wstring type = L"";
+            std::wstring defaultValue = L"";
+            if (IsContain(property.second, L"=")) {
+                type = SplitString(property.second, { L"=" })[0];
+                defaultValue = SplitString(property.second, { L"=" })[1];
+            } else
+                type = property.second;
+            Trim(type);
+            Trim(defaultValue);
+            if (IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end())
+                type = L"std::shared_ptr<" + type + L">";
+            result += INDENT + INDENT + L"mutable " + type + L" " + property.first + (!defaultValue.empty() ? (L" = " + defaultValue) : L"") + (!IsEndWith(defaultValue, L";") ? L";" : L"") + L"\r\n";
+        }
+
+        if (!result.empty())
+            result += L"\r\n";
+        if (!enumClass->GetProtectedProperties().empty())
+            result += INDENT + L"protected:\r\n";
+        for (auto const &property : enumClass->GetProtectedProperties()) {
+            std::wstring type = L"";
+            std::wstring defaultValue = L"";
+            if (IsContain(property.second, L"=")) {
+                type = SplitString(property.second, { L"=" })[0];
+                defaultValue = SplitString(property.second, { L"=" })[1];
+            } else
+                type = property.second;
+            Trim(type);
+            Trim(defaultValue);
+            if (IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end())
+                type = L"std::shared_ptr<" + type + L">";
+            result += INDENT + INDENT + L"mutable " + type + L" " + property.first + (!defaultValue.empty() ? (L" = " + defaultValue) : L"") + (!IsEndWith(defaultValue, L";") ? L";" : L"") + L"\r\n";
+        }
+
+        if (!result.empty())
+            result += L"\r\n";
         // generate properties
-        for (std::shared_ptr<VPGEnumClassProperty> property : enumClass->GetProperties()) {
+        for (auto const &property : enumClass->GetProperties()) {
             // handle enum without macro case
             // Not generate inherited properties
             if (property->GetMacro().empty() || property->GetIsInherit())
@@ -579,7 +652,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicCustomFunctions(const V
     return result;    
 }
 
-std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass* enumClass, const VPGConfig *option)
+std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass* enumClass, const VPGConfig *option, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping)
 {
     std::wstring result = L"";
     TRY
@@ -615,7 +688,7 @@ std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass
         result += L"\r\n"
             "class " + className + L" : public " + baseClassName + inheritClass + L"\r\n"
             "{\r\n"
-            + GetHppProperties(enumClass, className)
+            + GetHppProperties(enumClass, className, enumClassMapping)
             + GetHppPrivateFunctions(enumClass, className)
             + GetHppProtectedFunctions(enumClass, className)
             + L"\r\n"
@@ -633,6 +706,7 @@ std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass
 void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
     const VPGConfig *option,
     const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
+    const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
     const std::wstring &objectFilePathHpp,
     const std::wstring &formFilePathHpp,
     const std::wstring &actionFolderPathHpp,
@@ -648,6 +722,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
         std::set<std::wstring> classInCurrentFileList;
         bool isContainForm = false;
         GetHppIncludeFiles(projectClassIncludeFiles,
+            enumClassMapping,
             enumClassList,
             isContainForm,
             systemFileList,
@@ -713,7 +788,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
         for (auto const &enumClass : enumClassList) {
             if (!IsPropertyClass(enumClass->GetName(), L"") || enumClass->GetType() != VPGEnumClassType::ActionArgument)
                 continue;
-            content += GenerateHppClass(enumClass.get(), option);
+            content += GenerateHppClass(enumClass.get(), option, enumClassMapping);
         }
 
         // 2. Generate Action
@@ -725,7 +800,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
         for (auto const &enumClass : enumClassList) {
             if (!IsPropertyClass(enumClass->GetName(), L"") || enumClass->GetType() == VPGEnumClassType::ActionArgument)
                 continue;
-            content += GenerateHppClass(enumClass.get(), option);
+            content += GenerateHppClass(enumClass.get(), option, enumClassMapping);
         }
         
         // ------------------------------------------------------------------------------------------ //
