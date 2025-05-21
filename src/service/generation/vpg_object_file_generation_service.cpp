@@ -1146,7 +1146,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
             "std::shared_ptr<Json> " + className + L"::ToJson() const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n"
-            + toJsonVarable
+            + (!toJsonStr.empty() ? toJsonVarable : L"")
             + INDENT + INDENT + L"auto json = std::make_unique<Json>();\r\n"
             + toJsonStr
             + INDENT + INDENT + L"return json;\r\n"
@@ -1157,7 +1157,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
             "void " + className + L"::DeserializeJson(std::shared_ptr<IDocument> document) const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n"
-            + deserializeVariable
+            + (!deserializeStr.empty() ? deserializeVariable : L"")
             + INDENT + INDENT + L"auto json = std::dynamic_pointer_cast<Json>(document);\r\n"
             + INDENT + INDENT + L"assert(json != nullptr);\r\n"
             + deserializeStr

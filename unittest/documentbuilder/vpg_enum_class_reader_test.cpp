@@ -470,7 +470,7 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
 TEST(VPGEnumClassReaderTest, VCCEnumClassMultiMacro)
 {
     std::wstring code = L"#pragma once\r\n"
-        ""
+        "\r\n"
         "enum class VCCObjectProperty\r\n"
         "{\r\n"
         "    EnumA, // GETCUSTOM(int64_t, EnumA, return 100;)\r\n"

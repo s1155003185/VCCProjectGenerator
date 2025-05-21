@@ -823,6 +823,8 @@ Note:
 
 [@@Private { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } } ]
     Class Private.
+    Properties will not be exported in Json. Please also use GETCUSTOM, GETCUSTOM_SPTR, SETCUSTOM, SETCUSTOM_SPTR if export to json is needed.
+    For object, it will inialize at constructer.
     Attribute:
         Properties
             Object of property name and type pair. Can define initalize value using "=" in value.
@@ -831,6 +833,8 @@ Note:
 
 [@@Protected { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } }]
     Class Protected.
+    Properties will not be exported in Json. Please also use GETCUSTOM, GETCUSTOM_SPTR, SETCUSTOM, SETCUSTOM_SPTR if export to json is needed.
+    For object, it will inialize at constructer.
     Attribute:
         Properties
             Object of property name and type pair. Can define initalize value using "=" in value.
