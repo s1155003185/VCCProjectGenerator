@@ -459,41 +459,69 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
     }
 }
 
-std::wstring VPGObjectFileGenerationService::GetHppConstructor(const VPGEnumClass *enumClass, const std::wstring &classPrefix, const std::wstring &className, const std::wstring &baseClassNameWithoutQuote)
+std::wstring VPGObjectFileGenerationService::GetHppConstructor(const VPGEnumClass *enumClass, const std::wstring &classPrefix, const std::wstring &className, const std::wstring &baseClassNameWithoutQuote, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping)
 {
     std::wstring result = L"";
     TRY
         // Constructor
         if (enumClass->GetType() == VPGEnumClassType::Form) {
             result += INDENT + INDENT + className + L"();\r\n";
-        } else if (enumClass->GetType() == VPGEnumClassType::Result) {
-            result += INDENT + INDENT + className + L"() : " + className + L"(ExceptionType::NoError, L\"\") {}\r\n"
-                + INDENT + INDENT + className + L"(const ExceptionType &exceptionType, const std::wstring &errorMessage) : BaseResult(ObjectType::" +  className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L", exceptionType, errorMessage) {}\r\n";
         } else {
             std::wstring initializeStr = L"";
+            std::map<std::wstring, std::wstring> initializeStrMap; 
+            for (auto property : enumClass->GetPrivateProperties()) {
+                std::wstring type = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[0] : property.second;
+                std::wstring defaultValue = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[1] : L"";
+                Trim(type);
+                Trim(defaultValue);
+                if (IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end())
+                    initializeStrMap.insert(std::make_pair(property.first, property.first + L" = " + defaultValue));
+            }
+            for (auto property : enumClass->GetProtectedProperties()) {
+                std::wstring type = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[0] : property.second;
+                std::wstring defaultValue = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[1] : L"";
+                Trim(type);
+                Trim(defaultValue);
+                if (IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end())
+                    initializeStrMap.insert(std::make_pair(property.first, property.first + L" = " + defaultValue));
+            }
             for (auto property : enumClass->GetProperties()) {
                 if (property->GetIsInitializeInClassConstructorNeeded())
-                    initializeStr += INDENT + INDENT + INDENT + L"_" + property->GetPropertyName() + L" = std::make_shared<" + property->GetType1() + L">(" + property->GetDefaultValue() + L");\r\n";
+                    initializeStrMap.insert(std::make_pair(L"_" + property->GetPropertyName(), L"_" + property->GetPropertyName() + L" = std::make_shared<" + property->GetType1() + L">(" + property->GetDefaultValue() + L");"));
             }
+            for (auto const &str : initializeStrMap)
+                initializeStr += INDENT + INDENT + INDENT + str.second + L"\r\n";
 
-            if (!IsBlank(enumClass->GetInheritClass()))
-                result += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"()\r\n"
-                    + INDENT + INDENT + L"{\r\n"
-                    + INDENT + INDENT + INDENT + L"_ObjectType = ObjectType::" +  className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L";\r\n"
-                    + initializeStr
-                    + INDENT + INDENT + L"}\r\n";
-            else {
-                result += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"(ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L")";
-                if (!initializeStr.empty())
+            if (enumClass->GetType() == VPGEnumClassType::Result) {
+                result += INDENT + INDENT + className + L"() : " + className + L"(ExceptionType::NoError, L\"\") {}\r\n"
+                    + INDENT + INDENT + className + L"(const ExceptionType &exceptionType, const std::wstring &errorMessage) : BaseResult(ObjectType::" +  className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L", exceptionType, errorMessage)";
+                if (!initializeStr.empty()) {
                     result += L"\r\n"
                         + INDENT + INDENT + L"{\r\n"
                         + initializeStr
-                        + INDENT + INDENT;
-                else
-                    result += L" {";
-                result += L"}\r\n";
-                if (!initializeStr.empty())
-                    result += L"\r\n";
+                        + INDENT + INDENT + L"}\r\n";
+                } else
+                    result += L" {}\r\n";
+            } else {
+                if (!IsBlank(enumClass->GetInheritClass()))
+                    result += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"()\r\n"
+                        + INDENT + INDENT + L"{\r\n"
+                        + INDENT + INDENT + INDENT + L"_ObjectType = ObjectType::" +  className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L";\r\n"
+                        + initializeStr
+                        + INDENT + INDENT + L"}\r\n";
+                else {
+                    result += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"(ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L")";
+                    if (!initializeStr.empty())
+                        result += L"\r\n"
+                            + INDENT + INDENT + L"{\r\n"
+                            + initializeStr
+                            + INDENT + INDENT;
+                    else
+                        result += L" {";
+                    result += L"}\r\n";
+                    if (!initializeStr.empty())
+                        result += L"\r\n";
+                }
             }
         }
         // Destructor
@@ -519,8 +547,10 @@ std::wstring VPGObjectFileGenerationService::GetHppProperties(const VPGEnumClass
                 type = property.second;
             Trim(type);
             Trim(defaultValue);
-            if (IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end())
+            if (IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end()) {
                 type = L"std::shared_ptr<" + type + L">";
+                defaultValue = L"nullptr";
+            }
             result += INDENT + INDENT + L"mutable " + type + L" " + property.first + (!defaultValue.empty() ? (L" = " + defaultValue) : L"") + (!IsEndWith(defaultValue, L";") ? L";" : L"") + L"\r\n";
         }
 
@@ -693,7 +723,7 @@ std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass
             + GetHppProtectedFunctions(enumClass, className)
             + L"\r\n"
             + INDENT + L"public:\r\n"
-            + GetHppConstructor(enumClass, option->GetProjectPrefix(), className, baseClassNameWithoutQuote)
+            + GetHppConstructor(enumClass, option->GetProjectPrefix(), className, baseClassNameWithoutQuote, enumClassMapping)
             + GetHppPublicCloneFunctions(enumClass, className)
             + GetHppPublicJsonFunctions(enumClass)
             + GetHppPublicFunctions(enumClass, option)
@@ -911,21 +941,43 @@ std::wstring VPGObjectFileGenerationService::GetCppCustomHeader(const bool &isCo
     return result;
 }
 
-std::wstring VPGObjectFileGenerationService::GetCppConstructor(const VPGEnumClass *enumClass, const std::wstring &classPrefix, const std::wstring &className, const std::wstring &baseClassNameWithoutQuote)
+std::wstring VPGObjectFileGenerationService::GetCppConstructor(const VPGEnumClass *enumClass, const std::wstring &classPrefix, const std::wstring &className, const std::wstring &baseClassNameWithoutQuote, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping)
 {
     std::wstring result = L"";
     TRY
         if (enumClass->GetType() == VPGEnumClassType::Form) {
+            std::wstring initializeStr = L"";
+            std::map<std::wstring, std::wstring> initializeStrMap; 
+            for (auto property : enumClass->GetPrivateProperties()) {
+                std::wstring type = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[0] : property.second;
+                std::wstring defaultValue = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[1] : L"";
+                Trim(type);
+                Trim(defaultValue);
+                if (IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end())
+                    initializeStrMap.insert(std::make_pair(property.first, property.first + L" = " + defaultValue));
+            }
+            for (auto property : enumClass->GetProtectedProperties()) {
+                std::wstring type = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[0] : property.second;
+                std::wstring defaultValue = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[1] : L"";
+                Trim(type);
+                Trim(defaultValue);
+                if (IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end())
+                    initializeStrMap.insert(std::make_pair(property.first, property.first + L" = " + defaultValue));
+            }
+            for (auto property : enumClass->GetProperties()) {
+                if (property->GetIsInitializeInClassConstructorNeeded())
+                    initializeStrMap.insert(std::make_pair(L"_" + property->GetPropertyName(), L"_" + property->GetPropertyName() + L" = std::make_shared<" + property->GetType1() + L">(" + property->GetDefaultValue() + L");"));
+            }
+            for (auto const &str : initializeStrMap)
+                initializeStr += INDENT + INDENT + str.second + L"\r\n";
+
             result += L"\r\n"
                 + className + L"::" + className + L"() : " + baseClassNameWithoutQuote + L"()\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
-                + INDENT + INDENT + L"_ObjectType = ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L";\r\n";
-            for (auto const &property : enumClass->GetProperties()) {
-                if (property->GetIsInitializeInClassConstructorNeeded())
-                    result += INDENT + INDENT + L"_" + property->GetPropertyName() + L" = std::make_shared<" + property->GetType1() + L">(" + property->GetDefaultValue() + L");\r\n";
-            }
-            result += INDENT + INDENT + L"Initialize();\r\n"
+                + INDENT + INDENT + L"_ObjectType = ObjectType::" + className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L";\r\n"
+                + initializeStr
+                + INDENT + INDENT + L"Initialize();\r\n"
                 + INDENT + L"CATCH\r\n"
                 "}\r\n";
         }
@@ -1329,7 +1381,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
             if (IsContain(baseClassNameWithoutQuote, L"<"))
                 baseClassNameWithoutQuote = baseClassNameWithoutQuote.substr(0, Find(baseClassNameWithoutQuote, L"<"));
 
-            content += GetCppConstructor(enumClass.get(), classPrefix, className, baseClassNameWithoutQuote)
+            content += GetCppConstructor(enumClass.get(), classPrefix, className, baseClassNameWithoutQuote, enumClassMapping)
                 + GetCppCloneFunctions(enumClass.get(), className)
                 + GetCppJsonFunction(className, enumClassMapping, enumClass)
                 + GetCppInitialize(enumClass.get(), className, baseClassNameWithoutQuote)

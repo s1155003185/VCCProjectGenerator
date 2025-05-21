@@ -42,7 +42,7 @@ class VPGObjectFileGenerationService
             std::set<std::wstring> &abstractEnumClassList,
             std::set<std::wstring> &classInCurrentFileList);
 
-        static std::wstring GetHppConstructor(const VPGEnumClass *enumClass, const std::wstring &classPrefix, const std::wstring &className, const std::wstring &baseClassNameWithoutQuote);
+        static std::wstring GetHppConstructor(const VPGEnumClass *enumClass, const std::wstring &classPrefix, const std::wstring &className, const std::wstring &baseClassNameWithoutQuote, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping);
         static std::wstring GetHppProperties(const VPGEnumClass *enumClass, const std::wstring &className, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping);
         static std::wstring GetHppPrivateFunctions(const VPGEnumClass *enumClass, const std::wstring &className);
         static std::wstring GetHppProtectedFunctions(const VPGEnumClass *enumClass, const std::wstring &className);
@@ -61,7 +61,7 @@ class VPGObjectFileGenerationService
             std::set<std::wstring> &customIncludeFiles);
 
         static std::wstring GetCppCustomHeader(const bool &isContainForm);
-        static std::wstring GetCppConstructor(const VPGEnumClass *enumClass, const std::wstring &classPrefix, const std::wstring &className, const std::wstring &baseClassNameWithoutQuote);
+        static std::wstring GetCppConstructor(const VPGEnumClass *enumClass, const std::wstring &classPrefix, const std::wstring &className, const std::wstring &baseClassNameWithoutQuote, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping);
         static std::wstring GetCppCloneFunctions(const VPGEnumClass *enumClass, const std::wstring &className);
         static std::wstring GetCppJsonFunction(const std::wstring &className,
             const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,

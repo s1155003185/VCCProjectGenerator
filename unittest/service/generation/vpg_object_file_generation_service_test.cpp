@@ -490,13 +490,16 @@ TEST_F(VPGObjectFileGenerationServiceTest, Properties)
         "        mutable std::shared_ptr<VPGObjectB> b = nullptr;\r\n"
         "\r\n"
         "    protected:\r\n"
-        "        mutable std::shared_ptr<VPGObjectC> c = std::make_shared<VPGObjectC>(1,2,3);\r\n"
+        "        mutable std::shared_ptr<VPGObjectC> c = nullptr;\r\n"
         "        mutable ExceptionType d = ExceptionType::NA;\r\n"
         "\r\n"
         "    GETSET(std::wstring, EnumA, L\"\")\r\n"
         "\r\n"
         "    public:\r\n"
-        "        VPGGitLog() : BaseObject(ObjectType::GitLog) {}\r\n"
+        "        VPGGitLog() : BaseObject(ObjectType::GitLog)\r\n"
+        "        {\r\n"
+        "            c = std::make_shared<VPGObjectC>(1,2,3);\r\n"
+        "        }\r\n"
         "        virtual ~VPGGitLog() {}\r\n"
         "\r\n"
         "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
@@ -3162,7 +3165,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Properties)
         "//@@Protected{ \"Properties\": {\"c\":\"VPGObjectC=std::make_shared<VPGObjectC>(1,2,3);\", \"d\":\"ExceptionType=ExceptionType::NA\" } }\r\n"
         "enum class VPGGitLogProperty\r\n"
         "{\r\n"
-        "    EnumA // GETSET(std::wstring, EnumA, L\"\") \r\n"
+        "    String // GETSET(std::wstring, String, L\"\") \r\n"
         "};\r\n"
         "\r\n";
 WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
@@ -3174,8 +3177,8 @@ std::wstring classPrefix = L"VPG";
 auto option = std::make_shared<VPGConfig>();
 option->SetProjectPrefix(classPrefix);
 std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-projectClassIncludeFiles.insert(std::make_pair(L"VPGObject", L"vcc_object.hpp"));
-projectClassIncludeFiles.insert(std::make_pair(L"JsonInternalType", L"json.hpp"));
+projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectB", L"vpg_object_b.hpp"));
+projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectC", L"vpg_object_c.hpp"));
 VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
     this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
 VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
@@ -3200,23 +3203,15 @@ EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
     "\r\n"
     "class VPGObject : public BaseObject, public BaseJsonObject\r\n"
     "{\r\n"
-    "    GETSET(bool, Boolean, false)\r\n"
-    "    GETSET(int, Integer, 0)\r\n"
-    "    GETSET(JsonInternalType, Enum, JsonInternalType::String)\r\n"
-    "    GETSET(double, Double, 0)\r\n"
-    "    GETSET(std::string, String, \"\")\r\n"
-    "    GETSET(std::wstring, Wstring, L\"\")\r\n"
-    "    VECTOR(int, Vector)\r\n"
-    "    MAP(int, int, Map)\r\n"
-    "    MAP(JsonInternalType, std::wstring, MapEnumString)\r\n"
-    "    MAP(std::wstring, JsonInternalType, MapStringEnum)\r\n"
-    "    SET(int, Set)\r\n"
-    "    ORDERED_MAP(int, int, OrderedMap)\r\n"
-    "    GETSET_SPTR(VPGObject, Object)\r\n"
-    "    VECTOR_SPTR(VPGObject, VectorObject)\r\n"
-    "    MAP_SPTR_R(int, VPGObject, MapObject)\r\n"
-    "    SET_SPTR(VPGObject, SetObject)\r\n"
-    "    ORDERED_MAP_SPTR_R(int, VPGObject, OrdredMapObject)\r\n"
+    "    private:\r\n"
+    "        mutable int64_t a = 0;\r\n"
+    "        mutable std::shared_ptr<VPGObjectB> b = nullptr;\r\n"
+    "\r\n"
+    "    protected:\r\n"
+    "        mutable std::shared_ptr<VPGObjectC> c = std::make_shared<VPGObjectC>(1,2,3);\r\n"
+    "        mutable ExceptionType d = ExceptionType::NA;\r\n"
+    "\r\n"
+    "    GETSET(std::wstring, EnumA, L\"\")\r\n"
     "\r\n"
     "    public:\r\n"
     "        VPGObject() : BaseObject(ObjectType::Object)\r\n"
