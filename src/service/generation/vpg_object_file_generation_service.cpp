@@ -468,21 +468,15 @@ std::wstring VPGObjectFileGenerationService::GetHppConstructor(const VPGEnumClas
             result += INDENT + INDENT + className + L"();\r\n";
         } else {
             std::wstring initializeStr = L"";
-            std::map<std::wstring, std::wstring> initializeStrMap; 
-            for (auto property : enumClass->GetPrivateProperties()) {
+            std::map<std::wstring, std::wstring> initializeStrMap;
+            auto propertyList = enumClass->GetPrivateProperties();
+            propertyList.insert(enumClass->GetProtectedProperties().begin(), enumClass->GetProtectedProperties().end());
+            for (auto property : propertyList) {
                 std::wstring type = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[0] : property.second;
                 std::wstring defaultValue = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[1] : L"";
                 Trim(type);
                 Trim(defaultValue);
-                if (IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end())
-                    initializeStrMap.insert(std::make_pair(property.first, property.first + L" = " + defaultValue));
-            }
-            for (auto property : enumClass->GetProtectedProperties()) {
-                std::wstring type = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[0] : property.second;
-                std::wstring defaultValue = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[1] : L"";
-                Trim(type);
-                Trim(defaultValue);
-                if (IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end())
+                if (IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end() && defaultValue != L"nullptr")
                     initializeStrMap.insert(std::make_pair(property.first, property.first + L" = " + defaultValue));
             }
             for (auto property : enumClass->GetProperties()) {
@@ -948,20 +942,14 @@ std::wstring VPGObjectFileGenerationService::GetCppConstructor(const VPGEnumClas
         if (enumClass->GetType() == VPGEnumClassType::Form) {
             std::wstring initializeStr = L"";
             std::map<std::wstring, std::wstring> initializeStrMap; 
-            for (auto property : enumClass->GetPrivateProperties()) {
+            auto propertyList = enumClass->GetPrivateProperties();
+            propertyList.insert(enumClass->GetProtectedProperties().begin(), enumClass->GetProtectedProperties().end());
+            for (auto property : propertyList) {
                 std::wstring type = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[0] : property.second;
                 std::wstring defaultValue = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[1] : L"";
                 Trim(type);
                 Trim(defaultValue);
-                if (IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end())
-                    initializeStrMap.insert(std::make_pair(property.first, property.first + L" = " + defaultValue));
-            }
-            for (auto property : enumClass->GetProtectedProperties()) {
-                std::wstring type = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[0] : property.second;
-                std::wstring defaultValue = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[1] : L"";
-                Trim(type);
-                Trim(defaultValue);
-                if (IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end())
+                if (IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end() && defaultValue != L"nullptr")
                     initializeStrMap.insert(std::make_pair(property.first, property.first + L" = " + defaultValue));
             }
             for (auto property : enumClass->GetProperties()) {
