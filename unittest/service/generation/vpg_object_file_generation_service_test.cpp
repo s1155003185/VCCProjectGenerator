@@ -188,7 +188,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, GetSetCustom)
         "    EnumB, // SETCUSTOM(EnumB , int64_t, argument, return 100;)\r\n"
         "    EnumC, // GETCUSTOM(int64_t, EnumC, return 100;) SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;)\r\n"
         "    EnumD, // GETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
-        "    EnumE // SETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
+        "    EnumE // SETCUSTOM_SPTR(EnumE, VPGClassA, enumC, _EnumC = enumC;)\r\n"
         "};\r\n";
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
@@ -655,7 +655,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form_Complex)
         "{\r\n"
         "    String // GETSET(std::wstring, String, L\"\")\r\n"
         "    GetSetCustom, // GETCUSTOM(int64_t, GetSetCustom, return 100;) SETCUSTOM(GetSetCustom, ExceptionType, enumC, _EnumC = ExceptionType::NA;)\r\n"
-        "    GetSetCustom_SPTR // GETCUSTOM_SPTR(VPGClassA, GetSetCustom_SPTR, return 100;) SETCUSTOM_SPTR(VPGClassA, GetSetCustom_SPTR, return 100;)\r\n"
+        "    GetSetCustom_SPTR // GETCUSTOM_SPTR(VPGClassA, GetSetCustom_SPTR, return 100;) SETCUSTOM_SPTR(EnumE, VPGClassA, enumC, _EnumC = enumC;)\r\n"
         "};\r\n"
         "\r\n";
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
@@ -2701,7 +2701,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_GetSetCustom)
         "    EnumB, // SETCUSTOM(EnumB , int64_t, argument, return 100;)\r\n"
         "    EnumC, // GETCUSTOM(int64_t, EnumC, return 100;) SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;)\r\n"
         "    EnumD, // GETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
-        "    EnumE // SETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
+        "    EnumE // SETCUSTOM_SPTR(EnumE, VPGClassA, enumC, _EnumC = enumC;)\r\n"
         "};\r\n";
     WriteFile(ConcatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
@@ -2863,20 +2863,14 @@ EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
     "    public:\r\n"
     "        VPGObject() : BaseObject(ObjectType::Object)\r\n"
     "        {\r\n"
-    "            _Object = std::make_shared<VPGObject>();\r\n"
+    "            c = std::make_shared<VPGObjectC>(1,2,3);\r\n"
     "        }\r\n"
     "\r\n"
     "        virtual ~VPGObject() {}\r\n"
     "\r\n"
     "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
     "        {\r\n"
-    "            auto obj = std::make_shared<VPGObject>(*this);\r\n"
-    "            obj->CloneObject(this->_Object.get());\r\n"
-    "            obj->CloneVectorObject(this->_VectorObject);\r\n"
-    "            obj->CloneMapObject(this->_MapObject);\r\n"
-    "            obj->CloneSetObject(this->_SetObject);\r\n"
-    "            obj->CloneOrdredMapObject(this->_OrdredMapObject);\r\n"
-    "            return obj;\r\n"
+    "            return std::make_shared<VPGObject>(*this);\r\n"
     "        }\r\n"
     "\r\n"
     "        virtual std::shared_ptr<Json> ToJson() const override;\r\n"
