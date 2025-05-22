@@ -18,7 +18,7 @@ class VPGObjectFileGenerationService
         ~VPGObjectFileGenerationService() {}
 
         // Clone
-        static std::wstring GetCloneFunction(const VPGEnumClass *enumClass, const std::wstring &className, const bool &isCpp);
+        static std::wstring GetCloneFunction(const VPGEnumClass *enumClass, const std::wstring &className, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping, const bool &isCpp);
 
         // Json
         static std::vector<std::wstring> GetObjectToJsonEnumSwitch(const std::wstring &switchVariable, const std::wstring &returnVariable,
@@ -46,7 +46,7 @@ class VPGObjectFileGenerationService
         static std::wstring GetHppProperties(const VPGEnumClass *enumClass, const std::wstring &className, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping);
         static std::wstring GetHppPrivateFunctions(const VPGEnumClass *enumClass, const std::wstring &className);
         static std::wstring GetHppProtectedFunctions(const VPGEnumClass *enumClass, const std::wstring &className);
-        static std::wstring GetHppPublicCloneFunctions(const VPGEnumClass *enumClass, const std::wstring &className);
+        static std::wstring GetHppPublicCloneFunctions(const VPGEnumClass *enumClass, const std::wstring &className, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping);
         static std::wstring GetHppPublicJsonFunctions(const VPGEnumClass *enumClass);
         static std::wstring GetHppPublicFunctions(const VPGEnumClass *enumClass, const VPGConfig *option);
         static std::wstring GetHppPublicCustomFunctions(const VPGEnumClass *enumClass, const std::wstring &className);
@@ -62,7 +62,7 @@ class VPGObjectFileGenerationService
 
         static std::wstring GetCppCustomHeader(const bool &isContainForm);
         static std::wstring GetCppConstructor(const VPGEnumClass *enumClass, const std::wstring &classPrefix, const std::wstring &className, const std::wstring &baseClassNameWithoutQuote, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping);
-        static std::wstring GetCppCloneFunctions(const VPGEnumClass *enumClass, const std::wstring &className);
+        static std::wstring GetCppCloneFunctions(const VPGEnumClass *enumClass, const std::wstring &className, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping);
         static std::wstring GetCppJsonFunction(const std::wstring &className,
             const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
             const std::shared_ptr<VPGEnumClass> enumClass);

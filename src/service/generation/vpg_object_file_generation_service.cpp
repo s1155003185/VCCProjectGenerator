@@ -21,7 +21,7 @@ using namespace vcc;
 
 #define LOG_ID L"Object File Generation"
 
-std::wstring VPGObjectFileGenerationService::GetCloneFunction(const VPGEnumClass *enumClass, const std::wstring &className, const bool &isCpp)
+std::wstring VPGObjectFileGenerationService::GetCloneFunction(const VPGEnumClass *enumClass, const std::wstring &className, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping, const bool &isCpp)
 {
     std::wstring result = L"";
     TRY
@@ -44,22 +44,33 @@ std::wstring VPGObjectFileGenerationService::GetCloneFunction(const VPGEnumClass
 
         if (isContentNeeded) {
             result += indent + L"{\r\n";
+            std::map<std::wstring, std::wstring> cloneObjs;
             std::wstring cloneContent = L"";
+            auto propertyList = enumClass->GetPrivateProperties();
+            propertyList.insert(enumClass->GetProtectedProperties().begin(), enumClass->GetProtectedProperties().end());
+            for (auto const &property : propertyList) {
+                std::wstring type = IsContain(property.second, L"=") ? SplitString(property.second, { L"=" })[0] : property.second;
+                Trim(type);
+                if (!IsCapital(type))
+                    continue;
+                if (enumClassMapping.find(type) == enumClassMapping.end())
+                    cloneObjs.insert({ property.first, L"obj->" + property.first + L"(this->" + property.first + L".get())" });
+            }
             for (auto const &property : enumClass->GetProperties()) {
                 // handle enum without macro case
-                if (property->GetPropertyType() != VPGEnumClassPropertyType::Property)
+                if (property->GetPropertyType() != VPGEnumClassPropertyType::Property || property->GetIsCustom())
                     continue;
                 if ((!property->GetType1().empty() && IsCapital(property->GetType1())) 
                     || (!property->GetType2().empty() && IsCapital(property->GetType2()))) {
-                    if (Find(property->GetMacro(), L"SPTR") != std::wstring::npos) {
-                        cloneContent += indent + INDENT + L"obj->Clone" + property->GetPropertyName() + L"(this->_" + property->GetPropertyName() + (IsStartWith(property->GetMacro(), L"GETSET") ? L".get()" : L"" ) + L");\r\n";
-                    }
+                    if (Find(property->GetMacro(), L"SPTR") != std::wstring::npos)
+                        cloneObjs.insert({ property->GetPropertyName(), L"obj->Clone" + property->GetPropertyName() + L"(this->_" + property->GetPropertyName() + (IsStartWith(property->GetMacro(), L"GETSET") ? L".get()" : L"" ) + L")" });
                 }
             }
-            if (!cloneContent.empty()) {
-                result += indent + INDENT + L"auto obj = std::make_shared<" + className + L">(*this);\r\n"
-                    + cloneContent
-                    + indent + INDENT + L"return obj;\r\n";
+            if (!cloneObjs.empty()) {
+                result += indent + INDENT + L"auto obj = std::make_shared<" + className + L">(*this);\r\n";
+                for (auto const &cloneObj : cloneObjs)
+                    result += indent + INDENT + cloneObj.second + L";\r\n";
+                result += indent + INDENT + L"return obj;\r\n";
             } else
                 result += indent + INDENT + L"return std::make_shared<" + className + L">(*this);\r\n";
             result += indent + L"}\r\n";
@@ -615,13 +626,12 @@ std::wstring VPGObjectFileGenerationService::GetHppProtectedFunctions(const VPGE
     return result;
 }
 
-std::wstring VPGObjectFileGenerationService::GetHppPublicCloneFunctions(const VPGEnumClass *enumClass, const std::wstring &className)
+std::wstring VPGObjectFileGenerationService::GetHppPublicCloneFunctions(const VPGEnumClass *enumClass, const std::wstring &className, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping)
 {
-    std::wstring result = L"";
     TRY
-        result = GetCloneFunction(enumClass, className, false);
+        return GetCloneFunction(enumClass, className, enumClassMapping, false);
     CATCH
-    return result;
+    return L"";
 }
 
 std::wstring VPGObjectFileGenerationService::GetHppPublicJsonFunctions(const VPGEnumClass *enumClass)
@@ -718,7 +728,7 @@ std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass
             + L"\r\n"
             + INDENT + L"public:\r\n"
             + GetHppConstructor(enumClass, option->GetProjectPrefix(), className, baseClassNameWithoutQuote, enumClassMapping)
-            + GetHppPublicCloneFunctions(enumClass, className)
+            + GetHppPublicCloneFunctions(enumClass, className, enumClassMapping)
             + GetHppPublicJsonFunctions(enumClass)
             + GetHppPublicFunctions(enumClass, option)
             + GetHppPublicCustomFunctions(enumClass, className)
@@ -973,14 +983,13 @@ std::wstring VPGObjectFileGenerationService::GetCppConstructor(const VPGEnumClas
     return result;
 }
 
-std::wstring VPGObjectFileGenerationService::GetCppCloneFunctions(const VPGEnumClass *enumClass, const std::wstring &className)
+std::wstring VPGObjectFileGenerationService::GetCppCloneFunctions(const VPGEnumClass *enumClass, const std::wstring &className, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping)
 {
-    std::wstring result = L"";
     TRY
         if (enumClass->GetType() == VPGEnumClassType::Form)
-            result += GetCloneFunction(enumClass, className, true);
+            return GetCloneFunction(enumClass, className, enumClassMapping, true);
     CATCH
-    return result;
+    return L"";
 }
 
 std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstring &className,
@@ -1370,7 +1379,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 baseClassNameWithoutQuote = baseClassNameWithoutQuote.substr(0, Find(baseClassNameWithoutQuote, L"<"));
 
             content += GetCppConstructor(enumClass.get(), classPrefix, className, baseClassNameWithoutQuote, enumClassMapping)
-                + GetCppCloneFunctions(enumClass.get(), className)
+                + GetCppCloneFunctions(enumClass.get(), className, enumClassMapping)
                 + GetCppJsonFunction(className, enumClassMapping, enumClass)
                 + GetCppInitialize(enumClass.get(), className, baseClassNameWithoutQuote)
                 + GetCppAction(enumClass.get(), className);

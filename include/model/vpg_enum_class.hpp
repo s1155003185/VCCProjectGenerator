@@ -97,13 +97,14 @@ class VPGEnumClassProperty : public BaseObject
         }
 
         bool GetIsGeneralType() const { return !GetIsCollection(); }
+        bool GetIsCustom() const { return IsContain(std::vector<VPGEnumClassMacroType>{ VPGEnumClassMacroType::Getcustom, VPGEnumClassMacroType::GetcustomSptr, VPGEnumClassMacroType::Setcustom, VPGEnumClassMacroType::SetcustomSptr }, _MacroType); }
         bool GetIsObject() const { return _Macro.find(L"(") != std::wstring::npos ? IsContain(_Macro.substr(0, _Macro.find(L"(")), L"_SPTR") : false; }
-        bool GetIsVector() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Vector, VPGEnumClassMacroType::VectorSptr}, _MacroType); }
-        bool GetIsMap() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Map, VPGEnumClassMacroType::MapSptrR}, _MacroType); }
-        bool GetIsOrderedMap() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::OrderedMap, VPGEnumClassMacroType::OrderedMapSptrR}, _MacroType); }
-        bool GetIsSet() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Set, VPGEnumClassMacroType::SetSptr}, _MacroType); }
-        bool GetIsAction() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Action, VPGEnumClassMacroType::ActionWithArgSptr}, _MacroType); }
-        bool GetIsManager() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::ManagerSptr, VPGEnumClassMacroType::ManagerSptrNull, VPGEnumClassMacroType::ManagerSptrParent}, _MacroType); }
+        bool GetIsVector() const { return IsContain(std::vector<VPGEnumClassMacroType>{ VPGEnumClassMacroType::Vector, VPGEnumClassMacroType::VectorSptr }, _MacroType); }
+        bool GetIsMap() const { return IsContain(std::vector<VPGEnumClassMacroType>{ VPGEnumClassMacroType::Map, VPGEnumClassMacroType::MapSptrR }, _MacroType); }
+        bool GetIsOrderedMap() const { return IsContain(std::vector<VPGEnumClassMacroType>{ VPGEnumClassMacroType::OrderedMap, VPGEnumClassMacroType::OrderedMapSptrR }, _MacroType); }
+        bool GetIsSet() const { return IsContain(std::vector<VPGEnumClassMacroType>{ VPGEnumClassMacroType::Set, VPGEnumClassMacroType::SetSptr }, _MacroType); }
+        bool GetIsAction() const { return IsContain(std::vector<VPGEnumClassMacroType>{ VPGEnumClassMacroType::Action, VPGEnumClassMacroType::ActionWithArgSptr }, _MacroType); }
+        bool GetIsManager() const { return IsContain(std::vector<VPGEnumClassMacroType>{ VPGEnumClassMacroType::ManagerSptr, VPGEnumClassMacroType::ManagerSptrNull, VPGEnumClassMacroType::ManagerSptrParent }, _MacroType); }
         bool GetIsCollection() const { return GetIsVector() || GetIsMap() || GetIsOrderedMap() || GetIsSet(); }
 
         bool GetIsInitializeInClassConstructorNeeded() const { return IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::GetsetSptr, VPGEnumClassMacroType::ManagerSptr}, _MacroType); }
