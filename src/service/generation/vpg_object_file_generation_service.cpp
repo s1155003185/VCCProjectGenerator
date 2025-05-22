@@ -573,8 +573,10 @@ std::wstring VPGObjectFileGenerationService::GetHppProperties(const VPGEnumClass
                 type = property.second;
             Trim(type);
             Trim(defaultValue);
-            if (IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end())
+            if (IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end()) {
                 type = L"std::shared_ptr<" + type + L">";
+                defaultValue = L"nullptr";
+            }
             result += INDENT + INDENT + L"mutable " + type + L" " + property.first + (!defaultValue.empty() ? (L" = " + defaultValue) : L"") + (!IsEndWith(defaultValue, L";") ? L";" : L"") + L"\r\n";
         }
 

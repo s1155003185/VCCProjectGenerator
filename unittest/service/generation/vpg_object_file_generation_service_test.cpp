@@ -222,10 +222,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, GetSetCustom)
         "    SETCUSTOM(EnumB , int64_t, argument, return 100;)\r\n"
         "    GETCUSTOM(int64_t, EnumC, return 100;)\r\n"
         "    SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;)\r\n"
-        "    GETCUSTOM(int64_t, EnumD, return 100;)\r\n"
-        "    SETCUSTOM(EnumE, int64_t, enumE, _EnumC = enumC;)\r\n"
         "    GETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
-        "    SETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
+        "    SETCUSTOM_SPTR(EnumE, VPGClassA, enumC, _EnumC = enumC;)\r\n"
         "\r\n"
         "    public:\r\n"
         "        VPGObject() : BaseObject(ObjectType::Object) {}\r\n"
@@ -500,11 +498,15 @@ TEST_F(VPGObjectFileGenerationServiceTest, Properties)
         "        {\r\n"
         "            c = std::make_shared<VPGObjectC>(1,2,3);\r\n"
         "        }\r\n"
+        "\r\n"
         "        virtual ~VPGGitLog() {}\r\n"
         "\r\n"
         "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
         "        {\r\n"
-        "            return std::make_shared<VPGGitLog>(*this);\r\n"
+        "            auto obj = std::make_shared<VPGGitLog>(*this);\r\n"
+        "            obj->b(this->b.get());\r\n"
+        "            obj->c(this->c.get());\r\n"
+        "            return obj;\r\n"
         "        }\r\n"
         "};\r\n");
 }
@@ -2712,7 +2714,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_GetSetCustom)
     auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGObject", L"vcc_object.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"JsonInternalType", L"json.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
@@ -2725,14 +2727,13 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_GetSetCustom)
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
-        "#include <string>\r\n"
-        "\r\n"
         "#include \"base_json_object.hpp\"\r\n"
         "#include \"base_object.hpp\"\r\n"
         "#include \"class_macro.hpp\"\r\n"
         "#include \"i_document.hpp\"\r\n"
         "#include \"json.hpp\"\r\n"
         "#include \"object_type.hpp\"\r\n"
+        "#include \"vpg_class_a.hpp\"\r\n"
         "\r\n"
         "using namespace vcc;\r\n"
         "\r\n"
@@ -2743,14 +2744,10 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_GetSetCustom)
         "    GETCUSTOM(int64_t, EnumC, return 100;)\r\n"
         "    SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;)\r\n"
         "    GETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
-        "    SETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
+        "    SETCUSTOM_SPTR(EnumE, VPGClassA, enumC, _EnumC = enumC;)\r\n"
         "\r\n"
         "    public:\r\n"
-        "        VPGObject() : BaseObject(ObjectType::Object)\r\n"
-        "        {\r\n"
-        "            _Object = std::make_shared<VPGObject>();\r\n"
-        "        }\r\n"
-        "\r\n"
+        "        VPGObject() : BaseObject(ObjectType::Object) {}\r\n"
         "        virtual ~VPGObject() {}\r\n"
         "\r\n"
         "        virtual std::shared_ptr<IObject> Clone() const override\r\n"
@@ -2855,7 +2852,7 @@ EXPECT_EQ(ReadFile(this->GetFilePathHpp()),
     "        mutable std::shared_ptr<VPGObjectB> b = nullptr;\r\n"
     "\r\n"
     "    protected:\r\n"
-    "        mutable std::shared_ptr<VPGObjectC> c = std::make_shared<VPGObjectC>(1,2,3);\r\n"
+    "        mutable std::shared_ptr<VPGObjectC> c = nullptr;\r\n"
     "        mutable ExceptionType d = ExceptionType::NA;\r\n"
     "\r\n"
     "    GETSET(std::wstring, String, L\"\")\r\n"
