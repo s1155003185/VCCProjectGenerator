@@ -669,8 +669,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form_Complex)
     auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    //projectClassIncludeFiles.insert(std::make_pair(L"GitLog", L"git_service.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"ExceptionType", L"exception_type.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectB", L"vpg_object_b.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectC", L"vpg_object_c.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,

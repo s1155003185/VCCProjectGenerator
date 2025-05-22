@@ -45,7 +45,7 @@ std::wstring VPGEnumClassReader::_GetEnum(const std::wstring &propertyStr, size_
         GetNextCharPos(propertyStr, pos, true);
         while (pos < propertyStr.size())
         {
-            if (!std::iswalpha(propertyStr[pos]) && !std::iswdigit(propertyStr[pos])) {
+            if (!std::iswalpha(propertyStr[pos]) && !std::iswdigit(propertyStr[pos]) && propertyStr[pos] != L'_') {
                 pos--;
                 break;
             }
