@@ -290,6 +290,8 @@ std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const st
             return projectClassIncludeFiles.at(className);
         else if (IsContain(projectClassIncludeFiles, L"vcc::" + className))
             return projectClassIncludeFiles.at(L"vcc::" + className);
+        else
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Include file of Class " + className + L" NOT FOUND");
     CATCH
     return L"";
 }

@@ -653,7 +653,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form_Complex)
         "//@@Form\r\n"
         "//@@Private{ \"Properties\": {\"a\":\"int64_t=0\", \"b\":\"VPGObjectB=nullptr\" } }\r\n"
         "//@@Protected{ \"Properties\": {\"c\":\"VPGObjectC=std::make_shared<VPGObjectC>(1,2,3);\", \"d\":\"ExceptionType=ExceptionType::NA\" } }\r\n"
-        "enum class VPGGitFormProperty\r\n"
+        "enum class VPGObjectProperty\r\n"
         "{\r\n"
         "    String // GETSET(std::wstring, String, L\"\")\r\n"
         "    GetSetCustom, // GETCUSTOM(int64_t, GetSetCustom, return 100;) SETCUSTOM(GetSetCustom, ExceptionType, enumC, _EnumC = ExceptionType::NA;)\r\n"
@@ -670,8 +670,11 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form_Complex)
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"ExceptionType", L"exception_type.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_object_a.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectB", L"vpg_object_b.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectC", L"vpg_object_c.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"OperationResult", L"operation_result.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectProperty", L"vpg_object_property.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
@@ -689,8 +692,11 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form_Complex)
         "\r\n"
         "#include \"base_form.hpp\"\r\n"
         "#include \"class_macro.hpp\"\r\n"
+        "#include \"exception_type.hpp\"\r\n"
         "#include \"i_result.hpp\"\r\n"
         "#include \"object_type.hpp\"\r\n"
+        "#include \"vpg_object_b.hpp\"\r\n"
+        "#include \"vpg_object_c.hpp\"\r\n"
         "\r\n"
         "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "// </vcc:customHeader>\r\n"
@@ -699,7 +705,19 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form_Complex)
         "\r\n"
         "class VPGGitForm : public BaseForm\r\n"
         "{\r\n"
+        "    private:\r\n"
+        "        mutable int64_t a = 0;\r\n"
+        "        mutable std::shared_ptr<VPGObjectB> b = nullptr;\r\n"
+        "\r\n"
+        "    protected:\r\n"
+        "        mutable std::shared_ptr<VPGObjectC> c = nullptr;\r\n"
+        "        mutable ExceptionType d = ExceptionType::NA;\r\n"
+        "\r\n"
         "    GETSET(std::wstring, String, L\"\")\r\n"
+        "    GETCUSTOM(int64_t, GetSetCustom, return 100;)\r\n"
+        "    SETCUSTOM(GetSetCustom, ExceptionType, enumC, _EnumC = ExceptionType::NA;)\r\n"
+        "    GETCUSTOM_SPTR(VPGClassA, GetSetCustom_SPTR, return 100;)\r\n"
+        "    SETCUSTOM_SPTR(EnumE, VPGClassA, enumC, _EnumC = enumC;)\r\n"
         "\r\n"
         "    // <vcc:customVPGGitFormProperties sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "    // </vcc:customVPGGitFormProperties>\r\n"
@@ -735,7 +753,6 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form_Complex)
         "\r\n"
         "#include \"base_form.hpp\"\r\n"
         "#include \"exception_macro.hpp\"\r\n"
-        "#include \"git_form_property.hpp\"\r\n"
         "#include \"i_result.hpp\"\r\n"
         "\r\n"
         "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
@@ -747,13 +764,17 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form_Complex)
         "{\r\n"
         "    TRY\r\n"
         "        _ObjectType = ObjectType::GitForm;\r\n"
+        "        c = std::make_shared<VPGObjectC>(1,2,3);\r\n"
         "        Initialize();\r\n"
         "    CATCH\r\n"
         "}\r\n"
         "\r\n"
         "std::shared_ptr<IObject> VPGGitForm::Clone() const\r\n"
         "{\r\n"
-        "    return std::make_shared<VPGGitForm>(*this);\r\n"
+        "    auto obj = std::make_shared<VPGGitForm>(*this);\r\n"
+        "    obj->b(this->b.get());\r\n"
+        "    obj->c(this->c.get());\r\n"
+        "    return obj;\r\n"
         "}\r\n"
         "\r\n"
         "void VPGGitForm::InitializeComponents() const\r\n"
@@ -1079,6 +1100,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
     auto option = std::make_shared<VPGConfig>();
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
+    projectClassIncludeFiles.insert(std::make_pair(L"GitManager", L"git_manager.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"BaseGitManager", L"base_git_manager.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"vpg_git_form_property.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
@@ -1095,8 +1119,10 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
         "#include <string>\r\n"
         "\r\n"
         "#include \"base_form.hpp\"\r\n"
+        "#include \"base_git_manager.hpp\"\r\n"
         "#include \"base_json_object.hpp\"\r\n"
         "#include \"class_macro.hpp\"\r\n"
+        "#include \"git_manager.hpp\""
         "#include \"i_document.hpp\"\r\n"
         "#include \"i_result.hpp\"\r\n"
         "#include \"json.hpp\"\r\n"
@@ -1151,7 +1177,6 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
         "#include <memory>\r\n"
         "#include <string>\r\n"
         "\r\n"
-        "#include \"\"\r\n"
         "#include \"base_form.hpp\"\r\n"
         "#include \"exception_macro.hpp\"\r\n"
         "#include \"i_document.hpp\"\r\n"
@@ -1160,6 +1185,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
         "#include \"json.hpp\"\r\n"
         "#include \"number_helper.hpp\"\r\n"
         "#include \"string_helper.hpp\"\r\n"
+        "#include \"vpg_git_form_property.hpp\"\r\n"
         "\r\n"
         "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "// </vcc:customHeader>\r\n"
@@ -1258,6 +1284,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
     option->SetProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgument", L"vpg_git_form.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"vpg_git_form.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"OperationResult", L"operation_result.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
@@ -1387,13 +1415,13 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "#include <memory>\r\n"
         "#include <string>\r\n"
         "\r\n"
-        "#include \"\"\r\n"
         "#include \"base_action.hpp\"\r\n"
         "#include \"base_form.hpp\"\r\n"
         "#include \"exception_macro.hpp\"\r\n"
         "#include \"i_object.hpp\"\r\n"
         "#include \"i_result.hpp\"\r\n"
         "#include \"log_config.hpp\"\r\n"
+        "#include \"operation_result.hpp\"\r\n"
         "#include \"vpg_git_form.hpp\"\r\n"
         "\r\n"
         "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
@@ -2210,6 +2238,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObject", L"vcc_object.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"JsonInternalType", L"json.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectA", L"vpg_object_a.hpp"));
     VPGObjectFileGenerationService::GenerateHpp(this->GetLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
         this->GetFilePathHpp(), this->GetFilePathHpp(), this->GetActionFolderPathHpp(), enumClassList);
     VPGObjectFileGenerationService::GenerateCpp(this->GetLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
@@ -2227,6 +2256,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
         "#include \"i_document.hpp\"\r\n"
         "#include \"json.hpp\"\r\n"
         "#include \"object_type.hpp\"\r\n"
+        "#include \"vpg_object_a.hpp\"\r\n"
         "\r\n"
         "using namespace vcc;\r\n"
         "\r\n"
