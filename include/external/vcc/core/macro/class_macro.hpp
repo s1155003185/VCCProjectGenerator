@@ -24,6 +24,14 @@ namespace vcc
         const type& Get##var() const { return _##var; }\
         void Set##var(type val) const { _##var = val; }
 
+    #define GETCUSTOM(type, var, ...) \
+    public: \
+        const type& Get##var() const { __VA_ARGS__ }
+
+    #define SETCUSTOM(var, type, argumentName, ...) \
+    public: \
+        void Set##var(type argumentName) const { __VA_ARGS__ }
+    
     // object
 
     // Cannot set type as current class, will throw Segmentation fault
@@ -38,20 +46,10 @@ namespace vcc
         std::shared_ptr<type> Get##var() const { return _##var; } \
         void Set##var(std::shared_ptr<type> value) const { _##var = value; } \
         void Clone##var(const IObject *value) const { _##var = value != nullptr ? std::dynamic_pointer_cast<type>(value->Clone()) : nullptr; }
-        
-    // custom
-
-    #define GETCUSTOM(type, var, ...) \
-    public: \
-        type Get##var() const { __VA_ARGS__ }
-
+    
     #define GETCUSTOM_SPTR(type, var, ...) \
     public: \
         std::shared_ptr<type> Get##var() const { __VA_ARGS__ }
-
-    #define SETCUSTOM(var, type, argumentName, ...) \
-    public: \
-        void Set##var(type argumentName) const { __VA_ARGS__ }
 
     #define SETCUSTOM_SPTR(var, type, argumentName, ...) \
     public: \
