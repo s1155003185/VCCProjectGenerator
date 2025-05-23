@@ -20,17 +20,16 @@ namespace vcc
     #define GETSET(type, var, def) \
     protected: \
         mutable type _##var = def; \
-    public: \
-        const type& Get##var() const { return _##var; }\
-        void Set##var(type val) const { _##var = val; }
+    GETCUSTOM(type, var, return _##var; ) \
+    SETCUSTOM(var, type, _##var = value; )
 
     #define GETCUSTOM(type, var, ...) \
     public: \
-        const type& Get##var() const { __VA_ARGS__ }
+        type Get##var() const { __VA_ARGS__ }
 
-    #define SETCUSTOM(var, type, argumentName, ...) \
+    #define SETCUSTOM(var, type, ...) \
     public: \
-        void Set##var(type argumentName) const { __VA_ARGS__ }
+        void Set##var(const type &value) const { __VA_ARGS__ }
     
     // object
 
@@ -42,18 +41,18 @@ namespace vcc
     #define GETSET_SPTR_NULL(type, var) \
     protected: \
         mutable std::shared_ptr<type> _##var = nullptr; \
+    GETCUSTOM_SPTR(type, var, return _##var;) \
+    SETCUSTOM_SPTR(var, type, _##var = value; ) \
     public: \
-        std::shared_ptr<type> Get##var() const { return _##var; } \
-        void Set##var(std::shared_ptr<type> value) const { _##var = value; } \
         void Clone##var(const IObject *value) const { _##var = value != nullptr ? std::dynamic_pointer_cast<type>(value->Clone()) : nullptr; }
     
     #define GETCUSTOM_SPTR(type, var, ...) \
     public: \
         std::shared_ptr<type> Get##var() const { __VA_ARGS__ }
 
-    #define SETCUSTOM_SPTR(var, type, argumentName, ...) \
+    #define SETCUSTOM_SPTR(var, type,  ...) \
     public: \
-        void Set##var(std::shared_ptr<type> argumentName) const { __VA_ARGS__ }
+        void Set##var(std::shared_ptr<type> value) const { __VA_ARGS__ }
 
     // std::vector
     
@@ -74,6 +73,10 @@ namespace vcc
         std::vector<type> Clone##var() const { return _##var; }\
         void Clone##var(const std::vector<type> &value) const { _##var.clear(); Insert##var(value); }\
         void Clear##var() const { _##var.clear(); }
+
+    #define GETCUSTOM_VECTOR(type, var, ...)
+    
+    #define SETCUSTOM_VECTOR(type, var, ...)
 
     #define VECTOR_SPTR(type, var) \
     protected: \
