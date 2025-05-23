@@ -85,18 +85,21 @@ namespace vcc
         void Clone##varName(const std::vector<type> &value) const { _##varName.clear(); Insert##varName(value); }\
         void Clear##varName() const { _##varName.clear(); }
     
-    #define VECTOR_SPTR(type, varName) \
+    #define VECTOR_SPTR(type, varName) VECTORVALIDATE_SPTR(type, varName, (void)value; )
+
+    #define VECTORVALIDATE_SPTR(type, varName, ...) \
     protected: \
         mutable std::vector<std::shared_ptr<type>> _##varName; \
+        void __Validate##varName(const std::shared_ptr<type> value) const { __VA_ARGS__ } \
     public: \
         std::vector<std::shared_ptr<type>> &Get##varName() const { return _##varName; } \
         std::shared_ptr<type> Get##varName##AtIndex(int64_t index) const { return _##varName[index]; } \
-        void Set##varName##AtIndex(int64_t index, std::shared_ptr<IObject> value) const { SetIObject(_##varName, value, index); } \
+        void Set##varName##AtIndex(int64_t index, std::shared_ptr<IObject> value) const { __Validate##varName(value); SetIObject(_##varName, value, index); } \
         int64_t Find##varName(const std::shared_ptr<IObject> value) const { return FindIObject(_##varName, value.get()); } \
-        void Insert##varName(std::shared_ptr<IObject> value) const { InsertIObject(_##varName, value); } \
-        void Insert##varName##AtIndex(int64_t index, std::shared_ptr<IObject> value) const { InsertIObject(_##varName, value, index); } \
-        void Insert##varName(std::vector<std::shared_ptr<type>> &value) { InsertIObjects(_##varName, value); } \
-        void Insert##varName##AtIndex(int64_t index, std::vector<std::shared_ptr<type>> &value) { InsertIObjects(_##varName, value, index); } \
+        void Insert##varName(std::shared_ptr<IObject> value) const { __Validate##varName(value); InsertIObject(_##varName, value); } \
+        void Insert##varName##AtIndex(int64_t index, std::shared_ptr<IObject> value) const { __Validate##varName(value); InsertIObject(_##varName, value, index); } \
+        void Insert##varName(std::vector<std::shared_ptr<type>> &value) { for (auto const &element : value) __Validate##varName(element); InsertIObjects(_##varName, value); } \
+        void Insert##varName##AtIndex(int64_t index, std::vector<std::shared_ptr<type>> &value) { for (auto const &element : value) __Validate##varName(element); InsertIObjects(_##varName, value, index); } \
         void Remove##varName(const IObject* value) const { RemoveIObject(_##varName, value); } \
         void Remove##varName##AtIndex(int64_t index) { RemoveIObjecttAtIndex(_##varName, index); } \
         std::shared_ptr<type> Clone##varName##AtIndex(int64_t index) const { return std::static_pointer_cast<type>(_##varName[index]->Clone()); } \
