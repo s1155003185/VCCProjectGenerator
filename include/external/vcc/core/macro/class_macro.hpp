@@ -17,12 +17,16 @@ namespace vcc
     //------------------------------------------------------------------------------------------------------//
     // general
     
-    #define GETSET(type, varName, def) \
+    #define GETSET(type, varName, def) GETSETVALIDATE(type, varName, def, (void)value;)
+
+    #define GETSETVALIDATE(type, varName, def, ...) \
     protected: \
         mutable type _##varName = def; \
+        void __Validate##varName(const type &value) const { __VA_ARGS__ } \
     public: \
         const type &Get##varName() const { return _##varName; } \
-    SETCUSTOM(varName, type, _##varName = value; )
+    public: \
+        void Set##varName(const type &value) const { __Validate##varName(value); _##varName = value; }
 
     #define GETCUSTOM(type, varName, ...) \
     public: \
@@ -39,14 +43,17 @@ namespace vcc
     // Need to handle initialization manually if not using Generator
     #define GETSET_SPTR(type, varName, ...) GETSET_SPTR_NULL(type, varName)
 
-    #define GETSET_SPTR_NULL(type, varName) \
-    protected: \
-        mutable std::shared_ptr<type> _##varName = nullptr; \
-    GETCUSTOM_SPTR(type, varName, return _##varName;) \
-    SETCUSTOM_SPTR(varName, type, _##varName = value; ) \
-    public: \
-        void Clone##varName(const IObject *value) const { _##varName = value != nullptr ? std::dynamic_pointer_cast<type>(value->Clone()) : nullptr; }
-    
+    #define GETSET_SPTR_NULL(type, varName) GETSETVALIDATE_SPTR_NULL(type, varName, (void)value;)
+
+    #define GETSETVALIDATE_SPTR_NULL(type, varName, ...) \
+        protected: \
+            mutable std::shared_ptr<type> _##varName = nullptr; \
+            void __Validate##varName(const std::shared_ptr<type> value) const { __VA_ARGS__ } \
+        public: \
+            std::shared_ptr<type> Get##varName() const { return _##varName; } \
+            void Set##varName(std::shared_ptr<type> value) const { __Validate##varName(value); _##varName = value; } \
+            void Clone##varName(const IObject *value) const { _##varName = value != nullptr ? std::dynamic_pointer_cast<type>(value->Clone()) : nullptr; }
+        
     #define GETCUSTOM_SPTR(type, varName, ...) \
     public: \
         std::shared_ptr<type> Get##varName() const { __VA_ARGS__ }
@@ -57,28 +64,27 @@ namespace vcc
 
     // std::vector
     
-    #define VECTOR(type, varName) \
+    #define VECTOR(type, varName) VECTORVALIDATE(type, varName, (void)value; )
+
+    #define VECTORVALIDATE(type, varName, ...) \
     protected: \
         mutable std::vector<type> _##varName; \
+        void __Validate##varName(const type &value) const { __VA_ARGS__ } \
     public: \
         std::vector<type> &Get##varName() const { return _##varName; } \
-        type Get##varName##AtIndex(int64_t index) const { return _##varName[index]; } \
-        void Set##varName##AtIndex(int64_t index, type value) const { Set(_##varName, value, index); } \
-        int64_t Find##varName(type value) const { return Find(_##varName, value); } \
-        void Insert##varName(type value) const { Insert(_##varName, value); } \
-        void Insert##varName##AtIndex(int64_t index, type value) const { Insert(_##varName, value, index); } \
-        void Insert##varName(const std::vector<type> &value) const { Insert(_##varName, value); } \
-        void Insert##varName##AtIndex(int64_t index, std::vector<type> &value) const { Insert(_##varName, value, index); } \
-        void Remove##varName(type value) const { Remove(_##varName, value); } \
-        void Remove##varName##AtIndex(int64_t index) const { RemoveAtIndex(_##varName, index); } \
+        type Get##varName##AtIndex(const int64_t &index) const { return _##varName[index]; } \
+        void Set##varName##AtIndex(const int64_t &index, const type &value) const { __Validate##varName(value); Set(_##varName, value, index); } \
+        int64_t Find##varName(const type &value) const { return Find(_##varName, value); } \
+        void Insert##varName(const type &value) const { __Validate##varName(value); Insert(_##varName, value); } \
+        void Insert##varName##AtIndex(const int64_t &index, const type &value) const { __Validate##varName(value); Insert(_##varName, value, index); } \
+        void Insert##varName(const std::vector<type> &value) const { for (auto const &element : value) __Validate##varName(element); Insert(_##varName, value); } \
+        void Insert##varName##AtIndex(const int64_t &index, const std::vector<type> &value) const { for (auto const &element : value) __Validate##varName(element); Insert(_##varName, value, index); } \
+        void Remove##varName(const type &value) const { Remove(_##varName, value); } \
+        void Remove##varName##AtIndex(const int64_t &index) const { RemoveAtIndex(_##varName, index); } \
         std::vector<type> Clone##varName() const { return _##varName; }\
         void Clone##varName(const std::vector<type> &value) const { _##varName.clear(); Insert##varName(value); }\
         void Clear##varName() const { _##varName.clear(); }
-
-    #define GETCUSTOM_VECTOR(type, varName, ...)
     
-    #define SETCUSTOM_VECTOR(varName, type, ...)
-
     #define VECTOR_SPTR(type, varName) \
     protected: \
         mutable std::vector<std::shared_ptr<type>> _##varName; \
