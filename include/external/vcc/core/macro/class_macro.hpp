@@ -20,7 +20,8 @@ namespace vcc
     #define GETSET(type, var, def) \
     protected: \
         mutable type _##var = def; \
-    GETCUSTOM(type, var, return _##var; ) \
+    public: \
+        const type &Get##var() const { return _##var; } \
     SETCUSTOM(var, type, _##var = value; )
 
     #define GETCUSTOM(type, var, ...) \
@@ -76,7 +77,7 @@ namespace vcc
 
     #define GETCUSTOM_VECTOR(type, var, ...)
     
-    #define SETCUSTOM_VECTOR(type, var, ...)
+    #define SETCUSTOM_VECTOR(var, type, ...)
 
     #define VECTOR_SPTR(type, var) \
     protected: \
