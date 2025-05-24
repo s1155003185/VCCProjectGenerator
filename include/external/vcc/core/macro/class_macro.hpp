@@ -48,7 +48,7 @@ namespace vcc
     #define GETSETVALIDATE_SPTR_NULL(type, varName, ...) \
         protected: \
             mutable std::shared_ptr<type> _##varName = nullptr; \
-            void __Validate##varName(const std::shared_ptr<type> value) const { __VA_ARGS__ } \
+            void __Validate##varName(const std::shared_ptr<IObject> value) const { __VA_ARGS__ } \
         public: \
             std::shared_ptr<type> Get##varName() const { return _##varName; } \
             void Set##varName(std::shared_ptr<type> value) const { __Validate##varName(value); _##varName = value; } \
@@ -90,7 +90,7 @@ namespace vcc
     #define VECTORVALIDATE_SPTR(type, varName, ...) \
     protected: \
         mutable std::vector<std::shared_ptr<type>> _##varName; \
-        void __Validate##varName(const std::shared_ptr<type> value) const { __VA_ARGS__ } \
+        void __Validate##varName(const std::shared_ptr<IObject> value) const { __VA_ARGS__ } \
     public: \
         std::vector<std::shared_ptr<type>> &Get##varName() const { return _##varName; } \
         std::shared_ptr<type> Get##varName##AtIndex(int64_t index) const { return _##varName[index]; } \
