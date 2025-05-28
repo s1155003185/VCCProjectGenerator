@@ -45,7 +45,7 @@ std::shared_ptr<Json> VPGGitForm::ToJson() const
     return nullptr;
 }
 
-void VPGGitForm::DeserializeJson(std::shared_ptr<IDocument> document) const
+void VPGGitForm::DeserializeJson(std::shared_ptr<IDocument> document)
 {
     TRY
         auto json = std::dynamic_pointer_cast<Json>(document);
@@ -53,7 +53,7 @@ void VPGGitForm::DeserializeJson(std::shared_ptr<IDocument> document) const
     CATCH
 }
 
-void VPGGitForm::InitializeComponents() const
+void VPGGitForm::InitializeComponents()
 {
     TRY
         BaseForm::InitializeComponents();

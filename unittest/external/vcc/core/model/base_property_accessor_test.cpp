@@ -41,7 +41,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             return obj->GetString();
         }
 
-        virtual void _WriteStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index = -1) const override
+        virtual void _WriteStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index = -1) override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -58,7 +58,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             return obj->GetInteger();
         }
 
-        virtual void _WriteIntAtIndex(const int64_t &objectProperty, const int &value, const int64_t &index = -1) const override
+        virtual void _WriteIntAtIndex(const int64_t &objectProperty, const int &value, const int64_t &index = -1) override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -73,7 +73,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             return obj->GetObject();
         }
 
-        virtual void _WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index = -1) const override
+        virtual void _WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index = -1) override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -81,7 +81,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             obj->SetObject(std::static_pointer_cast<BasePropertyAccessorTestObject>(value));
         }
 
-        void _InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index) const override
+        void _InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index) override
         {
             TRY
                 assert(objectProperty == 0L);
@@ -103,7 +103,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             return obj->GetMapStringAtKey(*keyPtr);
         }
 
-        virtual void _WriteStringAtKey(const int64_t &objectProperty, const std::wstring &value, const void *key) const override
+        virtual void _WriteStringAtKey(const int64_t &objectProperty, const std::wstring &value, const void *key) override
         {
             assert(objectProperty == 0L);
             assert(key != nullptr);

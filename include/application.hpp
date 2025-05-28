@@ -41,7 +41,7 @@ class Application : public BaseForm
         Application() : BaseForm() {}
         ~Application() {}
 
-        virtual void InitializeComponents() const override;
+        virtual void InitializeComponents() override;
  
         static void Run();
 

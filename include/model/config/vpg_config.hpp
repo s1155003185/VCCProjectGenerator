@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "base_json_object.hpp"
@@ -30,7 +31,7 @@ class VPGConfigTemplate : public BaseObject, public BaseJsonObject
         }
 
         virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;
+        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
 };
 
 class VPGConfigBehavior : public BaseObject, public BaseJsonObject
@@ -48,7 +49,7 @@ class VPGConfigBehavior : public BaseObject, public BaseJsonObject
         }
 
         virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;
+        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
 };
 
 class VPGConfigInput : public BaseObject, public BaseJsonObject
@@ -65,7 +66,7 @@ class VPGConfigInput : public BaseObject, public BaseJsonObject
         }
 
         virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;
+        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
 };
 
 class VPGConfigOutput : public BaseObject, public BaseJsonObject
@@ -97,7 +98,7 @@ class VPGConfigOutput : public BaseObject, public BaseJsonObject
         }
 
         virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;
+        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
 };
 
 class VPGConfigExport : public BaseObject, public BaseJsonObject
@@ -122,7 +123,7 @@ class VPGConfigExport : public BaseObject, public BaseJsonObject
         }
 
         virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;
+        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
 };
 
 class VPGConfig : public BaseObject, public BaseJsonObject
@@ -144,10 +145,10 @@ class VPGConfig : public BaseObject, public BaseJsonObject
     public:
         VPGConfig() : BaseObject(ObjectType::Config)
         {
+            _Template = std::make_shared<VPGConfigTemplate>();
             _Behavior = std::make_shared<VPGConfigBehavior>();
             _Input = std::make_shared<VPGConfigInput>();
             _Output = std::make_shared<VPGConfigOutput>();
-            _Template = std::make_shared<VPGConfigTemplate>();
         }
 
         virtual ~VPGConfig() {}
@@ -164,5 +165,5 @@ class VPGConfig : public BaseObject, public BaseJsonObject
         }
 
         virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;
+        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
 };

@@ -16,7 +16,7 @@ namespace vcc
 
             virtual std::shared_ptr<Json> ToJson() const = 0;
             virtual std::wstring SerializeJson(const IDocumentBuilder *builder) const = 0;
-            virtual void DeserializeJson(std::shared_ptr<IDocument> document) const = 0;
-            virtual void DeserializeJsonString(const IDocumentBuilder *builder, const std::wstring &jsonStr) const = 0;
+            virtual void DeserializeJson(std::shared_ptr<IDocument> document) = 0;
+            virtual void DeserializeJsonString(const IDocumentBuilder *builder, const std::wstring &jsonStr) = 0;
     };
 }

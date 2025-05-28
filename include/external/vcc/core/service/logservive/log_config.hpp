@@ -46,7 +46,7 @@ namespace vcc
             return std::make_shared<LogConfig>(*this);
         }
 
-        void Initialize(const LogConfigInitialType &logConfigType, const std::wstring &filePath = L"") const {
+        void Initialize(const LogConfigInitialType &logConfigType, const std::wstring &filePath = L"") {
             switch (logConfigType)
             {
             case LogConfigInitialType::None:

@@ -677,7 +677,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicJsonFunctions(const VPG
         if (enumClass->GetIsJson())
             result += L"\r\n"
                 + INDENT + INDENT + L"virtual std::shared_ptr<Json> ToJson() const override;\r\n"
-                + INDENT + INDENT + L"virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;\r\n";
+                + INDENT + INDENT + L"virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;\r\n";
     CATCH
     return result;
 }
@@ -690,7 +690,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnum
         {
         case VPGEnumClassType::Form:
             result += L"\r\n"
-                + INDENT + INDENT + L"virtual void InitializeComponents() const override;\r\n"
+                + INDENT + INDENT + L"virtual void InitializeComponents() override;\r\n"
                 "\r\n"
                 + INDENT + INDENT + L"virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;\r\n";
             break;
@@ -1198,7 +1198,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
             + INDENT + L"return nullptr;\r\n"
             "}\r\n"
             "\r\n"
-            "void " + className + L"::DeserializeJson(std::shared_ptr<IDocument> document) const\r\n"
+            "void " + className + L"::DeserializeJson(std::shared_ptr<IDocument> document)\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n"
             + (!deserializeStr.empty() ? deserializeVariable : L"")
@@ -1217,7 +1217,7 @@ std::wstring VPGObjectFileGenerationService::GetCppInitialize(const VPGEnumClass
     TRY
         if (enumClass->GetType() == VPGEnumClassType::Form) {
             result += L"\r\n"
-                "void " + className + L"::InitializeComponents() const\r\n"
+                "void " + className + L"::InitializeComponents()\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + baseClassName + L"::InitializeComponents();\r\n";

@@ -1,13 +1,14 @@
 # Change Log
 
 ## [Unreleased] - Review - Git Manager Enhancement
+- Review using namespace vcc: add vcc:: before function instead of using namespace vcc
 - Git Manager Enhancement
+- Review naming rule: class variable: _PascalCase / variable: camelCase / function name: camelCase / class name: PascalCase / macro names: UPPER_CASE / enum type name: PascalCase / enumerator name: UPPER_CASE / constant name: UPPER_CASE / namespace name: lowercase
 - TODO: Enum Support custom include files
 - TODO: Export function name to lowercase with underscore
 - TODO: Support Callback in argument
 - TODO: Support Structure
 - TODO: Support Set for GETSET
-- TODO: Review usage of const
 - TODO: Review RESERVE and REPLACE tag
 
 ### [v0.3.6]
@@ -20,6 +21,7 @@
 - Support one enum with multi class macro
 - Class Enum supports @@Include @@Private @@Protected
 - Class Property Enum supports @@Initialize
+- Review usage of const
 
 ### [v0.3.5] - 2025-05-05: Review - vcc.json Grouping
 - Group vcc.json

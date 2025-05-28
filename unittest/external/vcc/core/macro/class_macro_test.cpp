@@ -25,17 +25,47 @@ class ClassMacroTestClassElement : public BaseObject
 
 class ClassMacroTestClass : public BaseObject
 {
+    // virtual
+    private:
+        mutable bool _Bool = false;
+        mutable std::shared_ptr<ClassMacroTestClassElement> _TestObject = nullptr;
+    GETCUSTOM(bool, CustomBool, return true;)
+    SETCUSTOM(CustomBool, bool, _Bool = value;)
+    GETCUSTOM_SPTR(ClassMacroTestClassElement, CustomObject, return _TestObject;)
+    SETCUSTOM_SPTR(CustomObject, ClassMacroTestClassElement, _TestObject = value;)
+
+    // general
     GETSET(int, Number, 0)
+    GETSET_VALIDATE(int64_t, ValidateNumber, 0, if (value < 0) throw std::runtime_error("ValidateNumber: Value cannot be negative."); )
+    
+    GETSET_SPTR(ClassMacroTestClassElement, Object)
+    GETSET_SPTR_NULL(ClassMacroTestClassElement, ObjectNull)
+    GETSET_VALIDATE_SPTR_NULL(ClassMacroTestClassElement, ObjectNullValidate, if (value == nullptr) throw std::runtime_error("ObjectNullValidate: Value cannot be nullptr.");)
+
+    // vector
     VECTOR(int, Vector)
+    VECTOR_VALIDATE(int64_t, VectorValidate, if (value < 0) throw std::runtime_error("VectorValidate: Value cannot be negative.");)
     VECTOR_SPTR(ClassMacroTestClassElement, VectorSPTR)
+    VECTOR_VALIDATE_SPTR(ClassMacroTestClassElement, VectorSPTRValidate, if (value == nullptr) throw std::runtime_error("ObjectNullValidate: Value cannot be nullptr."););
+    
+    // set
     SET(int, Set)
+    SET_VALIDATE(int, SetValidate, if (value < 0) throw std::runtime_error("VectorValidate: Value cannot be negative."););
     SET_SPTR(ClassMacroTestClassElement, SetSPTR)
+    SET_VALIDATE_SPTR(ClassMacroTestClassElement, SetSPTRValidate, if (value == nullptr) throw std::runtime_error("VectorValidate: Value cannot be nullptr."););
+    
+    // map
     MAP(int, std::wstring, Map)
     MAP(std::string, std::vector<std::shared_ptr<ClassMacroTestClassElement>>, MapVector)
+    MAP_VALIDATE(int, std::wstring, MapValidate, if (value.empty()) throw std::runtime_error("VectorValidate: Value cannot be empty string.");)
     MAP_SPTR_R(std::wstring, ClassMacroTestClassElement, MapSPTR)
+    MAP_VALIDATE_SPTR_R(std::wstring, ClassMacroTestClassElement, MapSPTRValidate, if (value == nullptr) throw std::runtime_error("VectorValidate: Value cannot be nullptr.");)
+    
+    // ordered map
     ORDERED_MAP(int, std::wstring, OrderedMap)
+    ORDERED_MAP_VALIDATE(int, std::wstring, OrderedMapValidate, if (value.empty()) throw std::runtime_error("VectorValidate: Value cannot be empty string.");)
     ORDERED_MAP_SPTR_R(std::wstring, ClassMacroTestClassElement, OrderedMapSPTR)
-
+    ORDERED_MAP_VALIDATE_SPTR_R(std::wstring, ClassMacroTestClassElement, OrderedMapSPTRValidate, if (value == nullptr) throw std::runtime_error("VectorValidate: Value cannot be nullptr.");)
 
     public:
         ClassMacroTestClass() : BaseObject(ObjectType::NA) {}

@@ -260,7 +260,7 @@ std::shared_ptr<Json> VPGMainForm::ToJson() const
     return nullptr;
 }
 
-void VPGMainForm::DeserializeJson(std::shared_ptr<IDocument> document) const
+void VPGMainForm::DeserializeJson(std::shared_ptr<IDocument> document)
 {
     TRY
         NamingStyle namestyle = NamingStyle::PascalCase;
@@ -278,7 +278,7 @@ void VPGMainForm::DeserializeJson(std::shared_ptr<IDocument> document) const
     CATCH
 }
 
-void VPGMainForm::InitializeComponents() const
+void VPGMainForm::InitializeComponents()
 {
     TRY
         BaseForm::InitializeComponents();

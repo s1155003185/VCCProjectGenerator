@@ -24,8 +24,8 @@ namespace vcc
             
             bool IsValue(const std::wstring &key) const;
             std::wstring GetValue(const std::wstring &key) const;
-            void AddValue(const std::wstring &key, const std::wstring &value) const;
-            void AddLine(const std::wstring &value = L"") const;
-            void AddCommand(const std::wstring &value) const;
+            void AddValue(const std::wstring &key, const std::wstring &value);
+            void AddLine(const std::wstring &value = L"");
+            void AddCommand(const std::wstring &value);
     };
 }

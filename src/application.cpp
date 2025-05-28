@@ -18,7 +18,7 @@
 
 using namespace vcc;
 
-void Application::InitializeComponents() const
+void Application::InitializeComponents()
 {
     TRY
         // Initialize for Global Log and Thread Setting

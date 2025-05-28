@@ -24,7 +24,7 @@ namespace vcc
         return L"";
     }
 
-    void Config::AddValue(const std::wstring &key, const std::wstring &value) const
+    void Config::AddValue(const std::wstring &key, const std::wstring &value)
     {
         TRY
             if (IsBlank(key) || key == L"#")
@@ -33,14 +33,14 @@ namespace vcc
         CATCH
     }
 
-    void Config::AddLine(const std::wstring &value) const
+    void Config::AddLine(const std::wstring &value)
     {
         TRY
             InsertConfigsAtKey(L"", value);
         CATCH
     }
 
-    void Config::AddCommand(const std::wstring &value) const
+    void Config::AddCommand(const std::wstring &value)
     {
         TRY
             InsertConfigsAtKey(L"#", value);

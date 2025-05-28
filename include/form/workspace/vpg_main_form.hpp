@@ -212,9 +212,9 @@ class VPGMainForm : public BaseForm, public BaseJsonObject
         virtual std::shared_ptr<IObject> Clone() const override;
 
         virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) const override;
+        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
 
-        virtual void InitializeComponents() const override;
+        virtual void InitializeComponents() override;
 
         virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;
 

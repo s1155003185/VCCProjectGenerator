@@ -16,7 +16,7 @@ namespace vcc
         return -1;
     }
 
-    std::shared_ptr<IResult> ActionManager::_Redo(const int64_t &noOfStep) const
+    std::shared_ptr<IResult> ActionManager::_Redo(const int64_t &noOfStep)
     { 
         TRY
             std::shared_ptr<IResult> result = nullptr;
@@ -31,7 +31,7 @@ namespace vcc
         return nullptr;
     }
 
-    std::shared_ptr<IResult> ActionManager::_Undo(const int64_t &noOfStep) const
+    std::shared_ptr<IResult> ActionManager::_Undo(const int64_t &noOfStep)
     {
         TRY
             std::shared_ptr<IResult> result = nullptr;
@@ -46,7 +46,7 @@ namespace vcc
         return nullptr;
     }
 
-    int64_t ActionManager::_RemoveAction(const int64_t &noOfAction, const bool &fromBeginning) const
+    int64_t ActionManager::_RemoveAction(const int64_t &noOfAction, const bool &fromBeginning)
     {
         TRY
             for (auto i = 0; i < noOfAction; i++) {
@@ -59,7 +59,7 @@ namespace vcc
         return _CurrentSeqNo;
     }
 
-    int64_t ActionManager::_ChopActionListToSize(const int64_t &size, const bool &fromBeginning) const
+    int64_t ActionManager::_ChopActionListToSize(const int64_t &size, const bool &fromBeginning)
     {
         TRY
             int64_t needToRemove = std::max(static_cast<int64_t>(_Actions.size()) - size, static_cast<int64_t>(0));
@@ -68,7 +68,7 @@ namespace vcc
         return _CurrentSeqNo;
     }
 
-    int64_t ActionManager::_Clear() const
+    int64_t ActionManager::_Clear()
     {
         TRY
             _Actions.clear();
@@ -77,7 +77,7 @@ namespace vcc
         return _CurrentSeqNo;
     }
 
-    int64_t ActionManager::_Truncate() const
+    int64_t ActionManager::_Truncate()
     {
         TRY
             _MaxSeqNo = -1;
@@ -104,7 +104,7 @@ namespace vcc
         return _CurrentSeqNo;
     }
 
-    std::shared_ptr<IResult> ActionManager::DoAction(std::shared_ptr<IAction> action) const
+    std::shared_ptr<IResult> ActionManager::DoAction(std::shared_ptr<IAction> action)
     {
         TRY
             //std::unique_lock lock(_mutex);
@@ -136,7 +136,7 @@ namespace vcc
         return nullptr;
     }
 
-    std::shared_ptr<IResult> ActionManager::Redo(const int64_t &noOfStep) const
+    std::shared_ptr<IResult> ActionManager::Redo(const int64_t &noOfStep)
     {
         TRY
             //std::unique_lock lock(_mutex);
@@ -145,7 +145,7 @@ namespace vcc
         return nullptr;
     }
 
-    std::shared_ptr<IResult> ActionManager::RedoToSeqNo(const int64_t &seqNo) const
+    std::shared_ptr<IResult> ActionManager::RedoToSeqNo(const int64_t &seqNo)
     {
         TRY
             return Redo(seqNo - _CurrentSeqNo);
@@ -153,7 +153,7 @@ namespace vcc
         return nullptr;
     }
 
-    std::shared_ptr<IResult> ActionManager::Undo(const int64_t &noOfStep) const
+    std::shared_ptr<IResult> ActionManager::Undo(const int64_t &noOfStep)
     {
         TRY
             //std::unique_lock lock(_mutex);
@@ -162,7 +162,7 @@ namespace vcc
         return nullptr;
     }
 
-    std::shared_ptr<IResult> ActionManager::UndoToSeqNo(const int64_t &seqNo) const
+    std::shared_ptr<IResult> ActionManager::UndoToSeqNo(const int64_t &seqNo)
     {
         TRY
             return Undo(_CurrentSeqNo - seqNo);
@@ -170,7 +170,7 @@ namespace vcc
         return nullptr;
     }
 
-    int64_t ActionManager::ChopActionListToSize(const int64_t &size) const
+    int64_t ActionManager::ChopActionListToSize(const int64_t &size)
     {
         TRY
             //std::unique_lock lock(_mutex);
@@ -179,7 +179,7 @@ namespace vcc
         return _CurrentSeqNo;
     }
 
-    int64_t ActionManager::Clear() const
+    int64_t ActionManager::Clear()
     {
         TRY
             //std::unique_lock lock(_mutex);
@@ -188,7 +188,7 @@ namespace vcc
         return _CurrentSeqNo;
     }
 
-    int64_t ActionManager::Truncate()const
+    int64_t ActionManager::Truncate()
     {
         TRY
             //std::unique_lock lock(_mutex);

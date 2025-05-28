@@ -34,7 +34,7 @@ std::shared_ptr<Json> VPGConfigTemplate::ToJson() const
     return nullptr;
 }
 
-void VPGConfigTemplate::DeserializeJson(std::shared_ptr<IDocument> document) const
+void VPGConfigTemplate::DeserializeJson(std::shared_ptr<IDocument> document)
 {
     TRY
         NamingStyle namestyle = NamingStyle::PascalCase;
@@ -85,7 +85,7 @@ std::shared_ptr<Json> VPGConfigBehavior::ToJson() const
     return nullptr;
 }
 
-void VPGConfigBehavior::DeserializeJson(std::shared_ptr<IDocument> document) const
+void VPGConfigBehavior::DeserializeJson(std::shared_ptr<IDocument> document)
 {
     TRY
         NamingStyle namestyle = NamingStyle::PascalCase;
@@ -124,7 +124,7 @@ std::shared_ptr<Json> VPGConfigInput::ToJson() const
     return nullptr;
 }
 
-void VPGConfigInput::DeserializeJson(std::shared_ptr<IDocument> document) const
+void VPGConfigInput::DeserializeJson(std::shared_ptr<IDocument> document)
 {
     TRY
         NamingStyle namestyle = NamingStyle::PascalCase;
@@ -178,7 +178,7 @@ std::shared_ptr<Json> VPGConfigOutput::ToJson() const
     return nullptr;
 }
 
-void VPGConfigOutput::DeserializeJson(std::shared_ptr<IDocument> document) const
+void VPGConfigOutput::DeserializeJson(std::shared_ptr<IDocument> document)
 {
     TRY
         NamingStyle namestyle = NamingStyle::PascalCase;
@@ -273,7 +273,7 @@ std::shared_ptr<Json> VPGConfigExport::ToJson() const
     return nullptr;
 }
 
-void VPGConfigExport::DeserializeJson(std::shared_ptr<IDocument> document) const
+void VPGConfigExport::DeserializeJson(std::shared_ptr<IDocument> document)
 {
     TRY
         NamingStyle namestyle = NamingStyle::PascalCase;
@@ -401,7 +401,7 @@ std::shared_ptr<Json> VPGConfig::ToJson() const
     return nullptr;
 }
 
-void VPGConfig::DeserializeJson(std::shared_ptr<IDocument> document) const
+void VPGConfig::DeserializeJson(std::shared_ptr<IDocument> document)
 {
     TRY
         NamingStyle namestyle = NamingStyle::PascalCase;

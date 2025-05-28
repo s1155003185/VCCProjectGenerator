@@ -23,7 +23,7 @@ namespace vcc
             return L"";
         }
 
-        virtual void DeserializeJsonString(const IDocumentBuilder *builder, const std::wstring &jsonStr) const override
+        virtual void DeserializeJsonString(const IDocumentBuilder *builder, const std::wstring &jsonStr) override
         {
             TRY
                 auto json = std::make_shared<Json>();

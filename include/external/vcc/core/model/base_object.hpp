@@ -39,7 +39,7 @@ namespace vcc
                 return _ParentObject;
             }
 
-            virtual void SetParentObject(std::shared_ptr<IObject> parentObject) const override
+            virtual void SetParentObject(std::shared_ptr<IObject> parentObject) override
             {
                 _ParentObject = parentObject;
             }

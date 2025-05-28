@@ -21,12 +21,12 @@ namespace vcc
 
     private:
         int64_t _GetFirstSeqNo(const bool &fromBeginning) const;
-        std::shared_ptr<IResult> _Redo(const int64_t &noOfStep) const;
-        std::shared_ptr<IResult> _Undo(const int64_t &noOfStep) const;
-        int64_t _RemoveAction(const int64_t &noOfAction, const bool &fromBeginning) const;
-        int64_t _ChopActionListToSize(const int64_t &size, const bool &fromBeginning) const;
-        int64_t _Clear() const;
-        int64_t _Truncate() const;
+        std::shared_ptr<IResult> _Redo(const int64_t &noOfStep);
+        std::shared_ptr<IResult> _Undo(const int64_t &noOfStep);
+        int64_t _RemoveAction(const int64_t &noOfAction, const bool &fromBeginning);
+        int64_t _ChopActionListToSize(const int64_t &size, const bool &fromBeginning);
+        int64_t _Clear();
+        int64_t _Truncate();
     public:
         ActionManager(std::shared_ptr<LogConfig> logConfig) : BaseManager(logConfig) {}
         virtual ~ActionManager() {}
@@ -34,17 +34,17 @@ namespace vcc
         int64_t GetFirstSeqNo() const;
         int64_t GetLastSeqNo() const;
 
-        std::shared_ptr<IResult> DoAction(std::shared_ptr<IAction> action) const;
+        std::shared_ptr<IResult> DoAction(std::shared_ptr<IAction> action);
         
-        std::shared_ptr<IResult> Redo(const int64_t &noOfStep = 1) const;
-        std::shared_ptr<IResult> RedoToSeqNo(const int64_t &seqNo) const;
+        std::shared_ptr<IResult> Redo(const int64_t &noOfStep = 1);
+        std::shared_ptr<IResult> RedoToSeqNo(const int64_t &seqNo);
 
-        std::shared_ptr<IResult> Undo(const int64_t &noOfStep = 1) const;
-        std::shared_ptr<IResult> UndoToSeqNo(const int64_t &seqNo) const;
+        std::shared_ptr<IResult> Undo(const int64_t &noOfStep = 1);
+        std::shared_ptr<IResult> UndoToSeqNo(const int64_t &seqNo);
         
-        int64_t ChopActionListToSize(const int64_t &size) const;
+        int64_t ChopActionListToSize(const int64_t &size);
 
-        int64_t Clear() const;
-        int64_t Truncate() const;
+        int64_t Clear();
+        int64_t Truncate();
     };
 }

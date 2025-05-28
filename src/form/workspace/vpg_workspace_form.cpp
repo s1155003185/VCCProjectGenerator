@@ -56,7 +56,7 @@ std::shared_ptr<Json> VPGWorkspaceForm::ToJson() const
     return nullptr;
 }
 
-void VPGWorkspaceForm::DeserializeJson(std::shared_ptr<IDocument> document) const
+void VPGWorkspaceForm::DeserializeJson(std::shared_ptr<IDocument> document)
 {
     TRY
         NamingStyle namestyle = NamingStyle::PascalCase;
@@ -80,7 +80,7 @@ void VPGWorkspaceForm::DeserializeJson(std::shared_ptr<IDocument> document) cons
     CATCH
 }
 
-void VPGWorkspaceForm::InitializeComponents() const
+void VPGWorkspaceForm::InitializeComponents()
 {
     TRY
         BaseForm::InitializeComponents();

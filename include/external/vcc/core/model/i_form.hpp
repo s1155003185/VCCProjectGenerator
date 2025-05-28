@@ -18,25 +18,25 @@ namespace vcc
             virtual ~IForm() = default;
         
             // Initialize
-            virtual void OnInitialize() const = 0;
-            virtual void OnInitializeComponents() const = 0;
-            virtual void OnInitializeValues() const = 0;
+            virtual void OnInitialize() = 0;
+            virtual void OnInitializeComponents() = 0;
+            virtual void OnInitializeValues() = 0;
 
             // Close
             virtual bool OnIsClosable() const = 0;
-            virtual bool OnClose() const = 0;
+            virtual bool OnClose() = 0;
         public:
             // Log
             virtual std::shared_ptr<LogConfig> GetLogConfig() const = 0;
-            virtual void SetLogConfig(std::shared_ptr<LogConfig> logConfig) const = 0;
+            virtual void SetLogConfig(std::shared_ptr<LogConfig> logConfig) = 0;
             
             // Action
             virtual std::shared_ptr<ActionManager> GetActionManager() const = 0;
-            virtual void SetActionManager(std::shared_ptr<ActionManager> actionManager) const = 0;
+            virtual void SetActionManager(std::shared_ptr<ActionManager> actionManager) = 0;
 
             // Thead
             virtual std::shared_ptr<ThreadManager> GetThreadManager() const = 0;
-            virtual void SetThreadManager(std::shared_ptr<ThreadManager> threadManager) const = 0;
+            virtual void SetThreadManager(std::shared_ptr<ThreadManager> threadManager) = 0;
 
             // State
             virtual State GetState() const = 0;
@@ -44,9 +44,9 @@ namespace vcc
             virtual bool IsClosed() const = 0;
 
             // Initialize
-            virtual void Initialize() const = 0;
-            virtual void InitializeComponents() const = 0;
-            virtual void InitializeValue() const = 0;
+            virtual void Initialize() = 0;
+            virtual void InitializeComponents() = 0;
+            virtual void InitializeValue() = 0;
 
             // Action
             virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) = 0;
@@ -61,10 +61,10 @@ namespace vcc
             virtual std::shared_ptr<IResult> UndoAction(const int64_t &noOfStep = 1) = 0;
             virtual std::shared_ptr<IResult> UndoActionToSeqNo(const int64_t &seqNo) = 0;
 
-            virtual int64_t ClearAction() const = 0;
-            virtual int64_t TruncateAction() const = 0;
+            virtual int64_t ClearAction() = 0;
+            virtual int64_t TruncateAction() = 0;
 
             // Close
-            virtual bool Close(bool isForce = false) const = 0;
+            virtual bool Close(bool isForce = false) = 0;
     };
 }

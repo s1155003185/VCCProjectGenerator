@@ -18,7 +18,7 @@ namespace vcc
             virtual size_t GetObjectId() const = 0;
             virtual const ObjectType& GetObjectType() const = 0;
             virtual std::shared_ptr<IObject> GetParentObject() const = 0;
-            virtual void SetParentObject(std::shared_ptr<IObject> parentObject) const = 0;
+            virtual void SetParentObject(std::shared_ptr<IObject> parentObject) = 0;
             virtual std::shared_ptr<IObject> Clone() const = 0;
     };
 }

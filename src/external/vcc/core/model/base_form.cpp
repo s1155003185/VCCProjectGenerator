@@ -18,7 +18,7 @@ namespace vcc
         return nullptr;
     }
 
-    void BaseForm::SetLogConfig(std::shared_ptr<LogConfig> logConfig) const
+    void BaseForm::SetLogConfig(std::shared_ptr<LogConfig> logConfig)
     {
         _LogConfig = logConfig;
     }
@@ -32,7 +32,7 @@ namespace vcc
         return nullptr;
     }
 
-    void BaseForm::SetActionManager(std::shared_ptr<ActionManager> actionManager) const
+    void BaseForm::SetActionManager(std::shared_ptr<ActionManager> actionManager)
     {
         _ActionManager = actionManager;
     }
@@ -46,7 +46,7 @@ namespace vcc
         return nullptr;
     }
 
-    void BaseForm::SetThreadManager(std::shared_ptr<ThreadManager> threadManager) const
+    void BaseForm::SetThreadManager(std::shared_ptr<ThreadManager> threadManager)
     {
         _ThreadManager = threadManager;
     }
@@ -75,7 +75,7 @@ namespace vcc
         return false;
     }
 
-    void BaseForm::Initialize() const
+    void BaseForm::Initialize()
     {
         TRY
             InitializeComponents();
@@ -84,14 +84,14 @@ namespace vcc
         CATCH
     }
 
-    void BaseForm::InitializeComponents() const
+    void BaseForm::InitializeComponents()
     {
         TRY
             OnInitialize();
         CATCH
     }
 
-    void BaseForm::InitializeValue() const
+    void BaseForm::InitializeValue()
     {
         TRY
             OnInitializeValues();
@@ -180,7 +180,7 @@ namespace vcc
         return nullptr;
     }
 
-    int64_t BaseForm::ClearAction() const
+    int64_t BaseForm::ClearAction()
     {
         TRY
             auto actionManager = GetActionManager();
@@ -190,7 +190,7 @@ namespace vcc
         return -1;
     }
 
-    int64_t BaseForm::TruncateAction() const
+    int64_t BaseForm::TruncateAction()
     {
         TRY
             auto actionManager = GetActionManager();
@@ -200,7 +200,7 @@ namespace vcc
         return -1;
     }
 
-    bool BaseForm::Close(bool isForce) const
+    bool BaseForm::Close(bool isForce)
     {
         TRY
             if (!isForce && !IsClosable())
