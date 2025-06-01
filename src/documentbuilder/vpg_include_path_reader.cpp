@@ -3,14 +3,12 @@
 #include "exception_macro.hpp"
 #include "string_helper.hpp"
 
-using namespace vcc;
-
 size_t VPGIncludePathReader::IsQuote(const std::wstring &cppCode, const size_t &pos) const
 {
     TRY
         size_t index = 0;
         for (auto const &quote : _OpenQuotes) {
-            if (IsStartWith(cppCode, quote, pos))
+            if (vcc::IsStartWith(cppCode, quote, pos))
                 return index;
             index++;
         }
@@ -23,7 +21,7 @@ size_t VPGIncludePathReader::IsCommand(const std::wstring &cppCode, const size_t
     TRY
         size_t index = 0;
         for (auto const &quote : _OpenCommands) {
-            if (IsStartWith(cppCode, quote, pos))
+            if (vcc::IsStartWith(cppCode, quote, pos))
                 return index;
             index++;
         }
@@ -35,7 +33,7 @@ size_t VPGIncludePathReader::SkipCommand(const std::wstring &cppCode, const size
 {
     TRY
         std::wstring closeCommand = _CloseCommands[openCommandIndex];
-        size_t tmpPos = Find(cppCode, closeCommand, pos);
+        size_t tmpPos = vcc::Find(cppCode, closeCommand, pos);
         if (tmpPos != std::wstring::npos)
             pos = tmpPos + closeCommand.length() - 1;
     CATCH
@@ -49,20 +47,20 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
     TRY
         size_t pos = 0;
         bool isNamespaceTriggered = false;
-        GetNextCharPos(cppCode, pos, true);
+        vcc::GetNextCharPos(cppCode, pos, true);
         while (pos < cppCode.length()) {
             size_t commandIndex = IsCommand(cppCode, pos);
             if (commandIndex != std::wstring::npos) {
                 SkipCommand(cppCode, commandIndex, pos);
             } else {
-                std::wstring nextToken = GetNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
-                if (!IsBlank(nextToken)) {
+                std::wstring nextToken = vcc::GetNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
+                if (!vcc::IsBlank(nextToken)) {
                     if (isNamespaceTriggered) {
                         // namespace name
-                        Trim(nextToken);
+                        vcc::Trim(nextToken);
                         pos++;
-                        std::wstring quoteStr = GetNextQuotedString(cppCode, pos, { L";" } );
-                        Trim(quoteStr);
+                        std::wstring quoteStr = vcc::GetNextQuotedString(cppCode, pos, { L";" } );
+                        vcc::Trim(quoteStr);
                         if (!quoteStr.empty()) {
                             std::set<std::wstring> tmpClassList;
                             ParseCustom(quoteStr.substr(1, quoteStr.length() - 2), nextToken, tmpClassList);
@@ -71,53 +69,51 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
                                     classList.insert(currentNamespace + L"::" + tmpClass);
                             } else
                                 classList.insert(tmpClassList.begin(), tmpClassList.end());
-                            break;
-                        } else {
-                            isNamespaceTriggered = false;
                         }
+                        isNamespaceTriggered = false;
                     } else {
                         if (nextToken == L"namespace") {
                             isNamespaceTriggered = true;
                         } else {
                             if (nextToken == L"class") {
-                                GetNextCharPos(cppCode, pos, false);
-                                nextToken = GetNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
-                                Trim(nextToken);
-                                GetNextCharPos(cppCode, pos, false);
+                                vcc::GetNextCharPos(cppCode, pos, false);
+                                nextToken = vcc::GetNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
+                                vcc::Trim(nextToken);
+                                vcc::GetNextCharPos(cppCode, pos, false);
                                 // check if it is :
                                 if (cppCode[pos] == L';')
                                     continue;
                                 if (cppCode[pos] == L':') {
-                                    pos = Find(cppCode, L"{", pos);
+                                    pos = vcc::Find(cppCode, L"{", pos);
                                 }
                                 // drop class quote
-                                if (!GetNextQuotedString(cppCode, pos, { L";" }).empty())
+                                if (!vcc::GetNextQuotedString(cppCode, pos, { L";" }).empty())
                                     classList.insert((!currentNamespace.empty() ? (currentNamespace + L"::") : L"") + nextToken);
                             } else if (nextToken == L"typedef") {
-                                GetNextCharPos(cppCode, pos, false);
-                                GetNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
-                                GetNextCharPos(cppCode, pos, false);
-                                nextToken = GetNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
-                                Trim(nextToken);
+                                vcc::GetNextCharPos(cppCode, pos, false);
+                                vcc::GetNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
+                                vcc::GetNextCharPos(cppCode, pos, false);
+                                nextToken = vcc::GetNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
+                                vcc::Trim(nextToken);
                                 classList.insert((!currentNamespace.empty() ? (currentNamespace + L"::") : L"") + nextToken);
                             } else if (nextToken == L"using") {
-                                GetNextCharPos(cppCode, pos, false);
-                                nextToken = GetNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
-                                Trim(nextToken);
-                                GetNextCharPos(cppCode, pos, false);
+                                vcc::GetNextCharPos(cppCode, pos, false);
+                                nextToken = vcc::GetNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
+                                vcc::Trim(nextToken);
+                                vcc::GetNextCharPos(cppCode, pos, false);
                                 // check if it is :
                                 if (cppCode[pos] == L';')
                                     continue;
                                 else if (cppCode[pos] == L'=') {
                                     classList.insert((!currentNamespace.empty() ? (currentNamespace + L"::") : L"") + nextToken);
                                 }
-                                pos = Find(cppCode, L";", pos);
+                                pos = vcc::Find(cppCode, L";", pos);
                             }
                         }
                     }
                 }
             }
-            GetNextCharPos(cppCode, pos, false);
+            vcc::GetNextCharPos(cppCode, pos, false);
         }
     CATCH
 }
@@ -136,16 +132,16 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
 //     if (cppCode.empty())
 //         return;
 //     TRY_CATCH () {
-//         size_t startCommandPos = Find(cppCode, L"/*");
+//         size_t startCommandPos = vcc::Find(cppCode, L"/*");
 //         if (startCommandPos == std::wstring::npos)
 //             return;
 
-//         size_t endCommandPos = Find(cppCode, L"*/", startCommandPos);
+//         size_t endCommandPos = vcc::Find(cppCode, L"*/", startCommandPos);
 //         if (endCommandPos == std::wstring::npos)
 //             return;
 
 //         std::wstring token = L"synopsis";
-//         startCommandPos = Find(cppCode, token, startCommandPos);
+//         startCommandPos = vcc::Find(cppCode, token, startCommandPos);
 //         if (startCommandPos == std::wstring::npos || endCommandPos < startCommandPos)
 //             return;
 
@@ -166,21 +162,21 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
 //     }
 // }
 
-void VPGIncludePathReader::Parse(const PlatformType &platformType, const std::wstring &cppCode, std::set<std::wstring> &classList) const
+void VPGIncludePathReader::Parse(const vcc::PlatformType &platformType, const std::wstring &cppCode, std::set<std::wstring> &classList) const
 {
     TRY
         switch (platformType)
         {
-        case PlatformType::NA:
+        case vcc::PlatformType::NA:
             ParseCustom(cppCode, L"", classList);
             break;
-        // case PlatformType::Linux:
+        // case vcc::PlatformType::Linux:
         //     ParseLinux(cppCode, classList);
         //     break;
-        // case PlatformType::MacOs:
+        // case vcc::PlatformType::MacOs:
         //     ParseMacOs(cppCode, classList);
         //     break;
-        // case PlatformType::Window:
+        // case vcc::PlatformType::Window:
         //     ParseWindow(cppCode, classList);
         //     break;        
         default:

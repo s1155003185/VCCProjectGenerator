@@ -6,8 +6,6 @@
 
 #include "vpg_code_reader.hpp"
 
-using namespace vcc;
-
 const std::wstring VCC_NAMESPACE = L"vcc";
 const std::wstring VCC_NAME = VCC_NAMESPACE + L":vccproj";
 
@@ -41,7 +39,7 @@ size_t VPGFileGenerationService::GetMinimumLeadingSpace(const std::vector<std::w
     TRY
         bool isFirstLine = true;
         for (auto const &line : lines) {
-            if (!IsBlank(line)) {
+            if (!vcc::IsBlank(line)) {
                 size_t noOfSpace = GetLeadingSpace(line);
                 if (isFirstLine) {
                     result = noOfSpace;
@@ -59,7 +57,7 @@ std::wstring VPGFileGenerationService::GetIndent(const std::wstring &str)
 {
     std::wstring result = L"";
     TRY
-        std::vector<std::wstring> lines = SplitStringByLine(str);
+        std::vector<std::wstring> lines = vcc::SplitStringByLine(str);
         if (lines.empty())
             return L"";
 
@@ -71,11 +69,11 @@ std::wstring VPGFileGenerationService::GetIndent(const std::wstring &str)
             if (line.empty())
                 continue;
             
-            if (IsBlank(line))
+            if (vcc::IsBlank(line))
                 result = line;
             else {
                 size_t pos = 0;
-                GetNextCharPos(line, pos, true);
+                vcc::GetNextCharPos(line, pos, true);
                 if (pos > 0 && pos < line.length())
                     result = line.substr(0, pos);
             }
@@ -85,7 +83,7 @@ std::wstring VPGFileGenerationService::GetIndent(const std::wstring &str)
     return result;
 }
 
-const Xml *VPGFileGenerationService::GetTagFromCode(const Xml *code, const std::wstring &tagName)
+const vcc::Xml *VPGFileGenerationService::GetTagFromCode(const vcc::Xml *code, const std::wstring &tagName)
 {
     TRY
         for (size_t i = 0; i < code->GetChildren().size(); i++) {
@@ -101,13 +99,13 @@ bool VPGFileGenerationService::IsGeneartionTag(const std::wstring &tag)
     return tag == GEN_TOKEN_SHORT || tag == GEN_TOKEN_LONG;
 }
 
-bool VPGFileGenerationService::IsTagForce(const Xml *child)
+bool VPGFileGenerationService::IsTagForce(const vcc::Xml *child)
 {
     TRY
-        for (std::shared_ptr<XmlAttribute> attr : child->GetAttributes()){
+        for (std::shared_ptr<vcc::XmlAttribute> attr : child->GetAttributes()){
             if (IsGeneartionTag(attr->GetName())) {
                 std::wstring value = attr->GetValue();
-                ToUpper(value);
+                vcc::ToUpper(value);
                 return value == REPLACE_TAG;
             }
         }
@@ -115,13 +113,13 @@ bool VPGFileGenerationService::IsTagForce(const Xml *child)
     return false;
 }
 
-bool VPGFileGenerationService::IsTagSkip(const Xml *child)
+bool VPGFileGenerationService::IsTagSkip(const vcc::Xml *child)
 {
     TRY
-        for (std::shared_ptr<XmlAttribute> attr : child->GetAttributes()){
+        for (std::shared_ptr<vcc::XmlAttribute> attr : child->GetAttributes()){
             if (IsGeneartionTag(attr->GetName())) {
                 std::wstring value = attr->GetValue();
-                ToUpper(value);
+                vcc::ToUpper(value);
                 return value == RESERVE_TAG;
             }
         }
@@ -129,15 +127,15 @@ bool VPGFileGenerationService::IsTagSkip(const Xml *child)
     return false;
 }
 
-VPGFileContentGenerationMode VPGFileGenerationService::GetGenerationMode(const Xml *codeElemet)
+VPGFileContentGenerationMode VPGFileGenerationService::GetGenerationMode(const vcc::Xml *codeElemet)
 {
     TRY
-        for (std::shared_ptr<Xml> child : codeElemet->GetChildren()) {
+        for (std::shared_ptr<vcc::Xml> child : codeElemet->GetChildren()) {
             if (child->GetName() == VCC_NAME) {
-                for (std::shared_ptr<XmlAttribute> attr : child->GetAttributes()) {
+                for (std::shared_ptr<vcc::XmlAttribute> attr : child->GetAttributes()) {
                     if (IsGeneartionTag(attr->GetName())) {
                         std::wstring value = attr->GetValue();
-                        ToUpper(value);
+                        vcc::ToUpper(value);
                         if (value == FORCE_MODE) {
                             return VPGFileContentGenerationMode::Force;
                         } else if (value == DEMAND_MODE) {
@@ -154,20 +152,20 @@ VPGFileContentGenerationMode VPGFileGenerationService::GetGenerationMode(const X
     return VPGFileContentGenerationMode::Demand;
 }
 
-std::wstring VPGFileGenerationService::GenerateForceCode(const Xml *src, const std::wstring &tagName, const std::wstring &generatedContent, const std::wstring &commandDelimiter)
+std::wstring VPGFileGenerationService::GenerateForceCode(const vcc::Xml *src, const std::wstring &tagName, const std::wstring &generatedContent, const std::wstring &commandDelimiter)
 {
     std::wstring result = L"";
     TRY
         // split replacement to lines
-        std::vector<std::wstring> lines = SplitStringByLine(generatedContent);
+        std::vector<std::wstring> lines = vcc::SplitStringByLine(generatedContent);
         bool isFound = false;
         std::wstring indent = L"";
         for (const auto &child : src->GetChildren()) {
-            if (IsStartWith(child->GetName(), L"vcc:") && child->GetName() == tagName) {
+            if (vcc::IsStartWith(child->GetName(), L"vcc:") && child->GetName() == tagName) {
                 result += commandDelimiter + L" " + child->GetOpeningTag() + L"\r\n";
                 size_t noOfSpace = GetMinimumLeadingSpace(lines);
                 for (auto line : lines) {
-                    RTrim(line);
+                    vcc::RTrim(line);
                     result += indent + line.substr(noOfSpace) + L"\r\n";
                 }
                 result += indent + commandDelimiter + L" " + child->GetClosingTag();
@@ -180,7 +178,7 @@ std::wstring VPGFileGenerationService::GenerateForceCode(const Xml *src, const s
         if (!isFound) {
             result += L"\r\n" + indent + commandDelimiter + L" <" + tagName + L" gen=\"REPLACE\">\r\n";
             for (auto line : lines) {
-                Trim(line);
+                vcc::Trim(line);
                 result += indent + line + L"\r\n";
             }
             result += indent + commandDelimiter + L" </" + tagName + L">\r\n";
@@ -189,22 +187,22 @@ std::wstring VPGFileGenerationService::GenerateForceCode(const Xml *src, const s
     return result;
 }
 
-std::wstring VPGFileGenerationService::GenerateDemandCode(const Xml *src, const std::wstring &tagName, const std::wstring &generatedContent, const std::wstring &commandDelimiter)
+std::wstring VPGFileGenerationService::GenerateDemandCode(const vcc::Xml *src, const std::wstring &tagName, const std::wstring &generatedContent, const std::wstring &commandDelimiter)
 {
     std::wstring result = L"";
     TRY
         // split replacement to lines
-        std::vector<std::wstring> lines = SplitStringByLine(generatedContent);
+        std::vector<std::wstring> lines = vcc::SplitStringByLine(generatedContent);
         std::wstring indent = L"";
         for (const auto &child : src->GetChildren()) {
-            if (IsStartWith(child->GetName(), L"vcc:") && child->GetName() == tagName) {            
-                const Xml *srcTag = VPGFileGenerationService::GetTagFromCode(src, child->GetName());
+            if (vcc::IsStartWith(child->GetName(), L"vcc:") && child->GetName() == tagName) {            
+                const vcc::Xml *srcTag = VPGFileGenerationService::GetTagFromCode(src, child->GetName());
                 if (srcTag != nullptr && VPGFileGenerationService::IsTagForce(child.get())) {
                     result += commandDelimiter + L" " + child->GetOpeningTag() + L"\r\n";
                     size_t noOfSpace = GetMinimumLeadingSpace(lines);
                     for (auto line : lines) {
-                        if (!IsBlank(line)) {
-                            RTrim(line);
+                        if (!vcc::IsBlank(line)) {
+                            vcc::RTrim(line);
                             result += indent + line.substr(noOfSpace) + L"\r\n";
                         } else
                             result += L"\r\n";
@@ -230,7 +228,7 @@ std::wstring VPGFileGenerationService::GenerateFileContent(const std::wstring &c
 {
     TRY
         std::unique_ptr<VPGCodeReader> reader = std::make_unique<VPGCodeReader>(commandDelimiter);
-        auto codeElement = std::make_shared<Xml>();
+        auto codeElement = std::make_shared<vcc::Xml>();
         reader->Deserialize(code, codeElement);
 
         switch (GetGenerationMode(codeElement.get()))

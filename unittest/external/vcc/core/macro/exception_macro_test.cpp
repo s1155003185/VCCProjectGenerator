@@ -11,20 +11,18 @@
 #include "log_config.hpp"
 #include "string_helper.hpp"
 
-using namespace vcc;
-
 TEST(ExceptionMacroTest, General)
 {
     bool throwException = false;
     try 
     {
-        throw Exception(ExceptionType::FileNotFound, L"FILE_NOT_FOUND");
+        throw vcc::Exception(ExceptionType::FileNotFound, L"FILE_NOT_FOUND");
     } 
     catch (std::exception &ex) 
     {
         throwException = true;
 
-        IException *iex = dynamic_cast<IException *>(&ex);
+        vcc::IException *iex = dynamic_cast<vcc::IException *>(&ex);
         EXPECT_TRUE(iex != nullptr);
         EXPECT_EQ(iex->GetErrorMessage(), L"FILE_NOT_FOUND");
         std::string whatStr(iex->what());

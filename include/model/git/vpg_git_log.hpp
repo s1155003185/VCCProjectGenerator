@@ -5,19 +5,17 @@
 #include "git_service.hpp"
 #include "object_type.hpp"
 
-using namespace vcc;
-
-class VPGGitLog : public GitLog
+class VPGGitLog : public vcc::GitLog
 {
 
     public:
-        VPGGitLog() : GitLog()
+        VPGGitLog() : vcc::GitLog()
         {
             _ObjectType = ObjectType::GitLog;
         }
         virtual ~VPGGitLog() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             return std::make_shared<VPGGitLog>(*this);
         }

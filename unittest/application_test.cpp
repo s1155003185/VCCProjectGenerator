@@ -9,8 +9,6 @@
 #include "vpg_main_form.hpp"
 #include "vpg_main_form_property.hpp"
 
-using namespace vcc;
-
 // Mode
 TEST(ApplicationTest, CreateForm)
 {
@@ -19,7 +17,7 @@ TEST(ApplicationTest, CreateForm)
     // ReadObject(form, (int64_t)VPGGitFormProperty::Log, -1);
 
     auto form = Application::CreateForm(ObjectType::MainForm);
-    auto gitform = static_cast<BaseForm *>(form.get());
-    IObject *object = static_cast<IObject *>((gitform));
+    auto gitform = static_cast<vcc::BaseForm *>(form.get());
+    vcc::IObject *object = static_cast<vcc::IObject *>((gitform));
     EXPECT_TRUE(object != nullptr);
 }

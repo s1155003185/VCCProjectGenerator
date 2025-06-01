@@ -562,19 +562,19 @@ TEST(VPGEnumClassReaderTest, AccessMode)
     EXPECT_EQ(element->GetProperties().size(), 5UL);
     EXPECT_EQ(element->GetProperties().at(0)->GetEnum(), L"EnumA");
     EXPECT_EQ(element->GetProperties().at(0)->GetCommand(), L"");
-    EXPECT_EQ(element->GetProperties().at(0)->GetAccessMode(), VPGEnumClassPropertyAccessMode::ReadWrite);
+    EXPECT_EQ(element->GetProperties().at(0)->GetAccessMode(), VPGEnumClassAttributeAccessMode::ReadWrite);
     EXPECT_EQ(element->GetProperties().at(1)->GetEnum(), L"EnumB");
     EXPECT_EQ(element->GetProperties().at(1)->GetCommand(), L"");
-    EXPECT_EQ(element->GetProperties().at(1)->GetAccessMode(), VPGEnumClassPropertyAccessMode::ReadOnly);
+    EXPECT_EQ(element->GetProperties().at(1)->GetAccessMode(), VPGEnumClassAttributeAccessMode::ReadOnly);
     EXPECT_EQ(element->GetProperties().at(2)->GetEnum(), L"EnumC");
     EXPECT_EQ(element->GetProperties().at(2)->GetCommand(), L"");
-    EXPECT_EQ(element->GetProperties().at(2)->GetAccessMode(), VPGEnumClassPropertyAccessMode::WriteOnly);
+    EXPECT_EQ(element->GetProperties().at(2)->GetAccessMode(), VPGEnumClassAttributeAccessMode::WriteOnly);
     EXPECT_EQ(element->GetProperties().at(3)->GetEnum(), L"EnumD");
     EXPECT_EQ(element->GetProperties().at(3)->GetCommand(), L"");
-    EXPECT_EQ(element->GetProperties().at(3)->GetAccessMode(), VPGEnumClassPropertyAccessMode::ReadWrite);
+    EXPECT_EQ(element->GetProperties().at(3)->GetAccessMode(), VPGEnumClassAttributeAccessMode::ReadWrite);
     EXPECT_EQ(element->GetProperties().at(4)->GetEnum(), L"EnumE");
     EXPECT_EQ(element->GetProperties().at(4)->GetCommand(), L"");
-    EXPECT_EQ(element->GetProperties().at(4)->GetAccessMode(), VPGEnumClassPropertyAccessMode::NoAccess);
+    EXPECT_EQ(element->GetProperties().at(4)->GetAccessMode(), VPGEnumClassAttributeAccessMode::NoAccess);
 }
 
 TEST(VPGEnumClassReaderTest, EnumClassMixedWithOthers)
@@ -600,28 +600,27 @@ TEST(VPGEnumClassReaderTest, EnumClassMixedWithOthers)
         "   enum EnumAInNamespace {};"
         "   enum class EnumBInNamespace {};\r\n"
         "   enum class EnumCInNamespace;\r\n"
+        "   namespace nestedNamespace {\r\n"
+        "       enum class EnumNestedNamespace {};\r\n"
+        "   }\r\n"
         "}\r\n"
         "enum EnumAOneLine {}; enum class EnumBOneLine {}; enum class EnumCOneLine;\r\n";
     std::vector<std::shared_ptr<VPGEnumClass>> results;
     VPGGlobal::GetEnumClassReader()->Parse(code, results);
-    EXPECT_EQ(results.size(), (size_t)6);
+    EXPECT_EQ(results.size(), (size_t)7);
     auto element = results.at(0);
-    EXPECT_EQ(element->GetNamespace(), L"");
     EXPECT_EQ(element->GetName(), L"EnumA");
     element = results.at(1);
-    EXPECT_EQ(element->GetNamespace(), L"");
     EXPECT_EQ(element->GetName(), L"EnumB");
     element = results.at(2);
-    EXPECT_EQ(element->GetNamespace(), L"Name");
-    EXPECT_EQ(element->GetName(), L"EnumAInNamespace");
+    EXPECT_EQ(element->GetName(), L"Name::EnumAInNamespace");
     element = results.at(3);
-    EXPECT_EQ(element->GetNamespace(), L"Name");
-    EXPECT_EQ(element->GetName(), L"EnumBInNamespace");
+    EXPECT_EQ(element->GetName(), L"Name::EnumBInNamespace");
     element = results.at(4);
-    EXPECT_EQ(element->GetNamespace(), L"");
-    EXPECT_EQ(element->GetName(), L"EnumAOneLine");
+    EXPECT_EQ(element->GetName(), L"Name::nestedNamespace::EnumNestedNamespace");
     element = results.at(5);
-    EXPECT_EQ(element->GetNamespace(), L"");
+    EXPECT_EQ(element->GetName(), L"EnumAOneLine");
+    element = results.at(6);
     EXPECT_EQ(element->GetName(), L"EnumBOneLine");
 }
 
@@ -633,7 +632,7 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
         "enum class Property {\r\n"
         "    Property, // GETSET(std::wstring, Property, L\"\")\r\n"
         "    Manager1, // MANAGER_SPTR(GitManager, GitManager1, _LogProperty)\r\n"
-        "    Manager2, // MANAGER_SPTR_NULL(GitManager, GitManager2)\r\n"
+        "    Manager2, // MANAGER_SPTR_NULL(vcc::GitManager, GitManager2)\r\n"
         "    Manager3, // MANAGER_SPTR_PARENT(GitManager, GitManager3, GitBaseManager)\r\n"
         "    Action1, // ACTION(AddGitLog) \r\n"
         "    Action2, // ACTION_WITH_ARG_SPTR(DeleteGitLog, GitLog) \r\n"
@@ -643,36 +642,35 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
     VPGGlobal::GetEnumClassReader()->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     auto element = results.at(0);
-    EXPECT_EQ(element->GetNamespace(), L"");
     EXPECT_EQ(element->GetName(), L"Property");
 
     // Property
     EXPECT_EQ(element->GetProperties().size(), (size_t)7);
-    EXPECT_EQ((int64_t)element->GetProperties().at(0)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Property);
+    EXPECT_EQ((int64_t)element->GetProperties().at(0)->GetPropertyType(), (int64_t)VPGEnumClassAttributeType::Property);
     EXPECT_EQ(element->GetProperties().at(0)->GetType1(), L"std::wstring");
     EXPECT_EQ(element->GetProperties().at(0)->GetPropertyName(), L"Property");
-    EXPECT_EQ((int64_t)element->GetProperties().at(1)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Manager);
+    EXPECT_EQ((int64_t)element->GetProperties().at(1)->GetPropertyType(), (int64_t)VPGEnumClassAttributeType::Manager);
     EXPECT_EQ(element->GetProperties().at(1)->GetType1(), L"GitManager");
     EXPECT_EQ(element->GetProperties().at(1)->GetPropertyName(), L"GitManager1");
     EXPECT_EQ(element->GetProperties().at(1)->GetDefaultValue(), L"_LogProperty");
-    EXPECT_EQ((int64_t)element->GetProperties().at(2)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Manager);
-    EXPECT_EQ(element->GetProperties().at(2)->GetType1(), L"GitManager");
+    EXPECT_EQ((int64_t)element->GetProperties().at(2)->GetPropertyType(), (int64_t)VPGEnumClassAttributeType::Manager);
+    EXPECT_EQ(element->GetProperties().at(2)->GetType1(), L"vcc::GitManager");
     EXPECT_EQ(element->GetProperties().at(2)->GetPropertyName(), L"GitManager2");
-    EXPECT_EQ((int64_t)element->GetProperties().at(3)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Manager);
+    EXPECT_EQ((int64_t)element->GetProperties().at(3)->GetPropertyType(), (int64_t)VPGEnumClassAttributeType::Manager);
     EXPECT_EQ(element->GetProperties().at(3)->GetType1(), L"GitManager");
     EXPECT_EQ(element->GetProperties().at(3)->GetPropertyName(), L"GitManager3");
     EXPECT_EQ(element->GetProperties().at(3)->GetDefaultValue(), L"GitBaseManager");
-    EXPECT_EQ((int64_t)element->GetProperties().at(4)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
+    EXPECT_EQ((int64_t)element->GetProperties().at(4)->GetPropertyType(), (int64_t)VPGEnumClassAttributeType::Action);
     EXPECT_EQ(element->GetProperties().at(4)->GetType1(), L"");
     EXPECT_EQ(element->GetProperties().at(4)->GetPropertyName(), L"AddGitLog");
-    EXPECT_EQ(element->GetProperties().at(4)->GetActionResultRedoClass(), L"OperationResult");
-    EXPECT_EQ(element->GetProperties().at(4)->GetActionResultUndoClass(), L"OperationResult");
-    EXPECT_EQ((int64_t)element->GetProperties().at(5)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
+    EXPECT_EQ(element->GetProperties().at(4)->GetActionResultRedoClass(), L"vcc::OperationResult");
+    EXPECT_EQ(element->GetProperties().at(4)->GetActionResultUndoClass(), L"vcc::OperationResult");
+    EXPECT_EQ((int64_t)element->GetProperties().at(5)->GetPropertyType(), (int64_t)VPGEnumClassAttributeType::Action);
     EXPECT_EQ(element->GetProperties().at(5)->GetType1(), L"GitLog");
     EXPECT_EQ(element->GetProperties().at(5)->GetPropertyName(), L"DeleteGitLog");
-    EXPECT_EQ(element->GetProperties().at(5)->GetActionResultRedoClass(), L"OperationResult");
-    EXPECT_EQ(element->GetProperties().at(5)->GetActionResultUndoClass(), L"OperationResult");
-    EXPECT_EQ((int64_t)element->GetProperties().at(6)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
+    EXPECT_EQ(element->GetProperties().at(5)->GetActionResultRedoClass(), L"vcc::OperationResult");
+    EXPECT_EQ(element->GetProperties().at(5)->GetActionResultUndoClass(), L"vcc::OperationResult");
+    EXPECT_EQ((int64_t)element->GetProperties().at(6)->GetPropertyType(), (int64_t)VPGEnumClassAttributeType::Action);
     EXPECT_EQ(element->GetProperties().at(6)->GetType1(), L"GitLog");
     EXPECT_EQ(element->GetProperties().at(6)->GetPropertyName(), L"ModifyGitLog");
     EXPECT_EQ(element->GetProperties().at(6)->GetActionResultRedoClass(), L"RedoActionResult");

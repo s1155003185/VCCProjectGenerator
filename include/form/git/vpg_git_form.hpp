@@ -16,12 +16,10 @@
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
 // </vcc:customHeader>
 
-using namespace vcc;
-
-class VPGGitForm : public BaseForm, public BaseJsonObject
+class VPGGitForm : public vcc::BaseForm, public vcc::BaseJsonObject
 {
     GETSET_SPTR_NULL(VPGGitLog, Log)
-    MANAGER_SPTR_NULL(GitManager, GitManager, _LogConfig)
+    MANAGER_SPTR_NULL(vcc::GitManager, GitManager, _LogConfig)
 
     // <vcc:customVPGGitFormProperties sync="RESERVE" gen="RESERVE">
     // </vcc:customVPGGitFormProperties>
@@ -38,14 +36,14 @@ class VPGGitForm : public BaseForm, public BaseJsonObject
         VPGGitForm();
         virtual ~VPGGitForm() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override;
+        virtual std::shared_ptr<vcc::IObject> Clone() const override;
 
-        virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
+        virtual std::shared_ptr<vcc::Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 
         virtual void InitializeComponents() override;
 
-        virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;
+        virtual std::shared_ptr<vcc::IResult> DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;
 
         // <vcc:customVPGGitFormPublicFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGGitFormPublicFunctions>

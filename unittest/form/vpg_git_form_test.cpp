@@ -4,7 +4,7 @@
 
 class VPGGitFormTest : public testing::Test 
 {
-    GETSET_SPTR_NULL(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);
     std::shared_ptr<VPGGitForm> _Form = nullptr;
     public:
         VPGGitFormTest() {}
@@ -12,7 +12,7 @@ class VPGGitFormTest : public testing::Test
 
         void SetUp() override
         {
-            _LogConfig = std::make_shared<LogConfig>(LogConfigInitialType::None);
+            _LogConfig = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
             _Form = std::make_shared<VPGGitForm>();
         }
 

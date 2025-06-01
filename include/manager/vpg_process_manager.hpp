@@ -11,9 +11,7 @@
 #include "vpg_config.hpp"
 #include "vpg_project_type.hpp"
 
-using namespace vcc;
-
-class VPGProcessManager : public BaseManager
+class VPGProcessManager : public vcc::BaseManager
 {
     // project
     GETSET(std::wstring, Workspace, L"");
@@ -24,7 +22,7 @@ class VPGProcessManager : public BaseManager
         std::shared_ptr<IVPGGenerationManager> GetGenerationManager();
 
     public:
-        VPGProcessManager(std::shared_ptr<LogConfig> logConfig) : BaseManager(logConfig)
+        VPGProcessManager(std::shared_ptr<vcc::LogConfig> logConfig) : BaseManager(logConfig)
         {
             this->_Option = std::make_shared<VPGConfig>();
         }

@@ -24,26 +24,25 @@ void VPGIncludePathService::GetWorkspaceIncludePath(const std::wstring &workspac
         for (auto const &filePath : std::filesystem::recursive_directory_iterator(PATH(!workspace.empty() ? workspace : L"."))) {
             if (filePath.is_directory() || !filePath.path().wstring().ends_with(L".hpp"))
                 continue;
-            std::wstring fileContent = ReadFile(filePath.path().wstring());//GetSimpleCode(ReadFile(filePath.path().wstring()));
+            std::wstring fileContent = vcc::ReadFile(filePath.path().wstring());//GetSimpleCode(vcc::ReadFile(filePath.path().wstring()));
             std::vector<std::shared_ptr<VPGEnumClass>> curremtnEnumClasses;
             reader->Parse(fileContent, curremtnEnumClasses);
-            for (auto enumClass : curremtnEnumClasses)
-                enumClassMapping.insert(std::make_pair((!enumClass->GetNamespace().empty()? (enumClass->GetNamespace() + L"::") : L"") + enumClass->GetName(), enumClass));
+            for (auto const &enumClass : curremtnEnumClasses)
+                enumClassMapping.insert(std::make_pair(enumClass->GetName(), enumClass));
             std::set<std::wstring> classNames;
             VPGIncludePathReader reader;
-            reader.Parse(PlatformType::NA, fileContent, classNames);
-            for (auto const &className : classNames) {
-                classPathMapping.insert(std::make_pair(className, GetFileName(filePath.path().wstring())));
-            }
+            reader.Parse(vcc::PlatformType::NA, fileContent, classNames);
+            for (auto const &className : classNames)
+                classPathMapping.insert(std::make_pair(className, vcc::GetFileName(filePath.path().wstring())));
         }
     CATCH
 }
 
-// void VPGIncludePathService::GetSystemIncludePath(const PlatformType &platformType, const std::wstring &workspace, std::map<std::wstring, std::wstring> &classPathMapping)
+// void VPGIncludePathService::GetSystemIncludePath(const vcc::PlatformType &platformType, const std::wstring &workspace, std::map<std::wstring, std::wstring> &classPathMapping)
 // {
 //     TRY
 //         for (auto const &filePath : std::filesystem::recursive_directory_iterator(PATH(!workspace.empty() ? workspace : L"."))) {
-//             std::wstring fileName = GetFileName(filePath.path().wstring());
+//             std::wstring fileName = vcc::GetFileName(filePath.path().wstring());
 //             if (filePath.is_directory() || fileName.starts_with(L"_"))
 //                 continue;
 //             // check all parents and file has prefix _
@@ -52,12 +51,12 @@ void VPGIncludePathService::GetWorkspaceIncludePath(const std::wstring &workspac
 //             if (Find(linuxPath, L"/_") != std::wstring::npos)
 //                 continue;
 
-//             std::wstring fileContent = ReadFile(filePath.path().wstring());
+//             std::wstring fileContent = vcc::ReadFile(filePath.path().wstring());
 //             std::set<std::wstring> classNames;
 //             VPGIncludePathReader reader;
 //             reader.Parse(platformType, fileContent, classNames);
 //             for (auto const &className : classNames) {
-//                 classPathMapping.insert(std::make_pair(className, GetFileName(filePath.path().wstring())));
+//                 classPathMapping.insert(std::make_pair(className, vcc::GetFileName(filePath.path().wstring())));
 //             }
 //         }
 //     }

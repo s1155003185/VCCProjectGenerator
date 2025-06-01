@@ -23,7 +23,7 @@ class GitServiceTest : public testing::Test
 
         void SetUp() override
         {
-            this->_LogConfig = std::make_shared<LogConfig>();
+            this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->SetIsConsoleLog(false);
 
             if (IsDirectoryExists(this->GetWorkspace())) {

@@ -7,16 +7,14 @@
 #include "json.hpp"
 #include "json_builder.hpp"
 
-using namespace vcc;
-
 TEST(JsonBuilderTest, String)
 {
     std::wstring str = L"{\"name\":\"John\"}";
-    std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    auto json = std::make_shared<Json>();
+    auto builder = std::make_unique<vcc::JsonBuilder>();
+    auto json = std::make_shared<vcc::Json>();
     builder->Deserialize(str, json);
-    EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"name")->GetJsonInternalType(), JsonInternalType::String);
+    EXPECT_EQ(json->GetJsonInternalType(), vcc::JsonInternalType::Json);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"name")->GetJsonInternalType(), vcc::JsonInternalType::String);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"name")->GetJsonInternalValue(), L"John");
     EXPECT_EQ(builder->Serialize(json.get()), str);
 }
@@ -24,11 +22,11 @@ TEST(JsonBuilderTest, String)
 TEST(JsonBuilderTest, Boolean)
 {
     std::wstring str = L"{\"answer\":true}";
-    std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    auto json = std::make_shared<Json>();
+    auto builder = std::make_unique<vcc::JsonBuilder>();
+    auto json = std::make_shared<vcc::Json>();
     builder->Deserialize(str, json);
-    EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"answer")->GetJsonInternalType(), JsonInternalType::Boolean);
+    EXPECT_EQ(json->GetJsonInternalType(), vcc::JsonInternalType::Json);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"answer")->GetJsonInternalType(), vcc::JsonInternalType::Boolean);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"answer")->GetJsonInternalValue(), L"true");
     EXPECT_EQ(builder->Serialize(json.get()), str);
 }
@@ -36,11 +34,11 @@ TEST(JsonBuilderTest, Boolean)
 TEST(JsonBuilderTest, Number)
 {
     std::wstring str = L"{\"age\":11}";
-    std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    auto json = std::make_shared<Json>();
+    auto builder = std::make_unique<vcc::JsonBuilder>();
+    auto json = std::make_shared<vcc::Json>();
     builder->Deserialize(str, json);
-    EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"age")->GetJsonInternalType(), JsonInternalType::Number);
+    EXPECT_EQ(json->GetJsonInternalType(), vcc::JsonInternalType::Json);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"age")->GetJsonInternalType(), vcc::JsonInternalType::Number);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"age")->GetJsonInternalValue(), L"11");
     EXPECT_EQ(builder->Serialize(json.get()), str);
 }
@@ -48,12 +46,12 @@ TEST(JsonBuilderTest, Number)
 TEST(JsonBuilderTest, Object)
 {
     std::wstring str = L"{\"Name\":{\"firstName\":\"A\",\"lastName\":\"B\"}}";
-    std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    auto json = std::make_shared<Json>();
+    auto builder = std::make_unique<vcc::JsonBuilder>();
+    auto json = std::make_shared<vcc::Json>();
     builder->Deserialize(str, json);
-    EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"Name")->GetJsonInternalType(), JsonInternalType::Object);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"Name")->GetJsonInternalArray()[0]->GetJsonInternalType(), JsonInternalType::Json);
+    EXPECT_EQ(json->GetJsonInternalType(), vcc::JsonInternalType::Json);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"Name")->GetJsonInternalType(), vcc::JsonInternalType::Object);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"Name")->GetJsonInternalArray()[0]->GetJsonInternalType(), vcc::JsonInternalType::Json);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"Name")->GetJsonInternalArray()[0]->GetJsonInternalNameValuePairsAtKey(L"firstName")->GetJsonInternalValue(), L"A");
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"Name")->GetJsonInternalArray()[0]->GetJsonInternalNameValuePairsAtKey(L"lastName")->GetJsonInternalValue(), L"B");
     EXPECT_EQ(builder->Serialize(json.get()), str);
@@ -62,20 +60,20 @@ TEST(JsonBuilderTest, Object)
 TEST(JsonBuilderTest, Array)
 {
     std::wstring str = L"{\"employees\":[1,true,null,\"Str\\\"ing\",[1,2],{\"firstName\":\"A\",\"lastName\":\"B\"}]}";
-    std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    auto json = std::make_shared<Json>();
+    auto builder = std::make_unique<vcc::JsonBuilder>();
+    auto json = std::make_shared<vcc::Json>();
     builder->Deserialize(str, json);
-    EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalType(), JsonInternalType::Array);
+    EXPECT_EQ(json->GetJsonInternalType(), vcc::JsonInternalType::Json);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalType(), vcc::JsonInternalType::Array);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().size(), (size_t)6);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().at(0)->GetJsonInternalType(), JsonInternalType:: Number);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().at(0)->GetJsonInternalType(), vcc::JsonInternalType:: Number);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().at(0)->GetJsonInternalValue(), L"1");
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().at(1)->GetJsonInternalType(), JsonInternalType:: Boolean);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().at(1)->GetJsonInternalType(), vcc::JsonInternalType:: Boolean);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().at(1)->GetJsonInternalValue(), L"true");
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().at(2)->GetJsonInternalType(), JsonInternalType:: Null);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().at(3)->GetJsonInternalType(), JsonInternalType:: String);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().at(2)->GetJsonInternalType(), vcc::JsonInternalType:: Null);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().at(3)->GetJsonInternalType(), vcc::JsonInternalType:: String);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().at(3)->GetJsonInternalValue(), L"Str\"ing");
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().at(4)->GetJsonInternalType(), JsonInternalType:: Array);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().at(4)->GetJsonInternalType(), vcc::JsonInternalType:: Array);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().at(4)->GetJsonInternalArray().size(), (size_t)2);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().at(5)->GetJsonInternalArray()[0]->GetJsonInternalNameValuePairsAtKey(L"firstName")->GetJsonInternalValue(), L"A");
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalArray().at(5)->GetJsonInternalArray()[0]->GetJsonInternalNameValuePairsAtKey(L"lastName")->GetJsonInternalValue(), L"B");
@@ -85,36 +83,36 @@ TEST(JsonBuilderTest, Array)
 TEST(JsonBuilderTest, Null)
 {
     std::wstring str = L"{\"Name\":null}";
-    std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    auto json = std::make_shared<Json>();
+    auto builder = std::make_unique<vcc::JsonBuilder>();
+    auto json = std::make_shared<vcc::Json>();
     builder->Deserialize(str, json);
-    EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"Name")->GetJsonInternalType(), JsonInternalType::Null);
+    EXPECT_EQ(json->GetJsonInternalType(), vcc::JsonInternalType::Json);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"Name")->GetJsonInternalType(), vcc::JsonInternalType::Null);
     EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 
 TEST(JsonBuilderTest, Full)
 {
     std::wstring str = L"{\"name\":\"John\",\"age\":11,\"tel\":null,\"FullName\":{\"firstName\":\"A\",\"lastName\":\"B\"},\"employees\":[{\"firstName\":\"A\",\"lastName\":\"B\"},{\"firstName\":\"C\",\"lastName\":\"D\"}]}";
-    std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    auto json = std::make_shared<Json>();
+    auto builder = std::make_unique<vcc::JsonBuilder>();
+    auto json = std::make_shared<vcc::Json>();
     builder->Deserialize(str, json);
-    EXPECT_EQ(json->GetJsonInternalType(), JsonInternalType::Json);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"name")->GetJsonInternalType(), JsonInternalType::String);
+    EXPECT_EQ(json->GetJsonInternalType(), vcc::JsonInternalType::Json);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"name")->GetJsonInternalType(), vcc::JsonInternalType::String);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"name")->GetJsonInternalValue(), L"John");
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"age")->GetJsonInternalType(), JsonInternalType::Number);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"age")->GetJsonInternalType(), vcc::JsonInternalType::Number);
     EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"age")->GetJsonInternalValue(), L"11");
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"tel")->GetJsonInternalType(), JsonInternalType::Null);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"FullName")->GetJsonInternalType(), JsonInternalType::Object);
-    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalType(), JsonInternalType::Array);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"tel")->GetJsonInternalType(), vcc::JsonInternalType::Null);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"FullName")->GetJsonInternalType(), vcc::JsonInternalType::Object);
+    EXPECT_EQ(json->GetJsonInternalNameValuePairsAtKey(L"employees")->GetJsonInternalType(), vcc::JsonInternalType::Array);
     EXPECT_EQ(builder->Serialize(json.get()), str);
 }
 
 TEST(JsonBuilderTest, Beautify)
 {
     std::wstring str = L"{\"name\":\"John\",\"age\":11,\"tel\":null,\"FullName\":{\"firstName\":\"A\",\"lastName\":\"B\"},\"employees\":[{\"firstName\":\"A\",\"lastName\":\"B\"},{\"firstName\":\"C\",\"lastName\":\"D\"}]}";
-    std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
-    auto json = std::make_shared<Json>();
+    auto builder = std::make_unique<vcc::JsonBuilder>();
+    auto json = std::make_shared<vcc::Json>();
     builder->Deserialize(str, json);
 
     std::wstring indent = L"\t";

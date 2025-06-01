@@ -7,16 +7,15 @@
 #include "i_object.hpp"
 #include "object_type.hpp"
 #include "vpg_config.hpp"
+#include "vpg_enum_class.hpp"
 #include "vpg_git_form.hpp"
 #include "vpg_git_log.hpp"
 #include "vpg_main_form.hpp"
 #include "vpg_workspace_form.hpp"
 
-using namespace vcc;
-
-std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<IObject> parentObject)
+std::shared_ptr<vcc::IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)
 {
-    std::shared_ptr<IObject> result = nullptr;
+    std::shared_ptr<vcc::IObject> result = nullptr;
     TRY
         switch (objectType)
         {
@@ -37,6 +36,12 @@ std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType, std
             break;
         case ObjectType::ConfigTemplate:
             result = std::make_shared<VPGConfigTemplate>();
+            break;
+        case ObjectType::EnumClass:
+            result = std::make_shared<VPGEnumClass>();
+            break;
+        case ObjectType::EnumClassAttribute:
+            result = std::make_shared<VPGEnumClassAttribute>();
             break;
         case ObjectType::GitForm:
             result = std::make_shared<VPGGitForm>();

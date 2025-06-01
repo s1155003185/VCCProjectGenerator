@@ -6,28 +6,26 @@
 #include "thread_service.hpp"
 #include "log_config.hpp"
 
-using namespace vcc;
-
 TEST(ThreadServiceTest, Join)
 {
-    auto logConfig = std::make_shared<LogConfig>(LogConfigInitialType::None);
-    auto thread = std::make_shared<Thread>(logConfig,
-        [](const Thread* /*thread*/) {
+    auto logConfig = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
+    auto thread = std::make_shared<vcc::Thread>(logConfig,
+        [](const vcc::Thread* /*thread*/) {
             std::wcout << L"ThreadServiceTest::Join Execute!" << std::endl;
-        }, [](const Thread* /*thread*/) {
+        }, [](const vcc::Thread* /*thread*/) {
             std::wcout << L"ThreadServiceTest::Join Complete!" << std::endl;
         });
-    ThreadService::Join(thread);
+    vcc::ThreadService::Join(thread);
 }
 
 TEST(ThreadServiceTest, Detach)
 {
-    auto logConfig = std::make_shared<LogConfig>(LogConfigInitialType::None);
-    auto thread = std::make_shared<Thread>(logConfig,
-        [](const Thread* /*thread*/) {
+    auto logConfig = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
+    auto thread = std::make_shared<vcc::Thread>(logConfig,
+        [](const vcc::Thread* /*thread*/) {
             std::wcout << L"ThreadServiceTest::Detach Execute!" << std::endl;
-        }, [](const Thread* /*thread*/) {
+        }, [](const vcc::Thread* /*thread*/) {
             std::wcout << L"ThreadServiceTest::Detach Complete!" << std::endl;
         });
-    ThreadService::Detach(thread);
+    vcc::ThreadService::Detach(thread);
 }

@@ -4,8 +4,6 @@
 #include "vpg_global.hpp"
 #include "vpg_include_path_service.hpp"
 
-using namespace vcc;
-
 // Mode
 TEST(VPGIncludePathSerciceTest, GetWorkspaceIncludePath)
 {
@@ -34,6 +32,6 @@ TEST(VPGIncludePathSerciceTest, GetWorkspaceIncludePath)
 //     #endif
 //     VPGIncludePathService::GetSystemIncludePath(platformType, workspace, classPathMapping);
 
-//     EXPECT_EQ(classPathMapping.at(L"std::string"), L"string");
+//     EXPECT_EQ(classPathMapping.at(L"string"), L"string");
 //     EXPECT_EQ(classPathMapping.at(L"std::complex"), L"complex");
 // }

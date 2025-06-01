@@ -3,26 +3,24 @@
 #include "json.hpp"
 #include "json_builder.hpp"
 
-using namespace vcc;
-
 TEST(JsonTest, Full) 
 {
-    std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();
+    auto builder = std::make_unique<vcc::JsonBuilder>();
 
-    auto json = std::make_shared<Json>();
+    auto json = std::make_shared<vcc::Json>();
     json->AddString(L"Version", L"0.0.1");
     json->AddBool(L"IsGit", true);
     json->AddDouble(L"Price", 2.33, 2);
     json->AddInt(L"State", 1);
     json->AddNull(L"Action");
     
-    auto plugins = std::make_shared<Json>();
+    auto plugins = std::make_shared<vcc::Json>();
     json->AddArray(L"Plugins", plugins);
     plugins->AddArrayString(L"/path/of/Git");
     
     std::wstring jsonStr = builder->Serialize(json.get());
 
-    auto resultJson = std::make_shared<Json>();
+    auto resultJson = std::make_shared<vcc::Json>();
     builder->Deserialize(jsonStr, resultJson);
 
     EXPECT_EQ(json->GetString(L"Version"), resultJson->GetString(L"Version"));

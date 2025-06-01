@@ -745,7 +745,7 @@ Note:
     e.g. VPGPersionProperty
 
 #### Class Attribute
-// [@@Form] [@@ActionArgument] [@@Result] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsIndependent": true }] [@@Action { "IsIndependent": true }] [@@Thread { "IsIndependent": true } ] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Include {"Files" : [ "a.hpp", "b.hpp" ]}] [@@Private { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } } ] [@@Protected { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } }] [@@Command xxx]
+// [@@Form] [@@ActionArgument] [@@Result] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsIndependent": true }] [@@Action { "IsIndependent": true }] [@@Thread { "IsIndependent": true } ] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Include { "SystemFiles": ["string", "vector"], "CustomFiles" : [ "a.hpp", "b.hpp" ]}] [@@Private { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } } ] [@@Protected { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } }] [@@Command xxx]
 
 []: Optional
 @@: Key for attributes. Need to state for attribute
@@ -1029,6 +1029,13 @@ enum class VPGGenerationOptionProperty
     // Export
     Exports // VECTOR_SPTR(VPGGenerationOptionExport, Exports);
 };
+
+namespace others {
+    enum class VPGGenerationOptionExportProperty
+    {
+        InterfaceType // GETSET(VPGGenerationOptionInterfaceType, Interface, VPGGenerationOptionInterfaceType::Java)
+    };
+}
 ```
     Then use generation. It will auto create class, property, factory, property accessor
 
@@ -1265,6 +1272,10 @@ X(Twitter) @VCCProject
 
 ****
 ## Release Log
+
+### [v0.3.7] - 2025-07-27: Review - Review Namespace
+- Review using namespace vcc: add vcc:: before function instead of using namespace vcc
+- Support namespace in TypeWorkspace
 
 ### [v0.3.6] - 2025-06-01: Review - Review Class Macro
 - Review GETSET_SPTR and MANAGER_SPTR: initialize in class constructor

@@ -10,13 +10,11 @@
 #include "vpg_enum_class_reader.hpp"
 #include "vpg_config.hpp"
 
-using namespace vcc;
-
 // Property: Generate Object Type, Object Class, PropertyAccessor, Interface // TODO: Interface
 // Type: Generate Interface // TODO: Interface
 
 class VPGEnumClass;
-class VPGFileGenerationManager : public BaseManager
+class VPGFileGenerationManager : public vcc::BaseManager
 {
     GETSET(std::wstring, Workspace, L"");
     SET(std::wstring, ClassMacros);
@@ -27,7 +25,7 @@ class VPGFileGenerationManager : public BaseManager
         std::wstring GetConcatPath(const std::wstring &projWorkspace, const std::wstring &objWorkspace, const std::wstring &middlePath, const std::wstring &fileName) const;
 
     public:
-        VPGFileGenerationManager(std::shared_ptr<LogConfig> logConfig, std::wstring workspace) : BaseManager(logConfig) { _Workspace = workspace; }
+        VPGFileGenerationManager(std::shared_ptr<vcc::LogConfig> logConfig, const std::wstring &workspace) : BaseManager(logConfig) { _Workspace = workspace; }
         virtual ~VPGFileGenerationManager() {}
 
         // properties
@@ -36,5 +34,5 @@ class VPGFileGenerationManager : public BaseManager
         std::wstring GetClassFilenameFromEnumClassFilename(const std::wstring &enumClassFileName);
         void GetFileList(const VPGEnumClassReader *reader, const std::wstring &directoryFullPath, const std::wstring &projectPrefix, const bool &isSeperateAction);
         
-        void GernerateProperty(const LogConfig *logConfig, const VPGConfig *option);
+        void GernerateProperty(const vcc::LogConfig *logConfig, const VPGConfig *option);
 };

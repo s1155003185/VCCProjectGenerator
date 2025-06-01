@@ -14,7 +14,7 @@
 
 class VPGFileGenerationManagerTest : public testing::Test 
 {
-    GETSET_SPTR_NULL(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);
 
     GETSET(std::wstring, Workspace, L"bin/Debug/FileGenerationServiceTest");
     GETSET(std::wstring, WorkspaceSource, L"");
@@ -24,26 +24,26 @@ class VPGFileGenerationManagerTest : public testing::Test
         void CreateFolderInSourceWorkspace(std::wstring folder)
         {
             if (folder.empty())
-                CreateDirectory(this->GetWorkspaceSource());
+                vcc::CreateDirectory(this->GetWorkspaceSource());
             else
-                CreateDirectory(ConcatPaths({this->GetWorkspaceSource(), folder}));
+                vcc::CreateDirectory(vcc::ConcatPaths({this->GetWorkspaceSource(), folder}));
         }
 
         void CreateFolderInTargetWorkspace(std::wstring folder)
         {
             if (folder.empty())
-                CreateDirectory(this->GetWorkspaceTarget());
+                vcc::CreateDirectory(this->GetWorkspaceTarget());
             else
-                CreateDirectory(ConcatPaths({this->GetWorkspaceTarget(), folder}));
+                vcc::CreateDirectory(vcc::ConcatPaths({this->GetWorkspaceTarget(), folder}));
         }
 
         void CreateFileInSourceWorkspace(std::wstring fileName, std::wstring content)
         {
-            AppendFileOneLine(ConcatPaths({this->GetWorkspaceSource(), fileName}), content, true);
+            vcc::AppendFileOneLine(vcc::ConcatPaths({this->GetWorkspaceSource(), fileName}), content, true);
         }
         void CreateFileInTargetWorkspace(std::wstring fileName, std::wstring content)
         {
-            AppendFileOneLine(ConcatPaths({this->GetWorkspaceTarget(), fileName}), content, true);
+            vcc::AppendFileOneLine(vcc::ConcatPaths({this->GetWorkspaceTarget(), fileName}), content, true);
         }
     public:
 
@@ -52,9 +52,9 @@ class VPGFileGenerationManagerTest : public testing::Test
 
         void SetUp() override
         {
-            this->_LogConfig = std::make_shared<LogConfig>(LogConfigInitialType::None);
-            this->_WorkspaceSource = ConcatPaths({this->_Workspace, L"Source"});
-            this->_WorkspaceTarget = ConcatPaths({this->_Workspace, L"Target"});
+            this->_LogConfig = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
+            this->_WorkspaceSource = vcc::ConcatPaths({this->_Workspace, L"Source"});
+            this->_WorkspaceTarget = vcc::ConcatPaths({this->_Workspace, L"Target"});
 
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
@@ -72,10 +72,10 @@ class VPGFileGenerationManagerTest : public testing::Test
             code += L"\r\n";
             code += L"enum class VCCObjectPtrProperty // Class Command\r\n";
             code += L"{\r\n";
-            code += L"    EnumA, // GETSET_SPTR(Json, EnumA) \r\n";
-            code += L"    EnumB, // GETSET_SPTR(Json, EnumB, 1, 2, 3) \r\n";
-            code += L"    EnumC, // VECTOR_SPTR(Json, EnumC) \r\n";
-            code += L"    EnumD, // SET_SPTR(Json, EnumD) \r\n";
+            code += L"    EnumA, // GETSET_SPTR(vcc::Json, EnumA) \r\n";
+            code += L"    EnumB, // GETSET_SPTR(vcc::Json, EnumB, 1, 2, 3) \r\n";
+            code += L"    EnumC, // VECTOR_SPTR(vcc::Json, EnumC) \r\n";
+            code += L"    EnumD, // SET_SPTR(vcc::Json, EnumD) \r\n";
             code += L"};";
             this->CreateFileInSourceWorkspace(L"vcc_a_property.hpp", code);
         }
@@ -87,7 +87,7 @@ class VPGFileGenerationManagerTest : public testing::Test
 
         bool CheckFolderExists(std::wstring path)
         {
-            return IsDirectoryExists(ConcatPaths({this->GetWorkspace(), path}));
+            return vcc::IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspace(), path}));
         }
 };
 
@@ -127,8 +127,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     // ------------------------------------------------------------------------------------------ //
     //                                      Object Type File                                      //
     // ------------------------------------------------------------------------------------------ //
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"object_type.hpp"})));
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"object_type.hpp"})),
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"object_type.hpp"})));
+    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"object_type.hpp"})),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
@@ -145,8 +145,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     // ------------------------------------------------------------------------------------------ //
     //                                      Class File                                            //
     // ------------------------------------------------------------------------------------------ //
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a.hpp"})));    
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a.hpp"})),
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a.hpp"})));    
+    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a.hpp"})),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
@@ -159,9 +159,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "#include \"json.hpp\"\r\n"
         "#include \"object_type.hpp\"\r\n"
         "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
-        "class VCCObject : public BaseObject\r\n"
+        "class VCCObject : public vcc::BaseObject\r\n"
         "{\r\n"
         + INDENT + L"GETSET(std::wstring, EnumB, L\"Default\")\r\n"
         + INDENT + L"GETSET(int64_t, EnumC, 0)\r\n"
@@ -169,32 +167,32 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         + INDENT + L"VECTOR(ExceptionType, EnumE)\r\n"
         + L"\r\n"
         + INDENT + L"public:\r\n"
-        + INDENT + INDENT + L"VCCObject() : BaseObject(ObjectType::Object) {}\r\n"
+        + INDENT + INDENT + L"VCCObject() : vcc::BaseObject(ObjectType::Object) {}\r\n"
         + INDENT + INDENT + L"virtual ~VCCObject() {}\r\n"
         + L"\r\n"
-        + INDENT + INDENT + L"virtual std::shared_ptr<IObject> Clone() const override\r\n"
+        + INDENT + INDENT + L"virtual std::shared_ptr<vcc::IObject> Clone() const override\r\n"
         + INDENT + INDENT + L"{\r\n"
         + INDENT + INDENT + INDENT + L"return std::make_shared<VCCObject>(*this);\r\n"
         + INDENT + INDENT + L"}\r\n"
         + L"};\r\n"
         "\r\n"
-        "class VCCObjectPtr : public BaseObject\r\n"
+        "class VCCObjectPtr : public vcc::BaseObject\r\n"
         "{\r\n"
-        + INDENT + L"GETSET_SPTR(Json, EnumA)\r\n"
-        + INDENT + L"GETSET_SPTR(Json, EnumB, 1, 2, 3)\r\n"
-        + INDENT + L"VECTOR_SPTR(Json, EnumC)\r\n"
-        + INDENT + L"SET_SPTR(Json, EnumD)\r\n"
+        + INDENT + L"GETSET_SPTR(vcc::Json, EnumA)\r\n"
+        + INDENT + L"GETSET_SPTR(vcc::Json, EnumB, 1, 2, 3)\r\n"
+        + INDENT + L"VECTOR_SPTR(vcc::Json, EnumC)\r\n"
+        + INDENT + L"SET_SPTR(vcc::Json, EnumD)\r\n"
         + L"\r\n"
         + INDENT + L"public:\r\n"
-        + INDENT + INDENT + L"VCCObjectPtr() : BaseObject(ObjectType::ObjectPtr)\r\n"
+        + INDENT + INDENT + L"VCCObjectPtr() : vcc::BaseObject(ObjectType::ObjectPtr)\r\n"
         + INDENT + INDENT + L"{\r\n"
-        + INDENT + INDENT + INDENT + L"_EnumA = std::make_shared<Json>();\r\n"
-        + INDENT + INDENT + INDENT + L"_EnumB = std::make_shared<Json>(1, 2, 3);\r\n"
+        + INDENT + INDENT + INDENT + L"_EnumA = std::make_shared<vcc::Json>();\r\n"
+        + INDENT + INDENT + INDENT + L"_EnumB = std::make_shared<vcc::Json>(1, 2, 3);\r\n"
         + INDENT + INDENT + L"}\r\n"
         "\r\n"
         + INDENT + INDENT + L"virtual ~VCCObjectPtr() {}\r\n"
         + L"\r\n"
-        + INDENT + INDENT + L"virtual std::shared_ptr<IObject> Clone() const override\r\n"
+        + INDENT + INDENT + L"virtual std::shared_ptr<vcc::IObject> Clone() const override\r\n"
         + INDENT + INDENT + L"{\r\n"
         + INDENT + INDENT + INDENT + L"auto obj = std::make_shared<VCCObjectPtr>(*this);\r\n"
         + INDENT + INDENT + INDENT + L"obj->CloneEnumA(this->_EnumA.get());\r\n"
@@ -208,8 +206,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     // ------------------------------------------------------------------------------------------ //
     //                                      Property Accessor File                                //
     // ------------------------------------------------------------------------------------------ //
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a_property_accessor.hpp"})));
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a_property_accessor.hpp"})),
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a_property_accessor.hpp"})));
+    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a_property_accessor.hpp"})),
         L"#pragma once\r\n"
         "\r\n"
         "#include <string>\r\n"
@@ -217,9 +215,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "#include \"base_property_accessor.hpp\"\r\n"
         "#include \"property_accessor_macro.hpp\"\r\n"
         "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
-        "class VCCObjectPropertyAccessor : public BasePropertyAccessor\r\n"
+        "class VCCObjectPropertyAccessor : public vcc::BasePropertyAccessor\r\n"
         "{\r\n"
         "    PROPERTY_ACCESSOR_HEADER(long, Long)\r\n"
         "    PROPERTY_ACCESSOR_HEADER(std::wstring, String)\r\n"
@@ -227,23 +223,23 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    PROPERTY_ACCESSOR_CONTAINER_HEADER\r\n"
         "\r\n"
         "    public:\r\n"
-        "        VCCObjectPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}\r\n"
+        "        VCCObjectPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}\r\n"
         "        virtual ~VCCObjectPropertyAccessor() {}\r\n"
         "};\r\n"
         "\r\n"
-        "class VCCObjectPtrPropertyAccessor : public BasePropertyAccessor\r\n"
+        "class VCCObjectPtrPropertyAccessor : public vcc::BasePropertyAccessor\r\n"
         "{\r\n"
-        "    PROPERTY_ACCESSOR_OBJECT_HEADER(std::shared_ptr<IObject>, Object)\r\n"
+        "    PROPERTY_ACCESSOR_OBJECT_HEADER(std::shared_ptr<vcc::IObject>, Object)\r\n"
         "\r\n"
         "    PROPERTY_ACCESSOR_CONTAINER_HEADER\r\n"
         "\r\n"
         "    public:\r\n"
-        "        VCCObjectPtrPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}\r\n"
+        "        VCCObjectPtrPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}\r\n"
         "        virtual ~VCCObjectPtrPropertyAccessor() {}\r\n"
         "};\r\n");
 
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a_property_accessor.cpp"})));
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a_property_accessor.cpp"})),
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a_property_accessor.cpp"})));
+    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"vcc_a_property_accessor.cpp"})),
         L"#include \"vcc_a_property_accessor.hpp\"\r\n"
         "\r\n"
         "#include <memory>\r\n"
@@ -257,8 +253,6 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "#include \"property_accessor_macro.hpp\"\r\n"
         "#include \"vcc_a.hpp\"\r\n"
         "#include \"vcc_a_property.hpp\"\r\n"
-        "\r\n"
-        "using namespace vcc;\r\n"
         "\r\n"
         "long VCCObjectPropertyAccessor::_ReadLong(const int64_t &objectProperty) const\r\n"
         "{\r\n"
@@ -491,7 +485,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    CATCH\r\n"
         "}\r\n"
         "\r\n"
-        "void VCCObjectPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const IObject */*value*/)\r\n"
+        "void VCCObjectPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const vcc::IObject */*value*/)\r\n"
         "{\r\n"
         "    TRY\r\n"
         "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
@@ -538,7 +532,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    CATCH\r\n"
         "}\r\n"
         "\r\n"
-        "std::shared_ptr<IObject> VCCObjectPtrPropertyAccessor::_ReadObject(const int64_t &objectProperty) const\r\n"
+        "std::shared_ptr<vcc::IObject> VCCObjectPtrPropertyAccessor::_ReadObject(const int64_t &objectProperty) const\r\n"
         "{\r\n"
         "    TRY\r\n"
         "        auto obj = std::static_pointer_cast<VCCObjectPtr>(_Object);\r\n"
@@ -546,9 +540,9 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "        switch(static_cast<VCCObjectPtrProperty>(objectProperty))\r\n"
         "        {\r\n"
         "        case VCCObjectPtrProperty::EnumA:\r\n"
-        "            return std::static_pointer_cast<IObject>(obj->GetEnumA());\r\n"
+        "            return std::static_pointer_cast<vcc::IObject>(obj->GetEnumA());\r\n"
         "        case VCCObjectPtrProperty::EnumB:\r\n"
-        "            return std::static_pointer_cast<IObject>(obj->GetEnumB());\r\n"
+        "            return std::static_pointer_cast<vcc::IObject>(obj->GetEnumB());\r\n"
         "        default:\r\n"
         "            assert(false);\r\n"
         "        }\r\n"
@@ -556,7 +550,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    return nullptr;\r\n"
         "}\r\n"
         "\r\n"
-        "std::shared_ptr<IObject> VCCObjectPtrPropertyAccessor::_ReadObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const\r\n"
+        "std::shared_ptr<vcc::IObject> VCCObjectPtrPropertyAccessor::_ReadObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const\r\n"
         "{\r\n"
         "    TRY\r\n"
         "        assert(index >= -1);\r\n"
@@ -565,7 +559,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "        switch(static_cast<VCCObjectPtrProperty>(objectProperty))\r\n"
         "        {\r\n"
         "        case VCCObjectPtrProperty::EnumC:\r\n"
-        "            return std::static_pointer_cast<IObject>(obj->GetEnumCAtIndex(index));\r\n"
+        "            return std::static_pointer_cast<vcc::IObject>(obj->GetEnumCAtIndex(index));\r\n"
         "        default:\r\n"
         "            assert(false);\r\n"
         "        }\r\n"
@@ -573,7 +567,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    return nullptr;\r\n"
         "}\r\n"
         "\r\n"
-        "std::shared_ptr<IObject> VCCObjectPtrPropertyAccessor::_ReadObjectAtKey(const int64_t &objectProperty, const void */*key*/) const\r\n"
+        "std::shared_ptr<vcc::IObject> VCCObjectPtrPropertyAccessor::_ReadObjectAtKey(const int64_t &objectProperty, const void */*key*/) const\r\n"
         "{\r\n"
         "    TRY\r\n"
         "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
@@ -581,7 +575,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    return nullptr;\r\n"
         "}\r\n"
         "\r\n"
-        "void VCCObjectPtrPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> value)\r\n"
+        "void VCCObjectPtrPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value)\r\n"
         "{\r\n"
         "    TRY\r\n"
         "        auto obj = std::static_pointer_cast<VCCObjectPtr>(_Object);\r\n"
@@ -589,10 +583,10 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "        switch(static_cast<VCCObjectPtrProperty>(objectProperty))\r\n"
         "        {\r\n"
         "        case VCCObjectPtrProperty::EnumA:\r\n"
-        "            obj->SetEnumA(std::static_pointer_cast<Json>(value));\r\n"
+        "            obj->SetEnumA(std::static_pointer_cast<vcc::Json>(value));\r\n"
         "            break;\r\n"
         "        case VCCObjectPtrProperty::EnumB:\r\n"
-        "            obj->SetEnumB(std::static_pointer_cast<Json>(value));\r\n"
+        "            obj->SetEnumB(std::static_pointer_cast<vcc::Json>(value));\r\n"
         "            break;\r\n"
         "        default:\r\n"
         "            assert(false);\r\n"
@@ -600,7 +594,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    CATCH\r\n"
         "}\r\n"
         "\r\n"
-        "void VCCObjectPtrPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index)\r\n"
+        "void VCCObjectPtrPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index)\r\n"
         "{\r\n"
         "    TRY\r\n"
         "        assert(index >= -1);\r\n"
@@ -610,9 +604,9 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "        {\r\n"
         "        case VCCObjectPtrProperty::EnumC:\r\n"
         "            if (index > -1)\r\n"
-        "                obj->SetEnumCAtIndex(index, std::static_pointer_cast<Json>(value));\r\n"
+        "                obj->SetEnumCAtIndex(index, std::static_pointer_cast<vcc::Json>(value));\r\n"
         "            else\r\n"
-        "                obj->InsertEnumC(std::static_pointer_cast<Json>(value));\r\n"
+        "                obj->InsertEnumC(std::static_pointer_cast<vcc::Json>(value));\r\n"
         "            break;\r\n"
         "        default:\r\n"
         "            assert(false);\r\n"
@@ -620,14 +614,14 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    CATCH\r\n"
         "}\r\n"
         "\r\n"
-        "void VCCObjectPtrPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const void */*key*/)\r\n"
+        "void VCCObjectPtrPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const void */*key*/)\r\n"
         "{\r\n"
         "    TRY\r\n"
         "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
         "    CATCH\r\n"
         "}\r\n"
         "\r\n"
-        "void VCCObjectPtrPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index)\r\n"
+        "void VCCObjectPtrPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index)\r\n"
         "{\r\n"
         "    TRY\r\n"
         "        assert(index >= -1);\r\n"
@@ -637,9 +631,9 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "        {\r\n"
         "        case VCCObjectPtrProperty::EnumC:\r\n"
         "            if (index > -1)\r\n"
-        "                obj->InsertEnumCAtIndex(index, std::static_pointer_cast<Json>(value));\r\n"
+        "                obj->InsertEnumCAtIndex(index, std::static_pointer_cast<vcc::Json>(value));\r\n"
         "            else\r\n"
-        "                obj->InsertEnumC(std::static_pointer_cast<Json>(value));\r\n"
+        "                obj->InsertEnumC(std::static_pointer_cast<vcc::Json>(value));\r\n"
         "            break;\r\n"
         "        default:\r\n"
         "            assert(false);\r\n"
@@ -647,7 +641,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    CATCH\r\n"
         "}\r\n"
         "\r\n"
-        "std::shared_ptr<IObject> VCCObjectPtrPropertyAccessor::_CloneObject(const int64_t &objectProperty) const\r\n"
+        "std::shared_ptr<vcc::IObject> VCCObjectPtrPropertyAccessor::_CloneObject(const int64_t &objectProperty) const\r\n"
         "{\r\n"
         "    TRY\r\n"
         "        auto obj = std::static_pointer_cast<VCCObjectPtr>(_Object);\r\n"
@@ -655,9 +649,9 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "        switch(static_cast<VCCObjectPtrProperty>(objectProperty))\r\n"
         "        {\r\n"
         "        case VCCObjectPtrProperty::EnumA:\r\n"
-        "            return std::static_pointer_cast<IObject>(obj->GetEnumA()->Clone());\r\n"
+        "            return std::static_pointer_cast<vcc::IObject>(obj->GetEnumA()->Clone());\r\n"
         "        case VCCObjectPtrProperty::EnumB:\r\n"
-        "            return std::static_pointer_cast<IObject>(obj->GetEnumB()->Clone());\r\n"
+        "            return std::static_pointer_cast<vcc::IObject>(obj->GetEnumB()->Clone());\r\n"
         "        default:\r\n"
         "            assert(false);\r\n"
         "        }\r\n"
@@ -665,7 +659,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    return nullptr;\r\n"
         "}\r\n"
         "\r\n"
-        "std::shared_ptr<IObject> VCCObjectPtrPropertyAccessor::_CloneObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const\r\n"
+        "std::shared_ptr<vcc::IObject> VCCObjectPtrPropertyAccessor::_CloneObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const\r\n"
         "{\r\n"
         "    TRY\r\n"
         "        assert(index >= -1);\r\n"
@@ -674,7 +668,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "        switch(static_cast<VCCObjectPtrProperty>(objectProperty))\r\n"
         "        {\r\n"
         "        case VCCObjectPtrProperty::EnumC:\r\n"
-        "            return std::static_pointer_cast<IObject>(obj->CloneEnumCAtIndex(index));\r\n"
+        "            return std::static_pointer_cast<vcc::IObject>(obj->CloneEnumCAtIndex(index));\r\n"
         "        default:\r\n"
         "            assert(false);\r\n"
         "        }\r\n"
@@ -682,7 +676,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    return nullptr;\r\n"
         "}\r\n"
         "\r\n"
-        "std::shared_ptr<IObject> VCCObjectPtrPropertyAccessor::_CloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const\r\n"
+        "std::shared_ptr<vcc::IObject> VCCObjectPtrPropertyAccessor::_CloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const\r\n"
         "{\r\n"
         "    TRY\r\n"
         "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
@@ -730,7 +724,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    CATCH\r\n"
         "}\r\n"
         "\r\n"
-        "void VCCObjectPtrPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const IObject *value)\r\n"
+        "void VCCObjectPtrPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const vcc::IObject *value)\r\n"
         "{\r\n"
         "    TRY\r\n"
         "        assert(value != nullptr);\r\n"
@@ -790,8 +784,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     // ------------------------------------------------------------------------------------------ //
     //                                      Object Factory                                        //
     // ------------------------------------------------------------------------------------------ //
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"object_factory.hpp"})));
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"object_factory.hpp"})),
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"object_factory.hpp"})));
+    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"object_factory.hpp"})),
         L"#pragma once\r\n"
         "\r\n"
         "#include <memory>\r\n"
@@ -800,19 +794,17 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "#include \"i_object.hpp\"\r\n"
         "#include \"object_type.hpp\"\r\n"
         "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
-        "class ObjectFactory : public BaseFactory\r\n"
+        "class ObjectFactory : public vcc::BaseFactory\r\n"
         "{\r\n"
         "    private:\r\n"
         "        ObjectFactory() = default;\r\n"
         "        virtual ~ObjectFactory() {}\r\n"
         "\r\n"
         "    public:\r\n"
-        "        static std::shared_ptr<IObject> Create(const ObjectType &objectType, std::shared_ptr<IObject> parentObject = nullptr);\r\n"
+        "        static std::shared_ptr<vcc::IObject> Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);\r\n"
         "};\r\n");
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"object_factory.cpp"})));
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"object_factory.cpp"})),
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"object_factory.cpp"})));
+    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"object_factory.cpp"})),
         L"#include \"object_factory.hpp\"\r\n"
         "\r\n"
         "#include <assert.h>\r\n"
@@ -823,11 +815,9 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "#include \"object_type.hpp\"\r\n"
         "#include \"vcc_a.hpp\"\r\n"
         "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
-        "std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<IObject> parentObject)\r\n"
+        "std::shared_ptr<vcc::IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)\r\n"
         "{\r\n"
-        "    std::shared_ptr<IObject> result = nullptr;\r\n"
+        "    std::shared_ptr<vcc::IObject> result = nullptr;\r\n"
         "    TRY\r\n"
         "        switch (objectType)\r\n"
         "        {\r\n"
@@ -850,8 +840,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     // ------------------------------------------------------------------------------------------ //
     //                                      Property Accessor Factory                             //
     // ------------------------------------------------------------------------------------------ //
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"property_accessor_factory.hpp"})));
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"property_accessor_factory.hpp"})),
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"property_accessor_factory.hpp"})));
+    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"property_accessor_factory.hpp"})),
         L"#pragma once\r\n"
         "\r\n"
         "#include <memory>\r\n"
@@ -860,19 +850,17 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "#include \"i_object.hpp\"\r\n"
         "#include \"i_property_accessor.hpp\"\r\n"
         "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
-        "class PropertyAccessorFactory : public BaseFactory\r\n"
+        "class PropertyAccessorFactory : public vcc::BaseFactory\r\n"
         "{\r\n"
         "    private:\r\n"
-        "        PropertyAccessorFactory() = default;\r\n"
+        "        PropertyAccessorFactory() = delete;\r\n"
         "        virtual ~PropertyAccessorFactory() {}\r\n"
         "\r\n"
         "    public:\r\n"
-        "        static std::shared_ptr<IPropertyAccessor> Create(std::shared_ptr<IObject> object);\r\n"
+        "        static std::shared_ptr<vcc::IPropertyAccessor> Create(std::shared_ptr<vcc::IObject> object);\r\n"
         "};\r\n");
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"property_accessor_factory.cpp"})));
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L"property_accessor_factory.cpp"})),
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"property_accessor_factory.cpp"})));
+    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"property_accessor_factory.cpp"})),
         L"#include \"property_accessor_factory.hpp\"\r\n"
         "\r\n"
         "#include <assert.h>\r\n"
@@ -883,9 +871,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "#include \"i_property_accessor.hpp\"\r\n"
         "#include \"vcc_a_property_accessor.hpp\"\r\n"
         "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
-        "std::shared_ptr<IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_ptr<IObject> object)\r\n"
+        "std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_ptr<vcc::IObject> object)\r\n"
         "{\r\n"
         "    assert(object != nullptr);\r\n"
         "\r\n"

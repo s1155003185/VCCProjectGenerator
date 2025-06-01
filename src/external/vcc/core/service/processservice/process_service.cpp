@@ -33,7 +33,7 @@ namespace vcc
         {
             std::wstring result = L"";
             // convert to token
-            std::vector<std::string> cmdTokens = ProcessService::ParseCMDLinux(command);
+            std::vector<std::string> cmdTokens = ProcessService::ParseCmdLinux(command);
             std::vector<char *> tokens;
             for (size_t i = 0; i < cmdTokens.size(); i++) {
                 tokens.push_back((char *)(cmdTokens[i].c_str()));
@@ -105,7 +105,7 @@ namespace vcc
             #endif
         }
 
-        std::vector<std::string> ProcessService::ParseCMDLinux(const std::string &cmd)
+        std::vector<std::string> ProcessService::ParseCmdLinux(const std::string &cmd)
         {
             // need to remove double quote and escape "\"
             std::vector<std::string> results;

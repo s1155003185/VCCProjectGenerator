@@ -5,8 +5,6 @@
 
 #include "log_config.hpp"
 
-using namespace vcc;
-
 class VPGObjectTypeFileGenerationService
 {
     private:
@@ -14,5 +12,5 @@ class VPGObjectTypeFileGenerationService
         ~VPGObjectTypeFileGenerationService() {}
 
     public:
-        static void Generate(const LogConfig *logConfig, const std::wstring &filePathHpp, const std::set<std::wstring> &propertyTypes);
+        static void Generate(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp, const std::set<std::wstring> &propertyTypes);
 };

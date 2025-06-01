@@ -7,9 +7,7 @@
 #include "class_macro.hpp"
 #include "log_config.hpp"
 
-using namespace vcc;
-
-class VPGDllFileGenerationServiceOption : public BaseObject
+class VPGDllFileGenerationServiceOption : public vcc::BaseObject
 {
     GETSET(bool, IsGeneratePropertyAccessor, false);
 
@@ -23,7 +21,7 @@ class VPGDllFileGenerationServiceOption : public BaseObject
             return _IsGeneratePropertyAccessor;
         }
         
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             return std::make_shared<VPGDllFileGenerationServiceOption>(*this);
         }
@@ -42,6 +40,6 @@ class VPGDllFileGenerationService
         static std::wstring GeneratePropertyAccessorCpp(const VPGDllFileGenerationServiceOption *option, std::set<std::wstring> &customIncludeFiles);
 
     public:
-        static void GenerateHpp(const LogConfig *logConfig, const std::wstring &filePathHpp, const VPGDllFileGenerationServiceOption *option);
-        static void GenerateCpp(const LogConfig *logConfig, const std::wstring &filePathCpp, const VPGDllFileGenerationServiceOption *option);
+        static void GenerateHpp(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp, const VPGDllFileGenerationServiceOption *option);
+        static void GenerateCpp(const vcc::LogConfig *logConfig, const std::wstring &filePathCpp, const VPGDllFileGenerationServiceOption *option);
 };

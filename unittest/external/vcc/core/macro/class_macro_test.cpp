@@ -8,22 +8,20 @@
 #include "class_macro.hpp"
 #include "object_type.hpp"
 
-using namespace vcc;
-
-class ClassMacroTestClassElement : public BaseObject
+class ClassMacroTestClassElement : public vcc::BaseObject
 {
     GETSET(int, Index, 0);
     public:
-        ClassMacroTestClassElement(int i) : BaseObject(ObjectType::NA) { this->_Index = i; }
+        ClassMacroTestClassElement(int i) : vcc::BaseObject(ObjectType::NA) { this->_Index = i; }
         virtual ~ClassMacroTestClassElement() {}
         
-    virtual std::shared_ptr<IObject> Clone() const override
+    virtual std::shared_ptr<vcc::IObject> Clone() const override
     {
         return std::make_shared<ClassMacroTestClassElement>(*this);
     }
 };
 
-class ClassMacroTestClass : public BaseObject
+class ClassMacroTestClass : public vcc::BaseObject
 {
     // virtual
     private:
@@ -68,10 +66,10 @@ class ClassMacroTestClass : public BaseObject
     ORDERED_MAP_VALIDATE_SPTR_R(std::wstring, ClassMacroTestClassElement, OrderedMapSPTRValidate, if (value == nullptr) throw std::runtime_error("VectorValidate: Value cannot be nullptr.");)
 
     public:
-        ClassMacroTestClass() : BaseObject(ObjectType::NA) {}
+        ClassMacroTestClass() : vcc::BaseObject(ObjectType::NA) {}
         virtual ~ClassMacroTestClass() {}
         
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             auto obj = std::make_shared<ClassMacroTestClass>(*this);
             obj->CloneVector(this->GetVector());

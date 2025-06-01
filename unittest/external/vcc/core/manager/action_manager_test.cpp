@@ -9,23 +9,21 @@
 #include "action_manager.hpp"
 #include "operation_result.hpp"
 
-using namespace vcc;
-
-class ActionManagerTestClass final : public BaseAction
+class ActionManagerTestClass final : public vcc::BaseAction
 {
     private:
         int uuid = 0;
     
     protected:
-        virtual std::shared_ptr<IResult> OnRedo() override { return std::make_shared<OperationResult>(); }
-        virtual std::shared_ptr<IResult> OnUndo() override { return std::make_shared<OperationResult>(); }
+        virtual std::shared_ptr<vcc::IResult> OnRedo() override { return std::make_shared<vcc::OperationResult>(); }
+        virtual std::shared_ptr<vcc::IResult> OnUndo() override { return std::make_shared<vcc::OperationResult>(); }
         
         virtual std::wstring GetRedoMessageStart() const override { return L""; }
         virtual std::wstring GetRedoMessageComplete() const override { return L""; }
         virtual std::wstring GetUndoMessageStart() const override { return L""; }
         virtual std::wstring GetUndoMessageComplete() const override { return L""; }
     public:
-        ActionManagerTestClass(int uuid) : BaseAction() { this->uuid = uuid; }
+        ActionManagerTestClass(int uuid) : vcc::BaseAction() { this->uuid = uuid; }
         ~ActionManagerTestClass() {}
 
         std::wstring GetMessage() { return std::to_wstring(uuid); }
@@ -34,10 +32,10 @@ class ActionManagerTestClass final : public BaseAction
 class ActionManagerTest : public testing::Test 
 {
     private:
-        MANAGER_SPTR_NULL(ActionManager, Manager);
+        MANAGER_SPTR_NULL(vcc::ActionManager, Manager);
 
     public:
-        std::shared_ptr<BaseAction> CreateAction(int index)
+        std::shared_ptr<vcc::BaseAction> CreateAction(int index)
         {
             return std::make_shared<ActionManagerTestClass>(index);
         }
@@ -54,7 +52,7 @@ class ActionManagerTest : public testing::Test
 
         void SetUp() override
         {
-            _Manager = std::make_shared<ActionManager>(nullptr);
+            _Manager = std::make_shared<vcc::ActionManager>(nullptr);
             this->_Manager->SetMaxActionListSize(10);
         }
 

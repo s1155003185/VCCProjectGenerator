@@ -32,7 +32,7 @@ class VPGVccGenerationManagerTest : public testing::Test
             this->_WorkspaceSource = this->_Workspace + L"Source";
             this->_WorkspaceTarget = this->_Workspace + L"Target";
 
-            this->_LogConfig = std::make_shared<LogConfig>();
+            this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
@@ -331,7 +331,7 @@ TEST_F(VPGVccGenerationManagerTest, Update)
     EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->GetWorkspaceTarget(), L"include/external/vcc/versioning/git"})));
 
     this->_Option->InsertPlugins(L"vcc/versioning/git");
-    auto jsonBuilder = std::make_unique<JsonBuilder>();
+    auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
     jsonBuilder->SetIsBeautify(true);
     WriteFile(ConcatPaths({this->GetWorkspaceTarget(), L".vcc/vcc.json"}), jsonBuilder->Serialize(this->_Option->ToJson().get()));
 
@@ -395,11 +395,11 @@ TEST_F(VPGVccGenerationManagerTest, Update_Makefile)
     std::wstring projectNameExe = L"NewProjectNameExe";
     std::wstring projectNameGtest = L"unittest";
 
-    auto jsonBuilder = std::make_unique<JsonBuilder>();
+    auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
     jsonBuilder->SetIsBeautify(true);
 
     std::wstring vccJsonFileContent = ReadFile(ConcatPaths({this->GetWorkspaceTarget(), L".vcc/vcc.json"}));
-    auto json = std::make_shared<Json>();
+    auto json = std::make_shared<vcc::Json>();
     jsonBuilder->Deserialize(vccJsonFileContent, json);
     json->SetString(L"ProjectName", projectName);
     json->SetString(L"ProjectNameDll", projectNameDll);

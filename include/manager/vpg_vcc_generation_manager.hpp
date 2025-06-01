@@ -6,8 +6,6 @@
 #include "vpg_base_generation_manager.hpp"
 #include "vpg_project_type.hpp"
 
-using namespace vcc;
-
 class VPGVccGenerationManager : public VPGBaseGenerationManager
 {
     private:
@@ -15,10 +13,10 @@ class VPGVccGenerationManager : public VPGBaseGenerationManager
         
     public:
         VPGVccGenerationManager() : VPGVccGenerationManager(nullptr, L"", nullptr) {}
-        VPGVccGenerationManager(std::shared_ptr<LogConfig> logConfig, std::wstring workspace, std::shared_ptr<VPGConfig> option) : VPGBaseGenerationManager(logConfig, workspace, option) {}
+        VPGVccGenerationManager(std::shared_ptr<vcc::LogConfig> logConfig, std::wstring workspace, std::shared_ptr<VPGConfig> option) : VPGBaseGenerationManager(logConfig, workspace, option) {}
         virtual ~VPGVccGenerationManager() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             return std::make_shared<VPGVccGenerationManager>(*this);
         }

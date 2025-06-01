@@ -6,8 +6,6 @@
 #include "exception_macro.hpp"
 #include "string_helper.hpp"
 
-using namespace vcc;
-
 const std::wstring VCC_TAG = L"vcc";
 
 enum class VPGCodeType
@@ -61,9 +59,9 @@ inline std::wstring GetVccTagModeString(const VPGTagMode &tagMode)
 inline VPGTagMode GetVccTagModeType(const std::wstring &tagMode)
 {
     TRY
-        if (IsEqual(tagMode, L"RESERVE", true))
+        if (vcc::IsEqual(tagMode, L"RESERVE", true))
             return VPGTagMode::Reserve;
-        else if (IsEqual(tagMode, L"REPLACE", true))
+        else if (vcc::IsEqual(tagMode, L"REPLACE", true))
             return VPGTagMode::Replace;
         assert(false);
     CATCH

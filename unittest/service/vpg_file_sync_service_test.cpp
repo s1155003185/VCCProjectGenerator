@@ -5,8 +5,6 @@
 
 #include <string>
 
-using namespace vcc;
-
 class VPGFileSyncServiceTest : public testing::Test 
 {    
     GETSET(std::wstring, FullHeader, L"// <vcc:vccproj sync=\"FULL\"/>\r\n")

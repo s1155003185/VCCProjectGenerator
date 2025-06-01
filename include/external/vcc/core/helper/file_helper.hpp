@@ -7,10 +7,10 @@
 #include "base_object.hpp"
 #include "class_macro.hpp"
 
+#define PATH std::filesystem::path
+
 namespace vcc
 {
-    #define PATH std::filesystem::path
-
 	// TODO: Support folder type
 	enum class SystemFolderType
 	{

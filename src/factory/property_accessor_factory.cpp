@@ -7,14 +7,13 @@
 #include "i_object.hpp"
 #include "i_property_accessor.hpp"
 #include "vpg_config_property_accessor.hpp"
+#include "vpg_enum_class_property_accessor.hpp"
 #include "vpg_git_form_property_accessor.hpp"
 #include "vpg_git_log_property_accessor.hpp"
 #include "vpg_main_form_property_accessor.hpp"
 #include "vpg_workspace_form_property_accessor.hpp"
 
-using namespace vcc;
-
-std::shared_ptr<IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_ptr<IObject> object)
+std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_ptr<vcc::IObject> object)
 {
     assert(object != nullptr);
 
@@ -32,6 +31,10 @@ std::shared_ptr<IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_p
         return std::make_shared<VPGConfigOutputPropertyAccessor>(object);
     case ObjectType::ConfigTemplate:
         return std::make_shared<VPGConfigTemplatePropertyAccessor>(object);
+    case ObjectType::EnumClass:
+        return std::make_shared<VPGEnumClassPropertyAccessor>(object);
+    case ObjectType::EnumClassAttribute:
+        return std::make_shared<VPGEnumClassAttributePropertyAccessor>(object);
     case ObjectType::GitForm:
         return std::make_shared<VPGGitFormPropertyAccessor>(object);
     case ObjectType::GitLog:

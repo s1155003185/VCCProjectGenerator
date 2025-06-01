@@ -2,17 +2,15 @@
 
 #include "git_manager.hpp"
 
-using namespace vcc;
-
 class GitManagerTest : public testing::Test 
 {
     private:
-        MANAGER_SPTR_NULL(GitManager, Manager);
+        MANAGER_SPTR_NULL(vcc::GitManager, Manager);
 
     public:
         void SetUp() override
         {
-            _Manager = std::make_shared<GitManager>(nullptr);
+            _Manager = std::make_shared<vcc::GitManager>(nullptr);
         }
 
         void TearDown() override

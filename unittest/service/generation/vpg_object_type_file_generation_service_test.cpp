@@ -9,22 +9,20 @@
 
 #include "vpg_object_type_file_generation_service.hpp"
 
-using namespace vcc;
-
 class VPGObjectTypeFileGenerationServiceTest : public testing::Test 
 {
-    GETSET_SPTR_NULL(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGObjectTypeFileGenerationServiceTest/");
     
     GETSET(std::wstring, FilePathHpp, L"");
     public:
         void SetUp() override
         {
-            this->_LogConfig = std::make_shared<LogConfig>();
+            this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
-            this->_FilePathHpp = ConcatPaths({this->GetWorkspace(), L"object_type.hpp"});
+            this->_FilePathHpp = vcc::ConcatPaths({this->GetWorkspace(), L"object_type.hpp"});
         }
 
         void TearDown() override
@@ -37,8 +35,8 @@ TEST_F(VPGObjectTypeFileGenerationServiceTest, Empty)
 {
     std::set<std::wstring> propertyTypes;
     VPGObjectTypeFileGenerationService::Generate(this->GetLogConfig().get(), this->GetFilePathHpp(), propertyTypes);
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
-    std::wstring content = ReadFile(this->GetFilePathHpp());
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
+    std::wstring content = vcc::ReadFile(this->GetFilePathHpp());
     std::wstring expectedResult = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         L"#pragma once\r\n"
         "\r\n"
@@ -58,8 +56,8 @@ TEST_F(VPGObjectTypeFileGenerationServiceTest, Normal)
     propertyTypes.insert(L"Def");
     propertyTypes.insert(L"Abc");
     VPGObjectTypeFileGenerationService::Generate(this->GetLogConfig().get(), this->GetFilePathHpp(), propertyTypes);
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
-    std::wstring content = ReadFile(this->GetFilePathHpp());
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
+    std::wstring content = vcc::ReadFile(this->GetFilePathHpp());
     std::wstring expectedResult = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         L"#pragma once\r\n"
         "\r\n"

@@ -4,8 +4,6 @@
 
 #include <string>
 
-using namespace vcc;
-
 class VPGFileGenerationServiceTest : public testing::Test 
 {
     GETSET(std::wstring, DemandHeader, L"// <vcc:vccproj gen=\"DEMAND\"/>\r\n")

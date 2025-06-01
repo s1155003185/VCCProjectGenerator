@@ -10,11 +10,9 @@
 #include "vpg_global.hpp"
 #include "vpg_java_generation_service.hpp"
 
-using namespace vcc;
-
 class VPGJavaGenerationServiceTest : public testing::Test 
 {
-    GETSET_SPTR_NULL(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGJavaGenerationServiceTest/");
     GETSET_SPTR_NULL(VPGConfigExport, JavaOption);
     
@@ -23,7 +21,7 @@ class VPGJavaGenerationServiceTest : public testing::Test
     public:
         void SetUp() override
         {
-            this->_LogConfig = std::make_shared<LogConfig>();
+            this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->SetIsConsoleLog(false);
 
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
@@ -51,7 +49,7 @@ class VPGJavaGenerationServiceTest : public testing::Test
 
 TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
 {
-    WriteFile(ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}),
+    vcc::WriteFile(vcc::ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}),
         L"// <vcc:vccproj gen=\"DEMAND\"/>\r\n"
         "#ifndef DLL_FUNCTIONS_H\r\n"
         "#define DLL_FUNCTIONS_H\r\n"
@@ -68,7 +66,6 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "#include \"property_accessor_macro.hpp\"\r\n"
         "#include \"exception_macro.hpp\"\r\n"
         "\r\n"
-        "using namespace vcc;\r\n"
         "// </vcc:dllInterfaceHeader>\r\n"
         "\r\n"
         "extern \"C\"\r\n"
@@ -76,7 +73,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "\r\n"
         "DLLEXPORT int GetVersion(wchar_t **str);\r\n"
         "\r\n"
-        "static std::shared_ptr<IObject> tmpObj;\r\n"
+        "static std::shared_ptr<vcc::IObject> tmpObj;\r\n"
         "DLLEXPORT void *CreateObject(int64_t property)\r\n"
         "{\r\n"
         "    ObjectType objectType = static_cast<ObjectType>(property);\r\n"
@@ -89,7 +86,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "{\r\n"
         "    TRY\r\n"
         "         IObject *object = static_cast<IObject *>(ref);\r\n"
-        "         std::shared_ptr<IObject> ptr(object, [](IObject*){});\r\n"
+        "         std::shared_ptr<vcc::IObject> ptr(object, [](IObject*){});\r\n"
         "         return PropertyAccessorFactory::Create(ptr)->ReadBool(LockType::ReadLock, property, index);\r\n"
         "     CATCH \r\n"
         "     return false;\r\n"
@@ -105,9 +102,9 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "\r\n"
         "#endif\r\n", true);
 
-    VPGJavaGenerationService::GenerateJavaBridge(this->GetLogConfig().get(), L"", ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}), this->GetOption().get());
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetDllBridgeDirectory(), L"VPGDllFunctions.java"})));
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetDllBridgeDirectory(), L"VPGDllFunctions.java"})),
+    VPGJavaGenerationService::GenerateJavaBridge(this->GetLogConfig().get(), L"", vcc::ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}), this->GetOption().get());
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetDllBridgeDirectory(), L"VPGDllFunctions.java"})));
+    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetDllBridgeDirectory(), L"VPGDllFunctions.java"})),
         L"package com.vcc.test;\r\n"
         "\r\n"
         "import com.sun.jna.Library;\r\n"
@@ -161,37 +158,21 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         );
 }
 
-TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
+void ValidateGenerateEnum(const VPGJavaGenerationServiceTest *test, const std::wstring &enumClass1, const std::wstring &enumClass2)
 {
-    std::wstring enumClass1 =
-        L"#param once\r\n"
-        "enum class VPGTypeA {\r\n"
-        "   EnumA,\r\n"
-        "   EnumB,\r\n"
-        "   EnumC\r\n"
-        "};\r\n";
-
-    std::wstring enumClass2 =
-        L"#param once\r\n"
-        "enum class VPGTypeBProperty {\r\n"
-        "   EnumA = 0, // GETSET(std::wstring, EnumA, L"")\r\n"
-        "   EnumB, // GETSET(int64_t, EnumB, 1)\r\n"
-        "   EnumC = 999 // VECTOR(double, EnumC)\r\n"
-        "};\r\n";
-
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList1;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList2;
     VPGGlobal::GetEnumClassReader()->Parse(enumClass1, enumClassList1);
     VPGGlobal::GetEnumClassReader()->Parse(enumClass2, enumClassList2);
 
-    std::wstring filePath1 = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeA.java"});
-    std::wstring filePath2 = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeBProperty.java"});
+    std::wstring filePath1 = vcc::ConcatPaths({test->GetWorkspace(), test->GetJavaOption()->GetTypeDirectory(), L"VPGTypeA.java"});
+    std::wstring filePath2 = vcc::ConcatPaths({test->GetWorkspace(), test->GetJavaOption()->GetTypeDirectory(), L"VPGTypeBProperty.java"});
     
-    VPGJavaGenerationService::GenerateEnum(this->GetLogConfig().get(), filePath1, L"", enumClassList1.at(0).get(), this->GetOption().get(), this->GetJavaOption().get());
-    VPGJavaGenerationService::GenerateEnum(this->GetLogConfig().get(), filePath2, L"", enumClassList2.at(0).get(), this->GetOption().get(), this->GetJavaOption().get());
+    VPGJavaGenerationService::GenerateEnum(test->GetLogConfig().get(), filePath1, L"", enumClassList1.at(0).get(), test->GetOption().get(), test->GetJavaOption().get());
+    VPGJavaGenerationService::GenerateEnum(test->GetLogConfig().get(), filePath2, L"", enumClassList2.at(0).get(), test->GetOption().get(), test->GetJavaOption().get());
     
-    EXPECT_TRUE(IsFilePresent(filePath1));
-    EXPECT_EQ(ReadFile(filePath1),
+    EXPECT_TRUE(vcc::IsFilePresent(filePath1));
+    EXPECT_EQ(vcc::ReadFile(filePath1),
         L"package com.vcc.type;\r\n"
         "\r\n"
         "import java.util.Objects;\r\n"
@@ -222,8 +203,8 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
         "\r\n"
         "}\r\n");
 
-    EXPECT_TRUE(IsFilePresent(filePath2));
-    EXPECT_EQ(ReadFile(filePath2),
+    EXPECT_TRUE(vcc::IsFilePresent(filePath2));
+    EXPECT_EQ(vcc::ReadFile(filePath2),
         L"package com.vcc.type;\r\n"
         "\r\n"
         "import java.util.Objects;\r\n"
@@ -255,37 +236,62 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
         "}\r\n");
 }
 
-TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
-{   
-    std::wstring enumClass =
+TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
+{
+    std::wstring enumClass1 =
         L"#param once\r\n"
-        "enum class VPGTypeBProperty {\r\n"
-        "    Bool = 0, // GETSET(bool, Bool, false)\r\n"
-        "    Long , // GETSET(long, Long, 0)\r\n"
-        "    Float, // GETSET(float, Float, 0)\r\n"
-        "    Char, // GETSET(char, Char, L'\\0')\r\n"
-        "    WChar, // GETSET(wchar_t, WChar, L'\\0')\r\n"
-        "    String, // GETSET(std::wstring, String, L\"\")\r\n"
-        "    Enum, // GETSET(VPGTypeBProperty, Enum, VPGTypeBProperty::Bool)\r\n"
-        "    Object = 50, // GETSET_SPTR_NULL(VPGTypeB, Object)\r\n"
-        "    VectorDouble = 80, // VECTOR(double, VectorDouble)\r\n"
-        "    VectorString, // VECTOR(std::wstring, VectorString)\r\n"
-        "    Map, // MAP(int, double, Map)\r\n"
-        "    OrderedMap, // ORDERED_MAP(int, double, OrderedMap)\r\n"
-        "    VectorObject, // VECTOR_SPTR(VPGTypeB, VectorObject)\r\n"
-        "    MapObject, // MAP_SPTR_R(std::wstring, VPGTypeB, MapObject)\r\n"
-        "    OrderedMapObject // ORDERED_MAP_SPTR_R(double, VPGTypeB, OrderedMapObject)\r\n" 
+        "enum class VPGTypeA {\r\n"
+        "   EnumA,\r\n"
+        "   EnumB,\r\n"
+        "   EnumC\r\n"
         "};\r\n";
 
+    std::wstring enumClass2 =
+        L"#param once\r\n"
+        "enum class VPGTypeBProperty {\r\n"
+        "   EnumA = 0, // GETSET(std::wstring, EnumA, L"")\r\n"
+        "   EnumB, // GETSET(int64_t, EnumB, 1)\r\n"
+        "   EnumC = 999 // VECTOR(double, EnumC)\r\n"
+        "};\r\n";
+    ValidateGenerateEnum(this, enumClass1, enumClass2);
+}
+
+TEST_F(VPGJavaGenerationServiceTest, GenerateEnum_Namespace)
+{
+    std::wstring enumClass1 =
+        L"#param once\r\n"
+        "namespace vcc\r\n"
+        "{\r\n"
+        "    enum class VPGTypeA {\r\n"
+        "        EnumA,\r\n"
+        "        EnumB,\r\n"
+        "        EnumC\r\n"
+        "    };\r\n"
+        "};\r\n";
+
+    std::wstring enumClass2 =
+        L"#param once\r\n"
+        "namespace vcc {\r\n"
+        "    enum class VPGTypeBProperty {\r\n"
+        "        EnumA = 0, // GETSET(std::wstring, EnumA, L"")\r\n"
+        "        EnumB, // GETSET(int64_t, EnumB, 1)\r\n"
+        "        EnumC = 999 // VECTOR(double, EnumC)\r\n"
+        "    };\r\n"
+        "};\r\n";
+    ValidateGenerateEnum(this, enumClass1, enumClass2);
+}
+
+void ValidateGenerateObject(const VPGJavaGenerationServiceTest *test, const std::wstring &code)
+{
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(code, enumClassList);
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMap;
-    std::wstring filePath = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"});
-    VPGJavaGenerationService::GenerateObject(this->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMap, typeWorkspaceClassRelativePathMap, this->GetOption().get(), this->GetJavaOption().get());
+    std::wstring filePath = vcc::ConcatPaths({test->GetWorkspace(), test->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"});
+    VPGJavaGenerationService::GenerateObject(test->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMap, typeWorkspaceClassRelativePathMap, test->GetOption().get(), test->GetJavaOption().get());
     
-    EXPECT_TRUE(IsFilePresent(filePath));
-    EXPECT_EQ(ReadFile(filePath),
+    EXPECT_TRUE(vcc::IsFilePresent(filePath));
+    EXPECT_EQ(vcc::ReadFile(filePath),
         L"package com.vcc.module;\r\n"
         "\r\n"
         "import com.sun.jna.Memory;\r\n"
@@ -677,6 +683,55 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
         "}\r\n");
 }
 
+TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
+{
+    ValidateGenerateObject(this, 
+        L"#param once\r\n"
+        "enum class VPGTypeBProperty {\r\n"
+        "    Bool = 0, // GETSET(bool, Bool, false)\r\n"
+        "    Long , // GETSET(long, Long, 0)\r\n"
+        "    Float, // GETSET(float, Float, 0)\r\n"
+        "    Char, // GETSET(char, Char, L'\\0')\r\n"
+        "    WChar, // GETSET(wchar_t, WChar, L'\\0')\r\n"
+        "    String, // GETSET(std::wstring, String, L\"\")\r\n"
+        "    Enum, // GETSET(VPGTypeBProperty, Enum, VPGTypeBProperty::Bool)\r\n"
+        "    Object = 50, // GETSET_SPTR_NULL(VPGTypeB, Object)\r\n"
+        "    VectorDouble = 80, // VECTOR(double, VectorDouble)\r\n"
+        "    VectorString, // VECTOR(std::wstring, VectorString)\r\n"
+        "    Map, // MAP(int, double, Map)\r\n"
+        "    OrderedMap, // ORDERED_MAP(int, double, OrderedMap)\r\n"
+        "    VectorObject, // VECTOR_SPTR(VPGTypeB, VectorObject)\r\n"
+        "    MapObject, // MAP_SPTR_R(std::wstring, VPGTypeB, MapObject)\r\n"
+        "    OrderedMapObject // ORDERED_MAP_SPTR_R(double, VPGTypeB, OrderedMapObject)\r\n" 
+        "};\r\n");
+}
+
+TEST_F(VPGJavaGenerationServiceTest, GenerateObjectWithNamespace)
+{   
+    ValidateGenerateObject(
+        this,
+        L"#param once\r\n"
+        "namespace vcc {\r\n"
+        "    enum class VPGTypeBProperty {\r\n"
+        "        Bool = 0, // GETSET(bool, Bool, false)\r\n"
+        "        Long , // GETSET(long, Long, 0)\r\n"
+        "        Float, // GETSET(float, Float, 0)\r\n"
+        "        Char, // GETSET(char, Char, L'\\0')\r\n"
+        "        WChar, // GETSET(wchar_t, WChar, L'\\0')\r\n"
+        "        String, // GETSET(std::wstring, String, L\"\")\r\n"
+        "        Enum, // GETSET(vcc::VPGTypeBProperty, Enum, vcc::VPGTypeBProperty::Bool)\r\n"
+        "        Object = 50, // GETSET_SPTR_NULL(vcc::VPGTypeB, Object)\r\n"
+        "        VectorDouble = 80, // VECTOR(double, VectorDouble)\r\n"
+        "        VectorString, // VECTOR(std::wstring, VectorString)\r\n"
+        "        Map, // MAP(int, double, Map)\r\n"
+        "        OrderedMap, // ORDERED_MAP(int, double, OrderedMap)\r\n"
+        "        VectorObject, // VECTOR_SPTR(vcc::VPGTypeB, VectorObject)\r\n"
+        "        MapObject, // MAP_SPTR_R(std::wstring, vcc::VPGTypeB, MapObject)\r\n"
+        "        OrderedMapObject // ORDERED_MAP_SPTR_R(double, vcc::VPGTypeB, OrderedMapObject)\r\n" 
+        "    };\r\n"
+        "};\r\n");
+}
+
 TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
 {
     std::wstring enumClass =
@@ -691,11 +746,11 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
     typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));
-    std::wstring filePath = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGGitLog.java"});
+    std::wstring filePath = vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGGitLog.java"});
     VPGJavaGenerationService::GenerateObject(this->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm, this->GetOption().get(), this->GetJavaOption().get());
     
-    EXPECT_TRUE(IsFilePresent(filePath));
-    EXPECT_EQ(ReadFile(filePath),
+    EXPECT_TRUE(vcc::IsFilePresent(filePath));
+    EXPECT_EQ(vcc::ReadFile(filePath),
         L"package com.vcc.form;\r\n"
         "\r\n"
         "import com.sun.jna.Pointer;\r\n"
@@ -791,11 +846,11 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateResult)
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
     typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));
-    std::wstring filePath = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGGitLog.java"});
+    std::wstring filePath = vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGGitLog.java"});
     VPGJavaGenerationService::GenerateObject(this->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm, this->GetOption().get(), this->GetJavaOption().get());
     
-    EXPECT_TRUE(IsFilePresent(filePath));
-    EXPECT_EQ(ReadFile(filePath),
+    EXPECT_TRUE(vcc::IsFilePresent(filePath));
+    EXPECT_EQ(vcc::ReadFile(filePath),
         L"package com.vcc.module;\r\n"
         "\r\n"
         "import com.sun.jna.Pointer;\r\n"

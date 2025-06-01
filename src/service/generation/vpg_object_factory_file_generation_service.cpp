@@ -8,14 +8,12 @@
 #include "log_service.hpp"
 #include "set_helper.hpp"
 
-using namespace vcc;
-
 #define LOG_ID L"Object Factory File Generation"
 
-void VPGObjectFactoryFileGenerationService::GenerateHpp(const LogConfig *logConfig, const std::wstring &filePathHpp)
+void VPGObjectFactoryFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp)
 {
     TRY
-        LogService::LogInfo(logConfig, LOG_ID, L"Generate object factory file: " + filePathHpp);
+        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object factory file: " + filePathHpp);
         std::wstring content = L""
             "#pragma once\r\n"
             "\r\n"
@@ -25,27 +23,25 @@ void VPGObjectFactoryFileGenerationService::GenerateHpp(const LogConfig *logConf
             "#include \"i_object.hpp\"\r\n"
             "#include \"object_type.hpp\"\r\n"
             "\r\n"
-            "using namespace vcc;\r\n"
-            "\r\n"
-            "class ObjectFactory : public BaseFactory\r\n"
+            "class ObjectFactory : public vcc::BaseFactory\r\n"
             "{\r\n"
             "    private:\r\n"
             "        ObjectFactory() = default;\r\n"
             "        virtual ~ObjectFactory() {}\r\n"
             "\r\n"
             "    public:\r\n"
-            "        static std::shared_ptr<IObject> Create(const ObjectType &objectType, std::shared_ptr<IObject> parentObject = nullptr);\r\n"
+            "        static std::shared_ptr<vcc::IObject> Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);\r\n"
             "};\r\n";
-        WriteFile(filePathHpp, content, true);
-        LogService::LogInfo(logConfig, LOG_ID, L"Generate object factory file completed.");
+        vcc::WriteFile(filePathHpp, content, true);
+        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object factory file completed.");
     CATCH
 }
 
-void VPGObjectFactoryFileGenerationService::GenerateCpp(const LogConfig *logConfig, const std::wstring &projectPrefix, const std::set<std::wstring> &includeFiles,
+void VPGObjectFactoryFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig, const std::wstring &projectPrefix, const std::set<std::wstring> &includeFiles,
     const std::wstring &filePathCpp, const std::set<std::wstring> &propertyTypes)
 {
     TRY
-        LogService::LogInfo(logConfig, LOG_ID, L"Generate object factory file: " + filePathCpp);
+        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object factory file: " + filePathCpp);
 
         std::set<std::wstring> tmpIncludePaths = includeFiles;
         tmpIncludePaths.insert(L"exception_macro.hpp");
@@ -60,14 +56,12 @@ void VPGObjectFactoryFileGenerationService::GenerateCpp(const LogConfig *logConf
             "\r\n";
         
         for (auto const &str : tmpIncludePaths)
-            content += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, str) + L"\r\n";
+            content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
 
         content += L"\r\n"
-            "using namespace vcc;\r\n"
-            "\r\n"
-            "std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<IObject> parentObject)\r\n"
+            "std::shared_ptr<vcc::IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)\r\n"
             "{\r\n"
-            + INDENT + L"std::shared_ptr<IObject> result = nullptr;\r\n"
+            + INDENT + L"std::shared_ptr<vcc::IObject> result = nullptr;\r\n"
             + INDENT + L"TRY\r\n"
             + INDENT + INDENT + L"switch (objectType)\r\n"
             + INDENT + INDENT + L"{\r\n";
@@ -86,7 +80,7 @@ void VPGObjectFactoryFileGenerationService::GenerateCpp(const LogConfig *logConf
             + INDENT + L"CATCH\r\n"
             + INDENT + L"return result;\r\n"
             "}\r\n";
-        WriteFile(filePathCpp, content, true);
-        LogService::LogInfo(logConfig, LOG_ID, L"Generate object factory completed.");
+        vcc::WriteFile(filePathCpp, content, true);
+        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object factory completed.");
     CATCH
 }

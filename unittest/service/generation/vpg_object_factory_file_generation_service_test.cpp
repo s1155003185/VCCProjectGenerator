@@ -9,11 +9,9 @@
 
 #include "vpg_object_factory_file_generation_service.hpp"
 
-using namespace vcc;
-
 class VPGObjectFactoryFileGenerationServiceTest : public testing::Test 
 {
-    GETSET_SPTR_NULL(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGObjectFactoryFileGenerationServiceTest/");
     
     GETSET(std::wstring, FilePathHpp, L"");
@@ -24,12 +22,12 @@ class VPGObjectFactoryFileGenerationServiceTest : public testing::Test
     public:
         void SetUp() override
         {
-            this->_LogConfig = std::make_shared<LogConfig>();
+            this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
-            this->_FilePathHpp = ConcatPaths({this->GetWorkspace(), L"object_factory.hpp"});
-            this->_FilePathCpp = ConcatPaths({this->GetWorkspace(), L"object_factory.cpp"});
+            this->_FilePathHpp = vcc::ConcatPaths({this->GetWorkspace(), L"object_factory.hpp"});
+            this->_FilePathCpp = vcc::ConcatPaths({this->GetWorkspace(), L"object_factory.cpp"});
 
             this->_ExpectedHpp = L""
                 "#pragma once\r\n"
@@ -40,16 +38,14 @@ class VPGObjectFactoryFileGenerationServiceTest : public testing::Test
                 "#include \"i_object.hpp\"\r\n"
                 "#include \"object_type.hpp\"\r\n"
                 "\r\n"
-                "using namespace vcc;\r\n"
-                "\r\n"
-                "class ObjectFactory : public BaseFactory\r\n"
+                "class ObjectFactory : public vcc::BaseFactory\r\n"
                 "{\r\n"
                 "    private:\r\n"
                 "        ObjectFactory() = default;\r\n"
                 "        virtual ~ObjectFactory() {}\r\n"
                 "\r\n"
                 "    public:\r\n"
-                "        static std::shared_ptr<IObject> Create(const ObjectType &objectType, std::shared_ptr<IObject> parentObject = nullptr);\r\n"
+                "        static std::shared_ptr<vcc::IObject> Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);\r\n"
                 "};\r\n";
         }
 
@@ -65,10 +61,10 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Empty)
     VPGObjectFactoryFileGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp());
     VPGObjectFactoryFileGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VCC", {}, this->GetFilePathCpp(), propertyTypes);
 
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
 
-    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), this->GetExpectedHpp());
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), this->GetExpectedHpp());
 
     std::wstring expectedResult = L""
         "#include \"object_factory.hpp\"\r\n"
@@ -80,11 +76,9 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Empty)
         "#include \"i_object.hpp\"\r\n"
         "#include \"object_type.hpp\"\r\n"
         "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
-        "std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<IObject> parentObject)\r\n"
+        "std::shared_ptr<vcc::IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)\r\n"
         "{\r\n"
-        "    std::shared_ptr<IObject> result = nullptr;\r\n"
+        "    std::shared_ptr<vcc::IObject> result = nullptr;\r\n"
         "    TRY\r\n"
         "        switch (objectType)\r\n"
         "        {\r\n"
@@ -97,7 +91,7 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Empty)
         "    CATCH\r\n"
         "    return result;\r\n"
         "}\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedResult);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedResult);
 }
 
 TEST_F(VPGObjectFactoryFileGenerationServiceTest, Normal)
@@ -108,10 +102,10 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Normal)
     VPGObjectFactoryFileGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp());
     VPGObjectFactoryFileGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VCC", { L"abc.hpp" }, this->GetFilePathCpp(), propertyTypes);
 
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
 
-    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), this->GetExpectedHpp());
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), this->GetExpectedHpp());
 
     std::wstring expectedResult = L""
         "#include \"object_factory.hpp\"\r\n"
@@ -124,11 +118,9 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Normal)
         "#include \"i_object.hpp\"\r\n"
         "#include \"object_type.hpp\"\r\n"
         "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
-        "std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<IObject> parentObject)\r\n"
+        "std::shared_ptr<vcc::IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)\r\n"
         "{\r\n"
-        "    std::shared_ptr<IObject> result = nullptr;\r\n"
+        "    std::shared_ptr<vcc::IObject> result = nullptr;\r\n"
         "    TRY\r\n"
         "        switch (objectType)\r\n"
         "        {\r\n"
@@ -147,5 +139,5 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Normal)
         "    CATCH\r\n"
         "    return result;\r\n"
         "}\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedResult);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedResult);
 }

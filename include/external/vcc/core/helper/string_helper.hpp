@@ -3,12 +3,11 @@
 #include <string>
 #include <regex>
 
+const std::wstring NL = L"\r\n";
+const std::wstring INDENT = L"    ";
+
 namespace vcc
 {
-    const std::wstring NL = L"\r\n";
-	
-	const std::wstring INDENT = L"    ";
-
 	enum class EscapeStringType
 	{
 		DoubleQuote,
@@ -92,7 +91,8 @@ namespace vcc
 	std::wstring GetNextQuotedString(const std::wstring& str, size_t &pos, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList = { L"\"", L"'", L"{", L"[", L"(" },
 		const std::vector<std::wstring> &quoteCloseList = { L"\"", L"'", L"}", L"]", L")" },
-		const std::vector<std::wstring> &quoteEscapeList = { L"\\", L"\\", L"", L"", L"" });
+		const std::vector<std::wstring> &quoteEscapeList = { L"\\", L"\\", L"", L"", L"" },
+		const std::vector<std::wstring> &stringOpenList = {});
 	bool IsContain(const std::wstring &str, const std::wstring &subStr, const size_t &pos = 0, const bool &isIgnoreCase = false);
 	size_t CountSubstring(const std::wstring &str, const std::wstring &subStr, const bool &isIgnoreCase = false);
 

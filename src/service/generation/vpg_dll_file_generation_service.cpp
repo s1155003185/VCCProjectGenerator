@@ -10,8 +10,6 @@
 
 #include "vpg_file_generation_service.hpp"
 
-using namespace vcc;
-
 #define LOG_ID L"Dll File Generation"
 
 std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFileGenerationServiceOption *option)
@@ -57,9 +55,9 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFil
         functionMap.insert(std::make_pair(L"ApplicationCloseForm", L"DLLEXPORT bool ApplicationCloseForm(void *form, bool isForce);\r\n"));
                     
         for (auto const &action : functionMap) {
-            std::vector<std::wstring> lines = SplitStringByLine(action.second);
+            std::vector<std::wstring> lines = vcc::SplitStringByLine(action.second);
             for (auto &line : lines) {
-                RTrim(line);
+                vcc::RTrim(line);
                 result += line + L"\r\n";
             }
         }
@@ -102,7 +100,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"int64_t ApplicationGetResultErrorCode(void *result)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::GetResultErrorCode(static_cast<IObject *>(result));\r\n"
+            "        return Application::GetResultErrorCode(static_cast<vcc::IObject *>(result));\r\n"
             "    CATCH\r\n"
             "    return 0;\r\n"
             "}\r\n"));
@@ -110,7 +108,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"void ApplicationGetResultMessage(void *result, wchar_t **value)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        std::wstring message = Application::GetResultMessage(static_cast<IObject *>(result));\r\n"
+            "        std::wstring message = Application::GetResultMessage(static_cast<vcc::IObject *>(result));\r\n"
             "        size_t size = (message.length() + 1) * sizeof(wchar_t);\r\n"
             "        *value = static_cast<wchar_t*>(malloc(size));\r\n"
             "        wcscpy(*value, message.c_str());\r\n"
@@ -121,7 +119,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"bool ApplicationIsErrorResult(void *result)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::IsErrorResult(static_cast<IObject *>(result));\r\n"
+            "        return Application::IsErrorResult(static_cast<vcc::IObject *>(result));\r\n"
             "    CATCH\r\n"
             "    return false;\r\n"
             "}\r\n"
@@ -130,7 +128,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"bool ApplicationIsWarningResult(void *result)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::IsWarningResult(static_cast<IObject *>(result));\r\n"
+            "        return Application::IsWarningResult(static_cast<vcc::IObject *>(result));\r\n"
             "    CATCH\r\n"
             "    return false;\r\n"
             "}\r\n"
@@ -139,7 +137,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"void ApplicationEraseResult(void *result)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        Application::EraseResult(static_cast<IObject *>(result));\r\n"
+            "        Application::EraseResult(static_cast<vcc::IObject *>(result));\r\n"
             "    CATCH\r\n"
             "}\r\n"));
             
@@ -157,7 +155,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"void *ApplicationDoFormAction(void *form, int64_t formProperty, void *argument)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::DoFormAction(static_cast<IObject *>(form), formProperty, static_cast<IObject *>(argument)).get();\r\n"
+            "        return Application::DoFormAction(static_cast<vcc::IObject *>(form), formProperty, static_cast<vcc::IObject *>(argument)).get();\r\n"
             "    CATCH\r\n"
             "    return nullptr;\r\n"
             "}\r\n"));
@@ -165,7 +163,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
                 L"int64_t ApplicationGetFormActionCurrentSeqNo(void *form)\r\n"
                 "{\r\n"
                 "    TRY\r\n"
-                "        return Application::GetFormActionCurrentSeqNo(static_cast<IObject *>(form));\r\n"
+                "        return Application::GetFormActionCurrentSeqNo(static_cast<vcc::IObject *>(form));\r\n"
                 "    CATCH\r\n"
                 "    return -1;\r\n"
                 "}\r\n"));
@@ -173,7 +171,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"int64_t ApplicationGetFormActionFirstSeqNo(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::GetFormActionFirstSeqNo(static_cast<IObject *>(form));\r\n"
+            "        return Application::GetFormActionFirstSeqNo(static_cast<vcc::IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return -1;\r\n"
             "}\r\n"));
@@ -181,7 +179,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"int64_t ApplicationGetFormActionLastSeqNo(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::GetFormActionLastSeqNo(static_cast<IObject *>(form));\r\n"
+            "        return Application::GetFormActionLastSeqNo(static_cast<vcc::IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return -1;\r\n"
             "}\r\n"));
@@ -190,14 +188,14 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"void ApplicationRedoFormAction(void *form, int64_t noOfStep)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        Application::RedoFormAction(static_cast<IObject *>(form), noOfStep);\r\n"
+            "        Application::RedoFormAction(static_cast<vcc::IObject *>(form), noOfStep);\r\n"
             "    CATCH\r\n"
             "}\r\n"));
         functionMap.insert(std::make_pair(L"ApplicationRedoFormActionToSeqNo",
             L"void ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        Application::RedoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);\r\n"
+            "        Application::RedoFormActionToSeqNo(static_cast<vcc::IObject *>(form), seqNo);\r\n"
             "    CATCH\r\n"
             "}\r\n"));
             
@@ -206,14 +204,14 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"void ApplicationUndoFormAction(void *form, int64_t noOfStep)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        Application::UndoFormAction(static_cast<IObject *>(form), noOfStep);\r\n"
+            "        Application::UndoFormAction(static_cast<vcc::IObject *>(form), noOfStep);\r\n"
             "    CATCH\r\n"
             "}\r\n"));
         functionMap.insert(std::make_pair(L"ApplicationUndoFormActionToSeqNo",
             L"void ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        Application::UndoFormActionToSeqNo(static_cast<IObject *>(form), seqNo);\r\n"
+            "        Application::UndoFormActionToSeqNo(static_cast<vcc::IObject *>(form), seqNo);\r\n"
             "    CATCH\r\n"
             "}\r\n"));
 
@@ -221,7 +219,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"int64_t ApplicationClearFormAction(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::ClearFormAction(static_cast<IObject *>(form));\r\n"
+            "        return Application::ClearFormAction(static_cast<vcc::IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return -1;\r\n"
             "}\r\n"));
@@ -229,7 +227,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"int64_t ApplicationTruncateFormAction(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::TruncateFormAction(static_cast<IObject *>(form));\r\n"
+            "        return Application::TruncateFormAction(static_cast<vcc::IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return -1;\r\n"
             "}\r\n"));
@@ -239,7 +237,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"bool ApplicationIsFormClosed(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::IsFormClosed(static_cast<IObject *>(form));\r\n"
+            "        return Application::IsFormClosed(static_cast<vcc::IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return false;\r\n"
             "}\r\n"));
@@ -247,7 +245,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"bool ApplicationIsFormClosable(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::IsFormClosable(static_cast<IObject *>(form));\r\n"
+            "        return Application::IsFormClosable(static_cast<vcc::IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return false;\r\n"
             "}\r\n"));
@@ -255,16 +253,16 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"bool ApplicationCloseForm(void *form, bool isForce)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::CloseForm(static_cast<IObject *>(form), isForce);\r\n"
+            "        return Application::CloseForm(static_cast<vcc::IObject *>(form), isForce);\r\n"
             "    CATCH\r\n"
             "    return false;\r\n"
             "}\r\n"));
 
         for (auto const &action : functionMap) {
-            std::vector<std::wstring> lines = SplitStringByLine(action.second);
+            std::vector<std::wstring> lines = vcc::SplitStringByLine(action.second);
             result += L"\r\n";
             for (auto &line : lines) {
-                RTrim(line);
+                vcc::RTrim(line);
                 result += line + L"\r\n";
             }
         }
@@ -338,14 +336,14 @@ std::wstring VPGDllFileGenerationService::GeneratePropertyAccessorCpp(const VPGD
     return result;
 }
 
-void VPGDllFileGenerationService::GenerateHpp(const LogConfig *logConfig, const std::wstring &filePathHpp, const VPGDllFileGenerationServiceOption *option)
+void VPGDllFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp, const VPGDllFileGenerationServiceOption *option)
 {
     TRY
         assert(option != nullptr);
-        if (!IsFilePresent(filePathHpp))
+        if (!vcc::IsFilePresent(filePathHpp))
             return;
         
-        LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file: " + filePathHpp);
+        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file: " + filePathHpp);
 
         // header
         std::wstring content = L"";
@@ -354,29 +352,27 @@ void VPGDllFileGenerationService::GenerateHpp(const LogConfig *logConfig, const 
         std::wstring propertyAccessorStr = GeneratePropertyAccessorHpp(option, customIncludeFiles);
         if (!customIncludeFiles.empty()) {
             for (auto const &file : customIncludeFiles)
-                content += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, file) + L"\r\n";
-            content += L"\r\n"
-                "using namespace vcc;\r\n";
+                content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, file) + L"\r\n";
         }
-        WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathHpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
+        vcc::WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(vcc::ReadFile(filePathHpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
 
         // content
         content = applicationStr;
         content += propertyAccessorStr;
 
-        WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathHpp), L"vcc:dllInterface", content, L"//"), true);
-        LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file completed.");
+        vcc::WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(vcc::ReadFile(filePathHpp), L"vcc:dllInterface", content, L"//"), true);
+        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file completed.");
     CATCH
 }
 
-void VPGDllFileGenerationService::GenerateCpp(const LogConfig *logConfig, const std::wstring &filePathCpp, const VPGDllFileGenerationServiceOption *option)
+void VPGDllFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig, const std::wstring &filePathCpp, const VPGDllFileGenerationServiceOption *option)
 {
     TRY
         assert(option != nullptr);
-        if (!IsFilePresent(filePathCpp))
+        if (!vcc::IsFilePresent(filePathCpp))
             return;
 
-        LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp file: " + filePathCpp);
+        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp file: " + filePathCpp);
         // header
         std::wstring content = L"";
         std::set<std::wstring> customIncludeFiles;
@@ -385,17 +381,15 @@ void VPGDllFileGenerationService::GenerateCpp(const LogConfig *logConfig, const 
 
         if (!customIncludeFiles.empty()) {
             for (auto const &file : customIncludeFiles)
-                content += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, file) + L"\r\n";
-            content += L"\r\n"
-                "using namespace vcc;\r\n";
+                content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, file) + L"\r\n";
         }
-        WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathCpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
+        vcc::WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(vcc::ReadFile(filePathCpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
 
         // content
         content = applicationStr;
         content += propertyAccessorStr;
-        WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathCpp), L"vcc:dllInterface", content, L"//"), true);
+        vcc::WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(vcc::ReadFile(filePathCpp), L"vcc:dllInterface", content, L"//"), true);
 
-        LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp completed.");
+        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp completed.");
     CATCH
 }

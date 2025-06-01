@@ -29,70 +29,13 @@
 #include "vpg_global.hpp"
 // </vcc:customHeader>
 
-using namespace vcc;
-
-VPGMainFormInitialize::VPGMainFormInitialize(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()
+VPGMainFormAddWorkspaceForm::VPGMainFormAddWorkspaceForm(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm) : vcc::BaseAction()
 {
     _LogConfig = logConfig;
     _ParentObject = parentForm;
 }
 
-std::wstring VPGMainFormInitialize::GetRedoMessageStart() const
-{
-    TRY
-        // <vcc:VPGMainFormInitializeGetRedoMessageStart sync="RESERVE" gen="RESERVE">
-        return L"VPGMainFormInitialize start";
-        // </vcc:VPGMainFormInitializeGetRedoMessageStart>
-    CATCH
-    return L"";
-}
-
-std::wstring VPGMainFormInitialize::GetRedoMessageComplete() const
-{
-    TRY
-        // <vcc:VPGMainFormInitializeGetRedoMessageComplete sync="RESERVE" gen="RESERVE">
-        return L"VPGMainFormInitialize complete";
-        // </vcc:VPGMainFormInitializeGetRedoMessageComplete>
-    CATCH
-    return L"";
-}
-
-std::shared_ptr<IResult> VPGMainFormInitialize::OnRedo()
-{
-    TRY
-        // <vcc:VPGMainFormInitializeOnRedo sync="RESERVE" gen="RESERVE">
-        auto propertyAccessor = PropertyAccessorFactory::Create(_ParentObject);
-        propertyAccessor->WriteLock();
-        auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
-        form->TruncateAction();
-        form->ClearWorkspaceForms();
-
-        auto configFilePath = VPGGlobal::GetVCCProjectManagerConfigFileFullPath();
-        if (IsFilePresent(configFilePath)) {
-            TRY
-                auto jsonBuilder = std::make_unique<JsonBuilder>();
-                jsonBuilder->SetIsBeautify(true);
-                form->DeserializeJsonString(jsonBuilder.get(), ReadFile(configFilePath));
-            CATCH_MSG(ExceptionType::ParserError, L"File " + configFilePath + L" exists but not vaild. Please adjust / remove the file and try again")
-        } else {
-            auto workspace = std::make_shared<VPGWorkspaceForm>();
-            workspace->SetName(L"Default");
-            form->InsertWorkspaceForms(workspace);
-            form->SaveConfig();
-        }
-        propertyAccessor->Unlock();
-        // </vcc:VPGMainFormInitializeOnRedo>
-    CATCH_RETURN_RESULT(OperationResult)
-    return std::make_shared<OperationResult>();
-}
-
-VPGMainFormAddWorkspaceForm::VPGMainFormAddWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()
-{
-    _LogConfig = logConfig;
-    _ParentObject = parentForm;
-}
-
-VPGMainFormAddWorkspaceForm::VPGMainFormAddWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm, std::shared_ptr<VPGMainFormAddWorkspaceFormArgument> argument) : BaseAction()
+VPGMainFormAddWorkspaceForm::VPGMainFormAddWorkspaceForm(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm, std::shared_ptr<VPGMainFormAddWorkspaceFormArgument> argument) : vcc::BaseAction()
 {
     _LogConfig = logConfig;
     _ParentObject = parentForm;
@@ -119,7 +62,7 @@ std::wstring VPGMainFormAddWorkspaceForm::GetRedoMessageComplete() const
     return L"";
 }
 
-std::shared_ptr<IResult> VPGMainFormAddWorkspaceForm::OnRedo()
+std::shared_ptr<vcc::IResult> VPGMainFormAddWorkspaceForm::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormAddWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
@@ -132,17 +75,17 @@ std::shared_ptr<IResult> VPGMainFormAddWorkspaceForm::OnRedo()
         form->SaveConfig();
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormAddWorkspaceFormOnRedo>
-    CATCH_RETURN_RESULT(OperationResult)
-    return std::make_shared<OperationResult>();
+    CATCH_RETURN_RESULT(vcc::OperationResult)
+    return std::make_shared<vcc::OperationResult>();
 }
 
-VPGMainFormDeleteWorkspaceForm::VPGMainFormDeleteWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()
+VPGMainFormDeleteWorkspaceForm::VPGMainFormDeleteWorkspaceForm(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm) : vcc::BaseAction()
 {
     _LogConfig = logConfig;
     _ParentObject = parentForm;
 }
 
-VPGMainFormDeleteWorkspaceForm::VPGMainFormDeleteWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm, std::shared_ptr<VPGMainFormDeleteWorkspaceFormArgument> argument) : BaseAction()
+VPGMainFormDeleteWorkspaceForm::VPGMainFormDeleteWorkspaceForm(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm, std::shared_ptr<VPGMainFormDeleteWorkspaceFormArgument> argument) : vcc::BaseAction()
 {
     _LogConfig = logConfig;
     _ParentObject = parentForm;
@@ -169,7 +112,7 @@ std::wstring VPGMainFormDeleteWorkspaceForm::GetRedoMessageComplete() const
     return L"";
 }
 
-std::shared_ptr<IResult> VPGMainFormDeleteWorkspaceForm::OnRedo()
+std::shared_ptr<vcc::IResult> VPGMainFormDeleteWorkspaceForm::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormDeleteWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
@@ -183,17 +126,72 @@ std::shared_ptr<IResult> VPGMainFormDeleteWorkspaceForm::OnRedo()
         form->SaveConfig();
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormDeleteWorkspaceFormOnRedo>
-    CATCH_RETURN_RESULT(OperationResult)
-    return std::make_shared<OperationResult>();
+    CATCH_RETURN_RESULT(vcc::OperationResult)
+    return std::make_shared<vcc::OperationResult>();
 }
 
-VPGMainFormRenameWorkspaceForm::VPGMainFormRenameWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm) : BaseAction()
+VPGMainFormInitialize::VPGMainFormInitialize(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm) : vcc::BaseAction()
 {
     _LogConfig = logConfig;
     _ParentObject = parentForm;
 }
 
-VPGMainFormRenameWorkspaceForm::VPGMainFormRenameWorkspaceForm(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm, std::shared_ptr<VPGMainFormRenameWorkspaceFormArgument> argument) : BaseAction()
+std::wstring VPGMainFormInitialize::GetRedoMessageStart() const
+{
+    TRY
+        // <vcc:VPGMainFormInitializeGetRedoMessageStart sync="RESERVE" gen="RESERVE">
+        return L"VPGMainFormInitialize start";
+        // </vcc:VPGMainFormInitializeGetRedoMessageStart>
+    CATCH
+    return L"";
+}
+
+std::wstring VPGMainFormInitialize::GetRedoMessageComplete() const
+{
+    TRY
+        // <vcc:VPGMainFormInitializeGetRedoMessageComplete sync="RESERVE" gen="RESERVE">
+        return L"VPGMainFormInitialize complete";
+        // </vcc:VPGMainFormInitializeGetRedoMessageComplete>
+    CATCH
+    return L"";
+}
+
+std::shared_ptr<vcc::IResult> VPGMainFormInitialize::OnRedo()
+{
+    TRY
+        // <vcc:VPGMainFormInitializeOnRedo sync="RESERVE" gen="RESERVE">
+        auto propertyAccessor = PropertyAccessorFactory::Create(_ParentObject);
+        propertyAccessor->WriteLock();
+        auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
+        form->TruncateAction();
+        form->ClearWorkspaceForms();
+
+        auto configFilePath = VPGGlobal::GetVCCProjectManagerConfigFileFullPath();
+        if (vcc::IsFilePresent(configFilePath)) {
+            TRY
+                auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
+                jsonBuilder->SetIsBeautify(true);
+                form->DeserializeJsonString(jsonBuilder.get(), vcc::ReadFile(configFilePath));
+            CATCH_MSG(ExceptionType::ParserError, L"File " + configFilePath + L" exists but not vaild. Please adjust / remove the file and try again")
+        } else {
+            auto workspace = std::make_shared<VPGWorkspaceForm>();
+            workspace->SetName(L"Default");
+            form->InsertWorkspaceForms(workspace);
+            form->SaveConfig();
+        }
+        propertyAccessor->Unlock();
+        // </vcc:VPGMainFormInitializeOnRedo>
+    CATCH_RETURN_RESULT(vcc::OperationResult)
+    return std::make_shared<vcc::OperationResult>();
+}
+
+VPGMainFormRenameWorkspaceForm::VPGMainFormRenameWorkspaceForm(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm) : vcc::BaseAction()
+{
+    _LogConfig = logConfig;
+    _ParentObject = parentForm;
+}
+
+VPGMainFormRenameWorkspaceForm::VPGMainFormRenameWorkspaceForm(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm, std::shared_ptr<VPGMainFormRenameWorkspaceFormArgument> argument) : vcc::BaseAction()
 {
     _LogConfig = logConfig;
     _ParentObject = parentForm;
@@ -220,16 +218,16 @@ std::wstring VPGMainFormRenameWorkspaceForm::GetRedoMessageComplete() const
     return L"";
 }
 
-std::shared_ptr<IResult> VPGMainFormRenameWorkspaceForm::OnRedo()
+std::shared_ptr<vcc::IResult> VPGMainFormRenameWorkspaceForm::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormRenameWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormRenameWorkspaceFormOnRedo>
-    CATCH_RETURN_RESULT(OperationResult)
-    return std::make_shared<OperationResult>();
+    CATCH_RETURN_RESULT(vcc::OperationResult)
+    return std::make_shared<vcc::OperationResult>();
 }
 
-VPGMainForm::VPGMainForm() : BaseForm()
+VPGMainForm::VPGMainForm() : vcc::BaseForm()
 {
     TRY
         _ObjectType = ObjectType::MainForm;
@@ -237,21 +235,21 @@ VPGMainForm::VPGMainForm() : BaseForm()
     CATCH
 }
 
-std::shared_ptr<IObject> VPGMainForm::Clone() const
+std::shared_ptr<vcc::IObject> VPGMainForm::Clone() const
 {
     auto obj = std::make_shared<VPGMainForm>(*this);
     obj->CloneWorkspaceForms(this->_WorkspaceForms);
     return obj;
 }
 
-std::shared_ptr<Json> VPGMainForm::ToJson() const
+std::shared_ptr<vcc::Json> VPGMainForm::ToJson() const
 {
     TRY
-        NamingStyle namestyle = NamingStyle::PascalCase;
-        auto json = std::make_unique<Json>();
+        vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
+        auto json = std::make_unique<vcc::Json>();
         // WorkspaceForms
-        auto tmpWorkspaceForms = std::make_shared<Json>();
-        json->AddArray(ConvertNamingStyle(L"WorkspaceForms", NamingStyle::PascalCase, namestyle), tmpWorkspaceForms);
+        auto tmpWorkspaceForms = std::make_shared<vcc::Json>();
+        json->AddArray(vcc::ConvertNamingStyle(L"WorkspaceForms", vcc::NamingStyle::PascalCase, namestyle), tmpWorkspaceForms);
         for (auto const &element : GetWorkspaceForms()) {
             tmpWorkspaceForms->AddArrayObject(element->ToJson());
         }
@@ -260,16 +258,16 @@ std::shared_ptr<Json> VPGMainForm::ToJson() const
     return nullptr;
 }
 
-void VPGMainForm::DeserializeJson(std::shared_ptr<IDocument> document)
+void VPGMainForm::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
 {
     TRY
-        NamingStyle namestyle = NamingStyle::PascalCase;
-        auto json = std::dynamic_pointer_cast<Json>(document);
+        vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
+        auto json = std::dynamic_pointer_cast<vcc::Json>(document);
         assert(json != nullptr);
         // WorkspaceForms
         ClearWorkspaceForms();
-        if (json->IsContainKey(ConvertNamingStyle(L"WorkspaceForms", namestyle, NamingStyle::PascalCase))) {
-            for (auto const &element : json->GetArray(ConvertNamingStyle(L"WorkspaceForms", namestyle, NamingStyle::PascalCase))) {
+        if (json->IsContainKey(vcc::ConvertNamingStyle(L"WorkspaceForms", namestyle, vcc::NamingStyle::PascalCase))) {
+            for (auto const &element : json->GetArray(vcc::ConvertNamingStyle(L"WorkspaceForms", namestyle, vcc::NamingStyle::PascalCase))) {
                 auto tmpWorkspaceForms = std::make_shared<VPGWorkspaceForm>();
                 tmpWorkspaceForms->DeserializeJson(element->GetArrayElementObject());
                 InsertWorkspaceForms(tmpWorkspaceForms);
@@ -281,7 +279,7 @@ void VPGMainForm::DeserializeJson(std::shared_ptr<IDocument> document)
 void VPGMainForm::InitializeComponents()
 {
     TRY
-        BaseForm::InitializeComponents();
+        vcc::BaseForm::InitializeComponents();
         _LogConfig = nullptr;
         _ActionManager = nullptr;
         _ThreadManager = nullptr;
@@ -289,7 +287,7 @@ void VPGMainForm::InitializeComponents()
     CATCH
 }
 
-std::shared_ptr<IResult> VPGMainForm::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument)
+std::shared_ptr<vcc::IResult> VPGMainForm::DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument)
 {
     TRY
         switch(static_cast<VPGMainFormProperty>(formProperty))
@@ -310,7 +308,7 @@ std::shared_ptr<IResult> VPGMainForm::DoAction(const int64_t &formProperty, std:
     return nullptr;
 }
 
-std::shared_ptr<IResult> VPGMainForm::DoInitialize()
+std::shared_ptr<vcc::IResult> VPGMainForm::DoInitialize()
 {
     TRY
         auto action = std::make_shared<VPGMainFormInitialize>(_LogConfig, SharedPtr());
@@ -321,7 +319,7 @@ std::shared_ptr<IResult> VPGMainForm::DoInitialize()
     return nullptr;
 }
 
-std::shared_ptr<IResult> VPGMainForm::DoAddWorkspaceForm(std::shared_ptr<VPGMainFormAddWorkspaceFormArgument> argument)
+std::shared_ptr<vcc::IResult> VPGMainForm::DoAddWorkspaceForm(std::shared_ptr<VPGMainFormAddWorkspaceFormArgument> argument)
 {
     TRY
         auto action = std::make_shared<VPGMainFormAddWorkspaceForm>(_LogConfig, SharedPtr(), argument);
@@ -332,7 +330,7 @@ std::shared_ptr<IResult> VPGMainForm::DoAddWorkspaceForm(std::shared_ptr<VPGMain
     return nullptr;
 }
 
-std::shared_ptr<IResult> VPGMainForm::DoDeleteWorkspaceForm(std::shared_ptr<VPGMainFormDeleteWorkspaceFormArgument> argument)
+std::shared_ptr<vcc::IResult> VPGMainForm::DoDeleteWorkspaceForm(std::shared_ptr<VPGMainFormDeleteWorkspaceFormArgument> argument)
 {
     TRY
         auto action = std::make_shared<VPGMainFormDeleteWorkspaceForm>(_LogConfig, SharedPtr(), argument);
@@ -343,7 +341,7 @@ std::shared_ptr<IResult> VPGMainForm::DoDeleteWorkspaceForm(std::shared_ptr<VPGM
     return nullptr;
 }
 
-std::shared_ptr<IResult> VPGMainForm::DoRenameWorkspaceForm(std::shared_ptr<VPGMainFormRenameWorkspaceFormArgument> argument)
+std::shared_ptr<vcc::IResult> VPGMainForm::DoRenameWorkspaceForm(std::shared_ptr<VPGMainFormRenameWorkspaceFormArgument> argument)
 {
     TRY
         auto action = std::make_shared<VPGMainFormRenameWorkspaceForm>(_LogConfig, SharedPtr(), argument);
@@ -358,9 +356,9 @@ std::shared_ptr<IResult> VPGMainForm::DoRenameWorkspaceForm(std::shared_ptr<VPGM
 void VPGMainForm::SaveConfig() const
 {
     TRY    
-        auto jsonBuilder = std::make_unique<JsonBuilder>();
+        auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
         jsonBuilder->SetIsBeautify(true);
-        WriteFile(VPGGlobal::GetVCCProjectManagerConfigFileFullPath(), SerializeJson(jsonBuilder.get()), true);
+        vcc::WriteFile(VPGGlobal::GetVCCProjectManagerConfigFileFullPath(), SerializeJson(jsonBuilder.get()), true);
     CATCH
 }
 // </vcc:customFunctions>

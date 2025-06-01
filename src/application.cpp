@@ -16,14 +16,12 @@
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
 // </vcc:customHeader>
 
-using namespace vcc;
-
 void Application::InitializeComponents()
 {
     TRY
         // Initialize for Global Log and Thread Setting
-        _LogConfig = std::make_shared<LogConfig>();
-        _ThreadManager = std::make_shared<ThreadManager>(_LogConfig);
+        _LogConfig = std::make_shared<vcc::LogConfig>();
+        _ThreadManager = std::make_shared<vcc::ThreadManager>(_LogConfig);
 
         // <vcc:vccconfig sync="RESERVE" gen="REPLACE">
         _ActionManager = nullptr;
@@ -33,7 +31,7 @@ void Application::InitializeComponents()
     CATCH
 }
 
-std::shared_ptr<IObject> Application::GetFormSharedPtr(IObject *form)
+std::shared_ptr<vcc::IObject> Application::GetFormSharedPtr(vcc::IObject *form)
 {
     TRY
         for (auto tmpForm : application->_Forms) {
@@ -44,7 +42,7 @@ std::shared_ptr<IObject> Application::GetFormSharedPtr(IObject *form)
     return nullptr;
 }
 
-IForm *Application::GetIFormPtrFromIObject(IObject *obj)
+vcc::IForm *Application::GetIFormPtrFromIObject(vcc::IObject *obj)
 {
     TRY
         return static_cast<BaseForm *>(obj);
@@ -52,18 +50,18 @@ IForm *Application::GetIFormPtrFromIObject(IObject *obj)
     return nullptr;
 }
 
-IObject *Application::GetIObjectPtrFromIResult(IResult *obj)
+vcc::IObject *Application::GetIObjectPtrFromIResult(vcc::IResult *obj)
 {
     TRY
-        return static_cast<BaseResult *>(obj);
+        return static_cast<vcc::BaseResult *>(obj);
     CATCH
     return nullptr;
 }
 
-IResult *Application::GetIResultPtrFromIObject(IObject *obj)
+vcc::IResult *Application::GetIResultPtrFromIObject(vcc::IObject *obj)
 {
     TRY
-        return static_cast<BaseResult *>(obj);
+        return static_cast<vcc::BaseResult *>(obj);
     CATCH
     return nullptr;
 }
@@ -76,7 +74,7 @@ void Application::Run()
     CATCH
 }
 
-std::shared_ptr<IObject> Application::CreateForm(const ObjectType &objectType)
+std::shared_ptr<vcc::IObject> Application::CreateForm(const ObjectType &objectType)
 {
     TRY
         auto form = ObjectFactory::Create(objectType);
@@ -88,7 +86,7 @@ std::shared_ptr<IObject> Application::CreateForm(const ObjectType &objectType)
     return nullptr;
 }
 
-int64_t Application::GetResultErrorCode(IObject *result)
+int64_t Application::GetResultErrorCode(vcc::IObject *result)
 {
     TRY
         return static_cast<int64_t>(GetIResultPtrFromIObject(result)->GetExceptionType());
@@ -96,7 +94,7 @@ int64_t Application::GetResultErrorCode(IObject *result)
     return -1;
 }
 
-std::wstring Application::GetResultMessage(IObject *result)
+std::wstring Application::GetResultMessage(vcc::IObject *result)
 {
     TRY
         return GetIResultPtrFromIObject(result)->GetMessage();
@@ -104,7 +102,7 @@ std::wstring Application::GetResultMessage(IObject *result)
     return L"";
 }
 
-bool Application::IsErrorResult(IObject *result)
+bool Application::IsErrorResult(vcc::IObject *result)
 {
     TRY
         return GetIResultPtrFromIObject(result)->IsError();
@@ -112,7 +110,7 @@ bool Application::IsErrorResult(IObject *result)
     return false;
 }
 
-bool Application::IsWarningResult(IObject *result)
+bool Application::IsWarningResult(vcc::IObject *result)
 {
     TRY
         return GetIResultPtrFromIObject(result)->IsWarning();
@@ -120,14 +118,14 @@ bool Application::IsWarningResult(IObject *result)
     return false;
 }
 
-void Application::EraseResult(IObject *result)
+void Application::EraseResult(vcc::IObject *result)
 {
     TRY
         RemoveIObjectAll(application->_Results, result);
     CATCH
 }
 
-std::shared_ptr<IObject> Application::CreateActionArgument(const ObjectType &objectType)
+std::shared_ptr<vcc::IObject> Application::CreateActionArgument(const ObjectType &objectType)
 {
     TRY
         auto actionArgument = ObjectFactory::Create(objectType);
@@ -137,7 +135,7 @@ std::shared_ptr<IObject> Application::CreateActionArgument(const ObjectType &obj
     return nullptr;
 }
 
-std::shared_ptr<IObject> Application::DoFormAction(IObject *form, const int64_t &formProperty, IObject *argument)
+std::shared_ptr<vcc::IObject> Application::DoFormAction(vcc::IObject *form, const int64_t &formProperty, vcc::IObject *argument)
 {
     TRY
         if (form == nullptr)
@@ -152,7 +150,7 @@ std::shared_ptr<IObject> Application::DoFormAction(IObject *form, const int64_t 
     return nullptr;
 }
 
-int64_t Application::GetFormActionCurrentSeqNo(IObject *form)
+int64_t Application::GetFormActionCurrentSeqNo(vcc::IObject *form)
 {
     TRY
         if (form == nullptr)
@@ -162,7 +160,7 @@ int64_t Application::GetFormActionCurrentSeqNo(IObject *form)
     return -1;
 }
 
-int64_t Application::GetFormActionFirstSeqNo(IObject *form)
+int64_t Application::GetFormActionFirstSeqNo(vcc::IObject *form)
 {
     TRY
         if (form == nullptr)
@@ -172,7 +170,7 @@ int64_t Application::GetFormActionFirstSeqNo(IObject *form)
     return -1;
 }
 
-int64_t Application::GetFormActionLastSeqNo(IObject *form)
+int64_t Application::GetFormActionLastSeqNo(vcc::IObject *form)
 {
     TRY
         if (form == nullptr)
@@ -182,7 +180,7 @@ int64_t Application::GetFormActionLastSeqNo(IObject *form)
     return -1;
 }
 
-void Application::RedoFormAction(IObject *form, const int64_t &noOfStep)
+void Application::RedoFormAction(vcc::IObject *form, const int64_t &noOfStep)
 {
     TRY
         if (form == nullptr)
@@ -191,7 +189,7 @@ void Application::RedoFormAction(IObject *form, const int64_t &noOfStep)
     CATCH
 }
 
-void Application::RedoFormActionToSeqNo(IObject *form, const int64_t &seqNo)
+void Application::RedoFormActionToSeqNo(vcc::IObject *form, const int64_t &seqNo)
 {
     TRY
         if (form == nullptr)
@@ -200,7 +198,7 @@ void Application::RedoFormActionToSeqNo(IObject *form, const int64_t &seqNo)
     CATCH
 }
 
-void Application::UndoFormAction(IObject *form, const int64_t &noOfStep)
+void Application::UndoFormAction(vcc::IObject *form, const int64_t &noOfStep)
 {
     TRY
         if (form == nullptr)
@@ -209,7 +207,7 @@ void Application::UndoFormAction(IObject *form, const int64_t &noOfStep)
     CATCH
 }
 
-void Application::UndoFormActionToSeqNo(IObject *form, const int64_t &seqNo)
+void Application::UndoFormActionToSeqNo(vcc::IObject *form, const int64_t &seqNo)
 {
     TRY
         if (form == nullptr)
@@ -218,7 +216,7 @@ void Application::UndoFormActionToSeqNo(IObject *form, const int64_t &seqNo)
     CATCH
 }
 
-int64_t Application::ClearFormAction(IObject *form)
+int64_t Application::ClearFormAction(vcc::IObject *form)
 {
     TRY
         if (form == nullptr)
@@ -228,7 +226,7 @@ int64_t Application::ClearFormAction(IObject *form)
     return -1;
 }
 
-int64_t Application::TruncateFormAction(IObject *form)
+int64_t Application::TruncateFormAction(vcc::IObject *form)
 {
     TRY
         if (form == nullptr)
@@ -238,7 +236,7 @@ int64_t Application::TruncateFormAction(IObject *form)
     return -1;
 }
 
-bool Application::IsFormClosable(IObject *form)
+bool Application::IsFormClosable(vcc::IObject *form)
 {
     if (form == nullptr)
         return true;
@@ -249,7 +247,7 @@ bool Application::IsFormClosable(IObject *form)
     return false;
 }
 
-bool Application::IsFormClosed(IObject *form)
+bool Application::IsFormClosed(vcc::IObject *form)
 {
     TRY
         if (form == nullptr)
@@ -259,7 +257,7 @@ bool Application::IsFormClosed(IObject *form)
     return true;
 }
 
-bool Application::CloseForm(IObject *form, const bool &isForce)
+bool Application::CloseForm(vcc::IObject *form, const bool &isForce)
 {
     if (form == nullptr)
         return true;

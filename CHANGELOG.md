@@ -1,15 +1,19 @@
 # Change Log
 
 ## [Unreleased] - Review - using namespace vcc and naming rules
-- Review using namespace vcc: add vcc:: before function instead of using namespace vcc
 - Git Manager Enhancement
 - Review naming rule: class variable: _PascalCase / variable: camelCase / function name: camelCase / class name: PascalCase / macro names: UPPER_CASE / enum type name: PascalCase / enumerator name: UPPER_CASE / constant name: UPPER_CASE / namespace name: lowercase
+- Remove Action Message, use <typeid> => std::type_info.name() to return message for debug mode
 - TODO: Enum Support custom include files
 - TODO: Export function name to lowercase with underscore
 - TODO: Support Callback in argument
 - TODO: Support Structure
 - TODO: Support Set for GETSET
 - TODO: Review RESERVE and REPLACE tag
+
+### [v0.3.7] - 2025-07-27: Review - Review Namespace
+- Review using namespace vcc: add vcc:: before function instead of using namespace vcc
+- Support namespace in TypeWorkspace
 
 ### [v0.3.6] - 2025-06-01: Review - Review Class Macro
 - Review GETSET_SPTR and MANAGER_SPTR: initialize in class constructor

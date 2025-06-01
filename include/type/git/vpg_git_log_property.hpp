@@ -1,6 +1,6 @@
 #pragma once
 
-// @@Inherit{ "Class": "GitLog" }
+// @@Inherit{ "Class": "vcc::GitLog" }
 enum class VPGGitLogProperty
 {
     ColumnIndex // GETSET(int64_t, ColumnIndex, 0) @@Inherit

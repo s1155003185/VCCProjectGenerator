@@ -779,7 +779,8 @@ namespace vcc
 	}
 	
 	std::wstring GetNextQuotedString(const std::wstring& str, size_t &pos, const std::vector<std::wstring> &delimiters,
-		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
+		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList,
+		const std::vector<std::wstring> &stringOpenList)
 	{
 		if (str.empty())
 			return str;
@@ -790,16 +791,20 @@ namespace vcc
 			GetNextCharPos(str, pos, true);
 			if (!(quoteOpenList.size() == quoteCloseList.size() && (quoteEscapeList.empty() || quoteCloseList.size() == quoteEscapeList.size())))
 				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Quote Open, Close, Escape List having different size.");
+			if (!IsContain(quoteOpenList, stringOpenList))
+				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Quote Open does not contained String Open List.");
 
 			size_t startPos = pos;
 			if (IsStartWith(str, quoteOpenList, pos)) {
 				std::vector<size_t> quotes;
+				bool isInString = false;
 				while (pos < str.length()) {
 					// first pos must be open quote
 					// if quotes become empty, that mean all quote closed, then return
-					// 1. if have quotes, check if it is escape chars
-					// 2. if have quotes, check if it is close quote
-					// 3. check if it is open quotes, if yes, then add to quote
+					// 1. if have string, skip all content in string until string close
+					// 2. if have quotes, check if it is escape chars
+					// 3. if have quotes, check if it is close quote
+					// 4. check if it is open quotes, if yes, then add to quote
 					// Last. None of above, then pos++
 					if (!quotes.empty()) {
 						if (!quoteEscapeList.empty()) {
@@ -814,18 +819,29 @@ namespace vcc
 						if (!closeQuote.empty() && IsStartWith(str, closeQuote, pos)) {
 							pos += closeQuote.length();
 							quotes.pop_back();
+							isInString = false;
 							if (quotes.empty())
 								break;
 							continue;
 						}
 					}
 					std::wstring currentQuoteOpen = L"";
-					for (size_t i = 0; i < quoteOpenList.size(); i++) {
-						std::wstring quoteOpen = quoteOpenList[i];
-						if (IsStartWith(str, quoteOpen, pos)) {
-							currentQuoteOpen = quoteOpen;
-							quotes.push_back(i);
-							break;
+					if (!isInString) {
+						for (size_t i = 0; i < quoteOpenList.size(); i++) {
+							std::wstring quoteOpen = quoteOpenList[i];
+							if (IsStartWith(str, quoteOpen, pos)) {
+								currentQuoteOpen = quoteOpen;
+								quotes.push_back(i);
+	
+								for (size_t i = 0; i < stringOpenList.size(); i++) {
+									std::wstring quoteOpen = stringOpenList[i];
+									if (IsStartWith(str, quoteOpen, pos)) {
+										isInString = true;
+										break;
+									}
+								}
+								break;
+							}
 						}
 					}
 					if (!currentQuoteOpen.empty())

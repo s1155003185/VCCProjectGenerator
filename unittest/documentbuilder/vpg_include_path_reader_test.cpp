@@ -7,8 +7,6 @@
 #include "string_helper.hpp"
 #include "vpg_include_path_reader.hpp"
 
-using namespace vcc;
-
 TEST(VPGIncludePathReaderTest, Normal)
 {
     auto reader = std::make_unique<VPGIncludePathReader>();
@@ -48,7 +46,7 @@ TEST(VPGIncludePathReaderTest, Normal)
         L"typedef aaa bbb;\r\n"
         L"}\r\n"
         // class inherit
-        L"class Json : public BaseDocument<Json>\r\n"
+        L"class Json : public BaseDocument<vcc::Json>\r\n"
         L"{};\r\n"
         // typedef
         L"typedef aaa bbb;\r\n"
@@ -68,7 +66,7 @@ TEST(VPGIncludePathReaderTest, Normal)
         L"int abc (...);\r\n"
         L"}\r\n";
     std::set<std::wstring> classList;
-    reader->Parse(PlatformType::NA, code, classList);
+    reader->Parse(vcc::PlatformType::NA, code, classList);
 
     std::set<std::wstring> resultList;
     resultList.insert(L"vcc::type");
@@ -115,12 +113,12 @@ TEST(VPGIncludePathReaderTest, Normal)
 //         L"*/\r\n"
 //         L"#endif\r\n";
 //     std::set<std::wstring> classList;
-//     reader->Parse(PlatformType::MacOs, code, classList);
+//     reader->Parse(vcc::PlatformType::MacOs, code, classList);
 
 //     std::set<std::wstring> resultList;
 //     resultList.insert(L"std::basic_string");
-//     resultList.insert(L"std::string");
-//     resultList.insert(L"std::wstring");
+//     resultList.insert(L"string");
+//     resultList.insert(L"wstring");
 //     resultList.insert(L"std::u8string");
 //     resultList.insert(L"std::u16string");
 //     resultList.insert(L"std::u32string");
@@ -147,12 +145,12 @@ TEST(VPGIncludePathReaderTest, Normal)
 //         // L"_STD_END\r\n";
     
 //     std::set<std::wstring> classList;
-//     reader->Parse(PlatformType::Window, code, classList);
+//     reader->Parse(vcc::PlatformType::Window, code, classList);
 
 //     std::set<std::wstring> resultList;
 //     resultList.insert(L"std::basic_string");
-//     resultList.insert(L"std::wstring");
-//     resultList.insert(L"std::string");
+//     resultList.insert(L"wstring");
+//     resultList.insert(L"string");
 //     EXPECT_EQ(classList, resultList);
 // }
 
@@ -162,7 +160,7 @@ TEST(VPGIncludePathReaderTest, Normal)
 //     DECLARE_UPTR(VPGIncludePathReader, reader); 
 //     std::wstring code = L"";
 //     std::set<std::wstring> classList;
-//     reader->Parse(PlatformType::Linux, code, classList);
+//     reader->Parse(vcc::PlatformType::Linux, code, classList);
 
 //     std::set<std::wstring> resultList;
 //     EXPECT_EQ(classList, resultList);

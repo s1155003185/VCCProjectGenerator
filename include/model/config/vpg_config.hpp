@@ -12,9 +12,7 @@
 #include "vpg_config_type.hpp"
 #include "vpg_project_type.hpp"
 
-using namespace vcc;
-
-class VPGConfigTemplate : public BaseObject, public BaseJsonObject
+class VPGConfigTemplate : public vcc::BaseObject, public vcc::BaseJsonObject
 {
     GETSET(std::wstring, Url, L"")
     GETSET(std::wstring, Workspace, L"")
@@ -22,54 +20,54 @@ class VPGConfigTemplate : public BaseObject, public BaseJsonObject
     GETSET(bool, IsExcludeVCCUnitTest, false)
 
     public:
-        VPGConfigTemplate() : BaseObject(ObjectType::ConfigTemplate) {}
+        VPGConfigTemplate() : vcc::BaseObject(ObjectType::ConfigTemplate) {}
         virtual ~VPGConfigTemplate() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             return std::make_shared<VPGConfigTemplate>(*this);
         }
 
-        virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
+        virtual std::shared_ptr<vcc::Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 };
 
-class VPGConfigBehavior : public BaseObject, public BaseJsonObject
+class VPGConfigBehavior : public vcc::BaseObject, public vcc::BaseJsonObject
 {
     GETSET(VPGConfigActionHistoryType, ActionHistoryType, VPGConfigActionHistoryType::NoHistory)
     GETSET(bool, IsActionResultThrowException, false)
 
     public:
-        VPGConfigBehavior() : BaseObject(ObjectType::ConfigBehavior) {}
+        VPGConfigBehavior() : vcc::BaseObject(ObjectType::ConfigBehavior) {}
         virtual ~VPGConfigBehavior() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             return std::make_shared<VPGConfigBehavior>(*this);
         }
 
-        virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
+        virtual std::shared_ptr<vcc::Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 };
 
-class VPGConfigInput : public BaseObject, public BaseJsonObject
+class VPGConfigInput : public vcc::BaseObject, public vcc::BaseJsonObject
 {
     GETSET(std::wstring, TypeWorkspace, L"include/type")
 
     public:
-        VPGConfigInput() : BaseObject(ObjectType::ConfigInput) {}
+        VPGConfigInput() : vcc::BaseObject(ObjectType::ConfigInput) {}
         virtual ~VPGConfigInput() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             return std::make_shared<VPGConfigInput>(*this);
         }
 
-        virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
+        virtual std::shared_ptr<vcc::Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 };
 
-class VPGConfigOutput : public BaseObject, public BaseJsonObject
+class VPGConfigOutput : public vcc::BaseObject, public vcc::BaseJsonObject
 {
     GETSET(std::wstring, ExceptionTypeDirectory, L"include/type")
     GETSET(std::wstring, ObjectTypeDirectory, L"include/type")
@@ -89,19 +87,19 @@ class VPGConfigOutput : public BaseObject, public BaseJsonObject
     GETSET(std::wstring, PropertyAccessorFactoryDirectoryCpp, L"src/factory")
 
     public:
-        VPGConfigOutput() : BaseObject(ObjectType::ConfigOutput) {}
+        VPGConfigOutput() : vcc::BaseObject(ObjectType::ConfigOutput) {}
         virtual ~VPGConfigOutput() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             return std::make_shared<VPGConfigOutput>(*this);
         }
 
-        virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
+        virtual std::shared_ptr<vcc::Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 };
 
-class VPGConfigExport : public BaseObject, public BaseJsonObject
+class VPGConfigExport : public vcc::BaseObject, public vcc::BaseJsonObject
 {
     GETSET(VPGConfigInterfaceType, Interface, VPGConfigInterfaceType::Java)
     GETSET(std::wstring, Workspace, L"../JavaProject")
@@ -114,19 +112,19 @@ class VPGConfigExport : public BaseObject, public BaseJsonObject
     GETSET(std::wstring, TypeDirectory, L"src/main/java/com/package/type")
 
     public:
-        VPGConfigExport() : BaseObject(ObjectType::ConfigExport) {}
+        VPGConfigExport() : vcc::BaseObject(ObjectType::ConfigExport) {}
         virtual ~VPGConfigExport() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             return std::make_shared<VPGConfigExport>(*this);
         }
 
-        virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
+        virtual std::shared_ptr<vcc::Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 };
 
-class VPGConfig : public BaseObject, public BaseJsonObject
+class VPGConfig : public vcc::BaseObject, public vcc::BaseJsonObject
 {
     GETSET(std::wstring, Version, L"v0.0.1")
     GETSET(VPGProjectType, ProjectType, VPGProjectType::VccModule)
@@ -136,14 +134,37 @@ class VPGConfig : public BaseObject, public BaseJsonObject
     GETSET(std::wstring, ProjectNameExe, L"VCCModule")
     GETSET(bool, IsGit, false)
     GETSET_SPTR(VPGConfigTemplate, Template)
+    GETCUSTOM(std::wstring, TemplateUrl, return this->GetTemplate() != nullptr ? this->GetTemplate()->GetUrl() : std::make_shared<VPGConfigTemplate>()->GetUrl();)
+    GETCUSTOM(std::wstring, TemplateWorkspace, return this->GetTemplate() != nullptr ? this->GetTemplate()->GetWorkspace() : std::make_shared<VPGConfigTemplate>()->GetWorkspace();)
+    GETCUSTOM(bool, TemplateIsExcludeUnittest, return this->GetTemplate() != nullptr ? this->GetTemplate()->GetIsExcludeUnittest() : std::make_shared<VPGConfigTemplate>()->GetIsExcludeUnittest();)
+    GETCUSTOM(bool, TemplateIsExcludeVCCUnitTest, return this->GetTemplate() != nullptr ? this->GetTemplate()->GetIsExcludeVCCUnitTest() : std::make_shared<VPGConfigTemplate>()->GetIsExcludeVCCUnitTest();)
     GETSET_SPTR(VPGConfigBehavior, Behavior)
+    GETCUSTOM(VPGConfigActionHistoryType, BehaviorActionHistoryType, return this->GetBehavior() != nullptr ? this->GetBehavior()->GetActionHistoryType() : std::make_shared<VPGConfigBehavior>()->GetActionHistoryType();)
+    GETCUSTOM(bool, BehaviorIsActionResultThrowException, return this->GetBehavior() != nullptr ? this->GetBehavior()->GetIsActionResultThrowException() : std::make_shared<VPGConfigBehavior>()->GetIsActionResultThrowException();)
     GETSET_SPTR(VPGConfigInput, Input)
+    GETCUSTOM(std::wstring, InputTypeWorkspace, return this->GetInput() != nullptr ? this->GetInput()->GetTypeWorkspace() : std::make_shared<VPGConfigInput>()->GetTypeWorkspace();)
     GETSET_SPTR(VPGConfigOutput, Output)
+    GETCUSTOM(std::wstring, OutputExceptionTypeDirectory, return this->GetOutput() != nullptr ? this->GetOutput()->GetExceptionTypeDirectory() : std::make_shared<VPGConfigOutput>()->GetExceptionTypeDirectory();)
+    GETCUSTOM(std::wstring, OutputObjectTypeDirectory, return this->GetOutput() != nullptr ? this->GetOutput()->GetObjectTypeDirectory() : std::make_shared<VPGConfigOutput>()->GetObjectTypeDirectory();)
+    GETCUSTOM(std::wstring, OutputApplicationDirectoryHpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetApplicationDirectoryHpp() : std::make_shared<VPGConfigOutput>()->GetApplicationDirectoryHpp();)
+    GETCUSTOM(std::wstring, OutputApplicationDirectoryCpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetApplicationDirectoryCpp() : std::make_shared<VPGConfigOutput>()->GetApplicationDirectoryCpp();)
+    GETCUSTOM(std::wstring, OutputActionDirectoryHpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetActionDirectoryHpp() : std::make_shared<VPGConfigOutput>()->GetActionDirectoryHpp();)
+    GETCUSTOM(std::wstring, OutputActionDirectoryCpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetActionDirectoryCpp() : std::make_shared<VPGConfigOutput>()->GetActionDirectoryCpp();)
+    GETCUSTOM(std::wstring, OutputFormDirectoryHpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetFormDirectoryHpp() : std::make_shared<VPGConfigOutput>()->GetFormDirectoryHpp();)
+    GETCUSTOM(std::wstring, OutputFormDirectoryCpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetFormDirectoryCpp() : std::make_shared<VPGConfigOutput>()->GetFormDirectoryCpp();)
+    GETCUSTOM(std::wstring, OutputObjectDirectoryHpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetObjectDirectoryHpp() : std::make_shared<VPGConfigOutput>()->GetObjectDirectoryHpp();)
+    GETCUSTOM(std::wstring, OutputObjectDirectoryCpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetObjectDirectoryCpp() : std::make_shared<VPGConfigOutput>()->GetObjectDirectoryCpp();)
+    GETCUSTOM(std::wstring, OutputPropertyAccessorDirectoryHpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetPropertyAccessorDirectoryHpp() : std::make_shared<VPGConfigOutput>()->GetPropertyAccessorDirectoryHpp();)
+    GETCUSTOM(std::wstring, OutputPropertyAccessorDirectoryCpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetPropertyAccessorDirectoryCpp() : std::make_shared<VPGConfigOutput>()->GetPropertyAccessorDirectoryCpp();)
+    GETCUSTOM(std::wstring, OutputObjectFactoryDirectoryHpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetObjectFactoryDirectoryHpp() : std::make_shared<VPGConfigOutput>()->GetObjectFactoryDirectoryHpp();)
+    GETCUSTOM(std::wstring, OutputObjectFactoryDirectoryCpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetObjectFactoryDirectoryCpp() : std::make_shared<VPGConfigOutput>()->GetObjectFactoryDirectoryCpp();)
+    GETCUSTOM(std::wstring, OutputPropertyAccessorFactoryDirectoryHpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetPropertyAccessorFactoryDirectoryHpp() : std::make_shared<VPGConfigOutput>()->GetPropertyAccessorFactoryDirectoryHpp();)
+    GETCUSTOM(std::wstring, OutputPropertyAccessorFactoryDirectoryCpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetPropertyAccessorFactoryDirectoryCpp() : std::make_shared<VPGConfigOutput>()->GetPropertyAccessorFactoryDirectoryCpp();)
     VECTOR(std::wstring, Plugins)
     VECTOR_SPTR(VPGConfigExport, Exports)
 
     public:
-        VPGConfig() : BaseObject(ObjectType::Config)
+        VPGConfig() : vcc::BaseObject(ObjectType::Config)
         {
             _Template = std::make_shared<VPGConfigTemplate>();
             _Behavior = std::make_shared<VPGConfigBehavior>();
@@ -153,7 +174,7 @@ class VPGConfig : public BaseObject, public BaseJsonObject
 
         virtual ~VPGConfig() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             auto obj = std::make_shared<VPGConfig>(*this);
             obj->CloneBehavior(this->_Behavior.get());
@@ -164,6 +185,6 @@ class VPGConfig : public BaseObject, public BaseJsonObject
             return obj;
         }
 
-        virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
+        virtual std::shared_ptr<vcc::Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 };

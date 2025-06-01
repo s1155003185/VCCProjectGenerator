@@ -10,6 +10,8 @@ enum class ObjectType
     , ConfigInput
     , ConfigOutput
     , ConfigTemplate
+    , EnumClass
+    , EnumClassAttribute
     , GitForm
     , GitLog
     , MainForm

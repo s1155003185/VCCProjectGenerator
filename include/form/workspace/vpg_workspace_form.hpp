@@ -16,9 +16,7 @@
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
 // </vcc:customHeader>
 
-using namespace vcc;
-
-class VPGWorkspaceForm : public BaseForm, public BaseJsonObject
+class VPGWorkspaceForm : public vcc::BaseForm, public vcc::BaseJsonObject
 {
     GETSET(std::wstring, Name, L"")
     GETSET(int64_t, TabOrder, -1)
@@ -39,14 +37,14 @@ class VPGWorkspaceForm : public BaseForm, public BaseJsonObject
         VPGWorkspaceForm();
         virtual ~VPGWorkspaceForm() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override;
+        virtual std::shared_ptr<vcc::IObject> Clone() const override;
 
-        virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
+        virtual std::shared_ptr<vcc::Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 
         virtual void InitializeComponents() override;
 
-        virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;
+        virtual std::shared_ptr<vcc::IResult> DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;
 
         // <vcc:customVPGWorkspaceFormPublicFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGWorkspaceFormPublicFunctions>

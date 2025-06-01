@@ -10,8 +10,6 @@
 #include "vpg_global.hpp"
 #include "vpg_process_manager.hpp"
 
-using namespace vcc;
-
 class VPGProcessManagerTest : public testing::Test 
 {
     MANAGER_SPTR_NULL(VPGProcessManager, Manager);
@@ -24,7 +22,7 @@ class VPGProcessManagerTest : public testing::Test
 
         void SetUp() override
         {
-            //auto logConfig = std::make_shared<LogConfig>(LogConfigType::None);
+            //auto logConfig = std::make_shared<vcc::LogConfig>(LogConfigType::None);
             //logConfig->SetIsConsoleLog(true);
             //this->_Manager->SetLogConfig(logConfig);
             _Manager = std::make_shared<VPGProcessManager>(nullptr);

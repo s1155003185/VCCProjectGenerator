@@ -17,8 +17,6 @@
 #include "vpg_project_type.hpp"
 #include "vpg_vcc_generation_manager.hpp"
 
-using namespace vcc;
-
 void VPGProcessManager::InitLogConfig()
 {
     if (this->_LogConfig != nullptr)
@@ -31,22 +29,22 @@ void VPGProcessManager::VerifyLocalResponse()
         // 1. Check if source file exists, if not exist then clone
         // 2. Check if version != branch, then checkout
         // std::wstring localResponseDirectory = VPGGlobal::GetConvertedPath(_Option->GetWorkspace());
-        // if (IsBlank(localResponseDirectory))
+        // if (vcc::IsBlank(localResponseDirectory))
         //     localResponseDirectory = VPGGlobal::GetConvertedPath(VPGGlobal::GetVccLocalResponseFolder());
         std::wstring localResponseDirectoryBase = VPGGlobal::GetConvertedPath(VPGGlobal::GetVccLocalResponseFolder());
         std::wstring localResponseDirectoryProject = VPGGlobal::GetConvertedPath(VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType()));
         std::wstring gitUrl = _Option->GetTemplate() != nullptr ? _Option->GetTemplate()->GetUrl() : L"";
 
-        LogService::LogInfo(this->GetLogConfig().get(), L"", L"Check VCC Local response existance: " + localResponseDirectoryProject);
+        vcc::LogService::LogInfo(this->GetLogConfig().get(), L"", L"Check VCC Local response existance: " + localResponseDirectoryProject);
         bool isNeedToCloneGitResponse = false;
-        if (IsDirectoryExists(localResponseDirectoryProject)) {
-            if (GitService::IsGitResponse(this->GetLogConfig().get(), localResponseDirectoryProject)) {
-                LogService::LogInfo(this->GetLogConfig().get(), L"", L"Done.");
+        if (vcc::IsDirectoryExists(localResponseDirectoryProject)) {
+            if (vcc::GitService::IsGitResponse(this->GetLogConfig().get(), localResponseDirectoryProject)) {
+                vcc::LogService::LogInfo(this->GetLogConfig().get(), L"", L"Done.");
 
                 // Cannot push for tag
                 try
                 {            
-                    GitService::Pull(this->GetLogConfig().get(), localResponseDirectoryProject);
+                    vcc::GitService::Pull(this->GetLogConfig().get(), localResponseDirectoryProject);
                 }
                 catch(...)
                 {
@@ -55,83 +53,83 @@ void VPGProcessManager::VerifyLocalResponse()
                     || _Option->GetProjectType() == VPGProjectType::VccDll
                     || _Option->GetProjectType() == VPGProjectType::VccExe) {
 
-                    LogService::LogInfo(this->GetLogConfig().get(), L"", L"Check Version.");
+                    vcc::LogService::LogInfo(this->GetLogConfig().get(), L"", L"Check Version.");
                     // check tag version
                     // if same as current version of generator, no action
                     // if not same, then check verison of genertor exists, if not exists, then master, else switch to correct branch
-                    auto currentLog = GitService::GetCurrentLog(this->GetLogConfig().get(), localResponseDirectoryProject);
-                    if (!IsContain(currentLog->GetTags(), VPGGlobal::GetVersion())) {
+                    auto currentLog = vcc::GitService::GetCurrentLog(this->GetLogConfig().get(), localResponseDirectoryProject);
+                    if (!vcc::IsContain(currentLog->GetTags(), VPGGlobal::GetVersion())) {
                         std::wstring currentBranchName = L"";
                         TRY
-                            auto currentTag = GitService::GetCurrentTag(this->GetLogConfig().get(), localResponseDirectoryProject);
-                            if (IsBlank(currentTag->GetTagName()))
-                                currentBranchName = GitService::GetCurrentBranchName(this->GetLogConfig().get(), localResponseDirectoryProject);
+                            auto currentTag = vcc::GitService::GetCurrentTag(this->GetLogConfig().get(), localResponseDirectoryProject);
+                            if (vcc::IsBlank(currentTag->GetTagName()))
+                                currentBranchName = vcc::GitService::GetCurrentBranchName(this->GetLogConfig().get(), localResponseDirectoryProject);
                         CATCH_SLIENT
                         // If version is main and current tag version not exists, then no switch
                         std::wstring mainBranch = L"main";
-                        std::vector<std::wstring> allTags = GitService::GetTags(this->GetLogConfig().get(), localResponseDirectoryProject);
-                        if (currentBranchName == L"main" && !IsContain(allTags, VPGGlobal::GetVersion())) {
-                            LogService::LogInfo(this->GetLogConfig().get(), L"", L"Currently in main branch and " + VPGGlobal::GetVersion() + L" is not found. Keep in main branch.");
+                        std::vector<std::wstring> allTags = vcc::GitService::GetTags(this->GetLogConfig().get(), localResponseDirectoryProject);
+                        if (currentBranchName == L"main" && !vcc::IsContain(allTags, VPGGlobal::GetVersion())) {
+                            vcc::LogService::LogInfo(this->GetLogConfig().get(), L"", L"Currently in main branch and " + VPGGlobal::GetVersion() + L" is not found. Keep in main branch.");
                         } else {
                             isNeedToCloneGitResponse = true;
-                            LogService::LogInfo(this->GetLogConfig().get(), L"", L"Outdated.");
+                            vcc::LogService::LogInfo(this->GetLogConfig().get(), L"", L"Outdated.");
                         }
                     }
                 }
             } else {
                 isNeedToCloneGitResponse = true;
-                LogService::LogInfo(this->GetLogConfig().get(), L"", localResponseDirectoryProject + L" already exists.");
+                vcc::LogService::LogInfo(this->GetLogConfig().get(), L"", localResponseDirectoryProject + L" already exists.");
             }            
         } else {
             isNeedToCloneGitResponse = true;
-            LogService::LogInfo(this->GetLogConfig().get(), L"", localResponseDirectoryProject + L" not Exists.");
+            vcc::LogService::LogInfo(this->GetLogConfig().get(), L"", localResponseDirectoryProject + L" not Exists.");
         }
         if (isNeedToCloneGitResponse) {
             // Try to drop and create
             // Note: Window version will hold folder for a while because of some threads of project have not been terminated. Cannot use drop create
             try
             {
-                if (IsDirectoryExists(localResponseDirectoryProject)) {
-                    LogService::LogInfo(this->GetLogConfig().get(), L"", L"Remove current response.");
-                    RemoveDirectory(localResponseDirectoryProject);
-                    LogService::LogInfo(this->GetLogConfig().get(), L"", L"Done.");
+                if (vcc::IsDirectoryExists(localResponseDirectoryProject)) {
+                    vcc::LogService::LogInfo(this->GetLogConfig().get(), L"", L"Remove current response.");
+                    vcc::RemoveDirectory(localResponseDirectoryProject);
+                    vcc::LogService::LogInfo(this->GetLogConfig().get(), L"", L"Done.");
                 }
             }
             catch(const std::exception& e)
             {
                 std::string msg(e.what());
-                LogService::LogWarning(this->GetLogConfig().get(), L"", str2wstr(msg));
+                vcc::LogService::LogWarning(this->GetLogConfig().get(), L"", vcc::str2wstr(msg));
             }
             try
             {            
-                LogService::LogInfo(this->GetLogConfig().get(), L"", L"Clone from " + gitUrl);
-                GitCloneOption cloneOption;
+                vcc::LogService::LogInfo(this->GetLogConfig().get(), L"", L"Clone from " + gitUrl);
+                vcc::GitCloneOption cloneOption;
                 cloneOption.SetIsQuiet(true);
-                GitService::CloneGitResponse(this->GetLogConfig().get(), localResponseDirectoryBase, gitUrl, &cloneOption);
-                LogService::LogInfo(this->GetLogConfig().get(), L"", L"Done.");
+                vcc::GitService::CloneGitResponse(this->GetLogConfig().get(), localResponseDirectoryBase, gitUrl, &cloneOption);
+                vcc::LogService::LogInfo(this->GetLogConfig().get(), L"", L"Done.");
             }
             catch(const std::exception& e)
             {
                 std::string msg(e.what());
-                LogService::LogWarning(this->GetLogConfig().get(), L"", str2wstr(msg));
+                vcc::LogService::LogWarning(this->GetLogConfig().get(), L"", vcc::str2wstr(msg));
             }
             
             // Switch to correct version
-            LogService::LogInfo(this->GetLogConfig().get(), L"", L"Switch to current version " + VPGGlobal::GetVersion());
+            vcc::LogService::LogInfo(this->GetLogConfig().get(), L"", L"Switch to current version " + VPGGlobal::GetVersion());
             try
             {
-                GitService::Switch(this->GetLogConfig().get(), localResponseDirectoryProject, VPGGlobal::GetVersion());
-                LogService::LogInfo(this->GetLogConfig().get(), L"", L"Done.");
+                vcc::GitService::Switch(this->GetLogConfig().get(), localResponseDirectoryProject, VPGGlobal::GetVersion());
+                vcc::LogService::LogInfo(this->GetLogConfig().get(), L"", L"Done.");
             }
             catch(const std::exception& e)
             {
                 try {
-                    LogService::LogError(this->GetLogConfig().get(), L"", L"VCC Project Generator version Not Exists. Switch to main");
-                    GitService::Switch(this->GetLogConfig().get(), localResponseDirectoryProject, L"main");
-                    GitService::Pull(this->GetLogConfig().get(), localResponseDirectoryProject);
-                    LogService::LogInfo(this->GetLogConfig().get(), L"", L"Done.");
+                    vcc::LogService::LogError(this->GetLogConfig().get(), L"", L"VCC Project Generator version Not Exists. Switch to main");
+                    vcc::GitService::Switch(this->GetLogConfig().get(), localResponseDirectoryProject, L"main");
+                    vcc::GitService::Pull(this->GetLogConfig().get(), localResponseDirectoryProject);
+                    vcc::LogService::LogInfo(this->GetLogConfig().get(), L"", L"Done.");
                 } catch (const std::exception &e) {
-                    LogService::LogWarning(this->GetLogConfig().get(), L"", str2wstr(e.what()));
+                    vcc::LogService::LogWarning(this->GetLogConfig().get(), L"", vcc::str2wstr(e.what()));
                 }
             }
         }
@@ -207,7 +205,7 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
 
     this->InitLogConfig();
 
-    _Workspace = GetCurrentFolderPath();
+    _Workspace = vcc::GetCurrentFolderPath();
     try {
         std::wstring mode = cmds[1];
         if (mode == L"-Version") {
@@ -221,11 +219,11 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
         
         for (size_t i = 2; i < cmds.size(); i++) {
             std::wstring cmd = cmds[i];
-            if (!IsStartWith(cmd, L"-")) {
+            if (!vcc::IsStartWith(cmd, L"-")) {
                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Argument missing - for " + cmd);
             }
             // single tag
-            if (!IsStartWith(cmd, L"--")) {
+            if (!vcc::IsStartWith(cmd, L"--")) {
                 // must have second argument
                 if (i + 1 < cmds.size()) {
                     i++;
@@ -233,22 +231,22 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
                     if (cmd == L"-workspace-destination") {
                         _Workspace = cmd2;
                     } else if (cmd == L"-interface") {
-                        ToUpper(cmd2);
-                        if (IsStartWith(cmd2, L"CPP")) {
-                            if (IsEndWith(cmd2, L"DLL"))
+                        vcc::ToUpper(cmd2);
+                        if (vcc::IsStartWith(cmd2, L"CPP")) {
+                            if (vcc::IsEndWith(cmd2, L"DLL"))
                                 _Option->SetProjectType(VPGProjectType::CppDll);
-                            else if (IsEndWith(cmd2, L"EXE"))
+                            else if (vcc::IsEndWith(cmd2, L"EXE"))
                                 _Option->SetProjectType(VPGProjectType::CppExe);
-                            else if (IsEndWith(cmd2, L"COMPLEX"))
+                            else if (vcc::IsEndWith(cmd2, L"COMPLEX"))
                                 _Option->SetProjectType(VPGProjectType::CppComplex);
                             else
                                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknown argument " + cmd2);
-                        } else if (IsStartWith(cmd2, L"VCC")) {
-                            if (IsEndWith(cmd2, L"DLL"))
+                        } else if (vcc::IsStartWith(cmd2, L"VCC")) {
+                            if (vcc::IsEndWith(cmd2, L"DLL"))
                                 _Option->SetProjectType(VPGProjectType::VccDll);
-                            else if (IsEndWith(cmd2, L"EXE"))
+                            else if (vcc::IsEndWith(cmd2, L"EXE"))
                                 _Option->SetProjectType(VPGProjectType::VccExe);
-                            else if (IsEndWith(cmd2, L"COMPLEX"))
+                            else if (vcc::IsEndWith(cmd2, L"COMPLEX"))
                                 _Option->SetProjectType(VPGProjectType::VccComplex);
                             else
                                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknown argument " + cmd2);
@@ -300,19 +298,19 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
             if (this->_Option->GetProjectType() == VPGProjectType::VccModule)
                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Interface Type missing.");
         } else {
-            std::wstring vccJsonFilePath = ConcatPaths({_Workspace, VPGGlobal::GetVccJsonFileName()});
-            if (!IsFilePresent(vccJsonFilePath))
+            std::wstring vccJsonFilePath = vcc::ConcatPaths({_Workspace, VPGGlobal::GetVccJsonFileName()});
+            if (!vcc::IsFilePresent(vccJsonFilePath))
                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, vccJsonFilePath + L": File not found.");
-            std::wstring fileContent = ReadFile(vccJsonFilePath);
-            auto jsonBuilder = std::make_unique<JsonBuilder>();
-            auto json = std::make_shared<Json>();
+            std::wstring fileContent = vcc::ReadFile(vccJsonFilePath);
+            auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
+            auto json = std::make_shared<vcc::Json>();
             jsonBuilder->Deserialize(fileContent, json);
             _Option->DeserializeJson(json);
             _Option->SetProjectType(VPGProjectType::VccComplex);
         }
 
-        std::wstring localResponseDirectory = _Option->GetTemplate() != nullptr && !IsBlank(_Option->GetTemplate()->GetWorkspace()) ? _Option->GetTemplate()->GetWorkspace() : VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType());
-        std::wstring gitUrl = _Option->GetTemplate() != nullptr && !IsBlank(_Option->GetTemplate()->GetUrl()) ? _Option->GetTemplate()->GetUrl() : VPGGlobal::GetProjecURL(_Option->GetProjectType());
+        std::wstring localResponseDirectory = _Option->GetTemplate() != nullptr && !vcc::IsBlank(_Option->GetTemplate()->GetWorkspace()) ? _Option->GetTemplate()->GetWorkspace() : VPGGlobal::GetVccProjectLocalResponseDirectory(_Option->GetProjectType());
+        std::wstring gitUrl = _Option->GetTemplate() != nullptr && !vcc::IsBlank(_Option->GetTemplate()->GetUrl()) ? _Option->GetTemplate()->GetUrl() : VPGGlobal::GetProjecURL(_Option->GetProjectType());
         _Option->GetTemplate()->SetWorkspace(localResponseDirectory);
         _Option->GetTemplate()->SetUrl(gitUrl);
 
@@ -325,7 +323,7 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
         else
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknow Mode " + mode);
         
-        LogService::LogInfo(this->_LogConfig.get(), L"VPGProcessManager", L"Process Complete Successfully!");
+        vcc::LogService::LogInfo(this->_LogConfig.get(), L"VPGProcessManager", L"Process Complete Successfully!");
     } catch (const std::exception &e) {
         THROW_EXCEPTION(e);
     }

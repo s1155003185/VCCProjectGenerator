@@ -11,8 +11,6 @@
 #include "vpg_main_form_property.hpp"
 #include "vpg_workspace_form.hpp"
 
-using namespace vcc;
-
 std::wstring VPGMainFormAddWorkspaceFormArgumentPropertyAccessor::_ReadString(const int64_t &objectProperty) const
 {
     TRY
@@ -82,7 +80,7 @@ void VPGMainFormAddWorkspaceFormArgumentPropertyAccessor::_InsertStringAtIndex(c
     CATCH
 }
 
-std::shared_ptr<IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_ReadObject(const int64_t &objectProperty) const
+std::shared_ptr<vcc::IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_ReadObject(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGMainFormDeleteWorkspaceFormArgument>(_Object);
@@ -90,7 +88,7 @@ std::shared_ptr<IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor:
         switch(static_cast<VPGMainFormDeleteWorkspaceFormArgumentProperty>(objectProperty))
         {
         case VPGMainFormDeleteWorkspaceFormArgumentProperty::WorkspaceForm:
-            return std::static_pointer_cast<IObject>(obj->GetWorkspaceForm());
+            return std::static_pointer_cast<vcc::IObject>(obj->GetWorkspaceForm());
         default:
             assert(false);
         }
@@ -98,7 +96,7 @@ std::shared_ptr<IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor:
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_ReadObjectAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+std::shared_ptr<vcc::IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_ReadObjectAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -106,7 +104,7 @@ std::shared_ptr<IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor:
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_ReadObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::shared_ptr<vcc::IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_ReadObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -114,7 +112,7 @@ std::shared_ptr<IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor:
     return nullptr;
 }
 
-void VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> value)
+void VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGMainFormDeleteWorkspaceFormArgument>(_Object);
@@ -130,28 +128,28 @@ void VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_WriteObject(const 
     CATCH
 }
 
-void VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const int64_t &/*index*/)
+void VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const void */*key*/)
+void VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const int64_t &/*index*/)
+void VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-std::shared_ptr<IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_CloneObject(const int64_t &objectProperty) const
+std::shared_ptr<vcc::IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_CloneObject(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGMainFormDeleteWorkspaceFormArgument>(_Object);
@@ -159,7 +157,7 @@ std::shared_ptr<IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor:
         switch(static_cast<VPGMainFormDeleteWorkspaceFormArgumentProperty>(objectProperty))
         {
         case VPGMainFormDeleteWorkspaceFormArgumentProperty::WorkspaceForm:
-            return std::static_pointer_cast<IObject>(obj->GetWorkspaceForm()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->GetWorkspaceForm()->Clone());
         default:
             assert(false);
         }
@@ -167,7 +165,7 @@ std::shared_ptr<IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor:
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_CloneObjectAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+std::shared_ptr<vcc::IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_CloneObjectAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -175,7 +173,7 @@ std::shared_ptr<IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor:
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_CloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::shared_ptr<vcc::IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_CloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -183,7 +181,7 @@ std::shared_ptr<IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor:
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObject(const int64_t &objectProperty) const
+std::shared_ptr<vcc::IObject> VPGMainFormPropertyAccessor::_ReadObject(const int64_t &objectProperty) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -191,7 +189,7 @@ std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObject(const int64_t 
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
+std::shared_ptr<vcc::IObject> VPGMainFormPropertyAccessor::_ReadObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -200,7 +198,7 @@ std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObjectAtIndex(const i
         switch(static_cast<VPGMainFormProperty>(objectProperty))
         {
         case VPGMainFormProperty::WorkspaceForms:
-            return std::static_pointer_cast<IObject>(obj->GetWorkspaceFormsAtIndex(index));
+            return std::static_pointer_cast<vcc::IObject>(obj->GetWorkspaceFormsAtIndex(index));
         default:
             assert(false);
         }
@@ -208,7 +206,7 @@ std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObjectAtIndex(const i
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::shared_ptr<vcc::IObject> VPGMainFormPropertyAccessor::_ReadObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -216,14 +214,14 @@ std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_ReadObjectAtKey(const int
     return nullptr;
 }
 
-void VPGMainFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/)
+void VPGMainFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGMainFormPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index)
+void VPGMainFormPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -243,14 +241,14 @@ void VPGMainFormPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectPrope
     CATCH
 }
 
-void VPGMainFormPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const void */*key*/)
+void VPGMainFormPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGMainFormPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index)
+void VPGMainFormPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -270,7 +268,7 @@ void VPGMainFormPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProp
     CATCH
 }
 
-std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_CloneObject(const int64_t &objectProperty) const
+std::shared_ptr<vcc::IObject> VPGMainFormPropertyAccessor::_CloneObject(const int64_t &objectProperty) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -278,7 +276,7 @@ std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_CloneObject(const int64_t
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_CloneObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
+std::shared_ptr<vcc::IObject> VPGMainFormPropertyAccessor::_CloneObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -287,7 +285,7 @@ std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_CloneObjectAtIndex(const 
         switch(static_cast<VPGMainFormProperty>(objectProperty))
         {
         case VPGMainFormProperty::WorkspaceForms:
-            return std::static_pointer_cast<IObject>(obj->CloneWorkspaceFormsAtIndex(index));
+            return std::static_pointer_cast<vcc::IObject>(obj->CloneWorkspaceFormsAtIndex(index));
         default:
             assert(false);
         }
@@ -295,7 +293,7 @@ std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_CloneObjectAtIndex(const 
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGMainFormPropertyAccessor::_CloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::shared_ptr<vcc::IObject> VPGMainFormPropertyAccessor::_CloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -343,7 +341,7 @@ void VPGMainFormPropertyAccessor::_Remove(const int64_t &objectProperty, const v
     CATCH
 }
 
-void VPGMainFormPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const IObject *value)
+void VPGMainFormPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const vcc::IObject *value)
 {
     TRY
         assert(value != nullptr);
@@ -469,7 +467,7 @@ void VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_InsertStringAtInde
     CATCH
 }
 
-std::shared_ptr<IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_ReadObject(const int64_t &objectProperty) const
+std::shared_ptr<vcc::IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_ReadObject(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGMainFormRenameWorkspaceFormArgument>(_Object);
@@ -477,7 +475,7 @@ std::shared_ptr<IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor:
         switch(static_cast<VPGMainFormRenameWorkspaceFormArgumentProperty>(objectProperty))
         {
         case VPGMainFormRenameWorkspaceFormArgumentProperty::WorkspaceForm:
-            return std::static_pointer_cast<IObject>(obj->GetWorkspaceForm());
+            return std::static_pointer_cast<vcc::IObject>(obj->GetWorkspaceForm());
         default:
             assert(false);
         }
@@ -485,7 +483,7 @@ std::shared_ptr<IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor:
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_ReadObjectAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+std::shared_ptr<vcc::IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_ReadObjectAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -493,7 +491,7 @@ std::shared_ptr<IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor:
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_ReadObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::shared_ptr<vcc::IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_ReadObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -501,7 +499,7 @@ std::shared_ptr<IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor:
     return nullptr;
 }
 
-void VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> value)
+void VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGMainFormRenameWorkspaceFormArgument>(_Object);
@@ -517,28 +515,28 @@ void VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_WriteObject(const 
     CATCH
 }
 
-void VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const int64_t &/*index*/)
+void VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const void */*key*/)
+void VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const int64_t &/*index*/)
+void VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-std::shared_ptr<IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_CloneObject(const int64_t &objectProperty) const
+std::shared_ptr<vcc::IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_CloneObject(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGMainFormRenameWorkspaceFormArgument>(_Object);
@@ -546,7 +544,7 @@ std::shared_ptr<IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor:
         switch(static_cast<VPGMainFormRenameWorkspaceFormArgumentProperty>(objectProperty))
         {
         case VPGMainFormRenameWorkspaceFormArgumentProperty::WorkspaceForm:
-            return std::static_pointer_cast<IObject>(obj->GetWorkspaceForm()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->GetWorkspaceForm()->Clone());
         default:
             assert(false);
         }
@@ -554,7 +552,7 @@ std::shared_ptr<IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor:
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_CloneObjectAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+std::shared_ptr<vcc::IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_CloneObjectAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -562,7 +560,7 @@ std::shared_ptr<IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor:
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_CloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::shared_ptr<vcc::IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_CloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND

@@ -6,8 +6,6 @@
 
 #define DLL_NAME L"libvpg"
 
-using namespace vcc;
-
 TEST(DllTest, LoadDll) {
     std::wstring dllName = DLL_NAME;
 
@@ -18,7 +16,7 @@ TEST(DllTest, LoadDll) {
     #else
     dllName = L"bin/Debug/" + dllName + L".so";
     #endif
-    Dll h(dllName);
+    vcc::Dll h(dllName);
     EXPECT_TRUE(h.GetH());
     
     typedef int (*GetVersionFunction)(wchar_t **);

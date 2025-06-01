@@ -83,7 +83,7 @@ namespace vcc
             auto result = OnRedo();
             LogRedoComplete();
             return result;
-        CATCH_RETURN_RESULT(OperationResult)
+        CATCH_RETURN_RESULT(vcc::OperationResult)
         return std::make_shared<OperationResult>();
     }
 
@@ -94,7 +94,7 @@ namespace vcc
             auto result = OnUndo();
             LogUndoComplete();
             return result;
-        CATCH_RETURN_RESULT(OperationResult)
+        CATCH_RETURN_RESULT(vcc::OperationResult)
         return std::make_shared<OperationResult>();
     }
 }
