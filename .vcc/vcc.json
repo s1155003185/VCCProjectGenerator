@@ -14,7 +14,7 @@
     },
     "Behavior": {
         "ActionHistoryType": "NoHistory",
-        "IsActionResultThrowException": false
+        "IsActionResultThrowException": true
     },
     "Input": {
         "TypeWorkspace": "include/type"
