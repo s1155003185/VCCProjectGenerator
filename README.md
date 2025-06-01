@@ -12,11 +12,12 @@ Please go to following session to see how to create VCC Project to generate c++ 
 - Tutorial for Create VCC DLL Project to generate dll with Java Interface
 
 ## What's new
-Group items of vcc.json
-* User need to review vcc.json
+Review class macro
+- Support GETCUSTOM, SETCUSTOM, GETCUSTOM_SPTR, SETCUSTOM_SPTR
+- Support GETSET_VALIDATE, GETSET_VALIDATE_SPTR_NULL, VECTOR_VALIDATE, VECTOR_VALIDATE_SPTR, MAP_VALIDATE, MAP_VALIDATE_SPTR_R, ORDERED_MAP_VALIDATE, ORDERED_MAP_VALIDATE_SPTR_R
 
 ## What's next
-Git Manager
+Review using namespace vcc and naming rules
 
 ## Features
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
@@ -1264,6 +1265,18 @@ X(Twitter) @VCCProject
 
 ****
 ## Release Log
+
+### [v0.3.6] - 2025-06-01: Review - Review Class Macro
+- Review GETSET_SPTR and MANAGER_SPTR: initialize in class constructor
+- Update vcc.json IsResultThrowException to IsActionResultThrowException
+- vcc.json supports ActionHistoryType
+- Add tag vccconfig so that setting in project is controlled by vcc.json
+- Support GETCUSTOM, SETCUSTOM, GETCUSTOM_SPTR, SETCUSTOM_SPTR
+- Support GETSET_VALIDATE, GETSET_VALIDATE_SPTR_NULL, VECTOR_VALIDATE, VECTOR_VALIDATE_SPTR, MAP_VALIDATE, MAP_VALIDATE_SPTR_R, ORDERED_MAP_VALIDATE, ORDERED_MAP_VALIDATE_SPTR_R
+- Support one enum with multi class macro
+- Class Enum supports @@Include @@Private @@Protected
+- Class Property Enum supports @@Initialize
+- Review usage of const
 
 ### [v0.3.5] - 2025-05-05: Review - vcc.json Grouping
 - Group vcc.json

@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased] - Review - Git Manager Enhancement
+## [Unreleased] - Review - using namespace vcc and naming rules
 - Review using namespace vcc: add vcc:: before function instead of using namespace vcc
 - Git Manager Enhancement
 - Review naming rule: class variable: _PascalCase / variable: camelCase / function name: camelCase / class name: PascalCase / macro names: UPPER_CASE / enum type name: PascalCase / enumerator name: UPPER_CASE / constant name: UPPER_CASE / namespace name: lowercase
@@ -11,7 +11,7 @@
 - TODO: Support Set for GETSET
 - TODO: Review RESERVE and REPLACE tag
 
-### [v0.3.6]
+### [v0.3.6] - 2025-06-01: Review - Review Class Macro
 - Review GETSET_SPTR and MANAGER_SPTR: initialize in class constructor
 - Update vcc.json IsResultThrowException to IsActionResultThrowException
 - vcc.json supports ActionHistoryType
