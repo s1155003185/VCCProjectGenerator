@@ -692,7 +692,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnum
             result += L"\r\n"
                 + INDENT + INDENT + L"virtual void InitializeComponents() override;\r\n"
                 "\r\n"
-                + INDENT + INDENT + L"virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;\r\n";
+                + INDENT + INDENT + L"virtual std::shared_ptr<vcc::IResult> DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;\r\n";
             break;
         case VPGEnumClassType::Result:
             if (option->GetBehavior() != nullptr && option->GetBehavior()->GetIsActionResultThrowException())
@@ -1269,7 +1269,7 @@ std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *en
             }
 
             result += L"\r\n"
-                "std::shared_ptr<IResult> " + className + L"::DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> " + (isContainArgument ? L"argument" : L"/*argument*/") + L")\r\n"
+                "std::shared_ptr<vcc::IResult> " + className + L"::DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> " + (isContainArgument ? L"argument" : L"/*argument*/") + L")\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + L"switch(static_cast<" + enumClass->GetName() + L">(formProperty))\r\n"
@@ -1304,7 +1304,7 @@ std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *en
 
                 std::wstring functionName = L"Do" + property->GetPropertyName();
                 result += L"\r\n"
-                    "std::shared_ptr<IResult> " + className + L"::" + functionName + L"(" + argumentList + L")\r\n"
+                    "std::shared_ptr<vcc::IResult> " + className + L"::" + functionName + L"(" + argumentList + L")\r\n"
                     "{\r\n"
                     + INDENT + L"TRY\r\n"
                     + INDENT + INDENT + L"auto action = std::make_shared<" + GetActionClassName(enumClass, property.get()) + L">(" + assignmentStr + L");\r\n"
