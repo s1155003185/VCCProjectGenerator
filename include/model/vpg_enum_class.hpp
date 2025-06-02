@@ -74,6 +74,10 @@ class VPGEnumClassProperty : public BaseObject
     friend class VPGEnumClassReader;
 
     private:
+        mutable std::vector<std::wstring> _Type1Namespace;
+        mutable std::vector<std::wstring> _Type2Namespace;
+        mutable std::wstring _Type1 = L"";
+        mutable std::wstring _Type2 = L"";
         mutable std::wstring _DefaultValue = L"";
         mutable VPGEnumClassPropertyAccessMode _AccessMode = VPGEnumClassPropertyAccessMode::ReadWrite;
 
@@ -81,8 +85,10 @@ class VPGEnumClassProperty : public BaseObject
     GETSET(std::wstring, Enum, L"");
     GETSET(int64_t, EnumValue, 0);
     GETSET(std::wstring, Macro, L"");
-    GETSET(std::wstring, Type1, L"");
-    GETSET(std::wstring, Type2, L"");
+    GETCUSTOM(std::wstring, Type1, return _Type1;);
+    SETCUSTOM(Type1, std::wstring, _Type1Namespace = SplitString(value, {L"::"}); for (auto &str : _Type1Namespace) Trim(str);  _Type1 = _Type1Namespace.back(); _Type1Namespace.pop_back(); );
+    GETCUSTOM(std::wstring, Type2, return _Type2;);
+    SETCUSTOM(Type2, std::wstring, _Type2Namespace = SplitString(value, {L"::"}); for (auto &str : _Type2Namespace) Trim(str);  _Type2 = _Type2Namespace.back(); _Type2Namespace.pop_back(); );
     GETSET(std::wstring, PropertyName, L"");
     GETSET(std::wstring, Validate, L"")
     GETCUSTOM(std::wstring, DefaultValue, if (_InitializeProperties.empty()) return _DefaultValue; return Concat(_InitializeProperties, L", ");)
