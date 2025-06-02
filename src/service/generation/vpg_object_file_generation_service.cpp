@@ -838,7 +838,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
                 + GetVccTagTailerCustomHeader(VPGCodeType::Cpp) + L"\r\n";
         }
 
-        std::wstring classList = L"":
+        std::wstring classList = L"";
         // for those class that cannot be found in file list
         for (auto const &str : abstractClassList) {
             if (classInCurrentFileList.find(str) != classInCurrentFileList.end())
