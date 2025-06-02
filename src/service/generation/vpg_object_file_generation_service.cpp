@@ -828,15 +828,18 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
         }
         std::wstring content = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
             "#pragma once\r\n";
-        content += L"\r\n";
+        if (!systemFileListStr.empty() || !projectFileListStr.empty())
+            content += L"\r\n";
         content += !systemFileListStr.empty() ? (systemFileListStr + L"\r\n") : L"";
         content += !projectFileListStr.empty() ? (projectFileListStr + L"\r\n") : L"";
         
         if (isContainForm) {
             content += GetVccTagHeaderCustomHeader(VPGCodeType::Cpp) + L"\r\n"
-                + GetVccTagTailerCustomHeader(VPGCodeType::Cpp) + L"\r\n"
-                "\r\n";
+                + GetVccTagTailerCustomHeader(VPGCodeType::Cpp) + L"\r\n";
         }
+
+        if (!abstractClassList.empty() || !abstractEnumClassList.empty())
+            content += L"\r\n";
 
         // for those class that cannot be found in file list
         for (auto const &str : abstractClassList) {
