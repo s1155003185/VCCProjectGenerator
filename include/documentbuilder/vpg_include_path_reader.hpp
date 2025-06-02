@@ -30,5 +30,5 @@ class VPGIncludePathReader
         VPGIncludePathReader() = default;
         ~VPGIncludePathReader() {}
 
-        void Parse(const PlatformType &platformType, const std::wstring &cppCode, std::set<std::wstring> &classList) const;
+        void Parse(const vcc::PlatformType &platformType, const std::wstring &cppCode, std::set<std::wstring> &classList) const;
 };
