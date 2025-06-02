@@ -77,13 +77,13 @@ public: \
     std::vector<type> &Get##varName() const { return _##varName; } \
     type Get##varName##AtIndex(const int64_t &index) const { return _##varName[index]; } \
     void Set##varName##AtIndex(const int64_t &index, const type &value) { Validate##varName(value); vcc::Set(_##varName, value, index); } \
-    int64_t Find##varName(const type &value) const { return Find(_##varName, value); } \
+    int64_t Find##varName(const type &value) const { return vcc::Find(_##varName, value); } \
     void Insert##varName(const type &value) { Validate##varName(value); vcc::Insert(_##varName, value); } \
     void Insert##varName##AtIndex(const int64_t &index, const type &value) { Validate##varName(value); vcc::Insert(_##varName, value, index); } \
     void Insert##varName(const std::vector<type> &value) { for (auto &element : value) Validate##varName(element); vcc::Insert(_##varName, value); } \
     void Insert##varName##AtIndex(const int64_t &index, const std::vector<type> &value) { for (auto const &element : value) Validate##varName(element); vcc::Insert(_##varName, value, index); } \
-    void Remove##varName(const type &value) { Remove(_##varName, value); } \
-    void Remove##varName##AtIndex(const int64_t &index) { RemoveAtIndex(_##varName, index); } \
+    void Remove##varName(const type &value) { vcc::Remove(_##varName, value); } \
+    void Remove##varName##AtIndex(const int64_t &index) { vcc::RemoveAtIndex(_##varName, index); } \
     std::vector<type> Clone##varName() const { return _##varName; }\
     void Clone##varName(const std::vector<type> &value) { _##varName.clear(); Insert##varName(value); }\
     void Clear##varName() { _##varName.clear(); }
