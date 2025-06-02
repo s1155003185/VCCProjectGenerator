@@ -66,11 +66,11 @@ std::shared_ptr<vcc::IResult> VPGMainFormInitialize::OnRedo()
         form->ClearWorkspaceForms();
 
         auto configFilePath = VPGGlobal::GetVCCProjectManagerConfigFileFullPath();
-        if (IsFilePresent(configFilePath)) {
+        if (vcc::IsFilePresent(configFilePath)) {
             TRY
-                auto jsonBuilder = std::make_unique<JsonBuilder>();
+                auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
                 jsonBuilder->SetIsBeautify(true);
-                form->DeserializeJsonString(jsonBuilder.get(), ReadFile(configFilePath));
+                form->DeserializeJsonString(jsonBuilder.get(), vcc::ReadFile(configFilePath));
             CATCH_MSG(ExceptionType::ParserError, L"File " + configFilePath + L" exists but not vaild. Please adjust / remove the file and try again")
         } else {
             auto workspace = std::make_shared<VPGWorkspaceForm>();
@@ -356,9 +356,9 @@ std::shared_ptr<vcc::IResult> VPGMainForm::DoRenameWorkspaceForm(std::shared_ptr
 void VPGMainForm::SaveConfig() const
 {
     TRY    
-        auto jsonBuilder = std::make_unique<JsonBuilder>();
+        auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
         jsonBuilder->SetIsBeautify(true);
-        WriteFile(VPGGlobal::GetVCCProjectManagerConfigFileFullPath(), SerializeJson(jsonBuilder.get()), true);
+        vcc::WriteFile(VPGGlobal::GetVCCProjectManagerConfigFileFullPath(), SerializeJson(jsonBuilder.get()), true);
     CATCH
 }
 // </vcc:customFunctions>
