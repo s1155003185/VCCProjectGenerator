@@ -42,10 +42,10 @@ namespace vcc
 #define CATCH_RETURN_RESULT(resultClass)  } catch (const std::exception &e) { return vcc::____HandleResult<resultClass>(e, L"", L""); }
 #endif
 
-#define THROW_EXCEPTION_DEBUG(e) vcc::____HandleException(e, str2wstr(__FILE__), std::to_wstring(__LINE__))
-#define CATCH_RETURN_RESULT_DEBUG(resultClass)  } catch (const std::exception &e) { return vcc::____HandleResult<resultClass>(e, str2wstr(__FILE__), std::to_wstring(__LINE__)); }
+#define THROW_EXCEPTION_DEBUG(e) vcc::____HandleException(e, vcc::str2wstr(__FILE__), std::to_wstring(__LINE__))
+#define CATCH_RETURN_RESULT_DEBUG(resultClass)  } catch (const std::exception &e) { return vcc::____HandleResult<resultClass>(e, vcc::str2wstr(__FILE__), std::to_wstring(__LINE__)); }
 
-#define THROW_EXCEPTION_STACK_TRACE(exceptionType, message) throw Exception(exceptionType, str2wstr(__FILE__) + L":" + std::to_wstring(__LINE__) + L":\r\n" + message)
+#define THROW_EXCEPTION_STACK_TRACE(exceptionType, message) throw vcc::Exception(exceptionType, vcc::str2wstr(__FILE__) + L":" + std::to_wstring(__LINE__) + L":\r\n" + message)
 
 #define TRY try {
 #define CATCH  } catch (const std::exception &e) { THROW_EXCEPTION(e); }
