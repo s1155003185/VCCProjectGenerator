@@ -838,20 +838,21 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
                 + GetVccTagTailerCustomHeader(VPGCodeType::Cpp) + L"\r\n";
         }
 
-        if (!abstractClassList.empty() || !abstractEnumClassList.empty())
-            content += L"\r\n";
-
+        std::wstring classList = L"":
         // for those class that cannot be found in file list
         for (auto const &str : abstractClassList) {
             if (classInCurrentFileList.find(str) != classInCurrentFileList.end())
                 continue;
-            content += L"class " + str + L";";
+            classList += L"class " + str + L";\r\n";
         }
         for (auto const &str : abstractEnumClassList) {
             if (classInCurrentFileList.find(str) != classInCurrentFileList.end())
                 continue;
-            content +=  L"enum class " + str + L";";
+            classList +=  L"enum class " + str + L";\r\n";
         }
+        if (!classList.empty())
+            content += L"\r\n"
+                + classList;
 
         // 1. Generate action argument class
         for (auto const &enumClass : enumClassList) {
