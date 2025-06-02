@@ -61,9 +61,9 @@ void VPGObjectFactoryFileGenerationService::GenerateCpp(const LogConfig *logConf
             content += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, str) + L"\r\n";
 
         content += L"\r\n"
-            "std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<IObject> parentObject)\r\n"
+            "std::shared_ptr<vcc::IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)\r\n"
             "{\r\n"
-            + INDENT + L"std::shared_ptr<IObject> result = nullptr;\r\n"
+            + INDENT + L"std::shared_ptr<vcc::IObject> result = nullptr;\r\n"
             + INDENT + L"TRY\r\n"
             + INDENT + INDENT + L"switch (objectType)\r\n"
             + INDENT + INDENT + L"{\r\n";
