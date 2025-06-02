@@ -25,14 +25,14 @@ void VPGObjectFactoryFileGenerationService::GenerateHpp(const LogConfig *logConf
             "#include \"i_object.hpp\"\r\n"
             "#include \"object_type.hpp\"\r\n"
             "\r\n"
-            "class ObjectFactory : public BaseFactory\r\n"
+            "class ObjectFactory : public vcc::BaseFactory\r\n"
             "{\r\n"
             "    private:\r\n"
             "        ObjectFactory() = default;\r\n"
             "        virtual ~ObjectFactory() {}\r\n"
             "\r\n"
             "    public:\r\n"
-            "        static std::shared_ptr<IObject> Create(const ObjectType &objectType, std::shared_ptr<IObject> parentObject = nullptr);\r\n"
+            "        static std::shared_ptr<vcc::IObject> Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);\r\n"
             "};\r\n";
         WriteFile(filePathHpp, content, true);
         LogService::LogInfo(logConfig, LOG_ID, L"Generate object factory file completed.");

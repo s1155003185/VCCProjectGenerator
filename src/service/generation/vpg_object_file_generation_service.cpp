@@ -160,7 +160,7 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetJsonToObjectEnumSwi
         std::wstring jsonStr = jsonEnumValue + L"Str";
         std::wstring jsonStrUpper = jsonStr + L"Upper";
 
-        result.push_back(INDENT + L"std::wstring " + jsonStr + L" = " + (isKey ? L"key;" : (L"json->GetString(ConvertNamingStyle(L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, propertyName) + L", namestyle, NamingStyle::PascalCase));")));
+        result.push_back(INDENT + L"std::wstring " + jsonStr + L" = " + (isKey ? L"key;" : (L"json->GetString(vcc::ConvertNamingStyle(L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, propertyName) + L", namestyle, NamingStyle::PascalCase));")));
         result.push_back(INDENT + L"std::wstring " + jsonStrUpper + L" = " + jsonStr + L";");
         result.push_back(INDENT + L"ToUpper(" + jsonStrUpper + L");");
         result.push_back(INDENT + L"int64_t " + jsonEnumValue + L" = -1;");
@@ -192,7 +192,7 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetObjectToJson(const 
     std::vector<std::wstring> result;
     TRY
         std::wstring arrayStr = isArray ? L"Array" : L"";
-        std::wstring convertedPropertyNameNoComma = isMap ? propertyName : (!isArray ? (L"ConvertNamingStyle(L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, propertyName) + L", NamingStyle::PascalCase, namestyle)") : L"");
+        std::wstring convertedPropertyNameNoComma = isMap ? propertyName : (!isArray ? (L"vcc::ConvertNamingStyle(L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, propertyName) + L", vcc::NamingStyle::PascalCase, namestyle)") : L"");
         std::wstring convertedPropertyName = !convertedPropertyNameNoComma.empty() ? (convertedPropertyNameNoComma + L", ") : L"";
         std::wstring currentPropertyName = L"";
         if (isMap)
@@ -302,7 +302,7 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetJsonToObject(const 
         }
         if (IsContain(macro, L"SPTR")) {
             // Object
-            result.push_back(indentPrefix + (isMap || isArray ? (L"Get" + propertyName + L"()") : L"tmpObject") + L"->DeserializeJson(" + currentParentName + L"->GetObject(ConvertNamingStyle(L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, propertyName) + L", namestyle, NamingStyle::PascalCase)));");
+            result.push_back(indentPrefix + (isMap || isArray ? (L"Get" + propertyName + L"()") : L"tmpObject") + L"->DeserializeJson(" + currentParentName + L"->GetObject(vcc::ConvertNamingStyle(L" + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, propertyName) + L", namestyle, NamingStyle::PascalCase)));");
         } else if (IsCapital(type)) {
             // Enum
             result.push_back(indentPrefix + insertPrefix + L"static_cast<" + type + L">(valueEnum)" + insertSuffix);
@@ -676,7 +676,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicJsonFunctions(const VPG
     TRY
         if (enumClass->GetIsJson())
             result += L"\r\n"
-                + INDENT + INDENT + L"virtual std::shared_ptr<Json> ToJson() const override;\r\n"
+                + INDENT + INDENT + L"virtual std::shared_ptr<vcc::Json> ToJson() const override;\r\n"
                 + INDENT + INDENT + L"virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;\r\n";
     CATCH
     return result;
@@ -1076,13 +1076,13 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
 
             if (property->GetIsVector() || property->GetIsSet()) {
                 // To Json
-                toJsonStr += INDENT + INDENT + L"auto tmp" + propertyName + L" = std::make_shared<Json>();\r\n"
-                    + INDENT + INDENT + L"json->AddArray(ConvertNamingStyle(L" + convertedPropertyName + L", NamingStyle::PascalCase, namestyle), tmp" + propertyName + L");\r\n"
+                toJsonStr += INDENT + INDENT + L"auto tmp" + propertyName + L" = std::make_shared<vcc::Json>();\r\n"
+                    + INDENT + INDENT + L"json->AddArray(vcc::ConvertNamingStyle(L" + convertedPropertyName + L", NamingStyle::PascalCase, namestyle), tmp" + propertyName + L");\r\n"
                     + INDENT + INDENT + L"for (auto const &element : Get" + propertyName + L"()) {\r\n";
                 
                 deserializeStr += INDENT + INDENT + L"Clear" + propertyName + L"();\r\n"
-                    + INDENT + INDENT + L"if (json->IsContainKey(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase))) {\r\n"
-                    + INDENT + INDENT + INDENT + L"for (auto const &element : json->GetArray(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase))) {\r\n";
+                    + INDENT + INDENT + L"if (json->IsContainKey(vcc::ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase))) {\r\n"
+                    + INDENT + INDENT + INDENT + L"for (auto const &element : json->GetArray(vcc::ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase))) {\r\n";
                 if (IsContain(originalMacro, L"SPTR")) {
                     // Object
                     toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->AddArrayObject(element->ToJson());\r\n";
@@ -1104,13 +1104,13 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
                     + INDENT + INDENT + L"}\r\n";
 
             } else if (property->GetIsMap() || property->GetIsOrderedMap()) {
-                toJsonStr += INDENT + INDENT + L"auto tmp" + propertyName + L" = std::make_shared<Json>();\r\n"
-                    + INDENT + INDENT + L"json->AddObject(ConvertNamingStyle(L" + convertedPropertyName + L", NamingStyle::PascalCase, namestyle), tmp" + propertyName + L");\r\n"
+                toJsonStr += INDENT + INDENT + L"auto tmp" + propertyName + L" = std::make_shared<vcc::Json>();\r\n"
+                    + INDENT + INDENT + L"json->AddObject(vcc::ConvertNamingStyle(L" + convertedPropertyName + L", NamingStyle::PascalCase, namestyle), tmp" + propertyName + L");\r\n"
                     + INDENT + INDENT + L"for (auto const &element : Get" + propertyName + L"()) {\r\n";
                 
                 deserializeStr += INDENT + INDENT + L"Clear" + propertyName + L"();\r\n"
-                    + INDENT + INDENT + L"if (json->IsContainKey(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) && json->GetObject(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) != nullptr) {\r\n"
-                    + INDENT + INDENT + INDENT + L"auto tmpObject = json->GetObject(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase));\r\n"
+                    + INDENT + INDENT + L"if (json->IsContainKey(vcc::ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) && json->GetObject(vcc::ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) != nullptr) {\r\n"
+                    + INDENT + INDENT + INDENT + L"auto tmpObject = json->GetObject(vcc::ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase));\r\n"
                     + INDENT + INDENT + INDENT + L"auto tmpKeys = tmpObject->GetKeys();\r\n"
                     + INDENT + INDENT + INDENT + L"for (auto const &key : tmpKeys) {\r\n";
                     
@@ -1167,13 +1167,13 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
                         else if (!property->GetIsCustom())
                             deserializeStr += INDENT + INDENT + L"Set" + propertyName + L"(nullptr);\r\n";
                         
-                        deserializeStr += INDENT + INDENT + L"if (json->IsContainKey(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) && json->GetObject(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) != nullptr) {\r\n"
+                        deserializeStr += INDENT + INDENT + L"if (json->IsContainKey(vcc::ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) && json->GetObject(vcc::ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)) != nullptr) {\r\n"
                             + INDENT + INDENT + INDENT + L"auto tmpObject = std::make_shared<" + property->GetType1() + L">();\r\n";
                     } else if (IsCapital(originalType)) {
                         // Enum
-                        deserializeStr += INDENT + INDENT + L"if (json->IsContainKey(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase))) {\r\n";
+                        deserializeStr += INDENT + INDENT + L"if (json->IsContainKey(vcc::ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase))) {\r\n";
                     } else {
-                        deserializeStr += INDENT + INDENT + L"if (json->IsContainKey(ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)))\r\n";
+                        deserializeStr += INDENT + INDENT + L"if (json->IsContainKey(vcc::ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, NamingStyle::PascalCase)))\r\n";
                     }
                     for (auto const &str : GetJsonToObject(enumClassMapping, L"json", originalMacro, originalType, L"", propertyName, false, false))
                         deserializeStr += INDENT + INDENT + str + L"\r\n";
@@ -1186,11 +1186,11 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
         }
         
         content += L"\r\n"
-            "std::shared_ptr<Json> " + className + L"::ToJson() const\r\n"
+            "std::shared_ptr<vcc::Json> " + className + L"::ToJson() const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n"
             + (!toJsonStr.empty() ? toJsonVarable : L"")
-            + INDENT + INDENT + L"auto json = std::make_unique<Json>();\r\n"
+            + INDENT + INDENT + L"auto json = std::make_unique<vcc::Json>();\r\n"
             + toJsonStr
             + INDENT + INDENT + L"return json;\r\n"
             + INDENT + L"CATCH\r\n"
@@ -1201,7 +1201,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
             "{\r\n"
             + INDENT + L"TRY\r\n"
             + (!deserializeStr.empty() ? deserializeVariable : L"")
-            + INDENT + INDENT + L"auto json = std::dynamic_pointer_cast<Json>(document);\r\n"
+            + INDENT + INDENT + L"auto json = std::dynamic_pointer_cast<vcc::Json>(document);\r\n"
             + INDENT + INDENT + L"assert(json != nullptr);\r\n"
             + deserializeStr
             + INDENT + L"CATCH\r\n"
@@ -1221,7 +1221,7 @@ std::wstring VPGObjectFileGenerationService::GetCppInitialize(const VPGEnumClass
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + baseClassName + L"::InitializeComponents();\r\n";
             if (enumClass->GetIsLogConfigIndependent())
-                result += INDENT + INDENT + L"_LogConfig = std::make_shared<LogConfig>();\r\n";
+                result += INDENT + INDENT + L"_LogConfig = std::make_shared<vcc::LogConfig>();\r\n";
             else
                 result += INDENT + INDENT + L"_LogConfig = nullptr;\r\n";
             if (enumClass->GetIsActionManagerIndependent())
@@ -1415,7 +1415,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 
             std::wstring className = GetClassNameFromPropertyClassName(enumClass->GetName());
 
-            std::wstring baseClassName = (enumClass->GetType() == VPGEnumClassType::Form ? L"BaseForm" : L"BaseObject");
+            std::wstring baseClassName = (enumClass->GetType() == VPGEnumClassType::Form ? L"vcc::BaseForm" : L"vcc::BaseObject");
             if (!IsBlank(enumClass->GetInheritClass()))
                 baseClassName = enumClass->GetInheritClass();                
             std::wstring baseClassNameWithoutQuote = baseClassName;
