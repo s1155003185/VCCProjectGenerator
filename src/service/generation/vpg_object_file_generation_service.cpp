@@ -1024,7 +1024,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
         std::wstring toJsonVarable = L"";
         std::wstring deserializeVariable = L"";
         //json
-        std::wstring namingStyleStr = L"NamingStyle namestyle = vcc::NamingStyle::" + (enumClass->IsJsonAttributesContainKey(L"Key.NamingStyle") ? enumClass->GetJsonAttributesAtKey(L"Key.NamingStyle") : L"PascalCase") + L";";
+        std::wstring namingStyleStr = L"vcc::NamingStyle namestyle = vcc::NamingStyle::" + (enumClass->IsJsonAttributesContainKey(L"Key.NamingStyle") ? enumClass->GetJsonAttributesAtKey(L"Key.NamingStyle") : L"PascalCase") + L";";
         toJsonVarable += INDENT + INDENT + namingStyleStr + L"\r\n";
         deserializeVariable += INDENT + INDENT + namingStyleStr + L"\r\n";
         bool isHavingDecimal = false;
