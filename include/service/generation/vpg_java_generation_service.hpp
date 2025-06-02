@@ -13,7 +13,7 @@
 class VPGJavaGenerationService
 {
     private:
-        VPGJavaGenerationService() = default;
+        VPGJavaGenerationService() = delete;
         ~VPGJavaGenerationService() {}
 
         static std::shared_ptr<VPGConfigExport> GetJavaOption(const VPGConfig *option);
@@ -61,12 +61,12 @@ class VPGJavaGenerationService
         static std::wstring GenerateFormAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass);
         static std::wstring GenerateFormCustomAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &optionResultParent, const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles);
     public:
-        static void GenerateJavaBridge(const LogConfig *logConfig, const std::wstring &targetWorkspace, const std::wstring &dllInterfacehppFilePath, const VPGConfig *option);
+        static void GenerateJavaBridge(const vcc::LogConfig *logConfig, const std::wstring &targetWorkspace, const std::wstring &dllInterfacehppFilePath, const VPGConfig *option);
         
-        static void GenerateEnum(const LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass, const VPGConfig *option, const VPGConfigExport *javaOption);
-        static void GenerateObject(const LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass,
+        static void GenerateEnum(const vcc::LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass, const VPGConfig *option, const VPGConfigExport *javaOption);
+        static void GenerateObject(const vcc::LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass,
             const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapObject, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapForm,
             const VPGConfig *option, const VPGConfigExport *javaOption);
-        static void GenerateOperationResult(const LogConfig *logConfig, const std::wstring &projectPrefix, const VPGConfigExport *option,
+        static void GenerateOperationResult(const vcc::LogConfig *logConfig, const std::wstring &projectPrefix, const VPGConfigExport *option,
             const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapObject, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapForm);
 };

@@ -74,7 +74,7 @@ class VPGObjectFileGenerationService
         static std::wstring GetProjectClassIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::wstring &className);
 
         static std::wstring GenerateHppClass(const VPGEnumClass* enumClass, const VPGConfig *option, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping);
-        static void GenerateHpp(const LogConfig *logConfig,
+        static void GenerateHpp(const vcc::LogConfig *logConfig,
             const VPGConfig *option,
             const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
             const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
@@ -83,7 +83,7 @@ class VPGObjectFileGenerationService
             const std::wstring &actionFolderPathHpp,
             const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList);
 
-        static void GenerateCpp(const LogConfig *logConfig,
+        static void GenerateCpp(const vcc::LogConfig *logConfig,
             const std::wstring &classPrefix,
             const std::map<std::wstring, std::wstring> &classPathMapping,
             const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,

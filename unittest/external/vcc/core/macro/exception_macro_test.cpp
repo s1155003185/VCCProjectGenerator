@@ -16,13 +16,13 @@ TEST(ExceptionMacroTest, General)
     bool throwException = false;
     try 
     {
-        throw Exception(ExceptionType::FileNotFound, L"FILE_NOT_FOUND");
+        throw vcc::Exception(ExceptionType::FileNotFound, L"FILE_NOT_FOUND");
     } 
     catch (std::exception &ex) 
     {
         throwException = true;
 
-        IException *iex = dynamic_cast<IException *>(&ex);
+        vcc::IException *iex = dynamic_cast<vcc::IException *>(&ex);
         EXPECT_TRUE(iex != nullptr);
         EXPECT_EQ(iex->GetErrorMessage(), L"FILE_NOT_FOUND");
         std::string whatStr(iex->what());
@@ -36,7 +36,7 @@ TEST(ExceptionMacroTest, Full)
     bool throwException = false;
     try
     {
-        THROW_EXCEPTION_MSG(ExceptionType::FileNotFound, L"FILE_NOT_FOUND");
+        THROW_EXCEPTION_MSG(vcc::ExceptionType::FileNotFound, L"FILE_NOT_FOUND");
     }
     catch(std::exception &ex)
     {

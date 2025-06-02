@@ -3,12 +3,11 @@
 #include <string>
 #include <regex>
 
+const std::wstring NL = L"\r\n";
+const std::wstring INDENT = L"    ";
+
 namespace vcc
 {
-    const std::wstring NL = L"\r\n";
-	
-	const std::wstring INDENT = L"    ";
-
 	enum class EscapeStringType
 	{
 		DoubleQuote,

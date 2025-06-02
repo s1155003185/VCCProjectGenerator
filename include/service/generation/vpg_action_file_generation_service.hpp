@@ -14,13 +14,13 @@ class VPGActionFileGenerationService
         ~VPGActionFileGenerationService() {}
 
     public:
-        static void GenerateHpp(const LogConfig *logConfig,
+        static void GenerateHpp(const vcc::LogConfig *logConfig,
             const std::map<std::wstring, std::wstring> &classPathMapping,
             const VPGEnumClass *enumClass,
             const std::wstring &projectPrefix, const std::wstring &folderPathHpp,
             std::vector<std::wstring> &actionClassList, std::set<std::wstring> &globalSystemIncludeFiles, std::set<std::wstring> &globalCustomIncludeFiles);
             
-        static void GenerateCpp(const LogConfig *logConfig, 
+        static void GenerateCpp(const vcc::LogConfig *logConfig, 
             const std::map<std::wstring, std::wstring> &classPathMapping,
             const VPGEnumClass *enumClass,
             const std::wstring &projectPrefix, const std::wstring &foldPathCpp,

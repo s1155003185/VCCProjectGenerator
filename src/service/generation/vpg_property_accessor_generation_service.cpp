@@ -59,8 +59,8 @@ bool VPGPropertyAccessorGenerationService::IsIncludeString(const std::vector<std
     TRY
         for (auto const &enumClass : enumClassList) {
             for (auto const &property : enumClass->GetProperties()) {
-                if (Find(property->GetType1(), L"string") != std::wstring::npos
-                    || Find(property->GetType2(), L"string") != std::wstring::npos) {
+                if (vcc::Find(property->GetType1(), L"string") != std::wstring::npos
+                    || vcc::Find(property->GetType2(), L"string") != std::wstring::npos) {
                     result = true;
                     break;
                 }
@@ -126,7 +126,7 @@ void VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(const std
             || originalType == L"int64_t"
             || originalType == L"time_t"
             || originalType == enumToken
-            || (!originalType.empty() && IsCapital(originalType) /* enum */)) {
+            || (!originalType.empty() && vcc::IsCapital(originalType) /* enum */)) {
             convertedType = L"long";
             convertedName = L"Long";
             returnResult = L"0L";
@@ -179,19 +179,19 @@ std::vector<std::wstring> VPGPropertyAccessorGenerationService::GetPropertyAcces
 std::wstring VPGPropertyAccessorGenerationService::GetIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::wstring &className)
 {
     TRY
-        if (IsContain(projectClassIncludeFiles, className))
+        if (vcc::IsContain(projectClassIncludeFiles, className))
             return projectClassIncludeFiles.at(className);
-        else if (IsContain(projectClassIncludeFiles, L"vcc::" + className))
+        else if (vcc::IsContain(projectClassIncludeFiles, L"vcc::" + className))
             return projectClassIncludeFiles.at(L"vcc::" + className);
     CATCH
     return L"";
 }
 
-void VPGPropertyAccessorGenerationService::GenerateHpp(const LogConfig *logConfig, const std::wstring &projectPrefix,
+void VPGPropertyAccessorGenerationService::GenerateHpp(const vcc::LogConfig *logConfig, const std::wstring &projectPrefix,
     const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
-        LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor hpp file: " + filePathHpp);
+        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor hpp file: " + filePathHpp);
 
         std::wstring result = L"#pragma once\r\n\r\n";
 
@@ -223,7 +223,7 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const LogConfig *logConfi
 
                 // property accessor not support set
                 if (property->GetIsSet()) {
-                    LogService::LogWarning(logConfig, L"Property Accessor Generation Service", L"Property Accessor not support SET: class " + enumClass->GetName() + L": " + property->GetMacro());
+                    vcc::LogService::LogWarning(logConfig, L"Property Accessor Generation Service", L"Property Accessor not support SET: class " + enumClass->GetName() + L": " + property->GetMacro());
                     continue;
                 }
                 
@@ -260,8 +260,8 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const LogConfig *logConfi
                 "};\r\n";
         }
 
-        WriteFile(filePathHpp, result, true);
-        LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor hpp completed.");
+        vcc::WriteFile(filePathHpp, result, true);
+        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor hpp completed.");
     CATCH
 }
 
@@ -287,7 +287,7 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
                 std::wstring returnStr = L"obj->Get" + property->GetPropertyName() + L"()";
                 if (type == objectToken)
                     returnStr = L"std::static_pointer_cast<vcc::IObject>(" + returnStr + L")";
-                else if (!property->GetType1().empty() && IsCapital(property->GetType1()))
+                else if (!property->GetType1().empty() && vcc::IsCapital(property->GetType1()))
                     returnStr = L"static_cast<long>(" + returnStr + L")";
                 else if (property->GetType1() == L"std::string")
                     returnStr = L"vcc::str2wstr(" + returnStr + L")";
@@ -305,7 +305,7 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
                     returnStr = L"std::static_pointer_cast<vcc::IObject>(" + returnStr + L"AtIndex(index)" + (isOrderedMap ? L".second" : L"") + L")";
                 else {
                     std::wstring type = isOrderedMap ? property->GetType2() : property->GetType1();
-                    if (!type.empty() && IsCapital(type))
+                    if (!type.empty() && vcc::IsCapital(type))
                         returnStr = L"static_cast<long>(" + returnStr + L"AtIndex(index)"+ (isOrderedMap ? L".second" : L"") + L")";
                     else if (type == L"std::string")
                         returnStr = L"vcc::str2wstr(" + returnStr + L"AtIndex(index)" + (isOrderedMap ? L".second" : L"") + L")";
@@ -325,7 +325,7 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
                 std::wstring returnStr = L"obj->Get" + property->GetPropertyName();
                 if (type == objectToken)
                     returnStr = L"std::static_pointer_cast<vcc::IObject>(" + returnStr + L"AtKey(" + mapGetKey + L")" + L")";
-                else if (!property->GetType2().empty() && IsCapital(property->GetType2()))
+                else if (!property->GetType2().empty() && vcc::IsCapital(property->GetType2()))
                     returnStr = L"static_cast<long>(" + returnStr + L"AtKey(" + mapGetKey + L")" + L")";
                 else if (property->GetType2() == L"std::string")
                     returnStr = L"vcc::str2wstr(" + returnStr + L"AtKey(" + mapGetKey + L")" + L")";
@@ -415,7 +415,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
 
                 if (type == objectToken)
                     returnStr += L"(std::static_pointer_cast<" + property->GetType1() + L">(value));\r\n";
-                else if (!property->GetType1().empty() && IsCapital(property->GetType1()))
+                else if (!property->GetType1().empty() && vcc::IsCapital(property->GetType1()))
                     returnStr += L"(static_cast<" + property->GetType1() + L">(value));\r\n";
                 else if (property->GetType1() == L"std::string")
                     returnStr += L"(wstr2str(value));\r\n";
@@ -434,7 +434,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"AtIndex(index, std::static_pointer_cast<" + type + L">(value));\r\n"
                         + INDENT + INDENT + INDENT + L"else\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(std::static_pointer_cast<" + type + L">(value));\r\n";
-                } else if (!type.empty() && IsCapital(type)) {
+                } else if (!type.empty() && vcc::IsCapital(type)) {
                     returnStr = INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"AtIndex(index, static_cast<" + type + L">(value));\r\n"
                         + INDENT + INDENT + INDENT + L"else\r\n"
@@ -469,7 +469,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"AtKey(" + mapGetKey + L", std::static_pointer_cast<" + property->GetType2() + L">(value));\r\n";
                 } else {
                     std::wstring type = property->GetType2();
-                    if (!type.empty() && IsCapital(type)) {
+                    if (!type.empty() && vcc::IsCapital(type)) {
                         returnStr += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
                             + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"AtKey(" + mapGetKey + L", static_cast<" + type + L">(value));\r\n"
                             + INDENT + INDENT + INDENT + L"else\r\n"
@@ -492,7 +492,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
 
         // General Type
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Write" + convertedName + L"(const int64_t &objectProperty, " + (IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (IsEqual(type, objectToken) ? L"" : L"&") + (!generalCases.empty() ? L"value" : L"/*value*/") + L")\r\n"
+            "void " + propertyName + L"Accessor::_Write" + convertedName + L"(const int64_t &objectProperty, " + (vcc::IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (vcc::IsEqual(type, objectToken) ? L"" : L"&") + (!generalCases.empty() ? L"value" : L"/*value*/") + L")\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!generalCases.empty()) {
@@ -509,7 +509,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
 
         // vector
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Write" + convertedName + L"AtIndex(const int64_t &objectProperty, " + (IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (IsEqual(type, objectToken) ? L"" : L"&") + (!vectorCases.empty() ? L"value" : L"/*value*/") + L", const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L")\r\n"
+            "void " + propertyName + L"Accessor::_Write" + convertedName + L"AtIndex(const int64_t &objectProperty, " + (vcc::IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (vcc::IsEqual(type, objectToken) ? L"" : L"&") + (!vectorCases.empty() ? L"value" : L"/*value*/") + L", const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L")\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!vectorCases.empty()) {
@@ -526,7 +526,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
 
         // map
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Write" + convertedName + L"AtKey(const int64_t &objectProperty, " + (IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (IsEqual(type, objectToken) ? L"" : L"&") + (!mapCases.empty() ? L"value" : L"/*value*/") + L", const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L")\r\n"
+            "void " + propertyName + L"Accessor::_Write" + convertedName + L"AtKey(const int64_t &objectProperty, " + (vcc::IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (vcc::IsEqual(type, objectToken) ? L"" : L"&") + (!mapCases.empty() ? L"value" : L"/*value*/") + L", const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L")\r\n"
             "{\r\n"
                 + INDENT + L"TRY\r\n";
         if (!mapCases.empty()) {
@@ -571,7 +571,7 @@ void VPGPropertyAccessorGenerationService::GenerateInsert(const std::wstring &pr
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"AtIndex(index, std::static_pointer_cast<" + type + L">(value));\r\n"
                         + INDENT + INDENT + INDENT + L"else\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(std::static_pointer_cast<" + type + L">(value));\r\n";
-                } else if (!type.empty() && IsCapital(type)) {
+                } else if (!type.empty() && vcc::IsCapital(type)) {
                     returnStr += INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"AtIndex(index, static_cast<" + type + L">(value));\r\n"
                         + INDENT + INDENT + INDENT + L"else\r\n"
@@ -591,7 +591,7 @@ void VPGPropertyAccessorGenerationService::GenerateInsert(const std::wstring &pr
             }
         }
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Insert" + convertedName + L"AtIndex(const int64_t &objectProperty, " + (IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (IsEqual(type, objectToken) ? L"" : L"&") + (!vectorCases.empty() ? L"value" : L"/*value*/") + L", const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L")\r\n"
+            "void " + propertyName + L"Accessor::_Insert" + convertedName + L"AtIndex(const int64_t &objectProperty, " + (vcc::IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (vcc::IsEqual(type, objectToken) ? L"" : L"&") + (!vectorCases.empty() ? L"value" : L"/*value*/") + L", const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L")\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!vectorCases.empty()) {
@@ -773,7 +773,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerIsContainKey(const s
             }
                 
         result += L"\r\n"
-            "bool " + propertyName + L"Accessor::_IsContainKey(const int64_t &objectProperty, const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L") const\r\n"
+            "bool " + propertyName + L"Accessor::_vcc::IsContainKey(const int64_t &objectProperty, const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L") const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!mapCases.empty()) {
@@ -925,12 +925,12 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
     CATCH
 }
 
-void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfig, const std::wstring &projectPrefix,
+void VPGPropertyAccessorGenerationService::GenerateCpp(const vcc::LogConfig *logConfig, const std::wstring &projectPrefix,
     const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
     const std::wstring &filePathCpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
-        LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor cpp file: " + filePathCpp);
+        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor cpp file: " + filePathCpp);
 
         std::set<std::wstring> systemIncludeFiles;
         std::set<std::wstring> projectIncludeFiles;
@@ -983,7 +983,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
 
                 // container
                 if (isContainer) {
-                    if (!IsContain(typeMacroMap[enumClass->GetName()], containerToken)) {
+                    if (!vcc::IsContain(typeMacroMap[enumClass->GetName()], containerToken)) {
                         std::vector<std::shared_ptr<VPGEnumClassProperty>> initVector;
                         typeMacroMap[enumClass->GetName()].insert(std::make_pair(containerToken, initVector));
                     }
@@ -993,35 +993,35 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
                 std::wstring type1 = property->GetType1();
                 std::wstring type2 = property->GetType2();
                 if (!type1.empty()) {
-                    if (IsCapital(type1)) {
+                    if (vcc::IsCapital(type1)) {
                         includePath = VPGPropertyAccessorGenerationService::GetIncludeFile(projectClassIncludeFiles, type1);
                         if (includePath.empty())
                             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Header file of class " + type1 + L" not found");
                         projectIncludeFiles.insert(includePath);
-                    } else if (Find(type1, L"string") != std::wstring::npos)
+                    } else if (vcc::Find(type1, L"string") != std::wstring::npos)
                         systemIncludeFiles.insert(L"string");
                 }
                 if (!type2.empty()) {
-                    if (IsCapital(type2)) {
+                    if (vcc::IsCapital(type2)) {
                         includePath = VPGPropertyAccessorGenerationService::GetIncludeFile(projectClassIncludeFiles, type2);
                         if (includePath.empty())
                             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Header file of class " + type2 + L" not found");
                         projectIncludeFiles.insert(includePath);
-                    } else if (Find(type2, L"string") != std::wstring::npos)
+                    } else if (vcc::Find(type2, L"string") != std::wstring::npos)
                         systemIncludeFiles.insert(L"string");
                 }
 
                 // object
                 if (property->GetIsObject()) {
                     systemIncludeFiles.insert(L"memory");
-                    if (!IsContain(typeMacroMap[enumClass->GetName()], (objectToken))) {
+                    if (!vcc::IsContain(typeMacroMap[enumClass->GetName()], (objectToken))) {
                         std::vector<std::shared_ptr<VPGEnumClassProperty>> initVector;
                         typeMacroMap[enumClass->GetName()].insert(std::make_pair(objectToken, initVector));
                     }
                     typeMacroMap[enumClass->GetName()][objectToken].push_back(property);
                 } else {
                     std::wstring type = property->GetIsMap() || property->GetIsOrderedMap() ? type2 : type1;
-                    if (!type.empty() && IsCapital(type))
+                    if (!type.empty() && vcc::IsCapital(type))
                         type = enumToken;
                     std::wstring convertedType = L"";
                     std::wstring converttedName = L"";
@@ -1032,9 +1032,9 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
             }
         }
 
-        std::wstring headerFileName = GetFileName(filePathCpp);
-        Replace(headerFileName, L".cpp", L".hpp");
-        std::wstring result = L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, headerFileName) + L"\r\n";
+        std::wstring headerFileName = vcc::GetFileName(filePathCpp);
+        vcc::Replace(headerFileName, L".cpp", L".hpp");
+        std::wstring result = L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, headerFileName) + L"\r\n";
         // system include files
         if (!systemIncludeFiles.empty())
             result += L"\r\n";
@@ -1043,7 +1043,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
         // project include files
         result += L"\r\n";
         for (auto const &includeFiles : projectIncludeFiles)
-            result += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, includeFiles) + L"\r\n";
+            result += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, includeFiles) + L"\r\n";
         
         size_t count = 0;
         for (auto const &enumClass : typeMacroMap) {
@@ -1090,14 +1090,14 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
             }
         }
         if (count > 0) {
-            WriteFile(filePathCpp, result, true);
-            LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor cpp completed.");
+            vcc::WriteFile(filePathCpp, result, true);
+            vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor cpp completed.");
         } else {
-            if (IsFilePresent(filePathCpp)) {
-                RemoveFile(filePathCpp);
-                LogService::LogInfo(logConfig, LOG_ID, L"Removed property accessor cpp as no properties are acceesable.");
+            if (vcc::IsFilePresent(filePathCpp)) {
+                vcc::RemoveFile(filePathCpp);
+                vcc::LogService::LogInfo(logConfig, LOG_ID, L"Removed property accessor cpp as no properties are acceesable.");
             } else
-                LogService::LogInfo(logConfig, LOG_ID, L"No property accessor cpp need to be generated.");
+                vcc::LogService::LogInfo(logConfig, LOG_ID, L"No property accessor cpp need to be generated.");
         }
     CATCH
 }

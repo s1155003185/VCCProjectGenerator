@@ -1,16 +1,13 @@
 #pragma once
 
-namespace vcc
+class IVPGGenerationManager
 {
-    class IVPGGenerationManager
-    {
-    protected:
-        IVPGGenerationManager() {}
-        ~IVPGGenerationManager() {}
+protected:
+    IVPGGenerationManager() {}
+    ~IVPGGenerationManager() {}
 
-    public:
-        virtual void Add() const = 0;
-        virtual void Update() const = 0;
-        virtual void Generate() const = 0;
-    };
-}
+public:
+    virtual void Add() const = 0;
+    virtual void Update() const = 0;
+    virtual void Generate() const = 0;
+};

@@ -55,9 +55,9 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFil
         functionMap.insert(std::make_pair(L"ApplicationCloseForm", L"DLLEXPORT bool ApplicationCloseForm(void *form, bool isForce);\r\n"));
                     
         for (auto const &action : functionMap) {
-            std::vector<std::wstring> lines = SplitStringByLine(action.second);
+            std::vector<std::wstring> lines = vcc::SplitStringByLine(action.second);
             for (auto &line : lines) {
-                RTrim(line);
+                vcc::RTrim(line);
                 result += line + L"\r\n";
             }
         }
@@ -259,10 +259,10 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             "}\r\n"));
 
         for (auto const &action : functionMap) {
-            std::vector<std::wstring> lines = SplitStringByLine(action.second);
+            std::vector<std::wstring> lines = vcc::SplitStringByLine(action.second);
             result += L"\r\n";
             for (auto &line : lines) {
-                RTrim(line);
+                vcc::RTrim(line);
                 result += line + L"\r\n";
             }
         }
@@ -336,14 +336,14 @@ std::wstring VPGDllFileGenerationService::GeneratePropertyAccessorCpp(const VPGD
     return result;
 }
 
-void VPGDllFileGenerationService::GenerateHpp(const LogConfig *logConfig, const std::wstring &filePathHpp, const VPGDllFileGenerationServiceOption *option)
+void VPGDllFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp, const VPGDllFileGenerationServiceOption *option)
 {
     TRY
         assert(option != nullptr);
-        if (!IsFilePresent(filePathHpp))
+        if (!vcc::IsFilePresent(filePathHpp))
             return;
         
-        LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file: " + filePathHpp);
+        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file: " + filePathHpp);
 
         // header
         std::wstring content = L"";
@@ -352,27 +352,27 @@ void VPGDllFileGenerationService::GenerateHpp(const LogConfig *logConfig, const 
         std::wstring propertyAccessorStr = GeneratePropertyAccessorHpp(option, customIncludeFiles);
         if (!customIncludeFiles.empty()) {
             for (auto const &file : customIncludeFiles)
-                content += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, file) + L"\r\n";
+                content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, file) + L"\r\n";
         }
-        WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathHpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
+        vcc::WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(vcc::ReadFile(filePathHpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
 
         // content
         content = applicationStr;
         content += propertyAccessorStr;
 
-        WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathHpp), L"vcc:dllInterface", content, L"//"), true);
-        LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file completed.");
+        vcc::WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(vcc::ReadFile(filePathHpp), L"vcc:dllInterface", content, L"//"), true);
+        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file completed.");
     CATCH
 }
 
-void VPGDllFileGenerationService::GenerateCpp(const LogConfig *logConfig, const std::wstring &filePathCpp, const VPGDllFileGenerationServiceOption *option)
+void VPGDllFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig, const std::wstring &filePathCpp, const VPGDllFileGenerationServiceOption *option)
 {
     TRY
         assert(option != nullptr);
-        if (!IsFilePresent(filePathCpp))
+        if (!vcc::IsFilePresent(filePathCpp))
             return;
 
-        LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp file: " + filePathCpp);
+        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp file: " + filePathCpp);
         // header
         std::wstring content = L"";
         std::set<std::wstring> customIncludeFiles;
@@ -381,15 +381,15 @@ void VPGDllFileGenerationService::GenerateCpp(const LogConfig *logConfig, const 
 
         if (!customIncludeFiles.empty()) {
             for (auto const &file : customIncludeFiles)
-                content += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, file) + L"\r\n";
+                content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, file) + L"\r\n";
         }
-        WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathCpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
+        vcc::WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(vcc::ReadFile(filePathCpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
 
         // content
         content = applicationStr;
         content += propertyAccessorStr;
-        WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathCpp), L"vcc:dllInterface", content, L"//"), true);
+        vcc::WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(vcc::ReadFile(filePathCpp), L"vcc:dllInterface", content, L"//"), true);
 
-        LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp completed.");
+        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp completed.");
     CATCH
 }

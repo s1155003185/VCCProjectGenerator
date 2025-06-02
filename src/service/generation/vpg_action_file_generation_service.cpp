@@ -20,7 +20,7 @@
 
 #define LOG_ID L"Action File Generation"
 
-void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
+void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig,
     const std::map<std::wstring, std::wstring> &classPathMapping,
     const VPGEnumClass *enumClass,
     const std::wstring &projectPrefix, const std::wstring &folderPathHpp,
@@ -32,7 +32,7 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
             return;
 
         std::wstring className = GetClassNameFromPropertyClassName(enumClass->GetName());
-        bool isSeperateFile = !IsBlank(folderPathHpp);
+        bool isSeperateFile = !vcc::IsBlank(folderPathHpp);
 
         for (auto const &property : enumClass->GetProperties()) {
             if (property->GetPropertyType() != VPGEnumClassPropertyType::Action)
@@ -53,12 +53,12 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
             std::wstring actionClassName = className + property->GetPropertyName();
 
             std::wstring propertyStr = L"";
-            std::wstring assignmentStrSimple = L"std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm";
+            std::wstring assignmentStrSimple = L"std::shared_ptr<vcc::vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm";
             std::wstring assignmentStr = assignmentStrSimple;
             
             std::wstring type1 = property->GetType1();
             // Only Support shared point argument
-            if (!type1.empty() && IsCapital(type1)) {
+            if (!type1.empty() && vcc::IsCapital(type1)) {
                 customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, type1));
                 
                 propertyStr = INDENT + L"GETSET_SPTR_NULL(" + type1 + L", Argument)\r\n";
@@ -120,7 +120,7 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
                 // custom include files
                 content += L"\r\n";
                 for (auto const &str : customIncludeFiles)
-                    content += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, str) + L"\r\n";
+                    content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
 
                 content += L"\r\n"
                     + GetVccTagHeaderCustomHeader(VPGCodeType::Cpp) + L"\r\n"
@@ -129,13 +129,13 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
                     + action;
                     
                 // Generate File
-                std::wstring filePathHpp = ConcatPaths({folderPathHpp, GetActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".hpp"});
-                LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file: " + filePathHpp);
-                if (IsFilePresent(filePathHpp))
-                    content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, ReadFile(filePathHpp), VPGFileContentSyncMode::Full, L"//");
-                LTrim(content);
-                WriteFile(filePathHpp, content, true);
-                LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file completed.");
+                std::wstring filePathHpp = vcc::ConcatPaths({folderPathHpp, GetActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".hpp"});
+                vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file: " + filePathHpp);
+                if (vcc::IsFilePresent(filePathHpp))
+                    content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::ReadFile(filePathHpp), VPGFileContentSyncMode::Full, L"//");
+                vcc::LTrim(content);
+                vcc::WriteFile(filePathHpp, content, true);
+                vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file completed.");
             } else {
                 // Generate to form files
                 globalSystemIncludeFiles.insert(systemIncludeFiles.begin(), systemIncludeFiles.end());
@@ -147,7 +147,7 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
     CATCH
 }
 
-void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
+void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig,
     const std::map<std::wstring, std::wstring> &classPathMapping,
     const VPGEnumClass *enumClass,
     const std::wstring &projectPrefix, const std::wstring &folderPathCpp,
@@ -159,7 +159,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
             return;
 
         std::wstring className = GetClassNameFromPropertyClassName(enumClass->GetName());
-        bool isSeperateFile = !IsBlank(folderPathCpp);
+        bool isSeperateFile = !vcc::IsBlank(folderPathCpp);
 
         for (auto const &property : enumClass->GetProperties()) {
             if (property->GetPropertyType() != VPGEnumClassPropertyType::Action)
@@ -180,16 +180,16 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
             // class name
             std::wstring actionClassName = className + property->GetPropertyName();
 
-            std::wstring assignmentStrSimple = L"std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm";
+            std::wstring assignmentStrSimple = L"std::shared_ptr<vcc::vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm";
             std::wstring assignmentStr = assignmentStrSimple;
             std::vector<std::wstring> propertyAssignmentsSimple;
-            propertyAssignmentsSimple.push_back(L"_LogConfig = logConfig");
+            propertyAssignmentsSimple.push_back(L"_vcc::LogConfig = logConfig");
             propertyAssignmentsSimple.push_back(L"_ParentObject = parentForm");
             std::vector<std::wstring> propertyAssignments;
             propertyAssignments.insert(propertyAssignments.end(), propertyAssignmentsSimple.begin(), propertyAssignmentsSimple.end());
 
             std::wstring type1 = property->GetType1();
-            if (!type1.empty() && IsCapital(type1)) {
+            if (!type1.empty() && vcc::IsCapital(type1)) {
                 customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, type1));
                 
                 if (!assignmentStr.empty())
@@ -198,9 +198,9 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 assignmentStr += L"std::shared_ptr<" + property->GetType1() + L"> argument";
                 propertyAssignments.push_back(L"_Argument = argument");
             }
-            if (!IsBlank(property->GetActionResultRedoClass()))
+            if (!vcc::IsBlank(property->GetActionResultRedoClass()))
                 customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, property->GetActionResultRedoClass()));
-            if (!IsBlank(property->GetActionResultUndoClass()))
+            if (!vcc::IsBlank(property->GetActionResultUndoClass()))
                 customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, property->GetActionResultUndoClass()));
 
 
@@ -260,7 +260,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                     + INDENT + L"return L\"\";\r\n"
                     "}\r\n";
 
-            std::wstring redoReturnClass = !IsBlank(property->GetActionResultRedoClass()) ? property->GetActionResultRedoClass() : L"OperationResult";
+            std::wstring redoReturnClass = !vcc::IsBlank(property->GetActionResultRedoClass()) ? property->GetActionResultRedoClass() : L"OperationResult";
             action += L"\r\n"
                 "std::shared_ptr<vcc::IResult> " + actionClassName + L"::OnRedo()\r\n"
                 "{\r\n"
@@ -272,7 +272,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 "}\r\n";
 
             if (!property->GetIsNoHistory()) {
-                std::wstring undoReturnClass = !IsBlank(property->GetActionResultUndoClass()) ? property->GetActionResultUndoClass() : L"OperationResult";
+                std::wstring undoReturnClass = !vcc::IsBlank(property->GetActionResultUndoClass()) ? property->GetActionResultUndoClass() : L"OperationResult";
                 action += L"\r\n"
                     "std::shared_ptr<vcc::IResult> " + actionClassName + L"::OnUndo()\r\n"
                     "{\r\n"
@@ -288,7 +288,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 // Generate to seperate files
                 std::wstring fileNameHpp = GetActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".hpp";
                 std::wstring content = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-                    "#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, fileNameHpp) + L"\r\n"
+                    "#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, fileNameHpp) + L"\r\n"
                     "\r\n";
                 // system include files
                 for (auto const &str : systemIncludeFiles)
@@ -299,7 +299,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 for (auto const &str : customIncludeFiles) {
                     if (str == fileNameHpp)
                         continue;
-                    content += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, str) + L"\r\n";
+                    content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
                 }
 
                 content += L"\r\n"
@@ -312,13 +312,13 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                     + GetVccTagTailerCustomClassFunctions(VPGCodeType::Cpp, L"") + L"\r\n";
                     
                 // Generate File
-                std::wstring filePathCpp = ConcatPaths({folderPathCpp, GetActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".cpp"});
-                LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file: " + filePathCpp);
-                if (IsFilePresent(filePathCpp))
-                    content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, ReadFile(filePathCpp), VPGFileContentSyncMode::Full, L"//");
-                LTrim(content);
-                WriteFile(filePathCpp, content, true);
-                LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file completed.");
+                std::wstring filePathCpp = vcc::ConcatPaths({folderPathCpp, GetActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".cpp"});
+                vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file: " + filePathCpp);
+                if (vcc::IsFilePresent(filePathCpp))
+                    content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::ReadFile(filePathCpp), VPGFileContentSyncMode::Full, L"//");
+                vcc::LTrim(content);
+                vcc::WriteFile(filePathCpp, content, true);
+                vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file completed.");
             } else {
                 // Generate to form files
                 globalSystemIncludeFiles.insert(systemIncludeFiles.begin(), systemIncludeFiles.end());
