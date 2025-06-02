@@ -677,7 +677,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicJsonFunctions(const VPG
         if (enumClass->GetIsJson())
             result += L"\r\n"
                 + INDENT + INDENT + L"virtual std::shared_ptr<Json> ToJson() const override;\r\n"
-                + INDENT + INDENT + L"virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;\r\n";
+                + INDENT + INDENT + L"virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;\r\n";
     CATCH
     return result;
 }
@@ -1197,7 +1197,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
             + INDENT + L"return nullptr;\r\n"
             "}\r\n"
             "\r\n"
-            "void " + className + L"::DeserializeJson(std::shared_ptr<IDocument> document)\r\n"
+            "void " + className + L"::DeserializeJson(std::shared_ptr<vcc::IDocument> document)\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n"
             + (!deserializeStr.empty() ? deserializeVariable : L"")
