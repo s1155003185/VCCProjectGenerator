@@ -28,7 +28,7 @@ std::wstring VPGGlobal::GetVersion()
 std::wstring VPGGlobal::GetVccLocalResponseFolder()
 {
     TRY
-        return ConcatPaths({USER_HOME_VARIABLE, L"Documents", L"vcc"});
+        return vcc::ConcatPaths({USER_HOME_VARIABLE, L"Documents", L"vcc"});
     CATCH
     return L"";
 }
@@ -36,7 +36,7 @@ std::wstring VPGGlobal::GetVccLocalResponseFolder()
 std::wstring VPGGlobal::GetVccProjectLocalResponseDirectory(VPGProjectType projectType)
 {
     TRY
-        return ConcatPaths({VPGGlobal::GetVccLocalResponseFolder(), VPGGlobal::GetProjectName(projectType)});
+        return vcc::ConcatPaths({VPGGlobal::GetVccLocalResponseFolder(), VPGGlobal::GetProjectName(projectType)});
     CATCH
     return L"";
 }
@@ -93,7 +93,7 @@ std::wstring VPGGlobal::GetVCCProjectManagerConfigFileName()
 
 std::wstring VPGGlobal::GetVCCProjectManagerConfigFileFullPath()
 {
-    return VPGGlobal::GetConvertedPath(ConcatPaths({ VPGGlobal::GetVccLocalResponseFolder(), L"config", VPGGlobal::GetVCCProjectManagerConfigFileName() }));
+    return VPGGlobal::GetConvertedPath(vcc::ConcatPaths({ VPGGlobal::GetVccLocalResponseFolder(), L"config", VPGGlobal::GetVCCProjectManagerConfigFileName() }));
 }
 
 std::shared_ptr<VPGEnumClassReader> VPGGlobal::GetEnumClassReader()
@@ -112,15 +112,15 @@ std::wstring VPGGlobal::GetConvertedPath(const std::wstring &path)
 {
     std::wstring result = path;
     TRY
-        std::wstring userHomePath = GetSystemFolderPath(SystemFolderType::UserHome);
-        ReplaceAll(result, USER_HOME_VARIABLE, userHomePath);
+        std::wstring userHomePath = vcc::GetSystemFolderPath(vcc::SystemFolderType::UserHome);
+        vcc::ReplaceAll(result, USER_HOME_VARIABLE, userHomePath);
     CATCH
     return result;
 }
 
 void VPGGlobal::Initialize(const std::wstring &projectWorkspace)
 {
-    VPGGlobal::_FileGenerationManager = std::make_unique<VPGFileGenerationManager>(std::make_shared<LogConfig>(LogConfigInitialType::None), L"");
+    VPGGlobal::_FileGenerationManager = std::make_unique<VPGFileGenerationManager>(std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None), L"");
     VPGGlobal::_FileGenerationManager->GetClassMacroList(projectWorkspace);
     VPGGlobal::_EnumClassReader = std::make_shared<VPGEnumClassReader>(VPGGlobal::_FileGenerationManager->GetClassMacros());
 }
