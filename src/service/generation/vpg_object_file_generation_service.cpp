@@ -335,7 +335,7 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetJsonToObject(const 
 std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::wstring &className)
 {
     TRY
-        std::vector<std::wstring> tokens = SplitString(className, L"::");
+        std::vector<std::wstring> tokens = SplitString(className, { L"::" });
         std::wstring realClassName = tokens.back();
         Trim(realClassName);
         if (IsContain(projectClassIncludeFiles, realClassName))
