@@ -25,8 +25,6 @@ void VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(const LogConfi
             "#include \"i_object.hpp\"\r\n"
             "#include \"i_property_accessor.hpp\"\r\n"
             "\r\n"
-            "using namespace vcc;\r\n"
-            "\r\n"
             "class PropertyAccessorFactory : public BaseFactory\r\n"
             "{\r\n"
             "    private:\r\n"
@@ -63,8 +61,6 @@ void VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(const LogConfi
             content += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, str) + L"\r\n";
 
         content += L"\r\n"
-            "using namespace vcc;\r\n"
-            "\r\n"
             "std::shared_ptr<IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_ptr<IObject> object)\r\n"
             "{\r\n"
             + INDENT + L"assert(object != nullptr);\r\n"

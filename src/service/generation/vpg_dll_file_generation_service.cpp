@@ -355,8 +355,6 @@ void VPGDllFileGenerationService::GenerateHpp(const LogConfig *logConfig, const 
         if (!customIncludeFiles.empty()) {
             for (auto const &file : customIncludeFiles)
                 content += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, file) + L"\r\n";
-            content += L"\r\n"
-                "using namespace vcc;\r\n";
         }
         WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathHpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
 
@@ -386,8 +384,6 @@ void VPGDllFileGenerationService::GenerateCpp(const LogConfig *logConfig, const 
         if (!customIncludeFiles.empty()) {
             for (auto const &file : customIncludeFiles)
                 content += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, file) + L"\r\n";
-            content += L"\r\n"
-                "using namespace vcc;\r\n";
         }
         WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(ReadFile(filePathCpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
 

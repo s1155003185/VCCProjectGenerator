@@ -838,20 +838,16 @@ void VPGObjectFileGenerationService::GenerateHpp(const LogConfig *logConfig,
                 "\r\n";
         }
 
-        // as using base_object and macro, must have namespace vcc
-        content += L"using namespace vcc;\r\n";
         // for those class that cannot be found in file list
         for (auto const &str : abstractClassList) {
             if (classInCurrentFileList.find(str) != classInCurrentFileList.end())
                 continue;
-            content +=  L"\r\n"
-                "class " + str + L";";
+            content += L"class " + str + L";";
         }
         for (auto const &str : abstractEnumClassList) {
             if (classInCurrentFileList.find(str) != classInCurrentFileList.end())
                 continue;
-            content +=  L"\r\n"
-                "enum class " + str + L";";
+            content +=  L"enum class " + str + L";";
         }
 
         // 1. Generate action argument class
@@ -1403,9 +1399,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const LogConfig *logConfig,
             }
         }
 
-        content += GetCppCustomHeader(isIncludeForm)
-            + L"\r\n"
-            "using namespace vcc;\r\n";
+        content += GetCppCustomHeader(isIncludeForm);
 
         for (auto const &str : actionClassList)
             content += L"\r\n"

@@ -25,8 +25,6 @@ void VPGObjectFactoryFileGenerationService::GenerateHpp(const LogConfig *logConf
             "#include \"i_object.hpp\"\r\n"
             "#include \"object_type.hpp\"\r\n"
             "\r\n"
-            "using namespace vcc;\r\n"
-            "\r\n"
             "class ObjectFactory : public BaseFactory\r\n"
             "{\r\n"
             "    private:\r\n"
@@ -63,8 +61,6 @@ void VPGObjectFactoryFileGenerationService::GenerateCpp(const LogConfig *logConf
             content += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, str) + L"\r\n";
 
         content += L"\r\n"
-            "using namespace vcc;\r\n"
-            "\r\n"
             "std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<IObject> parentObject)\r\n"
             "{\r\n"
             + INDENT + L"std::shared_ptr<IObject> result = nullptr;\r\n"

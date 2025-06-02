@@ -201,9 +201,7 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const LogConfig *logConfi
             result += L"#include <string>\r\n\r\n";
 
         result += L"#include \"base_property_accessor.hpp\"\r\n"
-            "#include \"property_accessor_macro.hpp\"\r\n"
-            "\r\n"
-            "using namespace vcc;\r\n";
+            "#include \"property_accessor_macro.hpp\"\r\n";
 
         for (auto const &enumClass : enumClassList) {
             if (!IsPropertyClass(enumClass->GetName(), projectPrefix))
@@ -1048,8 +1046,6 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const LogConfig *logConfi
         result += L"\r\n";
         for (auto const &includeFiles : projectIncludeFiles)
             result += L"#include " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, includeFiles) + L"\r\n";
-        result += L"\r\n"
-            "using namespace vcc;\r\n";
         
         size_t count = 0;
         for (auto const &enumClass : typeMacroMap) {
