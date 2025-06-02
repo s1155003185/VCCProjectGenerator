@@ -335,12 +335,15 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetJsonToObject(const 
 std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::wstring &className)
 {
     TRY
-        if (IsContain(projectClassIncludeFiles, className))
-            return projectClassIncludeFiles.at(className);
-        else if (IsContain(projectClassIncludeFiles, L"vcc::" + className))
-            return projectClassIncludeFiles.at(L"vcc::" + className);
+        std::vector<std::wstring> tokens = Split(clasName, L"::");
+        std::wstring realClassName = tokens.back();
+        Trim(realClassName);
+        if (IsContain(projectClassIncludeFiles, realClassName))
+            return projectClassIncludeFiles.at(realClassName);
+        else if (IsContain(projectClassIncludeFiles, L"vcc::" + realClassName))
+            return projectClassIncludeFiles.at(L"vcc::" + realClassName);
         else
-            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Include file of Class " + className + L" NOT FOUND");
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Include file of Class " + realClassName + L" NOT FOUND");
     CATCH
     return L"";
 }
