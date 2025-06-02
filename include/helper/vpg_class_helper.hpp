@@ -2,12 +2,7 @@
 
 #include <string>
 
-#include "exception_macro.hpp"
-#include "string_helper.hpp"
-
 #include "vpg_enum_class.hpp"
-
-using namespace vcc;
 
 bool IsFileStartWithProjectPrefix(const std::wstring &str, const std::wstring &projectPrefix);
 bool IsClassStartWithProjectPrefix(const std::wstring &str, const std::wstring &projectPrefix);

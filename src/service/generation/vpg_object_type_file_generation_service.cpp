@@ -9,8 +9,6 @@
 #include "vpg_code_reader.hpp"
 #include "vpg_tag_helper.hpp"
 
-using namespace vcc;
-
 #define LOG_ID L"Object Type File Generation"
 
 void VPGObjectTypeFileGenerationService::Generate(const LogConfig *logConfig, const std::wstring &filePathHpp, const std::set<std::wstring> &propertyTypes)

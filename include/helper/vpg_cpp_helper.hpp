@@ -5,8 +5,6 @@
 #include "exception_macro.hpp"
 #include "string_helper.hpp"
 
-using namespace vcc;
-
 // remove all command and special characters
 inline std::wstring GetSimpleCode(const std::wstring &str) {
     TRY

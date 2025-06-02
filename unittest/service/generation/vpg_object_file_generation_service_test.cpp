@@ -15,8 +15,6 @@
 #include "vpg_include_path_service.hpp"
 #include "vpg_object_file_generation_service.hpp"
 
-using namespace vcc;
-
 static std::map<std::wstring, std::wstring> _IncludeFiles;
 static std::map<std::wstring, std::shared_ptr<VPGEnumClass>> _EnumClasses;
 

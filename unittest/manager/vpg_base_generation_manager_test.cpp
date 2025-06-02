@@ -11,8 +11,6 @@
 #include "vpg_project_type.hpp"
 #include "vpg_cpp_generation_manager.hpp"
 
-using namespace vcc;
-
 class VPGBaseGenerationManagerTest : public testing::Test 
 {
     GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);

@@ -6,8 +6,6 @@
 
 #define DLL_NAME L"libvpg"
 
-using namespace vcc;
-
 TEST(DllTest, LoadDll) {
     std::wstring dllName = DLL_NAME;
 

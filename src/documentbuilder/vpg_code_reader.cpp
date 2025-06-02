@@ -5,8 +5,6 @@
 #include "exception_macro.hpp"
 #include "string_helper.hpp"
 
-using namespace vcc;
-
 VPGCodeReader::VPGCodeReader(std::wstring commandDelimiter)
 {
     this->_CommandDelimiter = commandDelimiter;

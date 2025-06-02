@@ -18,8 +18,6 @@
 #include "vpg_object_file_generation_service.hpp"
 #include "vpg_tag_helper.hpp"
 
-using namespace vcc;
-
 #define LOG_ID L"Action File Generation"
 
 void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,

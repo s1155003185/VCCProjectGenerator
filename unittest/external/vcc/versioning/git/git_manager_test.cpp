@@ -2,8 +2,6 @@
 
 #include "git_manager.hpp"
 
-using namespace vcc;
-
 class GitManagerTest : public testing::Test 
 {
     private:

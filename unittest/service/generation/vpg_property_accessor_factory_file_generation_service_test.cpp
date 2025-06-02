@@ -9,8 +9,6 @@
 
 #include "vpg_property_accessor_factory_file_generation_service.hpp"
 
-using namespace vcc;
-
 class VPGPropertyAccessorFactoryFileGenerationServiceTest : public testing::Test 
 {
     GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);
@@ -39,8 +37,6 @@ class VPGPropertyAccessorFactoryFileGenerationServiceTest : public testing::Test
                 "#include \"base_factory.hpp\"\r\n"
                 "#include \"i_object.hpp\"\r\n"
                 "#include \"i_property_accessor.hpp\"\r\n"
-                "\r\n"
-                "using namespace vcc;\r\n"
                 "\r\n"
                 "class PropertyAccessorFactory : public BaseFactory\r\n"
                 "{\r\n"
@@ -80,8 +76,6 @@ TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Empty)
         "#include \"i_object.hpp\"\r\n"
         "#include \"i_property_accessor.hpp\"\r\n"
         "\r\n"
-        "using namespace vcc;\r\n"
-        "\r\n"
         "std::shared_ptr<IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_ptr<IObject> object)\r\n"
         "{\r\n"
         "    assert(object != nullptr);\r\n"
@@ -120,8 +114,6 @@ TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Normal)
         "#include \"base_property_accessor.hpp\"\r\n"
         "#include \"i_object.hpp\"\r\n"
         "#include \"i_property_accessor.hpp\"\r\n"
-        "\r\n"
-        "using namespace vcc;\r\n"
         "\r\n"
         "std::shared_ptr<IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_ptr<IObject> object)\r\n"
         "{\r\n"

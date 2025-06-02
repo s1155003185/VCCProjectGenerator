@@ -16,8 +16,6 @@
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
 // </vcc:customHeader>
 
-using namespace vcc;
-
 void Application::InitializeComponents()
 {
     TRY

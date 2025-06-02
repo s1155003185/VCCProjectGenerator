@@ -6,8 +6,6 @@
 #include "thread_service.hpp"
 #include "log_config.hpp"
 
-using namespace vcc;
-
 TEST(ThreadServiceTest, Join)
 {
     auto logConfig = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);

@@ -17,8 +17,6 @@
 #include "vpg_project_type.hpp"
 #include "vpg_vcc_generation_manager.hpp"
 
-using namespace vcc;
-
 void VPGProcessManager::InitLogConfig()
 {
     if (this->_LogConfig != nullptr)

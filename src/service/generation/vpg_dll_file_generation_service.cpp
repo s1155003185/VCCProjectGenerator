@@ -10,8 +10,6 @@
 
 #include "vpg_file_generation_service.hpp"
 
-using namespace vcc;
-
 #define LOG_ID L"Dll File Generation"
 
 std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFileGenerationServiceOption *option)

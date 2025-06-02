@@ -7,8 +7,6 @@
 #include "file_helper.hpp"
 #include "vpg_code_reader.hpp"
 
-using namespace vcc;
-
 #define CLASS_ID L"VPGCppGenerationManager"
 
 void VPGCppGenerationManager::Add() const

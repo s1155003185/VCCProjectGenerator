@@ -9,8 +9,6 @@
 #include "file_helper.hpp"
 #include "log_config.hpp"
 
-using namespace vcc;
-
 class FileHelperTest : public testing::Test 
 {
     GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);

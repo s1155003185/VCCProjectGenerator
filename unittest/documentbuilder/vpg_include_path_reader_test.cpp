@@ -7,8 +7,6 @@
 #include "string_helper.hpp"
 #include "vpg_include_path_reader.hpp"
 
-using namespace vcc;
-
 TEST(VPGIncludePathReaderTest, Normal)
 {
     auto reader = std::make_unique<VPGIncludePathReader>();

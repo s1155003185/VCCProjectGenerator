@@ -10,8 +10,6 @@
 
 #include "vpg_project_type.hpp"
 
-using namespace vcc;
-
 constexpr auto URL = L"https://github.com/s1155003185/";
 constexpr auto URL_GIT = L".git"; 
 constexpr auto CPP_GIT_PROJ_NAME =  L"VCCSimpleTemplateCPP";

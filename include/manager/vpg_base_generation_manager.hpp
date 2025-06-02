@@ -7,8 +7,6 @@
 #include "i_vpg_generation_manager.hpp"
 #include "vpg_config.hpp"
 
-using namespace vcc;
-
 const std::wstring MakeFileName = L"Makefile";
 const std::wstring unittestFolderName = L"unittest";
 

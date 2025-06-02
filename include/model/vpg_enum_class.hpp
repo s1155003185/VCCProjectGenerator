@@ -8,8 +8,6 @@
 #include "class_macro.hpp"
 #include "vector_helper.hpp"
 
-using namespace vcc;
-
 enum class VPGEnumClassPropertyAccessMode
 {
     ReadWrite,

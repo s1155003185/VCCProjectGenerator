@@ -17,8 +17,6 @@
 #include "vpg_include_path_service.hpp"
 #include "vpg_tag_helper.hpp"
 
-using namespace vcc;
-
 #define LOG_ID L"Object File Generation"
 
 std::wstring VPGObjectFileGenerationService::GetCloneFunction(const VPGEnumClass *enumClass, const std::wstring &className, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping, const bool &isCpp)

@@ -8,8 +8,6 @@
 #include "vpg_process_manager.hpp"
 #include "string_helper.hpp"
 
-using namespace vcc;
-
 int main(int argc, char **argv)
 {
 	Application::Run();

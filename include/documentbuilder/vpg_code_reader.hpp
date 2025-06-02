@@ -6,8 +6,6 @@
 #include "class_macro.hpp"
 #include "xml_builder.hpp"
 
-using namespace vcc;
-
 class VPGCodeReader : public XmlBuilder
 {
     GETSET(std::wstring, CommandDelimiter, L"//")

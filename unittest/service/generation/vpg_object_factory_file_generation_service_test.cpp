@@ -9,8 +9,6 @@
 
 #include "vpg_object_factory_file_generation_service.hpp"
 
-using namespace vcc;
-
 class VPGObjectFactoryFileGenerationServiceTest : public testing::Test 
 {
     GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);
@@ -39,8 +37,6 @@ class VPGObjectFactoryFileGenerationServiceTest : public testing::Test
                 "#include \"base_factory.hpp\"\r\n"
                 "#include \"i_object.hpp\"\r\n"
                 "#include \"object_type.hpp\"\r\n"
-                "\r\n"
-                "using namespace vcc;\r\n"
                 "\r\n"
                 "class ObjectFactory : public BaseFactory\r\n"
                 "{\r\n"
@@ -79,8 +75,6 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Empty)
         "#include \"exception_macro.hpp\"\r\n"
         "#include \"i_object.hpp\"\r\n"
         "#include \"object_type.hpp\"\r\n"
-        "\r\n"
-        "using namespace vcc;\r\n"
         "\r\n"
         "std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<IObject> parentObject)\r\n"
         "{\r\n"
@@ -123,8 +117,6 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Normal)
         "#include \"exception_macro.hpp\"\r\n"
         "#include \"i_object.hpp\"\r\n"
         "#include \"object_type.hpp\"\r\n"
-        "\r\n"
-        "using namespace vcc;\r\n"
         "\r\n"
         "std::shared_ptr<IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<IObject> parentObject)\r\n"
         "{\r\n"

@@ -10,8 +10,6 @@
 #include "vpg_global.hpp"
 #include "vpg_java_generation_service.hpp"
 
-using namespace vcc;
-
 class VPGJavaGenerationServiceTest : public testing::Test 
 {
     GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);
@@ -68,7 +66,6 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "#include \"property_accessor_macro.hpp\"\r\n"
         "#include \"exception_macro.hpp\"\r\n"
         "\r\n"
-        "using namespace vcc;\r\n"
         "// </vcc:dllInterfaceHeader>\r\n"
         "\r\n"
         "extern \"C\"\r\n"

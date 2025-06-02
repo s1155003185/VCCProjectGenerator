@@ -7,8 +7,6 @@
 #include "i_object.hpp"
 #include "vector_helper.hpp"
 
-using namespace vcc;
-
 class VectorHelperTestObj : public BaseObject
 {
     public:

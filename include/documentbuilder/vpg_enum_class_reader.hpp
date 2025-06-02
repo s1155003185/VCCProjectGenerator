@@ -8,8 +8,6 @@
 #include "json.hpp"
 #include "vpg_enum_class.hpp"
 
-using namespace vcc;
-
 class VPGEnumClassReader
 {
     SET(std::wstring, ClassMacroList);

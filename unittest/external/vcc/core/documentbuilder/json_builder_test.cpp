@@ -7,8 +7,6 @@
 #include "json.hpp"
 #include "json_builder.hpp"
 
-using namespace vcc;
-
 TEST(JsonBuilderTest, String)
 {
     std::wstring str = L"{\"name\":\"John\"}";

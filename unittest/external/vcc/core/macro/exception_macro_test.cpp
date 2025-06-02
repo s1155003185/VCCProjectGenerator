@@ -11,8 +11,6 @@
 #include "log_config.hpp"
 #include "string_helper.hpp"
 
-using namespace vcc;
-
 TEST(ExceptionMacroTest, General)
 {
     bool throwException = false;

@@ -9,8 +9,6 @@
 #include "vpg_main_form.hpp"
 #include "vpg_main_form_property.hpp"
 
-using namespace vcc;
-
 // Mode
 TEST(ApplicationTest, CreateForm)
 {

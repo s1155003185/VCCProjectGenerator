@@ -10,8 +10,6 @@
 #include "vpg_enum_class.hpp"
 #include "vpg_config.hpp"
 
-using namespace vcc;
-
 class VPGJavaGenerationService
 {
     private:

@@ -9,8 +9,6 @@
 #include "action_manager.hpp"
 #include "operation_result.hpp"
 
-using namespace vcc;
-
 class ActionManagerTestClass final : public BaseAction
 {
     private:

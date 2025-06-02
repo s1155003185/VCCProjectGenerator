@@ -6,8 +6,6 @@
 #include "config.hpp"
 #include "config_builder.hpp"
 
-using namespace vcc;
-
 TEST(ConfigBuilderTest, Full)
 {
     std::unique_ptr<ConfigBuilder> reader = std::make_unique<ConfigBuilder>();

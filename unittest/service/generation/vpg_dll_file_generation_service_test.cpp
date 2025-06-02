@@ -9,8 +9,6 @@
 
 #include "vpg_dll_file_generation_service.hpp"
 
-using namespace vcc;
-
 class VPGDllFileGenerationServiceTest : public testing::Test 
 {
     GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);

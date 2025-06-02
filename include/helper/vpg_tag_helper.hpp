@@ -6,8 +6,6 @@
 #include "exception_macro.hpp"
 #include "string_helper.hpp"
 
-using namespace vcc;
-
 const std::wstring VCC_TAG = L"vcc";
 
 enum class VPGCodeType

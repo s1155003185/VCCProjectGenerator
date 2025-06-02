@@ -4,8 +4,6 @@
 #include "vpg_global.hpp"
 #include "vpg_include_path_service.hpp"
 
-using namespace vcc;
-
 // Mode
 TEST(VPGIncludePathSerciceTest, GetWorkspaceIncludePath)
 {

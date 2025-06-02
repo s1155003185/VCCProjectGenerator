@@ -12,8 +12,6 @@
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_global.hpp"
 
-using namespace vcc;
-
 #define CLASS_ID L"VPGVccGenerationManager"
 
 std::wstring VPGVccGenerationManager::AdjustAppliationCpp(const std::wstring &fileContent) const

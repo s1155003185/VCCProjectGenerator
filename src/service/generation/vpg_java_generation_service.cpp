@@ -14,8 +14,6 @@
 #include "vpg_config_type.hpp"
 #include "vpg_property_accessor_generation_service.hpp"
 
-using namespace vcc;
-
 #define LOG_ID L"Java Generation"
 #define JAVA_BRIDGE_FILE_NAME L"DllFunctions.java"
 #define JAVA_PROJECT_SOURCE_PARENT_FOLDER L"src/main/java"

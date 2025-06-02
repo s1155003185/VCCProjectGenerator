@@ -6,8 +6,6 @@
 #include "file_helper.hpp"
 #include "vpg_class_helper.hpp"
 
-using namespace vcc;
-
 #define LOG_ID L"Property Accessor Generation"
 const std::wstring containerToken = L"<Container>";
 const std::wstring objectToken = L"<Object>";

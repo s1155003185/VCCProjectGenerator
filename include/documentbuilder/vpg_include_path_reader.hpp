@@ -6,8 +6,6 @@
 
 #include "platform_type.hpp"
 
-using namespace vcc;
-
 class VPGIncludePathReader
 {
     private:

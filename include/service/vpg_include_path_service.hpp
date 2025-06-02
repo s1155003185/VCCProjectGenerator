@@ -6,8 +6,6 @@
 #include "platform_type.hpp"
 #include "vpg_enum_class.hpp"
 
-using namespace vcc;
-
 class VPGIncludePathService
 {
     private:

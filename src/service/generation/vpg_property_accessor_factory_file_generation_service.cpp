@@ -8,8 +8,6 @@
 #include "log_service.hpp"
 #include "set_helper.hpp"
 
-using namespace vcc;
-
 #define LOG_ID L"Prorperty Accessor Factory File Generation"
 
 void VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(const LogConfig *logConfig, const std::wstring &filePathHpp)

@@ -7,8 +7,6 @@
 #include "log_config.hpp"
 #include "vpg_enum_class.hpp"
 
-using namespace vcc;
-
 class VPGActionFileGenerationService
 {
     private:

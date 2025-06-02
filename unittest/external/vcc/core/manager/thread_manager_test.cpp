@@ -3,8 +3,6 @@
 #include "thread.hpp"
 #include "thread_manager.hpp"
 
-using namespace vcc;
-
 class ThreadManagerTest : public testing::Test 
 {
     MANAGER_SPTR_NULL(ThreadManager, Manager);

@@ -9,8 +9,6 @@
 #include "i_object.hpp"
 #include "map_helper.hpp"
 
-using namespace vcc;
-
 class MapHelperTestObj : public BaseObject
 {
     public:

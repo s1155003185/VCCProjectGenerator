@@ -14,8 +14,6 @@
 #include "vpg_code_reader.hpp"
 #include "vpg_file_sync_service.hpp"
 
-using namespace vcc;
-
 const std::wstring VCC_NAMESPACE = L"vcc";
 const std::wstring VCC_NAME = VCC_NAMESPACE + L":vccproj";
 

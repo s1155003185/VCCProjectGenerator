@@ -7,8 +7,6 @@
 #include "class_macro.hpp"
 #include "log_config.hpp"
 
-using namespace vcc;
-
 class VPGDllFileGenerationServiceOption : public BaseObject
 {
     GETSET(bool, IsGeneratePropertyAccessor, false);

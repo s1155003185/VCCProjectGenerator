@@ -10,8 +10,6 @@
 #include "vpg_global.hpp"
 #include "vpg_process_manager.hpp"
 
-using namespace vcc;
-
 class VPGProcessManagerTest : public testing::Test 
 {
     MANAGER_SPTR_NULL(VPGProcessManager, Manager);

@@ -8,8 +8,6 @@
 
 #include <memory>
 
-using namespace vcc;
-
 class BasePropertyAccessorTestObject : public BaseObject
 {
     GETSET(std::wstring, String, L"Test")

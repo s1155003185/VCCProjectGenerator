@@ -11,8 +11,6 @@
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_global.hpp"
 
-using namespace vcc;
-
 class VPGActionFileGenerationServiceTest : public testing::Test 
 {
     GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);

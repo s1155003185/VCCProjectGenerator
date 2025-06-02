@@ -3,8 +3,6 @@
 #include "json.hpp"
 #include "json_builder.hpp"
 
-using namespace vcc;
-
 TEST(JsonTest, Full) 
 {
     std::unique_ptr<JsonBuilder> builder = std::make_unique<JsonBuilder>();

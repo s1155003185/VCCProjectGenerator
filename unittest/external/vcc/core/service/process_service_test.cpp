@@ -7,8 +7,6 @@
 #include "log_config.hpp"
 #include "string_helper.hpp"
 
-using namespace vcc;
-
 TEST(ProcessServiceTest, Normal)
 {
     EXPECT_TRUE(ProcessService::Execute(nullptr, L"", L"git --version").starts_with(L"git version"));

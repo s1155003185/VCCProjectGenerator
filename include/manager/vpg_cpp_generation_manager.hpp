@@ -6,8 +6,6 @@
 #include "vpg_base_generation_manager.hpp"
 #include "vpg_project_type.hpp"
 
-using namespace vcc;
-
 class VPGCppGenerationManager : public VPGBaseGenerationManager
 {
     public:

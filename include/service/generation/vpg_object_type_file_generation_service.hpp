@@ -5,8 +5,6 @@
 
 #include "log_config.hpp"
 
-using namespace vcc;
-
 class VPGObjectTypeFileGenerationService
 {
     private:

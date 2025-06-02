@@ -12,8 +12,6 @@
 #include "string_helper.hpp"
 #include "vpg_enum_class.hpp"
 
-using namespace vcc;
-
 const std::wstring attributePrefix = L"@@";
 std::mutex _mutex;
 

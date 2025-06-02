@@ -8,8 +8,6 @@
 #include "class_macro.hpp"
 #include "object_type.hpp"
 
-using namespace vcc;
-
 class ClassMacroTestClassElement : public BaseObject
 {
     GETSET(int, Index, 0);

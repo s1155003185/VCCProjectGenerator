@@ -11,8 +11,6 @@
 #include "vpg_config.hpp"
 #include "vpg_project_type.hpp"
 
-using namespace vcc;
-
 class VPGProcessManager : public BaseManager
 {
     // project

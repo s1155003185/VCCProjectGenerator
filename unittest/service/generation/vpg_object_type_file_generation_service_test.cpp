@@ -9,8 +9,6 @@
 
 #include "vpg_object_type_file_generation_service.hpp"
 
-using namespace vcc;
-
 class VPGObjectTypeFileGenerationServiceTest : public testing::Test 
 {
     GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);

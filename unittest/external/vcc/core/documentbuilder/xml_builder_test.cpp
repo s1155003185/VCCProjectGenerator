@@ -5,8 +5,6 @@
 
 #include "xml_builder.hpp"
 
-using namespace vcc;
-
 TEST(XMLBuilderTest, ParserSimple_String)
 {
     std::unique_ptr<XmlBuilder> reader = std::make_unique<XmlBuilder>();

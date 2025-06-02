@@ -12,8 +12,6 @@
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
 // </vcc:customHeader>
 
-using namespace vcc;
-
 class Application : public BaseForm
 {
     private:

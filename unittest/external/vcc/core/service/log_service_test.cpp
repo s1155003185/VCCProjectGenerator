@@ -7,8 +7,6 @@
 #include "file_helper.hpp"
 #include "log_service.hpp"
 
-using namespace vcc;
-
 TEST(LogServiceTest, LogTest) 
 {
     std::wstring filePath = ConcatPaths({std::filesystem::current_path().wstring(), L"bin/Debug/AppLogs/LogServiceTest.log"});

@@ -3,8 +3,6 @@
 #include "exception_macro.hpp"
 #include "string_helper.hpp"
 
-using namespace vcc;
-
 size_t VPGIncludePathReader::IsQuote(const std::wstring &cppCode, const size_t &pos) const
 {
     TRY

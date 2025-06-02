@@ -10,8 +10,6 @@
 #include "vpg_enum_class_reader.hpp"
 #include "vpg_config.hpp"
 
-using namespace vcc;
-
 // Property: Generate Object Type, Object Class, PropertyAccessor, Interface // TODO: Interface
 // Type: Generate Interface // TODO: Interface
 
