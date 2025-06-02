@@ -7,7 +7,7 @@ using namespace vcc;
 class GitManagerTest : public testing::Test 
 {
     private:
-        MANAGER_SPTR_NULL(GitManager, Manager);
+        MANAGER_SPTR_NULL(vcc::GitManager, Manager);
 
     public:
         void SetUp() override

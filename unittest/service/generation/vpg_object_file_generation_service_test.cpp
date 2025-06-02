@@ -1171,7 +1171,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
         "{\r\n"
         "    String // GETSET(std::wstring, String, L\"\")\r\n"
         "    , GitManager1 // MANAGER_SPTR(GitManager, GitManager1, _LogProperty)\r\n"
-        "    , GitManager2 // MANAGER_SPTR_NULL(GitManager, GitManager2)\r\n"
+        "    , GitManager2 // MANAGER_SPTR_NULL(vcc::GitManager, GitManager2)\r\n"
         "    , GitManager3 // MANAGER_SPTR_PARENT(GitManager, GitManager3, BaseGitManager)\r\n"
         "};\r\n"
         "\r\n";
@@ -1221,7 +1221,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
         "{\r\n"
         "    GETSET(std::wstring, String, L\"\")\r\n"
         "    MANAGER_SPTR(GitManager, GitManager1, _LogProperty)\r\n"
-        "    MANAGER_SPTR_NULL(GitManager, GitManager2)\r\n"
+        "    MANAGER_SPTR_NULL(vcc::GitManager, GitManager2)\r\n"
         "    MANAGER_SPTR_PARENT(GitManager, GitManager3, BaseGitManager)\r\n"
         "\r\n"
         "    // <vcc:customVPGGitFormProperties sync=\"RESERVE\" gen=\"RESERVE\">\r\n"

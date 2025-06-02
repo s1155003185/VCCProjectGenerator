@@ -633,7 +633,7 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
         "enum class Property {\r\n"
         "    Property, // GETSET(std::wstring, Property, L\"\")\r\n"
         "    Manager1, // MANAGER_SPTR(GitManager, GitManager1, _LogProperty)\r\n"
-        "    Manager2, // MANAGER_SPTR_NULL(GitManager, GitManager2)\r\n"
+        "    Manager2, // MANAGER_SPTR_NULL(vcc::GitManager, GitManager2)\r\n"
         "    Manager3, // MANAGER_SPTR_PARENT(GitManager, GitManager3, GitBaseManager)\r\n"
         "    Action1, // ACTION(AddGitLog) \r\n"
         "    Action2, // ACTION_WITH_ARG_SPTR(DeleteGitLog, GitLog) \r\n"

@@ -21,7 +21,7 @@ using namespace vcc;
 class VPGGitForm : public BaseForm, public BaseJsonObject
 {
     GETSET_SPTR_NULL(VPGGitLog, Log)
-    MANAGER_SPTR_NULL(GitManager, GitManager, _LogConfig)
+    MANAGER_SPTR_NULL(vcc::GitManager, GitManager, _LogConfig)
 
     // <vcc:customVPGGitFormProperties sync="RESERVE" gen="RESERVE">
     // </vcc:customVPGGitFormProperties>
