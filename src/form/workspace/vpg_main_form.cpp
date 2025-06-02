@@ -80,8 +80,8 @@ std::shared_ptr<vcc::IResult> VPGMainFormInitialize::OnRedo()
         }
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormInitializeOnRedo>
-    CATCH_RETURN_RESULT(OperationResult)
-    return std::make_shared<OperationResult>();
+    CATCH_RETURN_RESULT(vcc::OperationResult)
+    return std::make_shared<vcc::OperationResult>();
 }
 
 VPGMainFormAddWorkspaceForm::VPGMainFormAddWorkspaceForm(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm) : vcc::BaseAction()
@@ -130,8 +130,8 @@ std::shared_ptr<vcc::IResult> VPGMainFormAddWorkspaceForm::OnRedo()
         form->SaveConfig();
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormAddWorkspaceFormOnRedo>
-    CATCH_RETURN_RESULT(OperationResult)
-    return std::make_shared<OperationResult>();
+    CATCH_RETURN_RESULT(vcc::OperationResult)
+    return std::make_shared<vcc::OperationResult>();
 }
 
 VPGMainFormDeleteWorkspaceForm::VPGMainFormDeleteWorkspaceForm(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm) : vcc::BaseAction()
@@ -181,8 +181,8 @@ std::shared_ptr<vcc::IResult> VPGMainFormDeleteWorkspaceForm::OnRedo()
         form->SaveConfig();
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormDeleteWorkspaceFormOnRedo>
-    CATCH_RETURN_RESULT(OperationResult)
-    return std::make_shared<OperationResult>();
+    CATCH_RETURN_RESULT(vcc::OperationResult)
+    return std::make_shared<vcc::OperationResult>();
 }
 
 VPGMainFormRenameWorkspaceForm::VPGMainFormRenameWorkspaceForm(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm) : vcc::BaseAction()
@@ -223,8 +223,8 @@ std::shared_ptr<vcc::IResult> VPGMainFormRenameWorkspaceForm::OnRedo()
     TRY
         // <vcc:VPGMainFormRenameWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormRenameWorkspaceFormOnRedo>
-    CATCH_RETURN_RESULT(OperationResult)
-    return std::make_shared<OperationResult>();
+    CATCH_RETURN_RESULT(vcc::OperationResult)
+    return std::make_shared<vcc::OperationResult>();
 }
 
 VPGMainForm::VPGMainForm() : vcc::BaseForm()

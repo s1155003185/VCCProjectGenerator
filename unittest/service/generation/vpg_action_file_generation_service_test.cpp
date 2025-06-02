@@ -141,8 +141,8 @@ std::wstring GetCppClass(const std::wstring &actionName, const std::vector<std::
             "    TRY\r\n"
             "        // <vcc:VPGGitForm" + actionName + L"OnRedo sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
             "        // </vcc:VPGGitForm" + actionName + L"OnRedo>\r\n"
-            "    CATCH_RETURN_RESULT(OperationResult)\r\n"
-            "    return std::make_shared<OperationResult>();\r\n"
+            "    CATCH_RETURN_RESULT(vcc::OperationResult)\r\n"
+            "    return std::make_shared<vcc::OperationResult>();\r\n"
             "}\r\n"
             "\r\n"
             "std::shared_ptr<IResult> VPGGitForm" + actionName + L"::OnUndo()\r\n"
@@ -150,8 +150,8 @@ std::wstring GetCppClass(const std::wstring &actionName, const std::vector<std::
             "    TRY\r\n"
             "        // <vcc:VPGGitForm" + actionName + L"OnUndo sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
             "        // </vcc:VPGGitForm" + actionName + L"OnUndo>\r\n"
-            "    CATCH_RETURN_RESULT(OperationResult)\r\n"
-            "    return std::make_shared<OperationResult>();\r\n"
+            "    CATCH_RETURN_RESULT(vcc::OperationResult)\r\n"
+            "    return std::make_shared<vcc::OperationResult>();\r\n"
             "}\r\n";
         return action;
     CATCH
