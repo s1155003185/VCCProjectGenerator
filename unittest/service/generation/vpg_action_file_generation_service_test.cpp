@@ -15,13 +15,13 @@ using namespace vcc;
 
 class VPGActionFileGenerationServiceTest : public testing::Test 
 {
-    GETSET_SPTR_NULL(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGActionFileGenerationServiceTest/");
 
     public:
         void SetUp() override
         {
-            this->_LogConfig = std::make_shared<LogConfig>();
+            this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
         }

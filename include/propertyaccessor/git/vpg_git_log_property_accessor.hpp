@@ -5,9 +5,7 @@
 #include "base_property_accessor.hpp"
 #include "property_accessor_macro.hpp"
 
-using namespace vcc;
-
-class VPGGitLogPropertyAccessor : public BasePropertyAccessor
+class VPGGitLogPropertyAccessor : public vcc::BasePropertyAccessor
 {
     PROPERTY_ACCESSOR_HEADER(bool, Bool)
     PROPERTY_ACCESSOR_HEADER(long, Long)
@@ -16,6 +14,6 @@ class VPGGitLogPropertyAccessor : public BasePropertyAccessor
     PROPERTY_ACCESSOR_CONTAINER_HEADER
 
     public:
-        VPGGitLogPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}
+        VPGGitLogPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}
         virtual ~VPGGitLogPropertyAccessor() {}
 };

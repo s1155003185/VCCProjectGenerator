@@ -13,7 +13,7 @@ using namespace vcc;
 
 class FileHelperTest : public testing::Test 
 {
-    GETSET_SPTR_NULL(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/FileHelperTest/");
     GETSET(std::wstring, WorkspaceSource, L"");
     GETSET(std::wstring, WorkspaceTarget, L"");
@@ -28,7 +28,7 @@ class FileHelperTest : public testing::Test
 
         void SetUp() override
         {
-            this->_LogConfig = std::make_shared<LogConfig>();
+            this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->SetIsConsoleLog(false);
             
             this->_WorkspaceSource = this->_Workspace + L"Source";

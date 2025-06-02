@@ -10,7 +10,7 @@ using namespace vcc;
 
 TEST(ThreadServiceTest, Join)
 {
-    auto logConfig = std::make_shared<LogConfig>(LogConfigInitialType::None);
+    auto logConfig = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
     auto thread = std::make_shared<Thread>(logConfig,
         [](const Thread* /*thread*/) {
             std::wcout << L"ThreadServiceTest::Join Execute!" << std::endl;
@@ -22,7 +22,7 @@ TEST(ThreadServiceTest, Join)
 
 TEST(ThreadServiceTest, Detach)
 {
-    auto logConfig = std::make_shared<LogConfig>(LogConfigInitialType::None);
+    auto logConfig = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
     auto thread = std::make_shared<Thread>(logConfig,
         [](const Thread* /*thread*/) {
             std::wcout << L"ThreadServiceTest::Detach Execute!" << std::endl;

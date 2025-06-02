@@ -22,7 +22,7 @@ static std::map<std::wstring, std::shared_ptr<VPGEnumClass>> _EnumClasses;
 
 class VPGObjectFileGenerationServiceTest : public testing::Test 
 {
-    GETSET_SPTR_NULL(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGObjectFileGenerationServiceTest/");
     GETSET(std::wstring, FilePathHpp, L"");
     GETSET(std::wstring, FilePathCpp, L"");
@@ -32,7 +32,7 @@ class VPGObjectFileGenerationServiceTest : public testing::Test
     public:
         void SetUp() override
         {
-            this->_LogConfig = std::make_shared<LogConfig>();
+            this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
@@ -1002,7 +1002,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormWithIndependentManager)
         "{\r\n"
         "    TRY\r\n"
         "        BaseForm::InitializeComponents();\r\n"
-        "        _LogConfig = std::make_shared<LogConfig>();\r\n"
+        "        _LogConfig = std::make_shared<vcc::LogConfig>();\r\n"
         "        _ActionManager = std::make_shared<ActionManager>(_LogConfig);\r\n"
         "        _ThreadManager = std::make_shared<ThreadManager>(_LogConfig);\r\n"
         "        OnInitializeComponents();\r\n"

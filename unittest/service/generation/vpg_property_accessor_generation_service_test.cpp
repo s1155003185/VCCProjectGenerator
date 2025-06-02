@@ -20,7 +20,7 @@ using namespace vcc;
 // need to change TEST_F(VPGVccGenerationManagerTest, XXX)
 class VPGPropertyAccessorFileGenerationServiceTest : public testing::Test 
 {
-    GETSET_SPTR_NULL(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGPropertyAccessorFileGenerationServiceTest/");
     
     GETSET(std::wstring, FilePathHpp, L"");
@@ -31,7 +31,7 @@ class VPGPropertyAccessorFileGenerationServiceTest : public testing::Test
     public:
         void SetUp() override
         {
-            this->_LogConfig = std::make_shared<LogConfig>();
+            this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 

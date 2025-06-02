@@ -8,14 +8,14 @@ using namespace vcc;
 class ThreadManagerTest : public testing::Test 
 {
     MANAGER_SPTR_NULL(ThreadManager, Manager);
-    GETSET_SPTR_NULL(LogConfig, LogConfig)
+    GETSET_SPTR_NULL(vcc::LogConfig, LogConfig)
 
     public:
         void SetUp() override
         {
             _Manager = std::make_shared<ThreadManager>(nullptr);
             _Manager->SetThreadManagementMode(ThreadManagementMode::Join);
-            _LogConfig = std::make_shared<LogConfig>(LogConfigInitialType::None);
+            _LogConfig = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
         }
 
         void TearDown() override

@@ -12,9 +12,8 @@
 #include "vpg_config_type.hpp"
 #include "vpg_project_type.hpp"
 
-using namespace vcc;
 
-class VPGConfigTemplate : public BaseObject, public BaseJsonObject
+class VPGConfigTemplate : public vcc::BaseObject, public vcc::BaseJsonObject
 {
     GETSET(std::wstring, Url, L"")
     GETSET(std::wstring, Workspace, L"")
@@ -22,54 +21,54 @@ class VPGConfigTemplate : public BaseObject, public BaseJsonObject
     GETSET(bool, IsExcludeVCCUnitTest, false)
 
     public:
-        VPGConfigTemplate() : BaseObject(ObjectType::ConfigTemplate) {}
+        VPGConfigTemplate() : vcc::BaseObject(ObjectType::ConfigTemplate) {}
         virtual ~VPGConfigTemplate() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             return std::make_shared<VPGConfigTemplate>(*this);
         }
 
-        virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
+        virtual std::shared_ptr<vcc::Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 };
 
-class VPGConfigBehavior : public BaseObject, public BaseJsonObject
+class VPGConfigBehavior : public vcc::BaseObject, public vcc::BaseJsonObject
 {
     GETSET(VPGConfigActionHistoryType, ActionHistoryType, VPGConfigActionHistoryType::NoHistory)
     GETSET(bool, IsActionResultThrowException, false)
 
     public:
-        VPGConfigBehavior() : BaseObject(ObjectType::ConfigBehavior) {}
+        VPGConfigBehavior() : vcc::BaseObject(ObjectType::ConfigBehavior) {}
         virtual ~VPGConfigBehavior() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             return std::make_shared<VPGConfigBehavior>(*this);
         }
 
-        virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
+        virtual std::shared_ptr<vcc::Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 };
 
-class VPGConfigInput : public BaseObject, public BaseJsonObject
+class VPGConfigInput : public vcc::BaseObject, public vcc::BaseJsonObject
 {
     GETSET(std::wstring, TypeWorkspace, L"include/type")
 
     public:
-        VPGConfigInput() : BaseObject(ObjectType::ConfigInput) {}
+        VPGConfigInput() : vcc::BaseObject(ObjectType::ConfigInput) {}
         virtual ~VPGConfigInput() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             return std::make_shared<VPGConfigInput>(*this);
         }
 
-        virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
+        virtual std::shared_ptr<vcc::Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 };
 
-class VPGConfigOutput : public BaseObject, public BaseJsonObject
+class VPGConfigOutput : public vcc::BaseObject, public vcc::BaseJsonObject
 {
     GETSET(std::wstring, ExceptionTypeDirectory, L"include/type")
     GETSET(std::wstring, ObjectTypeDirectory, L"include/type")
@@ -89,19 +88,19 @@ class VPGConfigOutput : public BaseObject, public BaseJsonObject
     GETSET(std::wstring, PropertyAccessorFactoryDirectoryCpp, L"src/factory")
 
     public:
-        VPGConfigOutput() : BaseObject(ObjectType::ConfigOutput) {}
+        VPGConfigOutput() : vcc::BaseObject(ObjectType::ConfigOutput) {}
         virtual ~VPGConfigOutput() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             return std::make_shared<VPGConfigOutput>(*this);
         }
 
-        virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
+        virtual std::shared_ptr<vcc::Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 };
 
-class VPGConfigExport : public BaseObject, public BaseJsonObject
+class VPGConfigExport : public vcc::BaseObject, public vcc::BaseJsonObject
 {
     GETSET(VPGConfigInterfaceType, Interface, VPGConfigInterfaceType::Java)
     GETSET(std::wstring, Workspace, L"../JavaProject")
@@ -114,19 +113,19 @@ class VPGConfigExport : public BaseObject, public BaseJsonObject
     GETSET(std::wstring, TypeDirectory, L"src/main/java/com/package/type")
 
     public:
-        VPGConfigExport() : BaseObject(ObjectType::ConfigExport) {}
+        VPGConfigExport() : vcc::BaseObject(ObjectType::ConfigExport) {}
         virtual ~VPGConfigExport() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             return std::make_shared<VPGConfigExport>(*this);
         }
 
-        virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
+        virtual std::shared_ptr<vcc::Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 };
 
-class VPGConfig : public BaseObject, public BaseJsonObject
+class VPGConfig : public vcc::BaseObject, public vcc::BaseJsonObject
 {
     GETSET(std::wstring, Version, L"v0.0.1")
     GETSET(VPGProjectType, ProjectType, VPGProjectType::VccModule)
@@ -143,7 +142,7 @@ class VPGConfig : public BaseObject, public BaseJsonObject
     VECTOR_SPTR(VPGConfigExport, Exports)
 
     public:
-        VPGConfig() : BaseObject(ObjectType::Config)
+        VPGConfig() : vcc::BaseObject(ObjectType::Config)
         {
             _Template = std::make_shared<VPGConfigTemplate>();
             _Behavior = std::make_shared<VPGConfigBehavior>();
@@ -153,7 +152,7 @@ class VPGConfig : public BaseObject, public BaseJsonObject
 
         virtual ~VPGConfig() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             auto obj = std::make_shared<VPGConfig>(*this);
             obj->CloneBehavior(this->_Behavior.get());
@@ -164,6 +163,6 @@ class VPGConfig : public BaseObject, public BaseJsonObject
             return obj;
         }
 
-        virtual std::shared_ptr<Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<IDocument> document) override;
+        virtual std::shared_ptr<vcc::Json> ToJson() const override;
+        virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 };

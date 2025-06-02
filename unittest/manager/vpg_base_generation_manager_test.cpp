@@ -15,7 +15,7 @@ using namespace vcc;
 
 class VPGBaseGenerationManagerTest : public testing::Test 
 {
-    GETSET_SPTR_NULL(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGBaseGenerationManagerTest/");
     GETSET(std::wstring, WorkspaceSource, L"");
     GETSET(std::wstring, WorkspaceTarget, L"");
@@ -55,7 +55,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
     public:
         void SetUp() override
         {
-            this->_LogConfig = std::make_shared<LogConfig>();
+            this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->SetIsConsoleLog(false);
             this->_WorkspaceSource = this->_Workspace + L"Source";
             this->_WorkspaceTarget = this->_Workspace + L"Target";

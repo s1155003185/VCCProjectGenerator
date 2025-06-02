@@ -14,7 +14,7 @@
 
 class VPGFileGenerationManagerTest : public testing::Test 
 {
-    GETSET_SPTR_NULL(LogConfig, LogConfig);
+    GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);
 
     GETSET(std::wstring, Workspace, L"bin/Debug/FileGenerationServiceTest");
     GETSET(std::wstring, WorkspaceSource, L"");
@@ -52,7 +52,7 @@ class VPGFileGenerationManagerTest : public testing::Test
 
         void SetUp() override
         {
-            this->_LogConfig = std::make_shared<LogConfig>(LogConfigInitialType::None);
+            this->_LogConfig = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
             this->_WorkspaceSource = ConcatPaths({this->_Workspace, L"Source"});
             this->_WorkspaceTarget = ConcatPaths({this->_Workspace, L"Target"});
 

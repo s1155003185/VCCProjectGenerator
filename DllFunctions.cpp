@@ -14,8 +14,6 @@
 #include "object_type.hpp"
 #include "property_accessor_factory.hpp"
 #include "property_accessor_macro.hpp"
-
-using namespace vcc;
 // </vcc:dllInterfaceHeader>
 
 int GetVersion(wchar_t **str)

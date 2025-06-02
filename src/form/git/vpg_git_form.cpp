@@ -19,9 +19,7 @@
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
 // </vcc:customHeader>
 
-using namespace vcc;
-
-VPGGitForm::VPGGitForm() : BaseForm()
+VPGGitForm::VPGGitForm() : vcc::BaseForm()
 {
     TRY
         _ObjectType = ObjectType::GitForm;
@@ -29,26 +27,26 @@ VPGGitForm::VPGGitForm() : BaseForm()
     CATCH
 }
 
-std::shared_ptr<IObject> VPGGitForm::Clone() const
+std::shared_ptr<vcc::IObject> VPGGitForm::Clone() const
 {
     auto obj = std::make_shared<VPGGitForm>(*this);
     obj->CloneLog(this->_Log.get());
     return obj;
 }
 
-std::shared_ptr<Json> VPGGitForm::ToJson() const
+std::shared_ptr<vcc::Json> VPGGitForm::ToJson() const
 {
     TRY
-        auto json = std::make_unique<Json>();
+        auto json = std::make_unique<vcc::Json>();
         return json;
     CATCH
     return nullptr;
 }
 
-void VPGGitForm::DeserializeJson(std::shared_ptr<IDocument> document)
+void VPGGitForm::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
 {
     TRY
-        auto json = std::dynamic_pointer_cast<Json>(document);
+        auto json = std::dynamic_pointer_cast<vcc::Json>(document);
         assert(json != nullptr);
     CATCH
 }
@@ -56,17 +54,17 @@ void VPGGitForm::DeserializeJson(std::shared_ptr<IDocument> document)
 void VPGGitForm::InitializeComponents()
 {
     TRY
-        BaseForm::InitializeComponents();
+        vcc::BaseForm::InitializeComponents();
         _LogConfig = nullptr;
         _ActionManager = nullptr;
         _ThreadManager = nullptr;
         // Custom Managers
-        _GitManager = std::make_shared<GitManager>(_LogConfig);
+        _GitManager = std::make_shared<vcc::GitManager>(_LogConfig);
         OnInitializeComponents();
     CATCH
 }
 
-std::shared_ptr<IResult> VPGGitForm::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> /*argument*/)
+std::shared_ptr<vcc::IResult> VPGGitForm::DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> /*argument*/)
 {
     TRY
         switch(static_cast<VPGGitFormProperty>(formProperty))

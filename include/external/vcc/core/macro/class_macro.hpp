@@ -63,7 +63,7 @@ public: \
     public: \
         std::shared_ptr<type> Get##varName() const { return _##varName; } \
         void Set##varName(std::shared_ptr<type> value) { Validate##varName(value); _##varName = value; } \
-        void Clone##varName(const IObject *value) { _##varName = value != nullptr ? std::dynamic_pointer_cast<type>(value->Clone()) : nullptr; }
+        void Clone##varName(const vcc::IObject *value) { _##varName = value != nullptr ? std::dynamic_pointer_cast<type>(value->Clone()) : nullptr; }
     
 // std::vector
 

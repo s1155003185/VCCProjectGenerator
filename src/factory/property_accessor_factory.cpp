@@ -12,9 +12,7 @@
 #include "vpg_main_form_property_accessor.hpp"
 #include "vpg_workspace_form_property_accessor.hpp"
 
-using namespace vcc;
-
-std::shared_ptr<IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_ptr<IObject> object)
+std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_ptr<vcc::IObject> object)
 {
     assert(object != nullptr);
 

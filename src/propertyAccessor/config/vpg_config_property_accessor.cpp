@@ -12,8 +12,6 @@
 #include "vpg_config_type.hpp"
 #include "vpg_project_type.hpp"
 
-using namespace vcc;
-
 bool VPGConfigBehaviorPropertyAccessor::_ReadBool(const int64_t &objectProperty) const
 {
     TRY
@@ -864,7 +862,7 @@ void VPGConfigPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProper
     CATCH
 }
 
-std::shared_ptr<IObject> VPGConfigPropertyAccessor::_ReadObject(const int64_t &objectProperty) const
+std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_ReadObject(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -872,13 +870,13 @@ std::shared_ptr<IObject> VPGConfigPropertyAccessor::_ReadObject(const int64_t &o
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Behavior:
-            return std::static_pointer_cast<IObject>(obj->GetBehavior());
+            return std::static_pointer_cast<vcc::IObject>(obj->GetBehavior());
         case VPGConfigProperty::Input:
-            return std::static_pointer_cast<IObject>(obj->GetInput());
+            return std::static_pointer_cast<vcc::IObject>(obj->GetInput());
         case VPGConfigProperty::Ouput:
-            return std::static_pointer_cast<IObject>(obj->GetOutput());
+            return std::static_pointer_cast<vcc::IObject>(obj->GetOutput());
         case VPGConfigProperty::Template:
-            return std::static_pointer_cast<IObject>(obj->GetTemplate());
+            return std::static_pointer_cast<vcc::IObject>(obj->GetTemplate());
         default:
             assert(false);
         }
@@ -886,7 +884,7 @@ std::shared_ptr<IObject> VPGConfigPropertyAccessor::_ReadObject(const int64_t &o
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGConfigPropertyAccessor::_ReadObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
+std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_ReadObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -895,7 +893,7 @@ std::shared_ptr<IObject> VPGConfigPropertyAccessor::_ReadObjectAtIndex(const int
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Exports:
-            return std::static_pointer_cast<IObject>(obj->GetExportsAtIndex(index));
+            return std::static_pointer_cast<vcc::IObject>(obj->GetExportsAtIndex(index));
         default:
             assert(false);
         }
@@ -903,7 +901,7 @@ std::shared_ptr<IObject> VPGConfigPropertyAccessor::_ReadObjectAtIndex(const int
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGConfigPropertyAccessor::_ReadObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_ReadObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -911,7 +909,7 @@ std::shared_ptr<IObject> VPGConfigPropertyAccessor::_ReadObjectAtKey(const int64
     return nullptr;
 }
 
-void VPGConfigPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<IObject> value)
+void VPGConfigPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -936,7 +934,7 @@ void VPGConfigPropertyAccessor::_WriteObject(const int64_t &objectProperty, std:
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index)
+void VPGConfigPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -956,14 +954,14 @@ void VPGConfigPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectPropert
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<IObject> /*value*/, const void */*key*/)
+void VPGConfigPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index)
+void VPGConfigPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -983,7 +981,7 @@ void VPGConfigPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProper
     CATCH
 }
 
-std::shared_ptr<IObject> VPGConfigPropertyAccessor::_CloneObject(const int64_t &objectProperty) const
+std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObject(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -991,13 +989,13 @@ std::shared_ptr<IObject> VPGConfigPropertyAccessor::_CloneObject(const int64_t &
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Behavior:
-            return std::static_pointer_cast<IObject>(obj->GetBehavior()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->GetBehavior()->Clone());
         case VPGConfigProperty::Input:
-            return std::static_pointer_cast<IObject>(obj->GetInput()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->GetInput()->Clone());
         case VPGConfigProperty::Ouput:
-            return std::static_pointer_cast<IObject>(obj->GetOutput()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->GetOutput()->Clone());
         case VPGConfigProperty::Template:
-            return std::static_pointer_cast<IObject>(obj->GetTemplate()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->GetTemplate()->Clone());
         default:
             assert(false);
         }
@@ -1005,7 +1003,7 @@ std::shared_ptr<IObject> VPGConfigPropertyAccessor::_CloneObject(const int64_t &
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGConfigPropertyAccessor::_CloneObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
+std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -1014,7 +1012,7 @@ std::shared_ptr<IObject> VPGConfigPropertyAccessor::_CloneObjectAtIndex(const in
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Exports:
-            return std::static_pointer_cast<IObject>(obj->CloneExportsAtIndex(index));
+            return std::static_pointer_cast<vcc::IObject>(obj->CloneExportsAtIndex(index));
         default:
             assert(false);
         }
@@ -1022,7 +1020,7 @@ std::shared_ptr<IObject> VPGConfigPropertyAccessor::_CloneObjectAtIndex(const in
     return nullptr;
 }
 
-std::shared_ptr<IObject> VPGConfigPropertyAccessor::_CloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -1085,7 +1083,7 @@ void VPGConfigPropertyAccessor::_Remove(const int64_t &objectProperty, const voi
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const IObject *value)
+void VPGConfigPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const vcc::IObject *value)
 {
     TRY
         assert(value != nullptr);

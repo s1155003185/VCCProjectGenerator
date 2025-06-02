@@ -14,8 +14,6 @@
 #include "object_factory.hpp"
 #include "property_accessor_factory.hpp"
 #include "property_accessor_macro.hpp"
-
-using namespace vcc;
 // </vcc:dllInterfaceHeader>
 
 extern "C"

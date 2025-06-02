@@ -9,8 +9,6 @@
 #include "vpg_git_log.hpp"
 #include "vpg_git_log_property.hpp"
 
-using namespace vcc;
-
 bool VPGGitLogPropertyAccessor::_ReadBool(const int64_t &objectProperty) const
 {
     TRY
@@ -442,7 +440,7 @@ void VPGGitLogPropertyAccessor::_Remove(const int64_t &objectProperty, const voi
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const IObject */*value*/)
+void VPGGitLogPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const vcc::IObject */*value*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
