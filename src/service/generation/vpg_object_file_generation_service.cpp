@@ -731,26 +731,26 @@ std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass
         std::wstring inheritClass = L"";
         // Json
         if (enumClass->GetIsJson())
-            inheritClass += L", public BaseJsonObject";
+            inheritClass += L", public vcc::BaseJsonObject";
 
         std::wstring baseClassName = L"";
         switch (enumClass->GetType())
         {
         case VPGEnumClassType::ActionArgument:
-            baseClassName = L"BaseActionArgument";
+            baseClassName = L"vcc::BaseActionArgument";
             break;
         case VPGEnumClassType::Form:
-            baseClassName = L"BaseForm";
+            baseClassName = L"vcc::BaseForm";
             break;
         case VPGEnumClassType::Result:
-            baseClassName = L"BaseResult";
+            baseClassName = L"vcc::BaseResult";
             break;
         default:
-            baseClassName = L"BaseObject";
+            baseClassName = L"vcc::BaseObject";
             break;
         }
         if (!IsBlank(enumClass->GetInheritClass()))
-            baseClassName = enumClass->GetInheritClass();                
+            baseClassName = enumClass->GetInheritClass();
         std::wstring baseClassNameWithoutQuote = baseClassName;
         if (IsContain(baseClassNameWithoutQuote, L"<"))
             baseClassNameWithoutQuote = baseClassNameWithoutQuote.substr(0, Find(baseClassNameWithoutQuote, L"<"));
