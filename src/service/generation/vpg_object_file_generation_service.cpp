@@ -31,14 +31,14 @@ std::wstring VPGObjectFileGenerationService::GetCloneFunction(const VPGEnumClass
 
         if (enumClass->GetType() == VPGEnumClassType::Form) {
             if (isCpp) {
-                result += indent + L"std::shared_ptr<IObject> " + className + L"::Clone() const\r\n";
+                result += indent + L"std::shared_ptr<vcc::IObject> " + className + L"::Clone() const\r\n";
                 isContentNeeded = true;
             } else {
-                result += indent + L"virtual std::shared_ptr<IObject> Clone() const override;\r\n";
+                result += indent + L"virtual std::shared_ptr<vcc::IObject> Clone() const override;\r\n";
                 isContentNeeded = false;
             }
         } else {
-            result += indent + L"virtual std::shared_ptr<IObject> Clone() const override\r\n";
+            result += indent + L"virtual std::shared_ptr<vcc::IObject> Clone() const override\r\n";
             isContentNeeded = true;
         }
 
@@ -692,7 +692,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnum
             result += L"\r\n"
                 + INDENT + INDENT + L"virtual void InitializeComponents() override;\r\n"
                 "\r\n"
-                + INDENT + INDENT + L"virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) override;\r\n";
+                + INDENT + INDENT + L"virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;\r\n";
             break;
         case VPGEnumClassType::Result:
             if (option->GetBehavior() != nullptr && option->GetBehavior()->GetIsActionResultThrowException())
@@ -1269,7 +1269,7 @@ std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *en
             }
 
             result += L"\r\n"
-                "std::shared_ptr<IResult> " + className + L"::DoAction(const int64_t &formProperty, std::shared_ptr<IObject> " + (isContainArgument ? L"argument" : L"/*argument*/") + L")\r\n"
+                "std::shared_ptr<IResult> " + className + L"::DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> " + (isContainArgument ? L"argument" : L"/*argument*/") + L")\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + L"switch(static_cast<" + enumClass->GetName() + L">(formProperty))\r\n"
