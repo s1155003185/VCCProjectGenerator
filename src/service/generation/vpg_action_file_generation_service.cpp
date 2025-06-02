@@ -55,7 +55,7 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
             std::wstring actionClassName = className + property->GetPropertyName();
 
             std::wstring propertyStr = L"";
-            std::wstring assignmentStrSimple = L"std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm";
+            std::wstring assignmentStrSimple = L"std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm";
             std::wstring assignmentStr = assignmentStrSimple;
             
             std::wstring type1 = property->GetType1();
@@ -70,7 +70,7 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
                 assignmentStr += L"std::shared_ptr<" + type1 + L"> argument";
             }
 
-            std::wstring action = L"class " + actionClassName + L" : public BaseAction\r\n"
+            std::wstring action = L"class " + actionClassName + L" : public vcc::BaseAction\r\n"
                 "{\r\n"
                 + propertyStr
                 + (!propertyStr.empty() ? L"\r\n" : L"")
@@ -90,17 +90,17 @@ void VPGActionFileGenerationService::GenerateHpp(const LogConfig *logConfig,
                     + INDENT + INDENT + L"virtual std::wstring GetUndoMessageComplete() const override;\r\n";
                 
             action += L"\r\n"
-                + INDENT + INDENT + L"virtual std::shared_ptr<IResult> OnRedo() override;\r\n";
+                + INDENT + INDENT + L"virtual std::shared_ptr<vcc::IResult> OnRedo() override;\r\n";
 
             if (!property->GetIsNoHistory())
-                action += INDENT + INDENT + L"virtual std::shared_ptr<IResult> OnUndo() override;\r\n";
+                action += INDENT + INDENT + L"virtual std::shared_ptr<vcc::IResult> OnUndo() override;\r\n";
             
             action += L"\r\n"
                 + INDENT + INDENT + GetVccTagHeaderCustomClassProtectedFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
                 + INDENT + INDENT + GetVccTagTailerCustomClassProtectedFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
                 "\r\n"
                 + INDENT + L"public:\r\n"
-                + INDENT + INDENT + actionClassName + L"() : BaseAction() {}\r\n"
+                + INDENT + INDENT + actionClassName + L"() : vcc::BaseAction() {}\r\n"
                 + INDENT + INDENT + actionClassName + L"(" + assignmentStrSimple + L");\r\n";
                 if (assignmentStr != assignmentStrSimple)
                     action += INDENT + INDENT + actionClassName + L"(" + assignmentStr + L");\r\n";
@@ -182,7 +182,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
             // class name
             std::wstring actionClassName = className + property->GetPropertyName();
 
-            std::wstring assignmentStrSimple = L"std::shared_ptr<LogConfig> logConfig, std::shared_ptr<IObject> parentForm";
+            std::wstring assignmentStrSimple = L"std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm";
             std::wstring assignmentStr = assignmentStrSimple;
             std::vector<std::wstring> propertyAssignmentsSimple;
             propertyAssignmentsSimple.push_back(L"_LogConfig = logConfig");
@@ -206,13 +206,13 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
                 customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, property->GetActionResultUndoClass()));
 
 
-            std::wstring action = actionClassName + L"::" + actionClassName + L"(" + assignmentStrSimple + L") : BaseAction()\r\n"
+            std::wstring action = actionClassName + L"::" + actionClassName + L"(" + assignmentStrSimple + L") : vcc::BaseAction()\r\n"
             "{\r\n";
             for (auto const &str : propertyAssignmentsSimple)
                 action += INDENT + str + L";\r\n";
             action += L"}\r\n";
             if (assignmentStrSimple != assignmentStr) {
-                action += L"\r\n" + actionClassName + L"::" + actionClassName + L"(" + assignmentStr + L") : BaseAction()\r\n"
+                action += L"\r\n" + actionClassName + L"::" + actionClassName + L"(" + assignmentStr + L") : vcc::BaseAction()\r\n"
                 "{\r\n";
                 for (auto const &str : propertyAssignments)
                     action += INDENT + str + L";\r\n";
@@ -264,7 +264,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
 
             std::wstring redoReturnClass = !IsBlank(property->GetActionResultRedoClass()) ? property->GetActionResultRedoClass() : L"OperationResult";
             action += L"\r\n"
-                "std::shared_ptr<IResult> " + actionClassName + L"::OnRedo()\r\n"
+                "std::shared_ptr<vcc::IResult> " + actionClassName + L"::OnRedo()\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
@@ -276,7 +276,7 @@ void VPGActionFileGenerationService::GenerateCpp(const LogConfig *logConfig,
             if (!property->GetIsNoHistory()) {
                 std::wstring undoReturnClass = !IsBlank(property->GetActionResultUndoClass()) ? property->GetActionResultUndoClass() : L"OperationResult";
                 action += L"\r\n"
-                    "std::shared_ptr<IResult> " + actionClassName + L"::OnUndo()\r\n"
+                    "std::shared_ptr<vcc::IResult> " + actionClassName + L"::OnUndo()\r\n"
                     "{\r\n"
                     + INDENT + L"TRY\r\n"
                     + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
