@@ -38,7 +38,7 @@ namespace vcc
 #define CATCH_RETURN_RESULT(resultClass)  CATCH_RETURN_RESULT_DEBUG(resultClass)
 #else
 #define THROW_EXCEPTION(e) vcc::____HandleException(e, L"", L"")
-#define THROW_EXCEPTION_MSG(exceptionType, message) throw Exception(exceptionType, message)
+#define THROW_EXCEPTION_MSG(exceptionType, message) throw vcc::Exception(exceptionType, message)
 #define CATCH_RETURN_RESULT(resultClass)  } catch (const std::exception &e) { return vcc::____HandleResult<resultClass>(e, L"", L""); }
 #endif
 
