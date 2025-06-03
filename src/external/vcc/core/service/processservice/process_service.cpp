@@ -33,7 +33,7 @@ namespace vcc
         {
             std::wstring result = L"";
             // convert to token
-            std::vector<std::string> cmdTokens = ProcessService::ParseCMDLinux(command);
+            std::vector<std::string> cmdTokens = ProcessService::ParseCmdLinux(command);
             std::vector<char *> tokens;
             for (size_t i = 0; i < cmdTokens.size(); i++) {
                 tokens.push_back((char *)(cmdTokens[i].c_str()));

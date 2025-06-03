@@ -434,8 +434,8 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
     EXPECT_EQ(element->GetProperties().at(2)->GetIsObject(), true);
     EXPECT_EQ(element->GetProperties().at(3)->GetEnum(), L"EnumValidate");
     EXPECT_EQ(element->GetProperties().at(3)->GetMacro(), L"GETSET_VALIDATE(std::wstring, EnumValidate, L\"Default\", validate)");
-    EXPECT_EQ(element->GetProperties().at(3)->GetType1(), L"wstring");
-    EXPECT_EQ(element->GetProperties().at(3)->GetFullType1(), L"std::wstring");
+    EXPECT_EQ(element->GetProperties().at(3)->GetType1(), L"std::wstring");
+    EXPECT_EQ(element->GetProperties().at(3)->GetType1WithoutNamespace(), L"wstring");
     EXPECT_EQ(element->GetProperties().at(3)->GetType2(), L"");
     EXPECT_EQ(element->GetProperties().at(3)->GetPropertyName(), L"EnumValidate");
     EXPECT_EQ(element->GetProperties().at(3)->GetDefaultValue(), L"L\"Default\"");
@@ -476,9 +476,8 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
     EXPECT_EQ(element->GetProperties().at(7)->GetEnum(), L"EnumMap");
     EXPECT_EQ(element->GetProperties().at(7)->GetMacro(), L"MAP(int, std::wstring, Map)");
     EXPECT_EQ(element->GetProperties().at(7)->GetType1(), L"int");
-    EXPECT_EQ(element->GetProperties().at(7)->GetFullType1(), L"int");
-    EXPECT_EQ(element->GetProperties().at(7)->GetType2(), L"wstring");
-    EXPECT_EQ(element->GetProperties().at(7)->GetFullType2(), L"std::wstring");
+    EXPECT_EQ(element->GetProperties().at(7)->GetType2(), L"std::wstring");
+    EXPECT_EQ(element->GetProperties().at(7)->GetType2WithoutNamespace(), L"wstring");
     EXPECT_EQ(element->GetProperties().at(7)->GetPropertyName(), L"Map");
     EXPECT_EQ(element->GetProperties().at(7)->GetDefaultValue(), L"");
     EXPECT_EQ(element->GetProperties().at(7)->GetCommand(), L"");
@@ -652,8 +651,8 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
     // Property
     EXPECT_EQ(element->GetProperties().size(), (size_t)7);
     EXPECT_EQ((int64_t)element->GetProperties().at(0)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Property);
-    EXPECT_EQ(element->GetProperties().at(0)->GetType1(), L"wstring");
-    EXPECT_EQ(element->GetProperties().at(0)->GetFullType1(), L"std::wstring");
+    EXPECT_EQ(element->GetProperties().at(0)->GetType1(), L"std::wstring");
+    EXPECT_EQ(element->GetProperties().at(0)->GetType1WithoutNamespace(), L"wstring");
     EXPECT_EQ(element->GetProperties().at(0)->GetPropertyName(), L"Property");
     EXPECT_EQ((int64_t)element->GetProperties().at(1)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Manager);
     EXPECT_EQ(element->GetProperties().at(1)->GetType1(), L"GitManager");
