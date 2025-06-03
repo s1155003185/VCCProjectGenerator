@@ -10,7 +10,7 @@ class GitManagerTest : public testing::Test
     public:
         void SetUp() override
         {
-            _Manager = std::make_shared<GitManager>(nullptr);
+            _Manager = std::make_shared<vcc::GitManager>(nullptr);
         }
 
         void TearDown() override

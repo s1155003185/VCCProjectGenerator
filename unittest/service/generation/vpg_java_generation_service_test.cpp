@@ -49,7 +49,7 @@ class VPGJavaGenerationServiceTest : public testing::Test
 
 TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
 {
-    WriteFile(vcc::ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}),
+    vcc::WriteFile(vcc::ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}),
         L"// <vcc:vccproj gen=\"DEMAND\"/>\r\n"
         "#ifndef DLL_FUNCTIONS_H\r\n"
         "#define DLL_FUNCTIONS_H\r\n"

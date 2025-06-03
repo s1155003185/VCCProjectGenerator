@@ -19,34 +19,34 @@ TEST(ProcessServiceTest, NormalWithWorkspace)
 
 TEST(ProcessServiceTest, ParseCMDToken)
 {
-    std::vector<std::string> tokens = vcc::ProcessService::ParseTerminalLinux("");
+    std::vector<std::string> tokens = vcc::ProcessService::ParseCmdLinux("");
     std::vector<std::string> expectedTokens;
     EXPECT_EQ(tokens, expectedTokens);
 
-    tokens = vcc::ProcessService::ParseTerminalLinux("a");
+    tokens = vcc::ProcessService::ParseCmdLinux("a");
     expectedTokens.clear();
     expectedTokens.push_back("a");
     EXPECT_EQ(tokens, expectedTokens);
 
-    tokens = vcc::ProcessService::ParseTerminalLinux("a b");
+    tokens = vcc::ProcessService::ParseCmdLinux("a b");
     expectedTokens.clear();
     expectedTokens.push_back("a");
     expectedTokens.push_back("b");
     EXPECT_EQ(tokens, expectedTokens);
 
-    tokens = vcc::ProcessService::ParseTerminalLinux("a \"a b c\"");
+    tokens = vcc::ProcessService::ParseCmdLinux("a \"a b c\"");
     expectedTokens.clear();
     expectedTokens.push_back("a");
     expectedTokens.push_back("a b c");
     EXPECT_EQ(tokens, expectedTokens);
 
-    tokens = vcc::ProcessService::ParseTerminalLinux("a \"a \\\"b\\\" c\"");
+    tokens = vcc::ProcessService::ParseCmdLinux("a \"a \\\"b\\\" c\"");
     expectedTokens.clear();
     expectedTokens.push_back("a");
     expectedTokens.push_back("a \"b\" c");
     EXPECT_EQ(tokens, expectedTokens);
 
-    tokens = vcc::ProcessService::ParseTerminalLinux("a 'a \\\'b\\\' c'");
+    tokens = vcc::ProcessService::ParseCmdLinux("a 'a \\\'b\\\' c'");
     expectedTokens.clear();
     expectedTokens.push_back("a");
     expectedTokens.push_back("a 'b' c");

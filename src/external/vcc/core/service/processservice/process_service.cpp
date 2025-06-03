@@ -105,7 +105,7 @@ namespace vcc
             #endif
         }
 
-        std::vector<std::string> ProcessService::ParseCMDLinux(const std::string &cmd)
+        std::vector<std::string> ProcessService::ParseCmdLinux(const std::string &cmd)
         {
             // need to remove double quote and escape "\"
             std::vector<std::string> results;
