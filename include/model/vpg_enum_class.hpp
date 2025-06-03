@@ -154,8 +154,8 @@ class VPGEnumClassProperty : public vcc::BaseObject
 
     // Action
     GETSET(bool, IsNoHistory, false);
-    GETSET(std::wstring, ActionResultRedoClass, L"OperationResult")
-    GETSET(std::wstring, ActionResultUndoClass, L"OperationResult")
+    GETSET(std::wstring, ActionResultRedoClass, L"vcc::OperationResult")
+    GETSET(std::wstring, ActionResultUndoClass, L"vcc::OperationResult")
 
     // Json
     GETSET(bool, IsNoJson, false)

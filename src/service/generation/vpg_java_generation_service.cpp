@@ -331,7 +331,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                 importPackages.insert(L"com.sun.jna.Pointer");
                 result += INDENT + L"long GetCount(Pointer ref, long property);\r\n"
                     + INDENT + L"Pointer GetMapKeys(Pointer ref, long property);\r\n"
-                    + INDENT + L"boolean vcc::IsContainKey(Pointer ref, long property, Pointer key);\r\n"
+                    + INDENT + L"boolean IsContainKey(Pointer ref, long property, Pointer key);\r\n"
                     + INDENT + L"void RemoveObject(Pointer ref, long property, Pointer value);\r\n"
                     + INDENT + L"void RemoveAtIndex(Pointer ref, long property, long index);\r\n"
                     + INDENT + L"void RemoveAtKey(Pointer ref, long property, Pointer key);\r\n"
@@ -549,7 +549,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const
                 + INDENT + L"}\r\n"
                 "\r\n"
                 + INDENT + L"public boolean is" + property->GetPropertyName() + L"ContainKey(" + javaType1 + L" key) {\r\n"
-                + GetGetterSetterMapKeyContent(classPropertyEnum, dllInstantPrefix, javaType1, L"vcc::IsContainKey", true)
+                + GetGetterSetterMapKeyContent(classPropertyEnum, dllInstantPrefix, javaType1, L"IsContainKey", true)
                 + INDENT + L"}\r\n";            
         }
 

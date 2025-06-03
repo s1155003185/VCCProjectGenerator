@@ -183,7 +183,7 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
             std::wstring assignmentStrSimple = L"std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm";
             std::wstring assignmentStr = assignmentStrSimple;
             std::vector<std::wstring> propertyAssignmentsSimple;
-            propertyAssignmentsSimple.push_back(L"_vcc::LogConfig = logConfig");
+            propertyAssignmentsSimple.push_back(L"_LogConfig = logConfig");
             propertyAssignmentsSimple.push_back(L"_ParentObject = parentForm");
             std::vector<std::wstring> propertyAssignments;
             propertyAssignments.insert(propertyAssignments.end(), propertyAssignmentsSimple.begin(), propertyAssignmentsSimple.end());
@@ -260,7 +260,7 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
                     + INDENT + L"return L\"\";\r\n"
                     "}\r\n";
 
-            std::wstring redoReturnClass = !vcc::IsBlank(property->GetActionResultRedoClass()) ? property->GetActionResultRedoClass() : L"OperationResult";
+            std::wstring redoReturnClass = !vcc::IsBlank(property->GetActionResultRedoClass()) ? property->GetActionResultRedoClass() : L"vcc::OperationResult";
             action += L"\r\n"
                 "std::shared_ptr<vcc::IResult> " + actionClassName + L"::OnRedo()\r\n"
                 "{\r\n"
@@ -272,7 +272,7 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
                 "}\r\n";
 
             if (!property->GetIsNoHistory()) {
-                std::wstring undoReturnClass = !vcc::IsBlank(property->GetActionResultUndoClass()) ? property->GetActionResultUndoClass() : L"OperationResult";
+                std::wstring undoReturnClass = !vcc::IsBlank(property->GetActionResultUndoClass()) ? property->GetActionResultUndoClass() : L"vcc::OperationResult";
                 action += L"\r\n"
                     "std::shared_ptr<vcc::IResult> " + actionClassName + L"::OnUndo()\r\n"
                     "{\r\n"

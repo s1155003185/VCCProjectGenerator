@@ -773,7 +773,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerIsContainKey(const s
             }
                 
         result += L"\r\n"
-            "bool " + propertyName + L"Accessor::_vcc::IsContainKey(const int64_t &objectProperty, const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L") const\r\n"
+            "bool " + propertyName + L"Accessor::_IsContainKey(const int64_t &objectProperty, const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L") const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!mapCases.empty()) {

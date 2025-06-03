@@ -46,7 +46,7 @@ TEST(VPGIncludePathReaderTest, Normal)
         L"typedef aaa bbb;\r\n"
         L"}\r\n"
         // class inherit
-        L"class Json : public BaseDocument<Json>\r\n"
+        L"class Json : public BaseDocument<vcc::Json>\r\n"
         L"{};\r\n"
         // typedef
         L"typedef aaa bbb;\r\n"

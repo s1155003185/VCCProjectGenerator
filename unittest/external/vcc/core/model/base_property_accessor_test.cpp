@@ -18,7 +18,7 @@ class BasePropertyAccessorTestObject : public vcc::BaseObject
     VECTOR_SPTR(BasePropertyAccessorTestObject, VectorObject)
 
     public:
-        BasePropertyAccessorTestObject() : BaseObject() {}
+        BasePropertyAccessorTestObject() : vcc::BaseObject() {}
         virtual ~BasePropertyAccessorTestObject() {}
 
         virtual std::shared_ptr<vcc::IObject> Clone() const override
@@ -112,7 +112,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public vcc::BasePropertyA
             obj->InsertMapStringAtKey(*keyPtr, value);
         }
     public:
-        BasePropertyAccessorTestObjectPropertyAccessor(std::shared_ptr<vcc::IObject> object) : BasePropertyAccessor(object) {}
+        BasePropertyAccessorTestObjectPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}
         virtual ~BasePropertyAccessorTestObjectPropertyAccessor() {}
 };
 
