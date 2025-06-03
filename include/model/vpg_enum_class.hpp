@@ -83,12 +83,12 @@ class VPGEnumClassProperty : public vcc::BaseObject
     GETSET(std::wstring, Macro, L"");
     VECTOR(std::wstring, Type1Namespace);
     GETCUSTOM(std::wstring, Type1, return _Type1;);
-    SETCUSTOM(Type1, std::wstring, _Type1Namespace = vcc::SplitString(value, {L"::"}); for (auto &str : _Type1Namespace) vcc::Trim(str);  _Type1 = _Type1Namespace.back(); _Type1Namespace.pop_back(); );
-    GETCUSTOM(std::wstring, FullType1, std::vector<std::wstring> result = _Type1Namespace; result.push_back(GetType1());  return vcc::Concat(result, L"::");)
+    SETCUSTOM(Type1, std::wstring, _Type1 = value; _Type1Namespace = vcc::SplitString(value, {L"::"}); _Type1Namespace.pop_back(); );
+    GETCUSTOM(std::wstring, Type1WithoutNamespace, auto result = vcc::SplitString(GetType1(), {L"::"});  return !result.empty() ? result.back() : L"";)
     VECTOR(std::wstring, Type2Namespace);
     GETCUSTOM(std::wstring, Type2, return _Type2;);
-    SETCUSTOM(Type2, std::wstring, _Type2Namespace = vcc::SplitString(value, {L"::"}); for (auto &str : _Type2Namespace) vcc::Trim(str);  _Type2 = _Type2Namespace.back(); _Type2Namespace.pop_back(); );
-    GETCUSTOM(std::wstring, FullType2, std::vector<std::wstring> result = _Type2Namespace; result.push_back(GetType2());  return vcc::Concat(result, L"::");)
+    SETCUSTOM(Type2, std::wstring, _Type2 = value; _Type2Namespace = vcc::SplitString(value, {L"::"}); _Type2Namespace.pop_back(); );
+    GETCUSTOM(std::wstring, Type2WithoutNamespace, auto result = vcc::SplitString(GetType2(), {L"::"});  return !result.empty() ? result.back() : L"";)
     GETSET(std::wstring, PropertyName, L"");
     GETSET(std::wstring, Validate, L"")
     GETCUSTOM(std::wstring, DefaultValue, if (_InitializeProperties.empty()) return _DefaultValue; return vcc::Concat(_InitializeProperties, L", ");)
