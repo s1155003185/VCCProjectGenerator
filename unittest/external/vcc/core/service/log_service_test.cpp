@@ -7,10 +7,10 @@
 #include "file_helper.hpp"
 #include "log_service.hpp"
 
-TEST(vcc::LogServiceTest, LogTest) 
+TEST(LogServiceTest, LogTest) 
 {
-    std::wstring filePath = ConcatPaths({std::filesystem::current_path().wstring(), L"bin/Debug/AppLogs/LogServiceTest.log"});
-    RemoveFile(filePath);
+    std::wstring filePath = vcc::ConcatPaths({std::filesystem::current_path().wstring(), L"bin/Debug/AppLogs/LogServiceTest.log"});
+    vcc::RemoveFile(filePath);
     
     auto property = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
     property->SetUserID(L"user");

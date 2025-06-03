@@ -150,37 +150,37 @@ TEST(StringHelperTest, SplitStringByUpperCase_WithSpecialChar)
 TEST(StringHelperTest, EscapeString)
 {
     // Double Quote
-    std::vector<wchar_t> specialChars = vcc::GetSpecialCharacters(EscapeStringType::DoubleQuote);
+    std::vector<wchar_t> specialChars = vcc::GetSpecialCharacters(vcc::EscapeStringType::DoubleQuote);
     std::wstring originalStr = L"";
     std::wstring expectedStr = L"";
     for (auto sc : specialChars) {
         originalStr += sc;
         expectedStr += L"\\" + std::wstring(1, sc);
     }
-    EXPECT_EQ(vcc::GetEscapeString(EscapeStringType::DoubleQuote, originalStr), expectedStr);
-    EXPECT_EQ(vcc::GetUnescapeString(EscapeStringType::DoubleQuote, expectedStr), originalStr);
+    EXPECT_EQ(vcc::GetEscapeString(vcc::EscapeStringType::DoubleQuote, originalStr), expectedStr);
+    EXPECT_EQ(vcc::GetUnescapeString(vcc::EscapeStringType::DoubleQuote, expectedStr), originalStr);
 
     // Regex
-    specialChars = vcc::GetSpecialCharacters(EscapeStringType::Regex);
+    specialChars = vcc::GetSpecialCharacters(vcc::EscapeStringType::Regex);
     originalStr = L"";
     expectedStr = L"";
     for (auto sc : specialChars) {
         originalStr += sc;
         expectedStr += L"\\" + std::wstring(1, sc);
     }
-    EXPECT_EQ(vcc::GetEscapeString(EscapeStringType::Regex, originalStr), expectedStr);
-    EXPECT_EQ(vcc::GetUnescapeString(EscapeStringType::Regex, expectedStr), originalStr);
+    EXPECT_EQ(vcc::GetEscapeString(vcc::EscapeStringType::Regex, originalStr), expectedStr);
+    EXPECT_EQ(vcc::GetUnescapeString(vcc::EscapeStringType::Regex, expectedStr), originalStr);
 
     // XML
-    specialChars = vcc::GetSpecialCharacters(EscapeStringType::XML);
+    specialChars = vcc::GetSpecialCharacters(vcc::EscapeStringType::XML);
     originalStr = L"";
     expectedStr = L"";
     for (auto sc : specialChars) {
         originalStr += sc;
-        expectedStr += vcc::GetEscapeStringMap(EscapeStringType::XML)[sc];
+        expectedStr += vcc::GetEscapeStringMap(vcc::EscapeStringType::XML)[sc];
     }
-    EXPECT_EQ(vcc::GetEscapeString(EscapeStringType::XML, originalStr), expectedStr);
-    EXPECT_EQ(vcc::GetUnescapeString(EscapeStringType::XML, expectedStr), originalStr);
+    EXPECT_EQ(vcc::GetEscapeString(vcc::EscapeStringType::XML, originalStr), expectedStr);
+    EXPECT_EQ(vcc::GetUnescapeString(vcc::EscapeStringType::XML, expectedStr), originalStr);
 }
 
 /* ---------------------------------------------------------------------------------------------------- */
@@ -269,18 +269,18 @@ TEST(StringHelperTest, GetNextQuotedString_Full)
     pos = 1;
     EXPECT_EQ(vcc::GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"\"name\"");
     EXPECT_EQ(pos, (size_t)6);
-    GetNextCharPos(fullStr, pos);
+    vcc::GetNextCharPos(fullStr, pos);
     EXPECT_EQ(pos, (size_t)7);
     EXPECT_EQ(vcc::GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"");
     EXPECT_EQ(pos, (size_t)7);
     pos = 8;
     EXPECT_EQ(vcc::GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"\"John\"");
     EXPECT_EQ(pos, (size_t)13);
-    GetNextCharPos(fullStr, pos);
+    vcc::GetNextCharPos(fullStr, pos);
     EXPECT_EQ(pos, (size_t)14);
     EXPECT_EQ(vcc::GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"}");
     EXPECT_EQ(pos, (size_t)14);
-    GetNextCharPos(fullStr, pos);
+    vcc::GetNextCharPos(fullStr, pos);
     EXPECT_EQ(pos, (size_t)15);
     EXPECT_EQ(vcc::GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"");
     EXPECT_EQ(pos, (size_t)15);    
@@ -294,12 +294,12 @@ TEST(StringHelperTest, ReplaceRegex)
 {
     std::wstring str = L"#define DLL_NAME \"xxx\"#define DLL_NAME \"xxx\"#define DLL_NAME \"xxx\"";
     std::wstring replacement = L"#define DLL_NAME \"yyy\"";
-    ReplaceRegex(str, L"#define DLL_NAME \"([^\"]*)\"", replacement);
+    vcc::ReplaceRegex(str, L"#define DLL_NAME \"([^\"]*)\"", replacement);
     EXPECT_EQ(str, L"#define DLL_NAME \"yyy\"#define DLL_NAME \"xxx\"#define DLL_NAME \"xxx\"");
 
     str = L"xxxxxxxxxxxxxxxxxxxx";
     replacement = L"xxx";
-    ReplaceRegex(str, L"xxxx", replacement);
+    vcc::ReplaceRegex(str, L"xxxx", replacement);
     EXPECT_EQ(str, L"xxxxxxxxxxxxxxxxxxx");
 }
 

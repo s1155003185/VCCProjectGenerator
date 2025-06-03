@@ -49,7 +49,7 @@ class VPGJavaGenerationServiceTest : public testing::Test
 
 TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
 {
-    WriteFile(ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}),
+    WriteFile(vcc::ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}),
         L"// <vcc:vccproj gen=\"DEMAND\"/>\r\n"
         "#ifndef DLL_FUNCTIONS_H\r\n"
         "#define DLL_FUNCTIONS_H\r\n"
@@ -102,9 +102,9 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "\r\n"
         "#endif\r\n", true);
 
-    VPGJavaGenerationService::GenerateJavaBridge(this->GetLogConfig().get(), L"", ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}), this->GetOption().get());
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetDllBridgeDirectory(), L"VPGDllFunctions.java"})));
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetDllBridgeDirectory(), L"VPGDllFunctions.java"})),
+    VPGJavaGenerationService::GenerateJavaBridge(this->GetLogConfig().get(), L"", vcc::ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}), this->GetOption().get());
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetDllBridgeDirectory(), L"VPGDllFunctions.java"})));
+    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetDllBridgeDirectory(), L"VPGDllFunctions.java"})),
         L"package com.vcc.test;\r\n"
         "\r\n"
         "import com.sun.jna.Library;\r\n"
@@ -181,14 +181,14 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass1, enumClassList1);
     VPGGlobal::GetEnumClassReader()->Parse(enumClass2, enumClassList2);
 
-    std::wstring filePath1 = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeA.java"});
-    std::wstring filePath2 = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeBProperty.java"});
+    std::wstring filePath1 = vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeA.java"});
+    std::wstring filePath2 = vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeBProperty.java"});
     
     VPGJavaGenerationService::GenerateEnum(this->GetLogConfig().get(), filePath1, L"", enumClassList1.at(0).get(), this->GetOption().get(), this->GetJavaOption().get());
     VPGJavaGenerationService::GenerateEnum(this->GetLogConfig().get(), filePath2, L"", enumClassList2.at(0).get(), this->GetOption().get(), this->GetJavaOption().get());
     
-    EXPECT_TRUE(IsFilePresent(filePath1));
-    EXPECT_EQ(ReadFile(filePath1),
+    EXPECT_TRUE(vcc::IsFilePresent(filePath1));
+    EXPECT_EQ(vcc::ReadFile(filePath1),
         L"package com.vcc.type;\r\n"
         "\r\n"
         "import java.util.Objects;\r\n"
@@ -219,8 +219,8 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
         "\r\n"
         "}\r\n");
 
-    EXPECT_TRUE(IsFilePresent(filePath2));
-    EXPECT_EQ(ReadFile(filePath2),
+    EXPECT_TRUE(vcc::IsFilePresent(filePath2));
+    EXPECT_EQ(vcc::ReadFile(filePath2),
         L"package com.vcc.type;\r\n"
         "\r\n"
         "import java.util.Objects;\r\n"
@@ -278,11 +278,11 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMap;
-    std::wstring filePath = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"});
+    std::wstring filePath = vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"});
     VPGJavaGenerationService::GenerateObject(this->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMap, typeWorkspaceClassRelativePathMap, this->GetOption().get(), this->GetJavaOption().get());
     
-    EXPECT_TRUE(IsFilePresent(filePath));
-    EXPECT_EQ(ReadFile(filePath),
+    EXPECT_TRUE(vcc::IsFilePresent(filePath));
+    EXPECT_EQ(vcc::ReadFile(filePath),
         L"package com.vcc.module;\r\n"
         "\r\n"
         "import com.sun.jna.Memory;\r\n"
@@ -688,11 +688,11 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
     typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));
-    std::wstring filePath = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGGitLog.java"});
+    std::wstring filePath = vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGGitLog.java"});
     VPGJavaGenerationService::GenerateObject(this->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm, this->GetOption().get(), this->GetJavaOption().get());
     
-    EXPECT_TRUE(IsFilePresent(filePath));
-    EXPECT_EQ(ReadFile(filePath),
+    EXPECT_TRUE(vcc::IsFilePresent(filePath));
+    EXPECT_EQ(vcc::ReadFile(filePath),
         L"package com.vcc.form;\r\n"
         "\r\n"
         "import com.sun.jna.Pointer;\r\n"
@@ -788,11 +788,11 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateResult)
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
     typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));
-    std::wstring filePath = ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGGitLog.java"});
+    std::wstring filePath = vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGGitLog.java"});
     VPGJavaGenerationService::GenerateObject(this->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm, this->GetOption().get(), this->GetJavaOption().get());
     
-    EXPECT_TRUE(IsFilePresent(filePath));
-    EXPECT_EQ(ReadFile(filePath),
+    EXPECT_TRUE(vcc::IsFilePresent(filePath));
+    EXPECT_EQ(vcc::ReadFile(filePath),
         L"package com.vcc.module;\r\n"
         "\r\n"
         "import com.sun.jna.Pointer;\r\n"

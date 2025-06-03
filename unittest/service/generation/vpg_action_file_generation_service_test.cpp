@@ -231,10 +231,10 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
     EXPECT_EQ(hppClass, emptyVector);
     EXPECT_EQ(cppClass, emptyVector);
 
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.hpp"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.cpp"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.hpp"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.cpp"})));
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.hpp"})));
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.cpp"})));
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.hpp"})));
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.cpp"})));
 
     std::wstring hppHeader = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         L"#pragma once\r\n"
@@ -249,7 +249,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
         "// <vcc:customFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "// </vcc:customFunctions>\r\n";
 
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.hpp"})),
+    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.hpp"})),
             hppHeader
             + L"#include <memory>\r\n"
             "#include <string>\r\n"
@@ -260,7 +260,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
             "#include \"log_config.hpp\"\r\n"
             + customPropertyHeader
             + GetHppClass(L"AddWorkspace", { }, L""));
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.cpp"})),
+    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.cpp"})),
             cppHeader
             + L"#include \"vpg_git_form_add_workspace.hpp\"\r\n"
             "\r\n"
@@ -277,7 +277,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
             + GetCppClass(L"AddWorkspace", { }, L"")
             + customFooter);
 
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.hpp"})),
+    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.hpp"})),
             hppHeader
             + L"#include <memory>\r\n"
             "#include <string>\r\n"
@@ -289,7 +289,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
             "#include \"vpg_git_form.hpp\"\r\n"
             + customPropertyHeader
             + GetHppClass(L"DeleteWorkspace" , { L"GETSET_SPTR_NULL(VPGGitFormDeleteWorkspaceArgument, Argument)" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument"));
-    EXPECT_EQ(ReadFile(ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.cpp"})),
+    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.cpp"})),
             cppHeader
             + L"#include \"vpg_git_form_delete_workspace.hpp\"\r\n"
             "\r\n"

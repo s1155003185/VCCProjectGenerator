@@ -6,7 +6,7 @@
 
 TEST(TerminalServiceTest, Normal)
 {
-    EXPECT_TRUE(TerminalService::Execute(nullptr, L"", L"git --version").starts_with(L"git version"));
+    EXPECT_TRUE(vcc::TerminalService::Execute(nullptr, L"", L"git --version").starts_with(L"git version"));
 }
 
 // Terminal cannot cap exception console log

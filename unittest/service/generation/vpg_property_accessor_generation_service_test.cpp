@@ -33,8 +33,8 @@ class VPGPropertyAccessorFileGenerationServiceTest : public testing::Test
             this->_LogConfig->SetIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
 
-            this->_FilePathHpp = ConcatPaths({this->GetWorkspace(), L"vpg_object_property_accessor.hpp"});
-            this->_FilePathCpp = ConcatPaths({this->GetWorkspace(), L"vpg_object_property_accessor.cpp"});
+            this->_FilePathHpp = vcc::ConcatPaths({this->GetWorkspace(), L"vpg_object_property_accessor.hpp"});
+            this->_FilePathCpp = vcc::ConcatPaths({this->GetWorkspace(), L"vpg_object_property_accessor.cpp"});
             this->_IncludeFileName = L"vpg_object_property_accessor.hpp";
 
             this->InsertProjectIncludeListAtKey(L"VCCEnum", L"vcc_enum.hpp");
@@ -70,8 +70,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -91,7 +91,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "        VPGObjectPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
 
     std::wstring expectedCppContent = L""
     "#include \"" + this->GetIncludeFileName() + L"\"\r\n"
@@ -316,7 +316,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
     "    CATCH\r\n"
     "}\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedCppContent);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
@@ -337,8 +337,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_FALSE(vcc::IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -353,7 +353,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
     "        VPGObjectPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
@@ -374,8 +374,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -392,7 +392,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
     "        VPGObjectPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
 
     std::wstring expectedCppContent = L""
     "#include \"" + this->GetIncludeFileName() + L"\"\r\n"
@@ -476,7 +476,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
     "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
     "    CATCH\r\n"
     "}\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedCppContent);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
@@ -497,8 +497,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -516,7 +516,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     "        VPGObjectPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
 
     std::wstring expectedCppContent = L""
     "#include \"" + this->GetIncludeFileName() + L"\"\r\n"
@@ -745,7 +745,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     "        }\r\n"
     "    CATCH\r\n"
     "}\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedCppContent);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
@@ -768,8 +768,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -794,7 +794,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     "        VPGObjectBPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectBPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
 
     std::wstring expectedCppContent = L""
     "#include \"" + this->GetIncludeFileName() + L"\"\r\n"
@@ -944,7 +944,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
     "    CATCH\r\n"
     "}\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedCppContent);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
@@ -962,8 +962,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -979,7 +979,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
     "        VPGObjectPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
 
     std::wstring expectedCppContent = L""
     "#include \"" + this->GetIncludeFileName() + L"\"\r\n"
@@ -1093,7 +1093,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
     "    CATCH\r\n"
     "    return nullptr;\r\n"
     "}\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedCppContent);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
@@ -1119,8 +1119,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -1140,7 +1140,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        VPGObjectPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
 
     std::wstring expectedCppContent = L""
     "#include \"" + this->GetIncludeFileName() + L"\"\r\n"
@@ -1922,7 +1922,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        }\r\n"
     "    CATCH\r\n"
     "}\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedCppContent);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
@@ -1944,8 +1944,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -1968,7 +1968,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        VPGObjectPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
 
     std::wstring expectedCppContent = L""
     "#include \"" + this->GetIncludeFileName() + L"\"\r\n"
@@ -2484,7 +2484,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        }\r\n"
     "    CATCH\r\n"
     "}\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathCpp()), expectedCppContent);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, ManagerAndAction)
@@ -2504,8 +2504,8 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, ManagerAndAction)
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
     VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_FALSE(IsFilePresent(this->GetFilePathCpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_FALSE(vcc::IsFilePresent(this->GetFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -2520,5 +2520,5 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, ManagerAndAction)
     "        VPGObjectPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
 }

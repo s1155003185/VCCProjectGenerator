@@ -49,7 +49,7 @@ TEST_F(VPGDllFileGenerationServiceTest, Normal)
     EXPECT_TRUE(IsFilePresent(this->GetFilePathHpp()));
     EXPECT_TRUE(IsFilePresent(this->GetFilePathCpp()));
 
-    std::wstring contentHpp = ReadFile(this->GetFilePathHpp());
+    std::wstring contentHpp = vcc::ReadFile(this->GetFilePathHpp());
     if (!IsContain(contentHpp, L"// <vcc:dllInterfaceHeader gen=\"REPLACE\">") || !IsContain(contentHpp, L"// </vcc:dllInterfaceHeader>")) {
         EXPECT_EQ(contentHpp, L"Generate Hpp Not Contain: dllInterfaceHeader");  
     }      
@@ -57,7 +57,7 @@ TEST_F(VPGDllFileGenerationServiceTest, Normal)
         EXPECT_EQ(contentHpp, L"Generate Hpp Not Contain: dllInterface");
     }
 
-    std::wstring contentCpp = ReadFile(this->GetFilePathCpp());
+    std::wstring contentCpp = vcc::ReadFile(this->GetFilePathCpp());
     if (!IsContain(contentCpp, L"// <vcc:dllInterfaceHeader gen=\"REPLACE\">") || !IsContain(contentCpp, L"// </vcc:dllInterfaceHeader>")) {
         EXPECT_EQ(contentCpp, L"Generate Cpp Not Contain: dllInterfaceHeader");
     }

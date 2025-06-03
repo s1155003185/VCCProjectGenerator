@@ -58,7 +58,7 @@ class FileHelperTest : public testing::Test
 
         bool CheckFolderExists(std::wstring path)
         {
-            return IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspace(), path}));
+            return vcc::IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspace(), path}));
         }
 };
 
@@ -66,11 +66,11 @@ TEST_F(FileHelperTest, GetRelativePath)
 {
     std::wstring absoluttePath = L"/abc/def/ghi.text";
     std::wstring basePath = L"/abc";
-    EXPECT_EQ(GetLinuxPath(GetRelativePath(absoluttePath, basePath)), L"def/ghi.text");
+    EXPECT_EQ(vcc::GetLinuxPath(vcc::GetRelativePath(absoluttePath, basePath)), L"def/ghi.text");
 
     absoluttePath = L"/abc/def/ghi.text";
     basePath = L"/abc/";
-    EXPECT_EQ(GetLinuxPath(GetRelativePath(absoluttePath, basePath)), L"def/ghi.text");
+    EXPECT_EQ(vcc::GetLinuxPath(vcc::GetRelativePath(absoluttePath, basePath)), L"def/ghi.text");
 }
 
 TEST_F(FileHelperTest, GetFileDifferenceBetweenWorkspacesTest)
@@ -78,7 +78,7 @@ TEST_F(FileHelperTest, GetFileDifferenceBetweenWorkspacesTest)
     std::vector<std::wstring> needToAdd;
     std::vector<std::wstring> needToDelete;
     std::vector<std::wstring> needToModify;
-    GetFileDifferenceBetweenWorkspaces(this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
+    vcc::GetFileDifferenceBetweenWorkspaces(this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
         needToAdd, needToModify, needToDelete);
     EXPECT_EQ((int)needToAdd.size(), 1);
     EXPECT_TRUE((int)needToAdd.at(0).ends_with(L"FileA.txt"));
@@ -90,10 +90,10 @@ TEST_F(FileHelperTest, GetFileDifferenceBetweenWorkspacesTest)
 
 TEST_F(FileHelperTest, GetRegexFromFileFilter)
 {
-    EXPECT_EQ(GetRegexFromFileFilter(L"*.txt"), L".*\\.txt");
-    EXPECT_EQ(GetRegexFromFileFilter(L"*abc*.txt"), L".*abc.*\\.txt");
+    EXPECT_EQ(vcc::GetRegexFromFileFilter(L"*.txt"), L".*\\.txt");
+    EXPECT_EQ(vcc::GetRegexFromFileFilter(L"*abc*.txt"), L".*abc.*\\.txt");
 
-    EXPECT_TRUE(std::regex_match(L"abcdef.txt", std::wregex(GetRegexFromFileFilter(L"*def*"))));
+    EXPECT_TRUE(std::regex_match(L"abcdef.txt", std::wregex(vcc::GetRegexFromFileFilter(L"*def*"))));
 }
 
 TEST_F(FileHelperTest, CopyDirectoryWithoutFilter)

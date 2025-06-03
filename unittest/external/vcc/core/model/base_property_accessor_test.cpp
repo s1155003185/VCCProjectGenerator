@@ -125,21 +125,21 @@ TEST(BasePropertyAccessorTest, Full)
     auto obj = std::make_shared<BasePropertyAccessorTestObject>();
     obj->SetObject(std::make_shared<BasePropertyAccessorTestObject>());
     std::unique_ptr<BasePropertyAccessorTestObjectPropertyAccessor> accessor = std::make_unique<BasePropertyAccessorTestObjectPropertyAccessor>(obj);
-    EXPECT_EQ(accessor->ReadStringAtIndex(LockType::ReadLock, 0L), L"Test");
-    EXPECT_EQ(accessor->ReadIntAtIndex(LockType::ReadLock, 0L), 1);
-    EXPECT_TRUE(accessor->ReadObject(LockType::ReadLock, 0L) != nullptr);
+    EXPECT_EQ(accessor->ReadStringAtIndex(vcc::LockType::ReadLock, 0L), L"Test");
+    EXPECT_EQ(accessor->ReadIntAtIndex(vcc::LockType::ReadLock, 0L), 1);
+    EXPECT_TRUE(accessor->ReadObject(vcc::LockType::ReadLock, 0L) != nullptr);
 
-    accessor->WriteStringAtIndex(LockType::WriteLock, 0L, L"SetString");
-    accessor->WriteIntAtIndex(LockType::WriteLock, 0L, 2);
-    EXPECT_EQ(accessor->ReadStringAtIndex(LockType::ReadLock, 0L), L"SetString");
-    EXPECT_EQ(accessor->ReadIntAtIndex(LockType::ReadLock, 0L), 2);
-    EXPECT_TRUE(accessor->ReadObject(LockType::ReadLock, 0L) != nullptr);
+    accessor->WriteStringAtIndex(vcc::LockType::WriteLock, 0L, L"SetString");
+    accessor->WriteIntAtIndex(vcc::LockType::WriteLock, 0L, 2);
+    EXPECT_EQ(accessor->ReadStringAtIndex(vcc::LockType::ReadLock, 0L), L"SetString");
+    EXPECT_EQ(accessor->ReadIntAtIndex(vcc::LockType::ReadLock, 0L), 2);
+    EXPECT_TRUE(accessor->ReadObject(vcc::LockType::ReadLock, 0L) != nullptr);
 
     std::shared_ptr<vcc::IObject> newObj = Create();
-    accessor->InsertObjectAtIndex(LockType::NoLock, 0L, newObj);
+    accessor->InsertObjectAtIndex(vcc::LockType::NoLock, 0L, newObj);
 
     std::wstring mapKey1 = L"key";
     std::wstring mapKey2 = L"key";
-    accessor->WriteStringAtKey(LockType::WriteLock, 0L, L"value", &mapKey1);
-    EXPECT_EQ(accessor->ReadStringAtKey(LockType::ReadLock, 0L, &mapKey2), L"value");
+    accessor->WriteStringAtKey(vcc::LockType::WriteLock, 0L, L"value", &mapKey1);
+    EXPECT_EQ(accessor->ReadStringAtKey(vcc::LockType::ReadLock, 0L, &mapKey2), L"value");
 }
