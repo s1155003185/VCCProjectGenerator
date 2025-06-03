@@ -160,7 +160,7 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetJsonToObjectEnumSwi
 
         result.push_back(INDENT + L"std::wstring " + jsonStr + L" = " + (isKey ? L"key;" : (L"json->GetString(vcc::ConvertNamingStyle(L" + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, propertyName) + L", namestyle, vcc::NamingStyle::PascalCase));")));
         result.push_back(INDENT + L"std::wstring " + jsonStrUpper + L" = " + jsonStr + L";");
-        result.push_back(INDENT + L"vcc::vcc::ToUpper(" + jsonStrUpper + L");");
+        result.push_back(INDENT + L"vcc::ToUpper(" + jsonStrUpper + L");");
         result.push_back(INDENT + L"int64_t " + jsonEnumValue + L" = -1;");
 
         std::shared_ptr<VPGEnumClass> enumEnumClass = nullptr;
@@ -1223,7 +1223,7 @@ std::wstring VPGObjectFileGenerationService::GetCppInitialize(const VPGEnumClass
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + baseClassName + L"::InitializeComponents();\r\n";
             if (enumClass->GetIsLogConfigIndependent())
-                result += INDENT + INDENT + L"_LogConfig = std::make_shared<vcc::vcc::LogConfig>();\r\n";
+                result += INDENT + INDENT + L"_LogConfig = std::make_shared<vcc::LogConfig>();\r\n";
             else
                 result += INDENT + INDENT + L"_LogConfig = nullptr;\r\n";
             if (enumClass->GetIsActionManagerIndependent())

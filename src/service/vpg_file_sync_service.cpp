@@ -9,7 +9,7 @@
 #include "exception_type.hpp"
 #include "file_helper.hpp"
 #include "log_config.hpp"
-#include "vcc::Xml_builder.hpp"
+#include "xml_builder.hpp"
 
 #include "vpg_code_reader.hpp"
 #include "vpg_file_sync_service.hpp"
@@ -114,20 +114,20 @@ bool VPGFileSyncService::IsTagReserve(const VPGFileContentSyncTagMode &mode, con
     return false;
 }
 
-void VPGFileSyncService::CopyFile(const LogConfig *logConfig, const VPGFileContentSyncTagMode &mode, const std::wstring &sourcePath, const std::wstring &originalCodePath)
+void VPGFileSyncService::CopyFile(const vcc::LogConfig *logConfig, const VPGFileContentSyncTagMode &mode, const std::wstring &sourcePath, const std::wstring &originalCodePath)
 {
     TRY
-        if (!IsFilePresent(sourcePath))
+        if (!vcc::IsFilePresent(sourcePath))
             THROW_EXCEPTION_MSG(ExceptionType::FileNotFound, sourcePath + L": File not found.");
 \
-        if (IsFilePresent(originalCodePath)) {
-            std::wstring commandDelimiter = GetFileName(sourcePath) == L"Makefile" ? L"#" : L"//";
-            std::wstring fileContent = VPGFileSyncService::SyncFileContent(mode, ReadFile(sourcePath), ReadFile(originalCodePath), VPGFileContentSyncMode::Demand, commandDelimiter);
-            WriteFile(originalCodePath, fileContent, true);
-            LogService::LogInfo(logConfig, L"", L"Updated File: " + originalCodePath);
+        if (vcc::IsFilePresent(originalCodePath)) {
+            std::wstring commandDelimiter = vcc::GetFileName(sourcePath) == L"Makefile" ? L"#" : L"//";
+            std::wstring fileContent = VPGFileSyncService::SyncFileContent(mode, vcc::ReadFile(sourcePath), vcc::ReadFile(originalCodePath), VPGFileContentSyncMode::Demand, commandDelimiter);
+            vcc::WriteFile(originalCodePath, fileContent, true);
+            vcc::LogService::LogInfo(logConfig, L"", L"Updated File: " + originalCodePath);
         } else {
             std::filesystem::copy_file(PATH(sourcePath), PATH(originalCodePath), std::filesystem::copy_options::overwrite_existing);
-            LogService::LogInfo(logConfig, L"", L"Added File: " + originalCodePath);
+            vcc::LogService::LogInfo(logConfig, L"", L"Added File: " + originalCodePath);
         }
     CATCH
 }
@@ -173,7 +173,7 @@ std::wstring VPGFileSyncService::GenerateFullCode(const VPGFileContentSyncTagMod
         for (std::shared_ptr<vcc::Xml> child : updatedCode->GetChildren()) {
             if (!shouldSkip) {
                 // if find tag then search tag in source, if reserve, then use source
-                if (IsStartWith(child->GetName(), L"vcc:")) {
+                if (vcc::IsStartWith(child->GetName(), L"vcc:")) {
                     const vcc::Xml *originalCodeTag = VPGFileSyncService::GetTagFromCode(originalCode, child->GetName());
                     if (originalCodeTag != nullptr && VPGFileSyncService::IsTagReserve(mode, originalCodeTag)) {
                         result += originalCodeTag->GetFullText();
@@ -205,7 +205,7 @@ std::wstring VPGFileSyncService::GenerateDemandCode(const VPGFileContentSyncTagM
         for (std::shared_ptr<vcc::Xml> child : originalCode->GetChildren()) {
             if (!shouldSkip) {
                 // if find tag then search tag in source, if reserve, then use source
-                if (IsStartWith(child->GetName(), L"vcc:")) {
+                if (vcc::IsStartWith(child->GetName(), L"vcc:")) {
                     const vcc::Xml *updatedCodeTag = VPGFileSyncService::GetTagFromCode(updatedCode, child->GetName());
                     if (updatedCodeTag != nullptr && VPGFileSyncService::IsTagReplace(mode, child.get())) {
                         result += updatedCodeTag->GetFullText();

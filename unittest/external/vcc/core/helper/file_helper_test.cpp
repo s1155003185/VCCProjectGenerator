@@ -31,23 +31,23 @@ class FileHelperTest : public testing::Test
             
             this->_WorkspaceSource = this->_Workspace + L"Source";
             this->_WorkspaceTarget = this->_Workspace + L"Target";
-            this->_FilePathSourceA = ConcatPaths({this->_WorkspaceSource, L"FileA.txt"});
-            this->_FilePathTargetB = ConcatPaths({this->_WorkspaceTarget, L"FileB.txt"});
-            this->_FilePathSourceC = ConcatPaths({this->_WorkspaceSource, L"FileC.txt"});
-            this->_FilePathTargetC = ConcatPaths({this->_WorkspaceTarget, L"FileC.txt"});
+            this->_FilePathSourceA = vcc::ConcatPaths({this->_WorkspaceSource, L"FileA.txt"});
+            this->_FilePathTargetB = vcc::ConcatPaths({this->_WorkspaceTarget, L"FileB.txt"});
+            this->_FilePathSourceC = vcc::ConcatPaths({this->_WorkspaceSource, L"FileC.txt"});
+            this->_FilePathTargetC = vcc::ConcatPaths({this->_WorkspaceTarget, L"FileC.txt"});
             
             std::filesystem::remove_all(PATH(this->GetWorkspace()));
-            CreateDirectory(this->GetWorkspace());
-            CreateDirectory(this->GetWorkspaceSource());
-            CreateDirectory(this->GetWorkspaceTarget());
+            vcc::CreateDirectory(this->GetWorkspace());
+            vcc::CreateDirectory(this->GetWorkspaceSource());
+            vcc::CreateDirectory(this->GetWorkspaceTarget());
 
             // FIle A
-            AppendFileOneLine(this->GetFilePathSourceA(), L"File A", true);
+            vcc::AppendFileOneLine(this->GetFilePathSourceA(), L"File A", true);
             // File B
-            AppendFileOneLine(this->GetFilePathTargetB(), L"File B", true);
+            vcc::AppendFileOneLine(this->GetFilePathTargetB(), L"File B", true);
             // File C
-            AppendFileOneLine(this->GetFilePathSourceC(), L"File C Source", true);
-            AppendFileOneLine(this->GetFilePathTargetC(), L"File C Target", true);
+            vcc::AppendFileOneLine(this->GetFilePathSourceC(), L"File C Source", true);
+            vcc::AppendFileOneLine(this->GetFilePathTargetC(), L"File C Target", true);
 
         }
 
@@ -58,7 +58,7 @@ class FileHelperTest : public testing::Test
 
         bool CheckFolderExists(std::wstring path)
         {
-            return IsDirectoryExists(ConcatPaths({this->GetWorkspace(), path}));
+            return IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspace(), path}));
         }
 };
 
@@ -99,40 +99,40 @@ TEST_F(FileHelperTest, GetRegexFromFileFilter)
 TEST_F(FileHelperTest, CopyDirectoryWithoutFilter)
 {
     std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
-    CreateDirectory(this->GetWorkspaceTarget());
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceSource(), L"FolderA", L"FileA.txt"}), L"File A", true);
-    CopyDirectoryOption option;
+    vcc::CreateDirectory(this->GetWorkspaceTarget());
+    vcc::AppendFileOneLine(vcc::ConcatPaths({this->GetWorkspaceSource(), L"FolderA", L"FileA.txt"}), L"File A", true);
+    vcc::CopyDirectoryOption option;
     option.SetIsRecursive(true);
     CopyDirectory(this->GetWorkspaceSource(), this->GetWorkspaceTarget(), &option);
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileA.txt"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileC.txt"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FolderA", L"FileA.txt"})));
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileA.txt"})));
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileC.txt"})));
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FolderA", L"FileA.txt"})));
 }
 
 TEST_F(FileHelperTest, CopyDirectoryWithIncludeFilter)
 {
     std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
-    CreateDirectory(this->GetWorkspaceTarget());
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceSource(), L"FolderA", L"FileA.txt"}), L"File A", true);
-    CopyDirectoryOption option;
+    vcc::CreateDirectory(this->GetWorkspaceTarget());
+    vcc::AppendFileOneLine(vcc::ConcatPaths({this->GetWorkspaceSource(), L"FolderA", L"FileA.txt"}), L"File A", true);
+    vcc::CopyDirectoryOption option;
     option.SetIsRecursive(true);
     option.InsertIncludeFileFilters(L"*FileA*");
     CopyDirectory(this->GetWorkspaceSource(), this->GetWorkspaceTarget(), &option);
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileA.txt"})));
-    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileC.txt"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FolderA", L"FileA.txt"})));
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileA.txt"})));
+    EXPECT_FALSE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileC.txt"})));
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FolderA", L"FileA.txt"})));
 }
 
 TEST_F(FileHelperTest, CopyDirectoryWithExcludeFilter)
 {
     std::filesystem::remove_all(PATH(this->GetWorkspaceTarget()));
-    CreateDirectory(this->GetWorkspaceTarget());
-    AppendFileOneLine(ConcatPaths({this->GetWorkspaceSource(), L"FolderA", L"FileA.txt"}), L"File A", true);
-    CopyDirectoryOption option;
+    vcc::CreateDirectory(this->GetWorkspaceTarget());
+    vcc::AppendFileOneLine(vcc::ConcatPaths({this->GetWorkspaceSource(), L"FolderA", L"FileA.txt"}), L"File A", true);
+    vcc::CopyDirectoryOption option;
     option.SetIsRecursive(true);
     option.InsertExcludeFileFilters(L"*FileA*");
     CopyDirectory(this->GetWorkspaceSource(), this->GetWorkspaceTarget(), &option);
-    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileA.txt"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FileC.txt"})));
-    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->GetWorkspaceTarget(), L"FolderA", L"FileA.txt"})));
+    EXPECT_FALSE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileA.txt"})));
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileC.txt"})));
+    EXPECT_FALSE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FolderA", L"FileA.txt"})));
 }

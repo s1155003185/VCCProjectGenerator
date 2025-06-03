@@ -53,7 +53,7 @@ void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
             std::wstring actionClassName = className + property->GetPropertyName();
 
             std::wstring propertyStr = L"";
-            std::wstring assignmentStrSimple = L"std::shared_ptr<vcc::vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm";
+            std::wstring assignmentStrSimple = L"std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm";
             std::wstring assignmentStr = assignmentStrSimple;
             
             std::wstring type1 = property->GetType1();
@@ -180,7 +180,7 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
             // class name
             std::wstring actionClassName = className + property->GetPropertyName();
 
-            std::wstring assignmentStrSimple = L"std::shared_ptr<vcc::vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm";
+            std::wstring assignmentStrSimple = L"std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm";
             std::wstring assignmentStr = assignmentStrSimple;
             std::vector<std::wstring> propertyAssignmentsSimple;
             propertyAssignmentsSimple.push_back(L"_vcc::LogConfig = logConfig");

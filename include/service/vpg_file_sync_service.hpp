@@ -32,7 +32,7 @@ enum class VPGFileContentSyncTagMode
 class VPGFileSyncService
 {
     private:
-        VPGFileSyncService() = default;
+        VPGFileSyncService() = delete;
         virtual ~VPGFileSyncService() {}
 
         static bool IsSyncTag(const VPGFileContentSyncTagMode &mode, const std::wstring &tag);

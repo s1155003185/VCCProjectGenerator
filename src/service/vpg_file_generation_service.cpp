@@ -165,7 +165,7 @@ std::wstring VPGFileGenerationService::GenerateForceCode(const vcc::Xml *src, co
                 result += commandDelimiter + L" " + child->GetOpeningTag() + L"\r\n";
                 size_t noOfSpace = GetMinimumLeadingSpace(lines);
                 for (auto line : lines) {
-                    vcc::Rvcc::Trim(line);
+                    vcc::RTrim(line);
                     result += indent + line.substr(noOfSpace) + L"\r\n";
                 }
                 result += indent + commandDelimiter + L" " + child->GetClosingTag();
@@ -202,7 +202,7 @@ std::wstring VPGFileGenerationService::GenerateDemandCode(const vcc::Xml *src, c
                     size_t noOfSpace = GetMinimumLeadingSpace(lines);
                     for (auto line : lines) {
                         if (!vcc::IsBlank(line)) {
-                            vcc::Rvcc::Trim(line);
+                            vcc::RTrim(line);
                             result += indent + line.substr(noOfSpace) + L"\r\n";
                         } else
                             result += L"\r\n";

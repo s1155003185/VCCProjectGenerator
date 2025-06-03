@@ -8,9 +8,9 @@
 
 TEST(ConfigBuilderTest, Full)
 {
-    std::unique_ptr<ConfigBuilder> reader = std::make_unique<ConfigBuilder>();
+    auto reader = std::make_unique<vcc::ConfigBuilder>();
     
-    auto element = std::make_shared<Config>();
+    auto element = std::make_shared<vcc::Config>();
     std::wstring str = L"";
     str += L"# command\r\n";
     str += L"name1=value1\r\n";

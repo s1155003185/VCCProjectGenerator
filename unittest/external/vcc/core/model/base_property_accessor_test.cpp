@@ -8,11 +8,11 @@
 
 #include <memory>
 
-class BasePropertyAccessorTestObject : public BaseObject
+class BasePropertyAccessorTestObject : public vcc::BaseObject
 {
     GETSET(std::wstring, String, L"Test")
     GETSET(int, Integer, 1);
-    GETSET_SPTR_NULL(IObject, Object);
+    GETSET_SPTR_NULL(vcc::IObject, Object);
 
     MAP(std::wstring, std::wstring, MapString)
     VECTOR_SPTR(BasePropertyAccessorTestObject, VectorObject)
@@ -21,13 +21,13 @@ class BasePropertyAccessorTestObject : public BaseObject
         BasePropertyAccessorTestObject() : BaseObject() {}
         virtual ~BasePropertyAccessorTestObject() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> Clone() const override
         {
             return std::make_shared<BasePropertyAccessorTestObject>(*this);
         }
 };
 
-class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccessor
+class BasePropertyAccessorTestObjectPropertyAccessor : public vcc::BasePropertyAccessor
 {
     protected:
 
@@ -64,14 +64,14 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             obj->SetInteger(value);
         }
 
-        virtual std::shared_ptr<IObject> _ReadObject(const int64_t &objectProperty) const override
+        virtual std::shared_ptr<vcc::IObject> _ReadObject(const int64_t &objectProperty) const override
         {
             assert(objectProperty == 0L);
             auto obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
             return obj->GetObject();
         }
 
-        virtual void _WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index = -1) override
+        virtual void _WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index = -1) override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -79,7 +79,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             obj->SetObject(std::static_pointer_cast<BasePropertyAccessorTestObject>(value));
         }
 
-        void _InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<IObject> value, const int64_t &index) override
+        void _InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index) override
         {
             TRY
                 assert(objectProperty == 0L);
@@ -112,11 +112,11 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public BasePropertyAccess
             obj->InsertMapStringAtKey(*keyPtr, value);
         }
     public:
-        BasePropertyAccessorTestObjectPropertyAccessor(std::shared_ptr<IObject> object) : BasePropertyAccessor(object) {}
+        BasePropertyAccessorTestObjectPropertyAccessor(std::shared_ptr<vcc::IObject> object) : BasePropertyAccessor(object) {}
         virtual ~BasePropertyAccessorTestObjectPropertyAccessor() {}
 };
 
-std::shared_ptr<IObject> Create()
+std::shared_ptr<vcc::IObject> Create()
 {
     return std::make_shared<BasePropertyAccessorTestObject>();
 }
@@ -135,7 +135,7 @@ TEST(BasePropertyAccessorTest, Full)
     EXPECT_EQ(accessor->ReadIntAtIndex(LockType::ReadLock, 0L), 2);
     EXPECT_TRUE(accessor->ReadObject(LockType::ReadLock, 0L) != nullptr);
 
-    std::shared_ptr<IObject> newObj = Create();
+    std::shared_ptr<vcc::IObject> newObj = Create();
     accessor->InsertObjectAtIndex(LockType::NoLock, 0L, newObj);
 
     std::wstring mapKey1 = L"key";
