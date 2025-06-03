@@ -72,8 +72,6 @@ class VPGEnumClassProperty : public vcc::BaseObject
     friend class VPGEnumClassReader;
 
     private:
-        mutable std::vector<std::wstring> _Type1Namespace;
-        mutable std::vector<std::wstring> _Type2Namespace;
         mutable std::wstring _Type1 = L"";
         mutable std::wstring _Type2 = L"";
         mutable std::wstring _DefaultValue = L"";
@@ -83,8 +81,11 @@ class VPGEnumClassProperty : public vcc::BaseObject
     GETSET(std::wstring, Enum, L"");
     GETSET(int64_t, EnumValue, 0);
     GETSET(std::wstring, Macro, L"");
+    VECTOR(std::wstring, Type1Namespace);
     GETCUSTOM(std::wstring, Type1, return _Type1;);
     SETCUSTOM(Type1, std::wstring, _Type1Namespace = vcc::SplitString(value, {L"::"}); for (auto &str : _Type1Namespace) vcc::Trim(str);  _Type1 = _Type1Namespace.back(); _Type1Namespace.pop_back(); );
+    GETCUSTOM(std::wstring, FullType1, std::vector<std::wstring> result = _Type1Namespace; result.push_back(GetType1());  return vcc::Concat(result, L"::");)
+    VECTOR(std::wstring, Type2Namespace);
     GETCUSTOM(std::wstring, Type2, return _Type2;);
     SETCUSTOM(Type2, std::wstring, _Type2Namespace = vcc::SplitString(value, {L"::"}); for (auto &str : _Type2Namespace) vcc::Trim(str);  _Type2 = _Type2Namespace.back(); _Type2Namespace.pop_back(); );
     GETSET(std::wstring, PropertyName, L"");
