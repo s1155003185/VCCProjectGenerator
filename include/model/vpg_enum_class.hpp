@@ -88,6 +88,7 @@ class VPGEnumClassProperty : public vcc::BaseObject
     VECTOR(std::wstring, Type2Namespace);
     GETCUSTOM(std::wstring, Type2, return _Type2;);
     SETCUSTOM(Type2, std::wstring, _Type2Namespace = vcc::SplitString(value, {L"::"}); for (auto &str : _Type2Namespace) vcc::Trim(str);  _Type2 = _Type2Namespace.back(); _Type2Namespace.pop_back(); );
+    GETCUSTOM(std::wstring, FullType2, std::vector<std::wstring> result = _Type2Namespace; result.push_back(GetType2());  return vcc::Concat(result, L"::");)
     GETSET(std::wstring, PropertyName, L"");
     GETSET(std::wstring, Validate, L"")
     GETCUSTOM(std::wstring, DefaultValue, if (_InitializeProperties.empty()) return _DefaultValue; return vcc::Concat(_InitializeProperties, L", ");)

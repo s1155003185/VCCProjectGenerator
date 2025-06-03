@@ -477,7 +477,7 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
     EXPECT_EQ(element->GetProperties().at(7)->GetMacro(), L"MAP(int, std::wstring, Map)");
     EXPECT_EQ(element->GetProperties().at(7)->GetType1(), L"int");
     EXPECT_EQ(element->GetProperties().at(7)->GetFullType1(), L"int");
-    EXPECT_EQ(element->GetProperties().at(7)->GetType2(), L"std::wstring");
+    EXPECT_EQ(element->GetProperties().at(7)->GetType2(), L"wstring");
     EXPECT_EQ(element->GetProperties().at(7)->GetFullType2(), L"std::wstring");
     EXPECT_EQ(element->GetProperties().at(7)->GetPropertyName(), L"Map");
     EXPECT_EQ(element->GetProperties().at(7)->GetDefaultValue(), L"");
@@ -653,7 +653,7 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
     EXPECT_EQ(element->GetProperties().size(), (size_t)7);
     EXPECT_EQ((int64_t)element->GetProperties().at(0)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Property);
     EXPECT_EQ(element->GetProperties().at(0)->GetType1(), L"wstring");
-    EXPECT_EQ(element->GetProperties().at(0)->GetFullype1(), L"std::wstring");
+    EXPECT_EQ(element->GetProperties().at(0)->GetFullType1(), L"std::wstring");
     EXPECT_EQ(element->GetProperties().at(0)->GetPropertyName(), L"Property");
     EXPECT_EQ((int64_t)element->GetProperties().at(1)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Manager);
     EXPECT_EQ(element->GetProperties().at(1)->GetType1(), L"GitManager");
