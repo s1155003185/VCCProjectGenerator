@@ -833,7 +833,8 @@ void VPGObjectFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
         content += !projectFileListStr.empty() ? (L"\r\n" + projectFileListStr) : L"";
         
         if (isContainForm) {
-            content += GetVccTagHeaderCustomHeader(VPGCodeType::Cpp) + L"\r\n"
+            content += L"\r\n"
+                + GetVccTagHeaderCustomHeader(VPGCodeType::Cpp) + L"\r\n"
                 + GetVccTagTailerCustomHeader(VPGCodeType::Cpp) + L"\r\n";
         }
 

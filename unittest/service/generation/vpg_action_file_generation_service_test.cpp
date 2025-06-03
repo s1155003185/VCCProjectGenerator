@@ -61,10 +61,10 @@ std::wstring GetHppClass(const std::wstring &actionName, const std::vector<std::
             "        // </vcc:customVPGGitForm" + actionName + L"ProtectedFunctions>\r\n"
             "\r\n"
             "    public:\r\n"
-            "        VPGGitForm" + actionName + L"() : BaseAction() {}\r\n"
-            "        VPGGitForm" + actionName + L"(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm);\r\n";
+            "        VPGGitForm" + actionName + L"() : vcc::BaseAction() {}\r\n"
+            "        VPGGitForm" + actionName + L"(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm);\r\n";
         if (!assignment.empty())
-            action += L"        VPGGitForm" + actionName + L"(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm, " + assignment + L");\r\n";
+            action += L"        VPGGitForm" + actionName + L"(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm, " + assignment + L");\r\n";
         action += L"        ~VPGGitForm" + actionName + L"() {}\r\n"
             "\r\n"
             "        // <vcc:customVPGGitForm" + actionName + L"PublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
@@ -85,13 +85,13 @@ std::wstring GetCppClass(const std::wstring &actionName, const std::vector<std::
         for (auto const &property : properties)
             propertyStr += INDENT + property + L"\r\n";
 
-        std::wstring action = L"VPGGitForm" + actionName + L"::VPGGitForm" + actionName + L"(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm) : BaseAction()\r\n"
+        std::wstring action = L"VPGGitForm" + actionName + L"::VPGGitForm" + actionName + L"(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm) : vcc::BaseAction()\r\n"
             "{\r\n"
             + propertyStrSimple
             + L"}\r\n";
         if (propertyStr != propertyStrSimple)
             action += L"\r\n"
-                "VPGGitForm" + actionName + L"::VPGGitForm" + actionName + L"(std::shared_ptr<LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm" + (!assignment.empty() ? L", " : L"") + assignment + L") : BaseAction()\r\n"
+                "VPGGitForm" + actionName + L"::VPGGitForm" + actionName + L"(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm" + (!assignment.empty() ? L", " : L"") + assignment + L") : vcc::BaseAction()\r\n"
                 "{\r\n"
                 + propertyStr
                 + L"}\r\n";
