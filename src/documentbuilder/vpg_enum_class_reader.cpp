@@ -331,7 +331,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
             if (currentProperty->GetIsManager()) {
                 currentProperty->_PropertyType = VPGEnumClassPropertyType::Manager;
     
-                currentProperty->_Type1 = _GetType(currentProperty->_Macro, pos);
+                currentProperty->SetType1(_GetType(currentProperty->_Macro, pos));
     
                 if (currentProperty->_Macro[pos] == L',')  {
                     pos++;
@@ -347,16 +347,16 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
                 currentProperty->_PropertyName = _GetType(currentProperty->_Macro, pos);
                 if (currentProperty->_Macro[pos] == L',')  {
                     pos++;
-                    currentProperty->_Type1 = _GetPropertyName(currentProperty->_Macro, pos);
+                    currentProperty->SetType1(_GetPropertyName(currentProperty->_Macro, pos));
                 }
             } else {
                 currentProperty->_PropertyType = VPGEnumClassPropertyType::Property;
     
                 if (currentProperty->GetIsMap() || currentProperty->GetIsOrderedMap()) {
-                    currentProperty->_Type1 = _GetType(currentProperty->_Macro, pos);
+                    currentProperty->SetType1(_GetType(currentProperty->_Macro, pos));
                     if (currentProperty->_Macro[pos] == L',')  {
                         pos++;
-                        currentProperty->_Type2 = _GetPropertyName(currentProperty->_Macro, pos);
+                        currentProperty->SetType2(_GetPropertyName(currentProperty->_Macro, pos));
                     }
                     if (currentProperty->_Macro[pos] == L',')  {
                         pos++;
@@ -371,14 +371,14 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
     
                     if (currentProperty->_Macro[pos] == L',')  {
                         pos++;
-                        currentProperty->_Type1 = _GetPropertyName(currentProperty->_Macro, pos);
+                        currentProperty->SetType1(_GetPropertyName(currentProperty->_Macro, pos));
                     }
                     if (currentProperty->_Macro[pos] == L',')  {
                         pos++;
                         currentProperty->_DefaultValue = _GetDefaultValue(currentProperty->_Macro, pos);
                     }
                 } else {
-                    currentProperty->_Type1 = _GetType(currentProperty->_Macro, pos);
+                    currentProperty->SetType1(_GetType(currentProperty->_Macro, pos));
     
                     if (currentProperty->_Macro[pos] == L',')  {
                         pos++;
