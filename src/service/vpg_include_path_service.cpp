@@ -27,14 +27,13 @@ void VPGIncludePathService::GetWorkspaceIncludePath(const std::wstring &workspac
             std::wstring fileContent = vcc::ReadFile(filePath.path().wstring());//GetSimpleCode(vcc::ReadFile(filePath.path().wstring()));
             std::vector<std::shared_ptr<VPGEnumClass>> curremtnEnumClasses;
             reader->Parse(fileContent, curremtnEnumClasses);
-            for (auto enumClass : curremtnEnumClasses)
+            for (auto const &enumClass : curremtnEnumClasses)
                 enumClassMapping.insert(std::make_pair((!enumClass->GetNamespace().empty()? (enumClass->GetNamespace() + L"::") : L"") + enumClass->GetName(), enumClass));
             std::set<std::wstring> classNames;
             VPGIncludePathReader reader;
             reader.Parse(vcc::PlatformType::NA, fileContent, classNames);
-            for (auto const &className : classNames) {
+            for (auto const &className : classNames)
                 classPathMapping.insert(std::make_pair(className, vcc::GetFileName(filePath.path().wstring())));
-            }
         }
     CATCH
 }
