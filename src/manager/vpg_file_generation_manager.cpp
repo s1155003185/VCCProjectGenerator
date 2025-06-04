@@ -44,7 +44,7 @@ void VPGFileGenerationManager::GetClassMacroList(const std::wstring &projWorkspa
         size_t prefixLen = wcslen(prefix.c_str());
         vcc::ReadFilePerLine(filePath, [prefix, prefixLen, this](std::wstring line) {
             vcc::Trim(line);
-            if (line.starts_with(prefix) && vcc::Find(line, L"(") != std::wstring::npos) {
+            if (vcc::IsStartWith(line, prefix) && vcc::IsContain(line, L"(")) {
                 std::wstring type = line.substr(prefixLen, vcc::Find(line, L"(") - prefixLen);
                 vcc::Trim(type);
                 this->_ClassMacros.insert(type);
