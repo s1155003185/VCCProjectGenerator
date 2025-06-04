@@ -5,7 +5,6 @@
 #include "git_service.hpp"
 #include "object_type.hpp"
 
-
 class VPGGitLog : public vcc::GitLog
 {
 

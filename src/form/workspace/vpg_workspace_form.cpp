@@ -62,10 +62,10 @@ void VPGWorkspaceForm::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
         assert(json != nullptr);
         // Name
         if (json->IsContainKey(vcc::ConvertNamingStyle(L"Name", namestyle, vcc::NamingStyle::PascalCase)))
-            SetName(json->GetString(ConvertNamingStyle(L"Name", namestyle, vcc::NamingStyle::PascalCase)));
+            SetName(json->GetString(vcc::ConvertNamingStyle(L"Name", namestyle, vcc::NamingStyle::PascalCase)));
         // TabOrder
         if (json->IsContainKey(vcc::ConvertNamingStyle(L"TabOrder", namestyle, vcc::NamingStyle::PascalCase)))
-            SetTabOrder(static_cast<int64_t>(json->GetInt64(ConvertNamingStyle(L"TabOrder", namestyle, vcc::NamingStyle::PascalCase))));
+            SetTabOrder(static_cast<int64_t>(json->GetInt64(vcc::ConvertNamingStyle(L"TabOrder", namestyle, vcc::NamingStyle::PascalCase))));
         // GitForms
         ClearGitForms();
         if (json->IsContainKey(vcc::ConvertNamingStyle(L"GitForms", namestyle, vcc::NamingStyle::PascalCase))) {

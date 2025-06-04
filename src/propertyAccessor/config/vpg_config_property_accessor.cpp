@@ -609,6 +609,10 @@ bool VPGConfigPropertyAccessor::_ReadBool(const int64_t &objectProperty) const
         {
         case VPGConfigProperty::IsGit:
             return obj->GetIsGit();
+        case VPGConfigProperty::TemplateIsExcludeUnittest:
+            return obj->GetTemplateIsExcludeUnittest();
+        case VPGConfigProperty::TemplateIsExcludeVCCUnitTest:
+            return obj->GetTemplateIsExcludeVCCUnitTest();
         default:
             assert(false);
         }
@@ -753,6 +757,10 @@ std::wstring VPGConfigPropertyAccessor::_ReadString(const int64_t &objectPropert
             return obj->GetProjectNameExe();
         case VPGConfigProperty::ProjectPrefix:
             return obj->GetProjectPrefix();
+        case VPGConfigProperty::TemplateUrl:
+            return obj->GetTemplateUrl();
+        case VPGConfigProperty::TemplateWorkspace:
+            return obj->GetTemplateWorkspace();
         case VPGConfigProperty::Version:
             return obj->GetVersion();
         default:

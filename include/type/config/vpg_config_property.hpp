@@ -82,7 +82,14 @@ enum class VPGConfigProperty
     // --------------------------------------------------
     // Config
     // --------------------------------------------------
+    // Template
     Template, // GETSET_SPTR(VPGConfigTemplate, Template)
+
+    // Template - Getter
+    TemplateUrl, // GETCUSTOM(std::wstring, TemplateUrl, return this->GetTemplate() != nullptr ? this->GetTemplate()->GetUrl() : L"";) @@NoJson
+    TemplateWorkspace, // GETCUSTOM(std::wstring, TemplateWorkspace, return this->GetTemplate() != nullptr ? this->GetTemplate()->GetWorkspace() : L"";) @@NoJson
+    TemplateIsExcludeUnittest, // GETCUSTOM(bool, TemplateIsExcludeUnittest, return this->GetTemplate() != nullptr ? this->GetTemplate()->GetIsExcludeUnittest() : false;) @@NoJson
+    TemplateIsExcludeVCCUnitTest, // GETCUSTOM(bool, TemplateIsExcludeVCCUnitTest, return this->GetTemplate() != nullptr ? this->GetTemplate()->GetIsExcludeVCCUnitTest() : false;) @@NoJson
     
     Behavior, // GETSET_SPTR(VPGConfigBehavior, Behavior)
 

@@ -25,7 +25,7 @@ class VPGFileGenerationManager : public vcc::BaseManager
         std::wstring GetConcatPath(const std::wstring &projWorkspace, const std::wstring &objWorkspace, const std::wstring &middlePath, const std::wstring &fileName) const;
 
     public:
-        VPGFileGenerationManager(std::shared_ptr<vcc::LogConfig> logConfig, std::wstring workspace) : BaseManager(logConfig) { _Workspace = workspace; }
+        VPGFileGenerationManager(std::shared_ptr<vcc::LogConfig> logConfig, const std::wstring &workspace) : BaseManager(logConfig) { _Workspace = workspace; }
         virtual ~VPGFileGenerationManager() {}
 
         // properties

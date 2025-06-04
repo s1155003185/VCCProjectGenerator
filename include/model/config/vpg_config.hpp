@@ -12,7 +12,6 @@
 #include "vpg_config_type.hpp"
 #include "vpg_project_type.hpp"
 
-
 class VPGConfigTemplate : public vcc::BaseObject, public vcc::BaseJsonObject
 {
     GETSET(std::wstring, Url, L"")
@@ -135,6 +134,10 @@ class VPGConfig : public vcc::BaseObject, public vcc::BaseJsonObject
     GETSET(std::wstring, ProjectNameExe, L"VCCModule")
     GETSET(bool, IsGit, false)
     GETSET_SPTR(VPGConfigTemplate, Template)
+    GETCUSTOM(std::wstring, TemplateUrl, return this->GetTemplate() != nullptr ? this->GetTemplate()->GetUrl() : L"";)
+    GETCUSTOM(std::wstring, TemplateWorkspace, return this->GetTemplate() != nullptr ? this->GetTemplate()->GetWorkspace() : L"";)
+    GETCUSTOM(bool, TemplateIsExcludeUnittest, return this->GetTemplate() != nullptr ? this->GetTemplate()->GetIsExcludeUnittest() : false;)
+    GETCUSTOM(bool, TemplateIsExcludeVCCUnitTest, return this->GetTemplate() != nullptr ? this->GetTemplate()->GetIsExcludeVCCUnitTest() : false;)
     GETSET_SPTR(VPGConfigBehavior, Behavior)
     GETSET_SPTR(VPGConfigInput, Input)
     GETSET_SPTR(VPGConfigOutput, Output)
