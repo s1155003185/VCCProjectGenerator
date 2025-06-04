@@ -160,6 +160,11 @@ class VPGEnumClassProperty : public vcc::BaseObject
     // Json
     GETSET(bool, IsNoJson, false)
 
+    // Generator Behavior
+    GETCUSTOM(bool, IsInitializeInClassConstructorNeeded, 
+        return vcc::IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::GetsetSptr, VPGEnumClassMacroType::ManagerSptr}, _MacroType)
+        || (!vcc::IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Getcustom, VPGEnumClassMacroType::GetcustomSptr}, _MacroType) && !_InitializeProperties.empty());)
+
     public:
         VPGEnumClassProperty() : BaseObject() {}
         virtual ~VPGEnumClassProperty() {}
@@ -167,12 +172,6 @@ class VPGEnumClassProperty : public vcc::BaseObject
         virtual std::shared_ptr<IObject> Clone() const override
         {
             return std::make_shared<VPGEnumClassProperty>(*this);
-        }
-
-        bool GetIsInitializeInClassConstructorNeeded() const
-        {
-            return vcc::IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::GetsetSptr, VPGEnumClassMacroType::ManagerSptr}, _MacroType)
-                || (!vcc::IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Getcustom, VPGEnumClassMacroType::GetcustomSptr}, _MacroType) && !_InitializeProperties.empty());
         }
 };
 
