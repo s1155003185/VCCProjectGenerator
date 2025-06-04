@@ -607,6 +607,8 @@ bool VPGConfigPropertyAccessor::_ReadBool(const int64_t &objectProperty) const
         assert(obj != nullptr);
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
+        case VPGConfigProperty::BehaviorIsActionResultThrowException:
+            return obj->GetBehaviorIsActionResultThrowException();
         case VPGConfigProperty::IsGit:
             return obj->GetIsGit();
         case VPGConfigProperty::TemplateIsExcludeUnittest:
@@ -680,6 +682,8 @@ long VPGConfigPropertyAccessor::_ReadLong(const int64_t &objectProperty) const
         assert(obj != nullptr);
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
+        case VPGConfigProperty::BehaviorActionHistoryType:
+            return static_cast<long>(obj->GetBehaviorActionHistoryType());
         case VPGConfigProperty::ProjectType:
             return static_cast<long>(obj->GetProjectType());
         default:
