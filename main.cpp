@@ -12,8 +12,8 @@ int main(int argc, char **argv)
 {
 	Application::Run();
 
-	auto logConfig = std::make_shared<LogConfig>();
-	logConfig->Initialize(LogConfigInitialType::None);
+	auto logConfig = std::make_shared<vcc::LogConfig>();
+	logConfig->Initialize(vcc::LogConfigInitialType::None);
 	logConfig->SetIsConsoleLog(false);
 	try {
 		if (argc < 2) {
@@ -21,10 +21,8 @@ int main(int argc, char **argv)
 			return 0;
 		}
 		std::vector<std::wstring> argList;
-		for (int i = 0; i < argc; i++) {
-			std::wstring arg = str2wstr(argv[i]);
-			argList.push_back(arg);
-		}
+		for (int i = 0; i < argc; i++)
+			argList.push_back(vcc::str2wstr(argv[i]));
 
 		// debug use
 		// argList.clear();
@@ -34,11 +32,11 @@ int main(int argc, char **argv)
 		VPGProcessManager process(logConfig);
 		process.Execute(argList);
 	} catch (std::exception &ex) {
-		const IException *ie = dynamic_cast<const IException *>(&ex);
+		const vcc::IException *ie = dynamic_cast<const vcc::IException *>(&ex);
 		if (ie != nullptr)
-			LogService::LogError(logConfig.get(), L"", ie->GetErrorMessage());
+			vcc::LogService::LogError(logConfig.get(), L"", ie->GetErrorMessage());
 		else
-			LogService::LogError(logConfig.get(), L"", str2wstr(ex.what()));
+			vcc::LogService::LogError(logConfig.get(), L"", vcc::str2wstr(ex.what()));
 		return -1;
 	}
 	return 0;
