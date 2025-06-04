@@ -163,7 +163,7 @@ class VPGEnumClassProperty : public vcc::BaseObject
     // Generator Behavior
     GETCUSTOM(bool, IsInitializeInClassConstructorNeeded, 
         return vcc::IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::GetsetSptr, VPGEnumClassMacroType::ManagerSptr}, _MacroType)
-        || (!vcc::IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Getcustom, VPGEnumClassMacroType::GetcustomSptr}, _MacroType) && !_InitializeProperties.empty());)
+            || (!vcc::IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Getcustom, VPGEnumClassMacroType::GetcustomSptr}, _MacroType) && !_InitializeProperties.empty());)
 
     public:
         VPGEnumClassProperty() : BaseObject() {}
