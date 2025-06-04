@@ -484,7 +484,7 @@ std::wstring VPGJavaGenerationService::GetGetterSetterMapKeyContent(const std::w
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainerCount(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty, bool isVector, bool isMap, bool isSet)
+std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainerCount(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty, bool isVector, bool isMap, bool isSet)
 {
     std::wstring result = L"";
     TRY
@@ -502,7 +502,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainerCount(
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
+std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
     const std::wstring &cppType1, const std::wstring &javaType1,
     bool isVector, bool isMap, bool isSet, std::set<std::wstring> &importFiles)
 {
@@ -511,7 +511,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const
         if (!isVector && !isMap && !isSet)
             return result;
         
-        bool isAllowWrite = property->GetAccessMode() == VPGEnumClassPropertyAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassPropertyAccessMode::WriteOnly;
+        bool isAllowWrite = property->GetAccessMode() == VPGEnumClassAttributeAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassAttributeAccessMode::WriteOnly;
         std::wstring dllInstantPrefix = projectPrefix + L"DllFunctions.Instance.";
         std::wstring classPropertyEnum = objectProperty + L"." + property->GetEnum() + L".getValue()";
         std::wstring macro = property->GetMacro().substr(0, property->GetMacro().find(L"("));
@@ -585,13 +585,13 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterRead(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
+std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterRead(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
     const std::wstring &macro, const std::wstring &cppType1, const std::wstring &javaType1, const std::wstring &cppType2, const std::wstring &javaType2,
     bool isVector, bool isMap, bool isSet, std::set<std::wstring> &importFiles)
 {
     std::wstring result = L"";
     TRY
-        bool isAllowRead = property->GetAccessMode() == VPGEnumClassPropertyAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassPropertyAccessMode::ReadOnly;
+        bool isAllowRead = property->GetAccessMode() == VPGEnumClassAttributeAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassAttributeAccessMode::ReadOnly;
         if (!isAllowRead)
             return result;
 
@@ -662,14 +662,14 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterRead(const VPGE
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterWrite(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
+std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterWrite(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
     const std::wstring &macro, const std::wstring &cppType1, const std::wstring &javaType1, const std::wstring &cppType2, const std::wstring &javaType2,
     bool isVector, bool isMap, bool isSet,
     const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles)
 {
     std::wstring result= L"";
     TRY
-        bool isAllowWrite = property->GetAccessMode() == VPGEnumClassPropertyAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassPropertyAccessMode::WriteOnly;
+        bool isAllowWrite = property->GetAccessMode() == VPGEnumClassAttributeAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassAttributeAccessMode::WriteOnly;
         if (!isAllowWrite)
             return result;
 
@@ -776,7 +776,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterWrite(const VPG
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterInsert(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
+std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterInsert(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
     const std::wstring &cppType1, const std::wstring &javaType1,
     bool isVector, std::set<std::wstring> &importFiles)
 {
@@ -785,7 +785,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterInsert(const VP
         if (!isVector)
             return result;
         
-        bool isAllowWrite = property->GetAccessMode() == VPGEnumClassPropertyAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassPropertyAccessMode::WriteOnly;
+        bool isAllowWrite = property->GetAccessMode() == VPGEnumClassAttributeAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassAttributeAccessMode::WriteOnly;
         if (!isAllowWrite)
             return result;
 
@@ -830,16 +830,16 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterInsert(const VP
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateObjectGetterSetter(const std::wstring &projectPrefix, const std::wstring &objectProperty, const VPGEnumClassProperty *property, const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles)
+std::wstring VPGJavaGenerationService::GenerateObjectGetterSetter(const std::wstring &projectPrefix, const std::wstring &objectProperty, const VPGEnumClassAttribute *property, const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles)
 {
     std::wstring result = L"";
     TRY
-        if (property->GetPropertyType() != VPGEnumClassPropertyType::Property || property->GetAccessMode() == VPGEnumClassPropertyAccessMode::NoAccess)
+        if (property->GetPropertyType() != VPGEnumClassAttributeType::Property || property->GetAccessMode() == VPGEnumClassAttributeAccessMode::NoAccess)
             return result;
         std::wstring macro = property->GetMacro().substr(0, property->GetMacro().find(L"("));
         std::wstring dllInstantPrefix = projectPrefix + L"DllFunctions.Instance.";
-        bool isAllowRead = property->GetAccessMode() == VPGEnumClassPropertyAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassPropertyAccessMode::ReadOnly;
-        bool isAllowWrite = property->GetAccessMode() == VPGEnumClassPropertyAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassPropertyAccessMode::WriteOnly;
+        bool isAllowRead = property->GetAccessMode() == VPGEnumClassAttributeAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassAttributeAccessMode::ReadOnly;
+        bool isAllowWrite = property->GetAccessMode() == VPGEnumClassAttributeAccessMode::ReadWrite || property->GetAccessMode() == VPGEnumClassAttributeAccessMode::WriteOnly;
 
         if (!isAllowRead && !isAllowWrite)
             return result;
@@ -1182,7 +1182,7 @@ std::wstring VPGJavaGenerationService::GenerateFormCustomAction(const std::wstri
     TRY
         std::map<std::wstring, std::wstring> formActions;
         for (auto const &property : enumClass->GetProperties()) {
-            if (property->GetPropertyType() != VPGEnumClassPropertyType::Action)
+            if (property->GetPropertyType() != VPGEnumClassAttributeType::Action)
                 continue;
 
             // Only support SPTR

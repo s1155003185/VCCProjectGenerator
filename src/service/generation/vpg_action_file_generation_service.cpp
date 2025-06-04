@@ -35,7 +35,7 @@ void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
         bool isSeperateFile = !vcc::IsBlank(folderPathHpp);
 
         for (auto const &property : enumClass->GetProperties()) {
-            if (property->GetPropertyType() != VPGEnumClassPropertyType::Action)
+            if (property->GetPropertyType() != VPGEnumClassAttributeType::Action)
                 continue;
             
             // include files
@@ -162,7 +162,7 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
         bool isSeperateFile = !vcc::IsBlank(folderPathCpp);
 
         for (auto const &property : enumClass->GetProperties()) {
-            if (property->GetPropertyType() != VPGEnumClassPropertyType::Action)
+            if (property->GetPropertyType() != VPGEnumClassAttributeType::Action)
                 continue;
             
             // include files

@@ -50,7 +50,7 @@ bool IsPropertyClass(const std::wstring &className, const std::wstring &projectP
     return false;
 }
 
-std::wstring GetActionClassName(const VPGEnumClass* enumClass, const VPGEnumClassProperty * property)
+std::wstring GetActionClassName(const VPGEnumClass* enumClass, const VPGEnumClassAttribute * property)
 {
     TRY
         return GetClassNameFromPropertyClassName(enumClass->GetName())  + property->GetPropertyName();

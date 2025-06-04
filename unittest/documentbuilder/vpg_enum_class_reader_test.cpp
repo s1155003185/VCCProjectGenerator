@@ -564,19 +564,19 @@ TEST(VPGEnumClassReaderTest, AccessMode)
     EXPECT_EQ(element->GetProperties().size(), 5UL);
     EXPECT_EQ(element->GetProperties().at(0)->GetEnum(), L"EnumA");
     EXPECT_EQ(element->GetProperties().at(0)->GetCommand(), L"");
-    EXPECT_EQ(element->GetProperties().at(0)->GetAccessMode(), VPGEnumClassPropertyAccessMode::ReadWrite);
+    EXPECT_EQ(element->GetProperties().at(0)->GetAccessMode(), VPGEnumClassAttributeAccessMode::ReadWrite);
     EXPECT_EQ(element->GetProperties().at(1)->GetEnum(), L"EnumB");
     EXPECT_EQ(element->GetProperties().at(1)->GetCommand(), L"");
-    EXPECT_EQ(element->GetProperties().at(1)->GetAccessMode(), VPGEnumClassPropertyAccessMode::ReadOnly);
+    EXPECT_EQ(element->GetProperties().at(1)->GetAccessMode(), VPGEnumClassAttributeAccessMode::ReadOnly);
     EXPECT_EQ(element->GetProperties().at(2)->GetEnum(), L"EnumC");
     EXPECT_EQ(element->GetProperties().at(2)->GetCommand(), L"");
-    EXPECT_EQ(element->GetProperties().at(2)->GetAccessMode(), VPGEnumClassPropertyAccessMode::WriteOnly);
+    EXPECT_EQ(element->GetProperties().at(2)->GetAccessMode(), VPGEnumClassAttributeAccessMode::WriteOnly);
     EXPECT_EQ(element->GetProperties().at(3)->GetEnum(), L"EnumD");
     EXPECT_EQ(element->GetProperties().at(3)->GetCommand(), L"");
-    EXPECT_EQ(element->GetProperties().at(3)->GetAccessMode(), VPGEnumClassPropertyAccessMode::ReadWrite);
+    EXPECT_EQ(element->GetProperties().at(3)->GetAccessMode(), VPGEnumClassAttributeAccessMode::ReadWrite);
     EXPECT_EQ(element->GetProperties().at(4)->GetEnum(), L"EnumE");
     EXPECT_EQ(element->GetProperties().at(4)->GetCommand(), L"");
-    EXPECT_EQ(element->GetProperties().at(4)->GetAccessMode(), VPGEnumClassPropertyAccessMode::NoAccess);
+    EXPECT_EQ(element->GetProperties().at(4)->GetAccessMode(), VPGEnumClassAttributeAccessMode::NoAccess);
 }
 
 TEST(VPGEnumClassReaderTest, EnumClassMixedWithOthers)
@@ -650,32 +650,32 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
 
     // Property
     EXPECT_EQ(element->GetProperties().size(), (size_t)7);
-    EXPECT_EQ((int64_t)element->GetProperties().at(0)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Property);
+    EXPECT_EQ((int64_t)element->GetProperties().at(0)->GetPropertyType(), (int64_t)VPGEnumClassAttributeType::Property);
     EXPECT_EQ(element->GetProperties().at(0)->GetType1(), L"std::wstring");
     EXPECT_EQ(element->GetProperties().at(0)->GetType1WithoutNamespace(), L"wstring");
     EXPECT_EQ(element->GetProperties().at(0)->GetPropertyName(), L"Property");
-    EXPECT_EQ((int64_t)element->GetProperties().at(1)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Manager);
+    EXPECT_EQ((int64_t)element->GetProperties().at(1)->GetPropertyType(), (int64_t)VPGEnumClassAttributeType::Manager);
     EXPECT_EQ(element->GetProperties().at(1)->GetType1(), L"GitManager");
     EXPECT_EQ(element->GetProperties().at(1)->GetPropertyName(), L"GitManager1");
     EXPECT_EQ(element->GetProperties().at(1)->GetDefaultValue(), L"_LogProperty");
-    EXPECT_EQ((int64_t)element->GetProperties().at(2)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Manager);
+    EXPECT_EQ((int64_t)element->GetProperties().at(2)->GetPropertyType(), (int64_t)VPGEnumClassAttributeType::Manager);
     EXPECT_EQ(element->GetProperties().at(2)->GetType1(), L"vcc::GitManager");
     EXPECT_EQ(element->GetProperties().at(2)->GetPropertyName(), L"GitManager2");
-    EXPECT_EQ((int64_t)element->GetProperties().at(3)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Manager);
+    EXPECT_EQ((int64_t)element->GetProperties().at(3)->GetPropertyType(), (int64_t)VPGEnumClassAttributeType::Manager);
     EXPECT_EQ(element->GetProperties().at(3)->GetType1(), L"GitManager");
     EXPECT_EQ(element->GetProperties().at(3)->GetPropertyName(), L"GitManager3");
     EXPECT_EQ(element->GetProperties().at(3)->GetDefaultValue(), L"GitBaseManager");
-    EXPECT_EQ((int64_t)element->GetProperties().at(4)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
+    EXPECT_EQ((int64_t)element->GetProperties().at(4)->GetPropertyType(), (int64_t)VPGEnumClassAttributeType::Action);
     EXPECT_EQ(element->GetProperties().at(4)->GetType1(), L"");
     EXPECT_EQ(element->GetProperties().at(4)->GetPropertyName(), L"AddGitLog");
     EXPECT_EQ(element->GetProperties().at(4)->GetActionResultRedoClass(), L"vcc::OperationResult");
     EXPECT_EQ(element->GetProperties().at(4)->GetActionResultUndoClass(), L"vcc::OperationResult");
-    EXPECT_EQ((int64_t)element->GetProperties().at(5)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
+    EXPECT_EQ((int64_t)element->GetProperties().at(5)->GetPropertyType(), (int64_t)VPGEnumClassAttributeType::Action);
     EXPECT_EQ(element->GetProperties().at(5)->GetType1(), L"GitLog");
     EXPECT_EQ(element->GetProperties().at(5)->GetPropertyName(), L"DeleteGitLog");
     EXPECT_EQ(element->GetProperties().at(5)->GetActionResultRedoClass(), L"vcc::OperationResult");
     EXPECT_EQ(element->GetProperties().at(5)->GetActionResultUndoClass(), L"vcc::OperationResult");
-    EXPECT_EQ((int64_t)element->GetProperties().at(6)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
+    EXPECT_EQ((int64_t)element->GetProperties().at(6)->GetPropertyType(), (int64_t)VPGEnumClassAttributeType::Action);
     EXPECT_EQ(element->GetProperties().at(6)->GetType1(), L"GitLog");
     EXPECT_EQ(element->GetProperties().at(6)->GetPropertyName(), L"ModifyGitLog");
     EXPECT_EQ(element->GetProperties().at(6)->GetActionResultRedoClass(), L"RedoActionResult");

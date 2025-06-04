@@ -35,23 +35,23 @@ class VPGJavaGenerationService
         // Property
         static std::wstring GetGetterSetterMapKeyContent(const std::wstring &classPropertyEnum, const std::wstring &dllInstantPrefix, const std::wstring &javaType1,
             const std::wstring &orginalFunction, const bool &isReturnNeeded);
-        static std::wstring GenerateObjectGetterSetterContainerCount(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty, bool isVector, bool isMap, bool isSet);
-        static std::wstring GenerateObjectGetterSetterContainer(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
+        static std::wstring GenerateObjectGetterSetterContainerCount(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty, bool isVector, bool isMap, bool isSet);
+        static std::wstring GenerateObjectGetterSetterContainer(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
             const std::wstring &cppType1, const std::wstring &javaType1,
             bool isVector, bool isMap, bool isSet, std::set<std::wstring> &importFiles);
-        static std::wstring GenerateObjectGetterSetterRead(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
+        static std::wstring GenerateObjectGetterSetterRead(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
             const std::wstring &macro, const std::wstring &cppType1, const std::wstring &javaType1, const std::wstring &cppType2, const std::wstring &javaType2,
             bool isVector, bool isMap, bool isSet,
             std::set<std::wstring> &importFiles);
-        static std::wstring GenerateObjectGetterSetterWrite(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
+        static std::wstring GenerateObjectGetterSetterWrite(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
             const std::wstring &macro, const std::wstring &cppType1, const std::wstring &javaType1, const std::wstring &cppType2, const std::wstring &javaType2,
             bool isVector, bool isMap, bool isSet,
             const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles);
-        static std::wstring GenerateObjectGetterSetterInsert(const VPGEnumClassProperty *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
+        static std::wstring GenerateObjectGetterSetterInsert(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
             const std::wstring &cppType1, const std::wstring &javaType1,
             bool isVector, std::set<std::wstring> &importFiles);
         
-        static std::wstring GenerateObjectGetterSetter(const std::wstring &projectPrefix, const std::wstring &objectProperty, const VPGEnumClassProperty *property, const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles);
+        static std::wstring GenerateObjectGetterSetter(const std::wstring &projectPrefix, const std::wstring &objectProperty, const VPGEnumClassAttribute *property, const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles);
         static std::wstring GenerateObjectContent(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &middlePath, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMap, const VPGConfigExport *option);
     
         // Result

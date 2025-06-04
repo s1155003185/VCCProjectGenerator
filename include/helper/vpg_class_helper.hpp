@@ -10,7 +10,7 @@ bool IsPropertyClassNameValidToGenerateClass(const std::wstring &str, const std:
 bool IsPropertyFile(const std::wstring &filePath, const std::wstring &projectPrefix);
 bool IsPropertyClass(const std::wstring &className, const std::wstring &projectPrefix);
 
-std::wstring GetActionClassName(const VPGEnumClass* enumClass, const VPGEnumClassProperty * property);
+std::wstring GetActionClassName(const VPGEnumClass* enumClass, const VPGEnumClassAttribute * property);
 std::wstring GetActionFileNameWithoutExtension(const std::wstring &actionClassName, const std::wstring &projectPrefix);
 std::wstring GetClassNameFromPropertyClassName(const std::wstring &className);
 
