@@ -425,7 +425,7 @@ std::wstring VPGEnumClassReader::_GetCommand(const std::wstring &cppCode, const 
                 tmpCmd = tmpCmd.substr(2, tmpCmd.length() - 4);
             }
             vcc::Trim(tmpCmd);
-            result += tmpCmd;
+            result += tmpCmd + L"\r\n";
             size_t currentPos = pos;
             if (isClassCommand) {
                 size_t nextNewLinePos = cppCode.find(L"\n", pos + 1);
