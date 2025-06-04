@@ -64,7 +64,7 @@ std::wstring VPGEnumClassReader::_GetMacro(const std::wstring &propertyCommand, 
 
         vcc::GetNextCharPos(propertyCommand, pos, true);
         bool hasMacroPrefix = false;
-        for (auto str : this->_ClassMacroList) {
+        for (auto const &str : this->_ClassMacroList) {
             if (vcc::IsStartWith(propertyCommand, str + L"(", pos)) {
                 hasMacroPrefix = true;
                 break;
@@ -195,7 +195,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
                 pos = lastPos;
                 pos++;
             }
-            if (macro.empty() || !vcc::IsContain(_ClassMacroList, macro))
+            if (macro.empty())
                 break;
             macroList.push_back(macro);
         }
