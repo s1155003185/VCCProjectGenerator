@@ -151,20 +151,20 @@ void VPGFileGenerationManager::GernerateProperty(const vcc::LogConfig *logConfig
     TRY
         std::wstring projPrefix = option->GetProjectPrefix();
         std::wstring projWorkspace = _Workspace;
-        std::wstring typeWorkspaceFullPath = vcc::ConcatPaths({projWorkspace, option->GetInput() != nullptr ? option->GetInput()->GetTypeWorkspace() : L""});
-        std::wstring propertyAccessorDirectoryHpp = option->GetOutput() != nullptr ? option->GetOutput()->GetPropertyAccessorDirectoryHpp() : L"";
-        std::wstring propertyAccessorDirectoryCpp = option->GetOutput() != nullptr ? option->GetOutput()->GetPropertyAccessorDirectoryCpp() : L"";
-        std::wstring actionDirectoryHpp = option->GetOutput() != nullptr ? option->GetOutput()->GetActionDirectoryHpp() : L"";
-        std::wstring actionDirectoryCpp = option->GetOutput() != nullptr ? option->GetOutput()->GetActionDirectoryCpp() : L"";
-        std::wstring formDirectoryHpp = option->GetOutput() != nullptr ? option->GetOutput()->GetFormDirectoryHpp() : L"";
-        std::wstring formDirectoryCpp = option->GetOutput() != nullptr ? option->GetOutput()->GetFormDirectoryCpp() : L"";
-        std::wstring objectDirectoryHpp = option->GetOutput() != nullptr ? option->GetOutput()->GetObjectDirectoryHpp() : L"";
-        std::wstring objectDirectoryCpp = option->GetOutput() != nullptr ? option->GetOutput()->GetObjectDirectoryCpp() : L"";
-        std::wstring objectTypeDirectory = option->GetOutput() != nullptr ? option->GetOutput()->GetObjectTypeDirectory() : L"";
-        std::wstring objectFactoryDirectoryHpp = option->GetOutput() != nullptr ? option->GetOutput()->GetObjectFactoryDirectoryHpp() : L"";
-        std::wstring objectFactoryDirectoryCpp = option->GetOutput() != nullptr ? option->GetOutput()->GetObjectFactoryDirectoryCpp() : L"";
-        std::wstring propertyAccessorFactoryDirectoryHpp = option->GetOutput() != nullptr ? option->GetOutput()->GetPropertyAccessorFactoryDirectoryHpp() : L"";
-        std::wstring propertyAccessorFactoryDirectoryCpp = option->GetOutput() != nullptr ? option->GetOutput()->GetPropertyAccessorFactoryDirectoryCpp() : L"";
+        std::wstring typeWorkspaceFullPath = vcc::ConcatPaths({projWorkspace, option->GetInputTypeWorkspace()});
+        std::wstring propertyAccessorDirectoryHpp = option->GetOutputPropertyAccessorDirectoryHpp();
+        std::wstring propertyAccessorDirectoryCpp = option->GetOutputPropertyAccessorDirectoryCpp();
+        std::wstring actionDirectoryHpp = option->GetOutputActionDirectoryHpp();
+        std::wstring actionDirectoryCpp = option->GetOutputActionDirectoryCpp();
+        std::wstring formDirectoryHpp = option->GetOutputFormDirectoryHpp();
+        std::wstring formDirectoryCpp = option->GetOutputFormDirectoryCpp();
+        std::wstring objectDirectoryHpp = option->GetOutputObjectDirectoryHpp();
+        std::wstring objectDirectoryCpp = option->GetOutputObjectDirectoryCpp();
+        std::wstring objectTypeDirectory = option->GetOutputObjectTypeDirectory();
+        std::wstring objectFactoryDirectoryHpp = option->GetOutputObjectFactoryDirectoryHpp();
+        std::wstring objectFactoryDirectoryCpp = option->GetOutputObjectFactoryDirectoryCpp();
+        std::wstring propertyAccessorFactoryDirectoryHpp = option->GetOutputPropertyAccessorFactoryDirectoryHpp();
+        std::wstring propertyAccessorFactoryDirectoryCpp = option->GetOutputPropertyAccessorFactoryDirectoryCpp();
         
         GetClassMacroList(projWorkspace);
         VPGEnumClassReader enumClassReader(_ClassMacros);

@@ -755,38 +755,38 @@ std::wstring VPGConfigPropertyAccessor::_ReadString(const int64_t &objectPropert
         {
         case VPGConfigProperty::InputTypeWorkspace:
             return obj->GetInputTypeWorkspace();
-        case VPGConfigProperty::OuputActionDirectoryCpp:
-            return obj->GetOuputActionDirectoryCpp();
-        case VPGConfigProperty::OuputActionDirectoryHpp:
-            return obj->GetOuputActionDirectoryHpp();
-        case VPGConfigProperty::OuputApplicationDirectoryCpp:
-            return obj->GetOuputApplicationDirectoryCpp();
-        case VPGConfigProperty::OuputApplicationDirectoryHpp:
-            return obj->GetOuputApplicationDirectoryHpp();
-        case VPGConfigProperty::OuputExceptionTypeDirectory:
-            return obj->GetOuputExceptionTypeDirectory();
-        case VPGConfigProperty::OuputFormDirectoryCpp:
-            return obj->GetOuputFormDirectoryCpp();
-        case VPGConfigProperty::OuputFormDirectoryHpp:
-            return obj->GetOuputFormDirectoryHpp();
-        case VPGConfigProperty::OuputObjectDirectoryCpp:
-            return obj->GetOuputObjectDirectoryCpp();
-        case VPGConfigProperty::OuputObjectDirectoryHpp:
-            return obj->GetOuputObjectDirectoryHpp();
-        case VPGConfigProperty::OuputObjectFactoryDirectoryCpp:
-            return obj->GetOuputObjectFactoryDirectoryCpp();
-        case VPGConfigProperty::OuputObjectFactoryDirectoryHpp:
-            return obj->GetOuputObjectFactoryDirectoryHpp();
-        case VPGConfigProperty::OuputObjectTypeDirectory:
-            return obj->GetOuputObjectTypeDirectory();
-        case VPGConfigProperty::OuputPropertyAccessorDirectoryCpp:
-            return obj->GetOuputPropertyAccessorDirectoryCpp();
-        case VPGConfigProperty::OuputPropertyAccessorDirectoryHpp:
-            return obj->GetOuputPropertyAccessorDirectoryHpp();
-        case VPGConfigProperty::OuputPropertyAccessorFactoryDirectoryCpp:
-            return obj->GetOuputPropertyAccessorFactoryDirectoryCpp();
-        case VPGConfigProperty::OuputPropertyAccessorFactoryDirectoryHpp:
-            return obj->GetOuputPropertyAccessorFactoryDirectoryHpp();
+        case VPGConfigProperty::OutputActionDirectoryCpp:
+            return obj->GetOutputActionDirectoryCpp();
+        case VPGConfigProperty::OutputActionDirectoryHpp:
+            return obj->GetOutputActionDirectoryHpp();
+        case VPGConfigProperty::OutputApplicationDirectoryCpp:
+            return obj->GetOutputApplicationDirectoryCpp();
+        case VPGConfigProperty::OutputApplicationDirectoryHpp:
+            return obj->GetOutputApplicationDirectoryHpp();
+        case VPGConfigProperty::OutputExceptionTypeDirectory:
+            return obj->GetOutputExceptionTypeDirectory();
+        case VPGConfigProperty::OutputFormDirectoryCpp:
+            return obj->GetOutputFormDirectoryCpp();
+        case VPGConfigProperty::OutputFormDirectoryHpp:
+            return obj->GetOutputFormDirectoryHpp();
+        case VPGConfigProperty::OutputObjectDirectoryCpp:
+            return obj->GetOutputObjectDirectoryCpp();
+        case VPGConfigProperty::OutputObjectDirectoryHpp:
+            return obj->GetOutputObjectDirectoryHpp();
+        case VPGConfigProperty::OutputObjectFactoryDirectoryCpp:
+            return obj->GetOutputObjectFactoryDirectoryCpp();
+        case VPGConfigProperty::OutputObjectFactoryDirectoryHpp:
+            return obj->GetOutputObjectFactoryDirectoryHpp();
+        case VPGConfigProperty::OutputObjectTypeDirectory:
+            return obj->GetOutputObjectTypeDirectory();
+        case VPGConfigProperty::OutputPropertyAccessorDirectoryCpp:
+            return obj->GetOutputPropertyAccessorDirectoryCpp();
+        case VPGConfigProperty::OutputPropertyAccessorDirectoryHpp:
+            return obj->GetOutputPropertyAccessorDirectoryHpp();
+        case VPGConfigProperty::OutputPropertyAccessorFactoryDirectoryCpp:
+            return obj->GetOutputPropertyAccessorFactoryDirectoryCpp();
+        case VPGConfigProperty::OutputPropertyAccessorFactoryDirectoryHpp:
+            return obj->GetOutputPropertyAccessorFactoryDirectoryHpp();
         case VPGConfigProperty::ProjectName:
             return obj->GetProjectName();
         case VPGConfigProperty::ProjectNameDll:
@@ -919,7 +919,7 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_ReadObject(const int64
             return std::static_pointer_cast<vcc::IObject>(obj->GetBehavior());
         case VPGConfigProperty::Input:
             return std::static_pointer_cast<vcc::IObject>(obj->GetInput());
-        case VPGConfigProperty::Ouput:
+        case VPGConfigProperty::Output:
             return std::static_pointer_cast<vcc::IObject>(obj->GetOutput());
         case VPGConfigProperty::Template:
             return std::static_pointer_cast<vcc::IObject>(obj->GetTemplate());
@@ -968,7 +968,7 @@ void VPGConfigPropertyAccessor::_WriteObject(const int64_t &objectProperty, std:
         case VPGConfigProperty::Input:
             obj->SetInput(std::static_pointer_cast<VPGConfigInput>(value));
             break;
-        case VPGConfigProperty::Ouput:
+        case VPGConfigProperty::Output:
             obj->SetOutput(std::static_pointer_cast<VPGConfigOutput>(value));
             break;
         case VPGConfigProperty::Template:
@@ -1038,7 +1038,7 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObject(const int6
             return std::static_pointer_cast<vcc::IObject>(obj->GetBehavior()->Clone());
         case VPGConfigProperty::Input:
             return std::static_pointer_cast<vcc::IObject>(obj->GetInput()->Clone());
-        case VPGConfigProperty::Ouput:
+        case VPGConfigProperty::Output:
             return std::static_pointer_cast<vcc::IObject>(obj->GetOutput()->Clone());
         case VPGConfigProperty::Template:
             return std::static_pointer_cast<vcc::IObject>(obj->GetTemplate()->Clone());
