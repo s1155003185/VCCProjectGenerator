@@ -659,7 +659,7 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
     EXPECT_EQ(element->GetProperties().at(1)->GetPropertyName(), L"GitManager1");
     EXPECT_EQ(element->GetProperties().at(1)->GetDefaultValue(), L"_LogProperty");
     EXPECT_EQ((int64_t)element->GetProperties().at(2)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Manager);
-    EXPECT_EQ(element->GetProperties().at(2)->GetType1(), L"GitManager");
+    EXPECT_EQ(element->GetProperties().at(2)->GetType1(), L"vcc::GitManager");
     EXPECT_EQ(element->GetProperties().at(2)->GetPropertyName(), L"GitManager2");
     EXPECT_EQ((int64_t)element->GetProperties().at(3)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Manager);
     EXPECT_EQ(element->GetProperties().at(3)->GetType1(), L"GitManager");
@@ -668,13 +668,13 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
     EXPECT_EQ((int64_t)element->GetProperties().at(4)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
     EXPECT_EQ(element->GetProperties().at(4)->GetType1(), L"");
     EXPECT_EQ(element->GetProperties().at(4)->GetPropertyName(), L"AddGitLog");
-    EXPECT_EQ(element->GetProperties().at(4)->GetActionResultRedoClass(), L"OperationResult");
-    EXPECT_EQ(element->GetProperties().at(4)->GetActionResultUndoClass(), L"OperationResult");
+    EXPECT_EQ(element->GetProperties().at(4)->GetActionResultRedoClass(), L"vcc::OperationResult");
+    EXPECT_EQ(element->GetProperties().at(4)->GetActionResultUndoClass(), L"vcc::OperationResult");
     EXPECT_EQ((int64_t)element->GetProperties().at(5)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
     EXPECT_EQ(element->GetProperties().at(5)->GetType1(), L"GitLog");
     EXPECT_EQ(element->GetProperties().at(5)->GetPropertyName(), L"DeleteGitLog");
-    EXPECT_EQ(element->GetProperties().at(5)->GetActionResultRedoClass(), L"OperationResult");
-    EXPECT_EQ(element->GetProperties().at(5)->GetActionResultUndoClass(), L"OperationResult");
+    EXPECT_EQ(element->GetProperties().at(5)->GetActionResultRedoClass(), L"vcc::OperationResult");
+    EXPECT_EQ(element->GetProperties().at(5)->GetActionResultUndoClass(), L"vcc::OperationResult");
     EXPECT_EQ((int64_t)element->GetProperties().at(6)->GetPropertyType(), (int64_t)VPGEnumClassPropertyType::Action);
     EXPECT_EQ(element->GetProperties().at(6)->GetType1(), L"GitLog");
     EXPECT_EQ(element->GetProperties().at(6)->GetPropertyName(), L"ModifyGitLog");
