@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "exception_macro.hpp"
 #include "string_helper.hpp"
@@ -30,6 +31,26 @@ inline std::wstring GetSimpleCode(const std::wstring &str) {
                 result += std::wstring(1, str[i]);
         }
         return result;
+    CATCH
+    return L"";
+}
+
+inline bool IsCustomType(const std::wstring &value)
+{
+    TRY
+        if (value.empty())
+            return false;
+        return !value.empty() && vcc::IsCapital(vcc::SplitString(value, {L"::"}).back());
+    CATCH
+    return false;
+}
+
+inline std::wstring ToTypeWithoutNamespace(const std::wstring &value)
+{
+    TRY
+    if (value.empty())
+        return L"";
+    return vcc::SplitString(value, {L"::"}).back();
     CATCH
     return L"";
 }

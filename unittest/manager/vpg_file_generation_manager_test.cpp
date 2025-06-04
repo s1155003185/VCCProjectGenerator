@@ -72,10 +72,10 @@ class VPGFileGenerationManagerTest : public testing::Test
             code += L"\r\n";
             code += L"enum class VCCObjectPtrProperty // Class Command\r\n";
             code += L"{\r\n";
-            code += L"    EnumA, // GETSET_SPTR(Json, EnumA) \r\n";
-            code += L"    EnumB, // GETSET_SPTR(Json, EnumB, 1, 2, 3) \r\n";
-            code += L"    EnumC, // VECTOR_SPTR(Json, EnumC) \r\n";
-            code += L"    EnumD, // SET_SPTR(Json, EnumD) \r\n";
+            code += L"    EnumA, // GETSET_SPTR(vcc::Json, EnumA) \r\n";
+            code += L"    EnumB, // GETSET_SPTR(vcc::Json, EnumB, 1, 2, 3) \r\n";
+            code += L"    EnumC, // VECTOR_SPTR(vcc::Json, EnumC) \r\n";
+            code += L"    EnumD, // SET_SPTR(vcc::Json, EnumD) \r\n";
             code += L"};";
             this->CreateFileInSourceWorkspace(L"vcc_a_property.hpp", code);
         }
@@ -178,10 +178,10 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "\r\n"
         "class VCCObjectPtr : public vcc::BaseObject\r\n"
         "{\r\n"
-        + INDENT + L"GETSET_SPTR(Json, EnumA)\r\n"
-        + INDENT + L"GETSET_SPTR(Json, EnumB, 1, 2, 3)\r\n"
-        + INDENT + L"VECTOR_SPTR(Json, EnumC)\r\n"
-        + INDENT + L"SET_SPTR(Json, EnumD)\r\n"
+        + INDENT + L"GETSET_SPTR(vcc::Json, EnumA)\r\n"
+        + INDENT + L"GETSET_SPTR(vcc::Json, EnumB, 1, 2, 3)\r\n"
+        + INDENT + L"VECTOR_SPTR(vcc::Json, EnumC)\r\n"
+        + INDENT + L"SET_SPTR(vcc::Json, EnumD)\r\n"
         + L"\r\n"
         + INDENT + L"public:\r\n"
         + INDENT + INDENT + L"VCCObjectPtr() : vcc::BaseObject(ObjectType::ObjectPtr)\r\n"
