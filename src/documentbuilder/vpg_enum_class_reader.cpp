@@ -9,6 +9,7 @@
 #include "exception_macro.hpp"
 #include "json.hpp"
 #include "json_builder.hpp"
+#include "set_helper.hpp"
 #include "string_helper.hpp"
 #include "vpg_enum_class.hpp"
 
@@ -194,7 +195,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
                 pos = lastPos;
                 pos++;
             }
-            if (macro.empty())
+            if (macro.empty() || !vcc::IsContain(_ClassMacroList, macro))
                 break;
             macroList.push_back(macro);
         }
