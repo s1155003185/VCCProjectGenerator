@@ -286,6 +286,14 @@ TEST(StringHelperTest, GetNextQuotedString_Full)
     EXPECT_EQ(pos, (size_t)15);    
 }
 
+TEST(StringHelperTest, GetNextQuotedString_QuoteWihString)
+{
+    std::wstring fullStr = L"(bool, IsHavingValidate, return vcc::IsContain(GetMacro(), L\"(\") ? vcc::IsContain(_Macro.substr(0, _Macro.find(L\"(\")), L\"VALIDATE\") : false;)\r\n\r\n// Macro";
+    size_t pos = 0;
+    EXPECT_EQ(vcc::GetNextQuotedString(fullStr, pos, { L")", L" ", L"\t", L"\r", L"\n" }, { L"\"", L"'", L"{", L"[", L"(", L"/*", L"//" }, { L"\"", L"'", L"}", L"]", L")", L"*/", L"\n" }, { L"\\", L"\\", L"", L"", L"", L"", L"" }, { L"\"" }),
+        L"(bool, IsHavingValidate, return vcc::IsContain(GetMacro(), L\"(\") ? vcc::IsContain(_Macro.substr(0, _Macro.find(L\"(\")), L\"VALIDATE\") : false;)");
+}
+
 /* ---------------------------------------------------------------------------------------------------- */
 /*                                      Process                                                         */
 /* ---------------------------------------------------------------------------------------------------- */

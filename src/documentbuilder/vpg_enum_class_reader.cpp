@@ -78,7 +78,7 @@ std::wstring VPGEnumClassReader::_GetMacro(const std::wstring &propertyCommand, 
         size_t posOfQuote = vcc::Find(propertyCommand, L"(", pos);
         result = propertyCommand.substr(pos, posOfQuote - pos);
         pos = posOfQuote;
-        result += vcc::GetNextQuotedString(propertyCommand, pos, { L" ", L"\t", L"\r", L"\n" }, { L"\"", L"'", L"{", L"[", L"(", L"/*", L"//" }, { L"\"", L"'", L"}", L"]", L")", L"*/", L"\n" }, { L"\\", L"\\", L"", L"", L"", L"", L"" });
+        result += vcc::GetNextQuotedString(propertyCommand, pos, { L")", L" ", L"\t", L"\r", L"\n" }, { L"\"", L"'", L"{", L"[", L"(", L"/*", L"//" }, { L"\"", L"'", L"}", L"]", L")", L"*/", L"\n" }, { L"\\", L"\\", L"", L"", L"", L"", L"" }, { L"\"", L"//", L"/*" });
         vcc::Trim(result);
     CATCH
     return result;
@@ -146,7 +146,7 @@ std::shared_ptr<vcc::Json> VPGEnumClassReader::GetJsonAttributes(const std::wstr
         pos += attributeName.length();
         vcc::GetNextCharPos(command, pos, true);
         if (command[pos] == L'{') {
-            std::wstring jsonStr = vcc::GetNextQuotedString(command, pos, { L" ", L"\t", L"\n" }, { L"{", L"[", L"\"", L"'" }, { L"}", L"]", L"\"", L"'" }, { L"", L"", L"\\", L"\\" });
+            std::wstring jsonStr = vcc::GetNextQuotedString(command, pos, { L" ", L"\t", L"\n" }, { L"{", L"[", L"\"", L"'" }, { L"}", L"]", L"\"", L"'" }, { L"", L"", L"\\", L"\\" }, { L"\"" });
             TRY
                 auto json = std::make_shared<vcc::Json>();
                 vcc::JsonBuilder builder;
@@ -415,7 +415,7 @@ std::wstring VPGEnumClassReader::_GetCommand(const std::wstring &cppCode, const 
     TRY
         vcc::GetNextCharPos(cppCode, pos, true);
         while (vcc::IsStartWith(cppCode, L"//", pos) || vcc::IsStartWith(cppCode, L"/*", pos)) {
-            std::wstring tmpCmd = vcc::GetNextQuotedString(cppCode, pos, { L";", L"{", L"\n", L" ", L"/*", L"//" }, { L"/*", L"//"}, {L"*/", L"\n"}, { L"", L"" });
+            std::wstring tmpCmd = vcc::GetNextQuotedString(cppCode, pos, { L";", L"{", L"\n", L" ", L"/*", L"//" }, { L"/*", L"//"}, {L"*/", L"\n"}, { L"", L"" }, { L"/*", L"//"});
             vcc::Trim(tmpCmd);
             if (!result.empty())
                 result += L"\r\n";
@@ -425,7 +425,7 @@ std::wstring VPGEnumClassReader::_GetCommand(const std::wstring &cppCode, const 
                 tmpCmd = tmpCmd.substr(2, tmpCmd.length() - 4);
             }
             vcc::Trim(tmpCmd);
-            result += tmpCmd + L"\r\n";
+            result += tmpCmd;
             size_t currentPos = pos;
             if (isClassCommand) {
                 size_t nextNewLinePos = cppCode.find(L"\n", pos + 1);
@@ -674,7 +674,7 @@ void VPGEnumClassReader::Parse(const std::wstring &cppCode, std::vector<std::sha
                 if (semiPos == std::wstring::npos || openQuotePos < semiPos) {
                     pos = openQuotePos;
                     namespaceEndPos = pos;
-                    vcc::GetNextQuotedString(cppCode, namespaceEndPos, { L" ", L"\t", L"\r", L"\n", L";" }, { L"{", L"\"", L"//", L"/*" }, { L"}", L"\"", L"\n", L"*/" }, { L"", L"\\", L"", L"" });
+                    vcc::GetNextQuotedString(cppCode, namespaceEndPos, { L" ", L"\t", L"\r", L"\n", L";" }, { L"{", L"\"", L"//", L"/*" }, { L"}", L"\"", L"\n", L"*/" }, { L"", L"\\", L"", L"" }, { L"\"", L"//", L"/*" });
                 } else {
                     pos = semiPos;
                     currentNamespace = L"";

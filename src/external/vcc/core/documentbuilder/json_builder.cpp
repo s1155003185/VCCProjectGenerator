@@ -104,12 +104,12 @@ namespace vcc
                 doc->SetJsonInternalValue(falseStr);
                 pos += falseStr.length() - 1;
             } else if (str[pos] == L'"') {
-                std::wstring value = GetNextQuotedString(str, pos, { L",", L"}", L"]" }, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
+                std::wstring value = GetNextQuotedString(str, pos, { L",", L"}", L"]" }, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"}, { L"\"", L"'" });
                 value  = GetUnescapeStringWithQuote(EscapeStringType::DoubleQuote, value);
                 doc->SetJsonInternalType(JsonInternalType::String);
                 doc->SetJsonInternalValue(value);
             } else if (str[pos] == L'\'') {
-                std::wstring value = GetNextQuotedString(str, pos, { L",", L"}", L"]" }, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
+                std::wstring value = GetNextQuotedString(str, pos, { L",", L"}", L"]" }, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"}, { L"\"", L"'" });
                 value  = GetUnescapeStringWithQuote(EscapeStringType::SingleQuote, value);
                 doc->SetJsonInternalType(JsonInternalType::String);
                 doc->SetJsonInternalValue(value);
@@ -136,7 +136,7 @@ namespace vcc
                     }
                 }
             } else {
-                std::wstring numStr = GetNextQuotedString(str, pos, { L",", L"}", L"]" }, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
+                std::wstring numStr = GetNextQuotedString(str, pos, { L",", L"}", L"]" }, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"}, { L"\"", L"'" });
                 Trim(numStr);
                 try
                 {
@@ -168,7 +168,7 @@ namespace vcc
             while (pos < str.length())
             {
                 // name
-                std::wstring name = GetNextQuotedString(str, pos, {L":"}, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"});
+                std::wstring name = GetNextQuotedString(str, pos, {L":"}, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"}, { L"\"", L"'" });
                 Trim(name);
                 if (IsStartWith(name, L"\""))
                     name = GetUnescapeStringWithQuote(EscapeStringType::DoubleQuote, name);

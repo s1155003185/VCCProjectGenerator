@@ -27,6 +27,18 @@ namespace vcc
         }
         return false;
     }
+    
+    template<typename T>
+    inline bool IsContain(const std::set<T> &v, const std::set<T> &value) 
+    {
+        if (IsEmpty(v) || v.size() < value.size())
+            return false;
+        for (auto const &element : value) {
+            if (!IsContain(v, element))
+                return false;
+        }
+        return true;
+    }
 
     // Concat
     inline std::wstring Concat(const std::set<std::wstring> &v, const std::wstring &delimitor)

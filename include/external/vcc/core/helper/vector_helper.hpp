@@ -16,6 +16,8 @@ namespace vcc
     bool IsEmpty(const std::vector<T> &v);
     template<typename T>
     bool IsContain(const std::vector<T> &v, const T &value);
+    template<typename T>
+    bool IsContain(const std::vector<T> &v, const std::vector<T> &value);
 
     // Concat
     std::wstring Concat(const std::vector<std::wstring> &v, const std::wstring &delimitor);
@@ -79,6 +81,18 @@ namespace vcc
                 return true;
         }
         return false;
+    }
+    
+    template<typename T>
+    bool IsContain(const std::vector<T> &v, const std::vector<T> &value)
+    {
+        if (IsEmpty(v) || v.size() < value.size())
+            return false;
+        for (auto const &element : value) {
+            if (!IsContain(v, element))
+                return false;
+        }
+        return true;
     }
     
     template <typename T>
