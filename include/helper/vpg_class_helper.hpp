@@ -11,7 +11,7 @@ bool IsPropertyFile(const std::wstring &filePath, const std::wstring &projectPre
 bool IsPropertyClass(const std::wstring &className, const std::wstring &projectPrefix);
 
 bool IsCustomType(const std::wstring &value);
-std::wstring ToTypeWithoutNamespace(const std::wstring &value);
+std::wstring GetTypeOrClassWithoutNamespace(const std::wstring &value);
 
 std::wstring GetActionClassName(const VPGEnumClass* enumClass, const VPGEnumClassAttribute * property);
 std::wstring GetActionFileNameWithoutExtension(const std::wstring &actionClassName, const std::wstring &projectPrefix);

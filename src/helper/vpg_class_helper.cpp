@@ -21,7 +21,7 @@ bool IsClassStartWithProjectPrefix(const std::wstring &str, const std::wstring &
     TRY
         if (projectPrefix.empty())
             return true;
-        return vcc::IsStartWith(ToTypeWithoutNamespace(str), projectPrefix);
+        return vcc::IsStartWith(GetTypeOrClassWithoutNamespace(str), projectPrefix);
     CATCH
     return false;
 }
@@ -60,7 +60,7 @@ bool IsCustomType(const std::wstring &value)
     return false;
 }
 
-std::wstring ToTypeWithoutNamespace(const std::wstring &value)
+std::wstring GetTypeOrClassWithoutNamespace(const std::wstring &value)
 {
     TRY
     if (value.empty())
@@ -85,7 +85,7 @@ std::wstring GetActionFileNameWithoutExtension(const std::wstring &actionClassNa
         std::wstring currentActionClassName = actionClassName;
         std::wstring projectPrefixLower = projectPrefix;
         vcc::ToLower(projectPrefixLower);
-        if (!vcc::IsBlank(projectPrefix) && vcc::IsStartWith(ToTypeWithoutNamespace(actionClassName), projectPrefix)) {
+        if (!vcc::IsBlank(projectPrefix) && vcc::IsStartWith(GetTypeOrClassWithoutNamespace(actionClassName), projectPrefix)) {
             result += projectPrefixLower;
             currentActionClassName = currentActionClassName.substr(projectPrefix.length());
         }
