@@ -21,7 +21,7 @@ bool IsClassStartWithProjectPrefix(const std::wstring &str, const std::wstring &
     TRY
         if (projectPrefix.empty())
             return true;
-        return vcc::IsStartWith(str, projectPrefix);
+        return vcc::IsStartWith(ToTypeWithoutNamespace(str), projectPrefix);
     CATCH
     return false;
 }
@@ -50,6 +50,26 @@ bool IsPropertyClass(const std::wstring &className, const std::wstring &projectP
     return false;
 }
 
+bool IsCustomType(const std::wstring &value)
+{
+    TRY
+        if (value.empty())
+            return false;
+        return !value.empty() && vcc::IsCapital(vcc::SplitString(value, {L"::"}).back());
+    CATCH
+    return false;
+}
+
+std::wstring ToTypeWithoutNamespace(const std::wstring &value)
+{
+    TRY
+    if (value.empty())
+        return L"";
+    return vcc::SplitString(value, {L"::"}).back();
+    CATCH
+    return L"";
+}
+
 std::wstring GetActionClassName(const VPGEnumClass* enumClass, const VPGEnumClassAttribute * property)
 {
     TRY
@@ -65,7 +85,7 @@ std::wstring GetActionFileNameWithoutExtension(const std::wstring &actionClassNa
         std::wstring currentActionClassName = actionClassName;
         std::wstring projectPrefixLower = projectPrefix;
         vcc::ToLower(projectPrefixLower);
-        if (!vcc::IsBlank(projectPrefix) && vcc::IsStartWith(actionClassName, projectPrefix)) {
+        if (!vcc::IsBlank(projectPrefix) && vcc::IsStartWith(ToTypeWithoutNamespace(actionClassName), projectPrefix)) {
             result += projectPrefixLower;
             currentActionClassName = currentActionClassName.substr(projectPrefix.length());
         }

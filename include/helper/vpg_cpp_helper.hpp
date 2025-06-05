@@ -34,23 +34,3 @@ inline std::wstring GetSimpleCode(const std::wstring &str) {
     CATCH
     return L"";
 }
-
-inline bool IsCustomType(const std::wstring &value)
-{
-    TRY
-        if (value.empty())
-            return false;
-        return !value.empty() && vcc::IsCapital(vcc::SplitString(value, {L"::"}).back());
-    CATCH
-    return false;
-}
-
-inline std::wstring ToTypeWithoutNamespace(const std::wstring &value)
-{
-    TRY
-    if (value.empty())
-        return L"";
-    return vcc::SplitString(value, {L"::"}).back();
-    CATCH
-    return L"";
-}
