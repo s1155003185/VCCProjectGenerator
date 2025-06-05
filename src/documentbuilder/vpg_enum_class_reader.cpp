@@ -698,9 +698,8 @@ void VPGEnumClassReader::ParseCustom(const std::wstring &cppCode, const std::wst
                                 }
                             } else
                                 results.insert(results.end(), tmpClassList.begin(), tmpClassList.end());
-                            break;
-                        } else
-                            isNamespaceTriggered = false;
+                        }
+                        isNamespaceTriggered = false;
                     } else {
                         if (nextToken == L"namespace") {
                             isNamespaceTriggered = true;
@@ -712,7 +711,8 @@ void VPGEnumClassReader::ParseCustom(const std::wstring &cppCode, const std::wst
                             auto enumClass = std::make_shared<VPGEnumClass>();
                             enumClass->SetCommand(currentCommand);
                             bool isFullEnumClass = _ParseClass(cppCode, pos, enumClass);
-                            enumClass->SetName(currentNamespace + L"::" + enumClass->GetName());
+                            if (!currentNamespace.empty())
+                                enumClass->SetName(currentNamespace + L"::" + enumClass->GetName());
                             if (isFullEnumClass)
                                 results.push_back(enumClass);
                         }

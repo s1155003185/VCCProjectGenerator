@@ -69,10 +69,8 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
                                     classList.insert(currentNamespace + L"::" + tmpClass);
                             } else
                                 classList.insert(tmpClassList.begin(), tmpClassList.end());
-                            break;
-                        } else {
-                            isNamespaceTriggered = false;
                         }
+                        isNamespaceTriggered = false;
                     } else {
                         if (nextToken == L"namespace") {
                             isNamespaceTriggered = true;
