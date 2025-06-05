@@ -47,7 +47,6 @@ class VPGEnumClassAttribute : public vcc::BaseObject
     GETCUSTOM(bool, IsManager, return vcc::IsStartWith(_Macro, L"MANAGER");)
     GETCUSTOM(bool, IsCollection, return GetIsVector() || GetIsMap() || GetIsOrderedMap() || GetIsSet();)
     GETCUSTOM(bool, IsHavingValidate, return vcc::IsContain(GetMacro(), L"(") ? vcc::IsContain(_Macro.substr(0, _Macro.find(L"(")), L"VALIDATE") : false;)
-
     GETCUSTOM(VPGEnumClassAttributeAccessMode, AccessMode, 
                         switch (_MacroType) {
                         case VPGEnumClassMacroType::Getcustom:
