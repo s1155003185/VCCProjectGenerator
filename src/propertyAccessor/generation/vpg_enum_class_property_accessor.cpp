@@ -222,12 +222,8 @@ std::wstring VPGEnumClassAttributePropertyAccessor::_ReadString(const int64_t &o
             return obj->GetPropertyName();
         case VPGEnumClassAttributeProperty::Type1:
             return obj->GetType1();
-        case VPGEnumClassAttributeProperty::Type1WithoutNamespace:
-            return obj->GetType1WithoutNamespace();
         case VPGEnumClassAttributeProperty::Type2:
             return obj->GetType2();
-        case VPGEnumClassAttributeProperty::Type2WithoutNamespace:
-            return obj->GetType2WithoutNamespace();
         case VPGEnumClassAttributeProperty::Validate:
             return obj->GetValidate();
         default:
@@ -247,10 +243,6 @@ std::wstring VPGEnumClassAttributePropertyAccessor::_ReadStringAtIndex(const int
         {
         case VPGEnumClassAttributeProperty::InitializeProperties:
             return obj->GetInitializePropertiesAtIndex(index);
-        case VPGEnumClassAttributeProperty::Type1Namespace:
-            return obj->GetType1NamespaceAtIndex(index);
-        case VPGEnumClassAttributeProperty::Type2Namespace:
-            return obj->GetType2NamespaceAtIndex(index);
         default:
             assert(false);
         }
@@ -323,18 +315,6 @@ void VPGEnumClassAttributePropertyAccessor::_WriteStringAtIndex(const int64_t &o
             else
                 obj->InsertInitializeProperties(value);
             break;
-        case VPGEnumClassAttributeProperty::Type1Namespace:
-            if (index > -1)
-                obj->SetType1NamespaceAtIndex(index, value);
-            else
-                obj->InsertType1Namespace(value);
-            break;
-        case VPGEnumClassAttributeProperty::Type2Namespace:
-            if (index > -1)
-                obj->SetType2NamespaceAtIndex(index, value);
-            else
-                obj->InsertType2Namespace(value);
-            break;
         default:
             assert(false);
         }
@@ -362,18 +342,6 @@ void VPGEnumClassAttributePropertyAccessor::_InsertStringAtIndex(const int64_t &
             else
                 obj->InsertInitializeProperties(value);
             break;
-        case VPGEnumClassAttributeProperty::Type1Namespace:
-            if (index > -1)
-                obj->InsertType1NamespaceAtIndex(index, value);
-            else
-                obj->InsertType1Namespace(value);
-            break;
-        case VPGEnumClassAttributeProperty::Type2Namespace:
-            if (index > -1)
-                obj->InsertType2NamespaceAtIndex(index, value);
-            else
-                obj->InsertType2Namespace(value);
-            break;
         default:
             assert(false);
         }
@@ -387,10 +355,6 @@ size_t VPGEnumClassAttributePropertyAccessor::_GetCount(const int64_t &objectPro
         assert(obj != nullptr);
         switch(static_cast<VPGEnumClassAttributeProperty>(objectProperty))
         {
-        case VPGEnumClassAttributeProperty::Type1Namespace:
-            return obj->GetType1Namespace().size();
-        case VPGEnumClassAttributeProperty::Type2Namespace:
-            return obj->GetType2Namespace().size();
         case VPGEnumClassAttributeProperty::InitializeProperties:
             return obj->GetInitializeProperties().size();
         default:
@@ -431,18 +395,6 @@ void VPGEnumClassAttributePropertyAccessor::_Remove(const int64_t &objectPropert
             obj->RemoveInitializeProperties(valuePtr);
             break;
         }
-        case VPGEnumClassAttributeProperty::Type1Namespace: {
-            auto valuePtr = static_cast<const wchar_t *>(value);
-            assert(valuePtr != nullptr);
-            obj->RemoveType1Namespace(valuePtr);
-            break;
-        }
-        case VPGEnumClassAttributeProperty::Type2Namespace: {
-            auto valuePtr = static_cast<const wchar_t *>(value);
-            assert(valuePtr != nullptr);
-            obj->RemoveType2Namespace(valuePtr);
-            break;
-        }
         default:
             assert(false);
         }
@@ -467,12 +419,6 @@ void VPGEnumClassAttributePropertyAccessor::_RemoveAtIndex(const int64_t &object
         case VPGEnumClassAttributeProperty::InitializeProperties:
             obj->RemoveInitializePropertiesAtIndex(index);
             break;
-        case VPGEnumClassAttributeProperty::Type1Namespace:
-            obj->RemoveType1NamespaceAtIndex(index);
-            break;
-        case VPGEnumClassAttributeProperty::Type2Namespace:
-            obj->RemoveType2NamespaceAtIndex(index);
-            break;
         default:
             assert(false);
         }
@@ -493,12 +439,6 @@ void VPGEnumClassAttributePropertyAccessor::_Clear(const int64_t &objectProperty
         assert(obj != nullptr);
         switch(static_cast<VPGEnumClassAttributeProperty>(objectProperty))
         {
-        case VPGEnumClassAttributeProperty::Type1Namespace:
-            obj->ClearType1Namespace();
-            break;
-        case VPGEnumClassAttributeProperty::Type2Namespace:
-            obj->ClearType2Namespace();
-            break;
         case VPGEnumClassAttributeProperty::InitializeProperties:
             obj->ClearInitializeProperties();
             break;
@@ -674,8 +614,6 @@ std::wstring VPGEnumClassPropertyAccessor::_ReadString(const int64_t &objectProp
             return obj->GetInheritClass();
         case VPGEnumClassProperty::Name:
             return obj->GetName();
-        case VPGEnumClassProperty::Namespace:
-            return obj->GetNamespace();
         default:
             assert(false);
         }
@@ -760,9 +698,6 @@ void VPGEnumClassPropertyAccessor::_WriteString(const int64_t &objectProperty, c
             break;
         case VPGEnumClassProperty::Name:
             obj->SetName(value);
-            break;
-        case VPGEnumClassProperty::Namespace:
-            obj->SetNamespace(value);
             break;
         default:
             assert(false);

@@ -17,12 +17,8 @@ enum class VPGEnumClassAttributeProperty
     , EnumValue // GETSET(int64_t, EnumValue, 0)
     , Macro // GETSET(std::wstring, Macro, L"")
     , MacroType // GETSET(VPGEnumClassMacroType, MacroType, VPGEnumClassMacroType::NA);
-    , Type1Namespace // VECTOR(std::wstring, Type1Namespace)
-    , Type1 // GETCUSTOM(std::wstring, Type1, return _Type1;) SETCUSTOM(Type1, std::wstring, _Type1 = value; _Type1Namespace = vcc::SplitString(value, {L"::"}); _Type1Namespace.pop_back(); )
-    , Type1WithoutNamespace // GETCUSTOM(std::wstring, Type1WithoutNamespace, auto result = vcc::SplitString(GetType1(), {L"::"});  return !result.empty() ? result.back() : L"";)
-    , Type2Namespace // VECTOR(std::wstring, Type2Namespace)
-    , Type2 // GETCUSTOM(std::wstring, Type2, return _Type2;) SETCUSTOM(Type2, std::wstring, _Type2 = value; _Type2Namespace = vcc::SplitString(value, {L"::"}); _Type2Namespace.pop_back(); )
-    , Type2WithoutNamespace // GETCUSTOM(std::wstring, Type2WithoutNamespace, auto result = vcc::SplitString(GetType2(), {L"::"});  return !result.empty() ? result.back() : L"";)
+    , Type1 // GETSET(std::wstring, Type1, L"")
+    , Type2 // GETSET(std::wstring, Type2, L"")
     , PropertyName // GETSET(std::wstring, PropertyName, L"");
     , Validate // GETSET(std::wstring, Validate, L"")
     , DefaultValue // GETCUSTOM(std::wstring, DefaultValue, if (_InitializeProperties.empty()) return _DefaultValue; return vcc::Concat(_InitializeProperties, L", ");) SETCUSTOM(DefaultValue, std::wstring, _DefaultValue = value;)
@@ -99,8 +95,7 @@ enum class VPGEnumClassAttributeProperty
 
 enum class VPGEnumClassProperty
 {
-    Namespace // GETSET(std::wstring, Namespace, L"")
-    , Type // GETSET(VPGEnumClassType, Type, VPGEnumClassType::Object)
+    Type // GETSET(VPGEnumClassType, Type, VPGEnumClassType::Object)
     , Name // GETSET(std::wstring, Name, L"")
     , Command // GETSET(std::wstring, Command, L"")
     , Properties // VECTOR_SPTR(VPGEnumClassAttribute, Properties)
