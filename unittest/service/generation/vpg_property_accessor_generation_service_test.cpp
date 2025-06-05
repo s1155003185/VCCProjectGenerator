@@ -319,6 +319,80 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
 }
 
+TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
+{
+    std::wstring enumClass = L"#pragma once\r\n"
+        "\r\n"
+        "enum class VPGObjectAProperty\r\n"
+        "{\r\n"
+        "    EnumA // GETSET(std::wstring, EnumA, L\"\")\r\n"
+        "};\r\n"
+        "\r\n"
+        "namespace NamespaceA {\r\n"
+        "    enum class VPGObjectNamespaceProperty\r\n"
+        "    {\r\n"
+        "        EnumA // GETSET(std::wstring, EnumA, L\"\")\r\n"
+        "    };\r\n"
+        "    namespace NamespaceNested {\r\n"
+        "        enum class VPGObjectNamespaceNestedProperty\r\n"
+        "        {\r\n"
+        "            EnumA // GETSET(std::wstring, EnumA, L\"\")\r\n"
+        "        };\r\n"
+        "    }\r\n"
+        "};"
+        "\r\n"
+        "enum class VPGObjectBProperty\r\n"
+        "{\r\n"
+        "    EnumA // GETSET(std::wstring, EnumA, L\"\")\r\n"
+        "};\r\n"
+        "\r\n"
+        "namespace NamespaceB {\r\n"
+        "    enum class VPGObjectNamespaceProperty\r\n"
+        "    {\r\n"
+        "        EnumA // GETSET(std::wstring, EnumA, L\"\")\r\n"
+        "    };\r\n"
+        "    namespace NamespaceNested {\r\n"
+        "        enum class VPGObjectNamespaceNestedProperty\r\n"
+        "        {\r\n"
+        "            EnumA // GETSET(std::wstring, EnumA, L\"\")\r\n"
+        "        };\r\n"
+        "    }\r\n"
+        "};"
+        "\r\n";
+
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+
+    std::set<std::wstring> propertyTypes;
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
+
+    std::wstring expectedHppContent = L""
+    "#pragma once\r\n"
+    "\r\n"
+    "#include <string>\r\n"
+    "\r\n"
+    "#include \"base_property_accessor.hpp\"\r\n"
+    "#include \"property_accessor_macro.hpp\"\r\n"
+    "\r\n"
+    "class VPGObjectPropertyAccessor : public vcc::BasePropertyAccessor\r\n"
+    "{\r\n"
+    "    PROPERTY_ACCESSOR_HEADER(bool, Bool)\r\n"
+    "    PROPERTY_ACCESSOR_HEADER(long, Long)\r\n"
+    "    PROPERTY_ACCESSOR_HEADER(std::wstring, String)\r\n"
+    "\r\n"
+    "    public:\r\n"
+    "        VPGObjectPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}\r\n"
+    "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
+    "};\r\n";
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
+
+    std::wstring expectedCppContent = L"";
+    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
+}
+
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
 {
     std::wstring enumClass = L"#pragma once\r\n"
