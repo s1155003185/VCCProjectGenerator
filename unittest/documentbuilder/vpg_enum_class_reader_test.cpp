@@ -435,7 +435,6 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
     EXPECT_EQ(element->GetProperties().at(3)->GetEnum(), L"EnumValidate");
     EXPECT_EQ(element->GetProperties().at(3)->GetMacro(), L"GETSET_VALIDATE(std::wstring, EnumValidate, L\"Default\", validate)");
     EXPECT_EQ(element->GetProperties().at(3)->GetType1(), L"std::wstring");
-    EXPECT_EQ(element->GetProperties().at(3)->GetType1WithoutNamespace(), L"wstring");
     EXPECT_EQ(element->GetProperties().at(3)->GetType2(), L"");
     EXPECT_EQ(element->GetProperties().at(3)->GetPropertyName(), L"EnumValidate");
     EXPECT_EQ(element->GetProperties().at(3)->GetDefaultValue(), L"L\"Default\"");
@@ -477,7 +476,6 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
     EXPECT_EQ(element->GetProperties().at(7)->GetMacro(), L"MAP(int, std::wstring, Map)");
     EXPECT_EQ(element->GetProperties().at(7)->GetType1(), L"int");
     EXPECT_EQ(element->GetProperties().at(7)->GetType2(), L"std::wstring");
-    EXPECT_EQ(element->GetProperties().at(7)->GetType2WithoutNamespace(), L"wstring");
     EXPECT_EQ(element->GetProperties().at(7)->GetPropertyName(), L"Map");
     EXPECT_EQ(element->GetProperties().at(7)->GetDefaultValue(), L"");
     EXPECT_EQ(element->GetProperties().at(7)->GetCommand(), L"");
@@ -602,28 +600,27 @@ TEST(VPGEnumClassReaderTest, EnumClassMixedWithOthers)
         "   enum EnumAInNamespace {};"
         "   enum class EnumBInNamespace {};\r\n"
         "   enum class EnumCInNamespace;\r\n"
+        "   namespace nestedNamespace {\r\n"
+        "       enum class EnumNestedNamespace {};\r\n"
+        "   }\r\n"
         "}\r\n"
         "enum EnumAOneLine {}; enum class EnumBOneLine {}; enum class EnumCOneLine;\r\n";
     std::vector<std::shared_ptr<VPGEnumClass>> results;
     VPGGlobal::GetEnumClassReader()->Parse(code, results);
-    EXPECT_EQ(results.size(), (size_t)6);
+    EXPECT_EQ(results.size(), (size_t)7);
     auto element = results.at(0);
-    EXPECT_EQ(element->GetNamespace(), L"");
     EXPECT_EQ(element->GetName(), L"EnumA");
     element = results.at(1);
-    EXPECT_EQ(element->GetNamespace(), L"");
     EXPECT_EQ(element->GetName(), L"EnumB");
     element = results.at(2);
-    EXPECT_EQ(element->GetNamespace(), L"Name");
-    EXPECT_EQ(element->GetName(), L"EnumAInNamespace");
+    EXPECT_EQ(element->GetName(), L"Name::EnumAInNamespace");
     element = results.at(3);
-    EXPECT_EQ(element->GetNamespace(), L"Name");
-    EXPECT_EQ(element->GetName(), L"EnumBInNamespace");
+    EXPECT_EQ(element->GetName(), L"Name::EnumBInNamespace");
     element = results.at(4);
-    EXPECT_EQ(element->GetNamespace(), L"");
-    EXPECT_EQ(element->GetName(), L"EnumAOneLine");
+    EXPECT_EQ(element->GetName(), L"Name::nestedNamespace::EnumNestedNamespace");
     element = results.at(5);
-    EXPECT_EQ(element->GetNamespace(), L"");
+    EXPECT_EQ(element->GetName(), L"EnumAOneLine");
+    element = results.at(6);
     EXPECT_EQ(element->GetName(), L"EnumBOneLine");
 }
 
@@ -645,14 +642,12 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
     VPGGlobal::GetEnumClassReader()->Parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     auto element = results.at(0);
-    EXPECT_EQ(element->GetNamespace(), L"");
     EXPECT_EQ(element->GetName(), L"Property");
 
     // Property
     EXPECT_EQ(element->GetProperties().size(), (size_t)7);
     EXPECT_EQ((int64_t)element->GetProperties().at(0)->GetPropertyType(), (int64_t)VPGEnumClassAttributeType::Property);
     EXPECT_EQ(element->GetProperties().at(0)->GetType1(), L"std::wstring");
-    EXPECT_EQ(element->GetProperties().at(0)->GetType1WithoutNamespace(), L"wstring");
     EXPECT_EQ(element->GetProperties().at(0)->GetPropertyName(), L"Property");
     EXPECT_EQ((int64_t)element->GetProperties().at(1)->GetPropertyType(), (int64_t)VPGEnumClassAttributeType::Manager);
     EXPECT_EQ(element->GetProperties().at(1)->GetType1(), L"GitManager");

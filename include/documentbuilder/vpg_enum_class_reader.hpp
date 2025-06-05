@@ -10,10 +10,23 @@
 
 class VPGEnumClassReader
 {
+    private:
+        std::vector<std::wstring> _OpenCommands = { L"/*", L"//"};
+        std::vector<std::wstring> _CloseCommands = { L"*/", L"\n" };
+        std::vector<std::wstring> _OpenQuotes = { L"{", L"[" };
+        std::vector<std::wstring> _CloseQuotes = { L"}", L"]"};
+        std::vector<std::wstring> _OpenCommandAndQuotes = { L"/*", L"//", L"{", L"<<", L"<" };
+        std::vector<std::wstring> _CloseCommandAndQuotes = { L"*/", L"\n", L"}", L";", L">" };
+        std::vector<std::wstring> _Delimiter = { L" ", L"\t", L"\n", L",", L";", L"{", L"}" };
+
+
     SET(std::wstring, ClassMacroList);
     GETSET(int64_t, EnumValue, -1);
     private:
         std::wstring _GetErrorMessage(const std::wstring &str, const size_t &pos, const std::wstring &msg) const;
+
+        // Validate
+        size_t IsCommand(const std::wstring &cppCode, const size_t &pos) const;
 
         // class structure
         std::wstring _GetEnum(const std::wstring &propertyStr, size_t &pos) const;
@@ -27,6 +40,8 @@ class VPGEnumClassReader
 
         void _ParseProperties(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass) const;
         bool _ParseClass(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass) const;
+
+        void ParseCustom(const std::wstring &cppCode, const std::wstring &currentNamespace, std::vector<std::shared_ptr<VPGEnumClass>> &results) const;
     public:
         VPGEnumClassReader() = default;
         VPGEnumClassReader(const std::set<std::wstring> &classMacroList);

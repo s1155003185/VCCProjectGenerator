@@ -14,9 +14,6 @@ class VPGEnumClassAttribute : public vcc::BaseObject
     private:
         mutable VPGEnumClassAttributeAccessMode _AccessMode = VPGEnumClassAttributeAccessMode::ReadWrite;
         mutable std::wstring _DefaultValue = L"";
-        mutable std::wstring _Type1 = L"";
-        mutable std::wstring _Type2 = L"";
-
 
     GETSET(VPGEnumClassAttributeType, PropertyType, VPGEnumClassAttributeType::NA)
     GETSET(std::wstring, Enum, L"")

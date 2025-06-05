@@ -3,8 +3,6 @@
 /*
 @@Private {
     "Properties": {
-        "_Type1": "std::wstring=L\"\"",
-        "_Type2": "std::wstring=L\"\"",
         "_DefaultValue": "std::wstring=L\"\"",
         "_AccessMode": "VPGEnumClassAttributeAccessMode=VPGEnumClassAttributeAccessMode::ReadWrite"
     }

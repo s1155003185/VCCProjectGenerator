@@ -28,7 +28,7 @@ void VPGIncludePathService::GetWorkspaceIncludePath(const std::wstring &workspac
             std::vector<std::shared_ptr<VPGEnumClass>> curremtnEnumClasses;
             reader->Parse(fileContent, curremtnEnumClasses);
             for (auto const &enumClass : curremtnEnumClasses)
-                enumClassMapping.insert(std::make_pair((!enumClass->GetNamespace().empty()? (enumClass->GetNamespace() + L"::") : L"") + enumClass->GetName(), enumClass));
+                enumClassMapping.insert(std::make_pair(enumClass->GetName(), enumClass));
             std::set<std::wstring> classNames;
             VPGIncludePathReader reader;
             reader.Parse(vcc::PlatformType::NA, fileContent, classNames);

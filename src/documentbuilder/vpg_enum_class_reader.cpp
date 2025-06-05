@@ -37,6 +37,19 @@ std::wstring VPGEnumClassReader::_GetErrorMessage(const std::wstring &str, const
             + L" Error message: " + msg;
 }
 
+size_t VPGEnumClassReader::IsCommand(const std::wstring &cppCode, const size_t &pos) const
+{
+    TRY
+        size_t index = 0;
+        for (auto const &quote : _OpenCommands) {
+            if (vcc::IsStartWith(cppCode, quote, pos))
+                return index;
+            index++;
+        }
+    CATCH
+    return std::wstring::npos;
+}
+
 std::wstring VPGEnumClassReader::_GetEnum(const std::wstring &propertyStr, size_t &pos) const
 {
     std::wstring result = L"";
@@ -650,56 +663,69 @@ std::wstring VPGEnumClassReader::GetCppCodeLine(const std::wstring &str, size_t 
     return str.substr(startPos, pos - startPos + 1);
 }
 
-void VPGEnumClassReader::Parse(const std::wstring &cppCode, std::vector<std::shared_ptr<VPGEnumClass>> &results) const
+void VPGEnumClassReader::ParseCustom(const std::wstring &cppCode, const std::wstring &currentNamespace, std::vector<std::shared_ptr<VPGEnumClass>> &results) const
 {
     TRY
-        std::unique_lock lock(_mutex);
         size_t pos = 0;
         std::wstring currentCommand = L"";
-        std::wstring currentNamespace = L"";
-        size_t namespaceEndPos = 0;
+        bool isNamespaceTriggered = false;
+        vcc::GetNextCharPos(cppCode, pos, true);
         while (pos < cppCode.size()) {
-            if (namespaceEndPos > 0 && pos > namespaceEndPos)
-                currentNamespace = L"";
-
-            if (vcc::IsStartWith(cppCode, L"namespace", pos)) {
-                vcc::GetNextString(cppCode, pos, { L" ", L"\t", L"\r", L"\n" });
-                pos++;
-                currentNamespace = vcc::GetNextString(cppCode, pos, { L" ", L"\t", L"\r", L"\n", L";" });
-                pos++;
-                size_t openQuotePos = vcc::Find(cppCode, L"{", pos);
-                size_t semiPos = vcc::Find(cppCode, L";", pos);
-                if (openQuotePos == std::wstring::npos && semiPos == std::wstring::npos)
-                    THROW_EXCEPTION_MSG(ExceptionType::ParserError, _GetErrorMessage(cppCode, openQuotePos, L"Namespace " + currentNamespace + L" missing { or ;"));
-                if (semiPos == std::wstring::npos || openQuotePos < semiPos) {
-                    pos = openQuotePos;
-                    namespaceEndPos = pos;
-                    vcc::GetNextQuotedString(cppCode, namespaceEndPos, { L" ", L"\t", L"\r", L"\n", L";" }, { L"{", L"\"", L"//", L"/*" }, { L"}", L"\"", L"\n", L"*/" }, { L"", L"\\", L"", L"" }, { L"\"", L"//", L"/*" });
-                } else {
-                    pos = semiPos;
-                    currentNamespace = L"";
-                    namespaceEndPos = 0;
-                }
-                currentCommand = L"";
-            } else if (vcc::IsStartWith(cppCode, L"//", pos) || vcc::IsStartWith(cppCode, L"/*", pos)) {
+            size_t commandIndex = IsCommand(cppCode, pos);
+            if (commandIndex != std::wstring::npos) {
                 std::wstring tmpCmd = _GetCommand(cppCode, true, pos);
                 vcc::Trim(tmpCmd);
                 if (!currentCommand.empty())
                     currentCommand += L"\r\n";
                 currentCommand += tmpCmd;
-            } else if (cppCode[pos] == L'#') {
-                GetCppCodeLine(cppCode, pos, true);
-                currentCommand = L"";
-            } else if (vcc::IsStartWith(cppCode, L"enum ", pos)) {
-                auto enumClass = std::make_shared<VPGEnumClass>();
-                enumClass->SetNamespace(currentNamespace);
-                enumClass->SetCommand(currentCommand);
-                bool isFullEnumClass = _ParseClass(cppCode, pos, enumClass);
-                if (isFullEnumClass)
-                    results.push_back(enumClass);
-                currentCommand = L"";
+            } else {
+                size_t previousPos = pos;
+                std::wstring nextToken = vcc::GetNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
+                if (!vcc::IsBlank(nextToken)) {
+                    if (isNamespaceTriggered) {
+                        // namespace name
+                        vcc::Trim(nextToken);
+                        pos++;
+                        std::wstring quoteStr = vcc::GetNextQuotedString(cppCode, pos, { L";" } );
+                        vcc::Trim(quoteStr);
+                        if (!quoteStr.empty()) {
+                            std::vector<std::shared_ptr<VPGEnumClass>> tmpClassList;
+                            ParseCustom(quoteStr.substr(1, quoteStr.length() - 2), nextToken, tmpClassList);
+                            if (!currentNamespace.empty()) {
+                                for (auto &tmpClass : tmpClassList)
+                                    tmpClass->SetName(currentNamespace + L"::" + tmpClass->GetName());
+                            } else
+                                results.insert(results.end(), tmpClassList.begin(), tmpClassList.end());
+                            break;
+                        } else
+                            isNamespaceTriggered = false;
+                    } else {
+                        if (nextToken == L"namespace") {
+                            isNamespaceTriggered = true;
+                        } else if (nextToken[0] == L'#') {
+                            pos = previousPos;
+                            GetCppCodeLine(cppCode, pos, true);
+                        } else if (nextToken == L"enum") {
+                            pos = previousPos;
+                            auto enumClass = std::make_shared<VPGEnumClass>();
+                            enumClass->SetCommand(currentCommand);
+                            bool isFullEnumClass = _ParseClass(cppCode, pos, enumClass);
+                            if (isFullEnumClass)
+                                results.push_back(enumClass);
+                        }
+                    }
+                    currentCommand = L"";
+                }
             }
             vcc::GetNextCharPos(cppCode, pos, false);
         }
+    CATCH
+}
+
+void VPGEnumClassReader::Parse(const std::wstring &cppCode, std::vector<std::shared_ptr<VPGEnumClass>> &results) const
+{
+    TRY
+        std::unique_lock lock(_mutex);
+        ParseCustom(cppCode, L"", results);
     CATCH
 }
