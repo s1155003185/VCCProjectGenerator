@@ -692,8 +692,10 @@ void VPGEnumClassReader::ParseCustom(const std::wstring &cppCode, const std::wst
                             std::vector<std::shared_ptr<VPGEnumClass>> tmpClassList;
                             ParseCustom(quoteStr.substr(1, quoteStr.length() - 2), nextToken, tmpClassList);
                             if (!currentNamespace.empty()) {
-                                for (auto &tmpClass : tmpClassList)
+                                for (auto &tmpClass : tmpClassList) {
                                     tmpClass->SetName(currentNamespace + L"::" + tmpClass->GetName());
+                                    results.push_back(tmpClass);
+                                }
                             } else
                                 results.insert(results.end(), tmpClassList.begin(), tmpClassList.end());
                             break;
@@ -710,6 +712,7 @@ void VPGEnumClassReader::ParseCustom(const std::wstring &cppCode, const std::wst
                             auto enumClass = std::make_shared<VPGEnumClass>();
                             enumClass->SetCommand(currentCommand);
                             bool isFullEnumClass = _ParseClass(cppCode, pos, enumClass);
+                            enumClass->SetName(currentNamespace + L"::" + enumClass->GetName());
                             if (isFullEnumClass)
                                 results.push_back(enumClass);
                         }
