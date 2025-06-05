@@ -420,7 +420,7 @@ std::wstring VPGJavaGenerationService::GenerateEnumContent(const std::wstring &p
 {
     std::wstring result = L"";
     TRY
-        std::wstring enumClassName = (!vcc::IsStartWith(enumClass->GetName(), projectPrefix) ? projectPrefix  : L"") + enumClass->GetName();
+        std::wstring enumClassName = (!vcc::IsStartWith(enumClass->GetName(), projectPrefix) ? projectPrefix  : L"") + GetTypeOrClassWithoutNamespace(enumClass->GetName());
         std::wstring packageFolder = GetJavaPactkage(option->GetTypeDirectory(), middlePath, L"Type Directory");
         result += L"package " + packageFolder + L";\r\n"
             "\r\n"

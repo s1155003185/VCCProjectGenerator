@@ -258,9 +258,10 @@ void VPGFileGenerationManager::GernerateProperty(const vcc::LogConfig *logConfig
             //                              Procedure Start                                               //
             // ------------------------------------------------------------------------------------------ //
             for (auto const &enumClass : enumClassList) {
-                std::wstring className = GetClassNameFromPropertyClassName(enumClass->GetName());
-                if (projPrefix.empty() || IsPropertyClass(className, projPrefix)) {
-                    objectTypes.insert(className.substr(projPrefix.size()));
+                std::wstring propertyClassNameWithoutNamespace = GetTypeOrClassWithoutNamespace(enumClass->GetName());
+                std::wstring classNameWithoutNamespace = GetClassNameFromPropertyClassName(enumClass->GetName());
+                if (projPrefix.empty() || IsPropertyClass(classNameWithoutNamespace, projPrefix)) {
+                    objectTypes.insert(classNameWithoutNamespace.substr(projPrefix.size()));
                     objectEnumClassList.push_back(enumClass);
                 } else {
                     std::wstring classPrefixStr = !vcc::IsBlank(projPrefix) ? (L"Prefix " + projPrefix + L" or ") : L"";
@@ -270,7 +271,7 @@ void VPGFileGenerationManager::GernerateProperty(const vcc::LogConfig *logConfig
                 // ------------------------------------------------------------------------------------------ //
                 //                               JAVA Export File                                             //
                 // ------------------------------------------------------------------------------------------ //
-                std::wstring javaEnumClassName = enumClass->GetName();
+                std::wstring javaEnumClassName = classNameWithoutNamespace;
                 if (!projPrefix.empty() && !vcc::IsStartWith(javaEnumClassName, projPrefix))
                     javaEnumClassName = projPrefix + javaEnumClassName;
 
@@ -283,12 +284,12 @@ void VPGFileGenerationManager::GernerateProperty(const vcc::LogConfig *logConfig
                     if (!vcc::IsBlank(javaOption->GetTypeDirectory()))
                         VPGJavaGenerationService::GenerateEnum(logConfig, GetConcatPath(workspace, javaOption->GetTypeDirectory(), middlePath, javaEnumClassName + L".java"), middlePath, enumClass.get(), option, javaOption.get());
                     
-                    if (IsPropertyClass(enumClass->GetName(), projPrefix)) {
+                    if (IsPropertyClass(propertyClassNameWithoutNamespace, projPrefix)) {
                         std::wstring objectDirectory = javaOption->GetObjectDirectory();
                         if (enumClass->GetType() == VPGEnumClassType::Form && !vcc::IsBlank(javaOption->GetFormDirectory()))
                             objectDirectory = javaOption->GetFormDirectory();
                         if (!vcc::IsBlank(objectDirectory))
-                            VPGJavaGenerationService::GenerateObject(logConfig, GetConcatPath(workspace, objectDirectory, middlePath, className + L".java"), middlePath, enumClass.get(),
+                            VPGJavaGenerationService::GenerateObject(logConfig, GetConcatPath(workspace, objectDirectory, middlePath, classNameWithoutNamespace + L".java"), middlePath, enumClass.get(),
                                 typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm,
                                 option, javaOption.get());
                     }
