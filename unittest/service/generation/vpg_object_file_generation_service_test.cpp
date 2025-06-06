@@ -265,7 +265,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Namespace)
         "                }\r\n"
         "        }\r\n"
         "    }\r\n"
-        "};\r\n"");
+        "};\r\n");
 }
 
 TEST_F(VPGObjectFileGenerationServiceTest, Object)

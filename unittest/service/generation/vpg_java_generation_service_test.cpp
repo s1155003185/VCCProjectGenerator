@@ -158,18 +158,18 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         );
 }
 
-void ValidateGenerateEnum(const std::wstring &enumClass1, const std::wstring &enumClass2)
+void ValidateGenerateEnum(const VPGJavaGenerationServiceTest *test, const std::wstring &enumClass1, const std::wstring &enumClass2)
 {
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList1;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList2;
     VPGGlobal::GetEnumClassReader()->Parse(enumClass1, enumClassList1);
     VPGGlobal::GetEnumClassReader()->Parse(enumClass2, enumClassList2);
 
-    std::wstring filePath1 = vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeA.java"});
-    std::wstring filePath2 = vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetTypeDirectory(), L"VPGTypeBProperty.java"});
+    std::wstring filePath1 = vcc::ConcatPaths({test->GetWorkspace(), test->GetJavaOption()->GetTypeDirectory(), L"VPGTypeA.java"});
+    std::wstring filePath2 = vcc::ConcatPaths({test->GetWorkspace(), test->GetJavaOption()->GetTypeDirectory(), L"VPGTypeBProperty.java"});
     
-    VPGJavaGenerationService::GenerateEnum(this->GetLogConfig().get(), filePath1, L"", enumClassList1.at(0).get(), this->GetOption().get(), this->GetJavaOption().get());
-    VPGJavaGenerationService::GenerateEnum(this->GetLogConfig().get(), filePath2, L"", enumClassList2.at(0).get(), this->GetOption().get(), this->GetJavaOption().get());
+    VPGJavaGenerationService::GenerateEnum(test->GetLogConfig().get(), filePath1, L"", enumClassList1.at(0).get(), test->GetOption().get(), test->GetJavaOption().get());
+    VPGJavaGenerationService::GenerateEnum(test->GetLogConfig().get(), filePath2, L"", enumClassList2.at(0).get(), test->GetOption().get(), test->GetJavaOption().get());
     
     EXPECT_TRUE(vcc::IsFilePresent(filePath1));
     EXPECT_EQ(vcc::ReadFile(filePath1),
@@ -253,7 +253,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
         "   EnumB, // GETSET(int64_t, EnumB, 1)\r\n"
         "   EnumC = 999 // VECTOR(double, EnumC)\r\n"
         "};\r\n";
-    ValidateGenerateEnum(enumClass1, enumClass2);
+    ValidateGenerateEnum(this, enumClass1, enumClass2);
 }
 
 TEST_F(VPGJavaGenerationServiceTest, GenerateEnum_Namespace)
@@ -278,17 +278,17 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum_Namespace)
         "        EnumC = 999 // VECTOR(double, EnumC)\r\n"
         "    };\r\n"
         "};\r\n";
-    ValidateGenerateEnum(enumClass1, enumClass2);
+    ValidateGenerateEnum(this, enumClass1, enumClass2);
 }
 
-void ValidateGenerateObject(const std::wstring &code)
+void ValidateGenerateObject(const VPGJavaGenerationServiceTest *test, const std::wstring &code)
 {
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->Parse(code, enumClassList);
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMap;
-    std::wstring filePath = vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"});
-    VPGJavaGenerationService::GenerateObject(this->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMap, typeWorkspaceClassRelativePathMap, this->GetOption().get(), this->GetJavaOption().get());
+    std::wstring filePath = vcc::ConcatPaths({test->GetWorkspace(), test->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"});
+    VPGJavaGenerationService::GenerateObject(test->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMap, typeWorkspaceClassRelativePathMap, test->GetOption().get(), test->GetJavaOption().get());
     
     EXPECT_TRUE(vcc::IsFilePresent(filePath));
     EXPECT_EQ(vcc::ReadFile(filePath),
@@ -685,7 +685,8 @@ void ValidateGenerateObject(const std::wstring &code)
 
 TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
 {
-    ValidateGenerateObject(L"#param once\r\n"
+    ValidateGenerateObject(this, 
+        L"#param once\r\n"
         "enum class VPGTypeBProperty {\r\n"
         "    Bool = 0, // GETSET(bool, Bool, false)\r\n"
         "    Long , // GETSET(long, Long, 0)\r\n"
@@ -708,6 +709,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
 TEST_F(VPGJavaGenerationServiceTest, GenerateObjectWithNamespace)
 {   
     ValidateGenerateObject(
+        this,
         L"#param once\r\n"
         "namespace vcc {\r\n"
         "    enum class VPGTypeBProperty {\r\n"
