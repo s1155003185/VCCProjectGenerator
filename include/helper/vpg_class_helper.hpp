@@ -11,10 +11,17 @@ bool IsPropertyFile(const std::wstring &filePath, const std::wstring &projectPre
 bool IsPropertyClass(const std::wstring &className, const std::wstring &projectPrefix);
 
 bool IsCustomType(const std::wstring &value);
-std::wstring GetTypeOrClassWithoutNamespace(const std::wstring &value);
 
+// Namespace
+std::wstring GetTypeOrClassWithoutNamespace(const std::wstring &value);
+std::wstring GetNamespaceFromClassName(const std::wstring &className);
+bool IsClassInNamespace(const std::wstring &currentNamespace, const std::wstring &fullClassName);
+
+// Action
 std::wstring GetActionClassName(const VPGEnumClass* enumClass, const VPGEnumClassAttribute * property);
 std::wstring GetActionFileNameWithoutExtension(const std::wstring &actionClassName, const std::wstring &projectPrefix);
+
+// ConverC lass Name
 std::wstring GetClassNameFromPropertyClassName(const std::wstring &className);
 
 std::wstring GetActionMessage(const std::wstring &id, const std::wstring &msg);

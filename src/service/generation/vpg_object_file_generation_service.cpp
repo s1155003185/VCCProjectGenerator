@@ -788,9 +788,9 @@ void VPGObjectFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
         // ------------------------------------------------------------------------------------------ //
         //                               Action  Files                                                //
         // ------------------------------------------------------------------------------------------ //
-        std::vector<std::wstring> actionClassList;
+        std::map<std::wstring, std::wstring> actionNameAndActionClassList;
         for (auto const &enumClass : enumClassList)
-            VPGActionFileGenerationService::GenerateHpp(logConfig, projectClassIncludeFiles, enumClass.get(), classPrefix, actionFolderPathHpp, actionClassList, systemFileList, projectFileList);        
+            VPGActionFileGenerationService::GenerateHpp(logConfig, projectClassIncludeFiles, enumClass.get(), classPrefix, actionFolderPathHpp, actionNameAndActionClassList, systemFileList, projectFileList);        
 
         // ------------------------------------------------------------------------------------------ //
         //                               Generate Script                                              //
@@ -833,24 +833,38 @@ void VPGObjectFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
             content += L"\r\n"
                 + classList;
 
+        std::map<std::wstring, std::vector<std::wstring>> namespaceClassMapping;
         // 1. Generate action argument class
         for (auto const &enumClass : enumClassList) {
             if (!IsPropertyClass(enumClass->GetName(), L"") || enumClass->GetType() != VPGEnumClassType::ActionArgument)
                 continue;
-            content += GenerateHppClass(enumClass.get(), option, enumClassMapping);
+            std::wstring currentNamespace = GetNamespaceFromClassName(enumClass->GetName());
+            if (!vcc::IsContain(namespaceClassMapping, currentNamespace))
+                namespaceClassMapping.insert({currentNamespace, {}});
+            namespaceClassMapping[currentNamespace].push_back(GenerateHppClass(enumClass.get(), option, enumClassMapping));
         }
 
         // 2. Generate Action
-        for (auto const &str : actionClassList)
-            content += L"\r\n"
-                + str;
-            
+        for (auto const &pair : actionNameAndActionClassList) {
+            std::wstring currentNamespace = GetNamespaceFromClassName(pair.first);
+            if (!vcc::IsContain(namespaceClassMapping, currentNamespace))
+                namespaceClassMapping.insert({currentNamespace, {}});
+            namespaceClassMapping[currentNamespace].push_back(pair.second);
+        }
+        
         // 3. Generate class
         for (auto const &enumClass : enumClassList) {
             if (!IsPropertyClass(enumClass->GetName(), L"") || enumClass->GetType() == VPGEnumClassType::ActionArgument)
                 continue;
-            content += GenerateHppClass(enumClass.get(), option, enumClassMapping);
+            
+            std::wstring currentNamespace = GetNamespaceFromClassName(enumClass->GetName());
+            if (!vcc::IsContain(namespaceClassMapping, currentNamespace))
+                namespaceClassMapping.insert({currentNamespace, {}});
+            namespaceClassMapping[currentNamespace].push_back(GenerateHppClass(enumClass.get(), option, enumClassMapping));
         }
+
+        // Export class according to namespace
+
         
         // ------------------------------------------------------------------------------------------ //
         //                               Handle VCC Tag                                               //
@@ -1358,9 +1372,9 @@ void VPGObjectFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
         // ------------------------------------------------------------------------------------------ //
         //                               Action  Files                                                //
         // ------------------------------------------------------------------------------------------ //
-        std::vector<std::wstring> actionClassList;
+        std::map<std::wstring, std::wstring> actionNameAndActionClassList;
         for (auto const &enumClass : enumClassList)
-            VPGActionFileGenerationService::GenerateCpp(logConfig, classPathMapping, enumClass.get(), classPrefix, actionFolderPathCpp, actionClassList, systemIncludeFiles, customIncludeFiles);      
+            VPGActionFileGenerationService::GenerateCpp(logConfig, classPathMapping, enumClass.get(), classPrefix, actionFolderPathCpp, actionNameAndActionClassList, systemIncludeFiles, customIncludeFiles);      
 
         // ------------------------------------------------------------------------------------------ //
         //                               Generate Script                                              //
@@ -1384,9 +1398,13 @@ void VPGObjectFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
 
         content += GetCppCustomHeader(isIncludeForm);
 
-        for (auto const &str : actionClassList)
-            content += L"\r\n"
-                + str;
+        std::map<std::wstring, std::vector<std::wstring>> namespaceClassMapping;
+        for (auto const &pair : actionNameAndActionClassList) {
+            std::wstring currentNamespace = GetNamespaceFromClassName(pair.first);
+            if (!vcc::IsContain(namespaceClassMapping, currentNamespace))
+                namespaceClassMapping.insert({currentNamespace, {}});
+            namespaceClassMapping[currentNamespace].push_back(pair.second);
+        }
             
         // Generate Part
         for (auto const &enumClass : enumClassList) {
@@ -1401,13 +1419,19 @@ void VPGObjectFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
             std::wstring baseClassNameWithoutQuote = baseClassName;
             if (vcc::IsContain(baseClassNameWithoutQuote, L"<"))
                 baseClassNameWithoutQuote = baseClassNameWithoutQuote.substr(0, vcc::Find(baseClassNameWithoutQuote, L"<"));
-
-            content += GetCppConstructor(enumClass.get(), classPrefix, className, baseClassNameWithoutQuote, enumClassMapping)
+                
+            std::wstring currentNamespace = GetNamespaceFromClassName(enumClass->GetName());
+            if (!vcc::IsContain(namespaceClassMapping, currentNamespace))
+                namespaceClassMapping.insert({currentNamespace, {}});
+            namespaceClassMapping[currentNamespace].push_back(
+                GetCppConstructor(enumClass.get(), classPrefix, className, baseClassNameWithoutQuote, enumClassMapping)
                 + GetCppCloneFunctions(enumClass.get(), className, enumClassMapping)
                 + GetCppJsonFunction(className, enumClassMapping, enumClass)
                 + GetCppInitialize(enumClass.get(), className, baseClassNameWithoutQuote)
-                + GetCppAction(enumClass.get(), className);
+                + GetCppAction(enumClass.get(), className));
         }
+
+        // TODO
 
         content += GetCppCustomFunction(isIncludeForm);
             

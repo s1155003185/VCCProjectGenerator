@@ -24,7 +24,7 @@ void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
     const std::map<std::wstring, std::wstring> &classPathMapping,
     const VPGEnumClass *enumClass,
     const std::wstring &projectPrefix, const std::wstring &folderPathHpp,
-    std::vector<std::wstring> &actionClassList, std::set<std::wstring> &globalSystemIncludeFiles, std::set<std::wstring> &globalCustomIncludeFiles)
+    std::map<std::wstring, std::wstring> &actionClassList, std::set<std::wstring> &globalSystemIncludeFiles, std::set<std::wstring> &globalCustomIncludeFiles)
 {
     TRY
         assert(enumClass != nullptr);
@@ -140,7 +140,8 @@ void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
                 // Generate to form files
                 globalSystemIncludeFiles.insert(systemIncludeFiles.begin(), systemIncludeFiles.end());
                 globalCustomIncludeFiles.insert(customIncludeFiles.begin(), customIncludeFiles.end());
-                actionClassList.push_back(action);
+                std::wstring currentNamespace = GetNamespaceFromClassName(enumClass->GetName());
+                actionClassList.insert((!currentNamespace.empty() ? (currentNamespace + L"::") : L"") + actionClassName, action);
             }
 
         }
@@ -151,7 +152,7 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
     const std::map<std::wstring, std::wstring> &classPathMapping,
     const VPGEnumClass *enumClass,
     const std::wstring &projectPrefix, const std::wstring &folderPathCpp,
-    std::vector<std::wstring> &actionClassList, std::set<std::wstring> &globalSystemIncludeFiles, std::set<std::wstring> &globalCustomIncludeFiles)
+    std::map<std::wstring, std::wstring> &actionClassList, std::set<std::wstring> &globalSystemIncludeFiles, std::set<std::wstring> &globalCustomIncludeFiles)
 {
     TRY
         assert(enumClass != nullptr);
@@ -323,7 +324,9 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
                 // Generate to form files
                 globalSystemIncludeFiles.insert(systemIncludeFiles.begin(), systemIncludeFiles.end());
                 globalCustomIncludeFiles.insert(customIncludeFiles.begin(), customIncludeFiles.end());
-                actionClassList.push_back(action);
+
+                std::wstring currentNamespace = GetNamespaceFromClassName(enumClass->GetName());
+                actionClassList.insert((!currentNamespace.empty() ? (currentNamespace + L"::") : L"") + actionClassName, action);
             }
         }
     CATCH

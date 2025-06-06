@@ -70,6 +70,26 @@ std::wstring GetTypeOrClassWithoutNamespace(const std::wstring &value)
     return L"";
 }
 
+std::wstring GetNamespaceFromClassName(const std::wstring &className)
+{   
+    TRY
+        auto namespaceList = vcc::SplitString(className, {L"::"});
+        if (namespaceList.size() < 2)
+            return L"";
+        namespaceList.pop_back();
+        return vcc::Concat(namespaceList, L"::");
+    CATCH
+    return L"";
+}
+
+bool IsClassInNamespace(const std::wstring &currentNamespace, const std::wstring &fullClassName)
+{
+    TRY
+        return currentNamespace == GetNamespaceFromClassName(fullClassName);
+    CATCH
+    return false;
+}
+
 std::wstring GetActionClassName(const VPGEnumClass* enumClass, const VPGEnumClassAttribute * property)
 {
     TRY
