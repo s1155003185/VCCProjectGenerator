@@ -2,6 +2,7 @@
 
 ## [Unreleased] - Review - using namespace vcc and naming rules
 - Review using namespace vcc: add vcc:: before function instead of using namespace vcc
+- Support namespace in TypeWorkspace
 - Git Manager Enhancement
 - Review naming rule: class variable: _PascalCase / variable: camelCase / function name: camelCase / class name: PascalCase / macro names: UPPER_CASE / enum type name: PascalCase / enumerator name: UPPER_CASE / constant name: UPPER_CASE / namespace name: lowercase
 - Remove Action Message
