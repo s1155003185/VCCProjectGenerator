@@ -5,7 +5,7 @@
 - Support namespace in TypeWorkspace
 - Git Manager Enhancement
 - Review naming rule: class variable: _PascalCase / variable: camelCase / function name: camelCase / class name: PascalCase / macro names: UPPER_CASE / enum type name: PascalCase / enumerator name: UPPER_CASE / constant name: UPPER_CASE / namespace name: lowercase
-- Remove Action Message
+- Remove Action Message, use <typeid> => std::type_info.name() to return message for debug mode
 - TODO: Enum Support custom include files
 - TODO: Export function name to lowercase with underscore
 - TODO: Support Callback in argument
