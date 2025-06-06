@@ -186,10 +186,10 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile)
 
     std::map<std::wstring, std::wstring> classPathMapping;
     classPathMapping.insert(std::make_pair(L"State", L"state.hpp"));
-    classPathMapping.insert(std::make_pair(L"LogConfig", L"log_config.hpp"));
+    classPathMapping.insert(std::make_pair(L"vcc::LogConfig", L"log_config.hpp"));
     classPathMapping.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgument", L"vpg_git_form.hpp"));
     classPathMapping.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgumentProperty", L"vpg_git_form.hpp"));
-    classPathMapping.insert(std::make_pair(L"OperationResult", L"operation_result.hpp"));
+    classPathMapping.insert(std::make_pair(L"vcc::OperationResult", L"operation_result.hpp"));
 
     std::vector<std::wstring> hppClass, cppClass;
     std::set<std::wstring> sytemIncludeFiles;
@@ -262,8 +262,8 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
     
     std::map<std::wstring, std::wstring> classPathMapping;
     classPathMapping.insert(std::make_pair(L"State", L"state.hpp"));
-    classPathMapping.insert(std::make_pair(L"LogConfig", L"log_config.hpp"));
-    classPathMapping.insert(std::make_pair(L"OperationResult", L"operation_result.hpp"));
+    classPathMapping.insert(std::make_pair(L"vcc::LogConfig", L"log_config.hpp"));
+    classPathMapping.insert(std::make_pair(L"vcc::OperationResult", L"operation_result.hpp"));
     classPathMapping.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgument", L"vpg_git_form.hpp"));
     classPathMapping.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgumentProperty", L"vpg_git_form.hpp"));
 
