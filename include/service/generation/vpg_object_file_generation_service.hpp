@@ -11,8 +11,10 @@
 
 class VPGObjectFileGenerationService
 {
+    friend class VPGObjectFileGenerationServiceTest;
+    
     private:
-        VPGObjectFileGenerationService() = default;
+        VPGObjectFileGenerationService() = delete;
         ~VPGObjectFileGenerationService() {}
 
         // Clone

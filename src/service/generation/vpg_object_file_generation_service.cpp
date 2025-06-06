@@ -333,15 +333,10 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetJsonToObject(const 
 std::wstring VPGObjectFileGenerationService::GetProjectClassIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::wstring &className)
 {
     TRY
-        std::vector<std::wstring> tokens = vcc::SplitString(className, { L"::" });
-        std::wstring realClassName = tokens.back();
-        vcc::Trim(realClassName);
-        if (vcc::IsContain(projectClassIncludeFiles, realClassName))
-            return projectClassIncludeFiles.at(realClassName);
-        else if (vcc::IsContain(projectClassIncludeFiles, L"vcc::" + realClassName))
-            return projectClassIncludeFiles.at(L"vcc::" + realClassName);
+        if (vcc::IsContain(projectClassIncludeFiles, className))
+            return projectClassIncludeFiles.at(className);
         else
-            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Include file of Class " + realClassName + L" NOT FOUND");
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Include file of Class " + className + L" NOT FOUND");
     CATCH
     return L"";
 }
@@ -465,48 +460,32 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
             if (property->GetIsObject())
                 systemFileList.insert(L"memory");
 
-            std::wstring type = property->GetType1();
-            if (vcc::IsCapital(type)) {
-                if (vcc::Find(property->GetMacro().substr(0, vcc::Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
-                    std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
-                    if (!includeFile.empty())
-                        projectFileList.insert(includeFile);
-                    else
-                        abstractClassList.insert(type);
-                } else {
-                    std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
-                    if (!includeFile.empty())
-                        projectFileList.insert(includeFile);
-                    else
-                        abstractEnumClassList.insert(type);
-                }
-            } else {
-                // TODO: need to enable to check all systemn function
-                // system type
-                if (vcc::CountSubstring(type, L"string") > 0)
-                    systemFileList.insert(L"string");
-            }
+            for (auto i = 0; i < 2; i++) {
+                std::wstring type = i != 0 ? property->GetType2() : property->GetType1();
+                if (vcc::IsBlank(type))
+                    continue;
 
-            type = property->GetType2();
-            if (!type.empty() && vcc::IsCapital(type)) {
-                if (vcc::Find(property->GetMacro().substr(0, vcc::Find(property->GetMacro(), L"(")), L"SPTR") != std::wstring::npos) {
-                    std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
-                    if (!includeFile.empty())
-                        projectFileList.insert(includeFile);
-                    else
-                        abstractClassList.insert(type);
+                if (i != 0 ? property->GetIsType2Custom() : property->GetIsType1Custom()) {
+                    if (property->GetIsObject()) {
+                        std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
+                        if (!includeFile.empty())
+                            projectFileList.insert(includeFile);
+                        else
+                            abstractClassList.insert(type);
+                    } else {
+                        std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
+                        if (!includeFile.empty())
+                            projectFileList.insert(includeFile);
+                        else
+                            abstractEnumClassList.insert(type);
+                    }
                 } else {
-                    std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
-                    if (!includeFile.empty())
-                        projectFileList.insert(includeFile);
-                    else
-                        abstractEnumClassList.insert(type);
+                    // TODO: need to enable to check all systemn function
+                    // system type
+                    if (vcc::CountSubstring(type, L"string") > 0)
+                        systemFileList.insert(L"string");
                 }
-            } else {
-                // only suuport string
-                // system type
-                if (vcc::CountSubstring(type, L"string") > 0)
-                    systemFileList.insert(L"string");
+    
             }
             
             if (property->GetPropertyType() == VPGEnumClassAttributeType::Manager && vcc::IsStartWith(property->GetMacro(), L"MANAGER_SPTR_PARENT")) {
