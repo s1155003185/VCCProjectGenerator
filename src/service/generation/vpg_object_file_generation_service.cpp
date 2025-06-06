@@ -421,12 +421,12 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
         // ------------------------------------------------------------------------------------------ //
         std::set<std::wstring> extraPropertyList;
         for (auto const &property : enumClass->GetPrivateProperties()) {
-            std::wstring type = vcc::Find(property.second, L"=") != std::wstring::npos ? vcc::SplitString(property.second, { L"=" })[0] : property.second;
+            auto type = vcc::SplitString(property.second, { L"=" }).front();
             vcc::Trim(type);
             extraPropertyList.insert(type);
         }
         for (auto const &property : enumClass->GetProtectedProperties()) {
-            std::wstring type = vcc::Find(property.second, L"=") != std::wstring::npos ? vcc::SplitString(property.second, { L"=" })[0] : property.second;
+            auto type = vcc::SplitString(property.second, { L"=" }).front();
             vcc::Trim(type);
             extraPropertyList.insert(type);
         }
@@ -489,7 +489,7 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
             }
             
             if (property->GetPropertyType() == VPGEnumClassAttributeType::Manager && vcc::IsStartWith(property->GetMacro(), L"MANAGER_SPTR_PARENT")) {
-                type = property->GetDefaultValue();
+                std::wstring type = property->GetDefaultValue();
                 if (!type.empty() && vcc::IsCapital(type)) {
                     std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
                     if (!includeFile.empty())

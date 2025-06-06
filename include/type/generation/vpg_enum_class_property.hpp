@@ -1,6 +1,7 @@
 #pragma once
 
 /*
+@@Include { "CustomFiles" : [ "vpg_class_helper.hpp" ] }
 @@Private {
     "Properties": {
         "_DefaultValue": "std::wstring=L\"\"",
@@ -16,7 +17,9 @@ enum class VPGEnumClassAttributeProperty
     , Macro // GETSET(std::wstring, Macro, L"")
     , MacroType // GETSET(VPGEnumClassMacroType, MacroType, VPGEnumClassMacroType::NA);
     , Type1 // GETSET(std::wstring, Type1, L"")
+    , IsType1Custom // GETCUSTOM(bool, IsType1Custom, return vcc::IsCapital(GetTypeOrClassWithoutNamespace(GetType1()));)
     , Type2 // GETSET(std::wstring, Type2, L"")
+    , IsType2Custom // GETCUSTOM(bool, IsType2Custom, return vcc::IsCapital(GetTypeOrClassWithoutNamespace(GetType2()));)
     , PropertyName // GETSET(std::wstring, PropertyName, L"");
     , Validate // GETSET(std::wstring, Validate, L"")
     , DefaultValue // GETCUSTOM(std::wstring, DefaultValue, if (_InitializeProperties.empty()) return _DefaultValue; return vcc::Concat(_InitializeProperties, L", ");) SETCUSTOM(DefaultValue, std::wstring, _DefaultValue = value;)

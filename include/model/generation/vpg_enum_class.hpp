@@ -7,6 +7,7 @@
 #include "base_object.hpp"
 #include "class_macro.hpp"
 #include "object_type.hpp"
+#include "vpg_class_helper.hpp"
 #include "vpg_enum_class_type.hpp"
 
 class VPGEnumClassAttribute : public vcc::BaseObject

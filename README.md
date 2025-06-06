@@ -745,7 +745,7 @@ Note:
     e.g. VPGPersionProperty
 
 #### Class Attribute
-// [@@Form] [@@ActionArgument] [@@Result] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsIndependent": true }] [@@Action { "IsIndependent": true }] [@@Thread { "IsIndependent": true } ] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Include {"Files" : [ "a.hpp", "b.hpp" ]}] [@@Private { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } } ] [@@Protected { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } }] [@@Command xxx]
+// [@@Form] [@@ActionArgument] [@@Result] [@@Inherit { "Class": "ClassName" }] [@@Log { "IsIndependent": true }] [@@Action { "IsIndependent": true }] [@@Thread { "IsIndependent": true } ] [@@Json { "Key.NamingStyle" : "PascalCase", "Value.DecimalPlaces":2 }] [@@Include { "SystemFiles": ["string", "vector"], "CustomFiles" : [ "a.hpp", "b.hpp" ]}] [@@Private { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } } ] [@@Protected { "Properties": { "_PropertyA": "int64_t=0", "_PropertyB": "VPGGlobal=nullptr" } }] [@@Command xxx]
 
 []: Optional
 @@: Key for attributes. Need to state for attribute
