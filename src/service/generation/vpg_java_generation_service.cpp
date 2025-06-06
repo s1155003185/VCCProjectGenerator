@@ -146,8 +146,8 @@ std::wstring VPGJavaGenerationService::GetJavaGetterSetterCppToJavaConvertedType
             return L"float";
         } else if (cppType == L"double") {
             return L"double";
-        } else if (cppType == L"std::string"
-            || cppType == L"std::wstring") {
+        } else if (cppType == L"string"
+            || cppType == L"wstring") {
             return L"String";
         } else if (cppType == L"void**" || cppType == L"void **") {
             return L"PointerByReference";
@@ -523,7 +523,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const
 
             std::wstring javaCaptitalType = GetJavaGetterSetterJavaTypeToJavaCaptialType(javaType1);
             std::wstring getFromPointer = L"ptr.get" + javaCaptitalType + L"(0)";
-            if (cppType1 == L"std::wstring")
+            if (cppType1 == L"wstring")
                 getFromPointer = L"ptr.getWideString(0)";
             else if (vcc::IsCapital(cppType1)) {
                 // not support Left type is pointer

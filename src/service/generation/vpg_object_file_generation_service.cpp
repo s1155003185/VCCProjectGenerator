@@ -231,9 +231,9 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetObjectToJson(const 
             result.push_back(parentName + L"->Add" + arrayStr + L"Int(" + convertedPropertyName  + currentPropertyName + L");");
         else if (type == L"double" || type == L"float")
             result.push_back(parentName + L"->Add" + arrayStr + L"Double(" + convertedPropertyName + currentPropertyName + L", decimalPlaces >= 0 ? decimalPlaces : GetDecimalPlaces(" + currentPropertyName + L"));");
-        else if (type == L"std::string")
+        else if (type == L"string")
             result.push_back(parentName + L"->Add" + arrayStr + L"String(" + convertedPropertyName + L"str2wstr(" + currentPropertyName + L"));");
-        else if (type == L"std::wstring")
+        else if (type == L"wstring")
             result.push_back(parentName + L"->Add" + arrayStr + L"String(" + convertedPropertyName  + currentPropertyName + L");");
         else
             result.push_back(parentName + L"->Add" + arrayStr + L"String(" + convertedPropertyName + L"std::to_wstring(" + currentPropertyName + L"));");
@@ -260,9 +260,9 @@ std::wstring VPGObjectFileGenerationService::GetJsonToObjectMapKey(const std::ws
             result = L"std::stoi(key)";
         else if (type == L"float" || type == L"double") {
             result = L"std::stod(key)";
-        } else if (type == L"std::string") {
+        } else if (type == L"string") {
             result = L"wstr2str(key)";
-        } else if (type == L"std::wstring") {
+        } else if (type == L"wstring") {
             result = L"key";
         } else if (vcc::IsCapital(type)) {
             result = L"static_cast<" + type + L">(keyEnum)";
@@ -319,9 +319,9 @@ std::vector<std::wstring> VPGObjectFileGenerationService::GetJsonToObject(const 
                 result.push_back(indentPrefix + insertPrefix + L"static_cast<" + type + L">(" + currentParentName + L"->Get" + arrayElementStr + L"Int64(" + convertedPropertyNameForGeneral + L"))" + insertSuffix);
             else if (type == L"double" || type == L"float")
                 result.push_back(indentPrefix + insertPrefix + L"static_cast<" + type + L">(" + currentParentName + L"->Get" + arrayElementStr + L"Double(" + convertedPropertyNameForGeneral + L"))" + insertSuffix);
-            else if (type == L"std::string")
+            else if (type == L"string")
                 result.push_back(indentPrefix + insertPrefix + L"wstr2str(" + currentParentName + L"->Get" + arrayElementStr + L"String(" + convertedPropertyNameForGeneral + L"))" + insertSuffix);
-            else if (type == L"std::wstring")
+            else if (type == L"wstring")
                 result.push_back(indentPrefix + insertPrefix + currentParentName + L"->Get" + arrayElementStr + L"String(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
             else
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"VPGObjectFileGenerationService::GenerateCpp Unknown type: " + type);
@@ -1126,7 +1126,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
                     std::vector<std::wstring> jsonToObjectEnumkeySwtichStrings = GetJsonToObjectEnumSwitch(L"key", true, originalType, enumClassMapping);
                     for (auto const &str : jsonToObjectEnumkeySwtichStrings)
                         deserializeStr += INDENT + INDENT + INDENT + str + L"\r\n";
-                } else if (originalType == L"std::wstring")
+                } else if (originalType == L"wstring")
                     toJsonStrKeyStr = L"element.first";
                 else
                     toJsonStrKeyStr = L"std::to_wstring(element.first)";

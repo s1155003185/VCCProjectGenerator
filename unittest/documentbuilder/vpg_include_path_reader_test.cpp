@@ -117,8 +117,8 @@ TEST(VPGIncludePathReaderTest, Normal)
 
 //     std::set<std::wstring> resultList;
 //     resultList.insert(L"std::basic_string");
-//     resultList.insert(L"std::string");
-//     resultList.insert(L"std::wstring");
+//     resultList.insert(L"string");
+//     resultList.insert(L"wstring");
 //     resultList.insert(L"std::u8string");
 //     resultList.insert(L"std::u16string");
 //     resultList.insert(L"std::u32string");
@@ -149,8 +149,8 @@ TEST(VPGIncludePathReaderTest, Normal)
 
 //     std::set<std::wstring> resultList;
 //     resultList.insert(L"std::basic_string");
-//     resultList.insert(L"std::wstring");
-//     resultList.insert(L"std::string");
+//     resultList.insert(L"wstring");
+//     resultList.insert(L"string");
 //     EXPECT_EQ(classList, resultList);
 // }
 

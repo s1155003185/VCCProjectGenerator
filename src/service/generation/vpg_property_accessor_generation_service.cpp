@@ -144,9 +144,9 @@ void VPGPropertyAccessorGenerationService::GetPropertyAccessorTypeName(const std
             convertedType = L"double";
             convertedName = L"Double";
             returnResult = L"0";
-        } else if (originalType == L"std::string"
-            || originalType == L"std::wstring") {
-            convertedType = L"std::wstring";
+        } else if (originalType == L"string"
+            || originalType == L"wstring") {
+            convertedType = L"wstring";
             convertedName = L"String";
             returnResult = L"L\"\"";
         } else
@@ -170,7 +170,7 @@ std::vector<std::wstring> VPGPropertyAccessorGenerationService::GetPropertyAcces
     result.push_back(L"size_t");
     result.push_back(L"float");
     result.push_back(L"double");
-    result.push_back(L"std::wstring");
+    result.push_back(L"wstring");
     result.push_back(objectToken);
     result.push_back(containerToken);
     return result;
@@ -289,7 +289,7 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
                     returnStr = L"std::static_pointer_cast<vcc::IObject>(" + returnStr + L")";
                 else if (!property->GetType1().empty() && vcc::IsCapital(property->GetType1()))
                     returnStr = L"static_cast<long>(" + returnStr + L")";
-                else if (property->GetType1() == L"std::string")
+                else if (property->GetType1() == L"string")
                     returnStr = L"vcc::str2wstr(" + returnStr + L")";
                 generalCases.insert(std::make_pair(property->GetEnum(), returnStr));
             }
@@ -307,7 +307,7 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
                     std::wstring type = isOrderedMap ? property->GetType2() : property->GetType1();
                     if (!type.empty() && vcc::IsCapital(type))
                         returnStr = L"static_cast<long>(" + returnStr + L"AtIndex(index)"+ (isOrderedMap ? L".second" : L"") + L")";
-                    else if (type == L"std::string")
+                    else if (type == L"string")
                         returnStr = L"vcc::str2wstr(" + returnStr + L"AtIndex(index)" + (isOrderedMap ? L".second" : L"") + L")";
                     else
                         returnStr = returnStr + L"AtIndex(index)" + (isOrderedMap ? L".second" : L"");
@@ -317,8 +317,8 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
             // Map
             if (property->GetIsMap() || property->GetIsOrderedMap()) {
                 // key
-                std::wstring mapGetKey = property->GetType1() == L"std::wstring" ? L"keyPtr" : L"*keyPtr";
-                std::wstring castType = property->GetType1() == L"std::wstring" ? L"wchar_t" : property->GetType1();
+                std::wstring mapGetKey = property->GetType1() == L"wstring" ? L"keyPtr" : L"*keyPtr";
+                std::wstring castType = property->GetType1() == L"wstring" ? L"wchar_t" : property->GetType1();
                 mapCasekeyTypes.insert(std::make_pair(property->GetEnum(), castType));
 
                 // value
@@ -327,7 +327,7 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
                     returnStr = L"std::static_pointer_cast<vcc::IObject>(" + returnStr + L"AtKey(" + mapGetKey + L")" + L")";
                 else if (!property->GetType2().empty() && vcc::IsCapital(property->GetType2()))
                     returnStr = L"static_cast<long>(" + returnStr + L"AtKey(" + mapGetKey + L")" + L")";
-                else if (property->GetType2() == L"std::string")
+                else if (property->GetType2() == L"string")
                     returnStr = L"vcc::str2wstr(" + returnStr + L"AtKey(" + mapGetKey + L")" + L")";
                 else
                     returnStr = returnStr + L"AtKey(" + mapGetKey + L")";
@@ -417,7 +417,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
                     returnStr += L"(std::static_pointer_cast<" + property->GetType1() + L">(value));\r\n";
                 else if (!property->GetType1().empty() && vcc::IsCapital(property->GetType1()))
                     returnStr += L"(static_cast<" + property->GetType1() + L">(value));\r\n";
-                else if (property->GetType1() == L"std::string")
+                else if (property->GetType1() == L"string")
                     returnStr += L"(wstr2str(value));\r\n";
                 else
                     returnStr += L"(value);\r\n";
@@ -439,7 +439,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"AtIndex(index, static_cast<" + type + L">(value));\r\n"
                         + INDENT + INDENT + INDENT + L"else\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(static_cast<" + type + L">(value));\r\n";
-                } else if (type == L"std::string") {
+                } else if (type == L"string") {
                     returnStr = INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"AtIndex(index, wstr2str(value));\r\n"
                         + INDENT + INDENT + INDENT + L"else\r\n"
@@ -456,8 +456,8 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
             // Map
             if (property->GetIsMap() || property->GetIsOrderedMap()) {
                 // key
-                std::wstring mapGetKey = property->GetType1() == L"std::wstring" ? L"keyPtr" : L"*keyPtr";
-                std::wstring castType = property->GetType1() == L"std::wstring" ? L"wchar_t" : property->GetType1();
+                std::wstring mapGetKey = property->GetType1() == L"wstring" ? L"keyPtr" : L"*keyPtr";
+                std::wstring castType = property->GetType1() == L"wstring" ? L"wchar_t" : property->GetType1();
                 mapCasekeyTypes.insert(std::make_pair(property->GetEnum(), castType));
 
                 // value
@@ -474,7 +474,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
                             + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"AtKey(" + mapGetKey + L", static_cast<" + type + L">(value));\r\n"
                             + INDENT + INDENT + INDENT + L"else\r\n"
                             + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"AtKey(" + mapGetKey + L", static_cast<" + type + L">(value));\r\n";
-                    } else if (type == L"std::string") {
+                    } else if (type == L"string") {
                         returnStr += INDENT + INDENT + INDENT + L"if (obj->Is" + property->GetPropertyName() + L"ContainKey(" + mapGetKey + L"))\r\n"
                             + INDENT + INDENT + INDENT + INDENT + L"obj->Set" + property->GetPropertyName() + L"AtKey(" + mapGetKey + L", vcc::str2wstr(value));\r\n"
                             + INDENT + INDENT + INDENT + L"else\r\n"
@@ -576,7 +576,7 @@ void VPGPropertyAccessorGenerationService::GenerateInsert(const std::wstring &pr
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"AtIndex(index, static_cast<" + type + L">(value));\r\n"
                         + INDENT + INDENT + INDENT + L"else\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"(static_cast<" + type + L">(value));\r\n";
-                } else if (type == L"std::string") {
+                } else if (type == L"string") {
                     returnStr += INDENT + INDENT + INDENT + L"if (index > -1)\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"obj->Insert" + property->GetPropertyName() + L"AtIndex(index, wstr2str(value));\r\n"
                         + INDENT + INDENT + INDENT + L"else\r\n"
@@ -637,8 +637,8 @@ void VPGPropertyAccessorGenerationService::GenerateClone(const std::wstring &pro
             }
             // Map
             if (property->GetIsMap() || property->GetIsOrderedMap()) {
-                std::wstring castType = property->GetType1() == L"std::wstring" ? L"wchar_t" : property->GetType1();
-                std::wstring mapGetKey = property->GetType1() == L"std::wstring" ? L"keyPtr" : L"*keyPtr";
+                std::wstring castType = property->GetType1() == L"wstring" ? L"wchar_t" : property->GetType1();
+                std::wstring mapGetKey = property->GetType1() == L"wstring" ? L"keyPtr" : L"*keyPtr";
                 std::wstring returnStr = INDENT + INDENT + INDENT + L"auto keyPtr = static_cast<const " + castType + L" *>(key);\r\n"
                     + INDENT + INDENT + INDENT + L"assert(keyPtr != nullptr);\r\n"
                     + INDENT + INDENT + INDENT + L"if (keyPtr == nullptr)\r\n"
@@ -762,8 +762,8 @@ void VPGPropertyAccessorGenerationService::GenerateContainerIsContainKey(const s
         std::map<std::wstring, std::wstring> mapCases;
         for (auto const &property : enumClassProperties)
             if (property->GetIsMap() || property->GetIsOrderedMap()) {
-                std::wstring castType = property->GetType1() == L"std::wstring" ? L"wchar_t" : property->GetType1();
-                std::wstring mapGetKey = property->GetType1() == L"std::wstring" ? L"keyPtr" : L"*keyPtr";
+                std::wstring castType = property->GetType1() == L"wstring" ? L"wchar_t" : property->GetType1();
+                std::wstring mapGetKey = property->GetType1() == L"wstring" ? L"keyPtr" : L"*keyPtr";
                 mapCases.insert(std::make_pair(property->GetEnum(), 
                     INDENT + INDENT + INDENT + L"auto keyPtr = static_cast<const " + castType + L" *>(key);\r\n"
                     + INDENT + INDENT + INDENT + L"assert(keyPtr != nullptr);\r\n"
@@ -807,8 +807,8 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
                     std::wstring result = INDENT + INDENT + INDENT + L"obj->Remove" + property->GetPropertyName() + L"(value);\r\n";
                     vectorCasesObject.insert(std::make_pair(property->GetEnum(), result));
                 } else {
-                    std::wstring castType = property->GetType1() == L"std::wstring" ? L"wchar_t" : property->GetType1();
-                    std::wstring valueAssign = property->GetType1() == L"std::wstring" ? L"valuePtr" : L"*valuePtr";
+                    std::wstring castType = property->GetType1() == L"wstring" ? L"wchar_t" : property->GetType1();
+                    std::wstring valueAssign = property->GetType1() == L"wstring" ? L"valuePtr" : L"*valuePtr";
                     std::wstring result = INDENT + INDENT + INDENT + L"auto valuePtr = static_cast<const " + castType + L" *>(value);\r\n"
                         + INDENT + INDENT + INDENT + L"assert(valuePtr != nullptr);\r\n"
                         + INDENT + INDENT + INDENT + L"obj->Remove" + property->GetPropertyName() + L"(" + valueAssign + L");\r\n";
@@ -818,8 +818,8 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
             if (property->GetIsVector() || property->GetIsOrderedMap())
                 vectorCasesIndex.insert(std::make_pair(property->GetEnum(), L"obj->Remove" + property->GetPropertyName() + L"AtIndex(index)"));
             if (property->GetIsMap() || property->GetIsOrderedMap()) {
-                std::wstring castType = property->GetType1() == L"std::wstring" ? L"wchar_t" : property->GetType1();
-                std::wstring mapGetKey = property->GetType1() == L"std::wstring" ? L"keyPtr" : L"*keyPtr";
+                std::wstring castType = property->GetType1() == L"wstring" ? L"wchar_t" : property->GetType1();
+                std::wstring mapGetKey = property->GetType1() == L"wstring" ? L"keyPtr" : L"*keyPtr";
                 std::wstring result = INDENT + INDENT + INDENT + L"auto keyPtr = static_cast<const " + castType + L" *>(key);\r\n"
                     + INDENT + INDENT + INDENT + L"assert(keyPtr != nullptr);\r\n"
                     + INDENT + INDENT + INDENT + L"if (keyPtr == nullptr)\r\n"

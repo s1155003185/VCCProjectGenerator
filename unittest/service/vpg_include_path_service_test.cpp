@@ -32,6 +32,6 @@ TEST(VPGIncludePathSerciceTest, GetWorkspaceIncludePath)
 //     #endif
 //     VPGIncludePathService::GetSystemIncludePath(platformType, workspace, classPathMapping);
 
-//     EXPECT_EQ(classPathMapping.at(L"std::string"), L"string");
+//     EXPECT_EQ(classPathMapping.at(L"string"), L"string");
 //     EXPECT_EQ(classPathMapping.at(L"std::complex"), L"complex");
 // }
