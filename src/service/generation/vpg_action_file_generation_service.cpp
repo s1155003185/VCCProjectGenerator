@@ -141,7 +141,7 @@ void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
                 globalSystemIncludeFiles.insert(systemIncludeFiles.begin(), systemIncludeFiles.end());
                 globalCustomIncludeFiles.insert(customIncludeFiles.begin(), customIncludeFiles.end());
                 std::wstring currentNamespace = GetNamespaceFromClassName(enumClass->GetName());
-                actionClassList.insert((!currentNamespace.empty() ? (currentNamespace + L"::") : L"") + actionClassName, action);
+                actionClassList.insert({(!currentNamespace.empty() ? (currentNamespace + L"::") : L"") + actionClassName, action});
             }
 
         }
@@ -326,7 +326,7 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
                 globalCustomIncludeFiles.insert(customIncludeFiles.begin(), customIncludeFiles.end());
 
                 std::wstring currentNamespace = GetNamespaceFromClassName(enumClass->GetName());
-                actionClassList.insert((!currentNamespace.empty() ? (currentNamespace + L"::") : L"") + actionClassName, action);
+                actionClassList.insert({(!currentNamespace.empty() ? (currentNamespace + L"::") : L"") + actionClassName, action});
             }
         }
     CATCH

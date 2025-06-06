@@ -191,13 +191,17 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile)
     classPathMapping.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgumentProperty", L"vpg_git_form.hpp"));
     classPathMapping.insert(std::make_pair(L"vcc::OperationResult", L"operation_result.hpp"));
 
-    std::vector<std::wstring> hppClass, cppClass;
+    std::map<std::wstring, std::wstring> hppClass, cppClass;
     std::set<std::wstring> sytemIncludeFiles;
     std::set<std::wstring> customIncludeFiles;
     VPGActionFileGenerationService::GenerateHpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", L"", hppClass, sytemIncludeFiles, customIncludeFiles);
     VPGActionFileGenerationService::GenerateCpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", L"", cppClass, sytemIncludeFiles, customIncludeFiles);
-    EXPECT_EQ(hppClass, hppResult);
-    EXPECT_EQ(cppClass, cppResult);
+    EXPECT_EQ(hppClass.size(), hppResult.size());
+    EXPECT_EQ(cppClass.size(), cppResult.size());
+    for (auto const &pair : hppClass)
+        EXPECT_TRUE(vcc::IsContain(hppResult, pair.second));
+    for (auto const &pair : cppClass)
+        EXPECT_TRUE(vcc::IsContain(cppResult, pair.second));
 }
 
 TEST_F(VPGActionFileGenerationServiceTest, NoFile_Namespace)
@@ -258,7 +262,6 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
-    std::vector<std::wstring> emptyVector;
     
     std::map<std::wstring, std::wstring> classPathMapping;
     classPathMapping.insert(std::make_pair(L"State", L"state.hpp"));
@@ -267,13 +270,13 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
     classPathMapping.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgument", L"vpg_git_form.hpp"));
     classPathMapping.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgumentProperty", L"vpg_git_form.hpp"));
 
-    std::vector<std::wstring> hppClass, cppClass;
+    std::map<std::wstring, std::wstring> hppClass, cppClass;
     std::set<std::wstring> sytemIncludeFiles;
     std::set<std::wstring> customIncludeFiles;
     VPGActionFileGenerationService::GenerateHpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->GetWorkspace(), hppClass, sytemIncludeFiles, customIncludeFiles);
     VPGActionFileGenerationService::GenerateCpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->GetWorkspace(), cppClass, sytemIncludeFiles, customIncludeFiles);
-    EXPECT_EQ(hppClass, emptyVector);
-    EXPECT_EQ(cppClass, emptyVector);
+    EXPECT_TRUE(hppClass.empty());
+    EXPECT_TRUE(cppClass.empty());
 
     EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.hpp"})));
     EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.cpp"})));
