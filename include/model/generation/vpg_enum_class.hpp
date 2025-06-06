@@ -7,7 +7,6 @@
 #include "base_object.hpp"
 #include "class_macro.hpp"
 #include "object_type.hpp"
-#include "vpg_class_helper.hpp"
 #include "vpg_enum_class_type.hpp"
 
 class VPGEnumClassAttribute : public vcc::BaseObject
@@ -22,9 +21,9 @@ class VPGEnumClassAttribute : public vcc::BaseObject
     GETSET(std::wstring, Macro, L"")
     GETSET(VPGEnumClassMacroType, MacroType, VPGEnumClassMacroType::NA)
     GETSET(std::wstring, Type1, L"")
-    GETCUSTOM(bool, IsType1Custom, return vcc::IsCapital(GetTypeOrClassWithoutNamespace(GetType1()));)
+    GETCUSTOM(bool, IsType1Custom, return vcc::IsCapital(vcc::SplitString(GetType1(), {L"::"}).back());)
     GETSET(std::wstring, Type2, L"")
-    GETCUSTOM(bool, IsType2Custom, return vcc::IsCapital(GetTypeOrClassWithoutNamespace(GetType2()));)
+    GETCUSTOM(bool, IsType2Custom, return vcc::IsCapital(vcc::SplitString(GetType2(), {L"::"}).back());)
     GETSET(std::wstring, PropertyName, L"")
     GETSET(std::wstring, Validate, L"")
     GETCUSTOM(std::wstring, DefaultValue, if (_InitializeProperties.empty()) return _DefaultValue; return vcc::Concat(_InitializeProperties, L", ");)
