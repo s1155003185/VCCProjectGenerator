@@ -431,7 +431,7 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
             extraPropertyList.insert(type);
         }
         for (auto const &extraProperty : extraPropertyList) {
-            if (vcc::IsCapital(extraProperty)) {
+            if (vcc::IsCapital(GetTypeOrClassWithoutNamespace(extraProperty))) {
                 std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, extraProperty);
                 if (!includeFile.empty()) {
                     projectFileList.insert(includeFile);
