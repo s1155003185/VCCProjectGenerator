@@ -522,9 +522,9 @@ namespace vcc
         return logs;
     }
 
-    std::time_t GitService::ParseGitLogDatetime(const std::wstring &datimeStr)
+    time_t GitService::ParseGitLogDatetime(const std::wstring &datimeStr)
     {
-        std::time_t time = -1;
+        time_t time = -1;
         TRY
             time = ParseDatetime(datimeStr, L"%a %b %d %H:%M:%S %Y %z");
         CATCH

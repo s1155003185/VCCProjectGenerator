@@ -12,5 +12,5 @@ namespace vcc
     std::wstring GetDatetimeString(const time_t &timer);
     std::wstring GetCurrentDatetimeString();
 
-    std::time_t ParseDatetime(const std::wstring &timeStr, const std::wstring &format);
+    time_t ParseDatetime(const std::wstring &timeStr, const std::wstring &format);
 }

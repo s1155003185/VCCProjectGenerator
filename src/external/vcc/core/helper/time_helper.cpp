@@ -70,9 +70,9 @@ namespace vcc
         return dateTimeStr + str2wstr("." + PadLeft(nowMsStr, 3, '0'));
     }
 
-    std::time_t ParseDatetime(const std::wstring &timeStr, const std::wstring &format)
+    time_t ParseDatetime(const std::wstring &timeStr, const std::wstring &format)
     {
-        std::time_t time = -1;
+        time_t time = -1;
         TRY
             #ifdef _WIN32
                 std::tm timeStruct = {};

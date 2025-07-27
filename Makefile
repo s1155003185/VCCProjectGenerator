@@ -90,7 +90,7 @@ endif
 #----------------------------------#
 #---------- Compiler ----------#
 CXX := g++
-CXXVERSION := c++20
+CXXVERSION := c++23
 #---------- Flag ----------#
 # must have CXXFLAGS for default compile flags, .cpp.o only use CXXFLAGS
 DEBUG_FLAGS := -D__DEBUG__ -D__DEBUGLOG__

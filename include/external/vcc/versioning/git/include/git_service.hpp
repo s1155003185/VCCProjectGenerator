@@ -480,7 +480,7 @@ namespace vcc
             // only parse git log --graph --oneline --pretty=format:"(%H)(%h)(%T)(%t)(%P)(%p)"
             static std::vector<std::shared_ptr<GitLog>> ParseGitLogGraph(const std::wstring &str);
             // only parse pattern L"Thu Jan 25 22:47:35 2024 +0800"
-            static std::time_t ParseGitLogDatetime(const std::wstring &datimeStr);
+            static time_t ParseGitLogDatetime(const std::wstring &datimeStr);
             static void ParseGitLog(const std::wstring &str, std::shared_ptr<GitLog> log);
             // To draw graph, mark the point by column index first, then link nodes if having same ParentHashID and HashID
             static std::vector<std::shared_ptr<GitLog>> GetLogs(const LogConfig *logConfig, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria = nullptr);
