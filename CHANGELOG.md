@@ -11,8 +11,14 @@
 - TODO: Support Set for GETSET
 - TODO: Review RESERVE and REPLACE tag
 
-### [v0.4.0] - 2025-07-27: Upgrade to support C++23
+### [v0.4.0] - 2025-08-03: Upgrade to support C++23
 - Support C++23 (Note: MacOS support C++23 now)
+
+!!! Need to Update All Platform g++ to latest version !!!
+
+Known issue: To fit C++23 compilation, PC Window MSYS is upgraded to latest version. GitServiceTest.StageAndDifference cannot pass. As Window VSCode latest version cannot attach g++ debugger, cannot trace the reason. Mac version does not have this problem and all unittests are passed. May review latter.
+
+After upgrade, find that Window g++ compiler cannto recognize int64_t now. Need to add library <cstdint>.
 
 ### [v0.3.7] - 2025-07-27: Review - Review Namespace
 - Review using namespace vcc: add vcc:: before function instead of using namespace vcc
