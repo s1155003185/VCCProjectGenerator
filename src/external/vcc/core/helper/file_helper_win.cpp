@@ -75,8 +75,7 @@ namespace vcc
 			// 	csidl = CSIDL_WINDOWS;
 			// 	break;
 			default:
-				return 0;
-				break;
+				return L"";
 			}
 
 			CHAR path[MAX_PATH];
