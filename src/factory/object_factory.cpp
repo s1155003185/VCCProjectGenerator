@@ -69,7 +69,7 @@ std::shared_ptr<vcc::IObject> ObjectFactory::Create(const ObjectType &objectType
             break;
         }
         if (result != nullptr)
-            result->SetParentObject(parentObject);
+            result->setParentObject(parentObject);
     CATCH
     return result;
 }

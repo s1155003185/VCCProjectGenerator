@@ -13,7 +13,7 @@ namespace vcc
     {
         TRY
             auto baseForm = std::dynamic_pointer_cast<BaseForm>(_ParentObject);
-            return (baseForm != nullptr && _LogConfig == nullptr) ? baseForm->GetLogConfig() : _LogConfig;
+            return (baseForm != nullptr && _LogConfig == nullptr) ? baseForm->getLogConfig() : _LogConfig;
         CATCH
         return nullptr;
     }
@@ -27,7 +27,7 @@ namespace vcc
     {
         TRY
             auto baseForm = std::dynamic_pointer_cast<BaseForm>(_ParentObject);
-            return (baseForm != nullptr && _ActionManager == nullptr) ? baseForm->GetActionManager() : _ActionManager;
+            return (baseForm != nullptr && _ActionManager == nullptr) ? baseForm->getActionManager() : _ActionManager;
         CATCH
         return nullptr;
     }
@@ -41,7 +41,7 @@ namespace vcc
     {
         TRY
             auto baseForm = std::dynamic_pointer_cast<BaseForm>(_ParentObject);
-            return (baseForm != nullptr && _ThreadManager == nullptr) ? baseForm->GetThreadManager() : _ThreadManager;
+            return (baseForm != nullptr && _ThreadManager == nullptr) ? baseForm->getThreadManager() : _ThreadManager;
         CATCH
         return nullptr;
     }
@@ -78,8 +78,8 @@ namespace vcc
     void BaseForm::Initialize()
     {
         TRY
-            InitializeComponents();
-            InitializeValue();
+            initializeComponents();
+            initializeValue();
             OnInitialize();
         CATCH
     }
@@ -101,7 +101,7 @@ namespace vcc
     std::shared_ptr<IResult> BaseForm::ExecuteAction(std::shared_ptr<IAction> action, bool isNoHistory)
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (isNoHistory || actionManager == nullptr)
                 return action->Redo();
             else
@@ -113,9 +113,9 @@ namespace vcc
     int64_t BaseForm::GetActionCurrentSeqNo() const
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
-                return actionManager->GetCurrentSeqNo();
+                return actionManager->getCurrentSeqNo();
         CATCH
         return -1;
     }
@@ -123,9 +123,9 @@ namespace vcc
     int64_t BaseForm::GetActionFirstSeqNo() const
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
-                return actionManager->GetFirstSeqNo();
+                return actionManager->getFirstSeqNo();
         CATCH
         return -1;
     }
@@ -133,9 +133,9 @@ namespace vcc
     int64_t BaseForm::GetActionLastSeqNo() const
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
-                return actionManager->GetLastSeqNo();
+                return actionManager->getLastSeqNo();
         CATCH
         return -1;
     }
@@ -143,7 +143,7 @@ namespace vcc
     std::shared_ptr<IResult> BaseForm::RedoAction(const int64_t &noOfStep)
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
                 return actionManager->Redo(noOfStep);
         CATCH
@@ -153,7 +153,7 @@ namespace vcc
     std::shared_ptr<IResult> BaseForm::RedoActionToSeqNo(const int64_t &seqNo)
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
                 return actionManager->RedoToSeqNo(seqNo);
         CATCH
@@ -163,7 +163,7 @@ namespace vcc
     std::shared_ptr<IResult> BaseForm::UndoAction(const int64_t &noOfStep)
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
                 return actionManager->Undo(noOfStep);
         CATCH
@@ -173,7 +173,7 @@ namespace vcc
     std::shared_ptr<IResult> BaseForm::UndoActionToSeqNo(const int64_t &seqNo)
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
                 return actionManager->UndoToSeqNo(seqNo);
         CATCH
@@ -183,9 +183,9 @@ namespace vcc
     int64_t BaseForm::ClearAction()
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
-                return actionManager->GetFirstSeqNo();
+                return actionManager->getFirstSeqNo();
         CATCH
         return -1;
     }
@@ -193,9 +193,9 @@ namespace vcc
     int64_t BaseForm::TruncateAction()
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
-                return actionManager->GetFirstSeqNo();
+                return actionManager->getFirstSeqNo();
         CATCH
         return -1;
     }

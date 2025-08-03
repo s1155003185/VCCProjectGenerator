@@ -21,16 +21,16 @@ std::wstring VPGVccGenerationManager::AdjustAppliationCpp(const std::wstring &fi
         auto elements = std::make_shared<vcc::Xml>();
         VPGCodeReader reader(L"//");
         reader.Deserialize(fileContent, elements);
-        for (std::shared_ptr<vcc::Xml> element : elements->GetChildren()) {
-            if (element->GetName() == L"vcc:vccconfig") {
+        for (std::shared_ptr<vcc::Xml> element : elements->getChildren()) {
+            if (element->getName() == L"vcc:vccconfig") {
                 result += L"// <vcc:vccconfig sync=\"RESERVE\" gen=\"REPLACE\">\r\n";
-                if (_Option->GetBehavior()->GetActionHistoryType() == VPGConfigActionHistoryType::Global)
+                if (_Option->getBehavior()->getActionHistoryType() == VPGConfigActionHistoryType::Global)
                     result += INDENT + INDENT + L"_ActionManager = std::make_shared<ActionManager>(_LogConfig);\r\n";
                 else
                     result += INDENT + INDENT + L"_ActionManager = nullptr;\r\n";
                 result += INDENT + INDENT + L"// </vcc:vccconfig>";
             } else
-                result += element->GetFullText();
+                result += element->getFullText();
         }
     CATCH
     return result;
@@ -49,27 +49,27 @@ std::vector<std::wstring> VPGVccGenerationManager::GetUpdateList() const
     // application
     
     // type
-    result.push_back(vcc::ConcatPaths({_Option->GetOutput() != nullptr ? _Option->GetOutput()->GetExceptionTypeDirectory() : L"", L"exception_type.hpp"}));
-    result.push_back(vcc::ConcatPaths({_Option->GetOutput() != nullptr ? _Option->GetOutput()->GetObjectTypeDirectory() : L"", L"object_type.hpp"}));
+    result.push_back(vcc::ConcatPaths({_Option->getOutput() != nullptr ? _Option->getOutput()->getExceptionTypeDirectory() : L"", L"exception_type.hpp"}));
+    result.push_back(vcc::ConcatPaths({_Option->getOutput() != nullptr ? _Option->getOutput()->getObjectTypeDirectory() : L"", L"object_type.hpp"}));
     
     // application
-    if (_Option->GetOutput() != nullptr && !vcc::IsBlank(_Option->GetOutput()->GetApplicationDirectoryHpp()))
-        result.push_back(vcc::ConcatPaths({_Option->GetOutput()->GetApplicationDirectoryHpp(), L"application.hpp"}));
-    if (_Option->GetOutput() != nullptr && !vcc::IsBlank(_Option->GetOutput()->GetApplicationDirectoryCpp()))
-        result.push_back(vcc::ConcatPaths({_Option->GetOutput()->GetApplicationDirectoryCpp(), L"application.cpp"}));
+    if (_Option->getOutput() != nullptr && !vcc::IsBlank(_Option->getOutput()->getApplicationDirectoryHpp()))
+        result.push_back(vcc::ConcatPaths({_Option->getOutput()->getApplicationDirectoryHpp(), L"application.hpp"}));
+    if (_Option->getOutput() != nullptr && !vcc::IsBlank(_Option->getOutput()->getApplicationDirectoryCpp()))
+        result.push_back(vcc::ConcatPaths({_Option->getOutput()->getApplicationDirectoryCpp(), L"application.cpp"}));
 
     // factory
-    if (_Option->GetOutput() != nullptr && !vcc::IsBlank(_Option->GetOutput()->GetObjectFactoryDirectoryHpp()))
-        result.push_back(vcc::ConcatPaths({_Option->GetOutput()->GetObjectFactoryDirectoryHpp(), L"object_factory.hpp"}));
-    if (_Option->GetOutput() != nullptr && !vcc::IsBlank(_Option->GetOutput()->GetObjectFactoryDirectoryCpp()))
-        result.push_back(vcc::ConcatPaths({_Option->GetOutput()->GetObjectFactoryDirectoryCpp(), L"object_factory.cpp"}));
-    if (_Option->GetOutput() != nullptr && !vcc::IsBlank(_Option->GetOutput()->GetPropertyAccessorFactoryDirectoryHpp()))
-        result.push_back(vcc::ConcatPaths({_Option->GetOutput()->GetPropertyAccessorFactoryDirectoryHpp(), L"property_accessor_factory.hpp"}));
-    if (_Option->GetOutput() != nullptr && !vcc::IsBlank(_Option->GetOutput()->GetPropertyAccessorFactoryDirectoryCpp()))
-        result.push_back(vcc::ConcatPaths({_Option->GetOutput()->GetPropertyAccessorFactoryDirectoryCpp(), L"property_accessor_factory.cpp"}));
+    if (_Option->getOutput() != nullptr && !vcc::IsBlank(_Option->getOutput()->getObjectFactoryDirectoryHpp()))
+        result.push_back(vcc::ConcatPaths({_Option->getOutput()->getObjectFactoryDirectoryHpp(), L"object_factory.hpp"}));
+    if (_Option->getOutput() != nullptr && !vcc::IsBlank(_Option->getOutput()->getObjectFactoryDirectoryCpp()))
+        result.push_back(vcc::ConcatPaths({_Option->getOutput()->getObjectFactoryDirectoryCpp(), L"object_factory.cpp"}));
+    if (_Option->getOutput() != nullptr && !vcc::IsBlank(_Option->getOutput()->getPropertyAccessorFactoryDirectoryHpp()))
+        result.push_back(vcc::ConcatPaths({_Option->getOutput()->getPropertyAccessorFactoryDirectoryHpp(), L"property_accessor_factory.hpp"}));
+    if (_Option->getOutput() != nullptr && !vcc::IsBlank(_Option->getOutput()->getPropertyAccessorFactoryDirectoryCpp()))
+        result.push_back(vcc::ConcatPaths({_Option->getOutput()->getPropertyAccessorFactoryDirectoryCpp(), L"property_accessor_factory.cpp"}));
 
     // plugins
-    for (auto const &str : _Option->GetPlugins()) {
+    for (auto const &str : _Option->getPlugins()) {
         result.push_back(vcc::ConcatPaths({L"include/external/", str, L"*"}));
         result.push_back(vcc::ConcatPaths({L"src/external/", str, L"*"}));
     }
@@ -79,13 +79,13 @@ std::vector<std::wstring> VPGVccGenerationManager::GetUpdateList() const
 std::vector<std::wstring> VPGVccGenerationManager::GetUpdateUnitTestList() const
 {
     std::vector<std::wstring> result;
-    bool isExcludeUnittest = _Option->GetTemplate() != nullptr && _Option->GetTemplate()->GetIsExcludeUnittest();
-    bool isExcludeVCCUnittest = _Option->GetTemplate() != nullptr && _Option->GetTemplate()->GetIsExcludeVCCUnitTest();
+    bool isExcludeUnittest = _Option->getTemplate() != nullptr && _Option->getTemplate()->getIsExcludeUnittest();
+    bool isExcludeVCCUnittest = _Option->getTemplate() != nullptr && _Option->getTemplate()->getIsExcludeVCCUnitTest();
     if (!isExcludeVCCUnittest)
         result.push_back(L"external/vcc/core/*");
 
-    for (auto const &str : _Option->GetPlugins()) {
-        if (_Option->GetTemplate() == nullptr || !isExcludeUnittest) {
+    for (auto const &str : _Option->getPlugins()) {
+        if (_Option->getTemplate() == nullptr || !isExcludeUnittest) {
             if (!(vcc::IsStartWith(str, L"vcc") && isExcludeVCCUnittest))
                 result.push_back(vcc::ConcatPaths({L"external/", str, L"*"}));
         }
@@ -97,13 +97,13 @@ void VPGVccGenerationManager::CreateVccJson(bool isNew) const
 {
     TRY
         auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
-        jsonBuilder->SetIsBeautify(true);
-        _Option->SetVersion(VPGGlobal::GetVersion());
+        jsonBuilder->setIsBeautify(true);
+        _Option->setVersion(VPGGlobal::GetVersion());
         if (isNew) {
-            if (_Option->GetExports().empty())
-                _Option->InsertExports(std::make_shared<VPGConfigExport>());
+            if (_Option->getExports().empty())
+                _Option->insertExports(std::make_shared<VPGConfigExport>());
         }
-        vcc::AppendFileOneLine(vcc::ConcatPaths({_Workspace, VPGGlobal::GetVccJsonFileName()}), _Option->SerializeJson(jsonBuilder.get()), true);
+        vcc::AppendFileOneLine(vcc::ConcatPaths({_Workspace, VPGGlobal::GetVccJsonFileName()}), _Option->serializeJson(jsonBuilder.get()), true);
     CATCH
 }
 
@@ -121,23 +121,23 @@ void VPGVccGenerationManager::ReadVccJson() const
 void VPGVccGenerationManager::Add() const
 {
     TRY
-        assert(_Option->GetTemplate() != nullptr);
+        assert(_Option->getTemplate() != nullptr);
         VPGBaseGenerationManager::CreateBasicProject();
-        std::wstring src = VPGGlobal::GetConvertedPath(_Option->GetTemplate()->GetWorkspace());
+        std::wstring src = VPGGlobal::GetConvertedPath(_Option->getTemplate()->getWorkspace());
         std::wstring dest = _Workspace;
         vcc::LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Copy Project to " + dest + L" ...");
         vcc::CopyDirectoryOption copyDirectoryOption;
         copyDirectoryOption.SetIsForce(true);
         copyDirectoryOption.SetIsRecursive(true);
         
-        for (auto const &str : GetUpdateList())
+        for (auto const &str : getUpdateList())
             copyDirectoryOption.InsertIncludeFileFilters(str);
         vcc::CopyDirectory(src, dest, &copyDirectoryOption);
 
         // handle unittest in next loop as unit test name can be changed
-        if (_Option->GetTemplate() == nullptr || !_Option->GetTemplate()->GetIsExcludeUnittest()) {
+        if (_Option->getTemplate() == nullptr || !_Option->getTemplate()->getIsExcludeUnittest()) {
             copyDirectoryOption.ClearIncludeFileFilters();
-            for (auto const &str : GetUpdateUnitTestList())
+            for (auto const &str : getUpdateUnitTestList())
                 copyDirectoryOption.InsertIncludeFileFilters(str);
             if (!copyDirectoryOption.GetIncludeFileFilters().empty())
                 vcc::CopyDirectory(vcc::ConcatPaths({src, unittestFolderName}), vcc::ConcatPaths({dest, unittestFolderName}), &copyDirectoryOption);
@@ -154,18 +154,18 @@ void VPGVccGenerationManager::Update() const
     TRY
         ReadVccJson();
 
-        assert(_Option->GetTemplate() != nullptr);
-        std::wstring src = VPGGlobal::GetConvertedPath(_Option->GetTemplate()->GetWorkspace());
+        assert(_Option->getTemplate() != nullptr);
+        std::wstring src = VPGGlobal::GetConvertedPath(_Option->getTemplate()->getWorkspace());
         std::wstring dest = _Workspace;
         
         vcc::LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Sync Project ...");
         vcc::LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"From " + src);
         vcc::LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"To " + dest);
 
-        SyncWorkspace(this->_LogConfig.get(), src, dest, GetUpdateList(), {});
+        SyncWorkspace(this->_LogConfig.get(), src, dest, getUpdateList(), {});
         
-        if (_Option->GetTemplate() == nullptr || !_Option->GetTemplate()->GetIsExcludeUnittest()) {
-            auto list = GetUpdateUnitTestList();
+        if (_Option->getTemplate() == nullptr || !_Option->getTemplate()->getIsExcludeUnittest()) {
+            auto list = getUpdateUnitTestList();
             if (!list.empty())
                 SyncWorkspace(this->_LogConfig.get(), vcc::ConcatPaths({src, unittestFolderName}), vcc::ConcatPaths({dest, unittestFolderName}), list, {});
         }
@@ -181,7 +181,7 @@ void VPGVccGenerationManager::Update() const
         vcc::WriteFile(makefilePath, this->AdjustMakefile(makefileContent), true);
         
         // Update application
-        std::wstring applicationFilePath = vcc::ConcatPaths({dest, _Option->GetOutput()->GetApplicationDirectoryCpp(), L"application.cpp"});
+        std::wstring applicationFilePath = vcc::ConcatPaths({dest, _Option->getOutput()->getApplicationDirectoryCpp(), L"application.cpp"});
         if (vcc::IsFilePresent(applicationFilePath))
             vcc::WriteFile(applicationFilePath, this->AdjustAppliationCpp(vcc::ReadFile(applicationFilePath)), true);
 
@@ -205,13 +205,13 @@ void VPGVccGenerationManager::Generate() const
         vcc::WriteFile(makefilePath, this->AdjustMakefile(makefileContent), true);
         
         // Update application
-        std::wstring applicationFilePath = vcc::ConcatPaths({_Workspace, _Option->GetOutput()->GetApplicationDirectoryCpp(), L"application.cpp"});
+        std::wstring applicationFilePath = vcc::ConcatPaths({_Workspace, _Option->getOutput()->getApplicationDirectoryCpp(), L"application.cpp"});
         if (vcc::IsFilePresent(applicationFilePath))
             vcc::WriteFile(applicationFilePath, this->AdjustAppliationCpp(vcc::ReadFile(applicationFilePath)), true);
 
         auto manager = std::make_unique<VPGFileGenerationManager>(this->_LogConfig, _Workspace);
         vcc::LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Generate Project ...");
-        manager->GernerateProperty(_LogConfig.get(), _Option.get());
+        manager->gernerateProperty(_LogConfig.get(), _Option.get());
         vcc::LogService::LogInfo(this->_LogConfig.get(), CLASS_ID, L"Done");
     CATCH
 }

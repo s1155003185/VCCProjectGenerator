@@ -20,7 +20,7 @@ bool VPGConfigBehaviorPropertyAccessor::_ReadBool(const int64_t &objectProperty)
         switch(static_cast<VPGConfigBehaviorProperty>(objectProperty))
         {
         case VPGConfigBehaviorProperty::IsActionResultThrowException:
-            return obj->GetIsActionResultThrowException();
+            return obj->getIsActionResultThrowException();
         default:
             assert(false);
         }
@@ -52,7 +52,7 @@ void VPGConfigBehaviorPropertyAccessor::_WriteBool(const int64_t &objectProperty
         switch(static_cast<VPGConfigBehaviorProperty>(objectProperty))
         {
         case VPGConfigBehaviorProperty::IsActionResultThrowException:
-            obj->SetIsActionResultThrowException(value);
+            obj->setIsActionResultThrowException(value);
             break;
         default:
             assert(false);
@@ -89,7 +89,7 @@ long VPGConfigBehaviorPropertyAccessor::_ReadLong(const int64_t &objectProperty)
         switch(static_cast<VPGConfigBehaviorProperty>(objectProperty))
         {
         case VPGConfigBehaviorProperty::ActionHistoryType:
-            return static_cast<long>(obj->GetActionHistoryType());
+            return static_cast<long>(obj->getActionHistoryType());
         default:
             assert(false);
         }
@@ -121,7 +121,7 @@ void VPGConfigBehaviorPropertyAccessor::_WriteLong(const int64_t &objectProperty
         switch(static_cast<VPGConfigBehaviorProperty>(objectProperty))
         {
         case VPGConfigBehaviorProperty::ActionHistoryType:
-            obj->SetActionHistoryType(static_cast<VPGConfigActionHistoryType>(value));
+            obj->setActionHistoryType(static_cast<VPGConfigActionHistoryType>(value));
             break;
         default:
             assert(false);
@@ -158,7 +158,7 @@ bool VPGConfigExportPropertyAccessor::_ReadBool(const int64_t &objectProperty) c
         switch(static_cast<VPGConfigExportProperty>(objectProperty))
         {
         case VPGConfigExportProperty::IsExportExternalLib:
-            return obj->GetIsExportExternalLib();
+            return obj->getIsExportExternalLib();
         default:
             assert(false);
         }
@@ -190,7 +190,7 @@ void VPGConfigExportPropertyAccessor::_WriteBool(const int64_t &objectProperty, 
         switch(static_cast<VPGConfigExportProperty>(objectProperty))
         {
         case VPGConfigExportProperty::IsExportExternalLib:
-            obj->SetIsExportExternalLib(value);
+            obj->setIsExportExternalLib(value);
             break;
         default:
             assert(false);
@@ -227,7 +227,7 @@ long VPGConfigExportPropertyAccessor::_ReadLong(const int64_t &objectProperty) c
         switch(static_cast<VPGConfigExportProperty>(objectProperty))
         {
         case VPGConfigExportProperty::Interface:
-            return static_cast<long>(obj->GetInterface());
+            return static_cast<long>(obj->getInterface());
         default:
             assert(false);
         }
@@ -259,7 +259,7 @@ void VPGConfigExportPropertyAccessor::_WriteLong(const int64_t &objectProperty, 
         switch(static_cast<VPGConfigExportProperty>(objectProperty))
         {
         case VPGConfigExportProperty::Interface:
-            obj->SetInterface(static_cast<VPGConfigInterfaceType>(value));
+            obj->setInterface(static_cast<VPGConfigInterfaceType>(value));
             break;
         default:
             assert(false);
@@ -296,19 +296,19 @@ std::wstring VPGConfigExportPropertyAccessor::_ReadString(const int64_t &objectP
         switch(static_cast<VPGConfigExportProperty>(objectProperty))
         {
         case VPGConfigExportProperty::DllBridgeDirectory:
-            return obj->GetDllBridgeDirectory();
+            return obj->getDllBridgeDirectory();
         case VPGConfigExportProperty::ExportDirectoryDll:
-            return obj->GetExportDirectoryDll();
+            return obj->getExportDirectoryDll();
         case VPGConfigExportProperty::ExportDirectoryExe:
-            return obj->GetExportDirectoryExe();
+            return obj->getExportDirectoryExe();
         case VPGConfigExportProperty::FormDirectory:
-            return obj->GetFormDirectory();
+            return obj->getFormDirectory();
         case VPGConfigExportProperty::ObjectDirectory:
-            return obj->GetObjectDirectory();
+            return obj->getObjectDirectory();
         case VPGConfigExportProperty::TypeDirectory:
-            return obj->GetTypeDirectory();
+            return obj->getTypeDirectory();
         case VPGConfigExportProperty::Workspace:
-            return obj->GetWorkspace();
+            return obj->getWorkspace();
         default:
             assert(false);
         }
@@ -340,25 +340,25 @@ void VPGConfigExportPropertyAccessor::_WriteString(const int64_t &objectProperty
         switch(static_cast<VPGConfigExportProperty>(objectProperty))
         {
         case VPGConfigExportProperty::DllBridgeDirectory:
-            obj->SetDllBridgeDirectory(value);
+            obj->setDllBridgeDirectory(value);
             break;
         case VPGConfigExportProperty::ExportDirectoryDll:
-            obj->SetExportDirectoryDll(value);
+            obj->setExportDirectoryDll(value);
             break;
         case VPGConfigExportProperty::ExportDirectoryExe:
-            obj->SetExportDirectoryExe(value);
+            obj->setExportDirectoryExe(value);
             break;
         case VPGConfigExportProperty::FormDirectory:
-            obj->SetFormDirectory(value);
+            obj->setFormDirectory(value);
             break;
         case VPGConfigExportProperty::ObjectDirectory:
-            obj->SetObjectDirectory(value);
+            obj->setObjectDirectory(value);
             break;
         case VPGConfigExportProperty::TypeDirectory:
-            obj->SetTypeDirectory(value);
+            obj->setTypeDirectory(value);
             break;
         case VPGConfigExportProperty::Workspace:
-            obj->SetWorkspace(value);
+            obj->setWorkspace(value);
             break;
         default:
             assert(false);
@@ -395,7 +395,7 @@ std::wstring VPGConfigInputPropertyAccessor::_ReadString(const int64_t &objectPr
         switch(static_cast<VPGConfigInputProperty>(objectProperty))
         {
         case VPGConfigInputProperty::TypeWorkspace:
-            return obj->GetTypeWorkspace();
+            return obj->getTypeWorkspace();
         default:
             assert(false);
         }
@@ -427,7 +427,7 @@ void VPGConfigInputPropertyAccessor::_WriteString(const int64_t &objectProperty,
         switch(static_cast<VPGConfigInputProperty>(objectProperty))
         {
         case VPGConfigInputProperty::TypeWorkspace:
-            obj->SetTypeWorkspace(value);
+            obj->setTypeWorkspace(value);
             break;
         default:
             assert(false);
@@ -464,37 +464,37 @@ std::wstring VPGConfigOutputPropertyAccessor::_ReadString(const int64_t &objectP
         switch(static_cast<VPGConfigOutputProperty>(objectProperty))
         {
         case VPGConfigOutputProperty::ActionDirectoryCpp:
-            return obj->GetActionDirectoryCpp();
+            return obj->getActionDirectoryCpp();
         case VPGConfigOutputProperty::ActionDirectoryHpp:
-            return obj->GetActionDirectoryHpp();
+            return obj->getActionDirectoryHpp();
         case VPGConfigOutputProperty::ApplicationDirectoryCpp:
-            return obj->GetApplicationDirectoryCpp();
+            return obj->getApplicationDirectoryCpp();
         case VPGConfigOutputProperty::ApplicationDirectoryHpp:
-            return obj->GetApplicationDirectoryHpp();
+            return obj->getApplicationDirectoryHpp();
         case VPGConfigOutputProperty::ExceptionTypeDirectory:
-            return obj->GetExceptionTypeDirectory();
+            return obj->getExceptionTypeDirectory();
         case VPGConfigOutputProperty::FormDirectoryCpp:
-            return obj->GetFormDirectoryCpp();
+            return obj->getFormDirectoryCpp();
         case VPGConfigOutputProperty::FormDirectoryHpp:
-            return obj->GetFormDirectoryHpp();
+            return obj->getFormDirectoryHpp();
         case VPGConfigOutputProperty::ObjectDirectoryCpp:
-            return obj->GetObjectDirectoryCpp();
+            return obj->getObjectDirectoryCpp();
         case VPGConfigOutputProperty::ObjectDirectoryHpp:
-            return obj->GetObjectDirectoryHpp();
+            return obj->getObjectDirectoryHpp();
         case VPGConfigOutputProperty::ObjectFactoryDirectoryCpp:
-            return obj->GetObjectFactoryDirectoryCpp();
+            return obj->getObjectFactoryDirectoryCpp();
         case VPGConfigOutputProperty::ObjectFactoryDirectoryHpp:
-            return obj->GetObjectFactoryDirectoryHpp();
+            return obj->getObjectFactoryDirectoryHpp();
         case VPGConfigOutputProperty::ObjectTypeDirectory:
-            return obj->GetObjectTypeDirectory();
+            return obj->getObjectTypeDirectory();
         case VPGConfigOutputProperty::PropertyAccessorDirectoryCpp:
-            return obj->GetPropertyAccessorDirectoryCpp();
+            return obj->getPropertyAccessorDirectoryCpp();
         case VPGConfigOutputProperty::PropertyAccessorDirectoryHpp:
-            return obj->GetPropertyAccessorDirectoryHpp();
+            return obj->getPropertyAccessorDirectoryHpp();
         case VPGConfigOutputProperty::PropertyAccessorFactoryDirectoryCpp:
-            return obj->GetPropertyAccessorFactoryDirectoryCpp();
+            return obj->getPropertyAccessorFactoryDirectoryCpp();
         case VPGConfigOutputProperty::PropertyAccessorFactoryDirectoryHpp:
-            return obj->GetPropertyAccessorFactoryDirectoryHpp();
+            return obj->getPropertyAccessorFactoryDirectoryHpp();
         default:
             assert(false);
         }
@@ -526,52 +526,52 @@ void VPGConfigOutputPropertyAccessor::_WriteString(const int64_t &objectProperty
         switch(static_cast<VPGConfigOutputProperty>(objectProperty))
         {
         case VPGConfigOutputProperty::ActionDirectoryCpp:
-            obj->SetActionDirectoryCpp(value);
+            obj->setActionDirectoryCpp(value);
             break;
         case VPGConfigOutputProperty::ActionDirectoryHpp:
-            obj->SetActionDirectoryHpp(value);
+            obj->setActionDirectoryHpp(value);
             break;
         case VPGConfigOutputProperty::ApplicationDirectoryCpp:
-            obj->SetApplicationDirectoryCpp(value);
+            obj->setApplicationDirectoryCpp(value);
             break;
         case VPGConfigOutputProperty::ApplicationDirectoryHpp:
-            obj->SetApplicationDirectoryHpp(value);
+            obj->setApplicationDirectoryHpp(value);
             break;
         case VPGConfigOutputProperty::ExceptionTypeDirectory:
-            obj->SetExceptionTypeDirectory(value);
+            obj->setExceptionTypeDirectory(value);
             break;
         case VPGConfigOutputProperty::FormDirectoryCpp:
-            obj->SetFormDirectoryCpp(value);
+            obj->setFormDirectoryCpp(value);
             break;
         case VPGConfigOutputProperty::FormDirectoryHpp:
-            obj->SetFormDirectoryHpp(value);
+            obj->setFormDirectoryHpp(value);
             break;
         case VPGConfigOutputProperty::ObjectDirectoryCpp:
-            obj->SetObjectDirectoryCpp(value);
+            obj->setObjectDirectoryCpp(value);
             break;
         case VPGConfigOutputProperty::ObjectDirectoryHpp:
-            obj->SetObjectDirectoryHpp(value);
+            obj->setObjectDirectoryHpp(value);
             break;
         case VPGConfigOutputProperty::ObjectFactoryDirectoryCpp:
-            obj->SetObjectFactoryDirectoryCpp(value);
+            obj->setObjectFactoryDirectoryCpp(value);
             break;
         case VPGConfigOutputProperty::ObjectFactoryDirectoryHpp:
-            obj->SetObjectFactoryDirectoryHpp(value);
+            obj->setObjectFactoryDirectoryHpp(value);
             break;
         case VPGConfigOutputProperty::ObjectTypeDirectory:
-            obj->SetObjectTypeDirectory(value);
+            obj->setObjectTypeDirectory(value);
             break;
         case VPGConfigOutputProperty::PropertyAccessorDirectoryCpp:
-            obj->SetPropertyAccessorDirectoryCpp(value);
+            obj->setPropertyAccessorDirectoryCpp(value);
             break;
         case VPGConfigOutputProperty::PropertyAccessorDirectoryHpp:
-            obj->SetPropertyAccessorDirectoryHpp(value);
+            obj->setPropertyAccessorDirectoryHpp(value);
             break;
         case VPGConfigOutputProperty::PropertyAccessorFactoryDirectoryCpp:
-            obj->SetPropertyAccessorFactoryDirectoryCpp(value);
+            obj->setPropertyAccessorFactoryDirectoryCpp(value);
             break;
         case VPGConfigOutputProperty::PropertyAccessorFactoryDirectoryHpp:
-            obj->SetPropertyAccessorFactoryDirectoryHpp(value);
+            obj->setPropertyAccessorFactoryDirectoryHpp(value);
             break;
         default:
             assert(false);
@@ -608,13 +608,13 @@ bool VPGConfigPropertyAccessor::_ReadBool(const int64_t &objectProperty) const
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::BehaviorIsActionResultThrowException:
-            return obj->GetBehaviorIsActionResultThrowException();
+            return obj->getBehaviorIsActionResultThrowException();
         case VPGConfigProperty::IsGit:
-            return obj->GetIsGit();
+            return obj->getIsGit();
         case VPGConfigProperty::TemplateIsExcludeUnittest:
-            return obj->GetTemplateIsExcludeUnittest();
+            return obj->getTemplateIsExcludeUnittest();
         case VPGConfigProperty::TemplateIsExcludeVCCUnitTest:
-            return obj->GetTemplateIsExcludeVCCUnitTest();
+            return obj->getTemplateIsExcludeVCCUnitTest();
         default:
             assert(false);
         }
@@ -646,7 +646,7 @@ void VPGConfigPropertyAccessor::_WriteBool(const int64_t &objectProperty, const 
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::IsGit:
-            obj->SetIsGit(value);
+            obj->setIsGit(value);
             break;
         default:
             assert(false);
@@ -683,9 +683,9 @@ long VPGConfigPropertyAccessor::_ReadLong(const int64_t &objectProperty) const
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::BehaviorActionHistoryType:
-            return static_cast<long>(obj->GetBehaviorActionHistoryType());
+            return static_cast<long>(obj->getBehaviorActionHistoryType());
         case VPGConfigProperty::ProjectType:
-            return static_cast<long>(obj->GetProjectType());
+            return static_cast<long>(obj->getProjectType());
         default:
             assert(false);
         }
@@ -717,7 +717,7 @@ void VPGConfigPropertyAccessor::_WriteLong(const int64_t &objectProperty, const 
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::ProjectType:
-            obj->SetProjectType(static_cast<VPGProjectType>(value));
+            obj->setProjectType(static_cast<VPGProjectType>(value));
             break;
         default:
             assert(false);
@@ -754,53 +754,53 @@ std::wstring VPGConfigPropertyAccessor::_ReadString(const int64_t &objectPropert
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::InputTypeWorkspace:
-            return obj->GetInputTypeWorkspace();
+            return obj->getInputTypeWorkspace();
         case VPGConfigProperty::OutputActionDirectoryCpp:
-            return obj->GetOutputActionDirectoryCpp();
+            return obj->getOutputActionDirectoryCpp();
         case VPGConfigProperty::OutputActionDirectoryHpp:
-            return obj->GetOutputActionDirectoryHpp();
+            return obj->getOutputActionDirectoryHpp();
         case VPGConfigProperty::OutputApplicationDirectoryCpp:
-            return obj->GetOutputApplicationDirectoryCpp();
+            return obj->getOutputApplicationDirectoryCpp();
         case VPGConfigProperty::OutputApplicationDirectoryHpp:
-            return obj->GetOutputApplicationDirectoryHpp();
+            return obj->getOutputApplicationDirectoryHpp();
         case VPGConfigProperty::OutputExceptionTypeDirectory:
-            return obj->GetOutputExceptionTypeDirectory();
+            return obj->getOutputExceptionTypeDirectory();
         case VPGConfigProperty::OutputFormDirectoryCpp:
-            return obj->GetOutputFormDirectoryCpp();
+            return obj->getOutputFormDirectoryCpp();
         case VPGConfigProperty::OutputFormDirectoryHpp:
-            return obj->GetOutputFormDirectoryHpp();
+            return obj->getOutputFormDirectoryHpp();
         case VPGConfigProperty::OutputObjectDirectoryCpp:
-            return obj->GetOutputObjectDirectoryCpp();
+            return obj->getOutputObjectDirectoryCpp();
         case VPGConfigProperty::OutputObjectDirectoryHpp:
-            return obj->GetOutputObjectDirectoryHpp();
+            return obj->getOutputObjectDirectoryHpp();
         case VPGConfigProperty::OutputObjectFactoryDirectoryCpp:
-            return obj->GetOutputObjectFactoryDirectoryCpp();
+            return obj->getOutputObjectFactoryDirectoryCpp();
         case VPGConfigProperty::OutputObjectFactoryDirectoryHpp:
-            return obj->GetOutputObjectFactoryDirectoryHpp();
+            return obj->getOutputObjectFactoryDirectoryHpp();
         case VPGConfigProperty::OutputObjectTypeDirectory:
-            return obj->GetOutputObjectTypeDirectory();
+            return obj->getOutputObjectTypeDirectory();
         case VPGConfigProperty::OutputPropertyAccessorDirectoryCpp:
-            return obj->GetOutputPropertyAccessorDirectoryCpp();
+            return obj->getOutputPropertyAccessorDirectoryCpp();
         case VPGConfigProperty::OutputPropertyAccessorDirectoryHpp:
-            return obj->GetOutputPropertyAccessorDirectoryHpp();
+            return obj->getOutputPropertyAccessorDirectoryHpp();
         case VPGConfigProperty::OutputPropertyAccessorFactoryDirectoryCpp:
-            return obj->GetOutputPropertyAccessorFactoryDirectoryCpp();
+            return obj->getOutputPropertyAccessorFactoryDirectoryCpp();
         case VPGConfigProperty::OutputPropertyAccessorFactoryDirectoryHpp:
-            return obj->GetOutputPropertyAccessorFactoryDirectoryHpp();
+            return obj->getOutputPropertyAccessorFactoryDirectoryHpp();
         case VPGConfigProperty::ProjectName:
-            return obj->GetProjectName();
+            return obj->getProjectName();
         case VPGConfigProperty::ProjectNameDll:
-            return obj->GetProjectNameDll();
+            return obj->getProjectNameDll();
         case VPGConfigProperty::ProjectNameExe:
-            return obj->GetProjectNameExe();
+            return obj->getProjectNameExe();
         case VPGConfigProperty::ProjectPrefix:
-            return obj->GetProjectPrefix();
+            return obj->getProjectPrefix();
         case VPGConfigProperty::TemplateUrl:
-            return obj->GetTemplateUrl();
+            return obj->getTemplateUrl();
         case VPGConfigProperty::TemplateWorkspace:
-            return obj->GetTemplateWorkspace();
+            return obj->getTemplateWorkspace();
         case VPGConfigProperty::Version:
-            return obj->GetVersion();
+            return obj->getVersion();
         default:
             assert(false);
         }
@@ -817,7 +817,7 @@ std::wstring VPGConfigPropertyAccessor::_ReadStringAtIndex(const int64_t &object
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Plugins:
-            return obj->GetPluginsAtIndex(index);
+            return obj->getPluginsAtIndex(index);
         default:
             assert(false);
         }
@@ -841,19 +841,19 @@ void VPGConfigPropertyAccessor::_WriteString(const int64_t &objectProperty, cons
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::ProjectName:
-            obj->SetProjectName(value);
+            obj->setProjectName(value);
             break;
         case VPGConfigProperty::ProjectNameDll:
-            obj->SetProjectNameDll(value);
+            obj->setProjectNameDll(value);
             break;
         case VPGConfigProperty::ProjectNameExe:
-            obj->SetProjectNameExe(value);
+            obj->setProjectNameExe(value);
             break;
         case VPGConfigProperty::ProjectPrefix:
-            obj->SetProjectPrefix(value);
+            obj->setProjectPrefix(value);
             break;
         case VPGConfigProperty::Version:
-            obj->SetVersion(value);
+            obj->setVersion(value);
             break;
         default:
             assert(false);
@@ -871,9 +871,9 @@ void VPGConfigPropertyAccessor::_WriteStringAtIndex(const int64_t &objectPropert
         {
         case VPGConfigProperty::Plugins:
             if (index > -1)
-                obj->SetPluginsAtIndex(index, value);
+                obj->setPluginsAtIndex(index, value);
             else
-                obj->InsertPlugins(value);
+                obj->insertPlugins(value);
             break;
         default:
             assert(false);
@@ -898,9 +898,9 @@ void VPGConfigPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProper
         {
         case VPGConfigProperty::Plugins:
             if (index > -1)
-                obj->InsertPluginsAtIndex(index, value);
+                obj->insertPluginsAtIndex(index, value);
             else
-                obj->InsertPlugins(value);
+                obj->insertPlugins(value);
             break;
         default:
             assert(false);
@@ -916,13 +916,13 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_ReadObject(const int64
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Behavior:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetBehavior());
+            return std::static_pointer_cast<vcc::IObject>(obj->getBehavior());
         case VPGConfigProperty::Input:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetInput());
+            return std::static_pointer_cast<vcc::IObject>(obj->getInput());
         case VPGConfigProperty::Output:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetOutput());
+            return std::static_pointer_cast<vcc::IObject>(obj->getOutput());
         case VPGConfigProperty::Template:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetTemplate());
+            return std::static_pointer_cast<vcc::IObject>(obj->getTemplate());
         default:
             assert(false);
         }
@@ -939,7 +939,7 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_ReadObjectAtIndex(cons
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Exports:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetExportsAtIndex(index));
+            return std::static_pointer_cast<vcc::IObject>(obj->getExportsAtIndex(index));
         default:
             assert(false);
         }
@@ -963,16 +963,16 @@ void VPGConfigPropertyAccessor::_WriteObject(const int64_t &objectProperty, std:
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Behavior:
-            obj->SetBehavior(std::static_pointer_cast<VPGConfigBehavior>(value));
+            obj->setBehavior(std::static_pointer_cast<VPGConfigBehavior>(value));
             break;
         case VPGConfigProperty::Input:
-            obj->SetInput(std::static_pointer_cast<VPGConfigInput>(value));
+            obj->setInput(std::static_pointer_cast<VPGConfigInput>(value));
             break;
         case VPGConfigProperty::Output:
-            obj->SetOutput(std::static_pointer_cast<VPGConfigOutput>(value));
+            obj->setOutput(std::static_pointer_cast<VPGConfigOutput>(value));
             break;
         case VPGConfigProperty::Template:
-            obj->SetTemplate(std::static_pointer_cast<VPGConfigTemplate>(value));
+            obj->setTemplate(std::static_pointer_cast<VPGConfigTemplate>(value));
             break;
         default:
             assert(false);
@@ -990,9 +990,9 @@ void VPGConfigPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectPropert
         {
         case VPGConfigProperty::Exports:
             if (index > -1)
-                obj->SetExportsAtIndex(index, std::static_pointer_cast<VPGConfigExport>(value));
+                obj->setExportsAtIndex(index, std::static_pointer_cast<VPGConfigExport>(value));
             else
-                obj->InsertExports(std::static_pointer_cast<VPGConfigExport>(value));
+                obj->insertExports(std::static_pointer_cast<VPGConfigExport>(value));
             break;
         default:
             assert(false);
@@ -1017,9 +1017,9 @@ void VPGConfigPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProper
         {
         case VPGConfigProperty::Exports:
             if (index > -1)
-                obj->InsertExportsAtIndex(index, std::static_pointer_cast<VPGConfigExport>(value));
+                obj->insertExportsAtIndex(index, std::static_pointer_cast<VPGConfigExport>(value));
             else
-                obj->InsertExports(std::static_pointer_cast<VPGConfigExport>(value));
+                obj->insertExports(std::static_pointer_cast<VPGConfigExport>(value));
             break;
         default:
             assert(false);
@@ -1035,13 +1035,13 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObject(const int6
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Behavior:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetBehavior()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->getBehavior()->Clone());
         case VPGConfigProperty::Input:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetInput()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->getInput()->Clone());
         case VPGConfigProperty::Output:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetOutput()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->getOutput()->Clone());
         case VPGConfigProperty::Template:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetTemplate()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->getTemplate()->Clone());
         default:
             assert(false);
         }
@@ -1082,9 +1082,9 @@ size_t VPGConfigPropertyAccessor::_GetCount(const int64_t &objectProperty) const
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Plugins:
-            return obj->GetPlugins().size();
+            return obj->getPlugins().size();
         case VPGConfigProperty::Exports:
-            return obj->GetExports().size();
+            return obj->getExports().size();
         default:
             assert(false);
         }
@@ -1200,9 +1200,9 @@ bool VPGConfigTemplatePropertyAccessor::_ReadBool(const int64_t &objectProperty)
         switch(static_cast<VPGConfigTemplateProperty>(objectProperty))
         {
         case VPGConfigTemplateProperty::IsExcludeUnittest:
-            return obj->GetIsExcludeUnittest();
+            return obj->getIsExcludeUnittest();
         case VPGConfigTemplateProperty::IsExcludeVCCUnitTest:
-            return obj->GetIsExcludeVCCUnitTest();
+            return obj->getIsExcludeVCCUnitTest();
         default:
             assert(false);
         }
@@ -1234,10 +1234,10 @@ void VPGConfigTemplatePropertyAccessor::_WriteBool(const int64_t &objectProperty
         switch(static_cast<VPGConfigTemplateProperty>(objectProperty))
         {
         case VPGConfigTemplateProperty::IsExcludeUnittest:
-            obj->SetIsExcludeUnittest(value);
+            obj->setIsExcludeUnittest(value);
             break;
         case VPGConfigTemplateProperty::IsExcludeVCCUnitTest:
-            obj->SetIsExcludeVCCUnitTest(value);
+            obj->setIsExcludeVCCUnitTest(value);
             break;
         default:
             assert(false);
@@ -1274,9 +1274,9 @@ std::wstring VPGConfigTemplatePropertyAccessor::_ReadString(const int64_t &objec
         switch(static_cast<VPGConfigTemplateProperty>(objectProperty))
         {
         case VPGConfigTemplateProperty::Url:
-            return obj->GetUrl();
+            return obj->getUrl();
         case VPGConfigTemplateProperty::Workspace:
-            return obj->GetWorkspace();
+            return obj->getWorkspace();
         default:
             assert(false);
         }
@@ -1308,10 +1308,10 @@ void VPGConfigTemplatePropertyAccessor::_WriteString(const int64_t &objectProper
         switch(static_cast<VPGConfigTemplateProperty>(objectProperty))
         {
         case VPGConfigTemplateProperty::Url:
-            obj->SetUrl(value);
+            obj->setUrl(value);
             break;
         case VPGConfigTemplateProperty::Workspace:
-            obj->SetWorkspace(value);
+            obj->setWorkspace(value);
             break;
         default:
             assert(false);

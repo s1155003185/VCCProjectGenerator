@@ -52,26 +52,26 @@ namespace vcc
 	};
 
 	// system
-	std::wstring GetCurrentFolderPath();
+	std::wstring getCurrentFolderPath();
 	void ChangeCurrentFolderPath(const std::wstring &path);
-	std::wstring GetSystemFolderPath(const SystemFolderType &fileType);
+	std::wstring getSystemFolderPath(const SystemFolderType &fileType);
 
     // helper
 	bool IsAbsolutePath(const std::wstring &filePath);
-	std::wstring GetParentPath(const std::wstring &filePath);
-	std::wstring GetFileName(const std::wstring &filePath);
+	std::wstring getParentPath(const std::wstring &filePath);
+	std::wstring getFileName(const std::wstring &filePath);
     std::wstring ConcatPaths(const std::vector<std::wstring>& paths);
-	std::wstring GetRelativePath(const std::wstring &absolutePath, const std::wstring &basePath);
-	void GetFileDifferenceBetweenWorkspaces(const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
+	std::wstring getRelativePath(const std::wstring &absolutePath, const std::wstring &basePath);
+	void getFileDifferenceBetweenWorkspaces(const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
 		std::vector<std::wstring> &needToAdd, std::vector<std::wstring> &needToModify, std::vector<std::wstring> &needToDelete);
 
 	// converter
-	std::wstring GetCurrentPlatformPath(const std::wstring &path);
+	std::wstring getCurrentPlatformPath(const std::wstring &path);
 
 	// Regex
-	std::wstring GetWindowPath(const std::wstring &path);
-	std::wstring GetLinuxPath(const std::wstring &path);
-	std::wstring GetRegexFromFileFilter(const std::wstring &fileFilter);
+	std::wstring getWindowPath(const std::wstring &path);
+	std::wstring getLinuxPath(const std::wstring &path);
+	std::wstring getRegexFromFileFilter(const std::wstring &fileFilter);
 	bool IsPathMatchFileFilter(const std::wstring &filePath, const std::wstring &fileFilter);
 	bool IsPathMatchFileFilters(const std::wstring &filePath, const std::vector<std::wstring> &fileFilters);
 

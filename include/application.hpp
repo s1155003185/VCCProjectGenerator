@@ -19,7 +19,7 @@ class Application : public vcc::BaseForm
         std::set<std::shared_ptr<vcc::IObject>> _ActionArguments;
         std::set<std::shared_ptr<vcc::IObject>> _Results;
 
-        static std::shared_ptr<vcc::IObject> GetFormSharedPtr(vcc::IObject *IObject);
+        static std::shared_ptr<vcc::IObject> getFormSharedPtr(vcc::IObject *IObject);
         static vcc::IForm *GetIFormPtrFromIObject(vcc::IObject *obj);
         static vcc::IObject *GetIObjectPtrFromIResult(vcc::IResult *obj);
         static vcc::IResult *GetIResultPtrFromIObject(vcc::IObject *obj);
@@ -39,7 +39,7 @@ class Application : public vcc::BaseForm
         Application() : vcc::BaseForm() {}
         ~Application() {}
 
-        virtual void InitializeComponents() override;
+        virtual void initializeComponents() override;
  
         static void Run();
 
@@ -47,8 +47,8 @@ class Application : public vcc::BaseForm
         static std::shared_ptr<vcc::IObject> CreateForm(const ObjectType &objectType);
         
         // Result
-        static int64_t GetResultErrorCode(vcc::IObject *result);
-        static std::wstring GetResultMessage(vcc::IObject *result);
+        static int64_t getResultErrorCode(vcc::IObject *result);
+        static std::wstring getResultMessage(vcc::IObject *result);
         static bool IsErrorResult(vcc::IObject *result);
         static bool IsWarningResult(vcc::IObject *result);
         static void EraseResult(vcc::IObject *result);
@@ -56,9 +56,9 @@ class Application : public vcc::BaseForm
         // Form Action
         static std::shared_ptr<vcc::IObject> CreateActionArgument(const ObjectType &objectType);
         static std::shared_ptr<vcc::IObject> DoFormAction(vcc::IObject *form, const int64_t &formProperty, IObject *argument);
-        static int64_t GetFormActionCurrentSeqNo(vcc::IObject *form);
-        static int64_t GetFormActionFirstSeqNo(vcc::IObject *form);
-        static int64_t GetFormActionLastSeqNo(vcc::IObject *form);
+        static int64_t getFormActionCurrentSeqNo(vcc::IObject *form);
+        static int64_t getFormActionFirstSeqNo(vcc::IObject *form);
+        static int64_t getFormActionLastSeqNo(vcc::IObject *form);
         
         static void RedoFormAction(vcc::IObject *form, const int64_t &noOfStep = 1);
         static void RedoFormActionToSeqNo(vcc::IObject *form, const int64_t &seqNo);

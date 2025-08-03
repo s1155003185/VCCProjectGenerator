@@ -17,7 +17,7 @@ std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_ReadObject(const int6
         switch(static_cast<VPGGitFormProperty>(objectProperty))
         {
         case VPGGitFormProperty::Log:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetLog());
+            return std::static_pointer_cast<vcc::IObject>(obj->getLog());
         default:
             assert(false);
         }
@@ -49,7 +49,7 @@ void VPGGitFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std
         switch(static_cast<VPGGitFormProperty>(objectProperty))
         {
         case VPGGitFormProperty::Log:
-            obj->SetLog(std::static_pointer_cast<VPGGitLog>(value));
+            obj->setLog(std::static_pointer_cast<VPGGitLog>(value));
             break;
         default:
             assert(false);
@@ -86,7 +86,7 @@ std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_CloneObject(const int
         switch(static_cast<VPGGitFormProperty>(objectProperty))
         {
         case VPGGitFormProperty::Log:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetLog()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->getLog()->Clone());
         default:
             assert(false);
         }

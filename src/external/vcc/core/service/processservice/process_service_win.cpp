@@ -112,8 +112,8 @@ namespace vcc
             if (hNullDevice != INVALID_HANDLE_VALUE)
             {
                 // Redirect the stdout handle to the null device handle
-                SetHandleInformation(si.hStdOutput, HANDLE_FLAG_INHERIT, 0);
-                SetStdHandle(STD_OUTPUT_HANDLE, hNullDevice);
+                setHandleInformation(si.hStdOutput, HANDLE_FLAG_INHERIT, 0);
+                setStdHandle(STD_OUTPUT_HANDLE, hNullDevice);
                 CloseHandle(hNullDevice);
             }
 
@@ -153,7 +153,7 @@ namespace vcc
         DWORD dwRead, dwWritten; 
         CHAR buffer[BUFSIZE]; 
         BOOL bSuccess = FALSE;
-        HANDLE hParentStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+        HANDLE hParentStdOut = getStdHandle(STD_OUTPUT_HANDLE);
 
         std::wstring result = L"";
         while (true)
@@ -173,7 +173,7 @@ namespace vcc
         DWORD dwRead, dwWritten; 
         CHAR buffer[BUFSIZE]; 
         BOOL bSuccess = FALSE;
-        HANDLE hParentStdError = GetStdHandle(STD_ERROR_HANDLE);
+        HANDLE hParentStdError = getStdHandle(STD_ERROR_HANDLE);
 
         std::wstring result = L"";
         while (true)

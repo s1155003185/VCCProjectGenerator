@@ -27,33 +27,33 @@ namespace vcc
             virtual bool OnClose() = 0;
         public:
             // Log
-            virtual std::shared_ptr<LogConfig> GetLogConfig() const = 0;
-            virtual void SetLogConfig(std::shared_ptr<LogConfig> logConfig) = 0;
+            virtual std::shared_ptr<LogConfig> getLogConfig() const = 0;
+            virtual void setLogConfig(std::shared_ptr<LogConfig> logConfig) = 0;
             
             // Action
-            virtual std::shared_ptr<ActionManager> GetActionManager() const = 0;
-            virtual void SetActionManager(std::shared_ptr<ActionManager> actionManager) = 0;
+            virtual std::shared_ptr<ActionManager> getActionManager() const = 0;
+            virtual void setActionManager(std::shared_ptr<ActionManager> actionManager) = 0;
 
             // Thead
-            virtual std::shared_ptr<ThreadManager> GetThreadManager() const = 0;
-            virtual void SetThreadManager(std::shared_ptr<ThreadManager> threadManager) = 0;
+            virtual std::shared_ptr<ThreadManager> getThreadManager() const = 0;
+            virtual void setThreadManager(std::shared_ptr<ThreadManager> threadManager) = 0;
 
             // State
-            virtual State GetState() const = 0;
+            virtual State getState() const = 0;
             virtual bool IsClosable() const = 0;
             virtual bool IsClosed() const = 0;
 
             // Initialize
-            virtual void Initialize() = 0;
-            virtual void InitializeComponents() = 0;
-            virtual void InitializeValue() = 0;
+            virtual void initialize() = 0;
+            virtual void initializeComponents() = 0;
+            virtual void initializeValue() = 0;
 
             // Action
             virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) = 0;
             virtual std::shared_ptr<IResult> ExecuteAction(std::shared_ptr<IAction> action, bool isNoHistory) = 0;
-            virtual int64_t GetActionCurrentSeqNo() const = 0;
-            virtual int64_t GetActionFirstSeqNo() const = 0;
-            virtual int64_t GetActionLastSeqNo() const = 0;
+            virtual int64_t getActionCurrentSeqNo() const = 0;
+            virtual int64_t getActionFirstSeqNo() const = 0;
+            virtual int64_t getActionLastSeqNo() const = 0;
             
             virtual std::shared_ptr<IResult> RedoAction(const int64_t &noOfStep = 1) = 0;
             virtual std::shared_ptr<IResult> RedoActionToSeqNo(const int64_t &seqNo) = 0;

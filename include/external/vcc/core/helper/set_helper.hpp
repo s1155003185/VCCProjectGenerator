@@ -78,7 +78,7 @@ namespace vcc
     inline void RemoveIObject(std::set<std::shared_ptr<T>> &sourceSet, const IObject *obj)
     {
         for (auto it = sourceSet.begin(); it != sourceSet.end(); ) {
-            if ((*it)->GetObjectId() == obj->GetObjectId()) {
+            if ((*it)->getObjectId() == obj->getObjectId()) {
                 it = sourceSet.erase(it);
                 break;
             }
@@ -89,7 +89,7 @@ namespace vcc
     inline void RemoveIObjectAll(std::set<std::shared_ptr<T>> &sourceSet, const IObject *obj)
     {
         for (auto it = sourceSet.begin(); it != sourceSet.end(); ) {
-            if ((*it)->GetObjectId() == obj->GetObjectId())
+            if ((*it)->getObjectId() == obj->getObjectId())
                 it = sourceSet.erase(it);
             else
                 it++;

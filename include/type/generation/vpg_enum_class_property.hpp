@@ -34,7 +34,7 @@ enum class VPGEnumClassAttributeProperty
     , IsSet // GETCUSTOM(bool, IsSet, return vcc::IsContain(std::vector<VPGEnumClassMacroType>{ VPGEnumClassMacroType::Set, VPGEnumClassMacroType::SetSptr, VPGEnumClassMacroType::SetValidate, VPGEnumClassMacroType::SetValidateSptr }, _MacroType);)
     , IsAction // GETCUSTOM(bool, IsAction, return vcc::IsStartWith(_Macro, L"ACTION");)
     , IsManager // GETCUSTOM(bool, IsManager, return vcc::IsStartWith(_Macro, L"MANAGER");)
-    , IsCollection // GETCUSTOM(bool, IsCollection, return GetIsVector() || GetIsMap() || GetIsOrderedMap() || GetIsSet();)
+    , IsCollection // GETCUSTOM(bool, IsCollection, return getIsVector() || getIsMap() || getIsOrderedMap() || getIsSet();)
     , IsHavingValidate // GETCUSTOM(bool, IsHavingValidate, return vcc::IsContain(GetMacro(), L"(") ? vcc::IsContain(_Macro.substr(0, _Macro.find(L"(")), L"VALIDATE") : false;)
 
     // Macro

@@ -19,37 +19,37 @@ class VPGJavaGenerationServiceTest : public testing::Test
     GETSET_SPTR_NULL(VPGConfig, Option);
     
     public:
-        void SetUp() override
+        void setUp() override
         {
             this->_LogConfig = std::make_shared<vcc::LogConfig>();
-            this->_LogConfig->SetIsConsoleLog(false);
+            this->_LogConfig->setIsConsoleLog(false);
 
-            std::filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->getWorkspace()));
             _Option = std::make_shared<VPGConfig>();
-            _Option->SetProjectPrefix(L"VPG");
-            if (_Option->GetInput() == nullptr)
-                _Option->SetInput(std::make_shared<VPGConfigInput>());
-            _Option->GetInput()->SetTypeWorkspace(_Workspace);
+            _Option->setProjectPrefix(L"VPG");
+            if (_Option->getInput() == nullptr)
+                _Option->setInput(std::make_shared<VPGConfigInput>());
+            _Option->getInput()->setTypeWorkspace(_Workspace);
 
             _JavaOption = std::make_shared<VPGConfigExport>();
-            _Option->InsertExports(_JavaOption);
-            _JavaOption->SetInterface(VPGConfigInterfaceType::Java);
-            _JavaOption->SetWorkspace(_Workspace);
-            _JavaOption->SetDllBridgeDirectory(L"src/main/java/com/vcc/test/");
-            _JavaOption->SetTypeDirectory(L"src/main/java/com/vcc/type");
-            _JavaOption->SetObjectDirectory(L"src/main/java/com/vcc/module");
-            _JavaOption->SetFormDirectory(L"src/main/java/com/vcc/form");
+            _Option->insertExports(_JavaOption);
+            _JavaOption->setInterface(VPGConfigInterfaceType::Java);
+            _JavaOption->setWorkspace(_Workspace);
+            _JavaOption->setDllBridgeDirectory(L"src/main/java/com/vcc/test/");
+            _JavaOption->setTypeDirectory(L"src/main/java/com/vcc/type");
+            _JavaOption->setObjectDirectory(L"src/main/java/com/vcc/module");
+            _JavaOption->setFormDirectory(L"src/main/java/com/vcc/form");
         }
 
         void TearDown() override
         {
-            std::filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->getWorkspace()));
         }
 };
 
 TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
 {
-    vcc::WriteFile(vcc::ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}),
+    vcc::WriteFile(vcc::ConcatPaths({this->getWorkspace(), L"DllFunctions.h"}),
         L"// <vcc:vccproj gen=\"DEMAND\"/>\r\n"
         "#ifndef DLL_FUNCTIONS_H\r\n"
         "#define DLL_FUNCTIONS_H\r\n"
@@ -71,7 +71,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "extern \"C\"\r\n"
         "{\r\n"
         "\r\n"
-        "DLLEXPORT int GetVersion(wchar_t **str);\r\n"
+        "DLLEXPORT int getVersion(wchar_t **str);\r\n"
         "\r\n"
         "static std::shared_ptr<vcc::IObject> tmpObj;\r\n"
         "DLLEXPORT void *CreateObject(int64_t property)\r\n"
@@ -102,9 +102,9 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "\r\n"
         "#endif\r\n", true);
 
-    VPGJavaGenerationService::GenerateJavaBridge(this->GetLogConfig().get(), L"", vcc::ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"}), this->GetOption().get());
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetDllBridgeDirectory(), L"VPGDllFunctions.java"})));
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetDllBridgeDirectory(), L"VPGDllFunctions.java"})),
+    VPGJavaGenerationService::GenerateJavaBridge(this->getLogConfig().get(), L"", vcc::ConcatPaths({this->getWorkspace(), L"DllFunctions.h"}), this->getOption().get());
+    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspace(), this->getJavaOption()->getDllBridgeDirectory(), L"VPGDllFunctions.java"})));
+    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->getWorkspace(), this->getJavaOption()->getDllBridgeDirectory(), L"VPGDllFunctions.java"})),
         L"package com.vcc.test;\r\n"
         "\r\n"
         "import com.sun.jna.Library;\r\n"
@@ -113,7 +113,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "import com.sun.jna.ptr.PointerByReference;\r\n"
         "\r\n"
         "public interface VPGDllFunctions extends Library {\r\n"
-        "    VPGDllFunctions Instance = loadLibrary();\r\n"
+        "    VPGDllFunctions instance = loadLibrary();\r\n"
         "\r\n"
         "    static private VPGDllFunctions loadLibrary() {\r\n"
         "        String prefix = System.getProperty(\"os.name\").startsWith(\"Windows\") ? \"lib\" : \"\";\r\n"
@@ -122,7 +122,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "        return lib;\r\n"
         "    }\r\n"
         "\r\n"
-        "    int GetVersion(PointerByReference str);\r\n"
+        "    int getVersion(PointerByReference str);\r\n"
         "    Pointer CreateObject(long property);\r\n"
         "    boolean ReadBool(Pointer ref, long property, long index);\r\n"
         "    byte ReadChar(Pointer ref, long property);\r\n"
@@ -131,14 +131,14 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "    void WriteChar(Pointer ref, long property, byte value);\r\n"
         "    void WriteCharAtIndex(Pointer ref, long property, byte value, long index);\r\n"
         "    void WriteCharAtKey(Pointer ref, long property, byte value, Pointer key);\r\n"
-        "    void InsertCharAtIndex(Pointer ref, long property, byte value, long index);\r\n"
+        "    void insertCharAtIndex(Pointer ref, long property, byte value, long index);\r\n"
         "    void ReadString(Pointer ref, long property, PointerByReference value);\r\n"
         "    void ReadStringAtIndex(Pointer ref, long property, PointerByReference value, long index);\r\n"
         "    void ReadStringAtKey(Pointer ref, long property, PointerByReference value, Pointer key);\r\n"
         "    void WriteString(Pointer ref, long property, PointerByReference value);\r\n"
         "    void WriteStringAtIndex(Pointer ref, long property, PointerByReference value, long index);\r\n"
         "    void WriteStringAtKey(Pointer ref, long property, PointerByReference value, Pointer key);\r\n"
-        "    void InsertStringAtIndex(Pointer ref, long property, PointerByReference value, long index);\r\n"
+        "    void insertStringAtIndex(Pointer ref, long property, PointerByReference value, long index);\r\n"
         "    Pointer ReadObject(Pointer ref, long property);\r\n"
         "    Pointer ReadObjectAtIndex(Pointer ref, long property, long index);\r\n"
         "    Pointer ReadObjectAtKey(Pointer ref, long property, Pointer key);\r\n"
@@ -146,9 +146,9 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "    void WriteObjectAtIndex(Pointer ref, long property, Pointer value, long index);\r\n"
         "    void WriteObjectAtKey(Pointer ref, long property, Pointer value, Pointer key);\r\n"
         "    Pointer AddObjectAtIndex(Pointer ref, long property, long objectType, long index);\r\n"
-        "    void InsertObjectAtIndex(Pointer ref, long property, Pointer value, long index);\r\n"
-        "    long GetCount(Pointer ref, long property);\r\n"
-        "    Pointer GetMapKeys(Pointer ref, long property);\r\n"
+        "    void insertObjectAtIndex(Pointer ref, long property, Pointer value, long index);\r\n"
+        "    long getCount(Pointer ref, long property);\r\n"
+        "    Pointer getMapKeys(Pointer ref, long property);\r\n"
         "    boolean IsContainKey(Pointer ref, long property, Pointer key);\r\n"
         "    void RemoveObject(Pointer ref, long property, Pointer value);\r\n"
         "    void RemoveAtIndex(Pointer ref, long property, long index);\r\n"
@@ -165,11 +165,11 @@ void ValidateGenerateEnum(const VPGJavaGenerationServiceTest *test, const std::w
     VPGGlobal::GetEnumClassReader()->Parse(enumClass1, enumClassList1);
     VPGGlobal::GetEnumClassReader()->Parse(enumClass2, enumClassList2);
 
-    std::wstring filePath1 = vcc::ConcatPaths({test->GetWorkspace(), test->GetJavaOption()->GetTypeDirectory(), L"VPGTypeA.java"});
-    std::wstring filePath2 = vcc::ConcatPaths({test->GetWorkspace(), test->GetJavaOption()->GetTypeDirectory(), L"VPGTypeBProperty.java"});
+    std::wstring filePath1 = vcc::ConcatPaths({test->getWorkspace(), test->getJavaOption()->getTypeDirectory(), L"VPGTypeA.java"});
+    std::wstring filePath2 = vcc::ConcatPaths({test->getWorkspace(), test->getJavaOption()->getTypeDirectory(), L"VPGTypeBProperty.java"});
     
-    VPGJavaGenerationService::GenerateEnum(test->GetLogConfig().get(), filePath1, L"", enumClassList1.at(0).get(), test->GetOption().get(), test->GetJavaOption().get());
-    VPGJavaGenerationService::GenerateEnum(test->GetLogConfig().get(), filePath2, L"", enumClassList2.at(0).get(), test->GetOption().get(), test->GetJavaOption().get());
+    VPGJavaGenerationService::GenerateEnum(test->getLogConfig().get(), filePath1, L"", enumClassList1.at(0).get(), test->getOption().get(), test->getJavaOption().get());
+    VPGJavaGenerationService::GenerateEnum(test->getLogConfig().get(), filePath2, L"", enumClassList2.at(0).get(), test->getOption().get(), test->getJavaOption().get());
     
     EXPECT_TRUE(vcc::IsFilePresent(filePath1));
     EXPECT_EQ(vcc::ReadFile(filePath1),
@@ -182,13 +182,13 @@ void ValidateGenerateEnum(const VPGJavaGenerationServiceTest *test, const std::w
         "    EnumB(1),\r\n"
         "    EnumC(2);\r\n"
         "\r\n"
-        "    public final Integer value;\r\n"
+        "    public final integer value;\r\n"
         "\r\n"
         "    VPGTypeA(Integer value) {\r\n"
         "        this.value = value;\r\n"
         "    }\r\n"
         "\r\n"
-        "    public Integer getValue() {\r\n"
+        "    public integer getValue() {\r\n"
         "        return value;\r\n"
         "    }\r\n"
         "\r\n"
@@ -214,13 +214,13 @@ void ValidateGenerateEnum(const VPGJavaGenerationServiceTest *test, const std::w
         "    EnumB(1),\r\n"
         "    EnumC(999);\r\n"
         "\r\n"
-        "    public final Integer value;\r\n"
+        "    public final integer value;\r\n"
         "\r\n"
         "    VPGTypeBProperty(Integer value) {\r\n"
         "        this.value = value;\r\n"
         "    }\r\n"
         "\r\n"
-        "    public Integer getValue() {\r\n"
+        "    public integer getValue() {\r\n"
         "        return value;\r\n"
         "    }\r\n"
         "\r\n"
@@ -287,8 +287,8 @@ void ValidateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
     VPGGlobal::GetEnumClassReader()->Parse(code, enumClassList);
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMap;
-    std::wstring filePath = vcc::ConcatPaths({test->GetWorkspace(), test->GetJavaOption()->GetObjectDirectory(), L"VPGTypeB.java"});
-    VPGJavaGenerationService::GenerateObject(test->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMap, typeWorkspaceClassRelativePathMap, test->GetOption().get(), test->GetJavaOption().get());
+    std::wstring filePath = vcc::ConcatPaths({test->getWorkspace(), test->getJavaOption()->getObjectDirectory(), L"VPGTypeB.java"});
+    VPGJavaGenerationService::GenerateObject(test->getLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMap, typeWorkspaceClassRelativePathMap, test->getOption().get(), test->getJavaOption().get());
     
     EXPECT_TRUE(vcc::IsFilePresent(filePath));
     EXPECT_EQ(vcc::ReadFile(filePath),
@@ -464,8 +464,8 @@ void ValidateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "        VPGDllFunctions.Instance.WriteIntAtKey(Handle, VPGTypeBProperty.Map.getValue(), value, keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
-        "    public Set<Integer> getMapKeys() {\r\n"
-        "        Set<Integer> result = new HashSet<>();\r\n"
+        "    public set<Integer> getMapKeys() {\r\n"
+        "        set<Integer> result = new HashSet<>();\r\n"
         "        Pointer ptrs = VPGDllFunctions.Instance.GetMapKeys(Handle, VPGTypeBProperty.Map.getValue());\r\n"
         "        long total = getMapCount();\r\n"
         "        for (var ptr : ptrs.getPointerArray(0)) {\r\n"
@@ -512,8 +512,8 @@ void ValidateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "        VPGDllFunctions.Instance.WriteIntAtKey(Handle, VPGTypeBProperty.OrderedMap.getValue(), value, keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
-        "    public Set<Integer> getOrderedMapKeys() {\r\n"
-        "        Set<Integer> result = new HashSet<>();\r\n"
+        "    public set<Integer> getOrderedMapKeys() {\r\n"
+        "        set<Integer> result = new HashSet<>();\r\n"
         "        Pointer ptrs = VPGDllFunctions.Instance.GetMapKeys(Handle, VPGTypeBProperty.OrderedMap.getValue());\r\n"
         "        long total = getOrderedMapCount();\r\n"
         "        for (var ptr : ptrs.getPointerArray(0)) {\r\n"
@@ -600,8 +600,8 @@ void ValidateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "        VPGDllFunctions.Instance.WriteObjectAtKey(Handle, VPGTypeBProperty.MapObject.getValue(), value.Handle, keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
-        "    public Set<String> getMapObjectKeys() {\r\n"
-        "        Set<String> result = new HashSet<>();\r\n"
+        "    public set<String> getMapObjectKeys() {\r\n"
+        "        set<String> result = new HashSet<>();\r\n"
         "        Pointer ptrs = VPGDllFunctions.Instance.GetMapKeys(Handle, VPGTypeBProperty.MapObject.getValue());\r\n"
         "        long total = getMapObjectCount();\r\n"
         "        for (var ptr : ptrs.getPointerArray(0)) {\r\n"
@@ -648,8 +648,8 @@ void ValidateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "        VPGDllFunctions.Instance.WriteObjectAtKey(Handle, VPGTypeBProperty.OrderedMapObject.getValue(), value.Handle, keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
-        "    public Set<Double> getOrderedMapObjectKeys() {\r\n"
-        "        Set<Double> result = new HashSet<>();\r\n"
+        "    public set<Double> getOrderedMapObjectKeys() {\r\n"
+        "        set<Double> result = new HashSet<>();\r\n"
         "        Pointer ptrs = VPGDllFunctions.Instance.GetMapKeys(Handle, VPGTypeBProperty.OrderedMapObject.getValue());\r\n"
         "        long total = getOrderedMapObjectCount();\r\n"
         "        for (var ptr : ptrs.getPointerArray(0)) {\r\n"
@@ -746,8 +746,8 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
     typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));
-    std::wstring filePath = vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGGitLog.java"});
-    VPGJavaGenerationService::GenerateObject(this->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm, this->GetOption().get(), this->GetJavaOption().get());
+    std::wstring filePath = vcc::ConcatPaths({this->getWorkspace(), this->getJavaOption()->getObjectDirectory(), L"VPGGitLog.java"});
+    VPGJavaGenerationService::GenerateObject(this->getLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm, this->getOption().get(), this->getJavaOption().get());
     
     EXPECT_TRUE(vcc::IsFilePresent(filePath));
     EXPECT_EQ(vcc::ReadFile(filePath),
@@ -846,8 +846,8 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateResult)
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
     typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));
-    std::wstring filePath = vcc::ConcatPaths({this->GetWorkspace(), this->GetJavaOption()->GetObjectDirectory(), L"VPGGitLog.java"});
-    VPGJavaGenerationService::GenerateObject(this->GetLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm, this->GetOption().get(), this->GetJavaOption().get());
+    std::wstring filePath = vcc::ConcatPaths({this->getWorkspace(), this->getJavaOption()->getObjectDirectory(), L"VPGGitLog.java"});
+    VPGJavaGenerationService::GenerateObject(this->getLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm, this->getOption().get(), this->getJavaOption().get());
     
     EXPECT_TRUE(vcc::IsFilePresent(filePath));
     EXPECT_EQ(vcc::ReadFile(filePath),

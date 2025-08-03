@@ -22,9 +22,9 @@ void VPGObjectTypeFileGenerationService::Generate(const vcc::LogConfig *logConfi
             auto reader = std::make_unique<VPGCodeReader>(L"//");
             auto element = std::make_shared<vcc::Xml>();
             reader->Deserialize(orginalContent, element);
-            for (std::shared_ptr<vcc::Xml> child : element->GetChildren()) {
-                if (vcc::IsStartWith(child->GetName(), L"vcc:custom")) {
-                    customContent = child->GetFullText();
+            for (std::shared_ptr<vcc::Xml> child : element->getChildren()) {
+                if (vcc::IsStartWith(child->getName(), L"vcc:custom")) {
+                    customContent = child->getFullText();
                     break;
                 }
             }
@@ -45,8 +45,8 @@ void VPGObjectTypeFileGenerationService::Generate(const vcc::LogConfig *logConfi
         if (!vcc::IsBlank(customContent))
             content += INDENT + customContent + L"\r\n";
         else
-            content += INDENT + GetVccTagHeaderCustomTypes(VPGCodeType::Cpp, L"ObjectType") + L"\r\n"
-                + INDENT + GetVccTagTailerCustomTypes(VPGCodeType::Cpp, L"ObjectType") + L"\r\n";
+            content += INDENT + getVccTagHeaderCustomTypes(VPGCodeType::Cpp, L"ObjectType") + L"\r\n"
+                + INDENT + getVccTagTailerCustomTypes(VPGCodeType::Cpp, L"ObjectType") + L"\r\n";
         content += L"};\r\n";
         vcc::WriteFile(filePathHpp, content, true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object type file completed.");

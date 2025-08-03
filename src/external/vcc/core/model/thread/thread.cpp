@@ -31,7 +31,7 @@ namespace vcc
             _Pid = std::this_thread::get_id();
             if (_Action) {
                 _State = ProcessState::Busy;
-                std::wstring id = IsBlank(_Id) ? (L"Thread." + GetPid()) : _Id;
+                std::wstring id = IsBlank(_Id) ? (L"Thread." + getPid()) : _Id;
                 LogService::LogThread(_LogConfig.get(), id, IsBlank(_MessageStart) ? L"Thread Start" : _MessageStart);
                 if (!IsBlank(_DebugMessage))
                     LogService::LogDebug(_LogConfig.get(), id, _DebugMessage);

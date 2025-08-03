@@ -17,7 +17,7 @@ bool VPGGitLogPropertyAccessor::_ReadBool(const int64_t &objectProperty) const
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::IsHead:
-            return obj->GetIsHead();
+            return obj->getIsHead();
         default:
             assert(false);
         }
@@ -49,7 +49,7 @@ void VPGGitLogPropertyAccessor::_WriteBool(const int64_t &objectProperty, const 
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::IsHead:
-            obj->SetIsHead(value);
+            obj->setIsHead(value);
             break;
         default:
             assert(false);
@@ -86,11 +86,11 @@ long VPGGitLogPropertyAccessor::_ReadLong(const int64_t &objectProperty) const
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::AuthorDate:
-            return obj->GetAuthorDate();
+            return obj->getAuthorDate();
         case VPGGitLogProperty::ColumnIndex:
-            return obj->GetColumnIndex();
+            return obj->getColumnIndex();
         case VPGGitLogProperty::CommitDate:
-            return obj->GetCommitDate();
+            return obj->getCommitDate();
         default:
             assert(false);
         }
@@ -122,13 +122,13 @@ void VPGGitLogPropertyAccessor::_WriteLong(const int64_t &objectProperty, const 
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::AuthorDate:
-            obj->SetAuthorDate(value);
+            obj->setAuthorDate(value);
             break;
         case VPGGitLogProperty::ColumnIndex:
-            obj->SetColumnIndex(value);
+            obj->setColumnIndex(value);
             break;
         case VPGGitLogProperty::CommitDate:
-            obj->SetCommitDate(value);
+            obj->setCommitDate(value);
             break;
         default:
             assert(false);
@@ -165,31 +165,31 @@ std::wstring VPGGitLogPropertyAccessor::_ReadString(const int64_t &objectPropert
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::AbbreviatedHashID:
-            return obj->GetAbbreviatedHashID();
+            return obj->getAbbreviatedHashID();
         case VPGGitLogProperty::AbbreviatedTreeHashID:
-            return obj->GetAbbreviatedTreeHashID();
+            return obj->getAbbreviatedTreeHashID();
         case VPGGitLogProperty::Author:
-            return obj->GetAuthor();
+            return obj->getAuthor();
         case VPGGitLogProperty::AuthorDateStr:
-            return obj->GetAuthorDateStr();
+            return obj->getAuthorDateStr();
         case VPGGitLogProperty::AuthorEmail:
-            return obj->GetAuthorEmail();
+            return obj->getAuthorEmail();
         case VPGGitLogProperty::CommitDateStr:
-            return obj->GetCommitDateStr();
+            return obj->getCommitDateStr();
         case VPGGitLogProperty::Committer:
-            return obj->GetCommitter();
+            return obj->getCommitter();
         case VPGGitLogProperty::CommitterEmail:
-            return obj->GetCommitterEmail();
+            return obj->getCommitterEmail();
         case VPGGitLogProperty::FullMessage:
-            return obj->GetFullMessage();
+            return obj->getFullMessage();
         case VPGGitLogProperty::HashID:
-            return obj->GetHashID();
+            return obj->getHashID();
         case VPGGitLogProperty::Message:
-            return obj->GetMessage();
+            return obj->getMessage();
         case VPGGitLogProperty::Title:
-            return obj->GetTitle();
+            return obj->getTitle();
         case VPGGitLogProperty::TreeHashID:
-            return obj->GetTreeHashID();
+            return obj->getTreeHashID();
         default:
             assert(false);
         }
@@ -206,13 +206,13 @@ std::wstring VPGGitLogPropertyAccessor::_ReadStringAtIndex(const int64_t &object
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::AbbreviatedParentHashIDs:
-            return obj->GetAbbreviatedParentHashIDsAtIndex(index);
+            return obj->getAbbreviatedParentHashIDsAtIndex(index);
         case VPGGitLogProperty::Branches:
-            return obj->GetBranchesAtIndex(index);
+            return obj->getBranchesAtIndex(index);
         case VPGGitLogProperty::ParentHashIDs:
-            return obj->GetParentHashIDsAtIndex(index);
+            return obj->getParentHashIDsAtIndex(index);
         case VPGGitLogProperty::Tags:
-            return obj->GetTagsAtIndex(index);
+            return obj->getTagsAtIndex(index);
         default:
             assert(false);
         }
@@ -236,43 +236,43 @@ void VPGGitLogPropertyAccessor::_WriteString(const int64_t &objectProperty, cons
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::AbbreviatedHashID:
-            obj->SetAbbreviatedHashID(value);
+            obj->setAbbreviatedHashID(value);
             break;
         case VPGGitLogProperty::AbbreviatedTreeHashID:
-            obj->SetAbbreviatedTreeHashID(value);
+            obj->setAbbreviatedTreeHashID(value);
             break;
         case VPGGitLogProperty::Author:
-            obj->SetAuthor(value);
+            obj->setAuthor(value);
             break;
         case VPGGitLogProperty::AuthorDateStr:
-            obj->SetAuthorDateStr(value);
+            obj->setAuthorDateStr(value);
             break;
         case VPGGitLogProperty::AuthorEmail:
-            obj->SetAuthorEmail(value);
+            obj->setAuthorEmail(value);
             break;
         case VPGGitLogProperty::CommitDateStr:
-            obj->SetCommitDateStr(value);
+            obj->setCommitDateStr(value);
             break;
         case VPGGitLogProperty::Committer:
-            obj->SetCommitter(value);
+            obj->setCommitter(value);
             break;
         case VPGGitLogProperty::CommitterEmail:
-            obj->SetCommitterEmail(value);
+            obj->setCommitterEmail(value);
             break;
         case VPGGitLogProperty::FullMessage:
-            obj->SetFullMessage(value);
+            obj->setFullMessage(value);
             break;
         case VPGGitLogProperty::HashID:
-            obj->SetHashID(value);
+            obj->setHashID(value);
             break;
         case VPGGitLogProperty::Message:
-            obj->SetMessage(value);
+            obj->setMessage(value);
             break;
         case VPGGitLogProperty::Title:
-            obj->SetTitle(value);
+            obj->setTitle(value);
             break;
         case VPGGitLogProperty::TreeHashID:
-            obj->SetTreeHashID(value);
+            obj->setTreeHashID(value);
             break;
         default:
             assert(false);
@@ -290,27 +290,27 @@ void VPGGitLogPropertyAccessor::_WriteStringAtIndex(const int64_t &objectPropert
         {
         case VPGGitLogProperty::AbbreviatedParentHashIDs:
             if (index > -1)
-                obj->SetAbbreviatedParentHashIDsAtIndex(index, value);
+                obj->setAbbreviatedParentHashIDsAtIndex(index, value);
             else
-                obj->InsertAbbreviatedParentHashIDs(value);
+                obj->insertAbbreviatedParentHashIDs(value);
             break;
         case VPGGitLogProperty::Branches:
             if (index > -1)
-                obj->SetBranchesAtIndex(index, value);
+                obj->setBranchesAtIndex(index, value);
             else
-                obj->InsertBranches(value);
+                obj->insertBranches(value);
             break;
         case VPGGitLogProperty::ParentHashIDs:
             if (index > -1)
-                obj->SetParentHashIDsAtIndex(index, value);
+                obj->setParentHashIDsAtIndex(index, value);
             else
-                obj->InsertParentHashIDs(value);
+                obj->insertParentHashIDs(value);
             break;
         case VPGGitLogProperty::Tags:
             if (index > -1)
-                obj->SetTagsAtIndex(index, value);
+                obj->setTagsAtIndex(index, value);
             else
-                obj->InsertTags(value);
+                obj->insertTags(value);
             break;
         default:
             assert(false);
@@ -335,27 +335,27 @@ void VPGGitLogPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProper
         {
         case VPGGitLogProperty::AbbreviatedParentHashIDs:
             if (index > -1)
-                obj->InsertAbbreviatedParentHashIDsAtIndex(index, value);
+                obj->insertAbbreviatedParentHashIDsAtIndex(index, value);
             else
-                obj->InsertAbbreviatedParentHashIDs(value);
+                obj->insertAbbreviatedParentHashIDs(value);
             break;
         case VPGGitLogProperty::Branches:
             if (index > -1)
-                obj->InsertBranchesAtIndex(index, value);
+                obj->insertBranchesAtIndex(index, value);
             else
-                obj->InsertBranches(value);
+                obj->insertBranches(value);
             break;
         case VPGGitLogProperty::ParentHashIDs:
             if (index > -1)
-                obj->InsertParentHashIDsAtIndex(index, value);
+                obj->insertParentHashIDsAtIndex(index, value);
             else
-                obj->InsertParentHashIDs(value);
+                obj->insertParentHashIDs(value);
             break;
         case VPGGitLogProperty::Tags:
             if (index > -1)
-                obj->InsertTagsAtIndex(index, value);
+                obj->insertTagsAtIndex(index, value);
             else
-                obj->InsertTags(value);
+                obj->insertTags(value);
             break;
         default:
             assert(false);
@@ -371,13 +371,13 @@ size_t VPGGitLogPropertyAccessor::_GetCount(const int64_t &objectProperty) const
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::ParentHashIDs:
-            return obj->GetParentHashIDs().size();
+            return obj->getParentHashIDs().size();
         case VPGGitLogProperty::AbbreviatedParentHashIDs:
-            return obj->GetAbbreviatedParentHashIDs().size();
+            return obj->getAbbreviatedParentHashIDs().size();
         case VPGGitLogProperty::Branches:
-            return obj->GetBranches().size();
+            return obj->getBranches().size();
         case VPGGitLogProperty::Tags:
-            return obj->GetTags().size();
+            return obj->getTags().size();
         default:
             assert(false);
         }

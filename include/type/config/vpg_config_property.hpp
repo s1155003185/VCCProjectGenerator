@@ -86,44 +86,44 @@ enum class VPGConfigProperty
     Template, // GETSET_SPTR(VPGConfigTemplate, Template)
 
     // Template - Getter
-    TemplateUrl, // GETCUSTOM(std::wstring, TemplateUrl, return this->GetTemplate() != nullptr ? this->GetTemplate()->GetUrl() : std::make_shared<VPGConfigTemplate>()->GetUrl();) @@NoJson
-    TemplateWorkspace, // GETCUSTOM(std::wstring, TemplateWorkspace, return this->GetTemplate() != nullptr ? this->GetTemplate()->GetWorkspace() : std::make_shared<VPGConfigTemplate>()->GetWorkspace();) @@NoJson
-    TemplateIsExcludeUnittest, // GETCUSTOM(bool, TemplateIsExcludeUnittest, return this->GetTemplate() != nullptr ? this->GetTemplate()->GetIsExcludeUnittest() : std::make_shared<VPGConfigTemplate>()->GetIsExcludeUnittest();) @@NoJson
-    TemplateIsExcludeVCCUnitTest, // GETCUSTOM(bool, TemplateIsExcludeVCCUnitTest, return this->GetTemplate() != nullptr ? this->GetTemplate()->GetIsExcludeVCCUnitTest() : std::make_shared<VPGConfigTemplate>()->GetIsExcludeVCCUnitTest();) @@NoJson
+    TemplateUrl, // GETCUSTOM(std::wstring, TemplateUrl, return this->getTemplate() != nullptr ? this->getTemplate()->getUrl() : std::make_shared<VPGConfigTemplate>()->getUrl();) @@NoJson
+    TemplateWorkspace, // GETCUSTOM(std::wstring, TemplateWorkspace, return this->getTemplate() != nullptr ? this->getTemplate()->getWorkspace() : std::make_shared<VPGConfigTemplate>()->getWorkspace();) @@NoJson
+    TemplateIsExcludeUnittest, // GETCUSTOM(bool, TemplateIsExcludeUnittest, return this->getTemplate() != nullptr ? this->getTemplate()->getIsExcludeUnittest() : std::make_shared<VPGConfigTemplate>()->getIsExcludeUnittest();) @@NoJson
+    TemplateIsExcludeVCCUnitTest, // GETCUSTOM(bool, TemplateIsExcludeVCCUnitTest, return this->getTemplate() != nullptr ? this->getTemplate()->getIsExcludeVCCUnitTest() : std::make_shared<VPGConfigTemplate>()->getIsExcludeVCCUnitTest();) @@NoJson
     
     // Behavior
     Behavior, // GETSET_SPTR(VPGConfigBehavior, Behavior)
 
     // Behavior - Getter
-    BehaviorActionHistoryType, // GETCUSTOM(VPGConfigActionHistoryType, BehaviorActionHistoryType, return this->GetBehavior() != nullptr ? this->GetBehavior()->GetActionHistoryType() : std::make_shared<VPGConfigBehavior>()->GetActionHistoryType();) @@NoJson
-    BehaviorIsActionResultThrowException, // GETCUSTOM(bool, BehaviorIsActionResultThrowException, return this->GetBehavior() != nullptr ? this->GetBehavior()->GetIsActionResultThrowException() : std::make_shared<VPGConfigBehavior>()->GetIsActionResultThrowException();) @@NoJson
+    BehaviorActionHistoryType, // GETCUSTOM(VPGConfigActionHistoryType, BehaviorActionHistoryType, return this->getBehavior() != nullptr ? this->getBehavior()->getActionHistoryType() : std::make_shared<VPGConfigBehavior>()->getActionHistoryType();) @@NoJson
+    BehaviorIsActionResultThrowException, // GETCUSTOM(bool, BehaviorIsActionResultThrowException, return this->getBehavior() != nullptr ? this->getBehavior()->getIsActionResultThrowException() : std::make_shared<VPGConfigBehavior>()->getIsActionResultThrowException();) @@NoJson
 
     // Input
     Input, // GETSET_SPTR(VPGConfigInput, Input)
 
     // Input - Getter
-    InputTypeWorkspace, // GETCUSTOM(std::wstring, InputTypeWorkspace, return this->GetInput() != nullptr ? this->GetInput()->GetTypeWorkspace() : std::make_shared<VPGConfigInput>()->GetTypeWorkspace();) @@NoJson
+    InputTypeWorkspace, // GETCUSTOM(std::wstring, InputTypeWorkspace, return this->getInput() != nullptr ? this->getInput()->getTypeWorkspace() : std::make_shared<VPGConfigInput>()->getTypeWorkspace();) @@NoJson
 
     // Output
     Output, // GETSET_SPTR(VPGConfigOutput, Output)
 
     // Output - Getter
-    OutputExceptionTypeDirectory, // GETCUSTOM(std::wstring, OutputExceptionTypeDirectory, return this->GetOutput() != nullptr ? this->GetOutput()->GetExceptionTypeDirectory() : std::make_shared<VPGConfigOutput>()->GetExceptionTypeDirectory();) @@NoJson
-    OutputObjectTypeDirectory, // GETCUSTOM(std::wstring, OutputObjectTypeDirectory, return this->GetOutput() != nullptr ? this->GetOutput()->GetObjectTypeDirectory() : std::make_shared<VPGConfigOutput>()->GetObjectTypeDirectory();) @@NoJson
-    OutputApplicationDirectoryHpp, // GETCUSTOM(std::wstring, OutputApplicationDirectoryHpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetApplicationDirectoryHpp() : std::make_shared<VPGConfigOutput>()->GetApplicationDirectoryHpp();) @@NoJson
-    OutputApplicationDirectoryCpp, // GETCUSTOM(std::wstring, OutputApplicationDirectoryCpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetApplicationDirectoryCpp() : std::make_shared<VPGConfigOutput>()->GetApplicationDirectoryCpp();) @@NoJson
-    OutputActionDirectoryHpp, // GETCUSTOM(std::wstring, OutputActionDirectoryHpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetActionDirectoryHpp() : std::make_shared<VPGConfigOutput>()->GetActionDirectoryHpp();) @@NoJson
-    OutputActionDirectoryCpp, // GETCUSTOM(std::wstring, OutputActionDirectoryCpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetActionDirectoryCpp() : std::make_shared<VPGConfigOutput>()->GetActionDirectoryCpp();) @@NoJson
-    OutputFormDirectoryHpp, // GETCUSTOM(std::wstring, OutputFormDirectoryHpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetFormDirectoryHpp() : std::make_shared<VPGConfigOutput>()->GetFormDirectoryHpp();) @@NoJson
-    OutputFormDirectoryCpp, // GETCUSTOM(std::wstring, OutputFormDirectoryCpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetFormDirectoryCpp() : std::make_shared<VPGConfigOutput>()->GetFormDirectoryCpp();) @@NoJson
-    OutputObjectDirectoryHpp, // GETCUSTOM(std::wstring, OutputObjectDirectoryHpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetObjectDirectoryHpp() : std::make_shared<VPGConfigOutput>()->GetObjectDirectoryHpp();) @@NoJson
-    OutputObjectDirectoryCpp, // GETCUSTOM(std::wstring, OutputObjectDirectoryCpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetObjectDirectoryCpp() : std::make_shared<VPGConfigOutput>()->GetObjectDirectoryCpp();) @@NoJson
-    OutputPropertyAccessorDirectoryHpp, // GETCUSTOM(std::wstring, OutputPropertyAccessorDirectoryHpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetPropertyAccessorDirectoryHpp() : std::make_shared<VPGConfigOutput>()->GetPropertyAccessorDirectoryHpp();) @@NoJson
-    OutputPropertyAccessorDirectoryCpp, // GETCUSTOM(std::wstring, OutputPropertyAccessorDirectoryCpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetPropertyAccessorDirectoryCpp() : std::make_shared<VPGConfigOutput>()->GetPropertyAccessorDirectoryCpp();) @@NoJson
-    OutputObjectFactoryDirectoryHpp, // GETCUSTOM(std::wstring, OutputObjectFactoryDirectoryHpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetObjectFactoryDirectoryHpp() : std::make_shared<VPGConfigOutput>()->GetObjectFactoryDirectoryHpp();) @@NoJson
-    OutputObjectFactoryDirectoryCpp, // GETCUSTOM(std::wstring, OutputObjectFactoryDirectoryCpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetObjectFactoryDirectoryCpp() : std::make_shared<VPGConfigOutput>()->GetObjectFactoryDirectoryCpp();) @@NoJson
-    OutputPropertyAccessorFactoryDirectoryHpp, // GETCUSTOM(std::wstring, OutputPropertyAccessorFactoryDirectoryHpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetPropertyAccessorFactoryDirectoryHpp() : std::make_shared<VPGConfigOutput>()->GetPropertyAccessorFactoryDirectoryHpp();) @@NoJson
-    OutputPropertyAccessorFactoryDirectoryCpp, // GETCUSTOM(std::wstring, OutputPropertyAccessorFactoryDirectoryCpp, return this->GetOutput() != nullptr ? this->GetOutput()->GetPropertyAccessorFactoryDirectoryCpp() : std::make_shared<VPGConfigOutput>()->GetPropertyAccessorFactoryDirectoryCpp();) @@NoJson
+    OutputExceptionTypeDirectory, // GETCUSTOM(std::wstring, OutputExceptionTypeDirectory, return this->getOutput() != nullptr ? this->getOutput()->getExceptionTypeDirectory() : std::make_shared<VPGConfigOutput>()->getExceptionTypeDirectory();) @@NoJson
+    OutputObjectTypeDirectory, // GETCUSTOM(std::wstring, OutputObjectTypeDirectory, return this->getOutput() != nullptr ? this->getOutput()->getObjectTypeDirectory() : std::make_shared<VPGConfigOutput>()->getObjectTypeDirectory();) @@NoJson
+    OutputApplicationDirectoryHpp, // GETCUSTOM(std::wstring, OutputApplicationDirectoryHpp, return this->getOutput() != nullptr ? this->getOutput()->getApplicationDirectoryHpp() : std::make_shared<VPGConfigOutput>()->getApplicationDirectoryHpp();) @@NoJson
+    OutputApplicationDirectoryCpp, // GETCUSTOM(std::wstring, OutputApplicationDirectoryCpp, return this->getOutput() != nullptr ? this->getOutput()->getApplicationDirectoryCpp() : std::make_shared<VPGConfigOutput>()->getApplicationDirectoryCpp();) @@NoJson
+    OutputActionDirectoryHpp, // GETCUSTOM(std::wstring, OutputActionDirectoryHpp, return this->getOutput() != nullptr ? this->getOutput()->getActionDirectoryHpp() : std::make_shared<VPGConfigOutput>()->getActionDirectoryHpp();) @@NoJson
+    OutputActionDirectoryCpp, // GETCUSTOM(std::wstring, OutputActionDirectoryCpp, return this->getOutput() != nullptr ? this->getOutput()->getActionDirectoryCpp() : std::make_shared<VPGConfigOutput>()->getActionDirectoryCpp();) @@NoJson
+    OutputFormDirectoryHpp, // GETCUSTOM(std::wstring, OutputFormDirectoryHpp, return this->getOutput() != nullptr ? this->getOutput()->getFormDirectoryHpp() : std::make_shared<VPGConfigOutput>()->getFormDirectoryHpp();) @@NoJson
+    OutputFormDirectoryCpp, // GETCUSTOM(std::wstring, OutputFormDirectoryCpp, return this->getOutput() != nullptr ? this->getOutput()->getFormDirectoryCpp() : std::make_shared<VPGConfigOutput>()->getFormDirectoryCpp();) @@NoJson
+    OutputObjectDirectoryHpp, // GETCUSTOM(std::wstring, OutputObjectDirectoryHpp, return this->getOutput() != nullptr ? this->getOutput()->getObjectDirectoryHpp() : std::make_shared<VPGConfigOutput>()->getObjectDirectoryHpp();) @@NoJson
+    OutputObjectDirectoryCpp, // GETCUSTOM(std::wstring, OutputObjectDirectoryCpp, return this->getOutput() != nullptr ? this->getOutput()->getObjectDirectoryCpp() : std::make_shared<VPGConfigOutput>()->getObjectDirectoryCpp();) @@NoJson
+    OutputPropertyAccessorDirectoryHpp, // GETCUSTOM(std::wstring, OutputPropertyAccessorDirectoryHpp, return this->getOutput() != nullptr ? this->getOutput()->getPropertyAccessorDirectoryHpp() : std::make_shared<VPGConfigOutput>()->getPropertyAccessorDirectoryHpp();) @@NoJson
+    OutputPropertyAccessorDirectoryCpp, // GETCUSTOM(std::wstring, OutputPropertyAccessorDirectoryCpp, return this->getOutput() != nullptr ? this->getOutput()->getPropertyAccessorDirectoryCpp() : std::make_shared<VPGConfigOutput>()->getPropertyAccessorDirectoryCpp();) @@NoJson
+    OutputObjectFactoryDirectoryHpp, // GETCUSTOM(std::wstring, OutputObjectFactoryDirectoryHpp, return this->getOutput() != nullptr ? this->getOutput()->getObjectFactoryDirectoryHpp() : std::make_shared<VPGConfigOutput>()->getObjectFactoryDirectoryHpp();) @@NoJson
+    OutputObjectFactoryDirectoryCpp, // GETCUSTOM(std::wstring, OutputObjectFactoryDirectoryCpp, return this->getOutput() != nullptr ? this->getOutput()->getObjectFactoryDirectoryCpp() : std::make_shared<VPGConfigOutput>()->getObjectFactoryDirectoryCpp();) @@NoJson
+    OutputPropertyAccessorFactoryDirectoryHpp, // GETCUSTOM(std::wstring, OutputPropertyAccessorFactoryDirectoryHpp, return this->getOutput() != nullptr ? this->getOutput()->getPropertyAccessorFactoryDirectoryHpp() : std::make_shared<VPGConfigOutput>()->getPropertyAccessorFactoryDirectoryHpp();) @@NoJson
+    OutputPropertyAccessorFactoryDirectoryCpp, // GETCUSTOM(std::wstring, OutputPropertyAccessorFactoryDirectoryCpp, return this->getOutput() != nullptr ? this->getOutput()->getPropertyAccessorFactoryDirectoryCpp() : std::make_shared<VPGConfigOutput>()->getPropertyAccessorFactoryDirectoryCpp();) @@NoJson
 
     Plugins, // VECTOR(std::wstring, Plugins)
 

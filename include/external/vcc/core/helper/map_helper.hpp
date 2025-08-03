@@ -25,9 +25,9 @@ namespace vcc
 
     // Search
     template <typename A, typename B>
-    std::set<A> GetKeys(const std::map<A, B> &sourceMap);
+    std::set<A> getKeys(const std::map<A, B> &sourceMap);
     template <typename A, typename B>
-    std::set<void *> GetVoidKeys(const std::map<A, B> &sourceMap);
+    std::set<void *> getVoidKeys(const std::map<A, B> &sourceMap);
     template <typename A, typename B>
     std::set<A> Find(const std::map<A, B> &sourceMap, const B &obj);
     template <typename A, typename B>
@@ -35,13 +35,13 @@ namespace vcc
 
     // Set
     template <typename A, typename B>
-    void Set(std::map<A, B> &sourceMap, const A &key, const B &value);
+    void set(std::map<A, B> &sourceMap, const A &key, const B &value);
     template <typename A, typename B>
-    void Set(std::map<A, B> &sourceMap, const std::map<A, B> &appendMap);
+    void set(std::map<A, B> &sourceMap, const std::map<A, B> &appendMap);
     template <typename A, typename B>
-    void SetIObject(std::map<A, std::shared_ptr<B>> &sourceMap, A key, std::shared_ptr<IObject> value);
+    void setIObject(std::map<A, std::shared_ptr<B>> &sourceMap, A key, std::shared_ptr<IObject> value);
     template <typename A, typename B>
-    void SetIObjects(std::map<A, std::shared_ptr<B>> &sourceMap, const std::map<A, std::shared_ptr<B>> &appendMap);
+    void setIObjects(std::map<A, std::shared_ptr<B>> &sourceMap, const std::map<A, std::shared_ptr<B>> &appendMap);
     
     template <typename A, typename B>
     void RemoveAtKey(std::map<A, B> &sourceMap, const A& key);
@@ -79,7 +79,7 @@ namespace vcc
     }
 
     template <typename A, typename B>
-    std::set<A> GetKeys(const std::map<A, B> &sourceMap)
+    std::set<A> getKeys(const std::map<A, B> &sourceMap)
     {
         std::set<A> result;
         for (auto const &pair : sourceMap)
@@ -88,7 +88,7 @@ namespace vcc
     }
 
     template <typename A, typename B>
-    std::set<void *> GetVoidKeys(const std::map<A, B> &sourceMap)
+    std::set<void *> getVoidKeys(const std::map<A, B> &sourceMap)
     {
         std::set<void *> result;
         for (auto const &pair : sourceMap)
@@ -118,7 +118,7 @@ namespace vcc
     }
 
     template <typename A, typename B>
-    void Set(std::map<A, B> &sourceMap, const A &key, const B &value)
+    void set(std::map<A, B> &sourceMap, const A &key, const B &value)
     {
         if (sourceMap.find(key) != sourceMap.end())
             sourceMap[key] = value;
@@ -127,14 +127,14 @@ namespace vcc
     }
 
     template <typename A, typename B>
-    void Set(std::map<A, B> &sourceMap, const std::map<A, B> &appendMap)
+    void set(std::map<A, B> &sourceMap, const std::map<A, B> &appendMap)
     {
         for (auto const &pair : appendMap)
-            Set(sourceMap, pair.first, pair.second);
+            set(sourceMap, pair.first, pair.second);
     }
 
     template <typename A, typename B>
-    void SetIObject(std::map<A, std::shared_ptr<B>> &sourceMap, A key, std::shared_ptr<IObject> value)
+    void setIObject(std::map<A, std::shared_ptr<B>> &sourceMap, A key, std::shared_ptr<IObject> value)
     {
         auto derivedObj = std::dynamic_pointer_cast<B>(value);
         assert(derivedObj != nullptr);
@@ -145,9 +145,9 @@ namespace vcc
     }
 
     template <typename A, typename B>
-    void SetIObjects(std::map<A, std::shared_ptr<B>> &sourceMap, const std::map<A, std::shared_ptr<B>> &appendMap)
+    void setIObjects(std::map<A, std::shared_ptr<B>> &sourceMap, const std::map<A, std::shared_ptr<B>> &appendMap)
     {
-        Set(sourceMap, appendMap);
+        set(sourceMap, appendMap);
     }
 
     template <typename A, typename B>

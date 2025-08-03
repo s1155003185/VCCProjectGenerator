@@ -76,7 +76,7 @@ void VPGObjectFactoryFileGenerationService::GenerateCpp(const vcc::LogConfig *lo
             + INDENT + INDENT + INDENT + L"break;\r\n"
             + INDENT + INDENT + L"}\r\n"
             + INDENT + INDENT + L"if (result != nullptr)\r\n"
-            + INDENT + INDENT + INDENT + L"result->SetParentObject(parentObject);\r\n"
+            + INDENT + INDENT + INDENT + L"result->setParentObject(parentObject);\r\n"
             + INDENT + L"CATCH\r\n"
             + INDENT + L"return result;\r\n"
             "}\r\n";

@@ -17,7 +17,7 @@ namespace vcc
         GETSET(std::wstring, ColonValueSpace, L" ");
 
         private:
-            std::wstring GetCurrentIndent() const;
+            std::wstring getCurrentIndent() const;
 
         protected:
             void ParseJsonObject(const std::wstring &str, size_t &pos, std::shared_ptr<Json> doc) const;

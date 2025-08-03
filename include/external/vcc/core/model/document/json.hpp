@@ -37,61 +37,61 @@ namespace vcc
             
             virtual std::shared_ptr<IObject> Clone() const override;
 
-            JsonInternalType GetJsonType(const std::wstring &key) const;
-            std::vector<std::wstring> GetKeys(/*bool isRecursive = false*/) const; // TODO: Recursive
+            JsonInternalType getJsonType(const std::wstring &key) const;
+            std::vector<std::wstring> getKeys(/*bool isRecursive = false*/) const; // TODO: Recursive
             bool IsContainKey(const std::wstring &key/*, bool isRecursive = false*/) const; // TODO: Recursive
 
             bool IsNull(const std::wstring &key) const;
-            void SetNull(const std::wstring &key) const;
+            void setNull(const std::wstring &key) const;
             void AddNull(const std::wstring &key) const;
 
-            bool GetBool(const std::wstring &key) const;
-            void SetBool(const std::wstring &key, bool value) const;
+            bool getBool(const std::wstring &key) const;
+            void setBool(const std::wstring &key, bool value) const;
             void AddBool(const std::wstring &key, bool value) const;
 
-            float GetFloat(const std::wstring &key) const;
-            double GetDouble(const std::wstring &key) const;
-            size_t GetDecimalPlaces(const std::wstring &key) const;
-            void SetDouble(const std::wstring &key, double value, size_t decimalPlaces) const;
+            float getFloat(const std::wstring &key) const;
+            double getDouble(const std::wstring &key) const;
+            size_t getDecimalPlaces(const std::wstring &key) const;
+            void setDouble(const std::wstring &key, double value, size_t decimalPlaces) const;
             void AddDouble(const std::wstring &key, double value, size_t decimalPlaces) const;
 
-            int GetInt32(const std::wstring &key) const;
-            int64_t GetInt64(const std::wstring &key) const;
-            void SetInt(const std::wstring &key, int64_t value) const;
+            int getInt32(const std::wstring &key) const;
+            int64_t getInt64(const std::wstring &key) const;
+            void setInt(const std::wstring &key, int64_t value) const;
             void AddInt(const std::wstring &key, int64_t value) const;
 
-            char GetChar(const std::wstring &key) const;
-            wchar_t GetWchar(const std::wstring &key) const;
-            std::wstring GetString(const std::wstring &key) const;
-            void SetString(const std::wstring &key, const std::wstring &value) const;
+            char getChar(const std::wstring &key) const;
+            wchar_t getWchar(const std::wstring &key) const;
+            std::wstring getString(const std::wstring &key) const;
+            void setString(const std::wstring &key, const std::wstring &value) const;
             void AddString(const std::wstring &key, const std::wstring &value) const;
 
-            std::shared_ptr<Json> GetObject(const std::wstring &key) const;
-            //void SetObject(const std::wstring &key, std::shared_ptr<Json> object) const;
+            std::shared_ptr<Json> getObject(const std::wstring &key) const;
+            //void setObject(const std::wstring &key, std::shared_ptr<Json> object) const;
             void AddObject(const std::wstring &key, std::shared_ptr<Json> object) const;
 
             std::vector<std::shared_ptr<Json>> &GetArray(const std::wstring &key) const;
-            //void SetArray(const std::wstring &key, std::shared_ptr<Json> array) const;
+            //void setArray(const std::wstring &key, std::shared_ptr<Json> array) const;
             void AddArray(const std::wstring &key, std::shared_ptr<Json> array) const;
             
             // Array
             void AddArrayNull() const;
 
-            bool GetArrayElementBool() const;
+            bool getArrayElementBool() const;
             void AddArrayBool(bool value) const;
 
-            double GetArrayElementDouble() const;
+            double getArrayElementDouble() const;
             void AddArrayDouble(double value, size_t decimalPlaces) const;
             
-            int64_t GetArrayElementInt64() const;
+            int64_t getArrayElementInt64() const;
             void AddArrayInt(int64_t value) const;
 
-            char GetArrayElementChar() const;
-            wchar_t GetArrayElementWchar() const;
-            std::wstring GetArrayElementString() const;
+            char getArrayElementChar() const;
+            wchar_t getArrayElementWchar() const;
+            std::wstring getArrayElementString() const;
             void AddArrayString(const std::wstring &value) const;
 
-            std::shared_ptr<Json> GetArrayElementObject() const;
+            std::shared_ptr<Json> getArrayElementObject() const;
             void AddArrayObject(std::shared_ptr<Json> object) const;
             
             void AddArrayArray(std::shared_ptr<Json> array) const;

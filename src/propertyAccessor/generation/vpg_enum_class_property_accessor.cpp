@@ -20,39 +20,39 @@ bool VPGEnumClassAttributePropertyAccessor::_ReadBool(const int64_t &objectPrope
         switch(static_cast<VPGEnumClassAttributeProperty>(objectProperty))
         {
         case VPGEnumClassAttributeProperty::IsAction:
-            return obj->GetIsAction();
+            return obj->getIsAction();
         case VPGEnumClassAttributeProperty::IsCollection:
-            return obj->GetIsCollection();
+            return obj->getIsCollection();
         case VPGEnumClassAttributeProperty::IsCustom:
-            return obj->GetIsCustom();
+            return obj->getIsCustom();
         case VPGEnumClassAttributeProperty::IsGeneralType:
-            return obj->GetIsGeneralType();
+            return obj->getIsGeneralType();
         case VPGEnumClassAttributeProperty::IsHavingValidate:
-            return obj->GetIsHavingValidate();
+            return obj->getIsHavingValidate();
         case VPGEnumClassAttributeProperty::IsInherit:
-            return obj->GetIsInherit();
+            return obj->getIsInherit();
         case VPGEnumClassAttributeProperty::IsInitializeInClassConstructorNeeded:
-            return obj->GetIsInitializeInClassConstructorNeeded();
+            return obj->getIsInitializeInClassConstructorNeeded();
         case VPGEnumClassAttributeProperty::IsManager:
-            return obj->GetIsManager();
+            return obj->getIsManager();
         case VPGEnumClassAttributeProperty::IsMap:
-            return obj->GetIsMap();
+            return obj->getIsMap();
         case VPGEnumClassAttributeProperty::IsNoHistory:
-            return obj->GetIsNoHistory();
+            return obj->getIsNoHistory();
         case VPGEnumClassAttributeProperty::IsNoJson:
-            return obj->GetIsNoJson();
+            return obj->getIsNoJson();
         case VPGEnumClassAttributeProperty::IsObject:
-            return obj->GetIsObject();
+            return obj->getIsObject();
         case VPGEnumClassAttributeProperty::IsOrderedMap:
-            return obj->GetIsOrderedMap();
+            return obj->getIsOrderedMap();
         case VPGEnumClassAttributeProperty::IsSet:
-            return obj->GetIsSet();
+            return obj->getIsSet();
         case VPGEnumClassAttributeProperty::IsType1Custom:
-            return obj->GetIsType1Custom();
+            return obj->getIsType1Custom();
         case VPGEnumClassAttributeProperty::IsType2Custom:
-            return obj->GetIsType2Custom();
+            return obj->getIsType2Custom();
         case VPGEnumClassAttributeProperty::IsVector:
-            return obj->GetIsVector();
+            return obj->getIsVector();
         default:
             assert(false);
         }
@@ -84,13 +84,13 @@ void VPGEnumClassAttributePropertyAccessor::_WriteBool(const int64_t &objectProp
         switch(static_cast<VPGEnumClassAttributeProperty>(objectProperty))
         {
         case VPGEnumClassAttributeProperty::IsInherit:
-            obj->SetIsInherit(value);
+            obj->setIsInherit(value);
             break;
         case VPGEnumClassAttributeProperty::IsNoHistory:
-            obj->SetIsNoHistory(value);
+            obj->setIsNoHistory(value);
             break;
         case VPGEnumClassAttributeProperty::IsNoJson:
-            obj->SetIsNoJson(value);
+            obj->setIsNoJson(value);
             break;
         default:
             assert(false);
@@ -127,13 +127,13 @@ long VPGEnumClassAttributePropertyAccessor::_ReadLong(const int64_t &objectPrope
         switch(static_cast<VPGEnumClassAttributeProperty>(objectProperty))
         {
         case VPGEnumClassAttributeProperty::AccessMode:
-            return static_cast<long>(obj->GetAccessMode());
+            return static_cast<long>(obj->getAccessMode());
         case VPGEnumClassAttributeProperty::EnumValue:
-            return obj->GetEnumValue();
+            return obj->getEnumValue();
         case VPGEnumClassAttributeProperty::MacroType:
-            return static_cast<long>(obj->GetMacroType());
+            return static_cast<long>(obj->getMacroType());
         case VPGEnumClassAttributeProperty::PropertyType:
-            return static_cast<long>(obj->GetPropertyType());
+            return static_cast<long>(obj->getPropertyType());
         default:
             assert(false);
         }
@@ -165,16 +165,16 @@ void VPGEnumClassAttributePropertyAccessor::_WriteLong(const int64_t &objectProp
         switch(static_cast<VPGEnumClassAttributeProperty>(objectProperty))
         {
         case VPGEnumClassAttributeProperty::AccessMode:
-            obj->SetAccessMode(static_cast<VPGEnumClassAttributeAccessMode>(value));
+            obj->setAccessMode(static_cast<VPGEnumClassAttributeAccessMode>(value));
             break;
         case VPGEnumClassAttributeProperty::EnumValue:
-            obj->SetEnumValue(value);
+            obj->setEnumValue(value);
             break;
         case VPGEnumClassAttributeProperty::MacroType:
-            obj->SetMacroType(static_cast<VPGEnumClassMacroType>(value));
+            obj->setMacroType(static_cast<VPGEnumClassMacroType>(value));
             break;
         case VPGEnumClassAttributeProperty::PropertyType:
-            obj->SetPropertyType(static_cast<VPGEnumClassAttributeType>(value));
+            obj->setPropertyType(static_cast<VPGEnumClassAttributeType>(value));
             break;
         default:
             assert(false);
@@ -211,25 +211,25 @@ std::wstring VPGEnumClassAttributePropertyAccessor::_ReadString(const int64_t &o
         switch(static_cast<VPGEnumClassAttributeProperty>(objectProperty))
         {
         case VPGEnumClassAttributeProperty::ActionResultRedoClass:
-            return obj->GetActionResultRedoClass();
+            return obj->getActionResultRedoClass();
         case VPGEnumClassAttributeProperty::ActionResultUndoClass:
-            return obj->GetActionResultUndoClass();
+            return obj->getActionResultUndoClass();
         case VPGEnumClassAttributeProperty::Command:
-            return obj->GetCommand();
+            return obj->getCommand();
         case VPGEnumClassAttributeProperty::DefaultValue:
-            return obj->GetDefaultValue();
+            return obj->getDefaultValue();
         case VPGEnumClassAttributeProperty::Enum:
-            return obj->GetEnum();
+            return obj->getEnum();
         case VPGEnumClassAttributeProperty::Macro:
-            return obj->GetMacro();
+            return obj->getMacro();
         case VPGEnumClassAttributeProperty::PropertyName:
-            return obj->GetPropertyName();
+            return obj->getPropertyName();
         case VPGEnumClassAttributeProperty::Type1:
-            return obj->GetType1();
+            return obj->getType1();
         case VPGEnumClassAttributeProperty::Type2:
-            return obj->GetType2();
+            return obj->getType2();
         case VPGEnumClassAttributeProperty::Validate:
-            return obj->GetValidate();
+            return obj->getValidate();
         default:
             assert(false);
         }
@@ -246,7 +246,7 @@ std::wstring VPGEnumClassAttributePropertyAccessor::_ReadStringAtIndex(const int
         switch(static_cast<VPGEnumClassAttributeProperty>(objectProperty))
         {
         case VPGEnumClassAttributeProperty::InitializeProperties:
-            return obj->GetInitializePropertiesAtIndex(index);
+            return obj->getInitializePropertiesAtIndex(index);
         default:
             assert(false);
         }
@@ -270,34 +270,34 @@ void VPGEnumClassAttributePropertyAccessor::_WriteString(const int64_t &objectPr
         switch(static_cast<VPGEnumClassAttributeProperty>(objectProperty))
         {
         case VPGEnumClassAttributeProperty::ActionResultRedoClass:
-            obj->SetActionResultRedoClass(value);
+            obj->setActionResultRedoClass(value);
             break;
         case VPGEnumClassAttributeProperty::ActionResultUndoClass:
-            obj->SetActionResultUndoClass(value);
+            obj->setActionResultUndoClass(value);
             break;
         case VPGEnumClassAttributeProperty::Command:
-            obj->SetCommand(value);
+            obj->setCommand(value);
             break;
         case VPGEnumClassAttributeProperty::DefaultValue:
-            obj->SetDefaultValue(value);
+            obj->setDefaultValue(value);
             break;
         case VPGEnumClassAttributeProperty::Enum:
-            obj->SetEnum(value);
+            obj->setEnum(value);
             break;
         case VPGEnumClassAttributeProperty::Macro:
-            obj->SetMacro(value);
+            obj->setMacro(value);
             break;
         case VPGEnumClassAttributeProperty::PropertyName:
-            obj->SetPropertyName(value);
+            obj->setPropertyName(value);
             break;
         case VPGEnumClassAttributeProperty::Type1:
-            obj->SetType1(value);
+            obj->setType1(value);
             break;
         case VPGEnumClassAttributeProperty::Type2:
-            obj->SetType2(value);
+            obj->setType2(value);
             break;
         case VPGEnumClassAttributeProperty::Validate:
-            obj->SetValidate(value);
+            obj->setValidate(value);
             break;
         default:
             assert(false);
@@ -315,9 +315,9 @@ void VPGEnumClassAttributePropertyAccessor::_WriteStringAtIndex(const int64_t &o
         {
         case VPGEnumClassAttributeProperty::InitializeProperties:
             if (index > -1)
-                obj->SetInitializePropertiesAtIndex(index, value);
+                obj->setInitializePropertiesAtIndex(index, value);
             else
-                obj->InsertInitializeProperties(value);
+                obj->insertInitializeProperties(value);
             break;
         default:
             assert(false);
@@ -342,9 +342,9 @@ void VPGEnumClassAttributePropertyAccessor::_InsertStringAtIndex(const int64_t &
         {
         case VPGEnumClassAttributeProperty::InitializeProperties:
             if (index > -1)
-                obj->InsertInitializePropertiesAtIndex(index, value);
+                obj->insertInitializePropertiesAtIndex(index, value);
             else
-                obj->InsertInitializeProperties(value);
+                obj->insertInitializeProperties(value);
             break;
         default:
             assert(false);
@@ -360,7 +360,7 @@ size_t VPGEnumClassAttributePropertyAccessor::_GetCount(const int64_t &objectPro
         switch(static_cast<VPGEnumClassAttributeProperty>(objectProperty))
         {
         case VPGEnumClassAttributeProperty::InitializeProperties:
-            return obj->GetInitializeProperties().size();
+            return obj->getInitializeProperties().size();
         default:
             assert(false);
         }
@@ -460,13 +460,13 @@ bool VPGEnumClassPropertyAccessor::_ReadBool(const int64_t &objectProperty) cons
         switch(static_cast<VPGEnumClassProperty>(objectProperty))
         {
         case VPGEnumClassProperty::IsActionManagerIndependent:
-            return obj->GetIsActionManagerIndependent();
+            return obj->getIsActionManagerIndependent();
         case VPGEnumClassProperty::IsJson:
-            return obj->GetIsJson();
+            return obj->getIsJson();
         case VPGEnumClassProperty::IsLogConfigIndependent:
-            return obj->GetIsLogConfigIndependent();
+            return obj->getIsLogConfigIndependent();
         case VPGEnumClassProperty::IsThreadManagerIndependent:
-            return obj->GetIsThreadManagerIndependent();
+            return obj->getIsThreadManagerIndependent();
         default:
             assert(false);
         }
@@ -498,16 +498,16 @@ void VPGEnumClassPropertyAccessor::_WriteBool(const int64_t &objectProperty, con
         switch(static_cast<VPGEnumClassProperty>(objectProperty))
         {
         case VPGEnumClassProperty::IsActionManagerIndependent:
-            obj->SetIsActionManagerIndependent(value);
+            obj->setIsActionManagerIndependent(value);
             break;
         case VPGEnumClassProperty::IsJson:
-            obj->SetIsJson(value);
+            obj->setIsJson(value);
             break;
         case VPGEnumClassProperty::IsLogConfigIndependent:
-            obj->SetIsLogConfigIndependent(value);
+            obj->setIsLogConfigIndependent(value);
             break;
         case VPGEnumClassProperty::IsThreadManagerIndependent:
-            obj->SetIsThreadManagerIndependent(value);
+            obj->setIsThreadManagerIndependent(value);
             break;
         default:
             assert(false);
@@ -544,7 +544,7 @@ long VPGEnumClassPropertyAccessor::_ReadLong(const int64_t &objectProperty) cons
         switch(static_cast<VPGEnumClassProperty>(objectProperty))
         {
         case VPGEnumClassProperty::Type:
-            return static_cast<long>(obj->GetType());
+            return static_cast<long>(obj->getType());
         default:
             assert(false);
         }
@@ -576,7 +576,7 @@ void VPGEnumClassPropertyAccessor::_WriteLong(const int64_t &objectProperty, con
         switch(static_cast<VPGEnumClassProperty>(objectProperty))
         {
         case VPGEnumClassProperty::Type:
-            obj->SetType(static_cast<VPGEnumClassType>(value));
+            obj->setType(static_cast<VPGEnumClassType>(value));
             break;
         default:
             assert(false);
@@ -613,11 +613,11 @@ std::wstring VPGEnumClassPropertyAccessor::_ReadString(const int64_t &objectProp
         switch(static_cast<VPGEnumClassProperty>(objectProperty))
         {
         case VPGEnumClassProperty::Command:
-            return obj->GetCommand();
+            return obj->getCommand();
         case VPGEnumClassProperty::InheritClass:
-            return obj->GetInheritClass();
+            return obj->getInheritClass();
         case VPGEnumClassProperty::Name:
-            return obj->GetName();
+            return obj->getName();
         default:
             assert(false);
         }
@@ -634,9 +634,9 @@ std::wstring VPGEnumClassPropertyAccessor::_ReadStringAtIndex(const int64_t &obj
         switch(static_cast<VPGEnumClassProperty>(objectProperty))
         {
         case VPGEnumClassProperty::IncludeCustomFiles:
-            return obj->GetIncludeCustomFilesAtIndex(index);
+            return obj->getIncludeCustomFilesAtIndex(index);
         case VPGEnumClassProperty::IncludeSystemFiles:
-            return obj->GetIncludeSystemFilesAtIndex(index);
+            return obj->getIncludeSystemFilesAtIndex(index);
         default:
             assert(false);
         }
@@ -657,28 +657,28 @@ std::wstring VPGEnumClassPropertyAccessor::_ReadStringAtKey(const int64_t &objec
             assert(keyPtr != nullptr);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
-            return obj->GetInheritClassAttributesAtKey(keyPtr);
+            return obj->getInheritClassAttributesAtKey(keyPtr);
         }
         case VPGEnumClassProperty::JsonAttributes: {
             auto keyPtr = static_cast<const wchar_t *>(key);
             assert(keyPtr != nullptr);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
-            return obj->GetJsonAttributesAtKey(keyPtr);
+            return obj->getJsonAttributesAtKey(keyPtr);
         }
         case VPGEnumClassProperty::PrivateProperties: {
             auto keyPtr = static_cast<const wchar_t *>(key);
             assert(keyPtr != nullptr);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
-            return obj->GetPrivatePropertiesAtKey(keyPtr);
+            return obj->getPrivatePropertiesAtKey(keyPtr);
         }
         case VPGEnumClassProperty::ProtectedProperties: {
             auto keyPtr = static_cast<const wchar_t *>(key);
             assert(keyPtr != nullptr);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
-            return obj->GetProtectedPropertiesAtKey(keyPtr);
+            return obj->getProtectedPropertiesAtKey(keyPtr);
         }
         default:
             assert(false);
@@ -695,13 +695,13 @@ void VPGEnumClassPropertyAccessor::_WriteString(const int64_t &objectProperty, c
         switch(static_cast<VPGEnumClassProperty>(objectProperty))
         {
         case VPGEnumClassProperty::Command:
-            obj->SetCommand(value);
+            obj->setCommand(value);
             break;
         case VPGEnumClassProperty::InheritClass:
-            obj->SetInheritClass(value);
+            obj->setInheritClass(value);
             break;
         case VPGEnumClassProperty::Name:
-            obj->SetName(value);
+            obj->setName(value);
             break;
         default:
             assert(false);
@@ -719,15 +719,15 @@ void VPGEnumClassPropertyAccessor::_WriteStringAtIndex(const int64_t &objectProp
         {
         case VPGEnumClassProperty::IncludeCustomFiles:
             if (index > -1)
-                obj->SetIncludeCustomFilesAtIndex(index, value);
+                obj->setIncludeCustomFilesAtIndex(index, value);
             else
-                obj->InsertIncludeCustomFiles(value);
+                obj->insertIncludeCustomFiles(value);
             break;
         case VPGEnumClassProperty::IncludeSystemFiles:
             if (index > -1)
-                obj->SetIncludeSystemFilesAtIndex(index, value);
+                obj->setIncludeSystemFilesAtIndex(index, value);
             else
-                obj->InsertIncludeSystemFiles(value);
+                obj->insertIncludeSystemFiles(value);
             break;
         default:
             assert(false);
@@ -748,10 +748,10 @@ void VPGEnumClassPropertyAccessor::_WriteStringAtKey(const int64_t &objectProper
             assert(keyPtr != nullptr);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
-            if (obj->IsInheritClassAttributesContainKey(keyPtr))
-                obj->SetInheritClassAttributesAtKey(keyPtr, value);
+            if (obj->isInheritClassAttributesContainKey(keyPtr))
+                obj->setInheritClassAttributesAtKey(keyPtr, value);
             else
-                obj->InsertInheritClassAttributesAtKey(keyPtr, value);
+                obj->insertInheritClassAttributesAtKey(keyPtr, value);
             break;
         }
         case VPGEnumClassProperty::JsonAttributes: {
@@ -759,10 +759,10 @@ void VPGEnumClassPropertyAccessor::_WriteStringAtKey(const int64_t &objectProper
             assert(keyPtr != nullptr);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
-            if (obj->IsJsonAttributesContainKey(keyPtr))
-                obj->SetJsonAttributesAtKey(keyPtr, value);
+            if (obj->isJsonAttributesContainKey(keyPtr))
+                obj->setJsonAttributesAtKey(keyPtr, value);
             else
-                obj->InsertJsonAttributesAtKey(keyPtr, value);
+                obj->insertJsonAttributesAtKey(keyPtr, value);
             break;
         }
         case VPGEnumClassProperty::PrivateProperties: {
@@ -770,10 +770,10 @@ void VPGEnumClassPropertyAccessor::_WriteStringAtKey(const int64_t &objectProper
             assert(keyPtr != nullptr);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
-            if (obj->IsPrivatePropertiesContainKey(keyPtr))
-                obj->SetPrivatePropertiesAtKey(keyPtr, value);
+            if (obj->isPrivatePropertiesContainKey(keyPtr))
+                obj->setPrivatePropertiesAtKey(keyPtr, value);
             else
-                obj->InsertPrivatePropertiesAtKey(keyPtr, value);
+                obj->insertPrivatePropertiesAtKey(keyPtr, value);
             break;
         }
         case VPGEnumClassProperty::ProtectedProperties: {
@@ -781,10 +781,10 @@ void VPGEnumClassPropertyAccessor::_WriteStringAtKey(const int64_t &objectProper
             assert(keyPtr != nullptr);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
-            if (obj->IsProtectedPropertiesContainKey(keyPtr))
-                obj->SetProtectedPropertiesAtKey(keyPtr, value);
+            if (obj->isProtectedPropertiesContainKey(keyPtr))
+                obj->setProtectedPropertiesAtKey(keyPtr, value);
             else
-                obj->InsertProtectedPropertiesAtKey(keyPtr, value);
+                obj->insertProtectedPropertiesAtKey(keyPtr, value);
             break;
         }
         default:
@@ -803,15 +803,15 @@ void VPGEnumClassPropertyAccessor::_InsertStringAtIndex(const int64_t &objectPro
         {
         case VPGEnumClassProperty::IncludeCustomFiles:
             if (index > -1)
-                obj->InsertIncludeCustomFilesAtIndex(index, value);
+                obj->insertIncludeCustomFilesAtIndex(index, value);
             else
-                obj->InsertIncludeCustomFiles(value);
+                obj->insertIncludeCustomFiles(value);
             break;
         case VPGEnumClassProperty::IncludeSystemFiles:
             if (index > -1)
-                obj->InsertIncludeSystemFilesAtIndex(index, value);
+                obj->insertIncludeSystemFilesAtIndex(index, value);
             else
-                obj->InsertIncludeSystemFiles(value);
+                obj->insertIncludeSystemFiles(value);
             break;
         default:
             assert(false);
@@ -836,7 +836,7 @@ std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_ReadObjectAtIndex(c
         switch(static_cast<VPGEnumClassProperty>(objectProperty))
         {
         case VPGEnumClassProperty::Properties:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetPropertiesAtIndex(index));
+            return std::static_pointer_cast<vcc::IObject>(obj->getPropertiesAtIndex(index));
         default:
             assert(false);
         }
@@ -869,9 +869,9 @@ void VPGEnumClassPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProp
         {
         case VPGEnumClassProperty::Properties:
             if (index > -1)
-                obj->SetPropertiesAtIndex(index, std::static_pointer_cast<VPGEnumClassAttribute>(value));
+                obj->setPropertiesAtIndex(index, std::static_pointer_cast<VPGEnumClassAttribute>(value));
             else
-                obj->InsertProperties(std::static_pointer_cast<VPGEnumClassAttribute>(value));
+                obj->insertProperties(std::static_pointer_cast<VPGEnumClassAttribute>(value));
             break;
         default:
             assert(false);
@@ -896,9 +896,9 @@ void VPGEnumClassPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectPro
         {
         case VPGEnumClassProperty::Properties:
             if (index > -1)
-                obj->InsertPropertiesAtIndex(index, std::static_pointer_cast<VPGEnumClassAttribute>(value));
+                obj->insertPropertiesAtIndex(index, std::static_pointer_cast<VPGEnumClassAttribute>(value));
             else
-                obj->InsertProperties(std::static_pointer_cast<VPGEnumClassAttribute>(value));
+                obj->insertProperties(std::static_pointer_cast<VPGEnumClassAttribute>(value));
             break;
         default:
             assert(false);
@@ -947,19 +947,19 @@ size_t VPGEnumClassPropertyAccessor::_GetCount(const int64_t &objectProperty) co
         switch(static_cast<VPGEnumClassProperty>(objectProperty))
         {
         case VPGEnumClassProperty::Properties:
-            return obj->GetProperties().size();
+            return obj->getProperties().size();
         case VPGEnumClassProperty::IncludeSystemFiles:
-            return obj->GetIncludeSystemFiles().size();
+            return obj->getIncludeSystemFiles().size();
         case VPGEnumClassProperty::IncludeCustomFiles:
-            return obj->GetIncludeCustomFiles().size();
+            return obj->getIncludeCustomFiles().size();
         case VPGEnumClassProperty::PrivateProperties:
-            return obj->GetPrivateProperties().size();
+            return obj->getPrivateProperties().size();
         case VPGEnumClassProperty::ProtectedProperties:
-            return obj->GetProtectedProperties().size();
+            return obj->getProtectedProperties().size();
         case VPGEnumClassProperty::JsonAttributes:
-            return obj->GetJsonAttributes().size();
+            return obj->getJsonAttributes().size();
         case VPGEnumClassProperty::InheritClassAttributes:
-            return obj->GetInheritClassAttributes().size();
+            return obj->getInheritClassAttributes().size();
         default:
             assert(false);
         }
@@ -976,13 +976,13 @@ std::set<void *> VPGEnumClassPropertyAccessor::_GetMapKeys(const int64_t &object
         switch(static_cast<VPGEnumClassProperty>(objectProperty))
         {
         case VPGEnumClassProperty::InheritClassAttributes:
-            return obj->GetInheritClassAttributesVoidKeys();
+            return obj->getInheritClassAttributesVoidKeys();
         case VPGEnumClassProperty::JsonAttributes:
-            return obj->GetJsonAttributesVoidKeys();
+            return obj->getJsonAttributesVoidKeys();
         case VPGEnumClassProperty::PrivateProperties:
-            return obj->GetPrivatePropertiesVoidKeys();
+            return obj->getPrivatePropertiesVoidKeys();
         case VPGEnumClassProperty::ProtectedProperties:
-            return obj->GetProtectedPropertiesVoidKeys();
+            return obj->getProtectedPropertiesVoidKeys();
         default:
             assert(false);
         }
@@ -1003,28 +1003,28 @@ bool VPGEnumClassPropertyAccessor::_IsContainKey(const int64_t &objectProperty, 
             assert(keyPtr != nullptr);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
-            return obj->IsInheritClassAttributesContainKey(keyPtr);
+            return obj->isInheritClassAttributesContainKey(keyPtr);
         }
         case VPGEnumClassProperty::JsonAttributes: {
             auto keyPtr = static_cast<const wchar_t *>(key);
             assert(keyPtr != nullptr);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
-            return obj->IsJsonAttributesContainKey(keyPtr);
+            return obj->isJsonAttributesContainKey(keyPtr);
         }
         case VPGEnumClassProperty::PrivateProperties: {
             auto keyPtr = static_cast<const wchar_t *>(key);
             assert(keyPtr != nullptr);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
-            return obj->IsPrivatePropertiesContainKey(keyPtr);
+            return obj->isPrivatePropertiesContainKey(keyPtr);
         }
         case VPGEnumClassProperty::ProtectedProperties: {
             auto keyPtr = static_cast<const wchar_t *>(key);
             assert(keyPtr != nullptr);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
-            return obj->IsProtectedPropertiesContainKey(keyPtr);
+            return obj->isProtectedPropertiesContainKey(keyPtr);
         }
         default:
             assert(false);

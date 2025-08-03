@@ -660,7 +660,7 @@ namespace vcc
 		return std::wstring::npos;
 	}
 
-	void GetCharacterRowAndColumn(const std::wstring &str, size_t pos, size_t &row, size_t &column)
+	void getCharacterRowAndColumn(const std::wstring &str, size_t pos, size_t &row, size_t &column)
 	{
 		TRY
 			row = 1;
@@ -678,7 +678,7 @@ namespace vcc
 		CATCH
 	}
 
-	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos)
+	void getNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos)
 	{
 		TRY
 			if (!fromCurrentPos)
@@ -691,7 +691,7 @@ namespace vcc
 		CATCH
 	}
 
-	std::wstring GetTailingSubstring(const std::wstring &str, const size_t &length)
+	std::wstring getTailingSubstring(const std::wstring &str, const size_t &length)
 	{
 		if (str.length() <= length)
 			return str;
@@ -701,17 +701,17 @@ namespace vcc
 		return str;
 	}
 
-	std::wstring GetNextStringSplitBySpace(const std::wstring &str, size_t &pos,
+	std::wstring getNextStringSplitBySpace(const std::wstring &str, size_t &pos,
 		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
 	{
 		TRY
 			// \r\n must before \n and \r
-			return GetNextString(str, pos, {L" ", L"\r\n", L"\n", L"\r", L"\t"}, quoteOpenList, quoteCloseList, quoteEscapeList);
+			return getNextString(str, pos, {L" ", L"\r\n", L"\n", L"\r", L"\t"}, quoteOpenList, quoteCloseList, quoteEscapeList);
 		CATCH
 		return str;
 	}
 	
-	std::wstring GetNextString(const std::wstring &str, size_t &pos, const std::vector<std::wstring> &delimiters,
+	std::wstring getNextString(const std::wstring &str, size_t &pos, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList)
 	{
 		if (str.empty())
@@ -778,7 +778,7 @@ namespace vcc
 		return result;
 	}
 	
-	std::wstring GetNextQuotedString(const std::wstring& str, size_t &pos, const std::vector<std::wstring> &delimiters,
+	std::wstring getNextQuotedString(const std::wstring& str, size_t &pos, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList, const std::vector<std::wstring> &quoteCloseList, const std::vector<std::wstring> &quoteEscapeList,
 		const std::vector<std::wstring> &stringOpenList)
 	{
@@ -929,7 +929,7 @@ namespace vcc
 		CATCH
 	}
 
-    std::vector<wchar_t> GetSpecialCharacters(const EscapeStringType &type)
+    std::vector<wchar_t> getSpecialCharacters(const EscapeStringType &type)
     {
 		TRY
 			switch (type)
@@ -949,7 +949,7 @@ namespace vcc
         return {};
     }
 
-	std::map<wchar_t, std::wstring> GetEscapeStringMap(const EscapeStringType &type)
+	std::map<wchar_t, std::wstring> getEscapeStringMap(const EscapeStringType &type)
 	{
 		std::map<wchar_t, std::wstring> result;
 		TRY
@@ -974,7 +974,7 @@ namespace vcc
 	std::wstring ConvertSpecialCharacterToEscapeString(const EscapeStringType &type, const wchar_t &c)
 	{
         TRY
-			std::vector<wchar_t> specialChars = GetSpecialCharacters(type);
+			std::vector<wchar_t> specialChars = getSpecialCharacters(type);
 			if (!std::count(specialChars.begin(), specialChars.end(), c))
 				return std::wstring(1, c);
 	
@@ -985,7 +985,7 @@ namespace vcc
 				case EscapeStringType::SingleQuote:
 					return L"\\" + std::wstring(1, c);
 				case EscapeStringType::XML:
-					return GetEscapeStringMap(type)[c];
+					return getEscapeStringMap(type)[c];
 				default:
 					assert(false);
 			}
@@ -993,7 +993,7 @@ namespace vcc
 		return std::wstring(1, c);
 	}
 
-	std::wstring GetEscapeString(const EscapeStringType &type, const std::wstring &str)
+	std::wstring getEscapeString(const EscapeStringType &type, const std::wstring &str)
     {
         std::wstring result = L"";
         TRY
@@ -1003,7 +1003,7 @@ namespace vcc
         return result;
     }
 
-	std::wstring GetEscapeStringWithQuote(const EscapeStringType &type, const std::wstring &str)
+	std::wstring getEscapeStringWithQuote(const EscapeStringType &type, const std::wstring &str)
 	{
         std::wstring result = L"";
         TRY
@@ -1021,12 +1021,12 @@ namespace vcc
 				assert(false);
 				break;
 			}
-			result = openQuote + GetEscapeString(type, str) + closeQuote;
+			result = openQuote + getEscapeString(type, str) + closeQuote;
         CATCH
         return result;
 	}
 
-	std::wstring GetUnescapeString(const EscapeStringType &type, const std::wstring &str)
+	std::wstring getUnescapeString(const EscapeStringType &type, const std::wstring &str)
 	{
         std::wstring result = L"";
         TRY
@@ -1034,7 +1034,7 @@ namespace vcc
 			switch (type)
 			{
 			case EscapeStringType::XML:
-				escapeMap = GetEscapeStringMap(type);
+				escapeMap = getEscapeStringMap(type);
 				break;
 			default:
 				break;
@@ -1073,7 +1073,7 @@ namespace vcc
         return result;
 	}
 	
-	std::wstring GetUnescapeStringWithQuote(const EscapeStringType &type, const std::wstring &str)
+	std::wstring getUnescapeStringWithQuote(const EscapeStringType &type, const std::wstring &str)
 	{
 		TRY
 			switch (type)
@@ -1094,7 +1094,7 @@ namespace vcc
 				assert(false);
 				break;
 			}
-			return GetUnescapeString(type, str.substr(1, str.length() - 2));
+			return getUnescapeString(type, str.substr(1, str.length() - 2));
 		CATCH
 		return str;
 	}

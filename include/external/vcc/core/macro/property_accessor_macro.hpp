@@ -10,7 +10,7 @@
         virtual void Write##name(const vcc::LockType lockType, const int64_t &objectProperty, const type &value) = 0; \
         virtual void Write##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const type &value, const int64_t &index = -1) = 0; \
         virtual void Write##name##AtKey(const vcc::LockType lockType, const int64_t &objectProperty, const type &value, const void *key) = 0; \
-        virtual void Insert##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const type &value, const int64_t &index = -1) = 0;
+        virtual void insert##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const type &value, const int64_t &index = -1) = 0;
 
 #define I_PROPERTY_ACCESSOR_OBJECT_HEADER(type, name) \
     public: \
@@ -20,15 +20,15 @@
         virtual void Write##name(const vcc::LockType lockType, const int64_t &objectProperty, type value) = 0; \
         virtual void Write##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, type value, const int64_t &index = -1) = 0; \
         virtual void Write##name##AtKey(const vcc::LockType lockType, const int64_t &objectProperty, type value, const void *key) = 0; \
-        virtual void Insert##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, type value, const int64_t &index = -1) = 0; \
+        virtual void insert##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, type value, const int64_t &index = -1) = 0; \
         virtual type Clone##name(const vcc::LockType lockType, const int64_t &objectProperty) const = 0; \
         virtual type Clone##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const int64_t &index) const = 0; \
         virtual type Clone##name##AtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) const = 0; \
 
 #define I_PROPERTY_ACCESSOR_CONTAINER_HEADER \
     public: \
-        virtual size_t GetCount(const vcc::LockType lockType, const int64_t &objectProperty) const = 0; \
-        virtual std::set<void *> GetMapKeys(const vcc::LockType lockType, const int64_t &objectProperty) const = 0; \
+        virtual size_t getCount(const vcc::LockType lockType, const int64_t &objectProperty) const = 0; \
+        virtual std::set<void *> getMapKeys(const vcc::LockType lockType, const int64_t &objectProperty) const = 0; \
         virtual bool IsContainKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) const = 0;\
         virtual void Remove(const vcc::LockType lockType, const int64_t &objectProperty, const void *value) = 0; \
         virtual void RemoveObject(const vcc::LockType lockType, const int64_t &objectProperty, const vcc::IObject *value) = 0; \
@@ -52,7 +52,7 @@
         virtual void Write##name(const vcc::LockType lockType, const int64_t &objectProperty, const type &value) override; \
         virtual void Write##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const type &value, const int64_t &index = -1) override; \
         virtual void Write##name##AtKey(const vcc::LockType lockType, const int64_t &objectProperty, const type &value, const void *key) override; \
-        virtual void Insert##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const type &value, const int64_t &index = -1) override;
+        virtual void insert##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const type &value, const int64_t &index = -1) override;
 
 #define BASE_PROPERTY_ACCESSOR_OBJECT_HEADER(type, name) \
     protected: \
@@ -73,7 +73,7 @@
         virtual void Write##name(const vcc::LockType lockType, const int64_t &objectProperty, type value) override; \
         virtual void Write##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, type value, const int64_t &index = -1) override; \
         virtual void Write##name##AtKey(const vcc::LockType lockType, const int64_t &objectProperty, type value, const void *key) override; \
-        virtual void Insert##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, type value, const int64_t &index = -1) override; \
+        virtual void insert##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, type value, const int64_t &index = -1) override; \
         virtual type Clone##name(const vcc::LockType lockType, const int64_t &objectProperty) const override; \
         virtual type Clone##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const int64_t &index) const override; \
         virtual type Clone##name##AtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) const override;
@@ -89,8 +89,8 @@
         virtual void _RemoveAtKey(const int64_t &objectProperty, const void *key); \
         virtual void _Clear(const int64_t &objectProperty); \
     public: \
-        virtual size_t GetCount(const vcc::LockType lockType, const int64_t &objectProperty) const override; \
-        virtual std::set<void *> GetMapKeys(const vcc::LockType lockType, const int64_t &objectProperty) const override; \
+        virtual size_t getCount(const vcc::LockType lockType, const int64_t &objectProperty) const override; \
+        virtual std::set<void *> getMapKeys(const vcc::LockType lockType, const int64_t &objectProperty) const override; \
         virtual bool IsContainKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) const override;\
         virtual void Remove(const vcc::LockType lockType, const int64_t &objectProperty, const void *value) override; \
         virtual void RemoveObject(const vcc::LockType lockType, const int64_t &objectProperty, const vcc::IObject *value) override; \
@@ -200,7 +200,7 @@
     DLLEXPORT void Write##typeName(void *ref, int64_t property, exportType value); \
     DLLEXPORT void Write##typeName##AtIndex(void *ref, int64_t property, exportType value, int64_t index); \
     DLLEXPORT void Write##typeName##AtKey(void *ref, int64_t property, exportType value, void *key); \
-    DLLEXPORT void Insert##typeName##AtIndex(void *ref, int64_t property, exportType value, int64_t index);
+    DLLEXPORT void insert##typeName##AtIndex(void *ref, int64_t property, exportType value, int64_t index);
 
 #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_STRING \
     DLLEXPORT void ReadString(void *ref, int64_t property, wchar_t **value); \
@@ -209,7 +209,7 @@
     DLLEXPORT void WriteString(void *ref, int64_t property, wchar_t **value); \
     DLLEXPORT void WriteStringAtIndex(void *ref, int64_t property, wchar_t **value, int64_t index); \
     DLLEXPORT void WriteStringAtKey(void *ref, int64_t property, wchar_t **value, void *key); \
-    DLLEXPORT void InsertStringAtIndex(void *ref, int64_t property, wchar_t **value, int64_t index);
+    DLLEXPORT void insertStringAtIndex(void *ref, int64_t property, wchar_t **value, int64_t index);
 
 #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_OBJECT \
     DLLEXPORT void *ReadObject(void *ref, int64_t property); \
@@ -219,10 +219,10 @@
     DLLEXPORT void WriteObjectAtIndex(void *ref, int64_t property, void *value, int64_t index); \
     DLLEXPORT void WriteObjectAtKey(void *ref, int64_t property, void *value, void *key); \
     DLLEXPORT void *AddObjectAtIndex(void *ref, int64_t property, int64_t objectType, int64_t index); \
-    DLLEXPORT void InsertObjectAtIndex(void *ref, int64_t property, void *value, int64_t index);
+    DLLEXPORT void insertObjectAtIndex(void *ref, int64_t property, void *value, int64_t index);
 
 #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_CONTAINER \
-    DLLEXPORT long GetCount(void *ref, int64_t property); \
+    DLLEXPORT long getCount(void *ref, int64_t property); \
     DLLEXPORT void **GetMapKeys(void *ref, int64_t property); \
     DLLEXPORT bool IsContainKey(void *ref, int64_t property, void *key); \
     DLLEXPORT void Remove(void *ref, int64_t property, void *value); \
@@ -236,7 +236,7 @@ exportType Read##typeName(void *ref, int64_t property) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        return PropertyAccessorFactory::Create(object->SharedPtr())->Read##typeName(vcc::LockType::ReadLock, property); \
+        return PropertyAccessorFactory::Create(object->sharedPtr())->Read##typeName(vcc::LockType::ReadLock, property); \
     CATCH \
     return defaultValue; \
 } \
@@ -244,7 +244,7 @@ exportType Read##typeName##AtIndex(void *ref, int64_t property, int64_t index) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        return PropertyAccessorFactory::Create(object->SharedPtr())->Read##typeName##AtIndex(vcc::LockType::ReadLock, property, index); \
+        return PropertyAccessorFactory::Create(object->sharedPtr())->Read##typeName##AtIndex(vcc::LockType::ReadLock, property, index); \
     CATCH \
     return defaultValue; \
 } \
@@ -252,7 +252,7 @@ exportType Read##typeName##AtKey(void *ref, int64_t property, void *key) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        return PropertyAccessorFactory::Create(object->SharedPtr())->Read##typeName##AtKey(vcc::LockType::ReadLock, property, key); \
+        return PropertyAccessorFactory::Create(object->sharedPtr())->Read##typeName##AtKey(vcc::LockType::ReadLock, property, key); \
     CATCH \
     return defaultValue; \
 } \
@@ -260,28 +260,28 @@ void Write##typeName(void *ref, int64_t property, exportType value) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        PropertyAccessorFactory::Create(object->SharedPtr())->Write##typeName(vcc::LockType::WriteLock, property, value); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->Write##typeName(vcc::LockType::WriteLock, property, value); \
     CATCH \
 } \
 void Write##typeName##AtIndex(void *ref, int64_t property, exportType value, int64_t index) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        PropertyAccessorFactory::Create(object->SharedPtr())->Write##typeName##AtIndex(vcc::LockType::WriteLock, property, value, index); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->Write##typeName##AtIndex(vcc::LockType::WriteLock, property, value, index); \
     CATCH \
 } \
 void Write##typeName##AtKey(void *ref, int64_t property, exportType value, void *key) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        PropertyAccessorFactory::Create(object->SharedPtr())->Write##typeName##AtKey(vcc::LockType::WriteLock, property, value, key); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->Write##typeName##AtKey(vcc::LockType::WriteLock, property, value, key); \
     CATCH \
 } \
-void Insert##typeName##AtIndex(void *ref, int64_t property, exportType value, int64_t index) \
+void insert##typeName##AtIndex(void *ref, int64_t property, exportType value, int64_t index) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        PropertyAccessorFactory::Create(object->SharedPtr())->Insert##typeName##AtIndex(vcc::LockType::WriteLock, property, value, index); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->insert##typeName##AtIndex(vcc::LockType::WriteLock, property, value, index); \
     CATCH \
 }
 
@@ -290,7 +290,7 @@ void ReadString(void *ref, int64_t property, wchar_t **value) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        std::wstring result = PropertyAccessorFactory::Create(object->SharedPtr())->ReadString(vcc::LockType::ReadLock, property); \
+        std::wstring result = PropertyAccessorFactory::Create(object->sharedPtr())->ReadString(vcc::LockType::ReadLock, property); \
         size_t size = (result.length() + 1) * sizeof(wchar_t); \
         *value = static_cast<wchar_t*>(malloc(size)); \
         wcscpy(*value, result.c_str()); \
@@ -300,7 +300,7 @@ void ReadStringAtIndex(void *ref, int64_t property, wchar_t **value, int64_t ind
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        std::wstring result = PropertyAccessorFactory::Create(object->SharedPtr())->ReadStringAtIndex(vcc::LockType::ReadLock, property, index); \
+        std::wstring result = PropertyAccessorFactory::Create(object->sharedPtr())->ReadStringAtIndex(vcc::LockType::ReadLock, property, index); \
         size_t size = (result.length() + 1) * sizeof(wchar_t); \
         *value = static_cast<wchar_t*>(malloc(size)); \
         wcscpy(*value, result.c_str()); \
@@ -310,7 +310,7 @@ void ReadStringAtKey(void *ref, int64_t property, wchar_t **value, void *key) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        std::wstring result = PropertyAccessorFactory::Create(object->SharedPtr())->ReadStringAtKey(vcc::LockType::ReadLock, property, key); \
+        std::wstring result = PropertyAccessorFactory::Create(object->sharedPtr())->ReadStringAtKey(vcc::LockType::ReadLock, property, key); \
         size_t size = (result.length() + 1) * sizeof(wchar_t); \
         *value = static_cast<wchar_t*>(malloc(size)); \
         wcscpy(*value, result.c_str()); \
@@ -322,8 +322,8 @@ void WriteString(void *ref, int64_t property, wchar_t **value) \
         if (value != nullptr && *value != nullptr) \
         { \
             vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-            auto ptr = object->SharedPtr();\
-            PropertyAccessorFactory::Create(object->SharedPtr())->WriteString(vcc::LockType::WriteLock, property, *value); \
+            auto ptr = object->sharedPtr();\
+            PropertyAccessorFactory::Create(object->sharedPtr())->WriteString(vcc::LockType::WriteLock, property, *value); \
         } \
     CATCH \
 } \
@@ -333,8 +333,8 @@ void WriteStringAtIndex(void *ref, int64_t property, wchar_t **value, int64_t in
         if (value != nullptr && *value != nullptr) \
         { \
             vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-            auto ptr = object->SharedPtr();\
-            PropertyAccessorFactory::Create(object->SharedPtr())->WriteStringAtIndex(vcc::LockType::WriteLock, property, *value, index); \
+            auto ptr = object->sharedPtr();\
+            PropertyAccessorFactory::Create(object->sharedPtr())->WriteStringAtIndex(vcc::LockType::WriteLock, property, *value, index); \
         } \
     CATCH \
 } \
@@ -344,17 +344,17 @@ void WriteStringAtKey(void *ref, int64_t property, wchar_t **value, void *key) \
         if (value != nullptr && *value != nullptr) \
         { \
             vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-            PropertyAccessorFactory::Create(object->SharedPtr())->WriteStringAtKey(vcc::LockType::WriteLock, property, *value, key); \
+            PropertyAccessorFactory::Create(object->sharedPtr())->WriteStringAtKey(vcc::LockType::WriteLock, property, *value, key); \
         } \
     CATCH \
 } \
-void InsertStringAtIndex(void *ref, int64_t property, wchar_t **value, int64_t index) \
+void insertStringAtIndex(void *ref, int64_t property, wchar_t **value, int64_t index) \
 { \
     TRY \
         if (value != nullptr && *value != nullptr) \
         { \
             vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-            PropertyAccessorFactory::Create(object->SharedPtr())->InsertStringAtIndex(vcc::LockType::WriteLock, property, *value, index); \
+            PropertyAccessorFactory::Create(object->sharedPtr())->insertStringAtIndex(vcc::LockType::WriteLock, property, *value, index); \
         } \
     CATCH \
 }
@@ -364,7 +364,7 @@ DLLEXPORT void *ReadObject(void *ref, int64_t property) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        std::shared_ptr<vcc::IObject> result = PropertyAccessorFactory::Create(object->SharedPtr())->ReadObject(vcc::LockType::ReadLock, property); \
+        std::shared_ptr<vcc::IObject> result = PropertyAccessorFactory::Create(object->sharedPtr())->ReadObject(vcc::LockType::ReadLock, property); \
         return result != nullptr ? result.get() : nullptr; \
     CATCH \
     return nullptr; \
@@ -373,7 +373,7 @@ DLLEXPORT void *ReadObjectAtIndex(void *ref, int64_t property, int64_t index) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        std::shared_ptr<vcc::IObject> result = PropertyAccessorFactory::Create(object->SharedPtr())->ReadObjectAtIndex(vcc::LockType::ReadLock, property, index); \
+        std::shared_ptr<vcc::IObject> result = PropertyAccessorFactory::Create(object->sharedPtr())->ReadObjectAtIndex(vcc::LockType::ReadLock, property, index); \
         return result != nullptr ? result.get() : nullptr; \
     CATCH \
     return nullptr; \
@@ -382,7 +382,7 @@ DLLEXPORT void *ReadObjectAtKey(void *ref, int64_t property, void *key) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        std::shared_ptr<vcc::IObject> result = PropertyAccessorFactory::Create(object->SharedPtr())->ReadObjectAtKey(vcc::LockType::ReadLock, property, key); \
+        std::shared_ptr<vcc::IObject> result = PropertyAccessorFactory::Create(object->sharedPtr())->ReadObjectAtKey(vcc::LockType::ReadLock, property, key); \
         return result != nullptr ? result.get() : nullptr; \
     CATCH \
     return nullptr; \
@@ -393,7 +393,7 @@ DLLEXPORT void WriteObject(void *ref, int64_t property, void *value) \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
         vcc::IObject *result = static_cast<vcc::IObject *>(value); \
         std::shared_ptr<vcc::IObject> resultPtr(result); \
-        PropertyAccessorFactory::Create(object->SharedPtr())->WriteObject(vcc::LockType::WriteLock, property, resultPtr); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->WriteObject(vcc::LockType::WriteLock, property, resultPtr); \
     CATCH \
 } \
 DLLEXPORT void WriteObjectAtIndex(void *ref, int64_t property, void *value, int64_t index) \
@@ -402,7 +402,7 @@ DLLEXPORT void WriteObjectAtIndex(void *ref, int64_t property, void *value, int6
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
         vcc::IObject *result = static_cast<vcc::IObject *>(value); \
         std::shared_ptr<vcc::IObject> resultPtr(result); \
-        PropertyAccessorFactory::Create(object->SharedPtr())->WriteObjectAtIndex(vcc::LockType::WriteLock, property, resultPtr, index); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->WriteObjectAtIndex(vcc::LockType::WriteLock, property, resultPtr, index); \
     CATCH \
 } \
 DLLEXPORT void WriteObjectAtKey(void *ref, int64_t property, void *value, void *key) \
@@ -411,7 +411,7 @@ DLLEXPORT void WriteObjectAtKey(void *ref, int64_t property, void *value, void *
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
         vcc::IObject *result = static_cast<vcc::IObject *>(value); \
         std::shared_ptr<vcc::IObject> resultPtr(result); \
-        PropertyAccessorFactory::Create(object->SharedPtr())->WriteObjectAtKey(vcc::LockType::WriteLock, property, resultPtr, key); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->WriteObjectAtKey(vcc::LockType::WriteLock, property, resultPtr, key); \
     CATCH \
 } \
 DLLEXPORT void *AddObjectAtIndex(void *ref, int64_t property, int64_t objectType, int64_t index) \
@@ -419,27 +419,27 @@ DLLEXPORT void *AddObjectAtIndex(void *ref, int64_t property, int64_t objectType
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
         std::shared_ptr<vcc::IObject> newObject = ObjectFactory::Create(static_cast<ObjectType>(objectType)); \
-        PropertyAccessorFactory::Create(object->SharedPtr())->InsertObjectAtIndex(vcc::LockType::WriteLock, property, newObject, index); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->insertObjectAtIndex(vcc::LockType::WriteLock, property, newObject, index); \
         return newObject.get(); \
     CATCH \
     return nullptr; \
 } \
-DLLEXPORT void InsertObjectAtIndex(void *ref, int64_t property, void *value, int64_t index) \
+DLLEXPORT void insertObjectAtIndex(void *ref, int64_t property, void *value, int64_t index) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
         vcc::IObject *result = static_cast<vcc::IObject *>(value); \
         std::shared_ptr<vcc::IObject> resultPtr(result); \
-        PropertyAccessorFactory::Create(object->SharedPtr())->InsertObjectAtIndex(vcc::LockType::WriteLock, property, resultPtr, index); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->insertObjectAtIndex(vcc::LockType::WriteLock, property, resultPtr, index); \
     CATCH \
 }
 
 #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL_CONTAINER \
-long GetCount(void *ref, int64_t property) \
+long getCount(void *ref, int64_t property) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        return PropertyAccessorFactory::Create(object->SharedPtr())->GetCount(vcc::LockType::ReadLock, property); \
+        return PropertyAccessorFactory::Create(object->sharedPtr())->getCount(vcc::LockType::ReadLock, property); \
     CATCH \
     return 0; \
 } \
@@ -447,7 +447,7 @@ void **GetMapKeys(void *ref, int64_t property) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        std::set<void *> result = PropertyAccessorFactory::Create(object->SharedPtr())->GetMapKeys(vcc::LockType::ReadLock, property); \
+        std::set<void *> result = PropertyAccessorFactory::Create(object->sharedPtr())->getMapKeys(vcc::LockType::ReadLock, property); \
         void **array = new void *[result.size() + 1]; \
         std::fill(array, array + (result.size() + 1), nullptr); \
         size_t index = 0; \
@@ -461,7 +461,7 @@ bool IsContainKey(void *ref, int64_t property, void *key) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        return PropertyAccessorFactory::Create(object->SharedPtr())->IsContainKey(vcc::LockType::ReadLock, property, key); \
+        return PropertyAccessorFactory::Create(object->sharedPtr())->isContainKey(vcc::LockType::ReadLock, property, key); \
     CATCH \
     return false; \
 } \
@@ -469,34 +469,34 @@ void Remove(void *ref, int64_t property, void *value) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        PropertyAccessorFactory::Create(object->SharedPtr())->Remove(vcc::LockType::WriteLock, property, value); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->Remove(vcc::LockType::WriteLock, property, value); \
     CATCH \
 } \
 void RemoveObject(void *ref, int64_t property, void *value) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        PropertyAccessorFactory::Create(object->SharedPtr())->RemoveObject(vcc::LockType::WriteLock, property, static_cast<vcc::IObject *>(value)); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->RemoveObject(vcc::LockType::WriteLock, property, static_cast<vcc::IObject *>(value)); \
     CATCH \
 } \
 void RemoveAtIndex(void *ref, int64_t property, int64_t index) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        PropertyAccessorFactory::Create(object->SharedPtr())->RemoveAtIndex(vcc::LockType::WriteLock, property, index); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->RemoveAtIndex(vcc::LockType::WriteLock, property, index); \
     CATCH \
 } \
 void RemoveAtKey(void *ref, int64_t property, void *key) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        PropertyAccessorFactory::Create(object->SharedPtr())->RemoveAtKey(vcc::LockType::WriteLock, property, key); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->RemoveAtKey(vcc::LockType::WriteLock, property, key); \
     CATCH \
 } \
 void Clear(void *ref, int64_t property) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        return PropertyAccessorFactory::Create(object->SharedPtr())->Clear(vcc::LockType::WriteLock, property); \
+        return PropertyAccessorFactory::Create(object->sharedPtr())->Clear(vcc::LockType::WriteLock, property); \
     CATCH \
 }

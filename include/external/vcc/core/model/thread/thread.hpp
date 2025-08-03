@@ -49,9 +49,9 @@ namespace vcc
             virtual ~Thread() {}
 
             const ThreadManager *GetManager() const;
-            void SetManager(const ThreadManager *manager) const;
+            void setManager(const ThreadManager *manager) const;
 
-            std::wstring GetPid() const;
+            std::wstring getPid() const;
 
             void Execute() const;
     };

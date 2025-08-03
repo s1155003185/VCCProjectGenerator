@@ -22,5 +22,5 @@ TEST(ConfigBuilderTest, Full)
     resultStr += L"name2=value2\r\n";
 
     reader->Deserialize(str, element);
-    EXPECT_EQ(reader->Serialize(element.get()), resultStr);
+    EXPECT_EQ(reader->serialize(element.get()), resultStr);
 }

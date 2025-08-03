@@ -19,7 +19,7 @@ namespace vcc
         TRY
             if (IsBlank(key) || key == L"#")
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"key is blank or #");
-            return GetConfigsAtKey(key);
+            return getConfigsAtKey(key);
         CATCH
         return L"";
     }
@@ -29,21 +29,21 @@ namespace vcc
         TRY
             if (IsBlank(key) || key == L"#")
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"key is blank or #");
-            InsertConfigsAtKey(key, value);
+            insertConfigsAtKey(key, value);
         CATCH
     }
 
     void Config::AddLine(const std::wstring &value)
     {
         TRY
-            InsertConfigsAtKey(L"", value);
+            insertConfigsAtKey(L"", value);
         CATCH
     }
 
     void Config::AddCommand(const std::wstring &value)
     {
         TRY
-            InsertConfigsAtKey(L"#", value);
+            insertConfigsAtKey(L"#", value);
         CATCH
     }
 }

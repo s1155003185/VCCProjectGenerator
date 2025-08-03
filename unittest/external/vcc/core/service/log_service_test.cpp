@@ -13,15 +13,15 @@ TEST(LogServiceTest, LogTest)
     vcc::RemoveFile(filePath);
     
     auto property = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
-    property->SetUserID(L"user");
-    property->SetIsConsoleLog(false);
-    property->SetIsLogTerminal(true);
-    property->SetIsLogTerminalResult(true);
-    property->SetIsLogProcess(true);
-    property->SetIsLogProcessResult(true);
-    property->SetIsLogSQL(true);
-    property->SetIsLogSQLResult(true);
-    property->SetFilePath(filePath);
+    property->setUserID(L"user");
+    property->setIsConsoleLog(false);
+    property->setIsLogTerminal(true);
+    property->setIsLogTerminalResult(true);
+    property->setIsLogProcess(true);
+    property->setIsLogProcessResult(true);
+    property->setIsLogSQL(true);
+    property->setIsLogSQLResult(true);
+    property->setFilePath(filePath);
     std::wstring logInfoStr = vcc::LogService::LogInfo(property.get(), L"id", L"message");
     std::wstring logWarningStr = vcc::LogService::LogWarning(property.get(), L"id", L"message");
     std::wstring logErrorStr = vcc::LogService::LogError(property.get(), L"id", L"message");

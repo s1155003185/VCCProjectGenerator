@@ -117,9 +117,9 @@ namespace vcc
             assert(baseAction != nullptr);
 
             auto result = action->Redo();
-            if (result->IsError()) {
-                if (result->IsThrowException())
-                    THROW_EXCEPTION_MSG(result->GetExceptionType(), result->GetMessage());
+            if (result->isError()) {
+                if (result->isThrowException())
+                    THROW_EXCEPTION_MSG(result->getExceptionType(), result->getMessage());
                 return result;
             }
 
@@ -127,7 +127,7 @@ namespace vcc
             if (_Actions.size() > 0)
                 _MaxSeqNo = _GetFirstSeqNo(false);
             int64_t nextSeqNo = _MaxSeqNo + 1;
-            action->SetSeqNo(nextSeqNo);
+            action->setSeqNo(nextSeqNo);
             _Actions.emplace(nextSeqNo, baseAction);
             _MaxSeqNo = _CurrentSeqNo = _GetFirstSeqNo(false);
             _ChopActionListToSize(_MaxActionListSize, true);

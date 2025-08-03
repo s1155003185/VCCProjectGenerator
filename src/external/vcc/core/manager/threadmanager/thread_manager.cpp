@@ -59,14 +59,14 @@ namespace vcc
                 _ActiveThreads.erase(
                     std::remove_if(_ActiveThreads.begin(), _ActiveThreads.end(), 
                     [](std::shared_ptr<Thread> thread) {
-                        return thread->GetState() == ProcessState::Complete
-                        || thread->GetState() == ProcessState::Stop;
+                        return thread->getState() == ProcessState::Complete
+                        || thread->getState() == ProcessState::Stop;
                     }));
             }
             if (!_Threads.empty() && _MaxThreadPoolSize > 0 && _ActiveThreads.size() < (size_t)_MaxThreadPoolSize) {
                 auto firstElement = _Threads.front();
-                firstElement->SetManager(this);
-                firstElement->SetState(ProcessState::Idle);
+                firstElement->setManager(this);
+                firstElement->setState(ProcessState::Idle);
                 _ActiveThreads.push_back(firstElement);
                 _Threads.erase(_Threads.begin());
                 switch (_ThreadManagementMode)
@@ -125,7 +125,7 @@ namespace vcc
         TRY
             ClearWaitingThread();
             for (auto &thread : _ActiveThreads)
-                thread->SetState(ProcessState::Stop);
+                thread->setState(ProcessState::Stop);
             
             // Remove Complete thread
             Trigger();
@@ -137,9 +137,9 @@ namespace vcc
                     for (auto &thread : _ActiveThreads) {
                         TRY
                         #ifdef _WIN32
-                            TerminalService::Execute(_LogConfig.get(), L"Thread", L"taskkill /PID " + thread->GetPid() + L" /F");
+                            TerminalService::Execute(_LogConfig.get(), L"Thread", L"taskkill /PID " + thread->getPid() + L" /F");
                         #else
-                            TerminalService::Execute(_LogConfig.get(), L"Thread", L"kill " + thread->GetPid());
+                            TerminalService::Execute(_LogConfig.get(), L"Thread", L"kill " + thread->getPid());
                         #endif
                         // wait 1s
                         Sleep(1000);
@@ -152,7 +152,7 @@ namespace vcc
                         [this](const Thread * /*thread*/) {
                         while (true) {
                             this->Trigger();
-                            if (this->GetActiveThreads().empty())
+                            if (this->getActiveThreads().empty())
                                 break;
                             Sleep(500); // wait 0.5s
                         }

@@ -23,7 +23,7 @@ VPGGitForm::VPGGitForm() : vcc::BaseForm()
 {
     TRY
         _ObjectType = ObjectType::GitForm;
-        Initialize();
+        initialize();
     CATCH
 }
 

@@ -12,8 +12,8 @@
 void VPGCppGenerationManager::Add() const
 {
     TRY
-        vcc::LogService::LogInfo(this->GetLogConfig().get(), CLASS_ID, L"Copy Project to " + (!this->_Workspace.empty() ? this->_Workspace : vcc::GetCurrentFolderPath()));
+        vcc::LogService::LogInfo(this->getLogConfig().get(), CLASS_ID, L"Copy Project to " + (!this->_Workspace.empty() ? this->_Workspace : vcc::GetCurrentFolderPath()));
         this->CreateBasicProject();
-        vcc::LogService::LogInfo(this->GetLogConfig().get(), CLASS_ID, L"Done.");
+        vcc::LogService::LogInfo(this->getLogConfig().get(), CLASS_ID, L"Done.");
     CATCH
 }

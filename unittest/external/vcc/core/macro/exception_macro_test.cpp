@@ -24,7 +24,7 @@ TEST(ExceptionMacroTest, General)
 
         vcc::IException *iex = dynamic_cast<vcc::IException *>(&ex);
         EXPECT_TRUE(iex != nullptr);
-        EXPECT_EQ(iex->GetErrorMessage(), L"FILE_NOT_FOUND");
+        EXPECT_EQ(iex->getErrorMessage(), L"FILE_NOT_FOUND");
         std::string whatStr(iex->what());
         EXPECT_EQ(whatStr, "FILE_NOT_FOUND");
     }

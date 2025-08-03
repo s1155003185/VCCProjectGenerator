@@ -21,8 +21,8 @@ class VPGVccGenerationManager : public VPGBaseGenerationManager
             return std::make_shared<VPGVccGenerationManager>(*this);
         }
 
-        std::vector<std::wstring> GetUpdateList() const;
-        std::vector<std::wstring> GetUpdateUnitTestList() const;
+        std::vector<std::wstring> getUpdateList() const;
+        std::vector<std::wstring> getUpdateUnitTestList() const;
 
         void CreateVccJson(bool isNew) const;
         void ReadVccJson() const;

@@ -19,7 +19,7 @@ std::wstring VPGMainFormAddWorkspaceFormArgumentPropertyAccessor::_ReadString(co
         switch(static_cast<VPGMainFormAddWorkspaceFormArgumentProperty>(objectProperty))
         {
         case VPGMainFormAddWorkspaceFormArgumentProperty::Name:
-            return obj->GetName();
+            return obj->getName();
         default:
             assert(false);
         }
@@ -51,7 +51,7 @@ void VPGMainFormAddWorkspaceFormArgumentPropertyAccessor::_WriteString(const int
         switch(static_cast<VPGMainFormAddWorkspaceFormArgumentProperty>(objectProperty))
         {
         case VPGMainFormAddWorkspaceFormArgumentProperty::Name:
-            obj->SetName(value);
+            obj->setName(value);
             break;
         default:
             assert(false);
@@ -88,7 +88,7 @@ std::shared_ptr<vcc::IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAcce
         switch(static_cast<VPGMainFormDeleteWorkspaceFormArgumentProperty>(objectProperty))
         {
         case VPGMainFormDeleteWorkspaceFormArgumentProperty::WorkspaceForm:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetWorkspaceForm());
+            return std::static_pointer_cast<vcc::IObject>(obj->getWorkspaceForm());
         default:
             assert(false);
         }
@@ -120,7 +120,7 @@ void VPGMainFormDeleteWorkspaceFormArgumentPropertyAccessor::_WriteObject(const 
         switch(static_cast<VPGMainFormDeleteWorkspaceFormArgumentProperty>(objectProperty))
         {
         case VPGMainFormDeleteWorkspaceFormArgumentProperty::WorkspaceForm:
-            obj->SetWorkspaceForm(std::static_pointer_cast<VPGWorkspaceForm>(value));
+            obj->setWorkspaceForm(std::static_pointer_cast<VPGWorkspaceForm>(value));
             break;
         default:
             assert(false);
@@ -157,7 +157,7 @@ std::shared_ptr<vcc::IObject> VPGMainFormDeleteWorkspaceFormArgumentPropertyAcce
         switch(static_cast<VPGMainFormDeleteWorkspaceFormArgumentProperty>(objectProperty))
         {
         case VPGMainFormDeleteWorkspaceFormArgumentProperty::WorkspaceForm:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetWorkspaceForm()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->getWorkspaceForm()->Clone());
         default:
             assert(false);
         }
@@ -198,7 +198,7 @@ std::shared_ptr<vcc::IObject> VPGMainFormPropertyAccessor::_ReadObjectAtIndex(co
         switch(static_cast<VPGMainFormProperty>(objectProperty))
         {
         case VPGMainFormProperty::WorkspaceForms:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetWorkspaceFormsAtIndex(index));
+            return std::static_pointer_cast<vcc::IObject>(obj->getWorkspaceFormsAtIndex(index));
         default:
             assert(false);
         }
@@ -231,9 +231,9 @@ void VPGMainFormPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectPrope
         {
         case VPGMainFormProperty::WorkspaceForms:
             if (index > -1)
-                obj->SetWorkspaceFormsAtIndex(index, std::static_pointer_cast<VPGWorkspaceForm>(value));
+                obj->setWorkspaceFormsAtIndex(index, std::static_pointer_cast<VPGWorkspaceForm>(value));
             else
-                obj->InsertWorkspaceForms(std::static_pointer_cast<VPGWorkspaceForm>(value));
+                obj->insertWorkspaceForms(std::static_pointer_cast<VPGWorkspaceForm>(value));
             break;
         default:
             assert(false);
@@ -258,9 +258,9 @@ void VPGMainFormPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProp
         {
         case VPGMainFormProperty::WorkspaceForms:
             if (index > -1)
-                obj->InsertWorkspaceFormsAtIndex(index, std::static_pointer_cast<VPGWorkspaceForm>(value));
+                obj->insertWorkspaceFormsAtIndex(index, std::static_pointer_cast<VPGWorkspaceForm>(value));
             else
-                obj->InsertWorkspaceForms(std::static_pointer_cast<VPGWorkspaceForm>(value));
+                obj->insertWorkspaceForms(std::static_pointer_cast<VPGWorkspaceForm>(value));
             break;
         default:
             assert(false);
@@ -309,7 +309,7 @@ size_t VPGMainFormPropertyAccessor::_GetCount(const int64_t &objectProperty) con
         switch(static_cast<VPGMainFormProperty>(objectProperty))
         {
         case VPGMainFormProperty::WorkspaceForms:
-            return obj->GetWorkspaceForms().size();
+            return obj->getWorkspaceForms().size();
         default:
             assert(false);
         }
@@ -406,7 +406,7 @@ std::wstring VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_ReadString
         switch(static_cast<VPGMainFormRenameWorkspaceFormArgumentProperty>(objectProperty))
         {
         case VPGMainFormRenameWorkspaceFormArgumentProperty::NewName:
-            return obj->GetNewName();
+            return obj->getNewName();
         default:
             assert(false);
         }
@@ -438,7 +438,7 @@ void VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_WriteString(const 
         switch(static_cast<VPGMainFormRenameWorkspaceFormArgumentProperty>(objectProperty))
         {
         case VPGMainFormRenameWorkspaceFormArgumentProperty::NewName:
-            obj->SetNewName(value);
+            obj->setNewName(value);
             break;
         default:
             assert(false);
@@ -475,7 +475,7 @@ std::shared_ptr<vcc::IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAcce
         switch(static_cast<VPGMainFormRenameWorkspaceFormArgumentProperty>(objectProperty))
         {
         case VPGMainFormRenameWorkspaceFormArgumentProperty::WorkspaceForm:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetWorkspaceForm());
+            return std::static_pointer_cast<vcc::IObject>(obj->getWorkspaceForm());
         default:
             assert(false);
         }
@@ -507,7 +507,7 @@ void VPGMainFormRenameWorkspaceFormArgumentPropertyAccessor::_WriteObject(const 
         switch(static_cast<VPGMainFormRenameWorkspaceFormArgumentProperty>(objectProperty))
         {
         case VPGMainFormRenameWorkspaceFormArgumentProperty::WorkspaceForm:
-            obj->SetWorkspaceForm(std::static_pointer_cast<VPGWorkspaceForm>(value));
+            obj->setWorkspaceForm(std::static_pointer_cast<VPGWorkspaceForm>(value));
             break;
         default:
             assert(false);
@@ -544,7 +544,7 @@ std::shared_ptr<vcc::IObject> VPGMainFormRenameWorkspaceFormArgumentPropertyAcce
         switch(static_cast<VPGMainFormRenameWorkspaceFormArgumentProperty>(objectProperty))
         {
         case VPGMainFormRenameWorkspaceFormArgumentProperty::WorkspaceForm:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetWorkspaceForm()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->getWorkspaceForm()->Clone());
         default:
             assert(false);
         }

@@ -19,12 +19,12 @@ namespace vcc
         TRY  
             Config *configObj = dynamic_cast<Config *>(const_cast<IDocument *>(doc));
             assert(configObj != nullptr);
-            for (auto const &pair : configObj->GetConfigs()) {
+            for (auto const &pair : configObj->getConfigs()) {
                 std::wstring key = pair.first;
                 std::wstring value = pair.second;
                 Trim(key);
                 Trim(value);
-                if (configObj->IsValue(key))
+                if (configObj->isValue(key))
                     result += key + L"=" + value + L"\r\n";
                 else
                     result += value + L"\r\n";

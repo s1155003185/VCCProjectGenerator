@@ -20,17 +20,17 @@
 
 namespace vcc
 {
-    std::wstring GetCurrentFolderPath()
+    std::wstring getCurrentFolderPath()
     {
         return std::filesystem::current_path().wstring();
     }
 
-	std::wstring GetSystemFolderPath(const SystemFolderType &fileType)
+	std::wstring getSystemFolderPath(const SystemFolderType &fileType)
     {
         #ifdef __WIN32
-        return GetSystemFolderPathWindow(fileType);
+        return getSystemFolderPathWindow(fileType);
         #else
-        return GetSystemFolderPathLinux(fileType);
+        return getSystemFolderPathLinux(fileType);
         #endif
     }
     
@@ -42,7 +42,7 @@ namespace vcc
         return false;
     }
 
-    std::wstring GetParentPath(const std::wstring &filePath)
+    std::wstring getParentPath(const std::wstring &filePath)
     {
         std::wstring parentPath = L"";
         TRY
@@ -51,7 +51,7 @@ namespace vcc
         return parentPath;
     }
 
-    std::wstring GetFileName(const std::wstring &filePath)
+    std::wstring getFileName(const std::wstring &filePath)
     {
         std::wstring fileName = L"";
         TRY
@@ -74,13 +74,13 @@ namespace vcc
             }
         }
         #ifdef __WIN32
-        return GetWindowPath(result.wstring());
+        return getWindowPath(result.wstring());
         #else
-        return GetLinuxPath(result.wstring());
+        return getLinuxPath(result.wstring());
         #endif
     }
 
-    std::wstring GetRelativePath(const std::wstring &absolutePath, const std::wstring &basePath)
+    std::wstring getRelativePath(const std::wstring &absolutePath, const std::wstring &basePath)
     {
         TRY
             if (IsBlank(basePath))
@@ -90,7 +90,7 @@ namespace vcc
         return L"";
     }
 
-    void GetFileDifferenceBetweenWorkspaces(const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace, 
+    void getFileDifferenceBetweenWorkspaces(const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace, 
         std::vector<std::wstring> &needToAdd, std::vector<std::wstring> &needToModify, std::vector<std::wstring> &needToDelete)
     {
         TRY
@@ -127,33 +127,33 @@ namespace vcc
         CATCH
     }
 
-    std::wstring GetWindowPath(const std::wstring &path)
+    std::wstring getWindowPath(const std::wstring &path)
     {
         std::wstring result = path;
         ReplaceAll(result, L"/", L"\\");
         return result;
     }
 
-    std::wstring GetLinuxPath(const std::wstring &path)
+    std::wstring getLinuxPath(const std::wstring &path)
     {
         std::wstring result = path;
         ReplaceAll(result, L"\\", L"/");
         return result;
     }
 
-    std::wstring GetCurrentPlatformPath(const std::wstring &path)
+    std::wstring getCurrentPlatformPath(const std::wstring &path)
     {
         #ifdef __WIN32
-        GetWindowPath(path);
+        getWindowPath(path);
         #else
-        GetLinuxPath(path);
+        getLinuxPath(path);
         #endif
         return path;
     }
 
-    std::wstring GetRegexFromFileFilter(const std::wstring &fileFilter)
+    std::wstring getRegexFromFileFilter(const std::wstring &fileFilter)
     {
-        std::wstring patten = GetEscapeString(EscapeStringType::Regex, fileFilter);
+        std::wstring patten = getEscapeString(EscapeStringType::Regex, fileFilter);
 
         // Excape *
         ReplaceAll(patten, L"\\*", L".*");
@@ -289,23 +289,23 @@ namespace vcc
         assert(!IsBlank(srcDirectory));
         assert(!IsBlank(destDirectory));
         TRY
-            bool isForce = option != nullptr && option->GetIsForce();
+            bool isForce = option != nullptr && option->getIsForce();
             std::vector<std::wstring> srcFileList;
             for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(srcDirectory))) {
-                if (option != nullptr && !option->GetIsRecursive()) {
+                if (option != nullptr && !option->getIsRecursive()) {
                     if (filePath.path().parent_path().wstring() != srcDirectory)
                         continue;
                 }
-                std::wstring relativePath =  GetRelativePath(filePath.path().wstring(), srcDirectory);
+                std::wstring relativePath =  getRelativePath(filePath.path().wstring(), srcDirectory);
                 if (filePath.is_directory() && !(relativePath.ends_with(L"/") || relativePath.ends_with(L"\\")))
                     relativePath += L"/";
                 std::wstring destAbsolutePath = ConcatPaths({destDirectory, relativePath});
                 if (filePath.is_directory() && !(destAbsolutePath.ends_with(L"/") || destAbsolutePath.ends_with(L"\\")))
                     destAbsolutePath += L"/";
                 if (option != nullptr) {
-                    if (!option->GetIncludeFileFilters().empty() && !IsPathMatchFileFilters(relativePath, option->GetIncludeFileFilters()))
+                    if (!option->getIncludeFileFilters().empty() && !IsPathMatchFileFilters(relativePath, option->getIncludeFileFilters()))
                         continue;
-                    if (!option->GetExcludeFileFilters().empty() && IsPathMatchFileFilters(relativePath, option->GetExcludeFileFilters()))
+                    if (!option->getExcludeFileFilters().empty() && IsPathMatchFileFilters(relativePath, option->getExcludeFileFilters()))
                         continue;
                 }
                 if (filePath.is_directory()) {

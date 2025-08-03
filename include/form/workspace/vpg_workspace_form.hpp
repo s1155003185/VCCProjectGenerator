@@ -42,7 +42,7 @@ class VPGWorkspaceForm : public vcc::BaseForm, public vcc::BaseJsonObject
         virtual std::shared_ptr<vcc::Json> ToJson() const override;
         virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 
-        virtual void InitializeComponents() override;
+        virtual void initializeComponents() override;
 
         virtual std::shared_ptr<vcc::IResult> DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;
 

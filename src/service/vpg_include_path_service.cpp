@@ -28,7 +28,7 @@ void VPGIncludePathService::GetWorkspaceIncludePath(const std::wstring &workspac
             std::vector<std::shared_ptr<VPGEnumClass>> curremtnEnumClasses;
             reader->Parse(fileContent, curremtnEnumClasses);
             for (auto const &enumClass : curremtnEnumClasses)
-                enumClassMapping.insert(std::make_pair(enumClass->GetName(), enumClass));
+                enumClassMapping.insert(std::make_pair(enumClass->getName(), enumClass));
             std::set<std::wstring> classNames;
             VPGIncludePathReader reader;
             reader.Parse(vcc::PlatformType::NA, fileContent, classNames);
@@ -47,7 +47,7 @@ void VPGIncludePathService::GetWorkspaceIncludePath(const std::wstring &workspac
 //                 continue;
 //             // check all parents and file has prefix _
 //             // if yes, then skip
-//             std::wstring linuxPath = GetLinuxPath(filePath.path().wstring());
+//             std::wstring linuxPath = getLinuxPath(filePath.path().wstring());
 //             if (Find(linuxPath, L"/_") != std::wstring::npos)
 //                 continue;
 

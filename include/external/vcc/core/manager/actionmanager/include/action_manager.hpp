@@ -31,8 +31,8 @@ namespace vcc
         ActionManager(std::shared_ptr<LogConfig> logConfig) : BaseManager(logConfig) {}
         virtual ~ActionManager() {}
 
-        int64_t GetFirstSeqNo() const;
-        int64_t GetLastSeqNo() const;
+        int64_t getFirstSeqNo() const;
+        int64_t getLastSeqNo() const;
 
         std::shared_ptr<IResult> DoAction(std::shared_ptr<IAction> action);
         

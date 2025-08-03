@@ -16,7 +16,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFil
 {
     std::wstring result = L"";
     TRY
-        if (!option->GetIsGenerateApplication())
+        if (!option->getIsGenerateApplication())
             return result;
 
         std::map<std::wstring, std::wstring> functionMap;
@@ -69,7 +69,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
 {
     std::wstring result = L"";
     TRY
-        if (!option->GetIsGenerateApplication())
+        if (!option->getIsGenerateApplication())
             return result;
 
         customIncludeFiles.insert(L"application.hpp");
@@ -274,7 +274,7 @@ std::wstring VPGDllFileGenerationService::GeneratePropertyAccessorHpp(const VPGD
 {
     std::wstring result = L"";
     TRY
-        if (!option->GetIsGeneratePropertyAccessor())
+        if (!option->getIsGeneratePropertyAccessor())
             return result;
 
         customIncludeFiles.insert(L"object_factory.hpp");
@@ -306,7 +306,7 @@ std::wstring VPGDllFileGenerationService::GeneratePropertyAccessorCpp(const VPGD
 {
     std::wstring result = L"";
     TRY
-        if (!option->GetIsGeneratePropertyAccessor())
+        if (!option->getIsGeneratePropertyAccessor())
             return result;
 
         customIncludeFiles.insert(L"exception_macro.hpp");

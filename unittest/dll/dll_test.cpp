@@ -20,11 +20,11 @@ TEST(DllTest, LoadDll) {
     EXPECT_TRUE(h.GetH());
     
     typedef int (*GetVersionFunction)(wchar_t **);
-    const GetVersionFunction GetVersion = reinterpret_cast<GetVersionFunction>(h.GetProcedure(L"GetVersion"));
+    const getVersionFunction getVersion = reinterpret_cast<GetVersionFunction>(h.GetProcedure(L"GetVersion"));
     EXPECT_TRUE(GetVersion != nullptr);
     
     wchar_t* versionStr = nullptr;
-    int result = GetVersion(&versionStr);
+    int result = getVersion(&versionStr);
     EXPECT_EQ(result, 0);
     EXPECT_EQ(std::wstring(versionStr), L"v0.0.1");
     free(versionStr);

@@ -20,14 +20,14 @@ class VPGDllFileGenerationServiceTest : public testing::Test
     GETSET(std::wstring, ExpectedHpp, L"");
 
     public:
-        void SetUp() override
+        void setUp() override
         {
             this->_LogConfig = std::make_shared<vcc::LogConfig>();
-            this->_LogConfig->SetIsConsoleLog(false);
-            std::filesystem::remove_all(PATH(this->GetWorkspace()));
+            this->_LogConfig->setIsConsoleLog(false);
+            std::filesystem::remove_all(PATH(this->getWorkspace()));
 
-            this->_FilePathHpp = vcc::ConcatPaths({this->GetWorkspace(), L"DllFunctions.h"});
-            this->_FilePathCpp = vcc::ConcatPaths({this->GetWorkspace(), L"DllFunctions.cpp"});
+            this->_FilePathHpp = vcc::ConcatPaths({this->getWorkspace(), L"DllFunctions.h"});
+            this->_FilePathCpp = vcc::ConcatPaths({this->getWorkspace(), L"DllFunctions.cpp"});
             
             vcc::CopyFile(L"DllFunctions.h", this->_FilePathHpp, true);
             vcc::CopyFile(L"DllFunctions.cpp", this->_FilePathCpp, true);
@@ -35,21 +35,21 @@ class VPGDllFileGenerationServiceTest : public testing::Test
 
         void TearDown() override
         {
-            std::filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->getWorkspace()));
         }
 };
 
 TEST_F(VPGDllFileGenerationServiceTest, Normal)
 {
     auto option = std::make_shared<VPGDllFileGenerationServiceOption>();
-    option->SetIsGeneratePropertyAccessor(true);
-    VPGDllFileGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp(), option.get());
-    VPGDllFileGenerationService::GenerateCpp(this->GetLogConfig().get(), this->GetFilePathCpp(), option.get());
+    option->setIsGeneratePropertyAccessor(true);
+    VPGDllFileGenerationService::GenerateHpp(this->getLogConfig().get(), this->getFilePathHpp(), option.get());
+    VPGDllFileGenerationService::GenerateCpp(this->getLogConfig().get(), this->getFilePathCpp(), option.get());
 
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathCpp()));
 
-    std::wstring contentHpp = vcc::ReadFile(this->GetFilePathHpp());
+    std::wstring contentHpp = vcc::ReadFile(this->getFilePathHpp());
     if (!vcc::IsContain(contentHpp, L"// <vcc:dllInterfaceHeader gen=\"REPLACE\">") || !vcc::IsContain(contentHpp, L"// </vcc:dllInterfaceHeader>")) {
         EXPECT_EQ(contentHpp, L"Generate Hpp Not Contain: dllInterfaceHeader");  
     }      
@@ -57,7 +57,7 @@ TEST_F(VPGDllFileGenerationServiceTest, Normal)
         EXPECT_EQ(contentHpp, L"Generate Hpp Not Contain: dllInterface");
     }
 
-    std::wstring contentCpp = vcc::ReadFile(this->GetFilePathCpp());
+    std::wstring contentCpp = vcc::ReadFile(this->getFilePathCpp());
     if (!vcc::IsContain(contentCpp, L"// <vcc:dllInterfaceHeader gen=\"REPLACE\">") || !vcc::IsContain(contentCpp, L"// </vcc:dllInterfaceHeader>")) {
         EXPECT_EQ(contentCpp, L"Generate Cpp Not Contain: dllInterfaceHeader");
     }

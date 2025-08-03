@@ -26,7 +26,7 @@ namespace vcc
     void BaseAction::LogRedoStart() const
     { 
         TRY
-            std::wstring message = GetRedoMessageStart();
+            std::wstring message = getRedoMessageStart();
             if (!IsBlank(message))
                 LogService::LogInfo(_LogConfig.get(), L"", message);
         CATCH
@@ -35,7 +35,7 @@ namespace vcc
     void BaseAction::LogRedoComplete() const
     { 
         TRY
-            std::wstring message = GetRedoMessageComplete();
+            std::wstring message = getRedoMessageComplete();
             if (!IsBlank(message))
                 LogService::LogInfo(_LogConfig.get(), L"", message);
         CATCH
@@ -44,7 +44,7 @@ namespace vcc
     void BaseAction::LogUndoStart() const
     {
         TRY
-            std::wstring message = GetUndoMessageStart();
+            std::wstring message = getUndoMessageStart();
             if (!IsBlank(message))
                 LogService::LogInfo(_LogConfig.get(), L"", message);
         CATCH
@@ -53,7 +53,7 @@ namespace vcc
     void BaseAction::LogUndoComplete() const
     {
         TRY
-            std::wstring message = GetUndoMessageComplete();
+            std::wstring message = getUndoMessageComplete();
             if (!IsBlank(message))
                 LogService::LogInfo(_LogConfig.get(), L"", message);
         CATCH

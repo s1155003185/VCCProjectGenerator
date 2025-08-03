@@ -80,15 +80,15 @@ namespace vcc
 	// search
 	size_t Find(const std::wstring &str, const wchar_t &c, const size_t &pos = 0, const bool &isIgnoreCase = false);
 	size_t Find(const std::wstring &str, const std::wstring &subStr, const size_t &pos = 0, const bool &isIgnoreCase = false);
-	void GetCharacterRowAndColumn(const std::wstring &str, size_t pos, size_t &row, size_t &column);
-	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos = false);
-	std::wstring GetTailingSubstring(const std::wstring &str, const size_t &length);
+	void getCharacterRowAndColumn(const std::wstring &str, size_t pos, size_t &row, size_t &column);
+	void getNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos = false);
+	std::wstring getTailingSubstring(const std::wstring &str, const size_t &length);
 	// pos Point to end char after execution
-	std::wstring GetNextStringSplitBySpace(const std::wstring &str, size_t &pos,
+	std::wstring getNextStringSplitBySpace(const std::wstring &str, size_t &pos,
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
-	std::wstring GetNextString(const std::wstring &str, size_t &pos, const std::vector<std::wstring> &delimiters,
+	std::wstring getNextString(const std::wstring &str, size_t &pos, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
-	std::wstring GetNextQuotedString(const std::wstring& str, size_t &pos, const std::vector<std::wstring> &delimiters,
+	std::wstring getNextQuotedString(const std::wstring& str, size_t &pos, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList = { L"\"", L"'", L"{", L"[", L"(" },
 		const std::vector<std::wstring> &quoteCloseList = { L"\"", L"'", L"}", L"]", L")" },
 		const std::vector<std::wstring> &quoteEscapeList = { L"\\", L"\\", L"", L"", L"" },
@@ -103,12 +103,12 @@ namespace vcc
 	void ReplaceRegexAll(std::wstring &str, const std::wstring &regex, const std::wstring &replacement);
 
 	// regex
-	std::vector<wchar_t> GetSpecialCharacters(const EscapeStringType &type);
-	std::map<wchar_t, std::wstring> GetEscapeStringMap(const EscapeStringType &type);
+	std::vector<wchar_t> getSpecialCharacters(const EscapeStringType &type);
+	std::map<wchar_t, std::wstring> getEscapeStringMap(const EscapeStringType &type);
 	std::wstring ConvertSpecialCharacterToEscapeString(const EscapeStringType &type, const wchar_t &c);
-	std::wstring GetEscapeString(const EscapeStringType &type, const std::wstring &str);
-	std::wstring GetEscapeStringWithQuote(const EscapeStringType &type, const std::wstring &str);
-	std::wstring GetUnescapeString(const EscapeStringType &type, const std::wstring &str);
-	std::wstring GetUnescapeStringWithQuote(const EscapeStringType &type, const std::wstring &str);
+	std::wstring getEscapeString(const EscapeStringType &type, const std::wstring &str);
+	std::wstring getEscapeStringWithQuote(const EscapeStringType &type, const std::wstring &str);
+	std::wstring getUnescapeString(const EscapeStringType &type, const std::wstring &str);
+	std::wstring getUnescapeStringWithQuote(const EscapeStringType &type, const std::wstring &str);
 
 }

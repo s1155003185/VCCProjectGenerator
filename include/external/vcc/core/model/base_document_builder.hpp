@@ -11,7 +11,7 @@ namespace vcc
             // Error Message
             GETSET(int64_t, NumberOfCharactersBeforePosForErrorMessage, 10);
             GETSET(int64_t, NumberOfCharactersAfterPosForErrorMessage, 50);
-            std::wstring GetErrorMessage(const std::wstring &str, const size_t &pos, const std::wstring &msg) const;
+            std::wstring getErrorMessage(const std::wstring &str, const size_t &pos, const std::wstring &msg) const;
 
         protected:
             BaseDocumentBuilder() = default;

@@ -30,19 +30,19 @@ namespace vcc
 
     // Set
     template <typename T>
-    void Set(std::vector<T> &sourceVector, T obj, const int64_t &index = -1);
+    void set(std::vector<T> &sourceVector, T obj, const int64_t &index = -1);
     template <typename T>
-    void SetIObject(std::vector<std::shared_ptr<T>> &sourceVector, std::shared_ptr<IObject> &obj, const int64_t &index = -1);
+    void setIObject(std::vector<std::shared_ptr<T>> &sourceVector, std::shared_ptr<IObject> &obj, const int64_t &index = -1);
 
     // Insert
     template <typename T>
-    void Insert(std::vector<T> &sourceVector, T obj, const int64_t &index = -1);
+    void insert(std::vector<T> &sourceVector, T obj, const int64_t &index = -1);
     template <typename T>
-    void Insert(std::vector<T> &sourceVector, const std::vector<T> &objs, const int64_t &index = -1);
+    void insert(std::vector<T> &sourceVector, const std::vector<T> &objs, const int64_t &index = -1);
     template <typename T>
-    void InsertIObject(std::vector<std::shared_ptr<T>> &sourceVector, std::shared_ptr<IObject> obj, const int64_t &index = -1);
+    void insertIObject(std::vector<std::shared_ptr<T>> &sourceVector, std::shared_ptr<IObject> obj, const int64_t &index = -1);
     template <typename T>
-    void InsertIObjects(std::vector<std::shared_ptr<T>> &sourceVector, const std::vector<std::shared_ptr<T>> &objs, const int64_t &index = -1);
+    void insertIObjects(std::vector<std::shared_ptr<T>> &sourceVector, const std::vector<std::shared_ptr<T>> &objs, const int64_t &index = -1);
 
     // Remove
     template <typename T>
@@ -112,34 +112,34 @@ namespace vcc
         if (IsEmpty(sourceVector))
             return -1;
         for (size_t i = 0; i < sourceVector.size(); i++) {
-            if (sourceVector.at(i)->GetObjectId() == obj->GetObjectId())
+            if (sourceVector.at(i)->getObjectId() == obj->getObjectId())
                 return i;
         }
         return -1;
     }
 
     template <typename T>
-    void Set(std::vector<T> &sourceVector, T obj, const int64_t &index)
+    void set(std::vector<T> &sourceVector, T obj, const int64_t &index)
     {
         if (index >= 0)
             sourceVector[index] = obj;
         else
-            Insert(sourceVector, obj);
+            insert(sourceVector, obj);
     }
 
     template <typename T>
-    void SetIObject(std::vector<std::shared_ptr<T>> &sourceVector, std::shared_ptr<IObject> &obj, const int64_t &index)
+    void setIObject(std::vector<std::shared_ptr<T>> &sourceVector, std::shared_ptr<IObject> &obj, const int64_t &index)
     {
         auto derivedObj = std::dynamic_pointer_cast<T>(obj);
         assert(derivedObj != nullptr);
         if (index >= 0)
             sourceVector[index] = derivedObj;
         else
-            InsertIObject(sourceVector, derivedObj);
+            insertIObject(sourceVector, derivedObj);
     }
 
     template <typename T>
-    void Insert(std::vector<T> &sourceVector, T obj, const int64_t &index)
+    void insert(std::vector<T> &sourceVector, T obj, const int64_t &index)
     {
         if (index >= 0)
             sourceVector.insert(sourceVector.begin() + index, obj);
@@ -148,7 +148,7 @@ namespace vcc
     }
     
     template <typename T>
-    void Insert(std::vector<T> &sourceVector, const std::vector<T> &objs, const int64_t &index)
+    void insert(std::vector<T> &sourceVector, const std::vector<T> &objs, const int64_t &index)
     {
         if (index >= 0)
             sourceVector.insert(sourceVector.begin() + index, objs.begin(), objs.end());
@@ -157,7 +157,7 @@ namespace vcc
     }
     
     template <typename T>
-    void InsertIObject(std::vector<std::shared_ptr<T>> &sourceVector, std::shared_ptr<IObject> obj, const int64_t &index)
+    void insertIObject(std::vector<std::shared_ptr<T>> &sourceVector, std::shared_ptr<IObject> obj, const int64_t &index)
     {
         auto derivedObj = std::dynamic_pointer_cast<T>(obj);
         assert(derivedObj != nullptr);
@@ -168,9 +168,9 @@ namespace vcc
     }
     
     template <typename T>
-    void InsertIObjects(std::vector<std::shared_ptr<T>> &sourceVector, const std::vector<std::shared_ptr<T>> &objs, const int64_t &index)
+    void insertIObjects(std::vector<std::shared_ptr<T>> &sourceVector, const std::vector<std::shared_ptr<T>> &objs, const int64_t &index)
     {
-        Insert(sourceVector, objs, index);
+        insert(sourceVector, objs, index);
     }
 
     template <typename T>
@@ -222,7 +222,7 @@ namespace vcc
     {
         sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(),
             [&](const T &element) {
-                return element->GetObjectId() == obj->GetObjectId();
+                return element->getObjectId() == obj->getObjectId();
             }), sourceVector.end());
     }
 };

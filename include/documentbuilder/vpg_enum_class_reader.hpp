@@ -47,10 +47,10 @@ class VPGEnumClassReader
         VPGEnumClassReader(const std::set<std::wstring> &classMacroList);
         ~VPGEnumClassReader() {}
 
-        std::wstring GetCppCodeLine(const std::wstring &str, size_t &pos, bool fromCurrentPos) const;
-        std::shared_ptr<vcc::Json> GetJsonAttributes(const std::wstring &command, const std::wstring &attributeName) const;
+        std::wstring getCppCodeLine(const std::wstring &str, size_t &pos, bool fromCurrentPos) const;
+        std::shared_ptr<vcc::Json> getJsonAttributes(const std::wstring &command, const std::wstring &attributeName) const;
 
         // all attribute start with @@
-        std::vector<std::wstring> GetAttribute(const std::wstring &str) const;
+        std::vector<std::wstring> getAttribute(const std::wstring &str) const;
         void Parse(const std::wstring &cppCode, std::vector<std::shared_ptr<VPGEnumClass>> &results) const;
 };

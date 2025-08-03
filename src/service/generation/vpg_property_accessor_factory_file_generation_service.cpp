@@ -63,7 +63,7 @@ void VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(const vcc::Log
             "{\r\n"
             + INDENT + L"assert(object != nullptr);\r\n"
             "\r\n"
-            + INDENT + L"switch (object->GetObjectType())\r\n"
+            + INDENT + L"switch (object->getObjectType())\r\n"
             + INDENT + L"{\r\n";
         for (auto const &propertyType : propertyTypes) {
             content += INDENT + L"case ObjectType::" + propertyType + L":\r\n"

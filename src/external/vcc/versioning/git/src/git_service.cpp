@@ -108,7 +108,7 @@ namespace vcc
         TRY
             std::wstring optionStr = L"";
             if (searchCriteria != nullptr) {
-                if (searchCriteria->GetIsWithIgnoreFiles())
+                if (searchCriteria->getIsWithIgnoreFiles())
                     optionStr += L" --ignored";
             }
 
@@ -127,14 +127,14 @@ namespace vcc
                     // Note: For remote git response, no commit return is L"## main...origin/main"
                     std::wstring subLine = line.substr(localBrachPrefix.length());
                     Trim(subLine);
-                    status->SetBranch(subLine);
-                    status->SetRemoteBranch(L"");
+                    status->setBranch(subLine);
+                    status->setRemoteBranch(L"");
                     continue;
                 } else if (IsStartWith(line, remoteBranchPrefix)) {
                     std::vector<std::wstring> tokens = SplitString(line.substr(remoteBranchPrefix.length()), { L"..." });
-                    status->SetBranch(tokens.at(0));
+                    status->setBranch(tokens.at(0));
                     if (tokens.size() > 1)
-                        status->SetRemoteBranch(tokens.at(1));
+                        status->setRemoteBranch(tokens.at(1));
                     continue;
                 }
 
@@ -144,13 +144,13 @@ namespace vcc
                 std::wstring filePath = line.size() > prefixLength ? line.substr(prefixLength) : L"";
                 Trim(filePath);
                 if (indexFileStatus == GitFileStatus::Ignored || indexFileStatus == GitFileStatus::Untracked) {
-                    status->GetWorkingTreeFiles()[indexFileStatus].push_back(filePath);
+                    status->getWorkingTreeFiles()[indexFileStatus].push_back(filePath);
                     continue;
                 }
                 if (indexFileStatus != GitFileStatus::NA)
-                    status->GetIndexFiles()[indexFileStatus].push_back(filePath);
+                    status->getIndexFiles()[indexFileStatus].push_back(filePath);
                 if (workingTreeFileStatus != GitFileStatus::NA)
-                    status->GetWorkingTreeFiles()[workingTreeFileStatus].push_back(filePath);
+                    status->getWorkingTreeFiles()[workingTreeFileStatus].push_back(filePath);
             }
         CATCH
         return status;
@@ -169,11 +169,11 @@ namespace vcc
         TRY
             std::wstring optionStr = L"";
             if (option != nullptr) {
-                if (!IsBlank(option->GetBranch()))
-                    optionStr += L" -b " + GetEscapeStringWithQuote(EscapeStringType::DoubleQuote, option->GetBranch());
-                if (option->GetDepth() > 0)
-                    optionStr +=L" --depth " + std::to_wstring(option->GetDepth());
-                if (option->GetIsQuiet())
+                if (!IsBlank(option->getBranch()))
+                    optionStr += L" -b " + getEscapeStringWithQuote(EscapeStringType::DoubleQuote, option->getBranch());
+                if (option->getDepth() > 0)
+                    optionStr +=L" --depth " + std::to_wstring(option->getDepth());
+                if (option->getIsQuiet())
                     optionStr +=L" --quiet";
             }
             ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git clone " + url + optionStr);
@@ -193,12 +193,12 @@ namespace vcc
                 if (tokens.size() != (size_t)3)
                     THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected Remote: " + line);
                 auto remote = std::make_shared<GitRemote>();
-                remote->SetName(tokens[0]);
-                remote->SetURL(tokens[1]);
+                remote->setName(tokens[0]);
+                remote->setURL(tokens[1]);
                 if (tokens[2] == remoteMirrorFetch)
-                    remote->SetMirror(GitRemoteMirror::Fetch);
+                    remote->setMirror(GitRemoteMirror::Fetch);
                 else if (tokens[2] == remoteMirrorPush)
-                    remote->SetMirror(GitRemoteMirror::Push);
+                    remote->setMirror(GitRemoteMirror::Push);
                 else
                     THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected Remote Mirror: " + line);
                 remotes.push_back(remote);
@@ -261,10 +261,10 @@ namespace vcc
         TRY
             std::wstring optionStr = L"";
             if (option != nullptr) {
-                if (option->GetIsQuite())
+                if (option->getIsQuite())
                     optionStr += L" --quiet";
 
-                switch (option->GetRecurseSubmodules())
+                switch (option->getRecurseSubmodules())
                 {
                 case GitPullOptionRecurseSubmodulesMode::Default:
                     break;
@@ -281,7 +281,7 @@ namespace vcc
                     assert(false);
                     break;
                 }
-                for (const std::wstring &str : option->GetRepositories()) {
+                for (const std::wstring &str : option->getRepositories()) {
                     optionStr += L" " + str;
                 }
             }
@@ -294,13 +294,13 @@ namespace vcc
         TRY
             std::wstring optionStr = L"";
             if (option != nullptr) {
-                if (option->GetIsForce())
+                if (option->getIsForce())
                     optionStr += L" --force";
 
-                if (option->GetIsQuite())
+                if (option->getIsQuite())
                     optionStr += L" --quiet";
 
-                for (const std::wstring &str : option->GetRepositories()) {
+                for (const std::wstring &str : option->getRepositories()) {
                     optionStr += L" " + str;
                 }
             }
@@ -308,7 +308,7 @@ namespace vcc
         CATCH
     }
 
-    std::wstring GetGitLogSearchCriteriaString(const GitLogSearchCriteria *searchCriteria)
+    std::wstring getGitLogSearchCriteriaString(const GitLogSearchCriteria *searchCriteria)
     {
         std::wstring optionStr = L"";
         TRY
@@ -316,103 +316,103 @@ namespace vcc
                 return optionStr;
                 
             // Commit Limiting
-            if (searchCriteria->GetLogCount() > 0)
-                optionStr += L" -" + std::to_wstring(searchCriteria->GetLogCount());
+            if (searchCriteria->getLogCount() > 0)
+                optionStr += L" -" + std::to_wstring(searchCriteria->getLogCount());
             
-            if (searchCriteria->GetSkip() > 0)
-                optionStr += L" --skip=" + std::to_wstring(searchCriteria->GetSkip());
+            if (searchCriteria->getSkip() > 0)
+                optionStr += L" --skip=" + std::to_wstring(searchCriteria->getSkip());
 
-            if (!IsBlank(searchCriteria->GetDateAfter()))
-                optionStr += L" --after=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetDateAfter()) + L"\"";
+            if (!IsBlank(searchCriteria->getDateAfter()))
+                optionStr += L" --after=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getDateAfter()) + L"\"";
 
-            if (!IsBlank(searchCriteria->GetDateBefore()))
-                optionStr += L" --before=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetDateBefore()) + L"\"";
+            if (!IsBlank(searchCriteria->getDateBefore()))
+                optionStr += L" --before=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getDateBefore()) + L"\"";
             
-            if (!IsBlank(searchCriteria->GetAuthor()))
-                optionStr += L" --author=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetAuthor()) + L"\"";
+            if (!IsBlank(searchCriteria->getAuthor()))
+                optionStr += L" --author=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getAuthor()) + L"\"";
 
-            if (!IsBlank(searchCriteria->GetCommitter()))
-                optionStr += L" --committer=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetCommitter()) + L"\"";
+            if (!IsBlank(searchCriteria->getCommitter()))
+                optionStr += L" --committer=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getCommitter()) + L"\"";
 
-            if (!IsBlank(searchCriteria->GetGrep()))
-                optionStr += L" --grep=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetGrep()) + L"\"";
+            if (!IsBlank(searchCriteria->getGrep()))
+                optionStr += L" --grep=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getGrep()) + L"\"";
             
-            if (searchCriteria->GetIsGrepAllMatch())
+            if (searchCriteria->getIsGrepAllMatch())
                 optionStr += L" --all-match";
             
-            if (searchCriteria->GetIsGrepInvertGrep())
+            if (searchCriteria->getIsGrepInvertGrep())
                 optionStr += L" --invert-grep";
             
-            if (searchCriteria->GetIsPatternRegexpIgnoreCase())
+            if (searchCriteria->getIsPatternRegexpIgnoreCase())
                 optionStr += L" --regexp-ignore-case";
 
-            if (searchCriteria->GetIsPatternExtendedRegexp())
+            if (searchCriteria->getIsPatternExtendedRegexp())
                 optionStr += L" --extended-regexp";
 
-            if (searchCriteria->GetIsPatternFixedStrings())
+            if (searchCriteria->getIsPatternFixedStrings())
                 optionStr += L" --fixed-strings";
 
-            if (searchCriteria->GetIsMerges())
+            if (searchCriteria->getIsMerges())
                 optionStr += L" --merges";
 
-            if (searchCriteria->GetIsNoMerges())
+            if (searchCriteria->getIsNoMerges())
                 optionStr += L" --no-merges";
 
-            if (searchCriteria->GetMinParents() >= 0)
-                optionStr += L" --min-parents=" + std::to_wstring(searchCriteria->GetMinParents());
+            if (searchCriteria->getMinParents() >= 0)
+                optionStr += L" --min-parents=" + std::to_wstring(searchCriteria->getMinParents());
             
-            if (searchCriteria->GetMaxParents() >= 0)
-                optionStr += L" --max-parents=" + std::to_wstring(searchCriteria->GetMaxParents());
+            if (searchCriteria->getMaxParents() >= 0)
+                optionStr += L" --max-parents=" + std::to_wstring(searchCriteria->getMaxParents());
             
-            if (searchCriteria->GetIsFirstParent())
+            if (searchCriteria->getIsFirstParent())
                 optionStr += L" --first-parent";
 
-            if (searchCriteria->GetIsAll())
+            if (searchCriteria->getIsAll())
                 optionStr += L" --all";
 
-            if (searchCriteria->GetIsAllBranches())
+            if (searchCriteria->getIsAllBranches())
                 optionStr += L" --branches";
-            else if (!IsBlank(searchCriteria->GetBranches()))
-                optionStr += L" --branches=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetBranches()) + L"\"";
+            else if (!IsBlank(searchCriteria->getBranches()))
+                optionStr += L" --branches=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getBranches()) + L"\"";
             
-            if (searchCriteria->GetIsAllTags())
+            if (searchCriteria->getIsAllTags())
                 optionStr += L" --tags";
-            else if (!IsBlank(searchCriteria->GetTags()))
-                optionStr += L" --tags=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetTags()) + L"\"";
+            else if (!IsBlank(searchCriteria->getTags()))
+                optionStr += L" --tags=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getTags()) + L"\"";
             
-            if (searchCriteria->GetIsAllRemotes())
+            if (searchCriteria->getIsAllRemotes())
                 optionStr += L" --remotes";
-            else if (!IsBlank(searchCriteria->GetRemotes()))
-                optionStr += L" --remotes=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetRemotes()) + L"\"";
+            else if (!IsBlank(searchCriteria->getRemotes()))
+                optionStr += L" --remotes=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getRemotes()) + L"\"";
             
-            if (searchCriteria->GetIsAllGlob())
+            if (searchCriteria->getIsAllGlob())
                 optionStr += L" --glob";
-            else if (!IsBlank(searchCriteria->GetGlob()))
-                optionStr += L" --glob=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetGlob()) + L"\"";
+            else if (!IsBlank(searchCriteria->getGlob()))
+                optionStr += L" --glob=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getGlob()) + L"\"";
             
-            if (!IsBlank(searchCriteria->GetExcludeGlob()))
-                optionStr += L" --exclude=\"" + GetEscapeString(EscapeStringType::DoubleQuote, searchCriteria->GetExcludeGlob()) + L"\"";
+            if (!IsBlank(searchCriteria->getExcludeGlob()))
+                optionStr += L" --exclude=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getExcludeGlob()) + L"\"";
             
             // History Simplification
-            if (searchCriteria->GetIsSimplifyByDecoration())
+            if (searchCriteria->getIsSimplifyByDecoration())
                 optionStr += L" --simplify-by-decoration";
 
-            if (searchCriteria->GetIsShowPulls())
+            if (searchCriteria->getIsShowPulls())
                 optionStr += L" --show-pulls";
 
-            if (searchCriteria->GetIsFullHistory())
+            if (searchCriteria->getIsFullHistory())
                 optionStr += L" --full-history";
             
-            if (searchCriteria->GetIsSparse())
+            if (searchCriteria->getIsSparse())
                 optionStr += L" --sparse";
 
-            if (searchCriteria->GetIsSimplifyMerges())
+            if (searchCriteria->getIsSimplifyMerges())
                 optionStr += L" --simplify-merges";
 
-            if (!IsBlank(searchCriteria->GetAncestryPath()))
-                optionStr += L" --ancestry-path=" + searchCriteria->GetAncestryPath();
+            if (!IsBlank(searchCriteria->getAncestryPath()))
+                optionStr += L" --ancestry-path=" + searchCriteria->getAncestryPath();
             
-            switch (searchCriteria->GetOrderBy())
+            switch (searchCriteria->getOrderBy())
             {
             case GitLogOrderBy::NA:
                 break;
@@ -434,20 +434,20 @@ namespace vcc
             }
 
             // Revision Range
-            if (!IsBlank(searchCriteria->GetRevisionFrom()) || !IsBlank(searchCriteria->GetRevisionTo())) {
+            if (!IsBlank(searchCriteria->getRevisionFrom()) || !IsBlank(searchCriteria->getRevisionTo())) {
                 std::wstring revisionStr = L"";
-                if (!IsBlank(searchCriteria->GetRevisionFrom()))
-                    revisionStr += searchCriteria->GetRevisionFrom();
+                if (!IsBlank(searchCriteria->getRevisionFrom()))
+                    revisionStr += searchCriteria->getRevisionFrom();
                 revisionStr += L"..";
-                if (!IsBlank(searchCriteria->GetRevisionTo()))
-                    revisionStr += searchCriteria->GetRevisionTo();
+                if (!IsBlank(searchCriteria->getRevisionTo()))
+                    revisionStr += searchCriteria->getRevisionTo();
                 optionStr += L" " + revisionStr;
             }
 
             // path must be at the end            
-            if (!searchCriteria->GetPaths().empty()) {
+            if (!searchCriteria->getPaths().empty()) {
                 optionStr += L" --";
-                for (const std::wstring &path : searchCriteria->GetPaths()) {
+                for (const std::wstring &path : searchCriteria->getPaths()) {
                     optionStr += L" " + path;
                 }
             }
@@ -466,9 +466,9 @@ namespace vcc
                     continue;
                 auto log = std::make_shared<GitLog>();
                 if (pos > 0) {
-                    log->SetColumnIndex((size_t)floor(pos/2));
+                    log->setColumnIndex((size_t)floor(pos/2));
                 } else
-                    log->SetColumnIndex(0);
+                    log->setColumnIndex(0);
                 std::wregex pattern(L"\\(([^)]+)\\)");
                 std::wsmatch match;
                 std::wstring::const_iterator searchStart(line.cbegin());
@@ -477,16 +477,16 @@ namespace vcc
                     switch (cnt)
                     {
                     case 0:
-                        log->SetHashID(match[1]);
+                        log->setHashID(match[1]);
                         break;
                     case 1:
-                        log->SetAbbreviatedHashID(match[1]);
+                        log->setAbbreviatedHashID(match[1]);
                         break;
                     case 2:
-                        log->SetTreeHashID(match[1]);
+                        log->setTreeHashID(match[1]);
                         break;
                     case 3:
-                        log->SetAbbreviatedTreeHashID(match[1]);
+                        log->setAbbreviatedTreeHashID(match[1]);
                         break;
                     case 4: {
                         std::wstring parentID = match[1];
@@ -495,7 +495,7 @@ namespace vcc
                             if (IsBlank(token))
                                 continue;
                             Trim(token);
-                            log->InsertParentHashIDs(token);
+                            log->insertParentHashIDs(token);
                         }
                         break;
                     }
@@ -506,7 +506,7 @@ namespace vcc
                             if (IsBlank(token))
                                 continue;
                             Trim(token);
-                            log->InsertAbbreviatedParentHashIDs(token);
+                            log->insertAbbreviatedParentHashIDs(token);
                         }
                         break;
                     }
@@ -550,9 +550,9 @@ namespace vcc
                     std::vector<std::wstring> tokens = SplitString(tmpLine, { L" " });
                     if (tokens.empty())
                         THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"HashID missing: " + str);
-                    if (!IsBlank(log->GetHashID()) && log->GetHashID() != tokens.at(0))
-                        THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"HashID " + log->GetHashID() + L" + not match: " + str);
-                    log->SetHashID(tokens.at(0));
+                    if (!IsBlank(log->getHashID()) && log->getHashID() != tokens.at(0))
+                        THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"HashID " + log->getHashID() + L" + not match: " + str);
+                    log->setHashID(tokens.at(0));
                     if (Find(tmpLine, L"(") != std::wstring::npos) {
                         std::wregex pattern(L"\\((.*?)\\)");
                         std::wsmatch matches;
@@ -560,11 +560,11 @@ namespace vcc
                             std::wstring tagsStr = matches[1].str();
                             Trim(tagsStr);
                             if (IsStartWith(tagsStr, headerPrefix)) {
-                                log->SetIsHead(true);
+                                log->setIsHead(true);
                                 tagsStr = tagsStr.substr(headerPrefix.length());
                                 Trim(tagsStr);
                             } else
-                                log->SetIsHead(false);
+                                log->setIsHead(false);
 
                             std::vector<std::wstring> tokens = SplitString(tagsStr, { L"," });
                             for (std::wstring token : tokens) {
@@ -572,9 +572,9 @@ namespace vcc
                                 if (IsStartWith(token, tagPrefix)) {
                                     token = token.substr(tagPrefix.length());
                                     Trim(token);
-                                    log->InsertTags(token);
+                                    log->insertTags(token);
                                 } else {
-                                    log->InsertBranches(token);
+                                    log->insertBranches(token);
                                 }
                             }
                         }
@@ -585,40 +585,40 @@ namespace vcc
                     // name
                     std::wstring name = tmpLine.substr(0, Find(tmpLine, L"<") - 1);
                     Trim(name);
-                    log->SetAuthor(name);
+                    log->setAuthor(name);
                     //email
                     std::wregex pattern(L"<(.+?)>");
                     std::wsmatch matches;
                     if (std::regex_search(tmpLine, matches, pattern)) {
                         std::wstring email = matches[1].str();
                         Trim(email);
-                        log->SetAuthorEmail(email);
+                        log->setAuthorEmail(email);
                     }
                 } else if (IsStartWith(line, authorDatePrefix)) {
                     std::wstring tmpLine = line.substr(authorDatePrefix.length());
                     Trim(tmpLine);
-                    log->SetAuthorDate(GitService::ParseGitLogDatetime(tmpLine));
-                    log->SetAuthorDateStr(tmpLine);
+                    log->setAuthorDate(GitService::ParseGitLogDatetime(tmpLine));
+                    log->setAuthorDateStr(tmpLine);
                 } else if (IsStartWith(line, commitPrefix)) {
                     std::wstring tmpLine = line.substr(commitPrefix.length());
                     Trim(tmpLine);
                     // name
                     std::wstring name = tmpLine.substr(0, Find(tmpLine, L"<") - 1);
                     Trim(name);
-                    log->SetCommitter(name);
+                    log->setCommitter(name);
                     //email
                     std::wregex pattern(L"<(.+?)>");
                     std::wsmatch matches;
                     if (std::regex_search(tmpLine, matches, pattern)) {
                         std::wstring email = matches[1].str();
                         Trim(email);
-                        log->SetCommitterEmail(email);
+                        log->setCommitterEmail(email);
                     }
                 } else if (IsStartWith(line, commitDatePrefix)) {
                     std::wstring tmpLine = line.substr(commitDatePrefix.length());
                     Trim(tmpLine);
-                    log->SetCommitDate(GitService::ParseGitLogDatetime(tmpLine));
-                    log->SetCommitDateStr(tmpLine);
+                    log->setCommitDate(GitService::ParseGitLogDatetime(tmpLine));
+                    log->setCommitDateStr(tmpLine);
                 }
             }
 
@@ -655,9 +655,9 @@ namespace vcc
                     }
                 }
             }
-            log->SetTitle(title);
-            log->SetMessage(message);
-            log->SetFullMessage(str);
+            log->setTitle(title);
+            log->setMessage(message);
+            log->setFullMessage(str);
         CATCH
     }
     
@@ -665,14 +665,14 @@ namespace vcc
     {
         std::vector<std::shared_ptr<GitLog>> logs;
         TRY
-            logs = GitService::ParseGitLogGraph(ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git log --graph --oneline --pretty=format:\"(%H)(%h)(%T)(%t)(%P)(%p)\" " + GetGitLogSearchCriteriaString(searchCriteria)));
+            logs = GitService::ParseGitLogGraph(ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git log --graph --oneline --pretty=format:\"(%H)(%h)(%T)(%t)(%P)(%p)\" " + getGitLogSearchCriteriaString(searchCriteria)));
             std::map<std::wstring, std::shared_ptr<GitLog>> logMap;
             for (auto log : logs) {
-                logMap.insert({log->GetHashID(), log});
+                logMap.insert({log->getHashID(), log});
             }
             std::wstring logDetail = L"";
             std::wstring currentHashID = L"";
-            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git log --pretty=fuller" + GetGitLogSearchCriteriaString(searchCriteria)));
+            std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git log --pretty=fuller" + getGitLogSearchCriteriaString(searchCriteria)));
             for (const std::wstring &line : lines) {
                 if (IsStartWith(line, hashIDPrefix)) {
                     if (!logDetail.empty()) {
@@ -700,7 +700,7 @@ namespace vcc
     {
         TRY
             auto searchCriteria = std::make_shared<GitLogSearchCriteria>();
-            searchCriteria->SetLogCount(1);
+            searchCriteria->setLogCount(1);
             auto logs = GitService::GetLogs(logConfig, workspace, searchCriteria.get());
             if (!logs.empty())
                 return std::dynamic_pointer_cast<GitLog>(logs.at(0)->Clone());
@@ -722,14 +722,14 @@ namespace vcc
         TRY
             std::wstring optionStr = L"";
             if (searchCriteria != nullptr) {
-                if (!IsBlank(searchCriteria->GetContains()))
-                    optionStr += L" --contains " + searchCriteria->GetContains();
+                if (!IsBlank(searchCriteria->getContains()))
+                    optionStr += L" --contains " + searchCriteria->getContains();
 
-                if (!IsBlank(searchCriteria->GetNoContains()))
-                    optionStr += L" --no-contains " + searchCriteria->GetNoContains();
+                if (!IsBlank(searchCriteria->getNoContains()))
+                    optionStr += L" --no-contains " + searchCriteria->getNoContains();
 
-                if (!IsBlank(searchCriteria->GetOrderBy()))
-                    optionStr += L" --sort=" + searchCriteria->GetOrderBy();
+                if (!IsBlank(searchCriteria->getOrderBy()))
+                    optionStr += L" --sort=" + searchCriteria->getOrderBy();
             }
             std::vector<std::wstring> lines = SplitStringByLine(ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git tag -l"));
             tags.insert(tags.end(), lines.begin(), lines.end());
@@ -768,18 +768,18 @@ namespace vcc
             if (tokens.size() >= 3) {
                 try
                 {
-                    currentTag->SetNoOfCommit(std::stoi(tokens[tokens.size() - 2]));
-                    currentTag->SetHashID(tokens[tokens.size() - 1]);
+                    currentTag->setNoOfCommit(std::stoi(tokens[tokens.size() - 2]));
+                    currentTag->setHashID(tokens[tokens.size() - 1]);
                     tokens.pop_back();
                     tokens.pop_back();
-                    currentTag->SetTagName(Concat(tokens, L"-"));
+                    currentTag->setTagName(Concat(tokens, L"-"));
                 }
                 catch(...)
                 {
-                    currentTag->SetTagName(tagStr);
+                    currentTag->setTagName(tagStr);
                 }
             } else {
-                currentTag->SetTagName(tagStr);
+                currentTag->setTagName(tagStr);
             }
             return currentTag;
         CATCH
@@ -793,7 +793,7 @@ namespace vcc
             std::wstring optionStr = L"";
             std::wstring suffixOptionStr = L"";
             if (option != nullptr) {
-                switch (option->GetSign())
+                switch (option->getSign())
                 {
                 case GitTagCreateTagOptionSignMode::Default:
                     optionStr += L" -a";
@@ -805,22 +805,22 @@ namespace vcc
                     optionStr += L" -s";
                     break;
                 case GitTagCreateTagOptionSignMode::LocalUser:
-                    assert(!IsBlank(option->GetSignLocalUserKeyID()));
-                    optionStr += L" -local-user=" + option->GetSignLocalUserKeyID();
+                    assert(!IsBlank(option->getSignLocalUserKeyID()));
+                    optionStr += L" -local-user=" + option->getSignLocalUserKeyID();
                     break;
                 default:
                     assert(false);
                     break;
                 }
 
-                if (option->GetIsForce())
+                if (option->getIsForce())
                     optionStr += L" -f";
                 
-                if (!IsBlank(option->GetMessage()))
-                    optionStr += L" -m \"" + GetEscapeString(EscapeStringType::DoubleQuote, option->GetMessage()) + L"\"";
+                if (!IsBlank(option->getMessage()))
+                    optionStr += L" -m \"" + getEscapeString(EscapeStringType::DoubleQuote, option->getMessage()) + L"\"";
 
-                if (!IsBlank(option->GetHashID()))
-                    suffixOptionStr += L" " + option->GetHashID();
+                if (!IsBlank(option->getHashID()))
+                    suffixOptionStr += L" " + option->getHashID();
             }
             ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git tag" + optionStr + L" " + tagName + L" " + suffixOptionStr);
         CATCH
@@ -856,23 +856,23 @@ namespace vcc
             std::wstring tmpStr = str;
             std::wstring checkoutPrefix = L"*";
             if (IsStartWith(tmpStr, checkoutPrefix)) {
-                branch->SetIsActive(true);
+                branch->setIsActive(true);
                 tmpStr = tmpStr.substr(checkoutPrefix.size());
             }
             Trim(tmpStr);
             std::vector<std::wstring> tokens = SplitString(tmpStr, { L" ", L"\t"});
             if (tokens.size() < 3)
                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected git branch pattern: " + str);
-            branch->SetName(tokens[0]);
+            branch->setName(tokens[0]);
             std::wstring hashID = tokens[1];
             bool isPointTo = hashID == L"->";
             std::wstring title = str.substr(Find(str, hashID) + hashID.size());
             Trim(title);
             if (isPointTo) {
-                branch->SetPointToBranch(title);
+                branch->setPointToBranch(title);
             } else {
-                branch->SetHashID(hashID);
-                branch->SetTitle(title);
+                branch->setHashID(hashID);
+                branch->setTitle(title);
             }
         CATCH
     }
@@ -923,10 +923,10 @@ namespace vcc
             assert(!IsBlank(branchName));
             std::wstring optionStr = L"";
             if (option != nullptr) {
-                if (option->GetIsForce())
+                if (option->getIsForce())
                     optionStr += L" -f";
 
-                switch (option->GetTrack())
+                switch (option->getTrack())
                 {
                 case GitBranchCreateBranchOptionTrackMode::Default:
                     break;
@@ -944,7 +944,7 @@ namespace vcc
                     break;
                 }
 
-                if (option->GetIsRecurseSubmodules())
+                if (option->getIsRecurseSubmodules())
                     optionStr += L" --recurse-submodules";
             }
             ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git branch" + optionStr + L" " + branchName);
@@ -957,10 +957,10 @@ namespace vcc
             assert(!IsBlank(branchName));
             std::wstring optionStr = L"";
             if (option != nullptr) {
-                if (option->GetIsQuite()) {
+                if (option->getIsQuite()) {
                     optionStr += L" -q";
                 }
-                if (option->GetIsDiscardChanges()) {
+                if (option->getIsDiscardChanges()) {
                     optionStr += L" --discard-changes";
                 }
             }
@@ -1006,9 +1006,9 @@ namespace vcc
                 std::vector<std::wstring> tokens = SplitString(line, { L"\t" }, { L"\"" }, { L"\"" }, { L"\\" });
                 if (tokens.size() < 3)
                     continue;
-                summary->InsertFiles(tokens.at(2));
-                summary->InsertAddLineCounts((size_t)stoi(tokens.at(0)));
-                summary->InsertDeleteLineCounts((size_t)stoi(tokens.at(1)));
+                summary->insertFiles(tokens.at(2));
+                summary->insertAddLineCounts((size_t)stoi(tokens.at(0)));
+                summary->insertDeleteLineCounts((size_t)stoi(tokens.at(1)));
             }
             return summary;
         CATCH
@@ -1030,7 +1030,7 @@ namespace vcc
                 if (rowCount > 0) {
                     currentText += line + L"\n";
                     if (rowCount == 1) {
-                        difference->InsertChangedLines(currentText);
+                        difference->insertChangedLines(currentText);
                         currentText = L"";
                     }
                     rowCount--;
@@ -1038,16 +1038,16 @@ namespace vcc
                     if (IsStartWith(line, filePathOldPrefix)) {
                         std::wstring tmpStr = line.substr(filePathOldPrefix.length());
                         Trim(tmpStr);
-                        difference->SetFilePathOld(tmpStr);
+                        difference->setFilePathOld(tmpStr);
                     } else if (IsStartWith(line, filePathNewPrefix)){
                         std::wstring tmpStr = line.substr(filePathNewPrefix.length());
                         Trim(tmpStr);
-                        difference->SetFilePathNew(tmpStr);
+                        difference->setFilePathNew(tmpStr);
                     } else if (IsStartWith(line, lineCountPrefix)) {
                         // sample new: @@ -1 +1,2 @@
                         // sample modify: @@ -116,10 +116,10 @@ xxxx
                         // 1. Chop to remove all @@
-                        // 2. Get all numbers
+                        // 2. get all numbers
                         std::wstring tmpStr = line.substr(lineCountPrefix.length());
                         tmpStr = tmpStr.substr(0, Find(tmpStr, lineCountPrefix));
                         Trim(tmpStr);
@@ -1065,13 +1065,13 @@ namespace vcc
                         if (!(IsStartWith(lineNumberStr, L"-") && lineNumberStr.length() > 1))
                             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
 
-                        difference->InsertLineNumberOld((size_t)stoi(lineNumberStr.substr(1)));
+                        difference->insertLineNumberOld((size_t)stoi(lineNumberStr.substr(1)));
                         if (lineCountOld.size() > 1) {
                             std::wstring lineCountStr = lineCountOld[1];
                             Trim(lineCountStr);
-                            difference->InsertLineCountOld((size_t)stoi(lineCountStr));
+                            difference->insertLineCountOld((size_t)stoi(lineCountStr));
                         } else
-                            difference->InsertLineCountOld((size_t)0);
+                            difference->insertLineCountOld((size_t)0);
 
                         // new
                         std::vector<std::wstring> lineCountNew = SplitString(tokens[1], { L"," });
@@ -1083,16 +1083,16 @@ namespace vcc
                         if (!(IsStartWith(lineNumberStr, L"+") && lineNumberStr.length() > 1))
                             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
 
-                        difference->InsertLineNumberNew((size_t)stoi(lineNumberStr.substr(1)));
+                        difference->insertLineNumberNew((size_t)stoi(lineNumberStr.substr(1)));
                         if (lineCountNew.size() > 1) {
                             std::wstring lineCountStr = lineCountNew[1];
                             Trim(lineCountStr);
-                            difference->InsertLineCountNew((size_t)stoi(lineCountStr));
+                            difference->insertLineCountNew((size_t)stoi(lineCountStr));
                         } else
-                            difference->InsertLineCountNew((size_t)0);
+                            difference->insertLineCountNew((size_t)0);
 
-                        currentItem = difference->GetLineCountNew().size() - 1;
-                        rowCount = std::max(difference->GetLineCountOld()[currentItem], difference->GetLineCountNew()[currentItem]);
+                        currentItem = difference->getLineCountNew().size() - 1;
+                        rowCount = std::max(difference->getLineCountOld()[currentItem], difference->getLineCountNew()[currentItem]);
                     }
                 }
             }
@@ -1107,11 +1107,11 @@ namespace vcc
             auto diff = std::make_shared<GitDifference>();
             std::wstring optionStr = L"";
             if (searchCriteria != nullptr) {
-                if (searchCriteria->GetNoOfLines() > -1)
-                    optionStr += L" --unified=" + std::to_wstring(searchCriteria->GetNoOfLines());
+                if (searchCriteria->getNoOfLines() > -1)
+                    optionStr += L" --unified=" + std::to_wstring(searchCriteria->getNoOfLines());
                 
-                if (!searchCriteria->GetHashIDs().empty())
-                    optionStr += L" " + Concat(searchCriteria->GetHashIDs(), L" ");
+                if (!searchCriteria->getHashIDs().empty())
+                    optionStr += L" " + Concat(searchCriteria->getHashIDs(), L" ");
             }
             return ParseGitDiff(ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git diff --cached" + optionStr));
         CATCH
@@ -1124,13 +1124,13 @@ namespace vcc
             assert(!IsBlank(filePath));
             std::wstring optionStr = L"";
             if (searchCriteria != nullptr) {
-                if (searchCriteria->GetNoOfLines() > -1)
-                    optionStr += L" --unified=" + std::to_wstring(searchCriteria->GetNoOfLines());
+                if (searchCriteria->getNoOfLines() > -1)
+                    optionStr += L" --unified=" + std::to_wstring(searchCriteria->getNoOfLines());
                 
-                if (!searchCriteria->GetHashIDs().empty())
-                    optionStr += L" " + Concat(searchCriteria->GetHashIDs(), L" ");
+                if (!searchCriteria->getHashIDs().empty())
+                    optionStr += L" " + Concat(searchCriteria->getHashIDs(), L" ");
             }
-            return ParseGitDiff(ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git diff" + optionStr + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""));
+            return ParseGitDiff(ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git diff" + optionStr + L" \"" + getEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""));
         CATCH
         return nullptr;
     }
@@ -1141,13 +1141,13 @@ namespace vcc
             assert(!IsBlank(filePath));
             std::wstring optionStr = L"";
             if (searchCriteria != nullptr) {
-                if (searchCriteria->GetNoOfLines() > -1)
-                    optionStr += L" --unified=" + std::to_wstring(searchCriteria->GetNoOfLines());
+                if (searchCriteria->getNoOfLines() > -1)
+                    optionStr += L" --unified=" + std::to_wstring(searchCriteria->getNoOfLines());
                 
-                if (!searchCriteria->GetHashIDs().empty())
-                    optionStr += L" " + Concat(searchCriteria->GetHashIDs(), L" ");
+                if (!searchCriteria->getHashIDs().empty())
+                    optionStr += L" " + Concat(searchCriteria->getHashIDs(), L" ");
             }
-            return ParseGitDiff(ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git diff HEAD" + optionStr + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""));
+            return ParseGitDiff(ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git diff HEAD" + optionStr + L" \"" + getEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""));
         CATCH
         return nullptr;
     }
@@ -1158,10 +1158,10 @@ namespace vcc
             assert(!IsBlank(filePath));
             std::wstring optionStr = L"";
             if (searchCriteria != nullptr) {
-                if (searchCriteria->GetNoOfLines() > -1)
-                    optionStr += L" --unified=" + std::to_wstring(searchCriteria->GetNoOfLines());
+                if (searchCriteria->getNoOfLines() > -1)
+                    optionStr += L" --unified=" + std::to_wstring(searchCriteria->getNoOfLines());
             }
-            return ParseGitDiff(ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git diff" + optionStr + L" " + fromHashID + L"..." + toHashID + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""));
+            return ParseGitDiff(ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git diff" + optionStr + L" " + fromHashID + L"..." + toHashID + L" \"" + getEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\""));
         CATCH
         return nullptr;
     }
@@ -1169,7 +1169,7 @@ namespace vcc
     void GitService::Stage(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath)
     {
         TRY
-            ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git add \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
+            ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git add \"" + getEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
         CATCH
     }
     void GitService::StageAll(const LogConfig *logConfig, const std::wstring &workspace)
@@ -1182,7 +1182,7 @@ namespace vcc
     void GitService::Unstage(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath)
     {
         TRY
-            ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git reset \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
+            ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git reset \"" + getEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
         CATCH
     }
 
@@ -1196,7 +1196,7 @@ namespace vcc
     void GitService::Commit(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &command)
     {
         TRY
-            ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git commit -m \"" + GetEscapeString(EscapeStringType::DoubleQuote, command) + L"\"");
+            ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git commit -m \"" + getEscapeString(EscapeStringType::DoubleQuote, command) + L"\"");
         CATCH
     }
 
@@ -1210,7 +1210,7 @@ namespace vcc
     void GitService::DiscardFile(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath)
     {
         TRY
-            ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git checkout \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
+            ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git checkout \"" + getEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
         CATCH
     }
 
@@ -1218,7 +1218,7 @@ namespace vcc
     {
         TRY
             assert(!IsBlank(hashID));
-            ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git restore --source=" + hashID + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
+            ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git restore --source=" + hashID + L" \"" + getEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
         CATCH
     }
 
@@ -1280,13 +1280,13 @@ namespace vcc
             GitService::GetLocalConfig(logConfig, workspace, config);
             auto globalResult = std::make_shared<GitConfig>();
             GitService::GetGlobalConfig(logConfig, globalResult);
-            if (config->GetUserName().empty())
-                config->SetUserName(globalResult->GetUserName());
-            if (config->GetUserEmail().empty())
-                config->SetUserEmail(globalResult->GetUserEmail());
-            for (auto tmpConfig : globalResult->GetConfigs()) {
-                if (config->GetConfigs().find(tmpConfig.first) != config->GetConfigs().end())
-                    config->InsertConfigsAtKey(tmpConfig.first, tmpConfig.second);
+            if (config->getUserName().empty())
+                config->setUserName(globalResult->getUserName());
+            if (config->getUserEmail().empty())
+                config->setUserEmail(globalResult->getUserEmail());
+            for (auto tmpConfig : globalResult->getConfigs()) {
+                if (config->getConfigs().find(tmpConfig.first) != config->getConfigs().end())
+                    config->insertConfigsAtKey(tmpConfig.first, tmpConfig.second);
             }
         CATCH
     }
@@ -1343,16 +1343,16 @@ namespace vcc
                 auto element = std::make_shared<Config>();
                 auto reader = std::make_unique<ConfigBuilder>();
                 reader->Deserialize(cmdResult, element);
-                for (auto it : element->GetConfigs()) {
-                    if (!element->IsValue(it.first))
+                for (auto it : element->getConfigs()) {
+                    if (!element->isValue(it.first))
                         continue;
 
                     if (it.first == GIT_CONFIG_USER_NAME) {
-                        config->SetUserName(it.second);
+                        config->setUserName(it.second);
                     } else if (it.first == GIT_CONFIG_USER_EMAIL) {
-                        config->SetUserEmail(it.second);
+                        config->setUserEmail(it.second);
                     }
-                    config->InsertConfigsAtKey(it.first, it.second);
+                    config->insertConfigsAtKey(it.first, it.second);
                 }
 
             }
@@ -1371,7 +1371,7 @@ namespace vcc
     void GitService::SetGlobalConfig(const LogConfig *logConfig, const std::wstring &key, const std::wstring &value)
     {
         TRY
-            ProcessService::Execute(logConfig, GIT_LOG_ID, L"git config --global " + key + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, value) + L"\"");
+            ProcessService::Execute(logConfig, GIT_LOG_ID, L"git config --global " + key + L" \"" + getEscapeString(EscapeStringType::DoubleQuote, value) + L"\"");
         CATCH
     }
 
@@ -1426,15 +1426,15 @@ namespace vcc
                 auto reader = std::make_unique<ConfigBuilder>();
 
                 reader->Deserialize(cmdResult, element);
-                for (auto it : element->GetConfigs()) {
-                    if (!element->IsValue(it.first))
+                for (auto it : element->getConfigs()) {
+                    if (!element->isValue(it.first))
                         continue;
                     if (it.first == GIT_CONFIG_USER_NAME) {
-                        config->SetUserName(it.second);
+                        config->setUserName(it.second);
                     } else if (it.first == GIT_CONFIG_USER_EMAIL) {
-                        config->SetUserEmail(it.second);
+                        config->setUserEmail(it.second);
                     }
-                    config->InsertConfigsAtKey(it.first, it.second);
+                    config->insertConfigsAtKey(it.first, it.second);
                 }
             }
         CATCH
@@ -1452,7 +1452,7 @@ namespace vcc
     void GitService::SetLocalConfig(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key, const std::wstring &value)
     {
         TRY
-            ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git config --local " + key + L" \"" + GetEscapeString(EscapeStringType::DoubleQuote, value) + L"\"");
+            ProcessService::Execute(logConfig, GIT_LOG_ID, workspace, L"git config --local " + key + L" \"" + getEscapeString(EscapeStringType::DoubleQuote, value) + L"\"");
         CATCH
     }
 

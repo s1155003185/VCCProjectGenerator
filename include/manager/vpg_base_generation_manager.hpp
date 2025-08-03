@@ -30,7 +30,7 @@ class VPGBaseGenerationManager : public vcc::BaseManager, public IVPGGenerationM
 
         virtual ~VPGBaseGenerationManager() {}
 
-        void GetDLLTestFileContent(std::wstring &fileContent) const;
+        void getDLLTestFileContent(std::wstring &fileContent) const;
         
         void CreateWorkspaceDirectory() const;
         void CreateBasicProject() const;

@@ -41,8 +41,8 @@ namespace vcc
             virtual std::shared_ptr<IObject> Clone() const override
             {
                 std::shared_ptr<Xml> obj = std::make_shared<Xml>(*this);
-                obj->CloneAttributes(this->GetAttributes());
-                obj->CloneChildren(this->GetChildren());
+                obj->CloneAttributes(this->getAttributes());
+                obj->CloneChildren(this->getChildren());
                 return obj;
             }
     };

@@ -19,7 +19,7 @@ long VPGWorkspaceFormPropertyAccessor::_ReadLong(const int64_t &objectProperty) 
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
         case VPGWorkspaceFormProperty::TabOrder:
-            return obj->GetTabOrder();
+            return obj->getTabOrder();
         default:
             assert(false);
         }
@@ -51,7 +51,7 @@ void VPGWorkspaceFormPropertyAccessor::_WriteLong(const int64_t &objectProperty,
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
         case VPGWorkspaceFormProperty::TabOrder:
-            obj->SetTabOrder(value);
+            obj->setTabOrder(value);
             break;
         default:
             assert(false);
@@ -88,7 +88,7 @@ std::wstring VPGWorkspaceFormPropertyAccessor::_ReadString(const int64_t &object
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
         case VPGWorkspaceFormProperty::Name:
-            return obj->GetName();
+            return obj->getName();
         default:
             assert(false);
         }
@@ -120,7 +120,7 @@ void VPGWorkspaceFormPropertyAccessor::_WriteString(const int64_t &objectPropert
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
         case VPGWorkspaceFormProperty::Name:
-            obj->SetName(value);
+            obj->setName(value);
             break;
         default:
             assert(false);
@@ -166,7 +166,7 @@ std::shared_ptr<vcc::IObject> VPGWorkspaceFormPropertyAccessor::_ReadObjectAtInd
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
         case VPGWorkspaceFormProperty::GitForms:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetGitFormsAtIndex(index));
+            return std::static_pointer_cast<vcc::IObject>(obj->getGitFormsAtIndex(index));
         default:
             assert(false);
         }
@@ -199,9 +199,9 @@ void VPGWorkspaceFormPropertyAccessor::_WriteObjectAtIndex(const int64_t &object
         {
         case VPGWorkspaceFormProperty::GitForms:
             if (index > -1)
-                obj->SetGitFormsAtIndex(index, std::static_pointer_cast<VPGGitForm>(value));
+                obj->setGitFormsAtIndex(index, std::static_pointer_cast<VPGGitForm>(value));
             else
-                obj->InsertGitForms(std::static_pointer_cast<VPGGitForm>(value));
+                obj->insertGitForms(std::static_pointer_cast<VPGGitForm>(value));
             break;
         default:
             assert(false);
@@ -226,9 +226,9 @@ void VPGWorkspaceFormPropertyAccessor::_InsertObjectAtIndex(const int64_t &objec
         {
         case VPGWorkspaceFormProperty::GitForms:
             if (index > -1)
-                obj->InsertGitFormsAtIndex(index, std::static_pointer_cast<VPGGitForm>(value));
+                obj->insertGitFormsAtIndex(index, std::static_pointer_cast<VPGGitForm>(value));
             else
-                obj->InsertGitForms(std::static_pointer_cast<VPGGitForm>(value));
+                obj->insertGitForms(std::static_pointer_cast<VPGGitForm>(value));
             break;
         default:
             assert(false);
@@ -277,7 +277,7 @@ size_t VPGWorkspaceFormPropertyAccessor::_GetCount(const int64_t &objectProperty
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
         case VPGWorkspaceFormProperty::GitForms:
-            return obj->GetGitForms().size();
+            return obj->getGitForms().size();
         default:
             assert(false);
         }

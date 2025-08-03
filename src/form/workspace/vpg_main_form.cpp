@@ -70,9 +70,9 @@ std::shared_ptr<vcc::IResult> VPGMainFormAddWorkspaceForm::OnRedo()
         propertyAccessor->ReadWriteLock();
         auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
         auto workspaceForm = std::make_shared<VPGWorkspaceForm>();
-        workspaceForm->SetName(_Argument->GetName());
-        form->InsertWorkspaceForms(workspaceForm);
-        form->SaveConfig();
+        workspaceForm->setName(_Argument->getName());
+        form->insertWorkspaceForms(workspaceForm);
+        form->saveConfig();
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormAddWorkspaceFormOnRedo>
     CATCH_RETURN_RESULT(vcc::OperationResult)
@@ -119,11 +119,11 @@ std::shared_ptr<vcc::IResult> VPGMainFormDeleteWorkspaceForm::OnRedo()
         auto propertyAccessor = PropertyAccessorFactory::Create(_ParentObject);
         propertyAccessor->ReadWriteLock();
         auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
-        auto index = form->FindWorkspaceForms(_Argument->GetWorkspaceForm());
+        auto index = form->FindWorkspaceForms(_Argument->getWorkspaceForm());
         if (index < 0)
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace not found");
         form->RemoveWorkspaceFormsAtIndex(index);
-        form->SaveConfig();
+        form->saveConfig();
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormDeleteWorkspaceFormOnRedo>
     CATCH_RETURN_RESULT(vcc::OperationResult)
@@ -170,14 +170,14 @@ std::shared_ptr<vcc::IResult> VPGMainFormInitialize::OnRedo()
         if (vcc::IsFilePresent(configFilePath)) {
             TRY
                 auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
-                jsonBuilder->SetIsBeautify(true);
+                jsonBuilder->setIsBeautify(true);
                 form->DeserializeJsonString(jsonBuilder.get(), vcc::ReadFile(configFilePath));
             CATCH_MSG(ExceptionType::ParserError, L"File " + configFilePath + L" exists but not vaild. Please adjust / remove the file and try again")
         } else {
             auto workspace = std::make_shared<VPGWorkspaceForm>();
-            workspace->SetName(L"Default");
-            form->InsertWorkspaceForms(workspace);
-            form->SaveConfig();
+            workspace->setName(L"Default");
+            form->insertWorkspaceForms(workspace);
+            form->saveConfig();
         }
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormInitializeOnRedo>
@@ -231,7 +231,7 @@ VPGMainForm::VPGMainForm() : vcc::BaseForm()
 {
     TRY
         _ObjectType = ObjectType::MainForm;
-        Initialize();
+        initialize();
     CATCH
 }
 
@@ -250,7 +250,7 @@ std::shared_ptr<vcc::Json> VPGMainForm::ToJson() const
         // WorkspaceForms
         auto tmpWorkspaceForms = std::make_shared<vcc::Json>();
         json->AddArray(vcc::ConvertNamingStyle(L"WorkspaceForms", vcc::NamingStyle::PascalCase, namestyle), tmpWorkspaceForms);
-        for (auto const &element : GetWorkspaceForms()) {
+        for (auto const &element : getWorkspaceForms()) {
             tmpWorkspaceForms->AddArrayObject(element->ToJson());
         }
         return json;
@@ -266,11 +266,11 @@ void VPGMainForm::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
         assert(json != nullptr);
         // WorkspaceForms
         ClearWorkspaceForms();
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"WorkspaceForms", namestyle, vcc::NamingStyle::PascalCase))) {
-            for (auto const &element : json->GetArray(vcc::ConvertNamingStyle(L"WorkspaceForms", namestyle, vcc::NamingStyle::PascalCase))) {
+        if (json->isContainKey(vcc::ConvertNamingStyle(L"WorkspaceForms", namestyle, vcc::NamingStyle::PascalCase))) {
+            for (auto const &element : json->getArray(vcc::ConvertNamingStyle(L"WorkspaceForms", namestyle, vcc::NamingStyle::PascalCase))) {
                 auto tmpWorkspaceForms = std::make_shared<VPGWorkspaceForm>();
-                tmpWorkspaceForms->DeserializeJson(element->GetArrayElementObject());
-                InsertWorkspaceForms(tmpWorkspaceForms);
+                tmpWorkspaceForms->DeserializeJson(element->getArrayElementObject());
+                insertWorkspaceForms(tmpWorkspaceForms);
             }
         }
     CATCH
@@ -357,7 +357,7 @@ void VPGMainForm::SaveConfig() const
 {
     TRY    
         auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
-        jsonBuilder->SetIsBeautify(true);
+        jsonBuilder->setIsBeautify(true);
         vcc::WriteFile(VPGGlobal::GetVCCProjectManagerConfigFileFullPath(), SerializeJson(jsonBuilder.get()), true);
     CATCH
 }

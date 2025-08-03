@@ -121,6 +121,6 @@ std::wstring VPGGlobal::GetConvertedPath(const std::wstring &path)
 void VPGGlobal::Initialize(const std::wstring &projectWorkspace)
 {
     VPGGlobal::_FileGenerationManager = std::make_unique<VPGFileGenerationManager>(std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None), L"");
-    VPGGlobal::_FileGenerationManager->GetClassMacroList(projectWorkspace);
-    VPGGlobal::_EnumClassReader = std::make_shared<VPGEnumClassReader>(VPGGlobal::_FileGenerationManager->GetClassMacros());
+    VPGGlobal::_FileGenerationManager->getClassMacroList(projectWorkspace);
+    VPGGlobal::_EnumClassReader = std::make_shared<VPGEnumClassReader>(VPGGlobal::_FileGenerationManager->getClassMacros());
 }

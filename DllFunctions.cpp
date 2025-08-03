@@ -16,7 +16,7 @@
 #include "property_accessor_macro.hpp"
 // </vcc:dllInterfaceHeader>
 
-int GetVersion(wchar_t **str)
+int getVersion(wchar_t **str)
 {
     std::wstring versionString = L"v0.0.1";
     size_t size = (versionString.length() + 1) * sizeof(wchar_t);

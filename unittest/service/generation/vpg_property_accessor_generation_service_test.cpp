@@ -27,28 +27,28 @@ class VPGPropertyAccessorFileGenerationServiceTest : public testing::Test
 
     MAP(std::wstring, std::wstring, ProjectIncludeList);
     public:
-        void SetUp() override
+        void setUp() override
         {
             this->_LogConfig = std::make_shared<vcc::LogConfig>();
-            this->_LogConfig->SetIsConsoleLog(false);
-            std::filesystem::remove_all(PATH(this->GetWorkspace()));
+            this->_LogConfig->setIsConsoleLog(false);
+            std::filesystem::remove_all(PATH(this->getWorkspace()));
 
-            this->_FilePathHpp = vcc::ConcatPaths({this->GetWorkspace(), L"vpg_object_property_accessor.hpp"});
-            this->_FilePathCpp = vcc::ConcatPaths({this->GetWorkspace(), L"vpg_object_property_accessor.cpp"});
+            this->_FilePathHpp = vcc::ConcatPaths({this->getWorkspace(), L"vpg_object_property_accessor.hpp"});
+            this->_FilePathCpp = vcc::ConcatPaths({this->getWorkspace(), L"vpg_object_property_accessor.cpp"});
             this->_IncludeFileName = L"vpg_object_property_accessor.hpp";
 
-            this->InsertProjectIncludeListAtKey(L"VCCEnum", L"vcc_enum.hpp");
-            this->InsertProjectIncludeListAtKey(L"VPGObject", L"vpg_object.hpp");
-            this->InsertProjectIncludeListAtKey(L"VPGObjectProperty", L"vpg_object_property.hpp");
-            this->InsertProjectIncludeListAtKey(L"VPGObjectA", L"vpg_object_a.hpp");
-            this->InsertProjectIncludeListAtKey(L"VPGObjectAProperty", L"vpg_object_a_property.hpp");
-            this->InsertProjectIncludeListAtKey(L"VPGObjectB", L"vpg_object_b.hpp");
-            this->InsertProjectIncludeListAtKey(L"VPGObjectBProperty", L"vpg_object_b_property.hpp");
+            this->insertProjectIncludeListAtKey(L"VCCEnum", L"vcc_enum.hpp");
+            this->insertProjectIncludeListAtKey(L"VPGObject", L"vpg_object.hpp");
+            this->insertProjectIncludeListAtKey(L"VPGObjectProperty", L"vpg_object_property.hpp");
+            this->insertProjectIncludeListAtKey(L"VPGObjectA", L"vpg_object_a.hpp");
+            this->insertProjectIncludeListAtKey(L"VPGObjectAProperty", L"vpg_object_a_property.hpp");
+            this->insertProjectIncludeListAtKey(L"VPGObjectB", L"vpg_object_b.hpp");
+            this->insertProjectIncludeListAtKey(L"VPGObjectBProperty", L"vpg_object_b_property.hpp");
         }
 
         void TearDown() override
         {
-            std::filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->getWorkspace()));
         }
 };
 
@@ -68,10 +68,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->getLogConfig().get(), L"VPG", this->getProjectIncludeList(), this->getFilePathCpp(), enumClassList);
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -91,10 +91,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "        VPGObjectPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathHpp()), expectedHppContent);
 
     std::wstring expectedCppContent = L""
-    "#include \"" + this->GetIncludeFileName() + L"\"\r\n"
+    "#include \"" + this->getIncludeFileName() + L"\"\r\n"
     "\r\n"
     "#include <string>\r\n"
     "\r\n"
@@ -113,7 +113,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Bool:\r\n"
-    "            return obj->GetBool();\r\n"
+    "            return obj->getBool();\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -145,7 +145,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Bool:\r\n"
-    "            obj->SetBool(value);\r\n"
+    "            obj->setBool(value);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -182,7 +182,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Enum:\r\n"
-    "            return static_cast<long>(obj->GetEnum());\r\n"
+    "            return static_cast<long>(obj->getEnum());\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -214,7 +214,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Enum:\r\n"
-    "            obj->SetEnum(static_cast<VCCEnum>(value));\r\n"
+    "            obj->setEnum(static_cast<VCCEnum>(value));\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -251,9 +251,9 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::String:\r\n"
-    "            return vcc::str2wstr(obj->GetString());\r\n"
+    "            return vcc::str2wstr(obj->getString());\r\n"
     "        case VPGObjectProperty::Wstring:\r\n"
-    "            return obj->GetWstring();\r\n"
+    "            return obj->getWstring();\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -285,10 +285,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::String:\r\n"
-    "            obj->SetString(wstr2str(value));\r\n"
+    "            obj->setString(wstr2str(value));\r\n"
     "            break;\r\n"
     "        case VPGObjectProperty::Wstring:\r\n"
-    "            obj->SetWstring(value);\r\n"
+    "            obj->setWstring(value);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -316,7 +316,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
     "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
     "    CATCH\r\n"
     "}\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathCpp()), expectedCppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
@@ -364,18 +364,18 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
-    this->InsertProjectIncludeListAtKey(L"NamespaceA::VPGObjectNamespace", L"vcc_enum.hpp");
-    this->InsertProjectIncludeListAtKey(L"NamespaceA::VPGObjectNamespaceProperty", L"vcc_enum.hpp");
-    this->InsertProjectIncludeListAtKey(L"NamespaceA::NamespaceNested::VPGObjectNamespaceNested", L"vcc_enum.hpp");
-    this->InsertProjectIncludeListAtKey(L"NamespaceA::NamespaceNested::VPGObjectNamespaceNestedProperty", L"vcc_enum.hpp");
-    this->InsertProjectIncludeListAtKey(L"NamespaceB::VPGObjectNamespace", L"vcc_enum.hpp");
-    this->InsertProjectIncludeListAtKey(L"NamespaceB::VPGObjectNamespaceProperty", L"vcc_enum.hpp");
-    this->InsertProjectIncludeListAtKey(L"NamespaceB::NamespaceNested::VPGObjectNamespaceNested", L"vcc_enum.hpp");
-    this->InsertProjectIncludeListAtKey(L"NamespaceB::NamespaceNested::VPGObjectNamespaceNestedProperty", L"vcc_enum.hpp");
-    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
+    this->insertProjectIncludeListAtKey(L"NamespaceA::VPGObjectNamespace", L"vcc_enum.hpp");
+    this->insertProjectIncludeListAtKey(L"NamespaceA::VPGObjectNamespaceProperty", L"vcc_enum.hpp");
+    this->insertProjectIncludeListAtKey(L"NamespaceA::NamespaceNested::VPGObjectNamespaceNested", L"vcc_enum.hpp");
+    this->insertProjectIncludeListAtKey(L"NamespaceA::NamespaceNested::VPGObjectNamespaceNestedProperty", L"vcc_enum.hpp");
+    this->insertProjectIncludeListAtKey(L"NamespaceB::VPGObjectNamespace", L"vcc_enum.hpp");
+    this->insertProjectIncludeListAtKey(L"NamespaceB::VPGObjectNamespaceProperty", L"vcc_enum.hpp");
+    this->insertProjectIncludeListAtKey(L"NamespaceB::NamespaceNested::VPGObjectNamespaceNested", L"vcc_enum.hpp");
+    this->insertProjectIncludeListAtKey(L"NamespaceB::NamespaceNested::VPGObjectNamespaceNestedProperty", L"vcc_enum.hpp");
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->getLogConfig().get(), L"VPG", this->getProjectIncludeList(), this->getFilePathCpp(), enumClassList);
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -450,7 +450,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
     "        };\r\n"
     "    }\r\n"
     "}\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathHpp()), expectedHppContent);
 
     std::wstring expectedCppContent = L""
         "#include \"vpg_object_property_accessor.hpp\"\r\n"
@@ -474,7 +474,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
         "        switch(static_cast<VPGObjectAProperty>(objectProperty))\r\n"
         "        {\r\n"
         "        case VPGObjectAProperty::EnumA:\r\n"
-        "            return obj->GetEnumA();\r\n"
+        "            return obj->getEnumA();\r\n"
         "        default:\r\n"
         "            assert(false);\r\n"
         "        }\r\n"
@@ -506,7 +506,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
         "        switch(static_cast<VPGObjectAProperty>(objectProperty))\r\n"
         "        {\r\n"
         "        case VPGObjectAProperty::EnumA:\r\n"
-        "            obj->SetEnumA(value);\r\n"
+        "            obj->setEnumA(value);\r\n"
         "            break;\r\n"
         "        default:\r\n"
         "            assert(false);\r\n"
@@ -543,7 +543,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
         "        switch(static_cast<VPGObjectBProperty>(objectProperty))\r\n"
         "        {\r\n"
         "        case VPGObjectBProperty::EnumA:\r\n"
-        "            return obj->GetEnumA();\r\n"
+        "            return obj->getEnumA();\r\n"
         "        default:\r\n"
         "            assert(false);\r\n"
         "        }\r\n"
@@ -575,7 +575,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
         "        switch(static_cast<VPGObjectBProperty>(objectProperty))\r\n"
         "        {\r\n"
         "        case VPGObjectBProperty::EnumA:\r\n"
-        "            obj->SetEnumA(value);\r\n"
+        "            obj->setEnumA(value);\r\n"
         "            break;\r\n"
         "        default:\r\n"
         "            assert(false);\r\n"
@@ -614,7 +614,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
         "            switch(static_cast<VPGObjectNamespaceProperty>(objectProperty))\r\n"
         "            {\r\n"
         "            case VPGObjectNamespaceProperty::EnumA:\r\n"
-        "                return obj->GetEnumA();\r\n"
+        "                return obj->getEnumA();\r\n"
         "            default:\r\n"
         "                assert(false);\r\n"
         "            }\r\n"
@@ -646,7 +646,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
         "            switch(static_cast<VPGObjectNamespaceProperty>(objectProperty))\r\n"
         "            {\r\n"
         "            case VPGObjectNamespaceProperty::EnumA:\r\n"
-        "                obj->SetEnumA(value);\r\n"
+        "                obj->setEnumA(value);\r\n"
         "                break;\r\n"
         "            default:\r\n"
         "                assert(false);\r\n"
@@ -685,7 +685,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
         "                switch(static_cast<VPGObjectNamespaceNestedProperty>(objectProperty))\r\n"
         "                {\r\n"
         "                case VPGObjectNamespaceNestedProperty::EnumA:\r\n"
-        "                    return obj->GetEnumA();\r\n"
+        "                    return obj->getEnumA();\r\n"
         "                default:\r\n"
         "                    assert(false);\r\n"
         "                }\r\n"
@@ -717,7 +717,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
         "                switch(static_cast<VPGObjectNamespaceNestedProperty>(objectProperty))\r\n"
         "                {\r\n"
         "                case VPGObjectNamespaceNestedProperty::EnumA:\r\n"
-        "                    obj->SetEnumA(value);\r\n"
+        "                    obj->setEnumA(value);\r\n"
         "                    break;\r\n"
         "                default:\r\n"
         "                    assert(false);\r\n"
@@ -758,7 +758,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
         "            switch(static_cast<VPGObjectNamespaceProperty>(objectProperty))\r\n"
         "            {\r\n"
         "            case VPGObjectNamespaceProperty::EnumA:\r\n"
-        "                return obj->GetEnumA();\r\n"
+        "                return obj->getEnumA();\r\n"
         "            default:\r\n"
         "                assert(false);\r\n"
         "            }\r\n"
@@ -790,7 +790,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
         "            switch(static_cast<VPGObjectNamespaceProperty>(objectProperty))\r\n"
         "            {\r\n"
         "            case VPGObjectNamespaceProperty::EnumA:\r\n"
-        "                obj->SetEnumA(value);\r\n"
+        "                obj->setEnumA(value);\r\n"
         "                break;\r\n"
         "            default:\r\n"
         "                assert(false);\r\n"
@@ -829,7 +829,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
         "                switch(static_cast<VPGObjectNamespaceNestedProperty>(objectProperty))\r\n"
         "                {\r\n"
         "                case VPGObjectNamespaceNestedProperty::EnumA:\r\n"
-        "                    return obj->GetEnumA();\r\n"
+        "                    return obj->getEnumA();\r\n"
         "                default:\r\n"
         "                    assert(false);\r\n"
         "                }\r\n"
@@ -861,7 +861,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
         "                switch(static_cast<VPGObjectNamespaceNestedProperty>(objectProperty))\r\n"
         "                {\r\n"
         "                case VPGObjectNamespaceNestedProperty::EnumA:\r\n"
-        "                    obj->SetEnumA(value);\r\n"
+        "                    obj->setEnumA(value);\r\n"
         "                    break;\r\n"
         "                default:\r\n"
         "                    assert(false);\r\n"
@@ -891,7 +891,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
         "        }\r\n"
         "    }\r\n"
         "}\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathCpp()), expectedCppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
@@ -910,10 +910,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
     
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_FALSE(vcc::IsFilePresent(this->GetFilePathCpp()));
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->getLogConfig().get(), L"VPG", this->getProjectIncludeList(), this->getFilePathCpp(), enumClassList);
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
+    EXPECT_FALSE(vcc::IsFilePresent(this->getFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -928,7 +928,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
     "        VPGObjectPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathHpp()), expectedHppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
@@ -947,10 +947,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->getLogConfig().get(), L"VPG", this->getProjectIncludeList(), this->getFilePathCpp(), enumClassList);
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -966,10 +966,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
     "        VPGObjectPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathHpp()), expectedHppContent);
 
     std::wstring expectedCppContent = L""
-    "#include \"" + this->GetIncludeFileName() + L"\"\r\n"
+    "#include \"" + this->getIncludeFileName() + L"\"\r\n"
     "\r\n"
     "#include \"exception_macro.hpp\"\r\n"
     "#include \"i_object.hpp\"\r\n"
@@ -985,9 +985,9 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Read:\r\n"
-    "            return obj->GetRead();\r\n"
+    "            return obj->getRead();\r\n"
     "        case VPGObjectProperty::ReadWrite:\r\n"
-    "            return obj->GetReadWrite();\r\n"
+    "            return obj->getReadWrite();\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -1019,10 +1019,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::ReadWrite:\r\n"
-    "            obj->SetReadWrite(value);\r\n"
+    "            obj->setReadWrite(value);\r\n"
     "            break;\r\n"
     "        case VPGObjectProperty::Write:\r\n"
-    "            obj->SetWrite(value);\r\n"
+    "            obj->setWrite(value);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -1050,7 +1050,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
     "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
     "    CATCH\r\n"
     "}\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathCpp()), expectedCppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
@@ -1069,10 +1069,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
     
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->getLogConfig().get(), L"VPG", this->getProjectIncludeList(), this->getFilePathCpp(), enumClassList);
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -1090,10 +1090,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     "        VPGObjectPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathHpp()), expectedHppContent);
 
     std::wstring expectedCppContent = L""
-    "#include \"" + this->GetIncludeFileName() + L"\"\r\n"
+    "#include \"" + this->getIncludeFileName() + L"\"\r\n"
     "\r\n"
     "#include <vector>\r\n"
     "\r\n"
@@ -1120,9 +1120,9 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Read:\r\n"
-    "            return obj->GetReadAtIndex(index);\r\n"
+    "            return obj->getReadAtIndex(index);\r\n"
     "        case VPGObjectProperty::ReadWrite:\r\n"
-    "            return obj->GetReadWriteAtIndex(index);\r\n"
+    "            return obj->getReadWriteAtIndex(index);\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -1155,15 +1155,15 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     "        {\r\n"
     "        case VPGObjectProperty::ReadWrite:\r\n"
     "            if (index > -1)\r\n"
-    "                obj->SetReadWriteAtIndex(index, value);\r\n"
+    "                obj->setReadWriteAtIndex(index, value);\r\n"
     "            else\r\n"
-    "                obj->InsertReadWrite(value);\r\n"
+    "                obj->insertReadWrite(value);\r\n"
     "            break;\r\n"
     "        case VPGObjectProperty::Write:\r\n"
     "            if (index > -1)\r\n"
-    "                obj->SetWriteAtIndex(index, value);\r\n"
+    "                obj->setWriteAtIndex(index, value);\r\n"
     "            else\r\n"
-    "                obj->InsertWrite(value);\r\n"
+    "                obj->insertWrite(value);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -1188,15 +1188,15 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     "        {\r\n"
     "        case VPGObjectProperty::ReadWrite:\r\n"
     "            if (index > -1)\r\n"
-    "                obj->InsertReadWriteAtIndex(index, value);\r\n"
+    "                obj->insertReadWriteAtIndex(index, value);\r\n"
     "            else\r\n"
-    "                obj->InsertReadWrite(value);\r\n"
+    "                obj->insertReadWrite(value);\r\n"
     "            break;\r\n"
     "        case VPGObjectProperty::Write:\r\n"
     "            if (index > -1)\r\n"
-    "                obj->InsertWriteAtIndex(index, value);\r\n"
+    "                obj->insertWriteAtIndex(index, value);\r\n"
     "            else\r\n"
-    "                obj->InsertWrite(value);\r\n"
+    "                obj->insertWrite(value);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -1212,11 +1212,11 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::ReadWrite:\r\n"
-    "            return obj->GetReadWrite().size();\r\n"
+    "            return obj->getReadWrite().size();\r\n"
     "        case VPGObjectProperty::Read:\r\n"
-    "            return obj->GetRead().size();\r\n"
+    "            return obj->getRead().size();\r\n"
     "        case VPGObjectProperty::Write:\r\n"
-    "            return obj->GetWrite().size();\r\n"
+    "            return obj->getWrite().size();\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -1319,7 +1319,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
     "        }\r\n"
     "    CATCH\r\n"
     "}\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathCpp()), expectedCppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
@@ -1340,10 +1340,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->getLogConfig().get(), L"VPG", this->getProjectIncludeList(), this->getFilePathCpp(), enumClassList);
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -1368,10 +1368,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     "        VPGObjectBPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectBPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathHpp()), expectedHppContent);
 
     std::wstring expectedCppContent = L""
-    "#include \"" + this->GetIncludeFileName() + L"\"\r\n"
+    "#include \"" + this->getIncludeFileName() + L"\"\r\n"
     "\r\n"
     "#include \"exception_macro.hpp\"\r\n"
     "#include \"i_object.hpp\"\r\n"
@@ -1389,7 +1389,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     "        switch(static_cast<VPGObjectAProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectAProperty::Bool:\r\n"
-    "            return obj->GetBool();\r\n"
+    "            return obj->getBool();\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -1421,7 +1421,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     "        switch(static_cast<VPGObjectAProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectAProperty::Bool:\r\n"
-    "            obj->SetBool(value);\r\n"
+    "            obj->setBool(value);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -1458,7 +1458,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     "        switch(static_cast<VPGObjectBProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectBProperty::Bool:\r\n"
-    "            return obj->GetBool();\r\n"
+    "            return obj->getBool();\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -1490,7 +1490,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     "        switch(static_cast<VPGObjectBProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectBProperty::Bool:\r\n"
-    "            obj->SetBool(value);\r\n"
+    "            obj->setBool(value);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -1518,7 +1518,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
     "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
     "    CATCH\r\n"
     "}\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathCpp()), expectedCppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
@@ -1534,10 +1534,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->getLogConfig().get(), L"VPG", this->getProjectIncludeList(), this->getFilePathCpp(), enumClassList);
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -1553,10 +1553,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
     "        VPGObjectPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathHpp()), expectedHppContent);
 
     std::wstring expectedCppContent = L""
-    "#include \"" + this->GetIncludeFileName() + L"\"\r\n"
+    "#include \"" + this->getIncludeFileName() + L"\"\r\n"
     "\r\n"
     "#include <memory>\r\n"
     "\r\n"
@@ -1575,7 +1575,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Object:\r\n"
-    "            return std::static_pointer_cast<vcc::IObject>(obj->GetObject());\r\n"
+    "            return std::static_pointer_cast<vcc::IObject>(obj->getObject());\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -1607,7 +1607,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Object:\r\n"
-    "            obj->SetObject(std::static_pointer_cast<VPGObjectA>(value));\r\n"
+    "            obj->setObject(std::static_pointer_cast<VPGObjectA>(value));\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -1644,7 +1644,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Object:\r\n"
-    "            return std::static_pointer_cast<vcc::IObject>(obj->GetObject()->Clone());\r\n"
+    "            return std::static_pointer_cast<vcc::IObject>(obj->getObject()->Clone());\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -1667,7 +1667,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
     "    CATCH\r\n"
     "    return nullptr;\r\n"
     "}\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathCpp()), expectedCppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
@@ -1691,10 +1691,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
     
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->getLogConfig().get(), L"VPG", this->getProjectIncludeList(), this->getFilePathCpp(), enumClassList);
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -1704,7 +1704,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "\r\n"
     "class VPGObjectPropertyAccessor : public vcc::BasePropertyAccessor\r\n"
     "{\r\n"
-    "    PROPERTY_ACCESSOR_HEADER(int, Int)\r\n"
+    "    PROPERTY_ACCESSOR_HEADER(int, int)\r\n"
     "    PROPERTY_ACCESSOR_HEADER(long, Long)\r\n"
     "    PROPERTY_ACCESSOR_OBJECT_HEADER(std::shared_ptr<vcc::IObject>, Object)\r\n"
     "\r\n"
@@ -1714,10 +1714,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        VPGObjectPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathHpp()), expectedHppContent);
 
     std::wstring expectedCppContent = L""
-    "#include \"" + this->GetIncludeFileName() + L"\"\r\n"
+    "#include \"" + this->getIncludeFileName() + L"\"\r\n"
     "\r\n"
     "#include <map>\r\n"
     "#include <memory>\r\n"
@@ -1748,9 +1748,9 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::OrderedMapInt:\r\n"
-    "            return obj->GetOrderedMapIntAtIndex(index).second;\r\n"
+    "            return obj->getOrderedMapIntAtIndex(index).second;\r\n"
     "        case VPGObjectProperty::VectorInt:\r\n"
-    "            return obj->GetVectorIntAtIndex(index);\r\n"
+    "            return obj->getVectorIntAtIndex(index);\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -1771,14 +1771,14 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return obj->GetMapIntAtKey(*keyPtr);\r\n"
+    "            return obj->getMapIntAtKey(*keyPtr);\r\n"
     "        }\r\n"
     "        case VPGObjectProperty::OrderedMapInt: {\r\n"
     "            auto keyPtr = static_cast<const int *>(key);\r\n"
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return obj->GetOrderedMapIntAtKey(*keyPtr);\r\n"
+    "            return obj->getOrderedMapIntAtKey(*keyPtr);\r\n"
     "        }\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -1804,9 +1804,9 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        {\r\n"
     "        case VPGObjectProperty::VectorInt:\r\n"
     "            if (index > -1)\r\n"
-    "                obj->SetVectorIntAtIndex(index, value);\r\n"
+    "                obj->setVectorIntAtIndex(index, value);\r\n"
     "            else\r\n"
-    "                obj->InsertVectorInt(value);\r\n"
+    "                obj->insertVectorInt(value);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -1827,10 +1827,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            if (obj->IsMapIntContainKey(*keyPtr))\r\n"
-    "                obj->SetMapIntAtKey(*keyPtr, value);\r\n"
+    "            if (obj->isMapIntContainKey(*keyPtr))\r\n"
+    "                obj->setMapIntAtKey(*keyPtr, value);\r\n"
     "            else\r\n"
-    "                obj->InsertMapIntAtKey(*keyPtr, value);\r\n"
+    "                obj->insertMapIntAtKey(*keyPtr, value);\r\n"
     "            break;\r\n"
     "        }\r\n"
     "        case VPGObjectProperty::OrderedMapInt: {\r\n"
@@ -1838,10 +1838,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            if (obj->IsOrderedMapIntContainKey(*keyPtr))\r\n"
-    "                obj->SetOrderedMapIntAtKey(*keyPtr, value);\r\n"
+    "            if (obj->isOrderedMapIntContainKey(*keyPtr))\r\n"
+    "                obj->setOrderedMapIntAtKey(*keyPtr, value);\r\n"
     "            else\r\n"
-    "                obj->InsertOrderedMapIntAtKey(*keyPtr, value);\r\n"
+    "                obj->insertOrderedMapIntAtKey(*keyPtr, value);\r\n"
     "            break;\r\n"
     "        }\r\n"
     "        default:\r\n"
@@ -1860,9 +1860,9 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        {\r\n"
     "        case VPGObjectProperty::VectorInt:\r\n"
     "            if (index > -1)\r\n"
-    "                obj->InsertVectorIntAtIndex(index, value);\r\n"
+    "                obj->insertVectorIntAtIndex(index, value);\r\n"
     "            else\r\n"
-    "                obj->InsertVectorInt(value);\r\n"
+    "                obj->insertVectorInt(value);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -1887,9 +1887,9 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::OrderedMapEnum:\r\n"
-    "            return static_cast<long>(obj->GetOrderedMapEnumAtIndex(index).second);\r\n"
+    "            return static_cast<long>(obj->getOrderedMapEnumAtIndex(index).second);\r\n"
     "        case VPGObjectProperty::VectorEnum:\r\n"
-    "            return static_cast<long>(obj->GetVectorEnumAtIndex(index));\r\n"
+    "            return static_cast<long>(obj->getVectorEnumAtIndex(index));\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -1910,14 +1910,14 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return static_cast<long>(obj->GetMapEnumAtKey(*keyPtr));\r\n"
+    "            return static_cast<long>(obj->getMapEnumAtKey(*keyPtr));\r\n"
     "        }\r\n"
     "        case VPGObjectProperty::OrderedMapEnum: {\r\n"
     "            auto keyPtr = static_cast<const char *>(key);\r\n"
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return static_cast<long>(obj->GetOrderedMapEnumAtKey(*keyPtr));\r\n"
+    "            return static_cast<long>(obj->getOrderedMapEnumAtKey(*keyPtr));\r\n"
     "        }\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -1943,9 +1943,9 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        {\r\n"
     "        case VPGObjectProperty::VectorEnum:\r\n"
     "            if (index > -1)\r\n"
-    "                obj->SetVectorEnumAtIndex(index, static_cast<VCCEnum>(value));\r\n"
+    "                obj->setVectorEnumAtIndex(index, static_cast<VCCEnum>(value));\r\n"
     "            else\r\n"
-    "                obj->InsertVectorEnum(static_cast<VCCEnum>(value));\r\n"
+    "                obj->insertVectorEnum(static_cast<VCCEnum>(value));\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -1966,10 +1966,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            if (obj->IsMapEnumContainKey(*keyPtr))\r\n"
-    "                obj->SetMapEnumAtKey(*keyPtr, static_cast<VCCEnum>(value));\r\n"
+    "            if (obj->isMapEnumContainKey(*keyPtr))\r\n"
+    "                obj->setMapEnumAtKey(*keyPtr, static_cast<VCCEnum>(value));\r\n"
     "            else\r\n"
-    "                obj->InsertMapEnumAtKey(*keyPtr, static_cast<VCCEnum>(value));\r\n"
+    "                obj->insertMapEnumAtKey(*keyPtr, static_cast<VCCEnum>(value));\r\n"
     "            break;\r\n"
     "        }\r\n"
     "        case VPGObjectProperty::OrderedMapEnum: {\r\n"
@@ -1977,10 +1977,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            if (obj->IsOrderedMapEnumContainKey(*keyPtr))\r\n"
-    "                obj->SetOrderedMapEnumAtKey(*keyPtr, static_cast<VCCEnum>(value));\r\n"
+    "            if (obj->isOrderedMapEnumContainKey(*keyPtr))\r\n"
+    "                obj->setOrderedMapEnumAtKey(*keyPtr, static_cast<VCCEnum>(value));\r\n"
     "            else\r\n"
-    "                obj->InsertOrderedMapEnumAtKey(*keyPtr, static_cast<VCCEnum>(value));\r\n"
+    "                obj->insertOrderedMapEnumAtKey(*keyPtr, static_cast<VCCEnum>(value));\r\n"
     "            break;\r\n"
     "        }\r\n"
     "        default:\r\n"
@@ -1999,9 +1999,9 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        {\r\n"
     "        case VPGObjectProperty::VectorEnum:\r\n"
     "            if (index > -1)\r\n"
-    "                obj->InsertVectorEnumAtIndex(index, static_cast<VCCEnum>(value));\r\n"
+    "                obj->insertVectorEnumAtIndex(index, static_cast<VCCEnum>(value));\r\n"
     "            else\r\n"
-    "                obj->InsertVectorEnum(static_cast<VCCEnum>(value));\r\n"
+    "                obj->insertVectorEnum(static_cast<VCCEnum>(value));\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -2026,9 +2026,9 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::OrderedMapObj:\r\n"
-    "            return std::static_pointer_cast<vcc::IObject>(obj->GetOrderedMapObjAtIndex(index).second);\r\n"
+    "            return std::static_pointer_cast<vcc::IObject>(obj->getOrderedMapObjAtIndex(index).second);\r\n"
     "        case VPGObjectProperty::VectorObj:\r\n"
-    "            return std::static_pointer_cast<vcc::IObject>(obj->GetVectorObjAtIndex(index));\r\n"
+    "            return std::static_pointer_cast<vcc::IObject>(obj->getVectorObjAtIndex(index));\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -2049,14 +2049,14 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return std::static_pointer_cast<vcc::IObject>(obj->GetMapObjAtKey(*keyPtr));\r\n"
+    "            return std::static_pointer_cast<vcc::IObject>(obj->getMapObjAtKey(*keyPtr));\r\n"
     "        }\r\n"
     "        case VPGObjectProperty::OrderedMapObj: {\r\n"
     "            auto keyPtr = static_cast<const double *>(key);\r\n"
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return std::static_pointer_cast<vcc::IObject>(obj->GetOrderedMapObjAtKey(*keyPtr));\r\n"
+    "            return std::static_pointer_cast<vcc::IObject>(obj->getOrderedMapObjAtKey(*keyPtr));\r\n"
     "        }\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -2082,9 +2082,9 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        {\r\n"
     "        case VPGObjectProperty::VectorObj:\r\n"
     "            if (index > -1)\r\n"
-    "                obj->SetVectorObjAtIndex(index, std::static_pointer_cast<VPGObjectA>(value));\r\n"
+    "                obj->setVectorObjAtIndex(index, std::static_pointer_cast<VPGObjectA>(value));\r\n"
     "            else\r\n"
-    "                obj->InsertVectorObj(std::static_pointer_cast<VPGObjectA>(value));\r\n"
+    "                obj->insertVectorObj(std::static_pointer_cast<VPGObjectA>(value));\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -2105,10 +2105,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            if (obj->IsMapObjContainKey(*keyPtr))\r\n"
-    "                obj->SetMapObjAtKey(*keyPtr, std::static_pointer_cast<VPGObjectA>(value));\r\n"
+    "            if (obj->isMapObjContainKey(*keyPtr))\r\n"
+    "                obj->setMapObjAtKey(*keyPtr, std::static_pointer_cast<VPGObjectA>(value));\r\n"
     "            else\r\n"
-    "                obj->InsertMapObjAtKey(*keyPtr, std::static_pointer_cast<VPGObjectA>(value));\r\n"
+    "                obj->insertMapObjAtKey(*keyPtr, std::static_pointer_cast<VPGObjectA>(value));\r\n"
     "            break;\r\n"
     "        }\r\n"
     "        case VPGObjectProperty::OrderedMapObj: {\r\n"
@@ -2116,10 +2116,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            if (obj->IsOrderedMapObjContainKey(*keyPtr))\r\n"
-    "                obj->SetOrderedMapObjAtKey(*keyPtr, std::static_pointer_cast<VPGObjectA>(value));\r\n"
+    "            if (obj->isOrderedMapObjContainKey(*keyPtr))\r\n"
+    "                obj->setOrderedMapObjAtKey(*keyPtr, std::static_pointer_cast<VPGObjectA>(value));\r\n"
     "            else\r\n"
-    "                obj->InsertOrderedMapObjAtKey(*keyPtr, std::static_pointer_cast<VPGObjectA>(value));\r\n"
+    "                obj->insertOrderedMapObjAtKey(*keyPtr, std::static_pointer_cast<VPGObjectA>(value));\r\n"
     "            break;\r\n"
     "        }\r\n"
     "        default:\r\n"
@@ -2138,9 +2138,9 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        {\r\n"
     "        case VPGObjectProperty::VectorObj:\r\n"
     "            if (index > -1)\r\n"
-    "                obj->InsertVectorObjAtIndex(index, std::static_pointer_cast<VPGObjectA>(value));\r\n"
+    "                obj->insertVectorObjAtIndex(index, std::static_pointer_cast<VPGObjectA>(value));\r\n"
     "            else\r\n"
-    "                obj->InsertVectorObj(std::static_pointer_cast<VPGObjectA>(value));\r\n"
+    "                obj->insertVectorObj(std::static_pointer_cast<VPGObjectA>(value));\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -2212,23 +2212,23 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::VectorInt:\r\n"
-    "            return obj->GetVectorInt().size();\r\n"
+    "            return obj->getVectorInt().size();\r\n"
     "        case VPGObjectProperty::VectorEnum:\r\n"
-    "            return obj->GetVectorEnum().size();\r\n"
+    "            return obj->getVectorEnum().size();\r\n"
     "        case VPGObjectProperty::VectorObj:\r\n"
-    "            return obj->GetVectorObj().size();\r\n"
+    "            return obj->getVectorObj().size();\r\n"
     "        case VPGObjectProperty::MapInt:\r\n"
-    "            return obj->GetMapInt().size();\r\n"
+    "            return obj->getMapInt().size();\r\n"
     "        case VPGObjectProperty::MapEnum:\r\n"
-    "            return obj->GetMapEnum().size();\r\n"
+    "            return obj->getMapEnum().size();\r\n"
     "        case VPGObjectProperty::MapObj:\r\n"
-    "            return obj->GetMapObj().size();\r\n"
+    "            return obj->getMapObj().size();\r\n"
     "        case VPGObjectProperty::OrderedMapInt:\r\n"
-    "            return obj->GetOrderedMapInt().size();\r\n"
+    "            return obj->getOrderedMapInt().size();\r\n"
     "        case VPGObjectProperty::OrderedMapEnum:\r\n"
-    "            return obj->GetOrderedMapEnum().size();\r\n"
+    "            return obj->getOrderedMapEnum().size();\r\n"
     "        case VPGObjectProperty::OrderedMapObj:\r\n"
-    "            return obj->GetOrderedMapObj().size();\r\n"
+    "            return obj->getOrderedMapObj().size();\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -2245,17 +2245,17 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::MapEnum:\r\n"
-    "            return obj->GetMapEnumVoidKeys();\r\n"
+    "            return obj->getMapEnumVoidKeys();\r\n"
     "        case VPGObjectProperty::MapInt:\r\n"
-    "            return obj->GetMapIntVoidKeys();\r\n"
+    "            return obj->getMapIntVoidKeys();\r\n"
     "        case VPGObjectProperty::MapObj:\r\n"
-    "            return obj->GetMapObjVoidKeys();\r\n"
+    "            return obj->getMapObjVoidKeys();\r\n"
     "        case VPGObjectProperty::OrderedMapEnum:\r\n"
-    "            return obj->GetOrderedMapEnumVoidKeys();\r\n"
+    "            return obj->getOrderedMapEnumVoidKeys();\r\n"
     "        case VPGObjectProperty::OrderedMapInt:\r\n"
-    "            return obj->GetOrderedMapIntVoidKeys();\r\n"
+    "            return obj->getOrderedMapIntVoidKeys();\r\n"
     "        case VPGObjectProperty::OrderedMapObj:\r\n"
-    "            return obj->GetOrderedMapObjVoidKeys();\r\n"
+    "            return obj->getOrderedMapObjVoidKeys();\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -2276,42 +2276,42 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return obj->IsMapEnumContainKey(*keyPtr);\r\n"
+    "            return obj->isMapEnumContainKey(*keyPtr);\r\n"
     "        }\r\n"
     "        case VPGObjectProperty::MapInt: {\r\n"
     "            auto keyPtr = static_cast<const int *>(key);\r\n"
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return obj->IsMapIntContainKey(*keyPtr);\r\n"
+    "            return obj->isMapIntContainKey(*keyPtr);\r\n"
     "        }\r\n"
     "        case VPGObjectProperty::MapObj: {\r\n"
     "            auto keyPtr = static_cast<const double *>(key);\r\n"
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return obj->IsMapObjContainKey(*keyPtr);\r\n"
+    "            return obj->isMapObjContainKey(*keyPtr);\r\n"
     "        }\r\n"
     "        case VPGObjectProperty::OrderedMapEnum: {\r\n"
     "            auto keyPtr = static_cast<const char *>(key);\r\n"
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return obj->IsOrderedMapEnumContainKey(*keyPtr);\r\n"
+    "            return obj->isOrderedMapEnumContainKey(*keyPtr);\r\n"
     "        }\r\n"
     "        case VPGObjectProperty::OrderedMapInt: {\r\n"
     "            auto keyPtr = static_cast<const int *>(key);\r\n"
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return obj->IsOrderedMapIntContainKey(*keyPtr);\r\n"
+    "            return obj->isOrderedMapIntContainKey(*keyPtr);\r\n"
     "        }\r\n"
     "        case VPGObjectProperty::OrderedMapObj: {\r\n"
     "            auto keyPtr = static_cast<const double *>(key);\r\n"
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return obj->IsOrderedMapObjContainKey(*keyPtr);\r\n"
+    "            return obj->isOrderedMapObjContainKey(*keyPtr);\r\n"
     "        }\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -2496,7 +2496,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
     "        }\r\n"
     "    CATCH\r\n"
     "}\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathCpp()), expectedCppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
@@ -2516,10 +2516,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->getLogConfig().get(), L"VPG", this->getProjectIncludeList(), this->getFilePathCpp(), enumClassList);
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -2542,10 +2542,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        VPGObjectPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathHpp()), expectedHppContent);
 
     std::wstring expectedCppContent = L""
-    "#include \"" + this->GetIncludeFileName() + L"\"\r\n"
+    "#include \"" + this->getIncludeFileName() + L"\"\r\n"
     "\r\n"
     "#include <map>\r\n"
     "#include <memory>\r\n"
@@ -2567,7 +2567,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Bool:\r\n"
-    "            return obj->GetBool();\r\n"
+    "            return obj->getBool();\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -2599,7 +2599,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Bool:\r\n"
-    "            obj->SetBool(value);\r\n"
+    "            obj->setBool(value);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -2657,7 +2657,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return obj->GetMapAtKey(*keyPtr);\r\n"
+    "            return obj->getMapAtKey(*keyPtr);\r\n"
     "        }\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -2693,10 +2693,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            if (obj->IsMapContainKey(*keyPtr))\r\n"
-    "                obj->SetMapAtKey(*keyPtr, value);\r\n"
+    "            if (obj->isMapContainKey(*keyPtr))\r\n"
+    "                obj->setMapAtKey(*keyPtr, value);\r\n"
     "            else\r\n"
-    "                obj->InsertMapAtKey(*keyPtr, value);\r\n"
+    "                obj->insertMapAtKey(*keyPtr, value);\r\n"
     "            break;\r\n"
     "        }\r\n"
     "        default:\r\n"
@@ -2720,7 +2720,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::String:\r\n"
-    "            return obj->GetString();\r\n"
+    "            return obj->getString();\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -2737,7 +2737,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Vector:\r\n"
-    "            return obj->GetVectorAtIndex(index);\r\n"
+    "            return obj->getVectorAtIndex(index);\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -2761,7 +2761,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::String:\r\n"
-    "            obj->SetString(value);\r\n"
+    "            obj->setString(value);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -2779,9 +2779,9 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        {\r\n"
     "        case VPGObjectProperty::Vector:\r\n"
     "            if (index > -1)\r\n"
-    "                obj->SetVectorAtIndex(index, value);\r\n"
+    "                obj->setVectorAtIndex(index, value);\r\n"
     "            else\r\n"
-    "                obj->InsertVector(value);\r\n"
+    "                obj->insertVector(value);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -2806,9 +2806,9 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        {\r\n"
     "        case VPGObjectProperty::Vector:\r\n"
     "            if (index > -1)\r\n"
-    "                obj->InsertVectorAtIndex(index, value);\r\n"
+    "                obj->insertVectorAtIndex(index, value);\r\n"
     "            else\r\n"
-    "                obj->InsertVector(value);\r\n"
+    "                obj->insertVector(value);\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -2824,7 +2824,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Object:\r\n"
-    "            return std::static_pointer_cast<vcc::IObject>(obj->GetObject());\r\n"
+    "            return std::static_pointer_cast<vcc::IObject>(obj->getObject());\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -2856,7 +2856,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Object:\r\n"
-    "            obj->SetObject(std::static_pointer_cast<VPGObjectA>(value));\r\n"
+    "            obj->setObject(std::static_pointer_cast<VPGObjectA>(value));\r\n"
     "            break;\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -2893,7 +2893,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Object:\r\n"
-    "            return std::static_pointer_cast<vcc::IObject>(obj->GetObject()->Clone());\r\n"
+    "            return std::static_pointer_cast<vcc::IObject>(obj->getObject()->Clone());\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -2925,9 +2925,9 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Vector:\r\n"
-    "            return obj->GetVector().size();\r\n"
+    "            return obj->getVector().size();\r\n"
     "        case VPGObjectProperty::Map:\r\n"
-    "            return obj->GetMap().size();\r\n"
+    "            return obj->getMap().size();\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -2944,7 +2944,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        switch(static_cast<VPGObjectProperty>(objectProperty))\r\n"
     "        {\r\n"
     "        case VPGObjectProperty::Map:\r\n"
-    "            return obj->GetMapVoidKeys();\r\n"
+    "            return obj->getMapVoidKeys();\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
     "        }\r\n"
@@ -2965,7 +2965,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "            assert(keyPtr != nullptr);\r\n"
     "            if (keyPtr == nullptr)\r\n"
     "                THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-    "            return obj->IsMapContainKey(*keyPtr);\r\n"
+    "            return obj->isMapContainKey(*keyPtr);\r\n"
     "        }\r\n"
     "        default:\r\n"
     "            assert(false);\r\n"
@@ -3058,7 +3058,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
     "        }\r\n"
     "    CATCH\r\n"
     "}\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedCppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathCpp()), expectedCppContent);
 }
 
 TEST_F(VPGPropertyAccessorFileGenerationServiceTest, ManagerAndAction)
@@ -3076,10 +3076,10 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, ManagerAndAction)
     VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorGenerationService::GenerateHpp(this->GetLogConfig().get(), L"VPG", this->GetFilePathHpp(), enumClassList);
-    VPGPropertyAccessorGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VPG", this->GetProjectIncludeList(), this->GetFilePathCpp(), enumClassList);
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_FALSE(vcc::IsFilePresent(this->GetFilePathCpp()));
+    VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
+    VPGPropertyAccessorGenerationService::GenerateCpp(this->getLogConfig().get(), L"VPG", this->getProjectIncludeList(), this->getFilePathCpp(), enumClassList);
+    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
+    EXPECT_FALSE(vcc::IsFilePresent(this->getFilePathCpp()));
 
     std::wstring expectedHppContent = L""
     "#pragma once\r\n"
@@ -3094,5 +3094,5 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, ManagerAndAction)
     "        VPGObjectPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}\r\n"
     "        virtual ~VPGObjectPropertyAccessor() {}\r\n"
     "};\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), expectedHppContent);
+    EXPECT_EQ(vcc::ReadFile(this->getFilePathHpp()), expectedHppContent);
 }

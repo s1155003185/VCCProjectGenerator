@@ -17,8 +17,8 @@ namespace vcc
     class XmlBuilder : public BaseDocumentBuilder
     {
         protected:
-            virtual std::wstring GetString(const std::wstring &xmlData, size_t &pos) const;
-            virtual std::wstring GetTag(const std::wstring &xmlData, size_t &pos) const;
+            virtual std::wstring getString(const std::wstring &xmlData, size_t &pos) const;
+            virtual std::wstring getTag(const std::wstring &xmlData, size_t &pos) const;
             virtual bool IsNextCharTagEnd(const std::wstring &xmlData, size_t &pos) const;
             virtual bool IsXMLHeader(const std::wstring &xmlData, size_t &pos) const;
             virtual void ParseXMLHeader(const std::wstring &xmlData, size_t &pos) const; // TODO: handle <?...?> and <!...>
