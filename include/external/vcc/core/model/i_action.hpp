@@ -14,21 +14,21 @@ namespace vcc
         IAction() {}
         virtual ~IAction() {}
 
-        virtual std::shared_ptr<IResult> OnRedo() = 0;
-        virtual std::shared_ptr<IResult> OnUndo() = 0;
+        virtual std::shared_ptr<IResult> onRedo() = 0;
+        virtual std::shared_ptr<IResult> onUndo() = 0;
 
-        virtual std::wstring GetRedoMessageStart() const = 0;
-        virtual std::wstring GetRedoMessageComplete() const = 0;
-        virtual std::wstring GetUndoMessageStart() const = 0;
-        virtual std::wstring GetUndoMessageComplete() const = 0;
+        virtual std::wstring getRedoMessageStart() const = 0;
+        virtual std::wstring getRedoMessageComplete() const = 0;
+        virtual std::wstring getUndoMessageStart() const = 0;
+        virtual std::wstring getUndoMessageComplete() const = 0;
 
     public:
         // Log
-        virtual std::shared_ptr<LogConfig> GetLogConfig() const = 0;
-        virtual void SetLogConfig(std::shared_ptr<LogConfig> logConfig) const = 0;
+        virtual std::shared_ptr<LogConfig> getLogConfig() const = 0;
+        virtual void setLogConfig(std::shared_ptr<LogConfig> logConfig) const = 0;
         
-        virtual void SetSeqNo(const size_t &seqNo) const = 0;
-        virtual size_t GetSeqNo() const = 0;
+        virtual void setSeqNo(const size_t &seqNo) const = 0;
+        virtual size_t getSeqNo() const = 0;
         
         virtual std::shared_ptr<IResult> Redo() = 0;
         virtual std::shared_ptr<IResult> Undo() = 0;

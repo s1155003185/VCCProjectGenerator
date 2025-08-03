@@ -4,7 +4,7 @@
 
 namespace vcc
 {
-    int GetDecimalPlaces(const double &value);
+    int getDecimalPlaces(const double &value);
 
 	std::wstring ToString(const double &value, const size_t &decimalPlaces);
 };

@@ -5,6 +5,6 @@
 GTEST_API_ int main() {
     printf("Running main() from %s\n", __FILE__);
     ::testing::InitGoogleTest();
-    VPGGlobal::Initialize(L"");
+    VPGGlobal::initialize(L"");
     return RUN_ALL_TESTS();
 }

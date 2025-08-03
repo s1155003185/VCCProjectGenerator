@@ -19,24 +19,24 @@ class VPGObjectTypeFileGenerationServiceTest : public testing::Test
         void SetUp() override
         {
             this->_LogConfig = std::make_shared<vcc::LogConfig>();
-            this->_LogConfig->SetIsConsoleLog(false);
-            std::filesystem::remove_all(PATH(this->GetWorkspace()));
+            this->_LogConfig->setIsConsoleLog(false);
+            std::filesystem::remove_all(PATH(this->getWorkspace()));
 
-            this->_FilePathHpp = vcc::ConcatPaths({this->GetWorkspace(), L"object_type.hpp"});
+            this->_FilePathHpp = vcc::concatPaths({this->getWorkspace(), L"object_type.hpp"});
         }
 
         void TearDown() override
         {
-            std::filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->getWorkspace()));
         }
 };
 
 TEST_F(VPGObjectTypeFileGenerationServiceTest, Empty)
 {
     std::set<std::wstring> propertyTypes;
-    VPGObjectTypeFileGenerationService::Generate(this->GetLogConfig().get(), this->GetFilePathHpp(), propertyTypes);
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
-    std::wstring content = vcc::ReadFile(this->GetFilePathHpp());
+    VPGObjectTypeFileGenerationService::generate(this->getLogConfig().get(), this->getFilePathHpp(), propertyTypes);
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
+    std::wstring content = vcc::readFile(this->getFilePathHpp());
     std::wstring expectedResult = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         L"#pragma once\r\n"
         "\r\n"
@@ -55,9 +55,9 @@ TEST_F(VPGObjectTypeFileGenerationServiceTest, Normal)
     std::set<std::wstring> propertyTypes;
     propertyTypes.insert(L"Def");
     propertyTypes.insert(L"Abc");
-    VPGObjectTypeFileGenerationService::Generate(this->GetLogConfig().get(), this->GetFilePathHpp(), propertyTypes);
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
-    std::wstring content = vcc::ReadFile(this->GetFilePathHpp());
+    VPGObjectTypeFileGenerationService::generate(this->getLogConfig().get(), this->getFilePathHpp(), propertyTypes);
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
+    std::wstring content = vcc::readFile(this->getFilePathHpp());
     std::wstring expectedResult = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         L"#pragma once\r\n"
         "\r\n"

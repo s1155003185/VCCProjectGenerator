@@ -17,13 +17,13 @@ namespace vcc
             Config() : BaseDocument() {}
             virtual ~Config() {}
             
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<Config>(*this);
             }
             
-            bool IsValue(const std::wstring &key) const;
-            std::wstring GetValue(const std::wstring &key) const;
+            bool isValue(const std::wstring &key) const;
+            std::wstring getValue(const std::wstring &key) const;
             void AddValue(const std::wstring &key, const std::wstring &value);
             void AddLine(const std::wstring &value = L"");
             void AddCommand(const std::wstring &value);

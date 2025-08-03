@@ -16,48 +16,48 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFil
 {
     std::wstring result = L"";
     TRY
-        if (!option->GetIsGenerateApplication())
+        if (!option->getIsGenerateApplication())
             return result;
 
         std::map<std::wstring, std::wstring> functionMap;
-        functionMap.insert(std::make_pair(L"ApplicationStart", L"DLLEXPORT void ApplicationStart();\r\n"));
+        functionMap.insert(std::make_pair(L"applicationStart", L"DLLEXPORT void applicationStart();\r\n"));
 
         // Initialize Form
-        functionMap.insert(std::make_pair(L"ApplicationCreateForm", L"DLLEXPORT void *ApplicationCreateForm(int64_t objectType);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationCreateForm", L"DLLEXPORT void *applicationCreateForm(int64_t objectType);\r\n"));
         
         // Result
-        functionMap.insert(std::make_pair(L"ApplicationGetResultErrorCode", L"DLLEXPORT int64_t ApplicationGetResultErrorCode(void *result);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationGetResultMessage", L"DLLEXPORT void ApplicationGetResultMessage(void *result, wchar_t **value);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationIsErrorResult", L"DLLEXPORT bool ApplicationIsErrorResult(void *result);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationIsWarningResult", L"DLLEXPORT bool ApplicationIsWarningResult(void *result);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationEraseResult", L"DLLEXPORT void ApplicationEraseResult(void *result);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationGetResultErrorCode", L"DLLEXPORT int64_t applicationGetResultErrorCode(void *result);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationGetResultMessage", L"DLLEXPORT void applicationGetResultMessage(void *result, wchar_t **value);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationIsErrorResult", L"DLLEXPORT bool applicationIsErrorResult(void *result);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationIsWarningResult", L"DLLEXPORT bool applicationIsWarningResult(void *result);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationEraseResult", L"DLLEXPORT void applicationEraseResult(void *result);\r\n"));
 
         // Form Action
-        functionMap.insert(std::make_pair(L"ApplicationCreateActionArgument", L"DLLEXPORT void *ApplicationCreateActionArgument(int64_t objectType);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationCreateActionArgument", L"DLLEXPORT void *applicationCreateActionArgument(int64_t objectType);\r\n"));
 
-        functionMap.insert(std::make_pair(L"ApplicationDoFormAction", L"DLLEXPORT void *ApplicationDoFormAction(void *form, int64_t formProperty, void *argument);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationGetFormActionCurrentSeqNo", L"DLLEXPORT int64_t ApplicationGetFormActionCurrentSeqNo(void *form);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationGetFormActionFirstSeqNo", L"DLLEXPORT int64_t ApplicationGetFormActionFirstSeqNo(void *form);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationGetFormActionLastSeqNo", L"DLLEXPORT int64_t ApplicationGetFormActionLastSeqNo(void *form);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationDoFormAction", L"DLLEXPORT void *applicationDoFormAction(void *form, int64_t formProperty, void *argument);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationGetFormActionCurrentSeqNo", L"DLLEXPORT int64_t applicationGetFormActionCurrentSeqNo(void *form);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationGetFormActionFirstSeqNo", L"DLLEXPORT int64_t applicationGetFormActionFirstSeqNo(void *form);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationGetFormActionLastSeqNo", L"DLLEXPORT int64_t applicationGetFormActionLastSeqNo(void *form);\r\n"));
 
-        functionMap.insert(std::make_pair(L"ApplicationRedoFormAction", L"DLLEXPORT void ApplicationRedoFormAction(void *form, int64_t noOfStep);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationRedoFormActionToSeqNo", L"DLLEXPORT void ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationRedoFormAction", L"DLLEXPORT void applicationRedoFormAction(void *form, int64_t noOfStep);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationRedoFormActionToSeqNo", L"DLLEXPORT void applicationRedoFormActionToSeqNo(void *form, int64_t seqNo);\r\n"));
         
-        functionMap.insert(std::make_pair(L"ApplicationUndoFormAction", L"DLLEXPORT void ApplicationUndoFormAction(void *form, int64_t noOfStep);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationUndoFormActionToSeqNo", L"DLLEXPORT void ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationUndoFormAction", L"DLLEXPORT void applicationUndoFormAction(void *form, int64_t noOfStep);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationUndoFormActionToSeqNo", L"DLLEXPORT void applicationUndoFormActionToSeqNo(void *form, int64_t seqNo);\r\n"));
 
-        functionMap.insert(std::make_pair(L"ApplicationClearFormAction", L"DLLEXPORT int64_t ApplicationClearFormAction(void *form);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationTruncateFormAction", L"DLLEXPORT int64_t ApplicationTruncateFormAction(void *form);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationClearFormAction", L"DLLEXPORT int64_t applicationClearFormAction(void *form);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationTruncateFormAction", L"DLLEXPORT int64_t applicationTruncateFormAction(void *form);\r\n"));
 
         // Close Form
-        functionMap.insert(std::make_pair(L"ApplicationIsFormClosable", L"DLLEXPORT bool ApplicationIsFormClosable(void *form);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationIsFormClosed", L"DLLEXPORT bool ApplicationIsFormClosed(void *form);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationCloseForm", L"DLLEXPORT bool ApplicationCloseForm(void *form, bool isForce);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationIsFormClosable", L"DLLEXPORT bool applicationIsFormClosable(void *form);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationIsFormClosed", L"DLLEXPORT bool applicationIsFormClosed(void *form);\r\n"));
+        functionMap.insert(std::make_pair(L"applicationCloseForm", L"DLLEXPORT bool applicationCloseForm(void *form, bool isForce);\r\n"));
                     
         for (auto const &action : functionMap) {
-            std::vector<std::wstring> lines = vcc::SplitStringByLine(action.second);
+            std::vector<std::wstring> lines = vcc::splitStringByLine(action.second);
             for (auto &line : lines) {
-                vcc::RTrim(line);
+                vcc::rTrim(line);
                 result += line + L"\r\n";
             }
         }
@@ -69,7 +69,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
 {
     std::wstring result = L"";
     TRY
-        if (!option->GetIsGenerateApplication())
+        if (!option->getIsGenerateApplication())
             return result;
 
         customIncludeFiles.insert(L"application.hpp");
@@ -77,8 +77,8 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
         customIncludeFiles.insert(L"object_type.hpp");
 
         std::map<std::wstring, std::wstring> functionMap;
-        functionMap.insert(std::make_pair(L"ApplicationStart",
-            L"void ApplicationStart()\r\n"
+        functionMap.insert(std::make_pair(L"applicationStart",
+            L"void applicationStart()\r\n"
             "{\r\n"
             "    TRY\r\n"
             "        Application::Run();\r\n"
@@ -86,183 +86,183 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             "}\r\n"));
 
         // Initialize Form
-        functionMap.insert(std::make_pair(L"ApplicationCreateForm",
-            L"void *ApplicationCreateForm(int64_t objectType)\r\n"
+        functionMap.insert(std::make_pair(L"applicationCreateForm",
+            L"void *applicationCreateForm(int64_t objectType)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::CreateForm(static_cast<ObjectType>(objectType)).get();\r\n"
+            "        return Application::createForm(static_cast<ObjectType>(objectType)).get();\r\n"
             "    CATCH\r\n"
             "    return nullptr;\r\n"
             "}\r\n"));
             
         // Result
-        functionMap.insert(std::make_pair(L"ApplicationGetResultErrorCode",
-            L"int64_t ApplicationGetResultErrorCode(void *result)\r\n"
+        functionMap.insert(std::make_pair(L"applicationGetResultErrorCode",
+            L"int64_t applicationGetResultErrorCode(void *result)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::GetResultErrorCode(static_cast<vcc::IObject *>(result));\r\n"
+            "        return Application::getResultErrorCode(static_cast<vcc::IObject *>(result));\r\n"
             "    CATCH\r\n"
             "    return 0;\r\n"
             "}\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationGetResultMessage",
-            L"void ApplicationGetResultMessage(void *result, wchar_t **value)\r\n"
+        functionMap.insert(std::make_pair(L"applicationGetResultMessage",
+            L"void applicationGetResultMessage(void *result, wchar_t **value)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        std::wstring message = Application::GetResultMessage(static_cast<vcc::IObject *>(result));\r\n"
+            "        std::wstring message = Application::getResultMessage(static_cast<vcc::IObject *>(result));\r\n"
             "        size_t size = (message.length() + 1) * sizeof(wchar_t);\r\n"
             "        *value = static_cast<wchar_t*>(malloc(size));\r\n"
             "        wcscpy(*value, message.c_str());\r\n"
             "    CATCH\r\n"
             "}\r\n"));
         
-        functionMap.insert(std::make_pair(L"ApplicationIsErrorResult",
-            L"bool ApplicationIsErrorResult(void *result)\r\n"
+        functionMap.insert(std::make_pair(L"applicationIsErrorResult",
+            L"bool applicationIsErrorResult(void *result)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::IsErrorResult(static_cast<vcc::IObject *>(result));\r\n"
+            "        return Application::isErrorResult(static_cast<vcc::IObject *>(result));\r\n"
             "    CATCH\r\n"
             "    return false;\r\n"
             "}\r\n"
         ));
-        functionMap.insert(std::make_pair(L"ApplicationIsWarningResult",
-            L"bool ApplicationIsWarningResult(void *result)\r\n"
+        functionMap.insert(std::make_pair(L"applicationIsWarningResult",
+            L"bool applicationIsWarningResult(void *result)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::IsWarningResult(static_cast<vcc::IObject *>(result));\r\n"
+            "        return Application::isWarningResult(static_cast<vcc::IObject *>(result));\r\n"
             "    CATCH\r\n"
             "    return false;\r\n"
             "}\r\n"
         ));
-        functionMap.insert(std::make_pair(L"ApplicationEraseResult",
-            L"void ApplicationEraseResult(void *result)\r\n"
+        functionMap.insert(std::make_pair(L"applicationEraseResult",
+            L"void applicationEraseResult(void *result)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        Application::EraseResult(static_cast<vcc::IObject *>(result));\r\n"
+            "        Application::eraseResult(static_cast<vcc::IObject *>(result));\r\n"
             "    CATCH\r\n"
             "}\r\n"));
             
         // Form Action
-        functionMap.insert(std::make_pair(L"ApplicationCreateActionArgument",
-            L"void *ApplicationCreateActionArgument(int64_t objectType)\r\n"
+        functionMap.insert(std::make_pair(L"applicationCreateActionArgument",
+            L"void *applicationCreateActionArgument(int64_t objectType)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::CreateActionArgument(static_cast<ObjectType>(objectType)).get();\r\n"
+            "        return Application::createActionArgument(static_cast<ObjectType>(objectType)).get();\r\n"
             "    CATCH\r\n"
             "    return nullptr;\r\n"
             "}\r\n"));
 
-        functionMap.insert(std::make_pair(L"ApplicationDoFormAction", 
-            L"void *ApplicationDoFormAction(void *form, int64_t formProperty, void *argument)\r\n"
+        functionMap.insert(std::make_pair(L"applicationDoFormAction", 
+            L"void *applicationDoFormAction(void *form, int64_t formProperty, void *argument)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::DoFormAction(static_cast<vcc::IObject *>(form), formProperty, static_cast<vcc::IObject *>(argument)).get();\r\n"
+            "        return Application::doFormAction(static_cast<vcc::IObject *>(form), formProperty, static_cast<vcc::IObject *>(argument)).get();\r\n"
             "    CATCH\r\n"
             "    return nullptr;\r\n"
             "}\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationGetFormActionCurrentSeqNo",
-                L"int64_t ApplicationGetFormActionCurrentSeqNo(void *form)\r\n"
+        functionMap.insert(std::make_pair(L"applicationGetFormActionCurrentSeqNo",
+                L"int64_t applicationGetFormActionCurrentSeqNo(void *form)\r\n"
                 "{\r\n"
                 "    TRY\r\n"
-                "        return Application::GetFormActionCurrentSeqNo(static_cast<vcc::IObject *>(form));\r\n"
+                "        return Application::getFormActionCurrentSeqNo(static_cast<vcc::IObject *>(form));\r\n"
                 "    CATCH\r\n"
                 "    return -1;\r\n"
                 "}\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationGetFormActionFirstSeqNo",
-            L"int64_t ApplicationGetFormActionFirstSeqNo(void *form)\r\n"
+        functionMap.insert(std::make_pair(L"applicationGetFormActionFirstSeqNo",
+            L"int64_t applicationGetFormActionFirstSeqNo(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::GetFormActionFirstSeqNo(static_cast<vcc::IObject *>(form));\r\n"
+            "        return Application::getFormActionFirstSeqNo(static_cast<vcc::IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return -1;\r\n"
             "}\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationGetFormActionLastSeqNo",
-            L"int64_t ApplicationGetFormActionLastSeqNo(void *form)\r\n"
+        functionMap.insert(std::make_pair(L"applicationGetFormActionLastSeqNo",
+            L"int64_t applicationGetFormActionLastSeqNo(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::GetFormActionLastSeqNo(static_cast<vcc::IObject *>(form));\r\n"
+            "        return Application::getFormActionLastSeqNo(static_cast<vcc::IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return -1;\r\n"
             "}\r\n"));
             
-        functionMap.insert(std::make_pair(L"ApplicationRedoFormAction",
-            L"void ApplicationRedoFormAction(void *form, int64_t noOfStep)\r\n"
+        functionMap.insert(std::make_pair(L"applicationRedoFormAction",
+            L"void applicationRedoFormAction(void *form, int64_t noOfStep)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        Application::RedoFormAction(static_cast<vcc::IObject *>(form), noOfStep);\r\n"
+            "        Application::redoFormAction(static_cast<vcc::IObject *>(form), noOfStep);\r\n"
             "    CATCH\r\n"
             "}\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationRedoFormActionToSeqNo",
-            L"void ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo)\r\n"
+        functionMap.insert(std::make_pair(L"applicationRedoFormActionToSeqNo",
+            L"void applicationRedoFormActionToSeqNo(void *form, int64_t seqNo)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        Application::RedoFormActionToSeqNo(static_cast<vcc::IObject *>(form), seqNo);\r\n"
+            "        Application::redoFormActionToSeqNo(static_cast<vcc::IObject *>(form), seqNo);\r\n"
             "    CATCH\r\n"
             "}\r\n"));
             
             
-        functionMap.insert(std::make_pair(L"ApplicationUndoFormAction",
-            L"void ApplicationUndoFormAction(void *form, int64_t noOfStep)\r\n"
+        functionMap.insert(std::make_pair(L"applicationUndoFormAction",
+            L"void applicationUndoFormAction(void *form, int64_t noOfStep)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        Application::UndoFormAction(static_cast<vcc::IObject *>(form), noOfStep);\r\n"
+            "        Application::undoFormAction(static_cast<vcc::IObject *>(form), noOfStep);\r\n"
             "    CATCH\r\n"
             "}\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationUndoFormActionToSeqNo",
-            L"void ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo)\r\n"
+        functionMap.insert(std::make_pair(L"applicationUndoFormActionToSeqNo",
+            L"void applicationUndoFormActionToSeqNo(void *form, int64_t seqNo)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        Application::UndoFormActionToSeqNo(static_cast<vcc::IObject *>(form), seqNo);\r\n"
+            "        Application::undoFormActionToSeqNo(static_cast<vcc::IObject *>(form), seqNo);\r\n"
             "    CATCH\r\n"
             "}\r\n"));
 
-        functionMap.insert(std::make_pair(L"ApplicationClearFormAction",
-            L"int64_t ApplicationClearFormAction(void *form)\r\n"
+        functionMap.insert(std::make_pair(L"applicationClearFormAction",
+            L"int64_t applicationClearFormAction(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::ClearFormAction(static_cast<vcc::IObject *>(form));\r\n"
+            "        return Application::clearFormAction(static_cast<vcc::IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return -1;\r\n"
             "}\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationTruncateFormAction",
-            L"int64_t ApplicationTruncateFormAction(void *form)\r\n"
+        functionMap.insert(std::make_pair(L"applicationTruncateFormAction",
+            L"int64_t applicationTruncateFormAction(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::TruncateFormAction(static_cast<vcc::IObject *>(form));\r\n"
+            "        return Application::truncateFormAction(static_cast<vcc::IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return -1;\r\n"
             "}\r\n"));
             
         // Close Form
-        functionMap.insert(std::make_pair(L"ApplicationIsFormClosable",
-            L"bool ApplicationIsFormClosed(void *form)\r\n"
+        functionMap.insert(std::make_pair(L"applicationIsFormClosable",
+            L"bool applicationIsFormClosed(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::IsFormClosed(static_cast<vcc::IObject *>(form));\r\n"
+            "        return Application::isFormClosed(static_cast<vcc::IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return false;\r\n"
             "}\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationIsFormClosed",
-            L"bool ApplicationIsFormClosable(void *form)\r\n"
+        functionMap.insert(std::make_pair(L"applicationIsFormClosed",
+            L"bool applicationIsFormClosable(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::IsFormClosable(static_cast<vcc::IObject *>(form));\r\n"
+            "        return Application::isFormClosable(static_cast<vcc::IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return false;\r\n"
             "}\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationCloseForm",
-            L"bool ApplicationCloseForm(void *form, bool isForce)\r\n"
+        functionMap.insert(std::make_pair(L"applicationCloseForm",
+            L"bool applicationCloseForm(void *form, bool isForce)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::CloseForm(static_cast<vcc::IObject *>(form), isForce);\r\n"
+            "        return Application::closeForm(static_cast<vcc::IObject *>(form), isForce);\r\n"
             "    CATCH\r\n"
             "    return false;\r\n"
             "}\r\n"));
 
         for (auto const &action : functionMap) {
-            std::vector<std::wstring> lines = vcc::SplitStringByLine(action.second);
+            std::vector<std::wstring> lines = vcc::splitStringByLine(action.second);
             result += L"\r\n";
             for (auto &line : lines) {
-                vcc::RTrim(line);
+                vcc::rTrim(line);
                 result += line + L"\r\n";
             }
         }
@@ -274,7 +274,7 @@ std::wstring VPGDllFileGenerationService::GeneratePropertyAccessorHpp(const VPGD
 {
     std::wstring result = L"";
     TRY
-        if (!option->GetIsGeneratePropertyAccessor())
+        if (!option->getIsGeneratePropertyAccessor())
             return result;
 
         customIncludeFiles.insert(L"object_factory.hpp");
@@ -306,7 +306,7 @@ std::wstring VPGDllFileGenerationService::GeneratePropertyAccessorCpp(const VPGD
 {
     std::wstring result = L"";
     TRY
-        if (!option->GetIsGeneratePropertyAccessor())
+        if (!option->getIsGeneratePropertyAccessor())
             return result;
 
         customIncludeFiles.insert(L"exception_macro.hpp");
@@ -340,10 +340,10 @@ void VPGDllFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig, c
 {
     TRY
         assert(option != nullptr);
-        if (!vcc::IsFilePresent(filePathHpp))
+        if (!vcc::isFilePresent(filePathHpp))
             return;
         
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file: " + filePathHpp);
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file: " + filePathHpp);
 
         // header
         std::wstring content = L"";
@@ -352,16 +352,16 @@ void VPGDllFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig, c
         std::wstring propertyAccessorStr = GeneratePropertyAccessorHpp(option, customIncludeFiles);
         if (!customIncludeFiles.empty()) {
             for (auto const &file : customIncludeFiles)
-                content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, file) + L"\r\n";
+                content += L"#include " + vcc::getEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, file) + L"\r\n";
         }
-        vcc::WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(vcc::ReadFile(filePathHpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
+        vcc::writeFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(vcc::readFile(filePathHpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
 
         // content
         content = applicationStr;
         content += propertyAccessorStr;
 
-        vcc::WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(vcc::ReadFile(filePathHpp), L"vcc:dllInterface", content, L"//"), true);
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file completed.");
+        vcc::writeFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(vcc::readFile(filePathHpp), L"vcc:dllInterface", content, L"//"), true);
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file completed.");
     CATCH
 }
 
@@ -369,10 +369,10 @@ void VPGDllFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig, c
 {
     TRY
         assert(option != nullptr);
-        if (!vcc::IsFilePresent(filePathCpp))
+        if (!vcc::isFilePresent(filePathCpp))
             return;
 
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp file: " + filePathCpp);
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp file: " + filePathCpp);
         // header
         std::wstring content = L"";
         std::set<std::wstring> customIncludeFiles;
@@ -381,15 +381,15 @@ void VPGDllFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig, c
 
         if (!customIncludeFiles.empty()) {
             for (auto const &file : customIncludeFiles)
-                content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, file) + L"\r\n";
+                content += L"#include " + vcc::getEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, file) + L"\r\n";
         }
-        vcc::WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(vcc::ReadFile(filePathCpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
+        vcc::writeFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(vcc::readFile(filePathCpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
 
         // content
         content = applicationStr;
         content += propertyAccessorStr;
-        vcc::WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(vcc::ReadFile(filePathCpp), L"vcc:dllInterface", content, L"//"), true);
+        vcc::writeFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(vcc::readFile(filePathCpp), L"vcc:dllInterface", content, L"//"), true);
 
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp completed.");
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp completed.");
     CATCH
 }

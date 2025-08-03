@@ -19,7 +19,7 @@ class VPGProcessManager : public vcc::BaseManager
 
     private:
         VPGProcessManager() = delete;
-        std::shared_ptr<IVPGGenerationManager> GetGenerationManager();
+        std::shared_ptr<IVPGGenerationManager> getGenerationManager();
 
     public:
         VPGProcessManager(std::shared_ptr<vcc::LogConfig> logConfig) : BaseManager(logConfig)
@@ -29,19 +29,19 @@ class VPGProcessManager : public vcc::BaseManager
         
         ~VPGProcessManager() {};
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<IObject> clone() const override
         {
             return std::make_shared<VPGProcessManager>(*this);
         }
 
-        void InitLogConfig();
+        void initLogConfig();
         // Ensure VPG Generator have same version as Versioning Commond Codebase Response
-        void VerifyLocalResponse();
+        void verifyLocalResponse();
 
-        bool IsUpdateAvaliable();
+        bool isUpdateAvaliable();
         
-        void Add();
-        void Update();
-        void Generate();
-        void Execute(const std::vector<std::wstring> &cmds);
+        void add();
+        void update();
+        void generate();
+        void execute(const std::vector<std::wstring> &cmds);
 };

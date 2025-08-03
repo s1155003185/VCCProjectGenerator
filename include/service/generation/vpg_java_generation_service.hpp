@@ -16,24 +16,24 @@ class VPGJavaGenerationService
         VPGJavaGenerationService() = delete;
         ~VPGJavaGenerationService() {}
 
-        static std::shared_ptr<VPGConfigExport> GetJavaOption(const VPGConfig *option);
-        static std::wstring GetJavaPactkage(const std::wstring &path, const std::wstring &middlePath, const std::wstring &filePathName);
-        static std::wstring GetJavaPactkageObject(const VPGEnumClass *enumClass, const VPGConfigExport *option, const std::wstring &middlePath);
+        static std::shared_ptr<VPGConfigExport> getJavaOption(const VPGConfig *option);
+        static std::wstring getJavaPactkage(const std::wstring &path, const std::wstring &middlePath, const std::wstring &filePathName);
+        static std::wstring getJavaPactkageObject(const VPGEnumClass *enumClass, const VPGConfigExport *option, const std::wstring &middlePath);
         
-        static std::map<std::wstring, std::wstring> GetImportFileMap(const std::wstring &projectPrefix, const VPGConfigExport *option, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapObject, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapForm);
+        static std::map<std::wstring, std::wstring> getImportFileMap(const std::wstring &projectPrefix, const VPGConfigExport *option, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapObject, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapForm);
 
-        static std::wstring GetOperationResultFilePath(const std::wstring &projectPrefix, const VPGConfigExport *option);
+        static std::wstring getOperationResultFilePath(const std::wstring &projectPrefix, const VPGConfigExport *option);
 
-        static std::wstring GetPropertyAccessorCppToJavaConvertedType(const std::wstring &cppType);
-        static std::wstring GetJavaGetterSetterCppToJavaConvertedType(const std::wstring &cppType);
-        static std::wstring GetJavaGetterSetterJavaTypeToJavaCaptialType(const std::wstring &javaType);
+        static std::wstring getPropertyAccessorCppToJavaConvertedType(const std::wstring &cppType);
+        static std::wstring getJavaGetterSetterCppToJavaConvertedType(const std::wstring &cppType);
+        static std::wstring getJavaGetterSetterJavaTypeToJavaCaptialType(const std::wstring &javaType);
         
         static std::wstring GenerateJavaBridgeContent(const std::wstring &content, const VPGConfig *option);
 
         static std::wstring GenerateEnumContent(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &middlePath, const VPGConfigExport *option);
         
         // Property
-        static std::wstring GetGetterSetterMapKeyContent(const std::wstring &classPropertyEnum, const std::wstring &dllInstantPrefix, const std::wstring &javaType1,
+        static std::wstring getGetterSetterMapKeyContent(const std::wstring &classPropertyEnum, const std::wstring &dllInstantPrefix, const std::wstring &javaType1,
             const std::wstring &orginalFunction, const bool &isReturnNeeded);
         static std::wstring GenerateObjectGetterSetterContainerCount(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty, bool isVector, bool isMap, bool isSet);
         static std::wstring GenerateObjectGetterSetterContainer(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,

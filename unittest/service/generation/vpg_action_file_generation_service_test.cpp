@@ -21,17 +21,17 @@ class VPGActionFileGenerationServiceTest : public testing::Test
         void SetUp() override
         {
             this->_LogConfig = std::make_shared<vcc::LogConfig>();
-            this->_LogConfig->SetIsConsoleLog(false);
-            std::filesystem::remove_all(PATH(this->GetWorkspace()));
+            this->_LogConfig->setIsConsoleLog(false);
+            std::filesystem::remove_all(PATH(this->getWorkspace()));
         }
 
         void TearDown() override
         {
-            std::filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->getWorkspace()));
         }
 };
 
-std::wstring GetHppClass(const std::wstring &np, const std::wstring &actionName, const std::vector<std::wstring> &properties, const std::wstring &assignment)
+std::wstring getHppClass(const std::wstring &np, const std::wstring &actionName, const std::vector<std::wstring> &properties, const std::wstring &assignment)
 {
     TRY
         std::wstring propertyStr = L"";
@@ -51,13 +51,13 @@ std::wstring GetHppClass(const std::wstring &np, const std::wstring &actionName,
             "        // </vcc:customVPGGitForm" + actionName + L"PrivateFunctions>\r\n"
             "\r\n"
             "    protected:\r\n"
-            "        virtual std::wstring GetRedoMessageStart() const override;\r\n"
-            "        virtual std::wstring GetRedoMessageComplete() const override;\r\n"
-            "        virtual std::wstring GetUndoMessageStart() const override;\r\n"
-            "        virtual std::wstring GetUndoMessageComplete() const override;\r\n"
+            "        virtual std::wstring getRedoMessageStart() const override;\r\n"
+            "        virtual std::wstring getRedoMessageComplete() const override;\r\n"
+            "        virtual std::wstring getUndoMessageStart() const override;\r\n"
+            "        virtual std::wstring getUndoMessageComplete() const override;\r\n"
             "\r\n"
-            "        virtual std::shared_ptr<vcc::IResult> OnRedo() override;\r\n"
-            "        virtual std::shared_ptr<vcc::IResult> OnUndo() override;\r\n"
+            "        virtual std::shared_ptr<vcc::IResult> onRedo() override;\r\n"
+            "        virtual std::shared_ptr<vcc::IResult> onUndo() override;\r\n"
             "\r\n"
             "        // <vcc:customVPGGitForm" + actionName + L"ProtectedFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
             "        // </vcc:customVPGGitForm" + actionName + L"ProtectedFunctions>\r\n"
@@ -74,12 +74,12 @@ std::wstring GetHppClass(const std::wstring &np, const std::wstring &actionName,
             "};\r\n";
         std::map<std::wstring, std::vector<std::wstring>> namespaceClassMapping;
         namespaceClassMapping[np].push_back(action);
-        return GenerateCodeWithNamespace(namespaceClassMapping);
+        return generateCodeWithNamespace(namespaceClassMapping);
     CATCH
     return L"";
 }
 
-std::wstring GetCppClass(const std::wstring &np, const std::wstring &actionName, const std::vector<std::wstring> &properties, const std::wstring &assignment)
+std::wstring getCppClass(const std::wstring &np, const std::wstring &actionName, const std::vector<std::wstring> &properties, const std::wstring &assignment)
 {
     TRY
         std::wstring propertyStr = INDENT + L"_LogConfig = logConfig;\r\n"
@@ -101,21 +101,21 @@ std::wstring GetCppClass(const std::wstring &np, const std::wstring &actionName,
                 + propertyStr
                 + L"}\r\n";
         action += L"\r\n"
-            "std::wstring VPGGitForm" + actionName + L"::GetRedoMessageStart() const\r\n"
+            "std::wstring VPGGitForm" + actionName + L"::getRedoMessageStart() const\r\n"
             "{\r\n"
             "    TRY\r\n"
             "        // <vcc:VPGGitForm" + actionName + L"GetRedoMessageStart sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-            "        return L\"Execute VPGGitForm" + actionName + L" start\";\r\n"
+            "        return L\"execute VPGGitForm" + actionName + L" start\";\r\n"
             "        // </vcc:VPGGitForm" + actionName + L"GetRedoMessageStart>\r\n"
             "    CATCH\r\n"
             "    return L\"\";\r\n"
             "}\r\n"
             "\r\n"
-            "std::wstring VPGGitForm" + actionName + L"::GetRedoMessageComplete() const\r\n"
+            "std::wstring VPGGitForm" + actionName + L"::getRedoMessageComplete() const\r\n"
             "{\r\n"
             "    TRY\r\n"
             "        // <vcc:VPGGitForm" + actionName + L"GetRedoMessageComplete sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-            "        return L\"Execute VPGGitForm" + actionName + L" complete\";\r\n" 
+            "        return L\"execute VPGGitForm" + actionName + L" complete\";\r\n" 
             "        // </vcc:VPGGitForm" + actionName + L"GetRedoMessageComplete>\r\n"
             "    CATCH\r\n"
             "    return L\"\";\r\n"
@@ -141,7 +141,7 @@ std::wstring GetCppClass(const std::wstring &np, const std::wstring &actionName,
             "    return L\"\";\r\n"
             "}\r\n"
             "\r\n"
-            "std::shared_ptr<vcc::IResult> VPGGitForm" + actionName + L"::OnRedo()\r\n"
+            "std::shared_ptr<vcc::IResult> VPGGitForm" + actionName + L"::onRedo()\r\n"
             "{\r\n"
             "    TRY\r\n"
             "        // <vcc:VPGGitForm" + actionName + L"OnRedo sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
@@ -150,7 +150,7 @@ std::wstring GetCppClass(const std::wstring &np, const std::wstring &actionName,
             "    return std::make_shared<vcc::OperationResult>();\r\n"
             "}\r\n"
             "\r\n"
-            "std::shared_ptr<vcc::IResult> VPGGitForm" + actionName + L"::OnUndo()\r\n"
+            "std::shared_ptr<vcc::IResult> VPGGitForm" + actionName + L"::onUndo()\r\n"
             "{\r\n"
             "    TRY\r\n"
             "        // <vcc:VPGGitForm" + actionName + L"OnUndo sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
@@ -160,7 +160,7 @@ std::wstring GetCppClass(const std::wstring &np, const std::wstring &actionName,
             "}\r\n";
         std::map<std::wstring, std::vector<std::wstring>> namespaceClassMapping;
         namespaceClassMapping[np].push_back(action);
-        return GenerateCodeWithNamespace(namespaceClassMapping);
+        return generateCodeWithNamespace(namespaceClassMapping);
     CATCH
     return L"";
 }
@@ -179,16 +179,16 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile)
         "\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
 
     std::vector<std::wstring> hppResult = {
-            GetHppClass(L"", L"AddWorkspace", {  }, L""),
-            GetHppClass(L"", L"DeleteWorkspace" , { L"GETSET_SPTR_NULL(VPGGitFormDeleteWorkspaceArgument, Argument)" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")
+            getHppClass(L"", L"AddWorkspace", {  }, L""),
+            getHppClass(L"", L"DeleteWorkspace" , { L"GETSET_SPTR_NULL(VPGGitFormDeleteWorkspaceArgument, Argument)" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")
     };
 
     std::vector<std::wstring> cppResult = {
-            GetCppClass(L"", L"AddWorkspace", { }, L""),
-            GetCppClass(L"", L"DeleteWorkspace" , { L"_Argument = argument;" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")
+            getCppClass(L"", L"AddWorkspace", { }, L""),
+            getCppClass(L"", L"DeleteWorkspace" , { L"_Argument = argument;" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")
     };
 
     std::map<std::wstring, std::wstring> classPathMapping;
@@ -208,7 +208,7 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile)
 
     for (auto const &pair : hppClass) {
         for (auto const &hpp : hppResult) {
-            if (vcc::IsContain(hpp, pair.first)) {
+            if (vcc::isContain(hpp, pair.first)) {
                 EXPECT_EQ(pair.second, hpp);
                 break;
             }
@@ -216,7 +216,7 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile)
     }
     for (auto const &pair : cppClass) {
         for (auto const &cpp : cppResult) {
-            if (vcc::IsContain(cpp, pair.first)) {
+            if (vcc::isContain(cpp, pair.first)) {
                 EXPECT_EQ(pair.second, cpp);
                 break;
             }
@@ -239,16 +239,16 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile_Namespace)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
 
     std::vector<std::wstring> hppResult = {
-            GetHppClass(L"", L"AddWorkspace", {  }, L""),
-            GetHppClass(L"", L"DeleteWorkspace" , { L"GETSET_SPTR_NULL(VPGGitFormDeleteWorkspaceArgument, Argument)" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")
+            getHppClass(L"", L"AddWorkspace", {  }, L""),
+            getHppClass(L"", L"DeleteWorkspace" , { L"GETSET_SPTR_NULL(VPGGitFormDeleteWorkspaceArgument, Argument)" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")
     };
 
     std::vector<std::wstring> cppResult = {
-            GetCppClass(L"", L"AddWorkspace", { }, L""),
-            GetCppClass(L"", L"DeleteWorkspace" , { L"_Argument = argument;" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")
+            getCppClass(L"", L"AddWorkspace", { }, L""),
+            getCppClass(L"", L"DeleteWorkspace" , { L"_Argument = argument;" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")
     };
 
     std::map<std::wstring, std::wstring> classPathMapping;
@@ -268,7 +268,7 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile_Namespace)
 
     for (auto const &pair : hppClass) {
         for (auto const &hpp : hppResult) {
-            if (vcc::IsContain(hpp, pair.first)) {
+            if (vcc::isContain(hpp, pair.first)) {
                 EXPECT_EQ(pair.second, hpp);
                 break;
             }
@@ -276,7 +276,7 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile_Namespace)
     }
     for (auto const &pair : cppClass) {
         for (auto const &cpp : cppResult) {
-            if (vcc::IsContain(cpp, pair.first)) {
+            if (vcc::isContain(cpp, pair.first)) {
                 EXPECT_EQ(pair.second, cpp);
                 break;
             }
@@ -297,7 +297,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
         "\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
     
     std::map<std::wstring, std::wstring> classPathMapping;
     classPathMapping.insert(std::make_pair(L"State", L"state.hpp"));
@@ -309,15 +309,15 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
     std::map<std::wstring, std::wstring> hppClass, cppClass;
     std::set<std::wstring> sytemIncludeFiles;
     std::set<std::wstring> customIncludeFiles;
-    VPGActionFileGenerationService::GenerateHpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->GetWorkspace(), hppClass, sytemIncludeFiles, customIncludeFiles);
-    VPGActionFileGenerationService::GenerateCpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->GetWorkspace(), cppClass, sytemIncludeFiles, customIncludeFiles);
+    VPGActionFileGenerationService::GenerateHpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->getWorkspace(), hppClass, sytemIncludeFiles, customIncludeFiles);
+    VPGActionFileGenerationService::GenerateCpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->getWorkspace(), cppClass, sytemIncludeFiles, customIncludeFiles);
     EXPECT_TRUE(hppClass.empty());
     EXPECT_TRUE(cppClass.empty());
 
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.hpp"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.cpp"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.hpp"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.cpp"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_add_workspace.hpp"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_add_workspace.cpp"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_delete_workspace.hpp"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_delete_workspace.cpp"})));
 
     std::wstring hppHeader = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         L"#pragma once\r\n"
@@ -331,7 +331,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
         "// <vcc:customFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "// </vcc:customFunctions>\r\n";
 
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.hpp"})),
+    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_add_workspace.hpp"})),
             hppHeader
             + L"#include <memory>\r\n"
             "#include <string>\r\n"
@@ -341,8 +341,8 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
             "#include \"i_result.hpp\"\r\n"
             "#include \"log_config.hpp\"\r\n"
             + customPropertyHeader
-            + GetHppClass(L"", L"AddWorkspace", { }, L""));
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.cpp"})),
+            + getHppClass(L"", L"AddWorkspace", { }, L""));
+    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_add_workspace.cpp"})),
             cppHeader
             + L"#include \"vpg_git_form_add_workspace.hpp\"\r\n"
             "\r\n"
@@ -356,10 +356,10 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
             "#include \"log_config.hpp\"\r\n"
             "#include \"operation_result.hpp\"\r\n"
             + customPropertyHeader
-            + GetCppClass(L"", L"AddWorkspace", { }, L"")
+            + getCppClass(L"", L"AddWorkspace", { }, L"")
             + customFooter);
 
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.hpp"})),
+    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_delete_workspace.hpp"})),
             hppHeader
             + L"#include <memory>\r\n"
             "#include <string>\r\n"
@@ -370,8 +370,8 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
             "#include \"log_config.hpp\"\r\n"
             "#include \"vpg_git_form.hpp\"\r\n"
             + customPropertyHeader
-            + GetHppClass(L"", L"DeleteWorkspace" , { L"GETSET_SPTR_NULL(VPGGitFormDeleteWorkspaceArgument, Argument)" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument"));
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.cpp"})),
+            + getHppClass(L"", L"DeleteWorkspace" , { L"GETSET_SPTR_NULL(VPGGitFormDeleteWorkspaceArgument, Argument)" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument"));
+    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_delete_workspace.cpp"})),
             cppHeader
             + L"#include \"vpg_git_form_delete_workspace.hpp\"\r\n"
             "\r\n"
@@ -386,11 +386,11 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
             "#include \"operation_result.hpp\"\r\n"
             "#include \"vpg_git_form.hpp\"\r\n"
             + customPropertyHeader
-            + GetCppClass(L"", L"DeleteWorkspace" , { L"_Argument = argument;" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")
+            + getCppClass(L"", L"DeleteWorkspace" , { L"_Argument = argument;" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")
             + customFooter);
 }
 
-std::map<std::wstring, std::vector<std::wstring>> GetNamespaceClassContentMap(const std::wstring &ns, const std::vector<std::wstring> &code)
+std::map<std::wstring, std::vector<std::wstring>> getNamespaceClassContentMap(const std::wstring &ns, const std::vector<std::wstring> &code)
 {
     std::map<std::wstring, std::vector<std::wstring>> result;
     result.insert(std::make_pair(ns, code));
@@ -412,7 +412,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
     std::vector<std::wstring> emptyVector;
     
     std::map<std::wstring, std::wstring> classPathMapping;
@@ -423,15 +423,15 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
     std::map<std::wstring, std::wstring> hppClass, cppClass;
     std::set<std::wstring> sytemIncludeFiles;
     std::set<std::wstring> customIncludeFiles;
-    VPGActionFileGenerationService::GenerateHpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->GetWorkspace(), hppClass, sytemIncludeFiles, customIncludeFiles);
-    VPGActionFileGenerationService::GenerateCpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->GetWorkspace(), cppClass, sytemIncludeFiles, customIncludeFiles);
+    VPGActionFileGenerationService::GenerateHpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->getWorkspace(), hppClass, sytemIncludeFiles, customIncludeFiles);
+    VPGActionFileGenerationService::GenerateCpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->getWorkspace(), cppClass, sytemIncludeFiles, customIncludeFiles);
     EXPECT_TRUE(hppClass.empty());
     EXPECT_TRUE(cppClass.empty());
 
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.hpp"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.cpp"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.hpp"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.cpp"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_add_workspace.hpp"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_add_workspace.cpp"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_delete_workspace.hpp"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_delete_workspace.cpp"})));
 
     std::wstring hppHeader = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         L"#pragma once\r\n"
@@ -445,7 +445,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
         "// <vcc:customFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "// </vcc:customFunctions>\r\n";
 
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.hpp"})),
+    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_add_workspace.hpp"})),
             hppHeader
             + L"#include <memory>\r\n"
             "#include <string>\r\n"
@@ -455,8 +455,8 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
             "#include \"i_result.hpp\"\r\n"
             "#include \"log_config.hpp\"\r\n"
             + customPropertyHeader
-            + GenerateCodeWithNamespace(GetNamespaceClassContentMap(L"Namespace", { GetHppClass(L"", L"AddWorkspace", { }, L"")})));
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_add_workspace.cpp"})),
+            + generateCodeWithNamespace(getNamespaceClassContentMap(L"Namespace", { getHppClass(L"", L"AddWorkspace", { }, L"")})));
+    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_add_workspace.cpp"})),
             cppHeader
             + L"#include \"vpg_git_form_add_workspace.hpp\"\r\n"
             "\r\n"
@@ -470,11 +470,11 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
             "#include \"log_config.hpp\"\r\n"
             "#include \"operation_result.hpp\"\r\n"
             + customPropertyHeader
-            + GenerateCodeWithNamespace(GetNamespaceClassContentMap(L"Namespace", { GetCppClass(L"", L"AddWorkspace", { }, L"")}))
+            + generateCodeWithNamespace(getNamespaceClassContentMap(L"Namespace", { getCppClass(L"", L"AddWorkspace", { }, L"")}))
             + customFooter);
 
 
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.hpp"})),
+    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_delete_workspace.hpp"})),
             hppHeader
             + L"#include <memory>\r\n"
             "#include <string>\r\n"
@@ -485,8 +485,8 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
             "#include \"log_config.hpp\"\r\n"
             "#include \"vpg_git_form.hpp\"\r\n"
             + customPropertyHeader
-            + GenerateCodeWithNamespace(GetNamespaceClassContentMap(L"Namespace", { GetHppClass(L"", L"DeleteWorkspace", { L"GETSET_SPTR_NULL(VPGGitFormDeleteWorkspaceArgument, Argument)" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")})));
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->GetWorkspace(), L"vpg_git_form_delete_workspace.cpp"})),
+            + generateCodeWithNamespace(getNamespaceClassContentMap(L"Namespace", { getHppClass(L"", L"DeleteWorkspace", { L"GETSET_SPTR_NULL(VPGGitFormDeleteWorkspaceArgument, Argument)" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")})));
+    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_delete_workspace.cpp"})),
             cppHeader
             + L"#include \"vpg_git_form_delete_workspace.hpp\"\r\n"
             "\r\n"
@@ -501,6 +501,6 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
             "#include \"operation_result.hpp\"\r\n"
             "#include \"vpg_git_form.hpp\"\r\n"
             + customPropertyHeader
-            + GenerateCodeWithNamespace(GetNamespaceClassContentMap(L"Namespace", { GetCppClass(L"", L"DeleteWorkspace", { L"_Argument = argument;" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")}))
+            + generateCodeWithNamespace(getNamespaceClassContentMap(L"Namespace", { getCppClass(L"", L"DeleteWorkspace", { L"_Argument = argument;" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")}))
             + customFooter);
 }

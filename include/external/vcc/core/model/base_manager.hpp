@@ -21,7 +21,7 @@ namespace vcc
         BaseManager(std::shared_ptr<LogConfig> logConfig) : _LogConfig(logConfig) {}
         virtual ~BaseManager() {}
         
-        // No Clone for Manager
-        virtual std::shared_ptr<IObject> Clone() const override { assert(false);  return nullptr; }
+        // No clone for Manager
+        virtual std::shared_ptr<IObject> clone() const override { assert(false);  return nullptr; }
     };
 }

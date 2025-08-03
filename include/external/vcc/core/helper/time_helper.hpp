@@ -7,10 +7,10 @@ namespace vcc
 {
     void Sleep(const long long &milliseconds);
 
-    std::wstring GetDateString(const time_t &timer);
-    std::wstring GetCurrentDateString();
-    std::wstring GetDatetimeString(const time_t &timer);
-    std::wstring GetCurrentDatetimeString();
+    std::wstring getDateString(const time_t &timer);
+    std::wstring getCurrentDateString();
+    std::wstring getDatetimeString(const time_t &timer);
+    std::wstring getCurrentDatetimeString();
 
     time_t ParseDatetime(const std::wstring &timeStr, const std::wstring &format);
 }

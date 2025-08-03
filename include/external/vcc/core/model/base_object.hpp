@@ -24,22 +24,22 @@ namespace vcc
             virtual ~BaseObject() {}
 
         public:
-            virtual size_t GetObjectId() const override
+            virtual size_t getObjectId() const override
             {
                 return _ObjectId;
             }
 
-            virtual const ObjectType& GetObjectType() const override
+            virtual const ObjectType& getObjectType() const override
             { 
                 return _ObjectType;
             }
 
-            virtual std::shared_ptr<IObject> GetParentObject() const override
+            virtual std::shared_ptr<IObject> getParentObject() const override
             {
                 return _ParentObject;
             }
 
-            virtual void SetParentObject(std::shared_ptr<IObject> parentObject) override
+            virtual void setParentObject(std::shared_ptr<IObject> parentObject) override
             {
                 _ParentObject = parentObject;
             }

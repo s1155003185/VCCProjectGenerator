@@ -7,10 +7,10 @@
 
 namespace vcc
 {
-    std::wstring Concat(const std::vector<std::wstring> &v, const std::wstring &delimitor)
+    std::wstring concat(const std::vector<std::wstring> &v, const std::wstring &delimitor)
     {
         TRY
-            if (IsEmpty(v))
+            if (isEmpty(v))
                 return L"";
             
             std::wstring result = L"";

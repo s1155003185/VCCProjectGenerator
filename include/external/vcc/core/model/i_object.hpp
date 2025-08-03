@@ -12,13 +12,13 @@ namespace vcc
             IObject() {}
             virtual ~IObject() {}
 
-            virtual std::shared_ptr<IObject> SharedPtr() { return shared_from_this(); }
-            virtual std::shared_ptr<const IObject> SharedPtr() const { return shared_from_this(); }
+            virtual std::shared_ptr<IObject> sharedPtr() { return shared_from_this(); }
+            virtual std::shared_ptr<const IObject> sharedPtr() const { return shared_from_this(); }
 
-            virtual size_t GetObjectId() const = 0;
-            virtual const ObjectType& GetObjectType() const = 0;
-            virtual std::shared_ptr<IObject> GetParentObject() const = 0;
-            virtual void SetParentObject(std::shared_ptr<IObject> parentObject) = 0;
-            virtual std::shared_ptr<IObject> Clone() const = 0;
+            virtual size_t getObjectId() const = 0;
+            virtual const ObjectType& getObjectType() const = 0;
+            virtual std::shared_ptr<IObject> getParentObject() const = 0;
+            virtual void setParentObject(std::shared_ptr<IObject> parentObject) = 0;
+            virtual std::shared_ptr<IObject> clone() const = 0;
     };
 }

@@ -8,7 +8,7 @@
 
 namespace vcc
 {
-    int GetDecimalPlaces(const double &value) {
+    int getDecimalPlaces(const double &value) {
         TRY
             std::string numStr = std::to_string(value);
             size_t decimalPos = numStr.find_first_of(".");

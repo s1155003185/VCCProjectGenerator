@@ -36,14 +36,14 @@ class VPGGitForm : public vcc::BaseForm, public vcc::BaseJsonObject
         VPGGitForm();
         virtual ~VPGGitForm() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override;
+        virtual std::shared_ptr<vcc::IObject> clone() const override;
 
         virtual std::shared_ptr<vcc::Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
+        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 
-        virtual void InitializeComponents() override;
+        virtual void initializeComponents() override;
 
-        virtual std::shared_ptr<vcc::IResult> DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;
+        virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;
 
         // <vcc:customVPGGitFormPublicFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGGitFormPublicFunctions>

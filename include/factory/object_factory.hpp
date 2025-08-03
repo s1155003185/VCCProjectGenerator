@@ -13,5 +13,5 @@ class ObjectFactory : public vcc::BaseFactory
         virtual ~ObjectFactory() {}
 
     public:
-        static std::shared_ptr<vcc::IObject> Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);
+        static std::shared_ptr<vcc::IObject> create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);
 };

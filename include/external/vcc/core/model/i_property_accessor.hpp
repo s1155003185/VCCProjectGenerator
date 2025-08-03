@@ -56,9 +56,9 @@ namespace vcc
 
         public:
             // lock
-            virtual void ReadLock() const = 0;
-            virtual void WriteLock() const = 0;
-            virtual void ReadWriteLock() const = 0;
-            virtual void Unlock() const = 0;
+            virtual void readLock() const = 0;
+            virtual void writeLock() const = 0;
+            virtual void readWriteLock() const = 0;
+            virtual void unlock() const = 0;
     };
 }

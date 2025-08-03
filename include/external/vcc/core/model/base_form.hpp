@@ -25,51 +25,51 @@ namespace vcc
         mutable State _State = State::Active;
         
         BaseForm() : BaseForm(ObjectType::NA) {}
-        BaseForm(const ObjectType &type) : BaseObject(type) { Initialize(); }
+        BaseForm(const ObjectType &type) : BaseObject(type) { initialize(); }
         virtual ~BaseForm() = default;
 
-        virtual void OnInitialize() override {}
-        virtual void OnInitializeComponents() override {}
-        virtual void OnInitializeValues() override {}
+        virtual void onInitialize() override {}
+        virtual void onInitializeComponents() override {}
+        virtual void onInitializeValues() override {}
         virtual bool OnIsClosable() const override { return true; }
         virtual bool OnClose() override { return true; }
     public:
         // Log
-        virtual std::shared_ptr<LogConfig> GetLogConfig() const override;
-        virtual void SetLogConfig(std::shared_ptr<LogConfig> logConfig) override;
+        virtual std::shared_ptr<LogConfig> getLogConfig() const override;
+        virtual void setLogConfig(std::shared_ptr<LogConfig> logConfig) override;
         
         // Action
-        virtual std::shared_ptr<ActionManager> GetActionManager() const override;
-        virtual void SetActionManager(std::shared_ptr<ActionManager> actionManager) override;
+        virtual std::shared_ptr<ActionManager> getActionManager() const override;
+        virtual void setActionManager(std::shared_ptr<ActionManager> actionManager) override;
 
         // Thead
-        virtual std::shared_ptr<ThreadManager> GetThreadManager() const override;
-        virtual void SetThreadManager(std::shared_ptr<ThreadManager> threadManager) override;
+        virtual std::shared_ptr<ThreadManager> getThreadManager() const override;
+        virtual void setThreadManager(std::shared_ptr<ThreadManager> threadManager) override;
 
         // State
-        virtual State GetState() const override;
-        virtual bool IsClosable() const override;
-        virtual bool IsClosed() const override;
+        virtual State getState() const override;
+        virtual bool isClosable() const override;
+        virtual bool isClosed() const override;
 
         // Initialize
-        virtual void Initialize() override;
-        virtual void InitializeComponents() override;
-        virtual void InitializeValue() override;
+        virtual void initialize() override;
+        virtual void initializeComponents() override;
+        virtual void initializeValue() override;
         
         // Action
-        virtual std::shared_ptr<IResult> ExecuteAction(std::shared_ptr<IAction> action, bool isNoHistory) override;
-        virtual int64_t GetActionCurrentSeqNo() const override;
-        virtual int64_t GetActionFirstSeqNo() const override;
-        virtual int64_t GetActionLastSeqNo() const override;
+        virtual std::shared_ptr<IResult> executeAction(std::shared_ptr<IAction> action, bool isNoHistory) override;
+        virtual int64_t getActionCurrentSeqNo() const override;
+        virtual int64_t getActionFirstSeqNo() const override;
+        virtual int64_t getActionLastSeqNo() const override;
         
-        virtual std::shared_ptr<IResult> RedoAction(const int64_t &noOfStep = 1) override;
-        virtual std::shared_ptr<IResult> RedoActionToSeqNo(const int64_t &seqNo) override;
+        virtual std::shared_ptr<IResult> redoAction(const int64_t &noOfStep = 1) override;
+        virtual std::shared_ptr<IResult> redoActionToSeqNo(const int64_t &seqNo) override;
 
-        virtual std::shared_ptr<IResult> UndoAction(const int64_t &noOfStep = 1) override;
-        virtual std::shared_ptr<IResult> UndoActionToSeqNo(const int64_t &seqNo) override;
+        virtual std::shared_ptr<IResult> undoAction(const int64_t &noOfStep = 1) override;
+        virtual std::shared_ptr<IResult> undoActionToSeqNo(const int64_t &seqNo) override;
 
-        virtual int64_t ClearAction() override;
-        virtual int64_t TruncateAction() override;
+        virtual int64_t clearAction() override;
+        virtual int64_t truncateAction() override;
 
         // Close
         virtual bool Close(bool isForce = false) override;

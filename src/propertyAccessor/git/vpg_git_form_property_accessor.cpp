@@ -9,7 +9,7 @@
 #include "vpg_git_form_property.hpp"
 #include "vpg_git_log.hpp"
 
-std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_ReadObject(const int64_t &objectProperty) const
+std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_readObject(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGGitForm>(_Object);
@@ -17,7 +17,7 @@ std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_ReadObject(const int6
         switch(static_cast<VPGGitFormProperty>(objectProperty))
         {
         case VPGGitFormProperty::Log:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetLog());
+            return std::static_pointer_cast<vcc::IObject>(obj->getLog());
         default:
             assert(false);
         }
@@ -25,7 +25,7 @@ std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_ReadObject(const int6
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_ReadObjectAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_readObjectAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -33,7 +33,7 @@ std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_ReadObjectAtIndex(con
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_ReadObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_readObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -41,7 +41,7 @@ std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_ReadObjectAtKey(const
     return nullptr;
 }
 
-void VPGGitFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value)
+void VPGGitFormPropertyAccessor::_writeObject(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGGitForm>(_Object);
@@ -49,7 +49,7 @@ void VPGGitFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std
         switch(static_cast<VPGGitFormProperty>(objectProperty))
         {
         case VPGGitFormProperty::Log:
-            obj->SetLog(std::static_pointer_cast<VPGGitLog>(value));
+            obj->setLog(std::static_pointer_cast<VPGGitLog>(value));
             break;
         default:
             assert(false);
@@ -57,28 +57,28 @@ void VPGGitFormPropertyAccessor::_WriteObject(const int64_t &objectProperty, std
     CATCH
 }
 
-void VPGGitFormPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const int64_t &/*index*/)
+void VPGGitFormPropertyAccessor::_writeObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGGitFormPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const void */*key*/)
+void VPGGitFormPropertyAccessor::_writeObjectAtKey(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGGitFormPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const int64_t &/*index*/)
+void VPGGitFormPropertyAccessor::_insertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_CloneObject(const int64_t &objectProperty) const
+std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_cloneObject(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGGitForm>(_Object);
@@ -86,7 +86,7 @@ std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_CloneObject(const int
         switch(static_cast<VPGGitFormProperty>(objectProperty))
         {
         case VPGGitFormProperty::Log:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetLog()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->getLog()->clone());
         default:
             assert(false);
         }
@@ -94,7 +94,7 @@ std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_CloneObject(const int
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_CloneObjectAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_cloneObjectAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -102,7 +102,7 @@ std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_CloneObjectAtIndex(co
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_CloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::shared_ptr<vcc::IObject> VPGGitFormPropertyAccessor::_cloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND

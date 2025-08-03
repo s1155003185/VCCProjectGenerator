@@ -29,14 +29,14 @@ void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
 {
     TRY
         assert(enumClass != nullptr);
-        if (!IsPropertyClassNameValidToGenerateClass(enumClass->GetName(), projectPrefix))
+        if (!IsPropertyClassNameValidToGenerateClass(enumClass->getName(), projectPrefix))
             return;
 
-        std::wstring className = GetClassNameFromPropertyClassName(enumClass->GetName());
-        bool isSeperateFile = !vcc::IsBlank(folderPathHpp);
+        std::wstring className = getClassNameFromPropertyClassName(enumClass->getName());
+        bool isSeperateFile = !vcc::isBlank(folderPathHpp);
 
-        for (auto const &property : enumClass->GetProperties()) {
-            if (property->GetPropertyType() != VPGEnumClassAttributeType::Action)
+        for (auto const &property : enumClass->getProperties()) {
+            if (property->getPropertyType() != VPGEnumClassAttributeType::Action)
                 continue;
             
             // include files
@@ -51,17 +51,17 @@ void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
             customIncludeFiles.insert(L"log_config.hpp");
 
             // class name
-            std::wstring currentNamespace = GetNamespaceFromClassName(enumClass->GetName());
-            std::wstring actionClassName = GetTypeOrClassWithoutNamespace(className) + property->GetPropertyName();
+            std::wstring currentNamespace = getNamespaceFromClassName(enumClass->getName());
+            std::wstring actionClassName = getTypeOrClassWithoutNamespace(className) + property->getPropertyName();
 
             std::wstring propertyStr = L"";
             std::wstring assignmentStrSimple = L"std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm";
             std::wstring assignmentStr = assignmentStrSimple;
             
-            std::wstring type1 = property->GetType1();
+            std::wstring type1 = property->getType1();
             // Only Support shared point argument
-            if (!type1.empty() && vcc::IsCapital(type1)) {
-                customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, type1));
+            if (!type1.empty() && vcc::isCapital(type1)) {
+                customIncludeFiles.insert(VPGObjectFileGenerationService::getProjectClassIncludeFile(classPathMapping, type1));
                 
                 propertyStr = INDENT + L"GETSET_SPTR_NULL(" + type1 + L", Argument)\r\n";
 
@@ -75,30 +75,30 @@ void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
                 "{\r\n"
                 + propertyStr
                 + (!propertyStr.empty() ? L"\r\n" : L"")
-                + INDENT + GetVccTagHeaderCustomClassProperties(VPGCodeType::Cpp, actionClassName) + L"\r\n"
-                + INDENT + GetVccTagTailerCustomClassProperties(VPGCodeType::Cpp, actionClassName) + L"\r\n"
+                + INDENT + getVccTagHeaderCustomClassProperties(VPGCodeType::Cpp, actionClassName) + L"\r\n"
+                + INDENT + getVccTagTailerCustomClassProperties(VPGCodeType::Cpp, actionClassName) + L"\r\n"
                 L"\r\n"
                 + INDENT + L"private:\r\n"
-                + INDENT + INDENT + GetVccTagHeaderCustomClassPrivateFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
-                + INDENT + INDENT + GetVccTagTailerCustomClassPrivateFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
+                + INDENT + INDENT + getVccTagHeaderCustomClassPrivateFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
+                + INDENT + INDENT + getVccTagTailerCustomClassPrivateFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
                 "\r\n"
                 + INDENT + L"protected:\r\n"
-                + INDENT + INDENT + L"virtual std::wstring GetRedoMessageStart() const override;\r\n"
-                + INDENT + INDENT + L"virtual std::wstring GetRedoMessageComplete() const override;\r\n";
+                + INDENT + INDENT + L"virtual std::wstring getRedoMessageStart() const override;\r\n"
+                + INDENT + INDENT + L"virtual std::wstring getRedoMessageComplete() const override;\r\n";
             
-            if (!property->GetIsNoHistory())
-                action += INDENT + INDENT + L"virtual std::wstring GetUndoMessageStart() const override;\r\n"
-                    + INDENT + INDENT + L"virtual std::wstring GetUndoMessageComplete() const override;\r\n";
+            if (!property->getIsNoHistory())
+                action += INDENT + INDENT + L"virtual std::wstring getUndoMessageStart() const override;\r\n"
+                    + INDENT + INDENT + L"virtual std::wstring getUndoMessageComplete() const override;\r\n";
                 
             action += L"\r\n"
-                + INDENT + INDENT + L"virtual std::shared_ptr<vcc::IResult> OnRedo() override;\r\n";
+                + INDENT + INDENT + L"virtual std::shared_ptr<vcc::IResult> onRedo() override;\r\n";
 
-            if (!property->GetIsNoHistory())
-                action += INDENT + INDENT + L"virtual std::shared_ptr<vcc::IResult> OnUndo() override;\r\n";
+            if (!property->getIsNoHistory())
+                action += INDENT + INDENT + L"virtual std::shared_ptr<vcc::IResult> onUndo() override;\r\n";
             
             action += L"\r\n"
-                + INDENT + INDENT + GetVccTagHeaderCustomClassProtectedFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
-                + INDENT + INDENT + GetVccTagTailerCustomClassProtectedFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
+                + INDENT + INDENT + getVccTagHeaderCustomClassProtectedFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
+                + INDENT + INDENT + getVccTagTailerCustomClassProtectedFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
                 "\r\n"
                 + INDENT + L"public:\r\n"
                 + INDENT + INDENT + actionClassName + L"() : vcc::BaseAction() {}\r\n"
@@ -107,8 +107,8 @@ void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
                     action += INDENT + INDENT + actionClassName + L"(" + assignmentStr + L");\r\n";
                 action += INDENT + INDENT + L"~" + actionClassName + L"() {}\r\n"
                 "\r\n"
-                + INDENT + INDENT + GetVccTagHeaderCustomClassPublicFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
-                + INDENT + INDENT + GetVccTagTailerCustomClassPublicFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
+                + INDENT + INDENT + getVccTagHeaderCustomClassPublicFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
+                + INDENT + INDENT + getVccTagTailerCustomClassPublicFunctions(VPGCodeType::Cpp, actionClassName) + L"\r\n"
                 + L"};\r\n";
 
             if (isSeperateFile) {
@@ -123,24 +123,24 @@ void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
                 // custom include files
                 content += L"\r\n";
                 for (auto const &str : customIncludeFiles)
-                    content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
+                    content += L"#include " + vcc::getEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
 
                 content += L"\r\n"
-                    + GetVccTagHeaderCustomHeader(VPGCodeType::Cpp) + L"\r\n"
-                    + GetVccTagTailerCustomHeader(VPGCodeType::Cpp) + L"\r\n";
+                    + getVccTagHeaderCustomHeader(VPGCodeType::Cpp) + L"\r\n"
+                    + getVccTagTailerCustomHeader(VPGCodeType::Cpp) + L"\r\n";
 
                 std::map<std::wstring, std::vector<std::wstring>> namespaceClassMapping;
                 namespaceClassMapping.insert({ currentNamespace, { action } });
-                content += GenerateCodeWithNamespace(namespaceClassMapping);
+                content += generateCodeWithNamespace(namespaceClassMapping);
                     
                 // Generate File
-                std::wstring filePathHpp = vcc::ConcatPaths({folderPathHpp, GetActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".hpp"});
-                vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file: " + filePathHpp);
-                if (vcc::IsFilePresent(filePathHpp))
-                    content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::ReadFile(filePathHpp), VPGFileContentSyncMode::Full, L"//");
-                vcc::LTrim(content);
-                vcc::WriteFile(filePathHpp, content, true);
-                vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file completed.");
+                std::wstring filePathHpp = vcc::concatPaths({folderPathHpp, getActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".hpp"});
+                vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate action class file: " + filePathHpp);
+                if (vcc::isFilePresent(filePathHpp))
+                    content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::readFile(filePathHpp), VPGFileContentSyncMode::Full, L"//");
+                vcc::lTrim(content);
+                vcc::writeFile(filePathHpp, content, true);
+                vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate action class file completed.");
             } else {
                 // Generate to form files
                 globalSystemIncludeFiles.insert(systemIncludeFiles.begin(), systemIncludeFiles.end());
@@ -160,14 +160,14 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
 {
     TRY
         assert(enumClass != nullptr);
-        if (!IsPropertyClassNameValidToGenerateClass(enumClass->GetName(), projectPrefix))
+        if (!IsPropertyClassNameValidToGenerateClass(enumClass->getName(), projectPrefix))
             return;
 
-        std::wstring className = GetClassNameFromPropertyClassName(enumClass->GetName());
-        bool isSeperateFile = !vcc::IsBlank(folderPathCpp);
+        std::wstring className = getClassNameFromPropertyClassName(enumClass->getName());
+        bool isSeperateFile = !vcc::isBlank(folderPathCpp);
 
-        for (auto const &property : enumClass->GetProperties()) {
-            if (property->GetPropertyType() != VPGEnumClassAttributeType::Action)
+        for (auto const &property : enumClass->getProperties()) {
+            if (property->getPropertyType() != VPGEnumClassAttributeType::Action)
                 continue;
             
             // include files
@@ -183,8 +183,8 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
             customIncludeFiles.insert(L"i_result.hpp");
 
             // class name
-            std::wstring currentNamespace = GetNamespaceFromClassName(enumClass->GetName());
-            std::wstring actionClassName = GetTypeOrClassWithoutNamespace(className) + property->GetPropertyName();
+            std::wstring currentNamespace = getNamespaceFromClassName(enumClass->getName());
+            std::wstring actionClassName = getTypeOrClassWithoutNamespace(className) + property->getPropertyName();
 
             std::wstring assignmentStrSimple = L"std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm";
             std::wstring assignmentStr = assignmentStrSimple;
@@ -194,20 +194,20 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
             std::vector<std::wstring> propertyAssignments;
             propertyAssignments.insert(propertyAssignments.end(), propertyAssignmentsSimple.begin(), propertyAssignmentsSimple.end());
 
-            std::wstring type1 = property->GetType1();
-            if (!type1.empty() && vcc::IsCapital(type1)) {
-                customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, type1));
+            std::wstring type1 = property->getType1();
+            if (!type1.empty() && vcc::isCapital(type1)) {
+                customIncludeFiles.insert(VPGObjectFileGenerationService::getProjectClassIncludeFile(classPathMapping, type1));
                 
                 if (!assignmentStr.empty())
                     assignmentStr += L", ";
 
-                assignmentStr += L"std::shared_ptr<" + property->GetType1() + L"> argument";
+                assignmentStr += L"std::shared_ptr<" + property->getType1() + L"> argument";
                 propertyAssignments.push_back(L"_Argument = argument");
             }
-            if (!vcc::IsBlank(property->GetActionResultRedoClass()))
-                customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, property->GetActionResultRedoClass()));
-            if (!vcc::IsBlank(property->GetActionResultUndoClass()))
-                customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, property->GetActionResultUndoClass()));
+            if (!vcc::isBlank(property->getActionResultRedoClass()))
+                customIncludeFiles.insert(VPGObjectFileGenerationService::getProjectClassIncludeFile(classPathMapping, property->getActionResultRedoClass()));
+            if (!vcc::isBlank(property->getActionResultUndoClass()))
+                customIncludeFiles.insert(VPGObjectFileGenerationService::getProjectClassIncludeFile(classPathMapping, property->getActionResultUndoClass()));
 
 
             std::wstring action = L"\r\n"
@@ -225,34 +225,34 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
             }
 
             action += L"\r\n"
-                "std::wstring " + actionClassName + L"::GetRedoMessageStart() const\r\n"
+                "std::wstring " + actionClassName + L"::getRedoMessageStart() const\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
-                + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetRedoMessageStart") + L"\r\n"
-                + INDENT + INDENT + L"return L\"Execute " + actionClassName + L" start\";\r\n"
-                + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetRedoMessageStart") + L"\r\n"
+                + INDENT + INDENT + getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetRedoMessageStart") + L"\r\n"
+                + INDENT + INDENT + L"return L\"execute " + actionClassName + L" start\";\r\n"
+                + INDENT + INDENT + getVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetRedoMessageStart") + L"\r\n"
                 + INDENT + L"CATCH\r\n"
                 + INDENT + L"return L\"\";\r\n"
                 "}\r\n"
                 "\r\n"
-                "std::wstring " + actionClassName + L"::GetRedoMessageComplete() const\r\n"
+                "std::wstring " + actionClassName + L"::getRedoMessageComplete() const\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
-                + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetRedoMessageComplete") + L"\r\n"
-                + INDENT + INDENT + L"return L\"Execute " + actionClassName + L" complete\";\r\n"
-                + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetRedoMessageComplete") + L"\r\n"
+                + INDENT + INDENT + getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetRedoMessageComplete") + L"\r\n"
+                + INDENT + INDENT + L"return L\"execute " + actionClassName + L" complete\";\r\n"
+                + INDENT + INDENT + getVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetRedoMessageComplete") + L"\r\n"
                 + INDENT + L"CATCH\r\n"
                 + INDENT + L"return L\"\";\r\n"
                 "}\r\n";
             
-            if (!property->GetIsNoHistory())
+            if (!property->getIsNoHistory())
                 action += L"\r\n"
                     "std::wstring " + actionClassName + L"::GetUndoMessageStart() const\r\n"
                     "{\r\n"
                     + INDENT + L"TRY\r\n"
-                    + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetUndoMessageStart") + L"\r\n"
+                    + INDENT + INDENT + getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetUndoMessageStart") + L"\r\n"
                     + INDENT + INDENT + L"return L\"Undo " + actionClassName + L" start\";\r\n"
-                    + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetUndoMessageStart") + L"\r\n"
+                    + INDENT + INDENT + getVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetUndoMessageStart") + L"\r\n"
                     + INDENT + L"CATCH\r\n"
                     + INDENT + L"return L\"\";\r\n"
                     "}\r\n"
@@ -260,32 +260,32 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
                     "std::wstring " + actionClassName + L"::GetUndoMessageComplete() const\r\n"
                     "{\r\n"
                     + INDENT + L"TRY\r\n"
-                    + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetUndoMessageComplete") + L"\r\n"
+                    + INDENT + INDENT + getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetUndoMessageComplete") + L"\r\n"
                     + INDENT + INDENT + L"return L\"Undo " + actionClassName + L" complete\";\r\n"
-                    + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetUndoMessageComplete") + L"\r\n"
+                    + INDENT + INDENT + getVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetUndoMessageComplete") + L"\r\n"
                     + INDENT + L"CATCH\r\n"
                     + INDENT + L"return L\"\";\r\n"
                     "}\r\n";
 
-            std::wstring redoReturnClass = !vcc::IsBlank(property->GetActionResultRedoClass()) ? property->GetActionResultRedoClass() : L"vcc::OperationResult";
+            std::wstring redoReturnClass = !vcc::isBlank(property->getActionResultRedoClass()) ? property->getActionResultRedoClass() : L"vcc::OperationResult";
             action += L"\r\n"
-                "std::shared_ptr<vcc::IResult> " + actionClassName + L"::OnRedo()\r\n"
+                "std::shared_ptr<vcc::IResult> " + actionClassName + L"::onRedo()\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
-                + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
-                + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
+                + INDENT + INDENT + getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
+                + INDENT + INDENT + getVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnRedo") + L"\r\n"
                 + INDENT + L"CATCH_RETURN_RESULT(" + redoReturnClass + L")\r\n"
                 + INDENT + L"return std::make_shared<" + redoReturnClass + L">();\r\n"
                 "}\r\n";
 
-            if (!property->GetIsNoHistory()) {
-                std::wstring undoReturnClass = !vcc::IsBlank(property->GetActionResultUndoClass()) ? property->GetActionResultUndoClass() : L"vcc::OperationResult";
+            if (!property->getIsNoHistory()) {
+                std::wstring undoReturnClass = !vcc::isBlank(property->getActionResultUndoClass()) ? property->getActionResultUndoClass() : L"vcc::OperationResult";
                 action += L"\r\n"
-                    "std::shared_ptr<vcc::IResult> " + actionClassName + L"::OnUndo()\r\n"
+                    "std::shared_ptr<vcc::IResult> " + actionClassName + L"::onUndo()\r\n"
                     "{\r\n"
                     + INDENT + L"TRY\r\n"
-                    + INDENT + INDENT + GetVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
-                    + INDENT + INDENT + GetVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
+                    + INDENT + INDENT + getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
+                    + INDENT + INDENT + getVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"OnUndo") + L"\r\n"
                     + INDENT + L"CATCH_RETURN_RESULT(" + undoReturnClass + L")\r\n"
                     + INDENT + L"return std::make_shared<" + undoReturnClass + L">();\r\n"
                     "}\r\n";
@@ -293,9 +293,9 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
 
             if (isSeperateFile) {
                 // Generate to seperate files
-                std::wstring fileNameHpp = GetActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".hpp";
+                std::wstring fileNameHpp = getActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".hpp";
                 std::wstring content = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-                    "#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, fileNameHpp) + L"\r\n"
+                    "#include " + vcc::getEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, fileNameHpp) + L"\r\n"
                     "\r\n";
                 // system include files
                 for (auto const &str : systemIncludeFiles)
@@ -306,27 +306,27 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
                 for (auto const &str : customIncludeFiles) {
                     if (str == fileNameHpp)
                         continue;
-                    content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
+                    content += L"#include " + vcc::getEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
                 }
 
                 std::map<std::wstring, std::vector<std::wstring>> namespaceClassMapping;
                 namespaceClassMapping.insert({ currentNamespace, { action } });
                 content += L"\r\n"
-                    + GetVccTagHeaderCustomHeader(VPGCodeType::Cpp) + L"\r\n"
-                    + GetVccTagTailerCustomHeader(VPGCodeType::Cpp) + L"\r\n"
-                    + GenerateCodeWithNamespace(namespaceClassMapping)
+                    + getVccTagHeaderCustomHeader(VPGCodeType::Cpp) + L"\r\n"
+                    + getVccTagTailerCustomHeader(VPGCodeType::Cpp) + L"\r\n"
+                    + generateCodeWithNamespace(namespaceClassMapping)
                     + L"\r\n"
-                    + GetVccTagHeaderCustomClassFunctions(VPGCodeType::Cpp, L"") + L"\r\n"
-                    + GetVccTagTailerCustomClassFunctions(VPGCodeType::Cpp, L"") + L"\r\n";
+                    + getVccTagHeaderCustomClassFunctions(VPGCodeType::Cpp, L"") + L"\r\n"
+                    + getVccTagTailerCustomClassFunctions(VPGCodeType::Cpp, L"") + L"\r\n";
                     
                 // Generate File
-                std::wstring filePathCpp = vcc::ConcatPaths({folderPathCpp, GetActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".cpp"});
-                vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file: " + filePathCpp);
-                if (vcc::IsFilePresent(filePathCpp))
-                    content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::ReadFile(filePathCpp), VPGFileContentSyncMode::Full, L"//");
-                vcc::LTrim(content);
-                vcc::WriteFile(filePathCpp, content, true);
-                vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file completed.");
+                std::wstring filePathCpp = vcc::concatPaths({folderPathCpp, getActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".cpp"});
+                vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate action class file: " + filePathCpp);
+                if (vcc::isFilePresent(filePathCpp))
+                    content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::readFile(filePathCpp), VPGFileContentSyncMode::Full, L"//");
+                vcc::lTrim(content);
+                vcc::writeFile(filePathCpp, content, true);
+                vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate action class file completed.");
             } else {
                 // Generate to form files
                 globalSystemIncludeFiles.insert(systemIncludeFiles.begin(), systemIncludeFiles.end());

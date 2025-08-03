@@ -36,7 +36,7 @@ namespace vcc
                 }
             }
 
-            void* GetH() const 
+            void* getH() const 
             {
                 if (h == nullptr) {
                     #ifdef _WIN32
@@ -49,8 +49,8 @@ namespace vcc
                 return (void *)h;
             }
 
-            //win version: FARPROC GetProc(HINSTANCE h, const char* procName)
-            void *GetProcedure(const std::wstring &procName) const
+            //win version: FARPROC getProc(HINSTANCE h, const char* procName)
+            void *getProcedure(const std::wstring &procName) const
             {
                 #ifdef _WIN32
                 return (void *)GetProcAddress((HINSTANCE)h, wstr2str(procName).c_str());

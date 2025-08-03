@@ -11,7 +11,7 @@ bool IsFileStartWithProjectPrefix(const std::wstring &str, const std::wstring &p
     TRY
         if (projectPrefix.empty())
             return true;
-        return vcc::IsStartWith(str, projectPrefix + L"_", 0, true);
+        return vcc::isStartWith(str, projectPrefix + L"_", 0, true);
     CATCH
     return false;
 }
@@ -21,7 +21,7 @@ bool IsClassStartWithProjectPrefix(const std::wstring &str, const std::wstring &
     TRY
         if (projectPrefix.empty())
             return true;
-        return vcc::IsStartWith(GetTypeOrClassWithoutNamespace(str), projectPrefix);
+        return vcc::isStartWith(getTypeOrClassWithoutNamespace(str), projectPrefix);
     CATCH
     return false;
 }
@@ -29,7 +29,7 @@ bool IsClassStartWithProjectPrefix(const std::wstring &str, const std::wstring &
 bool IsPropertyClassNameValidToGenerateClass(const std::wstring &str, const std::wstring &projectPrefix)
 {
     TRY
-        return IsClassStartWithProjectPrefix(str, projectPrefix) && vcc::IsEndWith(str, propertyClassSuffix);
+        return IsClassStartWithProjectPrefix(str, projectPrefix) && vcc::isEndWith(str, propertyClassSuffix);
     CATCH
     return false;
 }
@@ -37,7 +37,7 @@ bool IsPropertyClassNameValidToGenerateClass(const std::wstring &str, const std:
 bool IsPropertyFile(const std::wstring &filePath, const std::wstring &projectPrefix)
 {
     TRY
-        return IsFileStartWithProjectPrefix(vcc::GetFileName(filePath), projectPrefix) && vcc::IsEndWith(filePath, propertyClassFileSuffix);
+        return IsFileStartWithProjectPrefix(vcc::getFileName(filePath), projectPrefix) && vcc::isEndWith(filePath, propertyClassFileSuffix);
     CATCH
     return false;
 }
@@ -45,7 +45,7 @@ bool IsPropertyFile(const std::wstring &filePath, const std::wstring &projectPre
 bool IsPropertyClass(const std::wstring &className, const std::wstring &projectPrefix)
 {
     TRY
-        return IsClassStartWithProjectPrefix(className, projectPrefix) && vcc::IsEndWith(className, propertyClassSuffix);
+        return IsClassStartWithProjectPrefix(className, projectPrefix) && vcc::isEndWith(className, propertyClassSuffix);
     CATCH
     return false;
 }
@@ -55,29 +55,29 @@ bool IsCustomType(const std::wstring &value)
     TRY
         if (value.empty())
             return false;
-        return !value.empty() && vcc::IsCapital(vcc::SplitString(value, {L"::"}).back());
+        return !value.empty() && vcc::isCapital(vcc::splitString(value, {L"::"}).back());
     CATCH
     return false;
 }
 
-std::wstring GetTypeOrClassWithoutNamespace(const std::wstring &value)
+std::wstring getTypeOrClassWithoutNamespace(const std::wstring &value)
 {
     TRY
     if (value.empty())
         return L"";
-    return vcc::SplitString(value, {L"::"}).back();
+    return vcc::splitString(value, {L"::"}).back();
     CATCH
     return L"";
 }
 
-std::wstring GetNamespaceFromClassName(const std::wstring &className)
+std::wstring getNamespaceFromClassName(const std::wstring &className)
 {   
     TRY
-        auto namespaceList = vcc::SplitString(className, {L"::"});
+        auto namespaceList = vcc::splitString(className, {L"::"});
         if (namespaceList.size() < 2)
             return L"";
         namespaceList.pop_back();
-        return vcc::Concat(namespaceList, L"::");
+        return vcc::concat(namespaceList, L"::");
     CATCH
     return L"";
 }
@@ -85,33 +85,33 @@ std::wstring GetNamespaceFromClassName(const std::wstring &className)
 bool IsClassInNamespace(const std::wstring &currentNamespace, const std::wstring &fullClassName)
 {
     TRY
-        return currentNamespace == GetNamespaceFromClassName(fullClassName);
+        return currentNamespace == getNamespaceFromClassName(fullClassName);
     CATCH
     return false;
 }
 
-std::wstring GetActionClassName(const VPGEnumClass* enumClass, const VPGEnumClassAttribute * property)
+std::wstring getActionClassName(const VPGEnumClass* enumClass, const VPGEnumClassAttribute * property)
 {
     TRY
-        return GetClassNameFromPropertyClassName(enumClass->GetName())  + property->GetPropertyName();
+        return getClassNameFromPropertyClassName(enumClass->getName())  + property->getPropertyName();
     CATCH
     return L"";
 }
 
-std::wstring GetActionFileNameWithoutExtension(const std::wstring &actionClassName, const std::wstring &projectPrefix)
+std::wstring getActionFileNameWithoutExtension(const std::wstring &actionClassName, const std::wstring &projectPrefix)
 {
     std::wstring result = L"";
     TRY
-        std::wstring currentActionClassName = GetTypeOrClassWithoutNamespace(actionClassName);
+        std::wstring currentActionClassName = getTypeOrClassWithoutNamespace(actionClassName);
         std::wstring projectPrefixLower = projectPrefix;
-        vcc::ToLower(projectPrefixLower);
-        if (!vcc::IsBlank(projectPrefix) && vcc::IsStartWith(GetTypeOrClassWithoutNamespace(actionClassName), projectPrefix)) {
+        vcc::toLower(projectPrefixLower);
+        if (!vcc::isBlank(projectPrefix) && vcc::isStartWith(getTypeOrClassWithoutNamespace(actionClassName), projectPrefix)) {
             result += projectPrefixLower;
             currentActionClassName = currentActionClassName.substr(projectPrefix.length());
         }
-        auto tokens = vcc::SplitStringByUpperCase(currentActionClassName, false, true);
+        auto tokens = vcc::splitStringByUpperCase(currentActionClassName, false, true);
         for (auto token : tokens) {
-            vcc::ToLower(token);
+            vcc::toLower(token);
             if (!result.empty())
                 result += L"_";
             result += token;
@@ -120,16 +120,16 @@ std::wstring GetActionFileNameWithoutExtension(const std::wstring &actionClassNa
     return result;
 }
 
-std::wstring GetClassNameFromPropertyClassName(const std::wstring &className)
+std::wstring getClassNameFromPropertyClassName(const std::wstring &className)
 {
     TRY
-        if (vcc::IsEndWith(className, propertyClassSuffix) && className.length() > propertyClassSuffix.length())
+        if (vcc::isEndWith(className, propertyClassSuffix) && className.length() > propertyClassSuffix.length())
             return className.substr(0, className.length() - propertyClassSuffix.length());
     CATCH
     return className;
 }
 
-std::wstring GetActionMessage(const std::wstring &id, const std::wstring &msg)
+std::wstring getActionMessage(const std::wstring &id, const std::wstring &msg)
 {
     return L"[" + id + L"] " + msg;
 }

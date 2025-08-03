@@ -18,10 +18,10 @@ class VPGIncludePathReader
         std::vector<std::wstring> _Delimiter = { L" ", L"\t", L"\n", L",", L";", L"{", L"}" };
 
         size_t IsQuote(const std::wstring &cppCode, const size_t &pos) const;
-        size_t IsCommand(const std::wstring &cppCode, const size_t &pos) const;
+        size_t isCommand(const std::wstring &cppCode, const size_t &pos) const;
         size_t SkipCommand(const std::wstring &cppCode, const size_t &openCommandIndex, size_t &pos) const;
 
-        void ParseCustom(const std::wstring &cppCode, const std::wstring &currentNamespace, std::set<std::wstring> &classList) const;
+        void parseCustom(const std::wstring &cppCode, const std::wstring &currentNamespace, std::set<std::wstring> &classList) const;
         // void ParseLinux(const std::wstring &cppCode, std::set<std::wstring> &classList) const;
         // void ParseMacOs(const std::wstring &cppCode, std::set<std::wstring> &classList) const;
         // void ParseWindow(const std::wstring &cppCode, std::set<std::wstring> &classList) const;
@@ -30,5 +30,5 @@ class VPGIncludePathReader
         VPGIncludePathReader() = default;
         ~VPGIncludePathReader() {}
 
-        void Parse(const vcc::PlatformType &platformType, const std::wstring &cppCode, std::set<std::wstring> &classList) const;
+        void parse(const vcc::PlatformType &platformType, const std::wstring &cppCode, std::set<std::wstring> &classList) const;
 };

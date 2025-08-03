@@ -12,7 +12,7 @@
 #include "vpg_config_type.hpp"
 #include "vpg_project_type.hpp"
 
-bool VPGConfigBehaviorPropertyAccessor::_ReadBool(const int64_t &objectProperty) const
+bool VPGConfigBehaviorPropertyAccessor::_readBool(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigBehavior>(_Object);
@@ -20,7 +20,7 @@ bool VPGConfigBehaviorPropertyAccessor::_ReadBool(const int64_t &objectProperty)
         switch(static_cast<VPGConfigBehaviorProperty>(objectProperty))
         {
         case VPGConfigBehaviorProperty::IsActionResultThrowException:
-            return obj->GetIsActionResultThrowException();
+            return obj->getIsActionResultThrowException();
         default:
             assert(false);
         }
@@ -28,7 +28,7 @@ bool VPGConfigBehaviorPropertyAccessor::_ReadBool(const int64_t &objectProperty)
     return false;
 }
 
-bool VPGConfigBehaviorPropertyAccessor::_ReadBoolAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+bool VPGConfigBehaviorPropertyAccessor::_readBoolAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -36,7 +36,7 @@ bool VPGConfigBehaviorPropertyAccessor::_ReadBoolAtIndex(const int64_t &objectPr
     return false;
 }
 
-bool VPGConfigBehaviorPropertyAccessor::_ReadBoolAtKey(const int64_t &objectProperty, const void */*key*/) const
+bool VPGConfigBehaviorPropertyAccessor::_readBoolAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -44,7 +44,7 @@ bool VPGConfigBehaviorPropertyAccessor::_ReadBoolAtKey(const int64_t &objectProp
     return false;
 }
 
-void VPGConfigBehaviorPropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool &value)
+void VPGConfigBehaviorPropertyAccessor::_writeBool(const int64_t &objectProperty, const bool &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigBehavior>(_Object);
@@ -52,7 +52,7 @@ void VPGConfigBehaviorPropertyAccessor::_WriteBool(const int64_t &objectProperty
         switch(static_cast<VPGConfigBehaviorProperty>(objectProperty))
         {
         case VPGConfigBehaviorProperty::IsActionResultThrowException:
-            obj->SetIsActionResultThrowException(value);
+            obj->setIsActionResultThrowException(value);
             break;
         default:
             assert(false);
@@ -60,28 +60,28 @@ void VPGConfigBehaviorPropertyAccessor::_WriteBool(const int64_t &objectProperty
     CATCH
 }
 
-void VPGConfigBehaviorPropertyAccessor::_WriteBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
+void VPGConfigBehaviorPropertyAccessor::_writeBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigBehaviorPropertyAccessor::_WriteBoolAtKey(const int64_t &objectProperty, const bool &/*value*/, const void */*key*/)
+void VPGConfigBehaviorPropertyAccessor::_writeBoolAtKey(const int64_t &objectProperty, const bool &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigBehaviorPropertyAccessor::_InsertBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
+void VPGConfigBehaviorPropertyAccessor::_insertBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-long VPGConfigBehaviorPropertyAccessor::_ReadLong(const int64_t &objectProperty) const
+long VPGConfigBehaviorPropertyAccessor::_readLong(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigBehavior>(_Object);
@@ -89,7 +89,7 @@ long VPGConfigBehaviorPropertyAccessor::_ReadLong(const int64_t &objectProperty)
         switch(static_cast<VPGConfigBehaviorProperty>(objectProperty))
         {
         case VPGConfigBehaviorProperty::ActionHistoryType:
-            return static_cast<long>(obj->GetActionHistoryType());
+            return static_cast<long>(obj->getActionHistoryType());
         default:
             assert(false);
         }
@@ -97,7 +97,7 @@ long VPGConfigBehaviorPropertyAccessor::_ReadLong(const int64_t &objectProperty)
     return 0L;
 }
 
-long VPGConfigBehaviorPropertyAccessor::_ReadLongAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+long VPGConfigBehaviorPropertyAccessor::_readLongAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -105,7 +105,7 @@ long VPGConfigBehaviorPropertyAccessor::_ReadLongAtIndex(const int64_t &objectPr
     return 0L;
 }
 
-long VPGConfigBehaviorPropertyAccessor::_ReadLongAtKey(const int64_t &objectProperty, const void */*key*/) const
+long VPGConfigBehaviorPropertyAccessor::_readLongAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -113,7 +113,7 @@ long VPGConfigBehaviorPropertyAccessor::_ReadLongAtKey(const int64_t &objectProp
     return 0L;
 }
 
-void VPGConfigBehaviorPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long &value)
+void VPGConfigBehaviorPropertyAccessor::_writeLong(const int64_t &objectProperty, const long &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigBehavior>(_Object);
@@ -121,7 +121,7 @@ void VPGConfigBehaviorPropertyAccessor::_WriteLong(const int64_t &objectProperty
         switch(static_cast<VPGConfigBehaviorProperty>(objectProperty))
         {
         case VPGConfigBehaviorProperty::ActionHistoryType:
-            obj->SetActionHistoryType(static_cast<VPGConfigActionHistoryType>(value));
+            obj->setActionHistoryType(static_cast<VPGConfigActionHistoryType>(value));
             break;
         default:
             assert(false);
@@ -129,28 +129,28 @@ void VPGConfigBehaviorPropertyAccessor::_WriteLong(const int64_t &objectProperty
     CATCH
 }
 
-void VPGConfigBehaviorPropertyAccessor::_WriteLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
+void VPGConfigBehaviorPropertyAccessor::_writeLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigBehaviorPropertyAccessor::_WriteLongAtKey(const int64_t &objectProperty, const long &/*value*/, const void */*key*/)
+void VPGConfigBehaviorPropertyAccessor::_writeLongAtKey(const int64_t &objectProperty, const long &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigBehaviorPropertyAccessor::_InsertLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
+void VPGConfigBehaviorPropertyAccessor::_insertLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-bool VPGConfigExportPropertyAccessor::_ReadBool(const int64_t &objectProperty) const
+bool VPGConfigExportPropertyAccessor::_readBool(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigExport>(_Object);
@@ -158,7 +158,7 @@ bool VPGConfigExportPropertyAccessor::_ReadBool(const int64_t &objectProperty) c
         switch(static_cast<VPGConfigExportProperty>(objectProperty))
         {
         case VPGConfigExportProperty::IsExportExternalLib:
-            return obj->GetIsExportExternalLib();
+            return obj->getIsExportExternalLib();
         default:
             assert(false);
         }
@@ -166,7 +166,7 @@ bool VPGConfigExportPropertyAccessor::_ReadBool(const int64_t &objectProperty) c
     return false;
 }
 
-bool VPGConfigExportPropertyAccessor::_ReadBoolAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+bool VPGConfigExportPropertyAccessor::_readBoolAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -174,7 +174,7 @@ bool VPGConfigExportPropertyAccessor::_ReadBoolAtIndex(const int64_t &objectProp
     return false;
 }
 
-bool VPGConfigExportPropertyAccessor::_ReadBoolAtKey(const int64_t &objectProperty, const void */*key*/) const
+bool VPGConfigExportPropertyAccessor::_readBoolAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -182,7 +182,7 @@ bool VPGConfigExportPropertyAccessor::_ReadBoolAtKey(const int64_t &objectProper
     return false;
 }
 
-void VPGConfigExportPropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool &value)
+void VPGConfigExportPropertyAccessor::_writeBool(const int64_t &objectProperty, const bool &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigExport>(_Object);
@@ -190,7 +190,7 @@ void VPGConfigExportPropertyAccessor::_WriteBool(const int64_t &objectProperty, 
         switch(static_cast<VPGConfigExportProperty>(objectProperty))
         {
         case VPGConfigExportProperty::IsExportExternalLib:
-            obj->SetIsExportExternalLib(value);
+            obj->setIsExportExternalLib(value);
             break;
         default:
             assert(false);
@@ -198,28 +198,28 @@ void VPGConfigExportPropertyAccessor::_WriteBool(const int64_t &objectProperty, 
     CATCH
 }
 
-void VPGConfigExportPropertyAccessor::_WriteBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
+void VPGConfigExportPropertyAccessor::_writeBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigExportPropertyAccessor::_WriteBoolAtKey(const int64_t &objectProperty, const bool &/*value*/, const void */*key*/)
+void VPGConfigExportPropertyAccessor::_writeBoolAtKey(const int64_t &objectProperty, const bool &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigExportPropertyAccessor::_InsertBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
+void VPGConfigExportPropertyAccessor::_insertBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-long VPGConfigExportPropertyAccessor::_ReadLong(const int64_t &objectProperty) const
+long VPGConfigExportPropertyAccessor::_readLong(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigExport>(_Object);
@@ -227,7 +227,7 @@ long VPGConfigExportPropertyAccessor::_ReadLong(const int64_t &objectProperty) c
         switch(static_cast<VPGConfigExportProperty>(objectProperty))
         {
         case VPGConfigExportProperty::Interface:
-            return static_cast<long>(obj->GetInterface());
+            return static_cast<long>(obj->getInterface());
         default:
             assert(false);
         }
@@ -235,7 +235,7 @@ long VPGConfigExportPropertyAccessor::_ReadLong(const int64_t &objectProperty) c
     return 0L;
 }
 
-long VPGConfigExportPropertyAccessor::_ReadLongAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+long VPGConfigExportPropertyAccessor::_readLongAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -243,7 +243,7 @@ long VPGConfigExportPropertyAccessor::_ReadLongAtIndex(const int64_t &objectProp
     return 0L;
 }
 
-long VPGConfigExportPropertyAccessor::_ReadLongAtKey(const int64_t &objectProperty, const void */*key*/) const
+long VPGConfigExportPropertyAccessor::_readLongAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -251,7 +251,7 @@ long VPGConfigExportPropertyAccessor::_ReadLongAtKey(const int64_t &objectProper
     return 0L;
 }
 
-void VPGConfigExportPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long &value)
+void VPGConfigExportPropertyAccessor::_writeLong(const int64_t &objectProperty, const long &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigExport>(_Object);
@@ -259,7 +259,7 @@ void VPGConfigExportPropertyAccessor::_WriteLong(const int64_t &objectProperty, 
         switch(static_cast<VPGConfigExportProperty>(objectProperty))
         {
         case VPGConfigExportProperty::Interface:
-            obj->SetInterface(static_cast<VPGConfigInterfaceType>(value));
+            obj->setInterface(static_cast<VPGConfigInterfaceType>(value));
             break;
         default:
             assert(false);
@@ -267,28 +267,28 @@ void VPGConfigExportPropertyAccessor::_WriteLong(const int64_t &objectProperty, 
     CATCH
 }
 
-void VPGConfigExportPropertyAccessor::_WriteLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
+void VPGConfigExportPropertyAccessor::_writeLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigExportPropertyAccessor::_WriteLongAtKey(const int64_t &objectProperty, const long &/*value*/, const void */*key*/)
+void VPGConfigExportPropertyAccessor::_writeLongAtKey(const int64_t &objectProperty, const long &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigExportPropertyAccessor::_InsertLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
+void VPGConfigExportPropertyAccessor::_insertLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-std::wstring VPGConfigExportPropertyAccessor::_ReadString(const int64_t &objectProperty) const
+std::wstring VPGConfigExportPropertyAccessor::_readString(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigExport>(_Object);
@@ -296,19 +296,19 @@ std::wstring VPGConfigExportPropertyAccessor::_ReadString(const int64_t &objectP
         switch(static_cast<VPGConfigExportProperty>(objectProperty))
         {
         case VPGConfigExportProperty::DllBridgeDirectory:
-            return obj->GetDllBridgeDirectory();
+            return obj->getDllBridgeDirectory();
         case VPGConfigExportProperty::ExportDirectoryDll:
-            return obj->GetExportDirectoryDll();
+            return obj->getExportDirectoryDll();
         case VPGConfigExportProperty::ExportDirectoryExe:
-            return obj->GetExportDirectoryExe();
+            return obj->getExportDirectoryExe();
         case VPGConfigExportProperty::FormDirectory:
-            return obj->GetFormDirectory();
+            return obj->getFormDirectory();
         case VPGConfigExportProperty::ObjectDirectory:
-            return obj->GetObjectDirectory();
+            return obj->getObjectDirectory();
         case VPGConfigExportProperty::TypeDirectory:
-            return obj->GetTypeDirectory();
+            return obj->getTypeDirectory();
         case VPGConfigExportProperty::Workspace:
-            return obj->GetWorkspace();
+            return obj->getWorkspace();
         default:
             assert(false);
         }
@@ -316,7 +316,7 @@ std::wstring VPGConfigExportPropertyAccessor::_ReadString(const int64_t &objectP
     return L"";
 }
 
-std::wstring VPGConfigExportPropertyAccessor::_ReadStringAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+std::wstring VPGConfigExportPropertyAccessor::_readStringAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -324,7 +324,7 @@ std::wstring VPGConfigExportPropertyAccessor::_ReadStringAtIndex(const int64_t &
     return L"";
 }
 
-std::wstring VPGConfigExportPropertyAccessor::_ReadStringAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::wstring VPGConfigExportPropertyAccessor::_readStringAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -332,7 +332,7 @@ std::wstring VPGConfigExportPropertyAccessor::_ReadStringAtKey(const int64_t &ob
     return L"";
 }
 
-void VPGConfigExportPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring &value)
+void VPGConfigExportPropertyAccessor::_writeString(const int64_t &objectProperty, const std::wstring &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigExport>(_Object);
@@ -340,25 +340,25 @@ void VPGConfigExportPropertyAccessor::_WriteString(const int64_t &objectProperty
         switch(static_cast<VPGConfigExportProperty>(objectProperty))
         {
         case VPGConfigExportProperty::DllBridgeDirectory:
-            obj->SetDllBridgeDirectory(value);
+            obj->setDllBridgeDirectory(value);
             break;
         case VPGConfigExportProperty::ExportDirectoryDll:
-            obj->SetExportDirectoryDll(value);
+            obj->setExportDirectoryDll(value);
             break;
         case VPGConfigExportProperty::ExportDirectoryExe:
-            obj->SetExportDirectoryExe(value);
+            obj->setExportDirectoryExe(value);
             break;
         case VPGConfigExportProperty::FormDirectory:
-            obj->SetFormDirectory(value);
+            obj->setFormDirectory(value);
             break;
         case VPGConfigExportProperty::ObjectDirectory:
-            obj->SetObjectDirectory(value);
+            obj->setObjectDirectory(value);
             break;
         case VPGConfigExportProperty::TypeDirectory:
-            obj->SetTypeDirectory(value);
+            obj->setTypeDirectory(value);
             break;
         case VPGConfigExportProperty::Workspace:
-            obj->SetWorkspace(value);
+            obj->setWorkspace(value);
             break;
         default:
             assert(false);
@@ -366,28 +366,28 @@ void VPGConfigExportPropertyAccessor::_WriteString(const int64_t &objectProperty
     CATCH
 }
 
-void VPGConfigExportPropertyAccessor::_WriteStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/)
+void VPGConfigExportPropertyAccessor::_writeStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigExportPropertyAccessor::_WriteStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/)
+void VPGConfigExportPropertyAccessor::_writeStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigExportPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/)
+void VPGConfigExportPropertyAccessor::_insertStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-std::wstring VPGConfigInputPropertyAccessor::_ReadString(const int64_t &objectProperty) const
+std::wstring VPGConfigInputPropertyAccessor::_readString(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigInput>(_Object);
@@ -395,7 +395,7 @@ std::wstring VPGConfigInputPropertyAccessor::_ReadString(const int64_t &objectPr
         switch(static_cast<VPGConfigInputProperty>(objectProperty))
         {
         case VPGConfigInputProperty::TypeWorkspace:
-            return obj->GetTypeWorkspace();
+            return obj->getTypeWorkspace();
         default:
             assert(false);
         }
@@ -403,7 +403,7 @@ std::wstring VPGConfigInputPropertyAccessor::_ReadString(const int64_t &objectPr
     return L"";
 }
 
-std::wstring VPGConfigInputPropertyAccessor::_ReadStringAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+std::wstring VPGConfigInputPropertyAccessor::_readStringAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -411,7 +411,7 @@ std::wstring VPGConfigInputPropertyAccessor::_ReadStringAtIndex(const int64_t &o
     return L"";
 }
 
-std::wstring VPGConfigInputPropertyAccessor::_ReadStringAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::wstring VPGConfigInputPropertyAccessor::_readStringAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -419,7 +419,7 @@ std::wstring VPGConfigInputPropertyAccessor::_ReadStringAtKey(const int64_t &obj
     return L"";
 }
 
-void VPGConfigInputPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring &value)
+void VPGConfigInputPropertyAccessor::_writeString(const int64_t &objectProperty, const std::wstring &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigInput>(_Object);
@@ -427,7 +427,7 @@ void VPGConfigInputPropertyAccessor::_WriteString(const int64_t &objectProperty,
         switch(static_cast<VPGConfigInputProperty>(objectProperty))
         {
         case VPGConfigInputProperty::TypeWorkspace:
-            obj->SetTypeWorkspace(value);
+            obj->setTypeWorkspace(value);
             break;
         default:
             assert(false);
@@ -435,28 +435,28 @@ void VPGConfigInputPropertyAccessor::_WriteString(const int64_t &objectProperty,
     CATCH
 }
 
-void VPGConfigInputPropertyAccessor::_WriteStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/)
+void VPGConfigInputPropertyAccessor::_writeStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigInputPropertyAccessor::_WriteStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/)
+void VPGConfigInputPropertyAccessor::_writeStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigInputPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/)
+void VPGConfigInputPropertyAccessor::_insertStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-std::wstring VPGConfigOutputPropertyAccessor::_ReadString(const int64_t &objectProperty) const
+std::wstring VPGConfigOutputPropertyAccessor::_readString(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigOutput>(_Object);
@@ -464,37 +464,37 @@ std::wstring VPGConfigOutputPropertyAccessor::_ReadString(const int64_t &objectP
         switch(static_cast<VPGConfigOutputProperty>(objectProperty))
         {
         case VPGConfigOutputProperty::ActionDirectoryCpp:
-            return obj->GetActionDirectoryCpp();
+            return obj->getActionDirectoryCpp();
         case VPGConfigOutputProperty::ActionDirectoryHpp:
-            return obj->GetActionDirectoryHpp();
+            return obj->getActionDirectoryHpp();
         case VPGConfigOutputProperty::ApplicationDirectoryCpp:
-            return obj->GetApplicationDirectoryCpp();
+            return obj->getApplicationDirectoryCpp();
         case VPGConfigOutputProperty::ApplicationDirectoryHpp:
-            return obj->GetApplicationDirectoryHpp();
+            return obj->getApplicationDirectoryHpp();
         case VPGConfigOutputProperty::ExceptionTypeDirectory:
-            return obj->GetExceptionTypeDirectory();
+            return obj->getExceptionTypeDirectory();
         case VPGConfigOutputProperty::FormDirectoryCpp:
-            return obj->GetFormDirectoryCpp();
+            return obj->getFormDirectoryCpp();
         case VPGConfigOutputProperty::FormDirectoryHpp:
-            return obj->GetFormDirectoryHpp();
+            return obj->getFormDirectoryHpp();
         case VPGConfigOutputProperty::ObjectDirectoryCpp:
-            return obj->GetObjectDirectoryCpp();
+            return obj->getObjectDirectoryCpp();
         case VPGConfigOutputProperty::ObjectDirectoryHpp:
-            return obj->GetObjectDirectoryHpp();
+            return obj->getObjectDirectoryHpp();
         case VPGConfigOutputProperty::ObjectFactoryDirectoryCpp:
-            return obj->GetObjectFactoryDirectoryCpp();
+            return obj->getObjectFactoryDirectoryCpp();
         case VPGConfigOutputProperty::ObjectFactoryDirectoryHpp:
-            return obj->GetObjectFactoryDirectoryHpp();
+            return obj->getObjectFactoryDirectoryHpp();
         case VPGConfigOutputProperty::ObjectTypeDirectory:
-            return obj->GetObjectTypeDirectory();
+            return obj->getObjectTypeDirectory();
         case VPGConfigOutputProperty::PropertyAccessorDirectoryCpp:
-            return obj->GetPropertyAccessorDirectoryCpp();
+            return obj->getPropertyAccessorDirectoryCpp();
         case VPGConfigOutputProperty::PropertyAccessorDirectoryHpp:
-            return obj->GetPropertyAccessorDirectoryHpp();
+            return obj->getPropertyAccessorDirectoryHpp();
         case VPGConfigOutputProperty::PropertyAccessorFactoryDirectoryCpp:
-            return obj->GetPropertyAccessorFactoryDirectoryCpp();
+            return obj->getPropertyAccessorFactoryDirectoryCpp();
         case VPGConfigOutputProperty::PropertyAccessorFactoryDirectoryHpp:
-            return obj->GetPropertyAccessorFactoryDirectoryHpp();
+            return obj->getPropertyAccessorFactoryDirectoryHpp();
         default:
             assert(false);
         }
@@ -502,7 +502,7 @@ std::wstring VPGConfigOutputPropertyAccessor::_ReadString(const int64_t &objectP
     return L"";
 }
 
-std::wstring VPGConfigOutputPropertyAccessor::_ReadStringAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+std::wstring VPGConfigOutputPropertyAccessor::_readStringAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -510,7 +510,7 @@ std::wstring VPGConfigOutputPropertyAccessor::_ReadStringAtIndex(const int64_t &
     return L"";
 }
 
-std::wstring VPGConfigOutputPropertyAccessor::_ReadStringAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::wstring VPGConfigOutputPropertyAccessor::_readStringAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -518,7 +518,7 @@ std::wstring VPGConfigOutputPropertyAccessor::_ReadStringAtKey(const int64_t &ob
     return L"";
 }
 
-void VPGConfigOutputPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring &value)
+void VPGConfigOutputPropertyAccessor::_writeString(const int64_t &objectProperty, const std::wstring &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigOutput>(_Object);
@@ -526,52 +526,52 @@ void VPGConfigOutputPropertyAccessor::_WriteString(const int64_t &objectProperty
         switch(static_cast<VPGConfigOutputProperty>(objectProperty))
         {
         case VPGConfigOutputProperty::ActionDirectoryCpp:
-            obj->SetActionDirectoryCpp(value);
+            obj->setActionDirectoryCpp(value);
             break;
         case VPGConfigOutputProperty::ActionDirectoryHpp:
-            obj->SetActionDirectoryHpp(value);
+            obj->setActionDirectoryHpp(value);
             break;
         case VPGConfigOutputProperty::ApplicationDirectoryCpp:
-            obj->SetApplicationDirectoryCpp(value);
+            obj->setApplicationDirectoryCpp(value);
             break;
         case VPGConfigOutputProperty::ApplicationDirectoryHpp:
-            obj->SetApplicationDirectoryHpp(value);
+            obj->setApplicationDirectoryHpp(value);
             break;
         case VPGConfigOutputProperty::ExceptionTypeDirectory:
-            obj->SetExceptionTypeDirectory(value);
+            obj->setExceptionTypeDirectory(value);
             break;
         case VPGConfigOutputProperty::FormDirectoryCpp:
-            obj->SetFormDirectoryCpp(value);
+            obj->setFormDirectoryCpp(value);
             break;
         case VPGConfigOutputProperty::FormDirectoryHpp:
-            obj->SetFormDirectoryHpp(value);
+            obj->setFormDirectoryHpp(value);
             break;
         case VPGConfigOutputProperty::ObjectDirectoryCpp:
-            obj->SetObjectDirectoryCpp(value);
+            obj->setObjectDirectoryCpp(value);
             break;
         case VPGConfigOutputProperty::ObjectDirectoryHpp:
-            obj->SetObjectDirectoryHpp(value);
+            obj->setObjectDirectoryHpp(value);
             break;
         case VPGConfigOutputProperty::ObjectFactoryDirectoryCpp:
-            obj->SetObjectFactoryDirectoryCpp(value);
+            obj->setObjectFactoryDirectoryCpp(value);
             break;
         case VPGConfigOutputProperty::ObjectFactoryDirectoryHpp:
-            obj->SetObjectFactoryDirectoryHpp(value);
+            obj->setObjectFactoryDirectoryHpp(value);
             break;
         case VPGConfigOutputProperty::ObjectTypeDirectory:
-            obj->SetObjectTypeDirectory(value);
+            obj->setObjectTypeDirectory(value);
             break;
         case VPGConfigOutputProperty::PropertyAccessorDirectoryCpp:
-            obj->SetPropertyAccessorDirectoryCpp(value);
+            obj->setPropertyAccessorDirectoryCpp(value);
             break;
         case VPGConfigOutputProperty::PropertyAccessorDirectoryHpp:
-            obj->SetPropertyAccessorDirectoryHpp(value);
+            obj->setPropertyAccessorDirectoryHpp(value);
             break;
         case VPGConfigOutputProperty::PropertyAccessorFactoryDirectoryCpp:
-            obj->SetPropertyAccessorFactoryDirectoryCpp(value);
+            obj->setPropertyAccessorFactoryDirectoryCpp(value);
             break;
         case VPGConfigOutputProperty::PropertyAccessorFactoryDirectoryHpp:
-            obj->SetPropertyAccessorFactoryDirectoryHpp(value);
+            obj->setPropertyAccessorFactoryDirectoryHpp(value);
             break;
         default:
             assert(false);
@@ -579,28 +579,28 @@ void VPGConfigOutputPropertyAccessor::_WriteString(const int64_t &objectProperty
     CATCH
 }
 
-void VPGConfigOutputPropertyAccessor::_WriteStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/)
+void VPGConfigOutputPropertyAccessor::_writeStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigOutputPropertyAccessor::_WriteStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/)
+void VPGConfigOutputPropertyAccessor::_writeStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigOutputPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/)
+void VPGConfigOutputPropertyAccessor::_insertStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-bool VPGConfigPropertyAccessor::_ReadBool(const int64_t &objectProperty) const
+bool VPGConfigPropertyAccessor::_readBool(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -608,13 +608,13 @@ bool VPGConfigPropertyAccessor::_ReadBool(const int64_t &objectProperty) const
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::BehaviorIsActionResultThrowException:
-            return obj->GetBehaviorIsActionResultThrowException();
+            return obj->getBehaviorIsActionResultThrowException();
         case VPGConfigProperty::IsGit:
-            return obj->GetIsGit();
+            return obj->getIsGit();
         case VPGConfigProperty::TemplateIsExcludeUnittest:
-            return obj->GetTemplateIsExcludeUnittest();
+            return obj->getTemplateIsExcludeUnittest();
         case VPGConfigProperty::TemplateIsExcludeVCCUnitTest:
-            return obj->GetTemplateIsExcludeVCCUnitTest();
+            return obj->getTemplateIsExcludeVCCUnitTest();
         default:
             assert(false);
         }
@@ -622,7 +622,7 @@ bool VPGConfigPropertyAccessor::_ReadBool(const int64_t &objectProperty) const
     return false;
 }
 
-bool VPGConfigPropertyAccessor::_ReadBoolAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+bool VPGConfigPropertyAccessor::_readBoolAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -630,7 +630,7 @@ bool VPGConfigPropertyAccessor::_ReadBoolAtIndex(const int64_t &objectProperty, 
     return false;
 }
 
-bool VPGConfigPropertyAccessor::_ReadBoolAtKey(const int64_t &objectProperty, const void */*key*/) const
+bool VPGConfigPropertyAccessor::_readBoolAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -638,7 +638,7 @@ bool VPGConfigPropertyAccessor::_ReadBoolAtKey(const int64_t &objectProperty, co
     return false;
 }
 
-void VPGConfigPropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool &value)
+void VPGConfigPropertyAccessor::_writeBool(const int64_t &objectProperty, const bool &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -646,7 +646,7 @@ void VPGConfigPropertyAccessor::_WriteBool(const int64_t &objectProperty, const 
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::IsGit:
-            obj->SetIsGit(value);
+            obj->setIsGit(value);
             break;
         default:
             assert(false);
@@ -654,28 +654,28 @@ void VPGConfigPropertyAccessor::_WriteBool(const int64_t &objectProperty, const 
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_WriteBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
+void VPGConfigPropertyAccessor::_writeBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_WriteBoolAtKey(const int64_t &objectProperty, const bool &/*value*/, const void */*key*/)
+void VPGConfigPropertyAccessor::_writeBoolAtKey(const int64_t &objectProperty, const bool &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_InsertBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
+void VPGConfigPropertyAccessor::_insertBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-long VPGConfigPropertyAccessor::_ReadLong(const int64_t &objectProperty) const
+long VPGConfigPropertyAccessor::_readLong(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -683,9 +683,9 @@ long VPGConfigPropertyAccessor::_ReadLong(const int64_t &objectProperty) const
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::BehaviorActionHistoryType:
-            return static_cast<long>(obj->GetBehaviorActionHistoryType());
+            return static_cast<long>(obj->getBehaviorActionHistoryType());
         case VPGConfigProperty::ProjectType:
-            return static_cast<long>(obj->GetProjectType());
+            return static_cast<long>(obj->getProjectType());
         default:
             assert(false);
         }
@@ -693,7 +693,7 @@ long VPGConfigPropertyAccessor::_ReadLong(const int64_t &objectProperty) const
     return 0L;
 }
 
-long VPGConfigPropertyAccessor::_ReadLongAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+long VPGConfigPropertyAccessor::_readLongAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -701,7 +701,7 @@ long VPGConfigPropertyAccessor::_ReadLongAtIndex(const int64_t &objectProperty, 
     return 0L;
 }
 
-long VPGConfigPropertyAccessor::_ReadLongAtKey(const int64_t &objectProperty, const void */*key*/) const
+long VPGConfigPropertyAccessor::_readLongAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -709,7 +709,7 @@ long VPGConfigPropertyAccessor::_ReadLongAtKey(const int64_t &objectProperty, co
     return 0L;
 }
 
-void VPGConfigPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long &value)
+void VPGConfigPropertyAccessor::_writeLong(const int64_t &objectProperty, const long &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -717,7 +717,7 @@ void VPGConfigPropertyAccessor::_WriteLong(const int64_t &objectProperty, const 
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::ProjectType:
-            obj->SetProjectType(static_cast<VPGProjectType>(value));
+            obj->setProjectType(static_cast<VPGProjectType>(value));
             break;
         default:
             assert(false);
@@ -725,28 +725,28 @@ void VPGConfigPropertyAccessor::_WriteLong(const int64_t &objectProperty, const 
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_WriteLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
+void VPGConfigPropertyAccessor::_writeLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_WriteLongAtKey(const int64_t &objectProperty, const long &/*value*/, const void */*key*/)
+void VPGConfigPropertyAccessor::_writeLongAtKey(const int64_t &objectProperty, const long &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_InsertLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
+void VPGConfigPropertyAccessor::_insertLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-std::wstring VPGConfigPropertyAccessor::_ReadString(const int64_t &objectProperty) const
+std::wstring VPGConfigPropertyAccessor::_readString(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -754,53 +754,53 @@ std::wstring VPGConfigPropertyAccessor::_ReadString(const int64_t &objectPropert
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::InputTypeWorkspace:
-            return obj->GetInputTypeWorkspace();
+            return obj->getInputTypeWorkspace();
         case VPGConfigProperty::OutputActionDirectoryCpp:
-            return obj->GetOutputActionDirectoryCpp();
+            return obj->getOutputActionDirectoryCpp();
         case VPGConfigProperty::OutputActionDirectoryHpp:
-            return obj->GetOutputActionDirectoryHpp();
+            return obj->getOutputActionDirectoryHpp();
         case VPGConfigProperty::OutputApplicationDirectoryCpp:
-            return obj->GetOutputApplicationDirectoryCpp();
+            return obj->getOutputApplicationDirectoryCpp();
         case VPGConfigProperty::OutputApplicationDirectoryHpp:
-            return obj->GetOutputApplicationDirectoryHpp();
+            return obj->getOutputApplicationDirectoryHpp();
         case VPGConfigProperty::OutputExceptionTypeDirectory:
-            return obj->GetOutputExceptionTypeDirectory();
+            return obj->getOutputExceptionTypeDirectory();
         case VPGConfigProperty::OutputFormDirectoryCpp:
-            return obj->GetOutputFormDirectoryCpp();
+            return obj->getOutputFormDirectoryCpp();
         case VPGConfigProperty::OutputFormDirectoryHpp:
-            return obj->GetOutputFormDirectoryHpp();
+            return obj->getOutputFormDirectoryHpp();
         case VPGConfigProperty::OutputObjectDirectoryCpp:
-            return obj->GetOutputObjectDirectoryCpp();
+            return obj->getOutputObjectDirectoryCpp();
         case VPGConfigProperty::OutputObjectDirectoryHpp:
-            return obj->GetOutputObjectDirectoryHpp();
+            return obj->getOutputObjectDirectoryHpp();
         case VPGConfigProperty::OutputObjectFactoryDirectoryCpp:
-            return obj->GetOutputObjectFactoryDirectoryCpp();
+            return obj->getOutputObjectFactoryDirectoryCpp();
         case VPGConfigProperty::OutputObjectFactoryDirectoryHpp:
-            return obj->GetOutputObjectFactoryDirectoryHpp();
+            return obj->getOutputObjectFactoryDirectoryHpp();
         case VPGConfigProperty::OutputObjectTypeDirectory:
-            return obj->GetOutputObjectTypeDirectory();
+            return obj->getOutputObjectTypeDirectory();
         case VPGConfigProperty::OutputPropertyAccessorDirectoryCpp:
-            return obj->GetOutputPropertyAccessorDirectoryCpp();
+            return obj->getOutputPropertyAccessorDirectoryCpp();
         case VPGConfigProperty::OutputPropertyAccessorDirectoryHpp:
-            return obj->GetOutputPropertyAccessorDirectoryHpp();
+            return obj->getOutputPropertyAccessorDirectoryHpp();
         case VPGConfigProperty::OutputPropertyAccessorFactoryDirectoryCpp:
-            return obj->GetOutputPropertyAccessorFactoryDirectoryCpp();
+            return obj->getOutputPropertyAccessorFactoryDirectoryCpp();
         case VPGConfigProperty::OutputPropertyAccessorFactoryDirectoryHpp:
-            return obj->GetOutputPropertyAccessorFactoryDirectoryHpp();
+            return obj->getOutputPropertyAccessorFactoryDirectoryHpp();
         case VPGConfigProperty::ProjectName:
-            return obj->GetProjectName();
+            return obj->getProjectName();
         case VPGConfigProperty::ProjectNameDll:
-            return obj->GetProjectNameDll();
+            return obj->getProjectNameDll();
         case VPGConfigProperty::ProjectNameExe:
-            return obj->GetProjectNameExe();
+            return obj->getProjectNameExe();
         case VPGConfigProperty::ProjectPrefix:
-            return obj->GetProjectPrefix();
+            return obj->getProjectPrefix();
         case VPGConfigProperty::TemplateUrl:
-            return obj->GetTemplateUrl();
+            return obj->getTemplateUrl();
         case VPGConfigProperty::TemplateWorkspace:
-            return obj->GetTemplateWorkspace();
+            return obj->getTemplateWorkspace();
         case VPGConfigProperty::Version:
-            return obj->GetVersion();
+            return obj->getVersion();
         default:
             assert(false);
         }
@@ -808,7 +808,7 @@ std::wstring VPGConfigPropertyAccessor::_ReadString(const int64_t &objectPropert
     return L"";
 }
 
-std::wstring VPGConfigPropertyAccessor::_ReadStringAtIndex(const int64_t &objectProperty, const int64_t &index) const
+std::wstring VPGConfigPropertyAccessor::_readStringAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -817,7 +817,7 @@ std::wstring VPGConfigPropertyAccessor::_ReadStringAtIndex(const int64_t &object
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Plugins:
-            return obj->GetPluginsAtIndex(index);
+            return obj->getPluginsAtIndex(index);
         default:
             assert(false);
         }
@@ -825,7 +825,7 @@ std::wstring VPGConfigPropertyAccessor::_ReadStringAtIndex(const int64_t &object
     return L"";
 }
 
-std::wstring VPGConfigPropertyAccessor::_ReadStringAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::wstring VPGConfigPropertyAccessor::_readStringAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -833,7 +833,7 @@ std::wstring VPGConfigPropertyAccessor::_ReadStringAtKey(const int64_t &objectPr
     return L"";
 }
 
-void VPGConfigPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring &value)
+void VPGConfigPropertyAccessor::_writeString(const int64_t &objectProperty, const std::wstring &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -841,19 +841,19 @@ void VPGConfigPropertyAccessor::_WriteString(const int64_t &objectProperty, cons
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::ProjectName:
-            obj->SetProjectName(value);
+            obj->setProjectName(value);
             break;
         case VPGConfigProperty::ProjectNameDll:
-            obj->SetProjectNameDll(value);
+            obj->setProjectNameDll(value);
             break;
         case VPGConfigProperty::ProjectNameExe:
-            obj->SetProjectNameExe(value);
+            obj->setProjectNameExe(value);
             break;
         case VPGConfigProperty::ProjectPrefix:
-            obj->SetProjectPrefix(value);
+            obj->setProjectPrefix(value);
             break;
         case VPGConfigProperty::Version:
-            obj->SetVersion(value);
+            obj->setVersion(value);
             break;
         default:
             assert(false);
@@ -861,7 +861,7 @@ void VPGConfigPropertyAccessor::_WriteString(const int64_t &objectProperty, cons
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_WriteStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
+void VPGConfigPropertyAccessor::_writeStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -871,9 +871,9 @@ void VPGConfigPropertyAccessor::_WriteStringAtIndex(const int64_t &objectPropert
         {
         case VPGConfigProperty::Plugins:
             if (index > -1)
-                obj->SetPluginsAtIndex(index, value);
+                obj->setPluginsAtIndex(index, value);
             else
-                obj->InsertPlugins(value);
+                obj->insertPlugins(value);
             break;
         default:
             assert(false);
@@ -881,14 +881,14 @@ void VPGConfigPropertyAccessor::_WriteStringAtIndex(const int64_t &objectPropert
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_WriteStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/)
+void VPGConfigPropertyAccessor::_writeStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
+void VPGConfigPropertyAccessor::_insertStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -898,9 +898,9 @@ void VPGConfigPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProper
         {
         case VPGConfigProperty::Plugins:
             if (index > -1)
-                obj->InsertPluginsAtIndex(index, value);
+                obj->insertPluginsAtIndex(index, value);
             else
-                obj->InsertPlugins(value);
+                obj->insertPlugins(value);
             break;
         default:
             assert(false);
@@ -908,7 +908,7 @@ void VPGConfigPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProper
     CATCH
 }
 
-std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_ReadObject(const int64_t &objectProperty) const
+std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_readObject(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -916,13 +916,13 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_ReadObject(const int64
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Behavior:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetBehavior());
+            return std::static_pointer_cast<vcc::IObject>(obj->getBehavior());
         case VPGConfigProperty::Input:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetInput());
+            return std::static_pointer_cast<vcc::IObject>(obj->getInput());
         case VPGConfigProperty::Output:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetOutput());
+            return std::static_pointer_cast<vcc::IObject>(obj->getOutput());
         case VPGConfigProperty::Template:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetTemplate());
+            return std::static_pointer_cast<vcc::IObject>(obj->getTemplate());
         default:
             assert(false);
         }
@@ -930,7 +930,7 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_ReadObject(const int64
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_ReadObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
+std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_readObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -939,7 +939,7 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_ReadObjectAtIndex(cons
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Exports:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetExportsAtIndex(index));
+            return std::static_pointer_cast<vcc::IObject>(obj->getExportsAtIndex(index));
         default:
             assert(false);
         }
@@ -947,7 +947,7 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_ReadObjectAtIndex(cons
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_ReadObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_readObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -955,7 +955,7 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_ReadObjectAtKey(const 
     return nullptr;
 }
 
-void VPGConfigPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value)
+void VPGConfigPropertyAccessor::_writeObject(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -963,16 +963,16 @@ void VPGConfigPropertyAccessor::_WriteObject(const int64_t &objectProperty, std:
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Behavior:
-            obj->SetBehavior(std::static_pointer_cast<VPGConfigBehavior>(value));
+            obj->setBehavior(std::static_pointer_cast<VPGConfigBehavior>(value));
             break;
         case VPGConfigProperty::Input:
-            obj->SetInput(std::static_pointer_cast<VPGConfigInput>(value));
+            obj->setInput(std::static_pointer_cast<VPGConfigInput>(value));
             break;
         case VPGConfigProperty::Output:
-            obj->SetOutput(std::static_pointer_cast<VPGConfigOutput>(value));
+            obj->setOutput(std::static_pointer_cast<VPGConfigOutput>(value));
             break;
         case VPGConfigProperty::Template:
-            obj->SetTemplate(std::static_pointer_cast<VPGConfigTemplate>(value));
+            obj->setTemplate(std::static_pointer_cast<VPGConfigTemplate>(value));
             break;
         default:
             assert(false);
@@ -980,7 +980,7 @@ void VPGConfigPropertyAccessor::_WriteObject(const int64_t &objectProperty, std:
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index)
+void VPGConfigPropertyAccessor::_writeObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -990,9 +990,9 @@ void VPGConfigPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectPropert
         {
         case VPGConfigProperty::Exports:
             if (index > -1)
-                obj->SetExportsAtIndex(index, std::static_pointer_cast<VPGConfigExport>(value));
+                obj->setExportsAtIndex(index, std::static_pointer_cast<VPGConfigExport>(value));
             else
-                obj->InsertExports(std::static_pointer_cast<VPGConfigExport>(value));
+                obj->insertExports(std::static_pointer_cast<VPGConfigExport>(value));
             break;
         default:
             assert(false);
@@ -1000,14 +1000,14 @@ void VPGConfigPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectPropert
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const void */*key*/)
+void VPGConfigPropertyAccessor::_writeObjectAtKey(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index)
+void VPGConfigPropertyAccessor::_insertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -1017,9 +1017,9 @@ void VPGConfigPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProper
         {
         case VPGConfigProperty::Exports:
             if (index > -1)
-                obj->InsertExportsAtIndex(index, std::static_pointer_cast<VPGConfigExport>(value));
+                obj->insertExportsAtIndex(index, std::static_pointer_cast<VPGConfigExport>(value));
             else
-                obj->InsertExports(std::static_pointer_cast<VPGConfigExport>(value));
+                obj->insertExports(std::static_pointer_cast<VPGConfigExport>(value));
             break;
         default:
             assert(false);
@@ -1027,7 +1027,7 @@ void VPGConfigPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProper
     CATCH
 }
 
-std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObject(const int64_t &objectProperty) const
+std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_cloneObject(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -1035,13 +1035,13 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObject(const int6
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Behavior:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetBehavior()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->getBehavior()->clone());
         case VPGConfigProperty::Input:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetInput()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->getInput()->clone());
         case VPGConfigProperty::Output:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetOutput()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->getOutput()->clone());
         case VPGConfigProperty::Template:
-            return std::static_pointer_cast<vcc::IObject>(obj->GetTemplate()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->getTemplate()->clone());
         default:
             assert(false);
         }
@@ -1049,7 +1049,7 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObject(const int6
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
+std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_cloneObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -1058,7 +1058,7 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObjectAtIndex(con
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Exports:
-            return std::static_pointer_cast<vcc::IObject>(obj->CloneExportsAtIndex(index));
+            return std::static_pointer_cast<vcc::IObject>(obj->cloneExportsAtIndex(index));
         default:
             assert(false);
         }
@@ -1066,7 +1066,7 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObjectAtIndex(con
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_cloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -1074,7 +1074,7 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObjectAtKey(const
     return nullptr;
 }
 
-size_t VPGConfigPropertyAccessor::_GetCount(const int64_t &objectProperty) const
+size_t VPGConfigPropertyAccessor::_getCount(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -1082,9 +1082,9 @@ size_t VPGConfigPropertyAccessor::_GetCount(const int64_t &objectProperty) const
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Plugins:
-            return obj->GetPlugins().size();
+            return obj->getPlugins().size();
         case VPGConfigProperty::Exports:
-            return obj->GetExports().size();
+            return obj->getExports().size();
         default:
             assert(false);
         }
@@ -1092,7 +1092,7 @@ size_t VPGConfigPropertyAccessor::_GetCount(const int64_t &objectProperty) const
     return 0;
 }
 
-std::set<void *> VPGConfigPropertyAccessor::_GetMapKeys(const int64_t &objectProperty) const
+std::set<void *> VPGConfigPropertyAccessor::_getMapKeys(const int64_t &objectProperty) const
 {
     std::set<void *> result;
     TRY
@@ -1101,7 +1101,7 @@ std::set<void *> VPGConfigPropertyAccessor::_GetMapKeys(const int64_t &objectPro
     return result;
 }
 
-bool VPGConfigPropertyAccessor::_IsContainKey(const int64_t &objectProperty, const void */*key*/) const
+bool VPGConfigPropertyAccessor::_isContainKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -1109,7 +1109,7 @@ bool VPGConfigPropertyAccessor::_IsContainKey(const int64_t &objectProperty, con
     return false;
 }
 
-void VPGConfigPropertyAccessor::_Remove(const int64_t &objectProperty, const void *value)
+void VPGConfigPropertyAccessor::_remove(const int64_t &objectProperty, const void *value)
 {
     TRY
         assert(value != nullptr);
@@ -1120,7 +1120,7 @@ void VPGConfigPropertyAccessor::_Remove(const int64_t &objectProperty, const voi
         case VPGConfigProperty::Plugins: {
             auto valuePtr = static_cast<const wchar_t *>(value);
             assert(valuePtr != nullptr);
-            obj->RemovePlugins(valuePtr);
+            obj->removePlugins(valuePtr);
             break;
         }
         default:
@@ -1129,7 +1129,7 @@ void VPGConfigPropertyAccessor::_Remove(const int64_t &objectProperty, const voi
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const vcc::IObject *value)
+void VPGConfigPropertyAccessor::_removeObject(const int64_t &objectProperty, const vcc::IObject *value)
 {
     TRY
         assert(value != nullptr);
@@ -1138,7 +1138,7 @@ void VPGConfigPropertyAccessor::_RemoveObject(const int64_t &objectProperty, con
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Exports:
-            obj->RemoveExports(value);
+            obj->removeExports(value);
             break;
         default:
             assert(false);
@@ -1146,7 +1146,7 @@ void VPGConfigPropertyAccessor::_RemoveObject(const int64_t &objectProperty, con
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_RemoveAtIndex(const int64_t &objectProperty, const int64_t &index)
+void VPGConfigPropertyAccessor::_removeAtIndex(const int64_t &objectProperty, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -1155,10 +1155,10 @@ void VPGConfigPropertyAccessor::_RemoveAtIndex(const int64_t &objectProperty, co
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Exports:
-            obj->RemoveExportsAtIndex(index);
+            obj->removeExportsAtIndex(index);
             break;
         case VPGConfigProperty::Plugins:
-            obj->RemovePluginsAtIndex(index);
+            obj->removePluginsAtIndex(index);
             break;
         default:
             assert(false);
@@ -1166,14 +1166,14 @@ void VPGConfigPropertyAccessor::_RemoveAtIndex(const int64_t &objectProperty, co
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_RemoveAtKey(const int64_t &objectProperty, const void */*key*/)
+void VPGConfigPropertyAccessor::_removeAtKey(const int64_t &objectProperty, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_Clear(const int64_t &objectProperty)
+void VPGConfigPropertyAccessor::_clear(const int64_t &objectProperty)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -1181,10 +1181,10 @@ void VPGConfigPropertyAccessor::_Clear(const int64_t &objectProperty)
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Plugins:
-            obj->ClearPlugins();
+            obj->clearPlugins();
             break;
         case VPGConfigProperty::Exports:
-            obj->ClearExports();
+            obj->clearExports();
             break;
         default:
             assert(false);
@@ -1192,7 +1192,7 @@ void VPGConfigPropertyAccessor::_Clear(const int64_t &objectProperty)
     CATCH
 }
 
-bool VPGConfigTemplatePropertyAccessor::_ReadBool(const int64_t &objectProperty) const
+bool VPGConfigTemplatePropertyAccessor::_readBool(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigTemplate>(_Object);
@@ -1200,9 +1200,9 @@ bool VPGConfigTemplatePropertyAccessor::_ReadBool(const int64_t &objectProperty)
         switch(static_cast<VPGConfigTemplateProperty>(objectProperty))
         {
         case VPGConfigTemplateProperty::IsExcludeUnittest:
-            return obj->GetIsExcludeUnittest();
+            return obj->getIsExcludeUnittest();
         case VPGConfigTemplateProperty::IsExcludeVCCUnitTest:
-            return obj->GetIsExcludeVCCUnitTest();
+            return obj->getIsExcludeVCCUnitTest();
         default:
             assert(false);
         }
@@ -1210,7 +1210,7 @@ bool VPGConfigTemplatePropertyAccessor::_ReadBool(const int64_t &objectProperty)
     return false;
 }
 
-bool VPGConfigTemplatePropertyAccessor::_ReadBoolAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+bool VPGConfigTemplatePropertyAccessor::_readBoolAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -1218,7 +1218,7 @@ bool VPGConfigTemplatePropertyAccessor::_ReadBoolAtIndex(const int64_t &objectPr
     return false;
 }
 
-bool VPGConfigTemplatePropertyAccessor::_ReadBoolAtKey(const int64_t &objectProperty, const void */*key*/) const
+bool VPGConfigTemplatePropertyAccessor::_readBoolAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -1226,7 +1226,7 @@ bool VPGConfigTemplatePropertyAccessor::_ReadBoolAtKey(const int64_t &objectProp
     return false;
 }
 
-void VPGConfigTemplatePropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool &value)
+void VPGConfigTemplatePropertyAccessor::_writeBool(const int64_t &objectProperty, const bool &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigTemplate>(_Object);
@@ -1234,10 +1234,10 @@ void VPGConfigTemplatePropertyAccessor::_WriteBool(const int64_t &objectProperty
         switch(static_cast<VPGConfigTemplateProperty>(objectProperty))
         {
         case VPGConfigTemplateProperty::IsExcludeUnittest:
-            obj->SetIsExcludeUnittest(value);
+            obj->setIsExcludeUnittest(value);
             break;
         case VPGConfigTemplateProperty::IsExcludeVCCUnitTest:
-            obj->SetIsExcludeVCCUnitTest(value);
+            obj->setIsExcludeVCCUnitTest(value);
             break;
         default:
             assert(false);
@@ -1245,28 +1245,28 @@ void VPGConfigTemplatePropertyAccessor::_WriteBool(const int64_t &objectProperty
     CATCH
 }
 
-void VPGConfigTemplatePropertyAccessor::_WriteBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
+void VPGConfigTemplatePropertyAccessor::_writeBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigTemplatePropertyAccessor::_WriteBoolAtKey(const int64_t &objectProperty, const bool &/*value*/, const void */*key*/)
+void VPGConfigTemplatePropertyAccessor::_writeBoolAtKey(const int64_t &objectProperty, const bool &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigTemplatePropertyAccessor::_InsertBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
+void VPGConfigTemplatePropertyAccessor::_insertBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-std::wstring VPGConfigTemplatePropertyAccessor::_ReadString(const int64_t &objectProperty) const
+std::wstring VPGConfigTemplatePropertyAccessor::_readString(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigTemplate>(_Object);
@@ -1274,9 +1274,9 @@ std::wstring VPGConfigTemplatePropertyAccessor::_ReadString(const int64_t &objec
         switch(static_cast<VPGConfigTemplateProperty>(objectProperty))
         {
         case VPGConfigTemplateProperty::Url:
-            return obj->GetUrl();
+            return obj->getUrl();
         case VPGConfigTemplateProperty::Workspace:
-            return obj->GetWorkspace();
+            return obj->getWorkspace();
         default:
             assert(false);
         }
@@ -1284,7 +1284,7 @@ std::wstring VPGConfigTemplatePropertyAccessor::_ReadString(const int64_t &objec
     return L"";
 }
 
-std::wstring VPGConfigTemplatePropertyAccessor::_ReadStringAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+std::wstring VPGConfigTemplatePropertyAccessor::_readStringAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -1292,7 +1292,7 @@ std::wstring VPGConfigTemplatePropertyAccessor::_ReadStringAtIndex(const int64_t
     return L"";
 }
 
-std::wstring VPGConfigTemplatePropertyAccessor::_ReadStringAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::wstring VPGConfigTemplatePropertyAccessor::_readStringAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -1300,7 +1300,7 @@ std::wstring VPGConfigTemplatePropertyAccessor::_ReadStringAtKey(const int64_t &
     return L"";
 }
 
-void VPGConfigTemplatePropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring &value)
+void VPGConfigTemplatePropertyAccessor::_writeString(const int64_t &objectProperty, const std::wstring &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfigTemplate>(_Object);
@@ -1308,10 +1308,10 @@ void VPGConfigTemplatePropertyAccessor::_WriteString(const int64_t &objectProper
         switch(static_cast<VPGConfigTemplateProperty>(objectProperty))
         {
         case VPGConfigTemplateProperty::Url:
-            obj->SetUrl(value);
+            obj->setUrl(value);
             break;
         case VPGConfigTemplateProperty::Workspace:
-            obj->SetWorkspace(value);
+            obj->setWorkspace(value);
             break;
         default:
             assert(false);
@@ -1319,21 +1319,21 @@ void VPGConfigTemplatePropertyAccessor::_WriteString(const int64_t &objectProper
     CATCH
 }
 
-void VPGConfigTemplatePropertyAccessor::_WriteStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/)
+void VPGConfigTemplatePropertyAccessor::_writeStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigTemplatePropertyAccessor::_WriteStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/)
+void VPGConfigTemplatePropertyAccessor::_writeStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGConfigTemplatePropertyAccessor::_InsertStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/)
+void VPGConfigTemplatePropertyAccessor::_insertStringAtIndex(const int64_t &objectProperty, const std::wstring &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND

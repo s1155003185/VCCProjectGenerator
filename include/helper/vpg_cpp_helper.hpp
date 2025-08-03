@@ -8,7 +8,7 @@
 #include "vector_helper.hpp"
 
 // remove all command and special characters
-inline std::wstring GetSimpleCode(const std::wstring &str) {
+inline std::wstring getSimpleCode(const std::wstring &str) {
     TRY
         std::wstring result = L"";
         std::vector<std::wstring> prefixes = { L"/*", L"//" };
@@ -16,8 +16,8 @@ inline std::wstring GetSimpleCode(const std::wstring &str) {
         for (size_t i = 0; i < str.size(); i++) {
             bool isCommand = false;
             for (size_t j = 0; j < prefixes.size(); j++) {
-                if (vcc::IsStartWith(str, prefixes[j], i)) {
-                    size_t pos = vcc::Find(str, suffixes[j], i + prefixes[j].size());
+                if (vcc::isStartWith(str, prefixes[j], i)) {
+                    size_t pos = vcc::find(str, suffixes[j], i + prefixes[j].size());
                     if (pos != std::wstring::npos)
                         i = pos + suffixes[j].size() - 1;
                     else
@@ -36,7 +36,7 @@ inline std::wstring GetSimpleCode(const std::wstring &str) {
     return L"";
 }
 
-inline std::wstring GetIndentStringWithNamespaceLevel(const size_t &namespaceLevel) {
+inline std::wstring getIndentStringWithNamespaceLevel(const size_t &namespaceLevel) {
     TRY
         std::wstring indent = L"";
         for (size_t i = 0; i < namespaceLevel; i++)
@@ -46,21 +46,21 @@ inline std::wstring GetIndentStringWithNamespaceLevel(const size_t &namespaceLev
     return L"";
 }
 
-inline size_t GetNamespaceLevel(const std::wstring &namespaceStr) {
+inline size_t getNamespaceLevel(const std::wstring &namespaceStr) {
     TRY
         if (namespaceStr.empty())
             return 0;
-        return vcc::SplitString(namespaceStr, { L"::" }).size();
+        return vcc::splitString(namespaceStr, { L"::" }).size();
     CATCH
     return 0;
 }
 
-inline std::wstring GetNamespaceCommonPrefix(const std::wstring &namespace1, const std::wstring &namespace2) {
+inline std::wstring getNamespaceCommonPrefix(const std::wstring &namespace1, const std::wstring &namespace2) {
     TRY
         if (namespace1.empty() || namespace2.empty())
             return L"";
-        auto nsTokens1 = vcc::SplitString(namespace1, { L"::" });
-        auto nsTokens2 = vcc::SplitString(namespace2, { L"::" });
+        auto nsTokens1 = vcc::splitString(namespace1, { L"::" });
+        auto nsTokens2 = vcc::splitString(namespace2, { L"::" });
         size_t minSize = std::min(nsTokens1.size(), nsTokens2.size());
         std::wstring commonPrefix = L"";
         for (size_t i = 0; i < minSize; i++) {
@@ -77,65 +77,65 @@ inline std::wstring GetNamespaceCommonPrefix(const std::wstring &namespace1, con
     return L"";
 }
 
-inline std::wstring GenerateCodeWithNamespace(const std::map<std::wstring, std::vector<std::wstring>> &namespaceClassMapping)
+inline std::wstring generateCodeWithNamespace(const std::map<std::wstring, std::vector<std::wstring>> &namespaceClassMapping)
 {
     TRY
         std::wstring content = L"";
         std::wstring previousNamespace = L"";
         size_t namespaceLevel = 0;
         for (auto const &pair : namespaceClassMapping) {
-            std::wstring commonPrefix = GetNamespaceCommonPrefix(previousNamespace, pair.first);
+            std::wstring commonPrefix = getNamespaceCommonPrefix(previousNamespace, pair.first);
             // Step 1: if previous namespace < common namespace, then close previous
             if (!previousNamespace.empty() && previousNamespace != commonPrefix) {
                 // Close previous namespace
-                namespaceLevel = GetNamespaceLevel(previousNamespace);
-                int64_t diff = std::abs((int64_t)namespaceLevel - (int64_t)GetNamespaceLevel(commonPrefix));
+                namespaceLevel = getNamespaceLevel(previousNamespace);
+                int64_t diff = std::abs((int64_t)namespaceLevel - (int64_t)getNamespaceLevel(commonPrefix));
                 while (diff > 0) {
                     namespaceLevel--;
-                    content += GetIndentStringWithNamespaceLevel(namespaceLevel) + L"}\r\n";
+                    content += getIndentStringWithNamespaceLevel(namespaceLevel) + L"}\r\n";
                     diff--;
                 }
             }
             // Step 2: if current namespace < common namespace, then create new namespace
             if (!pair.first.empty() && pair.first != commonPrefix) {
-                size_t currentNamespaceLevel = GetNamespaceLevel(commonPrefix);
-                namespaceLevel = GetNamespaceLevel(pair.first);
+                size_t currentNamespaceLevel = getNamespaceLevel(commonPrefix);
+                namespaceLevel = getNamespaceLevel(pair.first);
                 std::wstring namespaceRemain = pair.first.substr(commonPrefix.length());
-                if (vcc::IsStartWith(namespaceRemain, L"::"))
+                if (vcc::isStartWith(namespaceRemain, L"::"))
                     namespaceRemain = namespaceRemain.substr(2);
-                for (auto ns : vcc::SplitString(namespaceRemain, { L"::" })) {
+                for (auto ns : vcc::splitString(namespaceRemain, { L"::" })) {
                     content += L"\r\n"
-                        + GetIndentStringWithNamespaceLevel(currentNamespaceLevel) + L"namespace " + ns + L"\r\n"
-                        + GetIndentStringWithNamespaceLevel(currentNamespaceLevel) + L"{\r\n";
+                        + getIndentStringWithNamespaceLevel(currentNamespaceLevel) + L"namespace " + ns + L"\r\n"
+                        + getIndentStringWithNamespaceLevel(currentNamespaceLevel) + L"{\r\n";
                     currentNamespaceLevel++;
                 }
             }
             previousNamespace = pair.first;
-            namespaceLevel = GetNamespaceLevel(previousNamespace);
+            namespaceLevel = getNamespaceLevel(previousNamespace);
 
             // Step 3: Generate class content
             bool isFirstClass = true;
             for (auto &classContent : pair.second) {
                 std::wstring tmpStr = classContent;
-                vcc::RTrim(tmpStr);
-                auto lines = vcc::SplitString(tmpStr, { L"\r\n" });
+                vcc::rTrim(tmpStr);
+                auto lines = vcc::splitString(tmpStr, { L"\r\n" });
                 for (auto &line : lines) {
-                    if (isFirstClass && vcc::IsBlank(line)) {
+                    if (isFirstClass && vcc::isBlank(line)) {
                         isFirstClass = false;
                         continue;
                     }
-                    vcc::RTrim(line);
-                    if (vcc::IsBlank(content))
+                    vcc::rTrim(line);
+                    if (vcc::isBlank(content))
                         content += L"\r\n";
-                    if (!vcc::IsBlank(line))
-                        content += GetIndentStringWithNamespaceLevel(namespaceLevel) + line;
+                    if (!vcc::isBlank(line))
+                        content += getIndentStringWithNamespaceLevel(namespaceLevel) + line;
                     content += L"\r\n";
                 }
             }
         }
         while (namespaceLevel > 0) {
             namespaceLevel--;
-            content += GetIndentStringWithNamespaceLevel(namespaceLevel) + L"}\r\n";
+            content += getIndentStringWithNamespaceLevel(namespaceLevel) + L"}\r\n";
         }
         return content;
     CATCH

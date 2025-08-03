@@ -22,17 +22,17 @@ class VPGFileGenerationManager : public vcc::BaseManager
     MAP_SPTR_R(std::wstring, VPGEnumClass, EnumClasses);
 
     private:
-        std::wstring GetConcatPath(const std::wstring &projWorkspace, const std::wstring &objWorkspace, const std::wstring &middlePath, const std::wstring &fileName) const;
+        std::wstring getConcatPath(const std::wstring &projWorkspace, const std::wstring &objWorkspace, const std::wstring &middlePath, const std::wstring &fileName) const;
 
     public:
         VPGFileGenerationManager(std::shared_ptr<vcc::LogConfig> logConfig, const std::wstring &workspace) : BaseManager(logConfig) { _Workspace = workspace; }
         virtual ~VPGFileGenerationManager() {}
 
         // properties
-        void GetClassMacroList(const std::wstring &projWorkspace);
+        void getClassMacroList(const std::wstring &projWorkspace);
         
-        std::wstring GetClassFilenameFromEnumClassFilename(const std::wstring &enumClassFileName);
-        void GetFileList(const VPGEnumClassReader *reader, const std::wstring &directoryFullPath, const std::wstring &projectPrefix, const bool &isSeperateAction);
+        std::wstring getClassFilenameFromEnumClassFilename(const std::wstring &enumClassFileName);
+        void getFileList(const VPGEnumClassReader *reader, const std::wstring &directoryFullPath, const std::wstring &projectPrefix, const bool &isSeperateAction);
         
-        void GernerateProperty(const vcc::LogConfig *logConfig, const VPGConfig *option);
+        void generateProperty(const vcc::LogConfig *logConfig, const VPGConfig *option);
 };

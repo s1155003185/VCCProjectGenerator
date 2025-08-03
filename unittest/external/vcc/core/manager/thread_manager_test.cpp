@@ -12,7 +12,7 @@ class ThreadManagerTest : public testing::Test
         void SetUp() override
         {
             _Manager = std::make_shared<vcc::ThreadManager>(nullptr);
-            _Manager->SetThreadManagementMode(vcc::ThreadManagementMode::Join);
+            _Manager->setThreadManagementMode(vcc::ThreadManagementMode::Join);
             _LogConfig = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
         }
 
@@ -25,7 +25,7 @@ TEST_F(ThreadManagerTest, SuspendAndQueue)
 {
     size_t threadCnt = 0;
     size_t callbackCnt = 0;
-    auto thread1 = std::make_shared<vcc::Thread>(GetLogConfig(), [&threadCnt, &callbackCnt](const vcc::Thread * /*thread*/){
+    auto thread1 = std::make_shared<vcc::Thread>(getLogConfig(), [&threadCnt, &callbackCnt](const vcc::Thread * /*thread*/){
         EXPECT_EQ(threadCnt, (size_t)0);
         EXPECT_EQ(callbackCnt, (size_t)0);
         threadCnt++;
@@ -34,7 +34,7 @@ TEST_F(ThreadManagerTest, SuspendAndQueue)
         EXPECT_EQ(callbackCnt, (size_t)0);
         callbackCnt++;
     });
-    auto thread2 = std::make_shared<vcc::Thread>(GetLogConfig(), [&threadCnt, &callbackCnt](const vcc::Thread * /*thread*/){
+    auto thread2 = std::make_shared<vcc::Thread>(getLogConfig(), [&threadCnt, &callbackCnt](const vcc::Thread * /*thread*/){
         EXPECT_EQ(threadCnt, (size_t)1);
         EXPECT_EQ(callbackCnt, (size_t)1);
         threadCnt++;
@@ -43,7 +43,7 @@ TEST_F(ThreadManagerTest, SuspendAndQueue)
         EXPECT_EQ(callbackCnt, (size_t)1);
         callbackCnt++;
     });
-    auto thread3 = std::make_shared<vcc::Thread>(GetLogConfig(), [&threadCnt, &callbackCnt](const vcc::Thread * /*thread*/){
+    auto thread3 = std::make_shared<vcc::Thread>(getLogConfig(), [&threadCnt, &callbackCnt](const vcc::Thread * /*thread*/){
         EXPECT_EQ(threadCnt, (size_t)2);
         EXPECT_EQ(callbackCnt, (size_t)2);
         threadCnt++;
@@ -53,11 +53,11 @@ TEST_F(ThreadManagerTest, SuspendAndQueue)
         callbackCnt++;
     });
 
-    GetManager()->Suspend();
-    GetManager()->Queue(thread1);
-    GetManager()->Queue(thread2);
-    GetManager()->Queue(thread3);
-    GetManager()->Resume();
+    getManager()->suspend();
+    getManager()->queue(thread1);
+    getManager()->queue(thread2);
+    getManager()->queue(thread3);
+    getManager()->resume();
 
     EXPECT_EQ(threadCnt, (size_t)3);
     EXPECT_EQ(callbackCnt, (size_t)3);
@@ -66,40 +66,40 @@ TEST_F(ThreadManagerTest, SuspendAndQueue)
 TEST_F(ThreadManagerTest, SuspendAndUrgent) 
 {
     size_t threadCnt = 0;
-    auto thread1 = std::make_shared<vcc::Thread>(GetLogConfig(),
+    auto thread1 = std::make_shared<vcc::Thread>(getLogConfig(),
         [&threadCnt](const vcc::Thread * /*thread*/){
             EXPECT_EQ(threadCnt, (size_t)1);
             threadCnt++;
         }, [](const vcc::Thread * /*thread*/) {});
-    auto thread2 = std::make_shared<vcc::Thread>(GetLogConfig(),
+    auto thread2 = std::make_shared<vcc::Thread>(getLogConfig(),
         [&threadCnt](const vcc::Thread * /*thread*/){
             EXPECT_EQ(threadCnt, (size_t)0);
             threadCnt++;
         }, [](const vcc::Thread * /*thread*/) {});
-    GetManager()->Suspend();
-    GetManager()->Queue(thread1);
-    GetManager()->Urgent(thread2);
-    GetManager()->Resume();
+    getManager()->suspend();
+    getManager()->queue(thread1);
+    getManager()->urgent(thread2);
+    getManager()->resume();
 
     EXPECT_EQ(threadCnt, (size_t)2);
 }
 
 TEST_F(ThreadManagerTest, Stop) 
 {
-    auto thread1 = std::make_shared<vcc::Thread>(GetLogConfig(), [](const vcc::Thread * /*thread*/){}, [](const vcc::Thread * /*thread*/) {});
-    GetManager()->Suspend();
-    GetManager()->Queue(thread1);
-    GetManager()->Stop();
-    EXPECT_TRUE(GetManager()->GetThreads().empty());
-    EXPECT_TRUE(GetManager()->GetActiveThreads().empty());
+    auto thread1 = std::make_shared<vcc::Thread>(getLogConfig(), [](const vcc::Thread * /*thread*/){}, [](const vcc::Thread * /*thread*/) {});
+    getManager()->suspend();
+    getManager()->queue(thread1);
+    getManager()->stop();
+    EXPECT_TRUE(getManager()->getThreads().empty());
+    EXPECT_TRUE(getManager()->getActiveThreads().empty());
 }
 
 TEST_F(ThreadManagerTest, ClearWaitingThread) 
 {
-    auto thread1 = std::make_shared<vcc::Thread>(GetLogConfig(), [](const vcc::Thread * /*thread*/){}, [](const vcc::Thread * /*thread*/) {});
-    GetManager()->Suspend();
-    GetManager()->Queue(thread1);
-    GetManager()->ClearWaitingThread();
-    EXPECT_TRUE(GetManager()->GetThreads().empty());
-    EXPECT_TRUE(GetManager()->GetActiveThreads().empty());
+    auto thread1 = std::make_shared<vcc::Thread>(getLogConfig(), [](const vcc::Thread * /*thread*/){}, [](const vcc::Thread * /*thread*/) {});
+    getManager()->suspend();
+    getManager()->queue(thread1);
+    getManager()->clearWaitingThread();
+    EXPECT_TRUE(getManager()->getThreads().empty());
+    EXPECT_TRUE(getManager()->getActiveThreads().empty());
 }

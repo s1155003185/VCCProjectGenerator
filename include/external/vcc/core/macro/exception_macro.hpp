@@ -12,10 +12,10 @@ namespace vcc
 {
     inline void ____HandleException(const std::exception &e, const std::wstring &file, const std::wstring &line)
     {
-        std::wstring prefix = !IsBlank(file) && !IsBlank(line) ? (file + L":" + line + L":\r\n") : L"";
+        std::wstring prefix = !isBlank(file) && !isBlank(line) ? (file + L":" + line + L":\r\n") : L"";
         const IException *ie = dynamic_cast<const IException *>(&e); 
         if (ie != nullptr)
-            throw Exception(ie->GetErrorType(), prefix + ie->GetErrorMessage());
+            throw Exception(ie->getErrorType(), prefix + ie->getErrorMessage());
         else
             throw Exception(ExceptionType::CustomError, prefix + str2wstr(std::string(e.what())));
     }
@@ -23,10 +23,10 @@ namespace vcc
     template<typename ResultClass>
     inline std::shared_ptr<IResult> ____HandleResult(const std::exception &e, const std::wstring &file, const std::wstring &line)
     {
-        std::wstring prefix = !IsBlank(file) && !IsBlank(line) ? (file + L":" + line + L":\r\n") : L"";
+        std::wstring prefix = !isBlank(file) && !isBlank(line) ? (file + L":" + line + L":\r\n") : L"";
         const IException *ie = dynamic_cast<const IException *>(&e); 
         if (ie != nullptr)
-            return std::make_shared<ResultClass>(ie->GetErrorType(), prefix + ie->GetErrorMessage());
+            return std::make_shared<ResultClass>(ie->getErrorType(), prefix + ie->getErrorMessage());
         else
             return std::make_shared<ResultClass>(ExceptionType::CustomError, prefix + str2wstr(std::string(e.what())));
     }

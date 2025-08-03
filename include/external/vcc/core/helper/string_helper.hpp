@@ -32,83 +32,83 @@ namespace vcc
 	std::wstring str2wstr(const std::string& str);
 	std::string wstr2str(const std::wstring &wstr);
 
-	void ToCamel(std::wstring &str); // camelCase
-	void ToCapital(std::wstring &str); // Capitial Case
-	void ToLower(std::wstring &str);
-	void ToPascal(std::wstring &str); // PascalCase
-	void ToUpper(std::wstring &str);
+	void toCamel(std::wstring &str); // camelCase
+	void toCapital(std::wstring &str); // Capitial Case
+	void toLower(std::wstring &str);
+	void toPascal(std::wstring &str); // PascalCase
+	void toUpper(std::wstring &str);
 
-	bool IsLower(const std::wstring &str);
-	bool IsUpper(const std::wstring &str);
-	bool IsCapital(const std::wstring &str);
+	bool isLower(const std::wstring &str);
+	bool isUpper(const std::wstring &str);
+	bool isCapital(const std::wstring &str);
 
-	bool IsEmpty(const std::wstring &str);
-	bool IsBlank(const std::wstring &str);
+	bool isEmpty(const std::wstring &str);
+	bool isBlank(const std::wstring &str);
 
-	bool IsEqual(const std::wstring &str1, const std::wstring &str2, const bool &isIgnoreCase = false);
-	bool IsStartWith(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos = 0, bool isIgnoreCase = false);
-	bool IsStartWith(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &startFromPos = 0, bool isIgnoreCase = false);
-	bool IsStartWithTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos = 0);
-	bool IsEndWith(const std::wstring &str, const std::wstring &suffix);
+	bool isEqual(const std::wstring &str1, const std::wstring &str2, const bool &isIgnoreCase = false);
+	bool isStartWith(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos = 0, bool isIgnoreCase = false);
+	bool isStartWith(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &startFromPos = 0, bool isIgnoreCase = false);
+	bool isStartWithTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos = 0);
+	bool isEndWith(const std::wstring &str, const std::wstring &suffix);
 
-	std::vector<std::wstring> SplitString(const std::wstring &str, const std::vector<std::wstring> &delimiters,
+	std::vector<std::wstring> splitString(const std::wstring &str, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
-	std::vector<std::wstring> SplitStringBySpace(const std::wstring &str,
+	std::vector<std::wstring> splitStringBySpace(const std::wstring &str,
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
-	std::vector<std::wstring> SplitStringByLine(const std::wstring &str);
-	std::vector<std::wstring> SplitStringByUpperCase(const std::wstring &str, bool splitDigit, bool splitSpecialChar);
+	std::vector<std::wstring> splitStringByLine(const std::wstring &str);
+	std::vector<std::wstring> splitStringByUpperCase(const std::wstring &str, bool splitDigit, bool splitSpecialChar);
 
 	// Padding
-	std::string PadLeft(const std::string &str, const size_t &length, const char &c);
-	std::string PadRight(const std::string &str, const size_t &length, const char &c);
+	std::string padLeft(const std::string &str, const size_t &length, const char &c);
+	std::string padRight(const std::string &str, const size_t &length, const char &c);
 
-	std::wstring PadLeft(const std::wstring &str, const size_t &length, const wchar_t &c);
-	std::wstring PadRight(const std::wstring &str, const size_t &length, const wchar_t &c);
+	std::wstring padLeft(const std::wstring &str, const size_t &length, const wchar_t &c);
+	std::wstring padRight(const std::wstring &str, const size_t &length, const wchar_t &c);
 
 	// Trim
-	void LTrim(std::string &str);
-	void RTrim(std::string &str);
-	void Trim(std::string &str);
+	void lTrim(std::string &str);
+	void rTrim(std::string &str);
+	void trim(std::string &str);
 
-	void LTrim(std::wstring &str);
-	void RTrim(std::wstring &str);
-	void Trim(std::wstring &str);
+	void lTrim(std::wstring &str);
+	void rTrim(std::wstring &str);
+	void trim(std::wstring &str);
 
 	// Conversion
-	std::wstring ConvertNamingStyle(const std::wstring &str, const NamingStyle &from, const NamingStyle &to, const std::wstring& seperator = L" ");
+	std::wstring convertNamingStyle(const std::wstring &str, const NamingStyle &from, const NamingStyle &to, const std::wstring& seperator = L" ");
 
 	// search
-	size_t Find(const std::wstring &str, const wchar_t &c, const size_t &pos = 0, const bool &isIgnoreCase = false);
-	size_t Find(const std::wstring &str, const std::wstring &subStr, const size_t &pos = 0, const bool &isIgnoreCase = false);
-	void GetCharacterRowAndColumn(const std::wstring &str, size_t pos, size_t &row, size_t &column);
-	void GetNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos = false);
-	std::wstring GetTailingSubstring(const std::wstring &str, const size_t &length);
+	size_t find(const std::wstring &str, const wchar_t &c, const size_t &pos = 0, const bool &isIgnoreCase = false);
+	size_t find(const std::wstring &str, const std::wstring &subStr, const size_t &pos = 0, const bool &isIgnoreCase = false);
+	void getCharacterRowAndColumn(const std::wstring &str, size_t pos, size_t &row, size_t &column);
+	void getNextCharPos(const std::wstring &str, size_t &pos, bool fromCurrentPos = false);
+	std::wstring getTailingSubstring(const std::wstring &str, const size_t &length);
 	// pos Point to end char after execution
-	std::wstring GetNextStringSplitBySpace(const std::wstring &str, size_t &pos,
+	std::wstring getNextStringSplitBySpace(const std::wstring &str, size_t &pos,
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
-	std::wstring GetNextString(const std::wstring &str, size_t &pos, const std::vector<std::wstring> &delimiters,
+	std::wstring getNextString(const std::wstring &str, size_t &pos, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
-	std::wstring GetNextQuotedString(const std::wstring& str, size_t &pos, const std::vector<std::wstring> &delimiters,
+	std::wstring getNextQuotedString(const std::wstring& str, size_t &pos, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList = { L"\"", L"'", L"{", L"[", L"(" },
 		const std::vector<std::wstring> &quoteCloseList = { L"\"", L"'", L"}", L"]", L")" },
 		const std::vector<std::wstring> &quoteEscapeList = { L"\\", L"\\", L"", L"", L"" },
 		const std::vector<std::wstring> &stringOpenList = {});
-	bool IsContain(const std::wstring &str, const std::wstring &subStr, const size_t &pos = 0, const bool &isIgnoreCase = false);
-	size_t CountSubstring(const std::wstring &str, const std::wstring &subStr, const bool &isIgnoreCase = false);
+	bool isContain(const std::wstring &str, const std::wstring &subStr, const size_t &pos = 0, const bool &isIgnoreCase = false);
+	size_t countSubstring(const std::wstring &str, const std::wstring &subStr, const bool &isIgnoreCase = false);
 
 	// process
-	void Replace(std::wstring &str, const std::wstring& from, const std::wstring &to);
-	void ReplaceRegex(std::wstring &str, const std::wstring &regex, const std::wstring &replacement);
-	void ReplaceAll(std::wstring &str, const std::wstring& from, const std::wstring &to);
-	void ReplaceRegexAll(std::wstring &str, const std::wstring &regex, const std::wstring &replacement);
+	void replace(std::wstring &str, const std::wstring& from, const std::wstring &to);
+	void replaceRegex(std::wstring &str, const std::wstring &regex, const std::wstring &replacement);
+	void replaceAll(std::wstring &str, const std::wstring& from, const std::wstring &to);
+	void replaceRegexAll(std::wstring &str, const std::wstring &regex, const std::wstring &replacement);
 
 	// regex
-	std::vector<wchar_t> GetSpecialCharacters(const EscapeStringType &type);
-	std::map<wchar_t, std::wstring> GetEscapeStringMap(const EscapeStringType &type);
-	std::wstring ConvertSpecialCharacterToEscapeString(const EscapeStringType &type, const wchar_t &c);
-	std::wstring GetEscapeString(const EscapeStringType &type, const std::wstring &str);
-	std::wstring GetEscapeStringWithQuote(const EscapeStringType &type, const std::wstring &str);
-	std::wstring GetUnescapeString(const EscapeStringType &type, const std::wstring &str);
-	std::wstring GetUnescapeStringWithQuote(const EscapeStringType &type, const std::wstring &str);
+	std::vector<wchar_t> getSpecialCharacters(const EscapeStringType &type);
+	std::map<wchar_t, std::wstring> getEscapeStringMap(const EscapeStringType &type);
+	std::wstring convertSpecialCharacterToEscapeString(const EscapeStringType &type, const wchar_t &c);
+	std::wstring getEscapeString(const EscapeStringType &type, const std::wstring &str);
+	std::wstring getEscapeStringWithQuote(const EscapeStringType &type, const std::wstring &str);
+	std::wstring getUnescapeString(const EscapeStringType &type, const std::wstring &str);
+	std::wstring getUnescapeStringWithQuote(const EscapeStringType &type, const std::wstring &str);
 
 }

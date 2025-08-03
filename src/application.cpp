@@ -16,7 +16,7 @@
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
 // </vcc:customHeader>
 
-void Application::InitializeComponents()
+void Application::initializeComponents()
 {
     TRY
         // Initialize for Global Log and Thread Setting
@@ -26,12 +26,12 @@ void Application::InitializeComponents()
         // <vcc:vccconfig sync="RESERVE" gen="REPLACE">
         _ActionManager = nullptr;
         // </vcc:vccconfig>
-        // Custom Initialize Log, Action, Thread by override OnInitializeComponents
-        OnInitializeComponents();
+        // Custom Initialize Log, Action, Thread by override onInitializeComponents
+        onInitializeComponents();
     CATCH
 }
 
-std::shared_ptr<vcc::IObject> Application::GetFormSharedPtr(vcc::IObject *form)
+std::shared_ptr<vcc::IObject> Application::getFormsharedPtr(vcc::IObject *form)
 {
     TRY
         for (auto tmpForm : application->_Forms) {
@@ -42,7 +42,7 @@ std::shared_ptr<vcc::IObject> Application::GetFormSharedPtr(vcc::IObject *form)
     return nullptr;
 }
 
-vcc::IForm *Application::GetIFormPtrFromIObject(vcc::IObject *obj)
+vcc::IForm *Application::getIFormPtrFromIObject(vcc::IObject *obj)
 {
     TRY
         return static_cast<BaseForm *>(obj);
@@ -50,7 +50,7 @@ vcc::IForm *Application::GetIFormPtrFromIObject(vcc::IObject *obj)
     return nullptr;
 }
 
-vcc::IObject *Application::GetIObjectPtrFromIResult(vcc::IResult *obj)
+vcc::IObject *Application::getIObjectPtrFromIResult(vcc::IResult *obj)
 {
     TRY
         return static_cast<vcc::BaseResult *>(obj);
@@ -58,7 +58,7 @@ vcc::IObject *Application::GetIObjectPtrFromIResult(vcc::IResult *obj)
     return nullptr;
 }
 
-vcc::IResult *Application::GetIResultPtrFromIObject(vcc::IObject *obj)
+vcc::IResult *Application::getIResultPtrFromIObject(vcc::IObject *obj)
 {
     TRY
         return static_cast<vcc::BaseResult *>(obj);
@@ -74,198 +74,198 @@ void Application::Run()
     CATCH
 }
 
-std::shared_ptr<vcc::IObject> Application::CreateForm(const ObjectType &objectType)
+std::shared_ptr<vcc::IObject> Application::createForm(const ObjectType &objectType)
 {
     TRY
-        auto form = ObjectFactory::Create(objectType);
+        auto form = ObjectFactory::create(objectType);
         assert(form != nullptr);
-        form->SetParentObject(application);
+        form->setParentObject(application);
         application->_Forms.insert(form);
         return form;
     CATCH
     return nullptr;
 }
 
-int64_t Application::GetResultErrorCode(vcc::IObject *result)
+int64_t Application::getResultErrorCode(vcc::IObject *result)
 {
     TRY
-        return static_cast<int64_t>(GetIResultPtrFromIObject(result)->GetExceptionType());
+        return static_cast<int64_t>(getIResultPtrFromIObject(result)->getExceptionType());
     CATCH
     return -1;
 }
 
-std::wstring Application::GetResultMessage(vcc::IObject *result)
+std::wstring Application::getResultMessage(vcc::IObject *result)
 {
     TRY
-        return GetIResultPtrFromIObject(result)->GetMessage();
+        return getIResultPtrFromIObject(result)->getMessage();
     CATCH
     return L"";
 }
 
-bool Application::IsErrorResult(vcc::IObject *result)
+bool Application::isErrorResult(vcc::IObject *result)
 {
     TRY
-        return GetIResultPtrFromIObject(result)->IsError();
+        return getIResultPtrFromIObject(result)->isError();
     CATCH
     return false;
 }
 
-bool Application::IsWarningResult(vcc::IObject *result)
+bool Application::isWarningResult(vcc::IObject *result)
 {
     TRY
-        return GetIResultPtrFromIObject(result)->IsWarning();
+        return getIResultPtrFromIObject(result)->isWarning();
     CATCH
     return false;
 }
 
-void Application::EraseResult(vcc::IObject *result)
+void Application::eraseResult(vcc::IObject *result)
 {
     TRY
-        RemoveIObjectAll(application->_Results, result);
+        removeIObjectAll(application->_Results, result);
     CATCH
 }
 
-std::shared_ptr<vcc::IObject> Application::CreateActionArgument(const ObjectType &objectType)
+std::shared_ptr<vcc::IObject> Application::createActionArgument(const ObjectType &objectType)
 {
     TRY
-        auto actionArgument = ObjectFactory::Create(objectType);
+        auto actionArgument = ObjectFactory::create(objectType);
         application->_ActionArguments.insert(actionArgument);
         return actionArgument;
     CATCH
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> Application::DoFormAction(vcc::IObject *form, const int64_t &formProperty, vcc::IObject *argument)
+std::shared_ptr<vcc::IObject> Application::doFormAction(vcc::IObject *form, const int64_t &formProperty, vcc::IObject *argument)
 {
     TRY
         if (form == nullptr)
             return nullptr;
-        auto result = GetIFormPtrFromIObject(form)->DoAction(formProperty, argument != nullptr ? argument->SharedPtr() : nullptr);
+        auto result = getIFormPtrFromIObject(form)->doAction(formProperty, argument != nullptr ? argument->sharedPtr() : nullptr);
         if (argument != nullptr)
-            RemoveIObjectAll(application->_ActionArguments, argument);
-        auto obj = GetIObjectPtrFromIResult(result.get())->SharedPtr();
+            removeIObjectAll(application->_ActionArguments, argument);
+        auto obj = getIObjectPtrFromIResult(result.get())->sharedPtr();
         application->_Results.insert(obj);
         return obj;
     CATCH
     return nullptr;
 }
 
-int64_t Application::GetFormActionCurrentSeqNo(vcc::IObject *form)
+int64_t Application::getFormActionCurrentSeqNo(vcc::IObject *form)
 {
     TRY
         if (form == nullptr)
             return -1;
-        return GetIFormPtrFromIObject(form)->GetActionCurrentSeqNo();
+        return getIFormPtrFromIObject(form)->getActionCurrentSeqNo();
     CATCH
     return -1;
 }
 
-int64_t Application::GetFormActionFirstSeqNo(vcc::IObject *form)
+int64_t Application::getFormActionFirstSeqNo(vcc::IObject *form)
 {
     TRY
         if (form == nullptr)
             return -1;
-        return GetIFormPtrFromIObject(form)->GetActionFirstSeqNo();
+        return getIFormPtrFromIObject(form)->getActionFirstSeqNo();
     CATCH
     return -1;
 }
 
-int64_t Application::GetFormActionLastSeqNo(vcc::IObject *form)
+int64_t Application::getFormActionLastSeqNo(vcc::IObject *form)
 {
     TRY
         if (form == nullptr)
             return -1;
-        return GetIFormPtrFromIObject(form)->GetActionLastSeqNo();
+        return getIFormPtrFromIObject(form)->getActionLastSeqNo();
     CATCH
     return -1;
 }
 
-void Application::RedoFormAction(vcc::IObject *form, const int64_t &noOfStep)
+void Application::redoFormAction(vcc::IObject *form, const int64_t &noOfStep)
 {
     TRY
         if (form == nullptr)
             return;
-        GetIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->RedoAction(noOfStep).get())->SharedPtr();
+        getIObjectPtrFromIResult(getIFormPtrFromIObject(form)->redoAction(noOfStep).get())->sharedPtr();
     CATCH
 }
 
-void Application::RedoFormActionToSeqNo(vcc::IObject *form, const int64_t &seqNo)
+void Application::redoFormActionToSeqNo(vcc::IObject *form, const int64_t &seqNo)
 {
     TRY
         if (form == nullptr)
             return;
-        GetIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->RedoActionToSeqNo(seqNo).get())->SharedPtr();
+        getIObjectPtrFromIResult(getIFormPtrFromIObject(form)->redoActionToSeqNo(seqNo).get())->sharedPtr();
     CATCH
 }
 
-void Application::UndoFormAction(vcc::IObject *form, const int64_t &noOfStep)
+void Application::undoFormAction(vcc::IObject *form, const int64_t &noOfStep)
 {
     TRY
         if (form == nullptr)
             return;
-        GetIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->UndoAction(noOfStep).get())->SharedPtr();
+        getIObjectPtrFromIResult(getIFormPtrFromIObject(form)->undoAction(noOfStep).get())->sharedPtr();
     CATCH
 }
 
-void Application::UndoFormActionToSeqNo(vcc::IObject *form, const int64_t &seqNo)
+void Application::undoFormActionToSeqNo(vcc::IObject *form, const int64_t &seqNo)
 {
     TRY
         if (form == nullptr)
             return;
-        GetIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->UndoActionToSeqNo(seqNo).get())->SharedPtr();
+        getIObjectPtrFromIResult(getIFormPtrFromIObject(form)->undoActionToSeqNo(seqNo).get())->sharedPtr();
     CATCH
 }
 
-int64_t Application::ClearFormAction(vcc::IObject *form)
+int64_t Application::clearFormAction(vcc::IObject *form)
 {
     TRY
         if (form == nullptr)
             return -1;
-        return GetIFormPtrFromIObject(form)->ClearAction();
+        return getIFormPtrFromIObject(form)->clearAction();
     CATCH
     return -1;
 }
 
-int64_t Application::TruncateFormAction(vcc::IObject *form)
+int64_t Application::truncateFormAction(vcc::IObject *form)
 {
     TRY
         if (form == nullptr)
             return -1;
-        return GetIFormPtrFromIObject(form)->TruncateAction();
+        return getIFormPtrFromIObject(form)->truncateAction();
     CATCH
     return -1;
 }
 
-bool Application::IsFormClosable(vcc::IObject *form)
+bool Application::isFormClosable(vcc::IObject *form)
 {
     if (form == nullptr)
         return true;
     
     TRY
-        return GetIFormPtrFromIObject(form)->IsClosable();
+        return getIFormPtrFromIObject(form)->isClosable();
     CATCH
     return false;
 }
 
-bool Application::IsFormClosed(vcc::IObject *form)
+bool Application::isFormClosed(vcc::IObject *form)
 {
     TRY
         if (form == nullptr)
             return true;
-        return GetIFormPtrFromIObject(form)->IsClosed();
+        return getIFormPtrFromIObject(form)->isClosed();
     CATCH
     return true;
 }
 
-bool Application::CloseForm(vcc::IObject *form, const bool &isForce)
+bool Application::closeForm(vcc::IObject *form, const bool &isForce)
 {
     if (form == nullptr)
         return true;
     
     TRY
-        if (GetIFormPtrFromIObject(form)->Close(isForce)) {
-            if (GetFormSharedPtr(form) != nullptr)
-                application->_Forms.erase(GetFormSharedPtr(form));
+        if (getIFormPtrFromIObject(form)->Close(isForce)) {
+            if (getFormsharedPtr(form) != nullptr)
+                application->_Forms.erase(getFormsharedPtr(form));
             return true;
         }
     CATCH

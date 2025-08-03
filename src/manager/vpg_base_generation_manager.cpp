@@ -19,28 +19,28 @@
 #include "vpg_global.hpp"
 #include "vpg_project_type.hpp"
 
-void VPGBaseGenerationManager::ValidateOption() const
+void VPGBaseGenerationManager::validateOption() const
 {
     TRY
-        VALIDATE(L"Template Workspace is emtpy.", (_Option->GetTemplate() != nullptr && !vcc::IsBlank(_Option->GetTemplate()->GetWorkspace())));
-        if (vcc::IsBlank(_Workspace))
+        VALIDATE(L"Template Workspace is emtpy.", (_Option->getTemplate() != nullptr && !vcc::isBlank(_Option->getTemplate()->getWorkspace())));
+        if (vcc::isBlank(_Workspace))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace is emtpy.");
-        if (vcc::IsBlank(_Option->GetProjectName()))
+        if (vcc::isBlank(_Option->getProjectName()))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Project Name is emtpy.");
-        if (vcc::IsBlank(_Option->GetProjectNameDll()) && vcc::IsBlank(_Option->GetProjectNameExe()))
+        if (vcc::isBlank(_Option->getProjectNameDll()) && vcc::isBlank(_Option->getProjectNameExe()))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Both DLL name and EXE name both empty.");
     CATCH
 }
 
-void VPGBaseGenerationManager::GetDLLTestFileContent(std::wstring &fileContent) const
+void VPGBaseGenerationManager::getDLLTestFileContent(std::wstring &fileContent) const
 {
-    vcc::ReplaceRegex(fileContent, L"#define DLL_NAME L\"([^\"]*)\"", L"#define DLL_NAME L\"" + _Option->GetProjectNameDll() + L"\"");
+    vcc::replaceRegex(fileContent, L"#define DLL_NAME L\"([^\"]*)\"", L"#define DLL_NAME L\"" + _Option->getProjectNameDll() + L"\"");
 }
 
 void VPGBaseGenerationManager::CreateWorkspaceDirectory() const
 {
     TRY
-        ValidateOption();
+        validateOption();
         // All type has same project structure
         std::vector<std::wstring> checkList;
         // bin
@@ -58,14 +58,14 @@ void VPGBaseGenerationManager::CreateWorkspaceDirectory() const
         checkList.push_back(L"src");
 
         // unittest
-        if (_Option->GetTemplate() == nullptr || !_Option->GetTemplate()->GetIsExcludeUnittest())
+        if (_Option->getTemplate() == nullptr || !_Option->getTemplate()->getIsExcludeUnittest())
             checkList.push_back(unittestFolderName);
         
         for (auto path : checkList) {
-            std::wstring absPath = vcc::ConcatPaths({_Workspace, path});
-            if (!vcc::IsDirectoryExists(absPath)) {
-                vcc::CreateDirectory(absPath);
-                vcc::LogService::LogInfo(this->GetLogConfig().get(), L"", L"Create Directory: " + path);
+            std::wstring absPath = vcc::concatPaths({_Workspace, path});
+            if (!vcc::isDirectoryExists(absPath)) {
+                vcc::createDirectory(absPath);
+                vcc::LogService::logInfo(this->getLogConfig().get(), L"", L"Create Directory: " + path);
             }        
         }
     CATCH
@@ -73,66 +73,66 @@ void VPGBaseGenerationManager::CreateWorkspaceDirectory() const
 void VPGBaseGenerationManager::CreateBasicProject() const
 {
     TRY
-        ValidateOption();
+        validateOption();
         this->CreateWorkspaceDirectory();
 
-        std::wstring src = VPGGlobal::GetConvertedPath(_Option->GetTemplate()->GetWorkspace());
+        std::wstring src = VPGGlobal::getConvertedPath(_Option->getTemplate()->getWorkspace());
         std::wstring dest = _Workspace;
-        if (_Option->GetIsGit()) {
-            vcc::CopyFile(vcc::ConcatPaths({src, L".gitignore"}), vcc::ConcatPaths({dest, L".gitignore"}), true);
+        if (_Option->getIsGit()) {
+            vcc::copyFile(vcc::concatPaths({src, L".gitignore"}), vcc::concatPaths({dest, L".gitignore"}), true);
         }
-        if (!vcc::IsBlank(_Option->GetProjectNameExe())) {
-            vcc::CopyFile(vcc::ConcatPaths({src, L"main.cpp"}), vcc::ConcatPaths({dest, L"main.cpp"}), true);
+        if (!vcc::isBlank(_Option->getProjectNameExe())) {
+            vcc::copyFile(vcc::concatPaths({src, L"main.cpp"}), vcc::concatPaths({dest, L"main.cpp"}), true);
         }
-        if (!vcc::IsBlank(_Option->GetProjectNameDll())) {
-            vcc::CopyFile(vcc::ConcatPaths({src, L"DllEntryPoint.cpp"}), vcc::ConcatPaths({dest, L"DllEntryPoint.cpp"}), true);
-            vcc::CopyFile(vcc::ConcatPaths({src, L"DllFunctions.cpp"}), vcc::ConcatPaths({dest, L"DllFunctions.cpp"}), true);
-            vcc::CopyFile(vcc::ConcatPaths({src, L"DllFunctions.h"}), vcc::ConcatPaths({dest, L"DllFunctions.h"}), true);
+        if (!vcc::isBlank(_Option->getProjectNameDll())) {
+            vcc::copyFile(vcc::concatPaths({src, L"DllEntryPoint.cpp"}), vcc::concatPaths({dest, L"DllEntryPoint.cpp"}), true);
+            vcc::copyFile(vcc::concatPaths({src, L"DllFunctions.cpp"}), vcc::concatPaths({dest, L"DllFunctions.cpp"}), true);
+            vcc::copyFile(vcc::concatPaths({src, L"DllFunctions.h"}), vcc::concatPaths({dest, L"DllFunctions.h"}), true);
         }
-        if (_Option->GetTemplate() == nullptr || !_Option->GetTemplate()->GetIsExcludeUnittest()) {
-            vcc::CopyFile(vcc::ConcatPaths({src, unittestFolderName, L"gtest_main.cpp"}), vcc::ConcatPaths({dest, unittestFolderName, L"gtest_main.cpp"}), true);
+        if (_Option->getTemplate() == nullptr || !_Option->getTemplate()->getIsExcludeUnittest()) {
+            vcc::copyFile(vcc::concatPaths({src, unittestFolderName, L"gtest_main.cpp"}), vcc::concatPaths({dest, unittestFolderName, L"gtest_main.cpp"}), true);
 
-            if (!vcc::IsBlank(_Option->GetProjectNameDll())) {
-                std::wstring dllUnitTestContent = vcc::ReadFile(vcc::ConcatPaths({src, unittestFolderName, L"Dll/dll_test.cpp"}));
-                GetDLLTestFileContent(dllUnitTestContent);
-                vcc::AppendFileOneLine(vcc::ConcatPaths({dest, unittestFolderName, L"Dll/dll_test.cpp"}), dllUnitTestContent, true);
+            if (!vcc::isBlank(_Option->getProjectNameDll())) {
+                std::wstring dllUnitTestContent = vcc::readFile(vcc::concatPaths({src, unittestFolderName, L"Dll/dll_test.cpp"}));
+                getDLLTestFileContent(dllUnitTestContent);
+                vcc::appendFileOneLine(vcc::concatPaths({dest, unittestFolderName, L"Dll/dll_test.cpp"}), dllUnitTestContent, true);
             }
         }
         // Cannot Copy
-        vcc::AppendFileOneLine(vcc::ConcatPaths({dest, L"LICENSE"}), L"", true);
-        vcc::AppendFileOneLine(vcc::ConcatPaths({dest, L"README.md"}), L"", true);
-        vcc::AppendFileOneLine(vcc::ConcatPaths({dest, L"CHANGELOG.md"}), L"", true);
+        vcc::appendFileOneLine(vcc::concatPaths({dest, L"LICENSE"}), L"", true);
+        vcc::appendFileOneLine(vcc::concatPaths({dest, L"README.md"}), L"", true);
+        vcc::appendFileOneLine(vcc::concatPaths({dest, L"CHANGELOG.md"}), L"", true);
 
-        if (vcc::IsFilePresent(vcc::ConcatPaths({src, MakeFileName}))) {
+        if (vcc::isFilePresent(vcc::concatPaths({src, MakeFileName}))) {
             // Makefile
-            std::wstring makefilePath = vcc::ConcatPaths({dest, MakeFileName});
-            std::wstring makefileContent = vcc::ReadFile(vcc::ConcatPaths({src, MakeFileName}));
-            vcc::WriteFile(makefilePath, this->AdjustMakefile(makefileContent), true);
+            std::wstring makefilePath = vcc::concatPaths({dest, MakeFileName});
+            std::wstring makefileContent = vcc::readFile(vcc::concatPaths({src, MakeFileName}));
+            vcc::writeFile(makefilePath, this->AdjustMakefile(makefileContent), true);
         }
         
         // .vscode
-        std::wstring launchFilePath = vcc::ConcatPaths({dest,  L".vscode/launch.json"});
-        std::wstring launchFileContent = vcc::ReadFile(vcc::ConcatPaths({src,  L".vscode/launch.json"}));
-        vcc::WriteFile(launchFilePath, this->AdjustVSCodeLaunchJson(launchFileContent), true);
+        std::wstring launchFilePath = vcc::concatPaths({dest,  L".vscode/launch.json"});
+        std::wstring launchFileContent = vcc::readFile(vcc::concatPaths({src,  L".vscode/launch.json"}));
+        vcc::writeFile(launchFilePath, this->AdjustVSCodeLaunchJson(launchFileContent), true);
         
-        std::wstring tasksFilePath = vcc::ConcatPaths({dest,  L".vscode/tasks.json"});
-        std::wstring tasksFileContent = vcc::ReadFile(vcc::ConcatPaths({src,  L".vscode/tasks.json"}));
-        vcc::WriteFile(tasksFilePath, tasksFileContent, true);   
+        std::wstring tasksFilePath = vcc::concatPaths({dest,  L".vscode/tasks.json"});
+        std::wstring tasksFileContent = vcc::readFile(vcc::concatPaths({src,  L".vscode/tasks.json"}));
+        vcc::writeFile(tasksFilePath, tasksFileContent, true);   
     CATCH
 }
 
-void VPGBaseGenerationManager::SyncWorkspace(const vcc::LogConfig *logConfig, const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
+void VPGBaseGenerationManager::syncWorkspace(const vcc::LogConfig *logConfig, const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
             const std::vector<std::wstring> &includeFileFilters, const std::vector<std::wstring> &excludeFileFilters) const
 {
     TRY
         std::vector<std::wstring> needToAdd, needToModify, needToDelete;
         TRY
-            vcc::GetFileDifferenceBetweenWorkspaces(sourceWorkspace, targetWorkspace, needToAdd, needToModify, needToDelete);
+            vcc::getFileDifferenceBetweenWorkspaces(sourceWorkspace, targetWorkspace, needToAdd, needToModify, needToDelete);
         CATCH
 
         // Delete
         for (auto path : needToDelete) {
-            std::wstring targetPath = vcc::ConcatPaths({targetWorkspace, path});
+            std::wstring targetPath = vcc::concatPaths({targetWorkspace, path});
             if (!std::filesystem::exists(targetPath))
                 continue;
             if (std::filesystem::is_directory(targetPath)) {
@@ -142,25 +142,25 @@ void VPGBaseGenerationManager::SyncWorkspace(const vcc::LogConfig *logConfig, co
                 }                
             }
 
-            if (!includeFileFilters.empty() && !vcc::IsPathMatchFileFilters(path, includeFileFilters))
+            if (!includeFileFilters.empty() && !vcc::isPathMatchFileFilters(path, includeFileFilters))
                 continue;
-            if (!excludeFileFilters.empty() && vcc::IsPathMatchFileFilters(path, excludeFileFilters))
+            if (!excludeFileFilters.empty() && vcc::isPathMatchFileFilters(path, excludeFileFilters))
                 continue;
 
 
-            if (vcc::IsFile(targetPath)) {
+            if (vcc::isFile(targetPath)) {
                 remove(PATH(targetPath));
-                vcc::LogService::LogInfo(logConfig, L"", L"Removed Directory: " + targetPath);
+                vcc::LogService::logInfo(logConfig, L"", L"Removed Directory: " + targetPath);
             } else {
                 std::filesystem::remove_all(PATH(targetPath));
-                vcc::LogService::LogInfo(logConfig, L"", L"Removed File: " + targetPath);
+                vcc::LogService::logInfo(logConfig, L"", L"Removed File: " + targetPath);
             }
         }
 
         // Add
         for (auto path : needToAdd) {
-            std::wstring sourcePath = vcc::ConcatPaths({sourceWorkspace, path});
-            std::wstring targetPath = vcc::ConcatPaths({targetWorkspace, path});
+            std::wstring sourcePath = vcc::concatPaths({sourceWorkspace, path});
+            std::wstring targetPath = vcc::concatPaths({targetWorkspace, path});
             if (!std::filesystem::exists(sourcePath))
                 continue;
             if (std::filesystem::exists(targetPath))
@@ -173,51 +173,51 @@ void VPGBaseGenerationManager::SyncWorkspace(const vcc::LogConfig *logConfig, co
                 }                
             }
 
-            if (!includeFileFilters.empty() && !vcc::IsPathMatchFileFilters(path, includeFileFilters))
+            if (!includeFileFilters.empty() && !vcc::isPathMatchFileFilters(path, includeFileFilters))
                 continue;
-            if (!excludeFileFilters.empty() && vcc::IsPathMatchFileFilters(path, excludeFileFilters))
+            if (!excludeFileFilters.empty() && vcc::isPathMatchFileFilters(path, excludeFileFilters))
                 continue;
 
-            if (vcc::IsFile(sourcePath)) {
-                VPGFileSyncService::CopyFile(logConfig, VPGFileContentSyncTagMode::Synchronization, sourcePath, targetPath);
+            if (vcc::isFile(sourcePath)) {
+                VPGFileSyncService::copyFile(logConfig, VPGFileContentSyncTagMode::Synchronization, sourcePath, targetPath);
             } else {
-                vcc::CreateDirectory(targetPath);
-                vcc::LogService::LogInfo(logConfig, L"", L"Added Directory: " + targetPath);
+                vcc::createDirectory(targetPath);
+                vcc::LogService::logInfo(logConfig, L"", L"Added Directory: " + targetPath);
             }
         }
 
         // Modify
         for (auto path : needToModify) {
-            if (!includeFileFilters.empty() && !vcc::IsPathMatchFileFilters(path, includeFileFilters))
+            if (!includeFileFilters.empty() && !vcc::isPathMatchFileFilters(path, includeFileFilters))
                 continue;
-            if (!excludeFileFilters.empty() && vcc::IsPathMatchFileFilters(path, excludeFileFilters))
+            if (!excludeFileFilters.empty() && vcc::isPathMatchFileFilters(path, excludeFileFilters))
                 continue;
 
-            std::wstring sourcePath = vcc::ConcatPaths({sourceWorkspace, path});
-            std::wstring targetPath = vcc::ConcatPaths({targetWorkspace, path});
-            if (!vcc::IsFile(sourcePath) || !vcc::IsFile(targetPath))
+            std::wstring sourcePath = vcc::concatPaths({sourceWorkspace, path});
+            std::wstring targetPath = vcc::concatPaths({targetWorkspace, path});
+            if (!vcc::isFile(sourcePath) || !vcc::isFile(targetPath))
                 continue;
             
             // modify file
-            VPGFileSyncService::CopyFile(logConfig, VPGFileContentSyncTagMode::Synchronization, sourcePath, targetPath);
+            VPGFileSyncService::copyFile(logConfig, VPGFileContentSyncTagMode::Synchronization, sourcePath, targetPath);
         }
     CATCH
 }
 
 std::wstring VPGBaseGenerationManager::AdjustMakefile(const std::wstring &fileContent) const
 {
-    ValidateOption();
+    validateOption();
     std::wstring result = L"";
     TRY
         auto elements = std::make_shared<vcc::Xml>();
         VPGCodeReader reader(L"#");
-        reader.Deserialize(fileContent, elements);
-        for (std::shared_ptr<vcc::Xml> element : elements->GetChildren()) {
-            if (element->GetName() == L"vcc:name") {
-                std::wstring projName = !vcc::IsBlank(_Option->GetProjectName()) ? (L" " + _Option->GetProjectName()) : L"";
-                std::wstring dllName = !vcc::IsBlank(_Option->GetProjectNameDll()) ? (L" " + _Option->GetProjectNameDll()) : L"";
-                std::wstring exeName = !vcc::IsBlank(_Option->GetProjectNameExe()) ? (L" " + _Option->GetProjectNameExe()) : L"";
-                std::wstring IsExcludeUnittest = _Option->GetTemplate() != nullptr && _Option->GetTemplate()->GetIsExcludeUnittest() ? L" Y" : L" N";
+        reader.deserialize(fileContent, elements);
+        for (std::shared_ptr<vcc::Xml> element : elements->getChildren()) {
+            if (element->getName() == L"vcc:name") {
+                std::wstring projName = !vcc::isBlank(_Option->getProjectName()) ? (L" " + _Option->getProjectName()) : L"";
+                std::wstring dllName = !vcc::isBlank(_Option->getProjectNameDll()) ? (L" " + _Option->getProjectNameDll()) : L"";
+                std::wstring exeName = !vcc::isBlank(_Option->getProjectNameExe()) ? (L" " + _Option->getProjectNameExe()) : L"";
+                std::wstring IsExcludeUnittest = _Option->getTemplate() != nullptr && _Option->getTemplate()->getIsExcludeUnittest() ? L" Y" : L" N";
         
                 result += L"# <vcc:name sync=\"ALERT\" gen=\"ALERT\">\r\n";
                 result += L"#----------------------------------#\r\n";
@@ -228,7 +228,7 @@ std::wstring VPGBaseGenerationManager::AdjustMakefile(const std::wstring &fileCo
                 result += L"PROJ_NAME_EXE :=" + exeName + L"\r\n";
                 result += L"IS_EXCLUDE_UNITTEST :=" + IsExcludeUnittest + L"\r\n";
                 result += L"# </vcc:name>";
-            } else if (element->GetName() == L"vcc:export") {
+            } else if (element->getName() == L"vcc:export") {
                 std::wstring exportDllDirWindow = L"";
                 std::wstring exportExeDirWindow = L"";
                 std::wstring exportExternalLibDirWindow = L"";
@@ -236,31 +236,31 @@ std::wstring VPGBaseGenerationManager::AdjustMakefile(const std::wstring &fileCo
                 std::wstring exportExeDirLinux = L"";
                 std::wstring exportExternalLibDirLinux = L"";
 
-                for (auto const &exportOption : _Option->GetExports()) {
-                    if (vcc::IsBlank(exportOption->GetWorkspace()))
+                for (auto const &exportOption : _Option->getExports()) {
+                    if (vcc::isBlank(exportOption->getWorkspace()))
                         continue;
-                    std::wstring workspace = exportOption->GetWorkspace(); //IsAbsolutePath(exportOption->GetWorkspace()) ? exportOption->GetWorkspace() : vcc::ConcatPaths({ _Workspace, exportOption->GetWorkspace() });
+                    std::wstring workspace = exportOption->getWorkspace(); //isAbsolutePath(exportOption->getWorkspace()) ? exportOption->getWorkspace() : vcc::ConcatPaths({ _Workspace, exportOption->getWorkspace() });
 
-                    if (!vcc::IsBlank(exportOption->GetExportDirectoryDll())) {
-                        exportDllDirWindow += L" " + vcc::GetWindowPath(vcc::ConcatPaths({ workspace, exportOption->GetExportDirectoryDll() }));
-                        exportDllDirLinux += L" " + vcc::GetLinuxPath(vcc::ConcatPaths({ workspace, exportOption->GetExportDirectoryDll() }));
-                        if (exportOption->GetIsExportExternalLib()) {
-                            exportExternalLibDirWindow += L" " + vcc::GetWindowPath(vcc::ConcatPaths({ workspace, exportOption->GetExportDirectoryDll() }));
-                            exportExternalLibDirLinux += L" " + vcc::GetLinuxPath(vcc::ConcatPaths({ workspace, exportOption->GetExportDirectoryDll() }));
+                    if (!vcc::isBlank(exportOption->getExportDirectoryDll())) {
+                        exportDllDirWindow += L" " + vcc::getWindowPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryDll() }));
+                        exportDllDirLinux += L" " + vcc::getLinuxPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryDll() }));
+                        if (exportOption->getIsExportExternalLib()) {
+                            exportExternalLibDirWindow += L" " + vcc::getWindowPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryDll() }));
+                            exportExternalLibDirLinux += L" " + vcc::getLinuxPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryDll() }));
                         }
                     }
-                    if (!vcc::IsBlank(exportOption->GetExportDirectoryExe())) {
-                        exportExeDirWindow += L" " + vcc::GetWindowPath(vcc::ConcatPaths({ workspace, exportOption->GetExportDirectoryExe() }));
-                        exportExeDirLinux += L" " + vcc::GetLinuxPath(vcc::ConcatPaths({ workspace, exportOption->GetExportDirectoryExe() }));
-                        if (exportOption->GetIsExportExternalLib()) {
-                            exportExternalLibDirWindow += L" " + vcc::GetWindowPath(vcc::ConcatPaths({ workspace, exportOption->GetExportDirectoryExe() }));
-                            exportExternalLibDirLinux += L" " + vcc::GetLinuxPath(vcc::ConcatPaths({ workspace, exportOption->GetExportDirectoryExe() }));                            
+                    if (!vcc::isBlank(exportOption->getExportDirectoryExe())) {
+                        exportExeDirWindow += L" " + vcc::getWindowPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryExe() }));
+                        exportExeDirLinux += L" " + vcc::getLinuxPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryExe() }));
+                        if (exportOption->getIsExportExternalLib()) {
+                            exportExternalLibDirWindow += L" " + vcc::getWindowPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryExe() }));
+                            exportExternalLibDirLinux += L" " + vcc::getLinuxPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryExe() }));                            
                         }
                     }
                 }
-                vcc::ReplaceAll(exportDllDirWindow, L"\\", L"\\\\");
-                vcc::ReplaceAll(exportExeDirWindow, L"\\", L"\\\\");
-                vcc::ReplaceAll(exportExternalLibDirWindow, L"\\", L"\\\\");
+                vcc::replaceAll(exportDllDirWindow, L"\\", L"\\\\");
+                vcc::replaceAll(exportExeDirWindow, L"\\", L"\\\\");
+                vcc::replaceAll(exportExternalLibDirWindow, L"\\", L"\\\\");
 
                 result += L"# <vcc:export sync=\"ALERT\" gen=\"ALERT\">\r\n"
                     "#----------------------------------#\r\n"
@@ -277,7 +277,7 @@ std::wstring VPGBaseGenerationManager::AdjustMakefile(const std::wstring &fileCo
                     "endif\r\n"
                     "# </vcc:export>";
             } else
-                result += element->GetFullText();
+                result += element->getFullText();
         }
     CATCH
     return result;
@@ -287,8 +287,8 @@ std::wstring VPGBaseGenerationManager::AdjustVSCodeLaunchJson(const std::wstring
 {
     TRY
         std::wstring programPath = L"${workspaceFolder}/bin/Debug/unittest";
-        if (_Option->GetTemplate() != nullptr && _Option->GetTemplate()->GetIsExcludeUnittest() && !_Option->GetProjectNameExe().empty()) {
-            std::wstring projectName = _Option->GetProjectNameExe();
+        if (_Option->getTemplate() != nullptr && _Option->getTemplate()->getIsExcludeUnittest() && !_Option->getProjectNameExe().empty()) {
+            std::wstring projectName = _Option->getProjectNameExe();
             #ifdef __WIN32
             projectName += L".exe";
             #endif
@@ -296,18 +296,18 @@ std::wstring VPGBaseGenerationManager::AdjustVSCodeLaunchJson(const std::wstring
         }
 
         auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
-        jsonBuilder->SetIsBeautify(true);
-        jsonBuilder->SetIndent(L"  ");
+        jsonBuilder->setIsBeautify(true);
+        jsonBuilder->setIndent(L"  ");
 
         auto json = std::make_shared<vcc::Json>();
-        jsonBuilder->Deserialize(fileContent, json);
-        for (std::shared_ptr<vcc::Json> element : json->GetArray(L"configurations")) {
-            for (std::shared_ptr<vcc::Json> arrayElement : element->GetJsonInternalArray()) {
-                if (arrayElement->IsContainKey(L"program"))
-                    arrayElement->SetString(L"program", programPath);
+        jsonBuilder->deserialize(fileContent, json);
+        for (std::shared_ptr<vcc::Json> element : json->getArray(L"configurations")) {
+            for (std::shared_ptr<vcc::Json> arrayElement : element->getJsonInternalArray()) {
+                if (arrayElement->isContainKey(L"program"))
+                    arrayElement->setString(L"program", programPath);
             }
         }
-        return jsonBuilder->Serialize(json.get());
+        return jsonBuilder->serialize(json.get());
     CATCH
     return fileContent;
 }

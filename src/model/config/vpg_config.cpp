@@ -20,36 +20,36 @@ std::shared_ptr<vcc::Json> VPGConfigTemplate::ToJson() const
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
         auto json = std::make_unique<vcc::Json>();
         // Url
-        json->AddString(vcc::ConvertNamingStyle(L"Url", vcc::NamingStyle::PascalCase, namestyle), GetUrl());
+        json->addString(vcc::convertNamingStyle(L"Url", vcc::NamingStyle::PascalCase, namestyle), getUrl());
         // Workspace
-        json->AddString(vcc::ConvertNamingStyle(L"Workspace", vcc::NamingStyle::PascalCase, namestyle), GetWorkspace());
+        json->addString(vcc::convertNamingStyle(L"Workspace", vcc::NamingStyle::PascalCase, namestyle), getWorkspace());
         // IsExcludeUnittest
-        json->AddBool(vcc::ConvertNamingStyle(L"IsExcludeUnittest", vcc::NamingStyle::PascalCase, namestyle), GetIsExcludeUnittest());
+        json->addBool(vcc::convertNamingStyle(L"IsExcludeUnittest", vcc::NamingStyle::PascalCase, namestyle), getIsExcludeUnittest());
         // IsExcludeVCCUnitTest
-        json->AddBool(vcc::ConvertNamingStyle(L"IsExcludeVCCUnitTest", vcc::NamingStyle::PascalCase, namestyle), GetIsExcludeVCCUnitTest());
+        json->addBool(vcc::convertNamingStyle(L"IsExcludeVCCUnitTest", vcc::NamingStyle::PascalCase, namestyle), getIsExcludeVCCUnitTest());
         return json;
     CATCH
     return nullptr;
 }
 
-void VPGConfigTemplate::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
+void VPGConfigTemplate::deserializeJson(std::shared_ptr<vcc::IDocument> document)
 {
     TRY
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
         auto json = std::dynamic_pointer_cast<vcc::Json>(document);
         assert(json != nullptr);
         // Url
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"Url", namestyle, vcc::NamingStyle::PascalCase)))
-            SetUrl(json->GetString(vcc::ConvertNamingStyle(L"Url", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"Url", namestyle, vcc::NamingStyle::PascalCase)))
+            setUrl(json->getString(vcc::convertNamingStyle(L"Url", namestyle, vcc::NamingStyle::PascalCase)));
         // Workspace
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"Workspace", namestyle, vcc::NamingStyle::PascalCase)))
-            SetWorkspace(json->GetString(vcc::ConvertNamingStyle(L"Workspace", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"Workspace", namestyle, vcc::NamingStyle::PascalCase)))
+            setWorkspace(json->getString(vcc::convertNamingStyle(L"Workspace", namestyle, vcc::NamingStyle::PascalCase)));
         // IsExcludeUnittest
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"IsExcludeUnittest", namestyle, vcc::NamingStyle::PascalCase)))
-            SetIsExcludeUnittest(json->GetBool(vcc::ConvertNamingStyle(L"IsExcludeUnittest", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"IsExcludeUnittest", namestyle, vcc::NamingStyle::PascalCase)))
+            setIsExcludeUnittest(json->getBool(vcc::convertNamingStyle(L"IsExcludeUnittest", namestyle, vcc::NamingStyle::PascalCase)));
         // IsExcludeVCCUnitTest
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"IsExcludeVCCUnitTest", namestyle, vcc::NamingStyle::PascalCase)))
-            SetIsExcludeVCCUnitTest(json->GetBool(vcc::ConvertNamingStyle(L"IsExcludeVCCUnitTest", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"IsExcludeVCCUnitTest", namestyle, vcc::NamingStyle::PascalCase)))
+            setIsExcludeVCCUnitTest(json->getBool(vcc::convertNamingStyle(L"IsExcludeVCCUnitTest", namestyle, vcc::NamingStyle::PascalCase)));
     CATCH
 }
 
@@ -60,7 +60,7 @@ std::shared_ptr<vcc::Json> VPGConfigBehavior::ToJson() const
         auto json = std::make_unique<vcc::Json>();
         // ActionHistoryType
         std::wstring actionHistoryTypeValueStr = L"";
-        switch (GetActionHistoryType())
+        switch (getActionHistoryType())
         {
         case VPGConfigActionHistoryType::NoHistory:
             actionHistoryTypeValueStr = L"NoHistory";
@@ -75,25 +75,25 @@ std::shared_ptr<vcc::Json> VPGConfigBehavior::ToJson() const
             assert(false);
             break;
         }
-        json->AddString(vcc::ConvertNamingStyle(L"ActionHistoryType", vcc::NamingStyle::PascalCase, namestyle), actionHistoryTypeValueStr);
+        json->addString(vcc::convertNamingStyle(L"ActionHistoryType", vcc::NamingStyle::PascalCase, namestyle), actionHistoryTypeValueStr);
         // IsActionResultThrowException
-        json->AddBool(vcc::ConvertNamingStyle(L"IsActionResultThrowException", vcc::NamingStyle::PascalCase, namestyle), GetIsActionResultThrowException());
+        json->addBool(vcc::convertNamingStyle(L"IsActionResultThrowException", vcc::NamingStyle::PascalCase, namestyle), getIsActionResultThrowException());
         return json;
     CATCH
     return nullptr;
 }
 
-void VPGConfigBehavior::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
+void VPGConfigBehavior::deserializeJson(std::shared_ptr<vcc::IDocument> document)
 {
     TRY
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
         auto json = std::dynamic_pointer_cast<vcc::Json>(document);
         assert(json != nullptr);
         // ActionHistoryType
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ActionHistoryType", namestyle, vcc::NamingStyle::PascalCase))) {
-            std::wstring valueEnumStr = json->GetString(vcc::ConvertNamingStyle(L"ActionHistoryType", namestyle, vcc::NamingStyle::PascalCase));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ActionHistoryType", namestyle, vcc::NamingStyle::PascalCase))) {
+            std::wstring valueEnumStr = json->getString(vcc::convertNamingStyle(L"ActionHistoryType", namestyle, vcc::NamingStyle::PascalCase));
             std::wstring valueEnumStrUpper = valueEnumStr;
-            vcc::ToUpper(valueEnumStrUpper);
+            vcc::toUpper(valueEnumStrUpper);
             int64_t valueEnum = -1;
             if (valueEnumStrUpper == L"NOHISTORY")
                 valueEnum = static_cast<int64_t>(VPGConfigActionHistoryType::NoHistory);
@@ -102,11 +102,11 @@ void VPGConfigBehavior::DeserializeJson(std::shared_ptr<vcc::IDocument> document
             else if (valueEnumStrUpper == L"GLOBAL")
                 valueEnum = static_cast<int64_t>(VPGConfigActionHistoryType::Global);
             if (valueEnum > -1)
-                SetActionHistoryType(static_cast<VPGConfigActionHistoryType>(valueEnum));
+                setActionHistoryType(static_cast<VPGConfigActionHistoryType>(valueEnum));
         }
         // IsActionResultThrowException
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"IsActionResultThrowException", namestyle, vcc::NamingStyle::PascalCase)))
-            SetIsActionResultThrowException(json->GetBool(vcc::ConvertNamingStyle(L"IsActionResultThrowException", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"IsActionResultThrowException", namestyle, vcc::NamingStyle::PascalCase)))
+            setIsActionResultThrowException(json->getBool(vcc::convertNamingStyle(L"IsActionResultThrowException", namestyle, vcc::NamingStyle::PascalCase)));
     CATCH
 }
 
@@ -116,21 +116,21 @@ std::shared_ptr<vcc::Json> VPGConfigInput::ToJson() const
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
         auto json = std::make_unique<vcc::Json>();
         // TypeWorkspace
-        json->AddString(vcc::ConvertNamingStyle(L"TypeWorkspace", vcc::NamingStyle::PascalCase, namestyle), GetTypeWorkspace());
+        json->addString(vcc::convertNamingStyle(L"TypeWorkspace", vcc::NamingStyle::PascalCase, namestyle), getTypeWorkspace());
         return json;
     CATCH
     return nullptr;
 }
 
-void VPGConfigInput::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
+void VPGConfigInput::deserializeJson(std::shared_ptr<vcc::IDocument> document)
 {
     TRY
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
         auto json = std::dynamic_pointer_cast<vcc::Json>(document);
         assert(json != nullptr);
         // TypeWorkspace
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"TypeWorkspace", namestyle, vcc::NamingStyle::PascalCase)))
-            SetTypeWorkspace(json->GetString(vcc::ConvertNamingStyle(L"TypeWorkspace", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"TypeWorkspace", namestyle, vcc::NamingStyle::PascalCase)))
+            setTypeWorkspace(json->getString(vcc::convertNamingStyle(L"TypeWorkspace", namestyle, vcc::NamingStyle::PascalCase)));
     CATCH
 }
 
@@ -140,96 +140,96 @@ std::shared_ptr<vcc::Json> VPGConfigOutput::ToJson() const
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
         auto json = std::make_unique<vcc::Json>();
         // ExceptionTypeDirectory
-        json->AddString(vcc::ConvertNamingStyle(L"ExceptionTypeDirectory", vcc::NamingStyle::PascalCase, namestyle), GetExceptionTypeDirectory());
+        json->addString(vcc::convertNamingStyle(L"ExceptionTypeDirectory", vcc::NamingStyle::PascalCase, namestyle), getExceptionTypeDirectory());
         // ObjectTypeDirectory
-        json->AddString(vcc::ConvertNamingStyle(L"ObjectTypeDirectory", vcc::NamingStyle::PascalCase, namestyle), GetObjectTypeDirectory());
+        json->addString(vcc::convertNamingStyle(L"ObjectTypeDirectory", vcc::NamingStyle::PascalCase, namestyle), getObjectTypeDirectory());
         // ApplicationDirectoryHpp
-        json->AddString(vcc::ConvertNamingStyle(L"ApplicationDirectoryHpp", vcc::NamingStyle::PascalCase, namestyle), GetApplicationDirectoryHpp());
+        json->addString(vcc::convertNamingStyle(L"ApplicationDirectoryHpp", vcc::NamingStyle::PascalCase, namestyle), getApplicationDirectoryHpp());
         // ApplicationDirectoryCpp
-        json->AddString(vcc::ConvertNamingStyle(L"ApplicationDirectoryCpp", vcc::NamingStyle::PascalCase, namestyle), GetApplicationDirectoryCpp());
+        json->addString(vcc::convertNamingStyle(L"ApplicationDirectoryCpp", vcc::NamingStyle::PascalCase, namestyle), getApplicationDirectoryCpp());
         // ActionDirectoryHpp
-        json->AddString(vcc::ConvertNamingStyle(L"ActionDirectoryHpp", vcc::NamingStyle::PascalCase, namestyle), GetActionDirectoryHpp());
+        json->addString(vcc::convertNamingStyle(L"ActionDirectoryHpp", vcc::NamingStyle::PascalCase, namestyle), getActionDirectoryHpp());
         // ActionDirectoryCpp
-        json->AddString(vcc::ConvertNamingStyle(L"ActionDirectoryCpp", vcc::NamingStyle::PascalCase, namestyle), GetActionDirectoryCpp());
+        json->addString(vcc::convertNamingStyle(L"ActionDirectoryCpp", vcc::NamingStyle::PascalCase, namestyle), getActionDirectoryCpp());
         // FormDirectoryHpp
-        json->AddString(vcc::ConvertNamingStyle(L"FormDirectoryHpp", vcc::NamingStyle::PascalCase, namestyle), GetFormDirectoryHpp());
+        json->addString(vcc::convertNamingStyle(L"FormDirectoryHpp", vcc::NamingStyle::PascalCase, namestyle), getFormDirectoryHpp());
         // FormDirectoryCpp
-        json->AddString(vcc::ConvertNamingStyle(L"FormDirectoryCpp", vcc::NamingStyle::PascalCase, namestyle), GetFormDirectoryCpp());
+        json->addString(vcc::convertNamingStyle(L"FormDirectoryCpp", vcc::NamingStyle::PascalCase, namestyle), getFormDirectoryCpp());
         // ObjectDirectoryHpp
-        json->AddString(vcc::ConvertNamingStyle(L"ObjectDirectoryHpp", vcc::NamingStyle::PascalCase, namestyle), GetObjectDirectoryHpp());
+        json->addString(vcc::convertNamingStyle(L"ObjectDirectoryHpp", vcc::NamingStyle::PascalCase, namestyle), getObjectDirectoryHpp());
         // ObjectDirectoryCpp
-        json->AddString(vcc::ConvertNamingStyle(L"ObjectDirectoryCpp", vcc::NamingStyle::PascalCase, namestyle), GetObjectDirectoryCpp());
+        json->addString(vcc::convertNamingStyle(L"ObjectDirectoryCpp", vcc::NamingStyle::PascalCase, namestyle), getObjectDirectoryCpp());
         // PropertyAccessorDirectoryHpp
-        json->AddString(vcc::ConvertNamingStyle(L"PropertyAccessorDirectoryHpp", vcc::NamingStyle::PascalCase, namestyle), GetPropertyAccessorDirectoryHpp());
+        json->addString(vcc::convertNamingStyle(L"PropertyAccessorDirectoryHpp", vcc::NamingStyle::PascalCase, namestyle), getPropertyAccessorDirectoryHpp());
         // PropertyAccessorDirectoryCpp
-        json->AddString(vcc::ConvertNamingStyle(L"PropertyAccessorDirectoryCpp", vcc::NamingStyle::PascalCase, namestyle), GetPropertyAccessorDirectoryCpp());
+        json->addString(vcc::convertNamingStyle(L"PropertyAccessorDirectoryCpp", vcc::NamingStyle::PascalCase, namestyle), getPropertyAccessorDirectoryCpp());
         // ObjectFactoryDirectoryHpp
-        json->AddString(vcc::ConvertNamingStyle(L"ObjectFactoryDirectoryHpp", vcc::NamingStyle::PascalCase, namestyle), GetObjectFactoryDirectoryHpp());
+        json->addString(vcc::convertNamingStyle(L"ObjectFactoryDirectoryHpp", vcc::NamingStyle::PascalCase, namestyle), getObjectFactoryDirectoryHpp());
         // ObjectFactoryDirectoryCpp
-        json->AddString(vcc::ConvertNamingStyle(L"ObjectFactoryDirectoryCpp", vcc::NamingStyle::PascalCase, namestyle), GetObjectFactoryDirectoryCpp());
+        json->addString(vcc::convertNamingStyle(L"ObjectFactoryDirectoryCpp", vcc::NamingStyle::PascalCase, namestyle), getObjectFactoryDirectoryCpp());
         // PropertyAccessorFactoryDirectoryHpp
-        json->AddString(vcc::ConvertNamingStyle(L"PropertyAccessorFactoryDirectoryHpp", vcc::NamingStyle::PascalCase, namestyle), GetPropertyAccessorFactoryDirectoryHpp());
+        json->addString(vcc::convertNamingStyle(L"PropertyAccessorFactoryDirectoryHpp", vcc::NamingStyle::PascalCase, namestyle), getPropertyAccessorFactoryDirectoryHpp());
         // PropertyAccessorFactoryDirectoryCpp
-        json->AddString(vcc::ConvertNamingStyle(L"PropertyAccessorFactoryDirectoryCpp", vcc::NamingStyle::PascalCase, namestyle), GetPropertyAccessorFactoryDirectoryCpp());
+        json->addString(vcc::convertNamingStyle(L"PropertyAccessorFactoryDirectoryCpp", vcc::NamingStyle::PascalCase, namestyle), getPropertyAccessorFactoryDirectoryCpp());
         return json;
     CATCH
     return nullptr;
 }
 
-void VPGConfigOutput::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
+void VPGConfigOutput::deserializeJson(std::shared_ptr<vcc::IDocument> document)
 {
     TRY
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
         auto json = std::dynamic_pointer_cast<vcc::Json>(document);
         assert(json != nullptr);
         // ExceptionTypeDirectory
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ExceptionTypeDirectory", namestyle, vcc::NamingStyle::PascalCase)))
-            SetExceptionTypeDirectory(json->GetString(vcc::ConvertNamingStyle(L"ExceptionTypeDirectory", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ExceptionTypeDirectory", namestyle, vcc::NamingStyle::PascalCase)))
+            setExceptionTypeDirectory(json->getString(vcc::convertNamingStyle(L"ExceptionTypeDirectory", namestyle, vcc::NamingStyle::PascalCase)));
         // ObjectTypeDirectory
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ObjectTypeDirectory", namestyle, vcc::NamingStyle::PascalCase)))
-            SetObjectTypeDirectory(json->GetString(vcc::ConvertNamingStyle(L"ObjectTypeDirectory", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ObjectTypeDirectory", namestyle, vcc::NamingStyle::PascalCase)))
+            setObjectTypeDirectory(json->getString(vcc::convertNamingStyle(L"ObjectTypeDirectory", namestyle, vcc::NamingStyle::PascalCase)));
         // ApplicationDirectoryHpp
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ApplicationDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)))
-            SetApplicationDirectoryHpp(json->GetString(vcc::ConvertNamingStyle(L"ApplicationDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ApplicationDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)))
+            setApplicationDirectoryHpp(json->getString(vcc::convertNamingStyle(L"ApplicationDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)));
         // ApplicationDirectoryCpp
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ApplicationDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)))
-            SetApplicationDirectoryCpp(json->GetString(vcc::ConvertNamingStyle(L"ApplicationDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ApplicationDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)))
+            setApplicationDirectoryCpp(json->getString(vcc::convertNamingStyle(L"ApplicationDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)));
         // ActionDirectoryHpp
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ActionDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)))
-            SetActionDirectoryHpp(json->GetString(vcc::ConvertNamingStyle(L"ActionDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ActionDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)))
+            setActionDirectoryHpp(json->getString(vcc::convertNamingStyle(L"ActionDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)));
         // ActionDirectoryCpp
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ActionDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)))
-            SetActionDirectoryCpp(json->GetString(vcc::ConvertNamingStyle(L"ActionDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ActionDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)))
+            setActionDirectoryCpp(json->getString(vcc::convertNamingStyle(L"ActionDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)));
         // FormDirectoryHpp
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"FormDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)))
-            SetFormDirectoryHpp(json->GetString(vcc::ConvertNamingStyle(L"FormDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"FormDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)))
+            setFormDirectoryHpp(json->getString(vcc::convertNamingStyle(L"FormDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)));
         // FormDirectoryCpp
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"FormDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)))
-            SetFormDirectoryCpp(json->GetString(vcc::ConvertNamingStyle(L"FormDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"FormDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)))
+            setFormDirectoryCpp(json->getString(vcc::convertNamingStyle(L"FormDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)));
         // ObjectDirectoryHpp
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ObjectDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)))
-            SetObjectDirectoryHpp(json->GetString(vcc::ConvertNamingStyle(L"ObjectDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ObjectDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)))
+            setObjectDirectoryHpp(json->getString(vcc::convertNamingStyle(L"ObjectDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)));
         // ObjectDirectoryCpp
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ObjectDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)))
-            SetObjectDirectoryCpp(json->GetString(vcc::ConvertNamingStyle(L"ObjectDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ObjectDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)))
+            setObjectDirectoryCpp(json->getString(vcc::convertNamingStyle(L"ObjectDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)));
         // PropertyAccessorDirectoryHpp
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"PropertyAccessorDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)))
-            SetPropertyAccessorDirectoryHpp(json->GetString(vcc::ConvertNamingStyle(L"PropertyAccessorDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"PropertyAccessorDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)))
+            setPropertyAccessorDirectoryHpp(json->getString(vcc::convertNamingStyle(L"PropertyAccessorDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)));
         // PropertyAccessorDirectoryCpp
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"PropertyAccessorDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)))
-            SetPropertyAccessorDirectoryCpp(json->GetString(vcc::ConvertNamingStyle(L"PropertyAccessorDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"PropertyAccessorDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)))
+            setPropertyAccessorDirectoryCpp(json->getString(vcc::convertNamingStyle(L"PropertyAccessorDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)));
         // ObjectFactoryDirectoryHpp
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ObjectFactoryDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)))
-            SetObjectFactoryDirectoryHpp(json->GetString(vcc::ConvertNamingStyle(L"ObjectFactoryDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ObjectFactoryDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)))
+            setObjectFactoryDirectoryHpp(json->getString(vcc::convertNamingStyle(L"ObjectFactoryDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)));
         // ObjectFactoryDirectoryCpp
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ObjectFactoryDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)))
-            SetObjectFactoryDirectoryCpp(json->GetString(vcc::ConvertNamingStyle(L"ObjectFactoryDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ObjectFactoryDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)))
+            setObjectFactoryDirectoryCpp(json->getString(vcc::convertNamingStyle(L"ObjectFactoryDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)));
         // PropertyAccessorFactoryDirectoryHpp
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"PropertyAccessorFactoryDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)))
-            SetPropertyAccessorFactoryDirectoryHpp(json->GetString(vcc::ConvertNamingStyle(L"PropertyAccessorFactoryDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"PropertyAccessorFactoryDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)))
+            setPropertyAccessorFactoryDirectoryHpp(json->getString(vcc::convertNamingStyle(L"PropertyAccessorFactoryDirectoryHpp", namestyle, vcc::NamingStyle::PascalCase)));
         // PropertyAccessorFactoryDirectoryCpp
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"PropertyAccessorFactoryDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)))
-            SetPropertyAccessorFactoryDirectoryCpp(json->GetString(vcc::ConvertNamingStyle(L"PropertyAccessorFactoryDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"PropertyAccessorFactoryDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)))
+            setPropertyAccessorFactoryDirectoryCpp(json->getString(vcc::convertNamingStyle(L"PropertyAccessorFactoryDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)));
     CATCH
 }
 
@@ -240,7 +240,7 @@ std::shared_ptr<vcc::Json> VPGConfigExport::ToJson() const
         auto json = std::make_unique<vcc::Json>();
         // Interface
         std::wstring interfaceValueStr = L"";
-        switch (GetInterface())
+        switch (getInterface())
         {
         case VPGConfigInterfaceType::Java:
             interfaceValueStr = L"Java";
@@ -249,69 +249,69 @@ std::shared_ptr<vcc::Json> VPGConfigExport::ToJson() const
             assert(false);
             break;
         }
-        json->AddString(vcc::ConvertNamingStyle(L"Interface", vcc::NamingStyle::PascalCase, namestyle), interfaceValueStr);
+        json->addString(vcc::convertNamingStyle(L"Interface", vcc::NamingStyle::PascalCase, namestyle), interfaceValueStr);
         // Workspace
-        json->AddString(vcc::ConvertNamingStyle(L"Workspace", vcc::NamingStyle::PascalCase, namestyle), GetWorkspace());
+        json->addString(vcc::convertNamingStyle(L"Workspace", vcc::NamingStyle::PascalCase, namestyle), getWorkspace());
         // IsExportExternalLib
-        json->AddBool(vcc::ConvertNamingStyle(L"IsExportExternalLib", vcc::NamingStyle::PascalCase, namestyle), GetIsExportExternalLib());
+        json->addBool(vcc::convertNamingStyle(L"IsExportExternalLib", vcc::NamingStyle::PascalCase, namestyle), getIsExportExternalLib());
         // ExportDirectoryDll
-        json->AddString(vcc::ConvertNamingStyle(L"ExportDirectoryDll", vcc::NamingStyle::PascalCase, namestyle), GetExportDirectoryDll());
+        json->addString(vcc::convertNamingStyle(L"ExportDirectoryDll", vcc::NamingStyle::PascalCase, namestyle), getExportDirectoryDll());
         // ExportDirectoryExe
-        json->AddString(vcc::ConvertNamingStyle(L"ExportDirectoryExe", vcc::NamingStyle::PascalCase, namestyle), GetExportDirectoryExe());
+        json->addString(vcc::convertNamingStyle(L"ExportDirectoryExe", vcc::NamingStyle::PascalCase, namestyle), getExportDirectoryExe());
         // DllBridgeDirectory
-        json->AddString(vcc::ConvertNamingStyle(L"DllBridgeDirectory", vcc::NamingStyle::PascalCase, namestyle), GetDllBridgeDirectory());
+        json->addString(vcc::convertNamingStyle(L"DllBridgeDirectory", vcc::NamingStyle::PascalCase, namestyle), getDllBridgeDirectory());
         // FormDirectory
-        json->AddString(vcc::ConvertNamingStyle(L"FormDirectory", vcc::NamingStyle::PascalCase, namestyle), GetFormDirectory());
+        json->addString(vcc::convertNamingStyle(L"FormDirectory", vcc::NamingStyle::PascalCase, namestyle), getFormDirectory());
         // ObjectDirectory
-        json->AddString(vcc::ConvertNamingStyle(L"ObjectDirectory", vcc::NamingStyle::PascalCase, namestyle), GetObjectDirectory());
+        json->addString(vcc::convertNamingStyle(L"ObjectDirectory", vcc::NamingStyle::PascalCase, namestyle), getObjectDirectory());
         // TypeDirectory
-        json->AddString(vcc::ConvertNamingStyle(L"TypeDirectory", vcc::NamingStyle::PascalCase, namestyle), GetTypeDirectory());
+        json->addString(vcc::convertNamingStyle(L"TypeDirectory", vcc::NamingStyle::PascalCase, namestyle), getTypeDirectory());
         return json;
     CATCH
     return nullptr;
 }
 
-void VPGConfigExport::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
+void VPGConfigExport::deserializeJson(std::shared_ptr<vcc::IDocument> document)
 {
     TRY
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
         auto json = std::dynamic_pointer_cast<vcc::Json>(document);
         assert(json != nullptr);
         // Interface
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"Interface", namestyle, vcc::NamingStyle::PascalCase))) {
-            std::wstring valueEnumStr = json->GetString(vcc::ConvertNamingStyle(L"Interface", namestyle, vcc::NamingStyle::PascalCase));
+        if (json->isContainKey(vcc::convertNamingStyle(L"Interface", namestyle, vcc::NamingStyle::PascalCase))) {
+            std::wstring valueEnumStr = json->getString(vcc::convertNamingStyle(L"Interface", namestyle, vcc::NamingStyle::PascalCase));
             std::wstring valueEnumStrUpper = valueEnumStr;
-            vcc::ToUpper(valueEnumStrUpper);
+            vcc::toUpper(valueEnumStrUpper);
             int64_t valueEnum = -1;
             if (valueEnumStrUpper == L"JAVA")
                 valueEnum = static_cast<int64_t>(VPGConfigInterfaceType::Java);
             if (valueEnum > -1)
-                SetInterface(static_cast<VPGConfigInterfaceType>(valueEnum));
+                setInterface(static_cast<VPGConfigInterfaceType>(valueEnum));
         }
         // Workspace
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"Workspace", namestyle, vcc::NamingStyle::PascalCase)))
-            SetWorkspace(json->GetString(vcc::ConvertNamingStyle(L"Workspace", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"Workspace", namestyle, vcc::NamingStyle::PascalCase)))
+            setWorkspace(json->getString(vcc::convertNamingStyle(L"Workspace", namestyle, vcc::NamingStyle::PascalCase)));
         // IsExportExternalLib
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"IsExportExternalLib", namestyle, vcc::NamingStyle::PascalCase)))
-            SetIsExportExternalLib(json->GetBool(vcc::ConvertNamingStyle(L"IsExportExternalLib", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"IsExportExternalLib", namestyle, vcc::NamingStyle::PascalCase)))
+            setIsExportExternalLib(json->getBool(vcc::convertNamingStyle(L"IsExportExternalLib", namestyle, vcc::NamingStyle::PascalCase)));
         // ExportDirectoryDll
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ExportDirectoryDll", namestyle, vcc::NamingStyle::PascalCase)))
-            SetExportDirectoryDll(json->GetString(vcc::ConvertNamingStyle(L"ExportDirectoryDll", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ExportDirectoryDll", namestyle, vcc::NamingStyle::PascalCase)))
+            setExportDirectoryDll(json->getString(vcc::convertNamingStyle(L"ExportDirectoryDll", namestyle, vcc::NamingStyle::PascalCase)));
         // ExportDirectoryExe
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ExportDirectoryExe", namestyle, vcc::NamingStyle::PascalCase)))
-            SetExportDirectoryExe(json->GetString(vcc::ConvertNamingStyle(L"ExportDirectoryExe", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ExportDirectoryExe", namestyle, vcc::NamingStyle::PascalCase)))
+            setExportDirectoryExe(json->getString(vcc::convertNamingStyle(L"ExportDirectoryExe", namestyle, vcc::NamingStyle::PascalCase)));
         // DllBridgeDirectory
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"DllBridgeDirectory", namestyle, vcc::NamingStyle::PascalCase)))
-            SetDllBridgeDirectory(json->GetString(vcc::ConvertNamingStyle(L"DllBridgeDirectory", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"DllBridgeDirectory", namestyle, vcc::NamingStyle::PascalCase)))
+            setDllBridgeDirectory(json->getString(vcc::convertNamingStyle(L"DllBridgeDirectory", namestyle, vcc::NamingStyle::PascalCase)));
         // FormDirectory
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"FormDirectory", namestyle, vcc::NamingStyle::PascalCase)))
-            SetFormDirectory(json->GetString(vcc::ConvertNamingStyle(L"FormDirectory", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"FormDirectory", namestyle, vcc::NamingStyle::PascalCase)))
+            setFormDirectory(json->getString(vcc::convertNamingStyle(L"FormDirectory", namestyle, vcc::NamingStyle::PascalCase)));
         // ObjectDirectory
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ObjectDirectory", namestyle, vcc::NamingStyle::PascalCase)))
-            SetObjectDirectory(json->GetString(vcc::ConvertNamingStyle(L"ObjectDirectory", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ObjectDirectory", namestyle, vcc::NamingStyle::PascalCase)))
+            setObjectDirectory(json->getString(vcc::convertNamingStyle(L"ObjectDirectory", namestyle, vcc::NamingStyle::PascalCase)));
         // TypeDirectory
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"TypeDirectory", namestyle, vcc::NamingStyle::PascalCase)))
-            SetTypeDirectory(json->GetString(vcc::ConvertNamingStyle(L"TypeDirectory", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"TypeDirectory", namestyle, vcc::NamingStyle::PascalCase)))
+            setTypeDirectory(json->getString(vcc::convertNamingStyle(L"TypeDirectory", namestyle, vcc::NamingStyle::PascalCase)));
     CATCH
 }
 
@@ -321,10 +321,10 @@ std::shared_ptr<vcc::Json> VPGConfig::ToJson() const
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
         auto json = std::make_unique<vcc::Json>();
         // Version
-        json->AddString(vcc::ConvertNamingStyle(L"Version", vcc::NamingStyle::PascalCase, namestyle), GetVersion());
+        json->addString(vcc::convertNamingStyle(L"Version", vcc::NamingStyle::PascalCase, namestyle), getVersion());
         // ProjectType
         std::wstring projectTypeValueStr = L"";
-        switch (GetProjectType())
+        switch (getProjectType())
         {
         case VPGProjectType::VccModule:
             projectTypeValueStr = L"VccModule";
@@ -351,68 +351,68 @@ std::shared_ptr<vcc::Json> VPGConfig::ToJson() const
             assert(false);
             break;
         }
-        json->AddString(vcc::ConvertNamingStyle(L"ProjectType", vcc::NamingStyle::PascalCase, namestyle), projectTypeValueStr);
+        json->addString(vcc::convertNamingStyle(L"ProjectType", vcc::NamingStyle::PascalCase, namestyle), projectTypeValueStr);
         // ProjectPrefix
-        json->AddString(vcc::ConvertNamingStyle(L"ProjectPrefix", vcc::NamingStyle::PascalCase, namestyle), GetProjectPrefix());
+        json->addString(vcc::convertNamingStyle(L"ProjectPrefix", vcc::NamingStyle::PascalCase, namestyle), getProjectPrefix());
         // ProjectName
-        json->AddString(vcc::ConvertNamingStyle(L"ProjectName", vcc::NamingStyle::PascalCase, namestyle), GetProjectName());
+        json->addString(vcc::convertNamingStyle(L"ProjectName", vcc::NamingStyle::PascalCase, namestyle), getProjectName());
         // ProjectNameDll
-        json->AddString(vcc::ConvertNamingStyle(L"ProjectNameDll", vcc::NamingStyle::PascalCase, namestyle), GetProjectNameDll());
+        json->addString(vcc::convertNamingStyle(L"ProjectNameDll", vcc::NamingStyle::PascalCase, namestyle), getProjectNameDll());
         // ProjectNameExe
-        json->AddString(vcc::ConvertNamingStyle(L"ProjectNameExe", vcc::NamingStyle::PascalCase, namestyle), GetProjectNameExe());
+        json->addString(vcc::convertNamingStyle(L"ProjectNameExe", vcc::NamingStyle::PascalCase, namestyle), getProjectNameExe());
         // IsGit
-        json->AddBool(vcc::ConvertNamingStyle(L"IsGit", vcc::NamingStyle::PascalCase, namestyle), GetIsGit());
+        json->addBool(vcc::convertNamingStyle(L"IsGit", vcc::NamingStyle::PascalCase, namestyle), getIsGit());
         // Template
-        if (GetTemplate() != nullptr)
-            json->AddObject(vcc::ConvertNamingStyle(L"Template", vcc::NamingStyle::PascalCase, namestyle), GetTemplate()->ToJson());
+        if (getTemplate() != nullptr)
+            json->addObject(vcc::convertNamingStyle(L"Template", vcc::NamingStyle::PascalCase, namestyle), getTemplate()->ToJson());
         else
-            json->AddNull(vcc::ConvertNamingStyle(L"Template", vcc::NamingStyle::PascalCase, namestyle));
+            json->addNull(vcc::convertNamingStyle(L"Template", vcc::NamingStyle::PascalCase, namestyle));
         // Behavior
-        if (GetBehavior() != nullptr)
-            json->AddObject(vcc::ConvertNamingStyle(L"Behavior", vcc::NamingStyle::PascalCase, namestyle), GetBehavior()->ToJson());
+        if (getBehavior() != nullptr)
+            json->addObject(vcc::convertNamingStyle(L"Behavior", vcc::NamingStyle::PascalCase, namestyle), getBehavior()->ToJson());
         else
-            json->AddNull(vcc::ConvertNamingStyle(L"Behavior", vcc::NamingStyle::PascalCase, namestyle));
+            json->addNull(vcc::convertNamingStyle(L"Behavior", vcc::NamingStyle::PascalCase, namestyle));
         // Input
-        if (GetInput() != nullptr)
-            json->AddObject(vcc::ConvertNamingStyle(L"Input", vcc::NamingStyle::PascalCase, namestyle), GetInput()->ToJson());
+        if (getInput() != nullptr)
+            json->addObject(vcc::convertNamingStyle(L"Input", vcc::NamingStyle::PascalCase, namestyle), getInput()->ToJson());
         else
-            json->AddNull(vcc::ConvertNamingStyle(L"Input", vcc::NamingStyle::PascalCase, namestyle));
+            json->addNull(vcc::convertNamingStyle(L"Input", vcc::NamingStyle::PascalCase, namestyle));
         // Output
-        if (GetOutput() != nullptr)
-            json->AddObject(vcc::ConvertNamingStyle(L"Output", vcc::NamingStyle::PascalCase, namestyle), GetOutput()->ToJson());
+        if (getOutput() != nullptr)
+            json->addObject(vcc::convertNamingStyle(L"Output", vcc::NamingStyle::PascalCase, namestyle), getOutput()->ToJson());
         else
-            json->AddNull(vcc::ConvertNamingStyle(L"Output", vcc::NamingStyle::PascalCase, namestyle));
+            json->addNull(vcc::convertNamingStyle(L"Output", vcc::NamingStyle::PascalCase, namestyle));
         // Plugins
         auto tmpPlugins = std::make_shared<vcc::Json>();
-        json->AddArray(vcc::ConvertNamingStyle(L"Plugins", vcc::NamingStyle::PascalCase, namestyle), tmpPlugins);
-        for (auto const &element : GetPlugins()) {
-            tmpPlugins->AddArrayString(element);
+        json->addArray(vcc::convertNamingStyle(L"Plugins", vcc::NamingStyle::PascalCase, namestyle), tmpPlugins);
+        for (auto const &element : getPlugins()) {
+            tmpPlugins->addArrayString(element);
         }
         // Exports
         auto tmpExports = std::make_shared<vcc::Json>();
-        json->AddArray(vcc::ConvertNamingStyle(L"Exports", vcc::NamingStyle::PascalCase, namestyle), tmpExports);
-        for (auto const &element : GetExports()) {
-            tmpExports->AddArrayObject(element->ToJson());
+        json->addArray(vcc::convertNamingStyle(L"Exports", vcc::NamingStyle::PascalCase, namestyle), tmpExports);
+        for (auto const &element : getExports()) {
+            tmpExports->addArrayObject(element->ToJson());
         }
         return json;
     CATCH
     return nullptr;
 }
 
-void VPGConfig::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
+void VPGConfig::deserializeJson(std::shared_ptr<vcc::IDocument> document)
 {
     TRY
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
         auto json = std::dynamic_pointer_cast<vcc::Json>(document);
         assert(json != nullptr);
         // Version
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"Version", namestyle, vcc::NamingStyle::PascalCase)))
-            SetVersion(json->GetString(vcc::ConvertNamingStyle(L"Version", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"Version", namestyle, vcc::NamingStyle::PascalCase)))
+            setVersion(json->getString(vcc::convertNamingStyle(L"Version", namestyle, vcc::NamingStyle::PascalCase)));
         // ProjectType
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ProjectType", namestyle, vcc::NamingStyle::PascalCase))) {
-            std::wstring valueEnumStr = json->GetString(vcc::ConvertNamingStyle(L"ProjectType", namestyle, vcc::NamingStyle::PascalCase));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ProjectType", namestyle, vcc::NamingStyle::PascalCase))) {
+            std::wstring valueEnumStr = json->getString(vcc::convertNamingStyle(L"ProjectType", namestyle, vcc::NamingStyle::PascalCase));
             std::wstring valueEnumStrUpper = valueEnumStr;
-            vcc::ToUpper(valueEnumStrUpper);
+            vcc::toUpper(valueEnumStrUpper);
             int64_t valueEnum = -1;
             if (valueEnumStrUpper == L"VCCMODULE")
                 valueEnum = static_cast<int64_t>(VPGProjectType::VccModule);
@@ -429,65 +429,65 @@ void VPGConfig::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
             else if (valueEnumStrUpper == L"CPPEXE")
                 valueEnum = static_cast<int64_t>(VPGProjectType::CppExe);
             if (valueEnum > -1)
-                SetProjectType(static_cast<VPGProjectType>(valueEnum));
+                setProjectType(static_cast<VPGProjectType>(valueEnum));
         }
         // ProjectPrefix
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ProjectPrefix", namestyle, vcc::NamingStyle::PascalCase)))
-            SetProjectPrefix(json->GetString(vcc::ConvertNamingStyle(L"ProjectPrefix", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ProjectPrefix", namestyle, vcc::NamingStyle::PascalCase)))
+            setProjectPrefix(json->getString(vcc::convertNamingStyle(L"ProjectPrefix", namestyle, vcc::NamingStyle::PascalCase)));
         // ProjectName
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ProjectName", namestyle, vcc::NamingStyle::PascalCase)))
-            SetProjectName(json->GetString(vcc::ConvertNamingStyle(L"ProjectName", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ProjectName", namestyle, vcc::NamingStyle::PascalCase)))
+            setProjectName(json->getString(vcc::convertNamingStyle(L"ProjectName", namestyle, vcc::NamingStyle::PascalCase)));
         // ProjectNameDll
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ProjectNameDll", namestyle, vcc::NamingStyle::PascalCase)))
-            SetProjectNameDll(json->GetString(vcc::ConvertNamingStyle(L"ProjectNameDll", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ProjectNameDll", namestyle, vcc::NamingStyle::PascalCase)))
+            setProjectNameDll(json->getString(vcc::convertNamingStyle(L"ProjectNameDll", namestyle, vcc::NamingStyle::PascalCase)));
         // ProjectNameExe
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"ProjectNameExe", namestyle, vcc::NamingStyle::PascalCase)))
-            SetProjectNameExe(json->GetString(vcc::ConvertNamingStyle(L"ProjectNameExe", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"ProjectNameExe", namestyle, vcc::NamingStyle::PascalCase)))
+            setProjectNameExe(json->getString(vcc::convertNamingStyle(L"ProjectNameExe", namestyle, vcc::NamingStyle::PascalCase)));
         // IsGit
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"IsGit", namestyle, vcc::NamingStyle::PascalCase)))
-            SetIsGit(json->GetBool(vcc::ConvertNamingStyle(L"IsGit", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"IsGit", namestyle, vcc::NamingStyle::PascalCase)))
+            setIsGit(json->getBool(vcc::convertNamingStyle(L"IsGit", namestyle, vcc::NamingStyle::PascalCase)));
         // Template
-        SetTemplate(std::make_shared<VPGConfigTemplate>());
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"Template", namestyle, vcc::NamingStyle::PascalCase)) && json->GetObject(vcc::ConvertNamingStyle(L"Template", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {
+        setTemplate(std::make_shared<VPGConfigTemplate>());
+        if (json->isContainKey(vcc::convertNamingStyle(L"Template", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L"Template", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {
             auto tmpObject = std::make_shared<VPGConfigTemplate>();
-            tmpObject->DeserializeJson(json->GetObject(vcc::ConvertNamingStyle(L"Template", namestyle, vcc::NamingStyle::PascalCase)));
-            SetTemplate(tmpObject);
+            tmpObject->deserializeJson(json->getObject(vcc::convertNamingStyle(L"Template", namestyle, vcc::NamingStyle::PascalCase)));
+            setTemplate(tmpObject);
         }
         // Behavior
-        SetBehavior(std::make_shared<VPGConfigBehavior>());
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"Behavior", namestyle, vcc::NamingStyle::PascalCase)) && json->GetObject(vcc::ConvertNamingStyle(L"Behavior", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {
+        setBehavior(std::make_shared<VPGConfigBehavior>());
+        if (json->isContainKey(vcc::convertNamingStyle(L"Behavior", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L"Behavior", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {
             auto tmpObject = std::make_shared<VPGConfigBehavior>();
-            tmpObject->DeserializeJson(json->GetObject(vcc::ConvertNamingStyle(L"Behavior", namestyle, vcc::NamingStyle::PascalCase)));
-            SetBehavior(tmpObject);
+            tmpObject->deserializeJson(json->getObject(vcc::convertNamingStyle(L"Behavior", namestyle, vcc::NamingStyle::PascalCase)));
+            setBehavior(tmpObject);
         }
         // Input
-        SetInput(std::make_shared<VPGConfigInput>());
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"Input", namestyle, vcc::NamingStyle::PascalCase)) && json->GetObject(vcc::ConvertNamingStyle(L"Input", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {
+        setInput(std::make_shared<VPGConfigInput>());
+        if (json->isContainKey(vcc::convertNamingStyle(L"Input", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L"Input", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {
             auto tmpObject = std::make_shared<VPGConfigInput>();
-            tmpObject->DeserializeJson(json->GetObject(vcc::ConvertNamingStyle(L"Input", namestyle, vcc::NamingStyle::PascalCase)));
-            SetInput(tmpObject);
+            tmpObject->deserializeJson(json->getObject(vcc::convertNamingStyle(L"Input", namestyle, vcc::NamingStyle::PascalCase)));
+            setInput(tmpObject);
         }
         // Output
-        SetOutput(std::make_shared<VPGConfigOutput>());
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"Output", namestyle, vcc::NamingStyle::PascalCase)) && json->GetObject(vcc::ConvertNamingStyle(L"Output", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {
+        setOutput(std::make_shared<VPGConfigOutput>());
+        if (json->isContainKey(vcc::convertNamingStyle(L"Output", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L"Output", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {
             auto tmpObject = std::make_shared<VPGConfigOutput>();
-            tmpObject->DeserializeJson(json->GetObject(vcc::ConvertNamingStyle(L"Output", namestyle, vcc::NamingStyle::PascalCase)));
-            SetOutput(tmpObject);
+            tmpObject->deserializeJson(json->getObject(vcc::convertNamingStyle(L"Output", namestyle, vcc::NamingStyle::PascalCase)));
+            setOutput(tmpObject);
         }
         // Plugins
-        ClearPlugins();
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"Plugins", namestyle, vcc::NamingStyle::PascalCase))) {
-            for (auto const &element : json->GetArray(vcc::ConvertNamingStyle(L"Plugins", namestyle, vcc::NamingStyle::PascalCase))) {
-                InsertPlugins(element->GetArrayElementString());
+        clearPlugins();
+        if (json->isContainKey(vcc::convertNamingStyle(L"Plugins", namestyle, vcc::NamingStyle::PascalCase))) {
+            for (auto const &element : json->getArray(vcc::convertNamingStyle(L"Plugins", namestyle, vcc::NamingStyle::PascalCase))) {
+                insertPlugins(element->getArrayElementString());
             }
         }
         // Exports
-        ClearExports();
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"Exports", namestyle, vcc::NamingStyle::PascalCase))) {
-            for (auto const &element : json->GetArray(vcc::ConvertNamingStyle(L"Exports", namestyle, vcc::NamingStyle::PascalCase))) {
+        clearExports();
+        if (json->isContainKey(vcc::convertNamingStyle(L"Exports", namestyle, vcc::NamingStyle::PascalCase))) {
+            for (auto const &element : json->getArray(vcc::convertNamingStyle(L"Exports", namestyle, vcc::NamingStyle::PascalCase))) {
                 auto tmpExports = std::make_shared<VPGConfigExport>();
-                tmpExports->DeserializeJson(element->GetArrayElementObject());
-                InsertExports(tmpExports);
+                tmpExports->deserializeJson(element->getArrayElementObject());
+                insertExports(tmpExports);
             }
         }
     CATCH

@@ -14,7 +14,7 @@ namespace vcc
             ThreadService() : BaseService() {}            
             virtual ~ThreadService() {}
 
-            static void Join(std::shared_ptr<Thread> thread);
-            static void Detach(std::shared_ptr<Thread> thread);
+            static void join(std::shared_ptr<Thread> thread);
+            static void detach(std::shared_ptr<Thread> thread);
     };
 }

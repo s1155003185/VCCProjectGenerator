@@ -12,17 +12,17 @@ namespace vcc
         _Workspace = workspace;
     }
 
-    void GitManager::Validate() const
+    void GitManager::validate() const
     {
         TRY
-            VALIDATE(L"Workspace is empty", !IsBlank(_Workspace))
+            VALIDATE(L"Workspace is empty", !isBlank(_Workspace))
         CATCH
     }
 
-    std::wstring GitManager::GetVersion() const
+    std::wstring GitManager::getVersion() const
     {
         TRY
-            return GitService::GetVersion(_LogConfig.get());
+            return GitService::getVersion(_LogConfig.get());
         CATCH
         return L"";
     }
@@ -30,42 +30,42 @@ namespace vcc
     bool GitManager::IsGitResponse() const
     {
         TRY
-            Validate();
+            validate();
             return GitService::IsGitResponse(_LogConfig.get(), _Workspace);
         CATCH
         return false;
     }
 
-    std::shared_ptr<GitStatus> GitManager::GetStatus(const GitStatusSearchCriteria *searchCriteria) const
+    std::shared_ptr<GitStatus> GitManager::getStatus(const GitStatusSearchCriteria *searchCriteria) const
     {
         TRY
-            Validate();
-            return GitService::GetStatus(_LogConfig.get(), _Workspace, searchCriteria);
+            validate();
+            return GitService::getStatus(_LogConfig.get(), _Workspace, searchCriteria);
         CATCH
         return nullptr;
     }
 
-    void GitManager::InitializeGitResponse()
+    void GitManager::initializeGitResponse()
     {
         TRY
-            Validate();
-            GitService::InitializeGitResponse(_LogConfig.get(), _Workspace);
+            validate();
+            GitService::initializeGitResponse(_LogConfig.get(), _Workspace);
         CATCH
     }
 
-    void GitManager::CloneGitResponse(const std::wstring &url, const GitCloneOption *option)
+    void GitManager::cloneGitResponse(const std::wstring &url, const GitCloneOption *option)
     {
         TRY
-            Validate();
-            GitService::CloneGitResponse(_LogConfig.get(), _Workspace, url, option);
+            validate();
+            GitService::cloneGitResponse(_LogConfig.get(), _Workspace, url, option);
         CATCH
     }
 
-    std::vector<std::shared_ptr<GitRemote>> GitManager::GetRemote()
+    std::vector<std::shared_ptr<GitRemote>> GitManager::getRemote()
     {
         TRY
-            Validate();
-            return GitService::GetRemote(_LogConfig.get(), _Workspace);
+            validate();
+            return GitService::getRemote(_LogConfig.get(), _Workspace);
         CATCH
         return {};
     }
@@ -73,7 +73,7 @@ namespace vcc
     void GitManager::AddRemote(const std::wstring &name, const std::wstring &url, const GitRemoteMirror &mirror)
     {
         TRY
-            Validate();
+            validate();
             GitService::AddRemote(_LogConfig.get(), _Workspace, name, url, mirror);
         CATCH
     }
@@ -81,7 +81,7 @@ namespace vcc
     void GitManager::RenameRemote(const std::wstring &oldName, const std::wstring &newName)
     {
         TRY
-            Validate();
+            validate();
             GitService::RenameRemote(_LogConfig.get(), _Workspace, oldName, newName);
         CATCH
     }
@@ -89,7 +89,7 @@ namespace vcc
     void GitManager::RemoveRemote(const std::wstring &name)
     {
         TRY
-            Validate();
+            validate();
             GitService::RemoveRemote(_LogConfig.get(), _Workspace, name);
         CATCH
     }
@@ -97,7 +97,7 @@ namespace vcc
     void GitManager::FetchAll()
     {
         TRY
-            Validate();
+            validate();
             GitService::FetchAll(_LogConfig.get(), _Workspace);
         CATCH
     }
@@ -105,7 +105,7 @@ namespace vcc
     void GitManager::Pull(const GitPullOption *option)
     {
         TRY
-            Validate();
+            validate();
             GitService::Pull(_LogConfig.get(), _Workspace, option);
         CATCH
     }
@@ -113,34 +113,34 @@ namespace vcc
     void GitManager::Push(const GitPushOption *option)
     {
         TRY
-            Validate();
+            validate();
             GitService::Push(_LogConfig.get(), _Workspace, option);
         CATCH
     }
     
-    std::vector<std::shared_ptr<GitLog>> GitManager::GetLogs(const GitLogSearchCriteria *searchCriteria)
+    std::vector<std::shared_ptr<GitLog>> GitManager::getLogs(const GitLogSearchCriteria *searchCriteria)
     {
         TRY
-            Validate();
-            return GitService::GetLogs(_LogConfig.get(), _Workspace, searchCriteria);
+            validate();
+            return GitService::getLogs(_LogConfig.get(), _Workspace, searchCriteria);
         CATCH
         return {};
     }
     
-    std::vector<std::wstring> GitManager::GetTags(const GitTagSearchCriteria *searchCriteria)
+    std::vector<std::wstring> GitManager::getTags(const GitTagSearchCriteria *searchCriteria)
     {
         TRY
-            Validate();
-            return GitService::GetTags(_LogConfig.get(), _Workspace, searchCriteria);
+            validate();
+            return GitService::getTags(_LogConfig.get(), _Workspace, searchCriteria);
         CATCH
         return {};
     }
     
-    std::shared_ptr<GitTagCurrentTag> GitManager::GetCurrentTag()
+    std::shared_ptr<GitTagCurrentTag> GitManager::getCurrentTag()
     {
         TRY
-            Validate();
-            return GitService::GetCurrentTag(_LogConfig.get(), _Workspace);
+            validate();
+            return GitService::getCurrentTag(_LogConfig.get(), _Workspace);
         CATCH
         return nullptr;
     }
@@ -148,7 +148,7 @@ namespace vcc
     void GitManager::CreateTag(const std::wstring &tagName, const GitTagCreateTagOption *option)
     {
         TRY
-            Validate();
+            validate();
             GitService::CreateTag(_LogConfig.get(), _Workspace, tagName, option);
         CATCH
     }
@@ -156,7 +156,7 @@ namespace vcc
     void GitManager::Switch(const std::wstring &tagName, bool isForce)
     {
         TRY
-            Validate();
+            validate();
             GitService::Switch(_LogConfig.get(), _Workspace, tagName, isForce);
         CATCH
     }
@@ -164,25 +164,25 @@ namespace vcc
     void GitManager::DeleteTag(const std::wstring &tagName)
     {
         TRY
-            Validate();
+            validate();
             GitService::DeleteTag(_LogConfig.get(), _Workspace, tagName);
         CATCH
     }
     
-    std::wstring GitManager::GetCurrentBranchName()
+    std::wstring GitManager::getCurrentBranchName()
     {
         TRY
-            Validate();
-            return GitService::GetCurrentBranchName(_LogConfig.get(), _Workspace);
+            validate();
+            return GitService::getCurrentBranchName(_LogConfig.get(), _Workspace);
         CATCH
         return L"";
     }
     
-    std::vector<std::shared_ptr<GitBranch>> GitManager::GetBranches()
+    std::vector<std::shared_ptr<GitBranch>> GitManager::getBranches()
     {
         TRY
-            Validate();
-            return GitService::GetBranches(_LogConfig.get(), _Workspace);
+            validate();
+            return GitService::getBranches(_LogConfig.get(), _Workspace);
         CATCH
         return {};
     }
@@ -190,7 +190,7 @@ namespace vcc
     void GitManager::CreateBranch( const std::wstring &branchName, const GitBranchCreateBranchOption *option)
     {
         TRY
-            Validate();
+            validate();
             GitService::CreateBranch(_LogConfig.get(), _Workspace, branchName, option);
         CATCH
     }
@@ -198,7 +198,7 @@ namespace vcc
     void GitManager::SwitchBranch(const std::wstring &branchName, const GitBranchSwitchBranchOption *option)
     {
         TRY
-            Validate();
+            validate();
             GitService::SwitchBranch(_LogConfig.get(), _Workspace, branchName, option);
         CATCH
     }
@@ -206,7 +206,7 @@ namespace vcc
     void GitManager::RenameBranch(const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce)
     {
         TRY
-            Validate();
+            validate();
             GitService::RenameBranch(_LogConfig.get(), _Workspace, oldBranchName, newBranchName, isForce);
         CATCH
     }
@@ -214,7 +214,7 @@ namespace vcc
     void GitManager::CopyBranch(const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce)
     {
         TRY
-            Validate();
+            validate();
             GitService::CopyBranch(_LogConfig.get(), _Workspace, oldBranchName, newBranchName, isForce);
         CATCH
     }
@@ -222,92 +222,92 @@ namespace vcc
     void GitManager::DeleteBranch(const std::wstring &branchName, bool isForce)
     {
         TRY
-            Validate();
+            validate();
             GitService::DeleteBranch(_LogConfig.get(), _Workspace, branchName, isForce);
         CATCH
     }
     
-    std::shared_ptr<GitDifferenceSummary> GitManager::GetDifferenceSummary(const std::vector<std::wstring> &hashIDs)
+    std::shared_ptr<GitDifferenceSummary> GitManager::getDifferenceSummary(const std::vector<std::wstring> &hashIDs)
     {
         TRY
-            Validate();
-            return GitService::GetDifferenceSummary(_LogConfig.get(), _Workspace, hashIDs);
+            validate();
+            return GitService::getDifferenceSummary(_LogConfig.get(), _Workspace, hashIDs);
         CATCH
         return nullptr;
     }
     
-    std::shared_ptr<GitDifference> GitManager::GetDifferenceIndexFile(const GitDifferentSearchCriteria *searchCriteria)
+    std::shared_ptr<GitDifference> GitManager::getDifferenceIndexFile(const GitDifferentSearchCriteria *searchCriteria)
     {
         TRY
-            Validate();
-            return GitService::GetDifferenceIndexFile(_LogConfig.get(), _Workspace, searchCriteria);
+            validate();
+            return GitService::getDifferenceIndexFile(_LogConfig.get(), _Workspace, searchCriteria);
         CATCH
         return nullptr;
     }
     
-    std::shared_ptr<GitDifference> GitManager::GetDifferenceWorkingFile(const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria)
+    std::shared_ptr<GitDifference> GitManager::getDifferenceWorkingFile(const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria)
     {
         TRY
-            Validate();
-            return GitService::GetDifferenceWorkingFile(_LogConfig.get(), _Workspace, filePath, searchCriteria);
+            validate();
+            return GitService::getDifferenceWorkingFile(_LogConfig.get(), _Workspace, filePath, searchCriteria);
         CATCH
         return nullptr;
     }
     
-    std::shared_ptr<GitDifference> GitManager::GetDifferenceFile(const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria)
+    std::shared_ptr<GitDifference> GitManager::getDifferenceFile(const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria)
     {
         TRY
-            Validate();
-            return GitService::GetDifferenceFile(_LogConfig.get(), _Workspace, filePath, searchCriteria);
+            validate();
+            return GitService::getDifferenceFile(_LogConfig.get(), _Workspace, filePath, searchCriteria);
         CATCH
         return nullptr;
     }
 
-    std::shared_ptr<GitDifference> GitManager::GetDifferenceCommit(const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria)
+    std::shared_ptr<GitDifference> GitManager::getDifferenceCommit(const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria)
     {
         TRY
-            Validate();
-            return GitService::GetDifferenceCommit(_LogConfig.get(), _Workspace, fromHashID, toHashID, filePath, searchCriteria);
+            validate();
+            return GitService::getDifferenceCommit(_LogConfig.get(), _Workspace, fromHashID, toHashID, filePath, searchCriteria);
         CATCH
         return nullptr;
     }
     
-    void GitManager::Stage(const std::wstring &filePath)
+    void GitManager::stage(const std::wstring &filePath)
     {
         TRY
-            Validate();
-            GitService::Stage(_LogConfig.get(), _Workspace, filePath);
+            validate();
+            GitService::stage(_LogConfig.get(), _Workspace, filePath);
         CATCH
     }
     
-    void GitManager::StageAll()
+    void GitManager::stageAll()
     {
         TRY
-            Validate();
-            GitService::StageAll(_LogConfig.get(), _Workspace);
+            validate();
+            GitService::stageAll(_LogConfig.get(), _Workspace);
         CATCH
     }
     
-    void GitManager::Unstage(const std::wstring &filePath)
+    void GitManager::unstage(const std::wstring &filePath)
     {
         TRY
-            Validate();
-            GitService::Unstage(_LogConfig.get(), _Workspace, filePath);
+            validate();
+            GitService::unstage(_LogConfig.get(), _Workspace, filePath);
         CATCH
     }
     
-    void GitManager::UnstageAll()
+    void GitManager::unstageAll()
     {
         TRY
-            Validate();
-            GitService::UnstageAll(_LogConfig.get(), _Workspace);
+            validate();
+            GitService::unstageAll(_LogConfig.get(), _Workspace);
         CATCH
     }
     
     void GitManager::Commit(const std::wstring &command)
     {
         TRY
-            Validate();
+            validate();
             GitService::Commit(_LogConfig.get(), _Workspace, command);
         CATCH
     }
@@ -315,7 +315,7 @@ namespace vcc
     void GitManager::Amend()
     {
         TRY
-            Validate();
+            validate();
             GitService::Amend(_LogConfig.get(), _Workspace);
         CATCH
     }

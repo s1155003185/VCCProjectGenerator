@@ -22,37 +22,37 @@ namespace vcc
             virtual ~BaseResult() {}
 
         public:
-            virtual ExceptionType GetExceptionType() const override
+            virtual ExceptionType getExceptionType() const override
             {
                 return _ExceptionType;
             }
 
-            virtual void SetExceptionType(const ExceptionType &exceptionType) const override
+            virtual void setExceptionType(const ExceptionType &exceptionType) const override
             {
                 _ExceptionType = exceptionType;
             }
 
-            virtual std::wstring GetMessage() const override
+            virtual std::wstring getMessage() const override
             {
                 return _Message;
             }
 
-            virtual void SetMessage(const std::wstring &message) const override
+            virtual void setMessage(const std::wstring &message) const override
             {
                 _Message = message;
             }
             
-            virtual bool IsError() const override
+            virtual bool isError() const override
             {
                 return _ExceptionType != ExceptionType::NoError && _ExceptionType != ExceptionType::Warning;
             }
 
-            virtual bool IsWarning() const override
+            virtual bool isWarning() const override
             {
                 return _ExceptionType == ExceptionType::Warning;
             }
 
-            virtual bool IsThrowException() const override
+            virtual bool isThrowException() const override
             {
                 return false;
             }

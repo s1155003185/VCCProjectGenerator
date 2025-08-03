@@ -12,36 +12,36 @@ namespace vcc
 {
     ThreadManager::~ThreadManager()
     {
-        Stop();
+        stop();
     }
 
-    std::vector<std::shared_ptr<Thread>> &ThreadManager::GetThreads() const
+    std::vector<std::shared_ptr<Thread>> &ThreadManager::getThreads() const
     {
         return _Threads;
     }
 
-    std::vector<std::shared_ptr<Thread>> &ThreadManager::GetActiveThreads() const
+    std::vector<std::shared_ptr<Thread>> &ThreadManager::getActiveThreads() const
     {
         return _ActiveThreads;
     }
 
-    void ThreadManager::Queue(std::shared_ptr<Thread> thread) const
+    void ThreadManager::queue(std::shared_ptr<Thread> thread) const
     {
         TRY
             _Threads.push_back(thread);
-            Trigger();
+            trigger();
         CATCH
     }
     
-    void ThreadManager::Urgent(std::shared_ptr<Thread> thread) const
+    void ThreadManager::urgent(std::shared_ptr<Thread> thread) const
     {
         TRY
             _Threads.insert(_Threads.begin(), thread);
-            Trigger();
+            trigger();
         CATCH
     }
 
-    void ThreadManager::Trigger() const
+    void ThreadManager::trigger() const
     {
         TRY
             // cannot use lock, or it will be dead lock
@@ -59,23 +59,23 @@ namespace vcc
                 _ActiveThreads.erase(
                     std::remove_if(_ActiveThreads.begin(), _ActiveThreads.end(), 
                     [](std::shared_ptr<Thread> thread) {
-                        return thread->GetState() == ProcessState::Complete
-                        || thread->GetState() == ProcessState::Stop;
+                        return thread->getState() == ProcessState::Complete
+                        || thread->getState() == ProcessState::Stop;
                     }));
             }
             if (!_Threads.empty() && _MaxThreadPoolSize > 0 && _ActiveThreads.size() < (size_t)_MaxThreadPoolSize) {
                 auto firstElement = _Threads.front();
-                firstElement->SetManager(this);
-                firstElement->SetState(ProcessState::Idle);
+                firstElement->setManager(this);
+                firstElement->setState(ProcessState::Idle);
                 _ActiveThreads.push_back(firstElement);
                 _Threads.erase(_Threads.begin());
                 switch (_ThreadManagementMode)
                 {
                 case ThreadManagementMode::Detach:
-                    ThreadService::Detach(firstElement);
+                    ThreadService::detach(firstElement);
                     break;
                 case ThreadManagementMode::Join:
-                    ThreadService::Join(firstElement);
+                    ThreadService::join(firstElement);
                     break;
                 default:
                     assert(false);
@@ -86,49 +86,49 @@ namespace vcc
         CATCH
     }
 
-    void ThreadManager::Join(std::shared_ptr<Thread> thread) const
+    void ThreadManager::join(std::shared_ptr<Thread> thread) const
     {
         TRY
-            ThreadService::Join(thread);
+            ThreadService::join(thread);
         CATCH        
     }
     
-    void ThreadManager::Detach(std::shared_ptr<Thread> thread) const
+    void ThreadManager::detach(std::shared_ptr<Thread> thread) const
     {
         TRY
-            ThreadService::Detach(thread);
+            ThreadService::detach(thread);
         CATCH 
     }
 
-    bool ThreadManager::IsIdle() const
+    bool ThreadManager::isIdle() const
     {
         return _State == ProcessState::Idle || _State == ProcessState::Complete || _State == ProcessState::Stop;
     }
 
-    void ThreadManager::Suspend() const
+    void ThreadManager::suspend() const
     {
         TRY
             _State = ProcessState::Suspend;
         CATCH        
     }
 
-    void ThreadManager::Resume() const
+    void ThreadManager::resume() const
     {
         TRY
             _State = ProcessState::Idle;
-            Trigger();
+            trigger();
         CATCH
     }
 
-    void ThreadManager::Stop() const
+    void ThreadManager::stop() const
     {
         TRY
-            ClearWaitingThread();
+            clearWaitingThread();
             for (auto &thread : _ActiveThreads)
-                thread->SetState(ProcessState::Stop);
+                thread->setState(ProcessState::Stop);
             
             // Remove Complete thread
-            Trigger();
+            trigger();
             if (_ActiveThreads.empty())
                 return;
 
@@ -137,27 +137,27 @@ namespace vcc
                     for (auto &thread : _ActiveThreads) {
                         TRY
                         #ifdef _WIN32
-                            TerminalService::Execute(_LogConfig.get(), L"Thread", L"taskkill /PID " + thread->GetPid() + L" /F");
+                            TerminalService::execute(_LogConfig.get(), L"Thread", L"taskkill /PID " + thread->getPid() + L" /F");
                         #else
-                            TerminalService::Execute(_LogConfig.get(), L"Thread", L"kill " + thread->GetPid());
+                            TerminalService::execute(_LogConfig.get(), L"Thread", L"kill " + thread->getPid());
                         #endif
                         // wait 1s
                         Sleep(1000);
                         CATCH_SLIENT
                     }
                     // Remove Complete thread
-                    Trigger();
+                    trigger();
                 } else if (_TerminateMode == ThreadManagerTerminateMode::Wait) {
                     auto tmpThread = std::make_shared<Thread>(_LogConfig, L"ThreadTerminate", L"Start", L"Complete",
                         [this](const Thread * /*thread*/) {
                         while (true) {
-                            this->Trigger();
-                            if (this->GetActiveThreads().empty())
+                            this->trigger();
+                            if (this->getActiveThreads().empty())
                                 break;
                             Sleep(500); // wait 0.5s
                         }
                     });
-                    ThreadService::Join(tmpThread);
+                    ThreadService::join(tmpThread);
                 }
             }
             _ActiveThreads.clear();
@@ -165,7 +165,7 @@ namespace vcc
         CATCH
     }
     
-    void ThreadManager::ClearWaitingThread() const
+    void ThreadManager::clearWaitingThread() const
     {
         TRY
             _Threads.clear();

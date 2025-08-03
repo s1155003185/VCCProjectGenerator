@@ -13,18 +13,18 @@
 
 namespace vcc
 {
-    std::wstring ConfigBuilder::Serialize(const IDocument *doc) const
+    std::wstring ConfigBuilder::serialize(const IDocument *doc) const
     {
         std::wstring result = L"";
         TRY  
             Config *configObj = dynamic_cast<Config *>(const_cast<IDocument *>(doc));
             assert(configObj != nullptr);
-            for (auto const &pair : configObj->GetConfigs()) {
+            for (auto const &pair : configObj->getConfigs()) {
                 std::wstring key = pair.first;
                 std::wstring value = pair.second;
-                Trim(key);
-                Trim(value);
-                if (configObj->IsValue(key))
+                trim(key);
+                trim(value);
+                if (configObj->isValue(key))
                     result += key + L"=" + value + L"\r\n";
                 else
                     result += value + L"\r\n";
@@ -33,27 +33,27 @@ namespace vcc
         return result;
     }
 
-    void ConfigBuilder::Deserialize(const std::wstring &str, size_t &/*pos*/, std::shared_ptr<IDocument> doc) const
+    void ConfigBuilder::deserialize(const std::wstring &str, size_t &/*pos*/, std::shared_ptr<IDocument> doc) const
     {
         TRY
             auto configObj = std::dynamic_pointer_cast<Config>(doc);
             assert(configObj != nullptr);
 
-            std::vector<std::wstring> lines = SplitStringByLine(str);
+            std::vector<std::wstring> lines = splitStringByLine(str);
             for (std::wstring line : lines) {
-                Trim(line);
+                trim(line);
 
                 if (line.empty())
                     configObj->AddLine();
-                else if (IsStartWith(line, L"#"))
+                else if (isStartWith(line, L"#"))
                     configObj->AddCommand(line);
                 else {
-                    size_t eqPos = Find(line, L"=");
+                    size_t eqPos = find(line, L"=");
                     if (eqPos != std::wstring::npos) {
                         std::wstring key = line.substr(0, eqPos);
                         std::wstring value = line.substr(eqPos + 1);
-                        Trim(key);
-                        Trim(value);
+                        trim(key);
+                        trim(value);
                         configObj->AddValue(key, value);
                     } else
                         configObj->AddLine(line);
@@ -62,11 +62,11 @@ namespace vcc
         CATCH
     }
 
-    void ConfigBuilder::Deserialize(const std::wstring &str, std::shared_ptr<IDocument> doc) const
+    void ConfigBuilder::deserialize(const std::wstring &str, std::shared_ptr<IDocument> doc) const
     {
         TRY
             size_t pos = 0;
-            Deserialize(str, pos, doc);
+            deserialize(str, pos, doc);
         CATCH
     }
 }

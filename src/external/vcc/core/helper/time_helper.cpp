@@ -21,7 +21,7 @@ namespace vcc
         std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
     }
 
-    std::wstring GetDateString(const time_t &timer)
+    std::wstring getDateString(const time_t &timer)
     {
         std::tm bt{};
     #if defined(__unix__)
@@ -38,13 +38,13 @@ namespace vcc
         return str2wstr(std::string(dateString));
     }
 
-    std::wstring GetCurrentDateString()
+    std::wstring getCurrentDateString()
     {
         auto ts = std::chrono::system_clock::now();
-        return GetDateString(std::chrono::system_clock::to_time_t(ts));
+        return getDateString(std::chrono::system_clock::to_time_t(ts));
     }
 
-    std::wstring GetDatetimeString(const time_t &timer)
+    std::wstring getDatetimeString(const time_t &timer)
     {
         std::tm bt{};
     #if defined(__unix__)
@@ -61,13 +61,13 @@ namespace vcc
         return str2wstr(std::string(dateString));
     }
 
-    std::wstring GetCurrentDatetimeString()
+    std::wstring getCurrentDatetimeString()
     {
         auto ts = std::chrono::system_clock::now();
-        std::wstring dateTimeStr = GetDatetimeString(std::chrono::system_clock::to_time_t(ts));
+        std::wstring dateTimeStr = getDatetimeString(std::chrono::system_clock::to_time_t(ts));
         auto nowMs = std::chrono::duration_cast<std::chrono::milliseconds>(ts.time_since_epoch()) % 1000;
         auto nowMsStr = std::to_string(nowMs.count());
-        return dateTimeStr + str2wstr("." + PadLeft(nowMsStr, 3, '0'));
+        return dateTimeStr + str2wstr("." + padLeft(nowMsStr, 3, '0'));
     }
 
     time_t ParseDatetime(const std::wstring &timeStr, const std::wstring &format)

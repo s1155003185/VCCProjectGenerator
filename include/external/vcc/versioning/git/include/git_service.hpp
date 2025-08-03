@@ -22,7 +22,7 @@ namespace vcc
             GitStatusSearchCriteria() : BaseObject() {}
             virtual ~GitStatusSearchCriteria() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitStatusSearchCriteria>(*this);
             }
@@ -38,7 +38,7 @@ namespace vcc
             GitCloneOption() : BaseObject() {}
             virtual ~GitCloneOption() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitCloneOption>(*this);
             }
@@ -70,7 +70,7 @@ namespace vcc
             GitStatus() : BaseObject() {}
             virtual ~GitStatus() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitStatus>(*this);
             }
@@ -93,7 +93,7 @@ namespace vcc
             GitRemote() : BaseObject() {}
             virtual ~GitRemote() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitRemote>(*this);
             }
@@ -118,7 +118,7 @@ namespace vcc
             GitPullOption() : BaseObject() {}
             virtual ~GitPullOption() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitPullOption>(*this);
             }
@@ -135,7 +135,7 @@ namespace vcc
             GitPushOption() : BaseObject() {}
             virtual ~GitPushOption() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitPushOption>(*this);
             }
@@ -203,7 +203,7 @@ namespace vcc
             GitLogSearchCriteria() : BaseObject() {}
             virtual ~GitLogSearchCriteria() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitLogSearchCriteria>(*this);
             }
@@ -237,7 +237,7 @@ namespace vcc
             GitLog() : BaseObject() {}
             virtual ~GitLog() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitLog>(*this);
             }
@@ -254,7 +254,7 @@ namespace vcc
             GitTagSearchCriteria() : BaseObject() {}
             virtual ~GitTagSearchCriteria() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitTagSearchCriteria>(*this);
             }
@@ -270,7 +270,7 @@ namespace vcc
             GitTagCurrentTag() : BaseObject() {}
             virtual ~GitTagCurrentTag() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitTagCurrentTag>(*this);
             }
@@ -297,7 +297,7 @@ namespace vcc
             GitTagCreateTagOption() : BaseObject() {}
             virtual ~GitTagCreateTagOption() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitTagCreateTagOption>(*this);
             }
@@ -315,7 +315,7 @@ namespace vcc
             GitBranch() : BaseObject() {}
             virtual ~GitBranch() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitBranch>(*this);
             }
@@ -338,7 +338,7 @@ namespace vcc
             GitBranchCreateBranchOption() : BaseObject() {}
             virtual ~GitBranchCreateBranchOption() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitBranchCreateBranchOption>(*this);
             }
@@ -352,7 +352,7 @@ namespace vcc
             GitBranchSwitchBranchOption() : BaseObject() {}
             virtual ~GitBranchSwitchBranchOption() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitBranchSwitchBranchOption>(*this);
             }
@@ -367,7 +367,7 @@ namespace vcc
             GitDifferentSearchCriteria() : BaseObject() {}
             virtual ~GitDifferentSearchCriteria() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitDifferentSearchCriteria>(*this);
             }
@@ -383,7 +383,7 @@ namespace vcc
             GitDifferenceSummary() : BaseObject() {}
             virtual ~GitDifferenceSummary() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitDifferenceSummary>(*this);
             }
@@ -403,7 +403,7 @@ namespace vcc
             GitDifference() : BaseObject() {}
             virtual ~GitDifference() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitDifference>(*this);
             }
@@ -429,10 +429,10 @@ namespace vcc
             GitConfig() : BaseObject() {}
             virtual ~GitConfig() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 std::shared_ptr<GitConfig> obj = std::make_shared<GitConfig>(*this);
-                obj->CloneConfigs(this->GetConfigs());
+                obj->cloneConfigs(this->getConfigs());
                 return obj;
             }
     };
@@ -443,22 +443,22 @@ namespace vcc
             GitService() : BaseService() {}
             ~GitService() {}
 
-            static std::wstring Execute(const LogConfig *logConfig, const std::wstring &command);
+            static std::wstring execute(const LogConfig *logConfig, const std::wstring &command);
 
             // General
-            static std::wstring GetVersion(const LogConfig *logConfig);
+            static std::wstring getVersion(const LogConfig *logConfig);
             static bool IsGitResponse(const LogConfig *logConfig, const std::wstring &workspace);
-            static std::shared_ptr<GitStatus> GetStatus(const LogConfig *logConfig, const std::wstring &workspace, const GitStatusSearchCriteria *searchCriteria = nullptr);
+            static std::shared_ptr<GitStatus> getStatus(const LogConfig *logConfig, const std::wstring &workspace, const GitStatusSearchCriteria *searchCriteria = nullptr);
 
             // Initialize
-            static void InitializeGitResponse(const LogConfig *logConfig, const std::wstring &workspace);
-            static void CloneGitResponse(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &url, const GitCloneOption *option = nullptr);
+            static void initializeGitResponse(const LogConfig *logConfig, const std::wstring &workspace);
+            static void cloneGitResponse(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &url, const GitCloneOption *option = nullptr);
 
             /*-----------------------------------*
             * ----------- Remote     -----------*
             * ----------------------------------*/
             // remote
-            static std::vector<std::shared_ptr<GitRemote>> GetRemote(const LogConfig *logConfig, const std::wstring &workspace);
+            static std::vector<std::shared_ptr<GitRemote>> getRemote(const LogConfig *logConfig, const std::wstring &workspace);
             static void AddRemote(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &name, const std::wstring &url, const GitRemoteMirror &mirror = GitRemoteMirror::NA);
             static void RenameRemote(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &oldName, const std::wstring &newName);
             static void RemoveRemote(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &name);
@@ -478,22 +478,22 @@ namespace vcc
             * -----------   Log      -----------*
             * ----------------------------------*/
             // only parse git log --graph --oneline --pretty=format:"(%H)(%h)(%T)(%t)(%P)(%p)"
-            static std::vector<std::shared_ptr<GitLog>> ParseGitLogGraph(const std::wstring &str);
+            static std::vector<std::shared_ptr<GitLog>> parseGitLogGraph(const std::wstring &str);
             // only parse pattern L"Thu Jan 25 22:47:35 2024 +0800"
-            static time_t ParseGitLogDatetime(const std::wstring &datimeStr);
-            static void ParseGitLog(const std::wstring &str, std::shared_ptr<GitLog> log);
+            static time_t parseGitLogDatetime(const std::wstring &datimeStr);
+            static void parseGitLog(const std::wstring &str, std::shared_ptr<GitLog> log);
             // To draw graph, mark the point by column index first, then link nodes if having same ParentHashID and HashID
-            static std::vector<std::shared_ptr<GitLog>> GetLogs(const LogConfig *logConfig, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria = nullptr);
-            static std::shared_ptr<GitLog> GetCurrentLog(const LogConfig *logConfig, const std::wstring &workspace);
-            //static void GetLog(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &hashID, std::shared_ptr<GitLog> log);
+            static std::vector<std::shared_ptr<GitLog>> getLogs(const LogConfig *logConfig, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria = nullptr);
+            static std::shared_ptr<GitLog> getCurrentLog(const LogConfig *logConfig, const std::wstring &workspace);
+            //static void getLog(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &hashID, std::shared_ptr<GitLog> log);
             
             /*-----------------------------------*
             * -----------    Tag     -----------*
             * ----------------------------------*/
-            static std::vector<std::wstring> GetTags(const LogConfig *logConfig, const std::wstring &workspace, const GitTagSearchCriteria *searchCriteria = nullptr);
+            static std::vector<std::wstring> getTags(const LogConfig *logConfig, const std::wstring &workspace, const GitTagSearchCriteria *searchCriteria = nullptr);
             // Note: There is bug for Git, if using process, return string does not have branch and tags " (HEAD -> main, tag: v0.0.1)" after commit Hash ID. But it is normal if using terminal
-            //static void GetTag(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName, std::shared_ptr<GitLog> log);
-            static std::shared_ptr<GitTagCurrentTag> GetCurrentTag(const LogConfig *logConfig, const std::wstring &workspace);
+            //static void getTag(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName, std::shared_ptr<GitLog> log);
+            static std::shared_ptr<GitTagCurrentTag> getCurrentTag(const LogConfig *logConfig, const std::wstring &workspace);
             static void CreateTag(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName, const GitTagCreateTagOption *option = nullptr);
             // Window behavior and Linux Behavior different, Window throw exception (tag will detach branch) while Linux will not
             // Can use GitService::SwitchReverse to switch back
@@ -510,9 +510,9 @@ namespace vcc
             // 2. L"  master hashID Title"
             // 3. L"  head -> orgin/master"
             static void ParseGitBranch(const std::wstring &str, std::shared_ptr<GitBranch> branch);
-            // static void GetCurrentBranch(const LogConfig *logConfig, const std::wstring &workspace, std::shared_ptr<GitBranch> branch);
-            static std::wstring GetCurrentBranchName(const LogConfig *logConfig, const std::wstring &workspace);
-            static std::vector<std::shared_ptr<GitBranch>> GetBranches(const LogConfig *logConfig, const std::wstring &workspace);
+            // static void getCurrentBranch(const LogConfig *logConfig, const std::wstring &workspace, std::shared_ptr<GitBranch> branch);
+            static std::wstring getCurrentBranchName(const LogConfig *logConfig, const std::wstring &workspace);
+            static std::vector<std::shared_ptr<GitBranch>> getBranches(const LogConfig *logConfig, const std::wstring &workspace);
             static void CreateBranch(const LogConfig *logConfig, const std::wstring &workspace,  const std::wstring &branchName, const GitBranchCreateBranchOption *option = nullptr);
             static void SwitchBranch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &branchName, const GitBranchSwitchBranchOption *option = nullptr);
             static void RenameBranch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce = false);
@@ -536,13 +536,13 @@ namespace vcc
             // hashIDs.size() == 0, then different from latest commit to current working files
             // hashIDs.size() == 1, then different from commit to current working files
             // hashIDs.size() > 1, then different between commit
-            static std::shared_ptr<GitDifferenceSummary> GetDifferenceSummary(const LogConfig *logConfig, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs);
+            static std::shared_ptr<GitDifferenceSummary> getDifferenceSummary(const LogConfig *logConfig, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs);
             // filePath must be filled
-            static std::shared_ptr<GitDifference> ParseGitDiff(const std::wstring &str);
-            static std::shared_ptr<GitDifference> GetDifferenceIndexFile(const LogConfig *logConfig, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria = nullptr);
-            static std::shared_ptr<GitDifference> GetDifferenceWorkingFile(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria = nullptr);
-            static std::shared_ptr<GitDifference> GetDifferenceFile(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria = nullptr);
-            static std::shared_ptr<GitDifference> GetDifferenceCommit(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria = nullptr);
+            static std::shared_ptr<GitDifference> parseGitDiff(const std::wstring &str);
+            static std::shared_ptr<GitDifference> getDifferenceIndexFile(const LogConfig *logConfig, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria = nullptr);
+            static std::shared_ptr<GitDifference> getDifferenceWorkingFile(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria = nullptr);
+            static std::shared_ptr<GitDifference> getDifferenceFile(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria = nullptr);
+            static std::shared_ptr<GitDifference> getDifferenceCommit(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria = nullptr);
 
             /*-----------------------------------*
             * ----------    Blame    -----------*
@@ -557,10 +557,10 @@ namespace vcc
             /*-----------------------------------*
             * ----------- Commit     -----------*
             * ----------------------------------*/
-            static void Stage(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath);
-            static void StageAll(const LogConfig *logConfig, const std::wstring &workspace);
-            static void Unstage(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath);
-            static void UnstageAll(const LogConfig *logConfig, const std::wstring &workspace);
+            static void stage(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath);
+            static void stageAll(const LogConfig *logConfig, const std::wstring &workspace);
+            static void unstage(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath);
+            static void unstageAll(const LogConfig *logConfig, const std::wstring &workspace);
             static void Commit(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &command);
             static void Amend(const LogConfig *logConfig, const std::wstring &workspace);
 
@@ -583,31 +583,31 @@ namespace vcc
             * ----------------------------------*/
             // Overall Config
             static bool IsConfigExists(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key);
-            static void GetConfig(const LogConfig *logConfig, const std::wstring &workspace, std::shared_ptr<GitConfig> config);
-            static std::wstring GetConfig(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key);
-            static std::wstring GetUserName(const LogConfig *logConfig, const std::wstring &workspace);
-            static std::wstring GetUserEmail(const LogConfig *logConfig, const std::wstring &workspace);
+            static void getConfig(const LogConfig *logConfig, const std::wstring &workspace, std::shared_ptr<GitConfig> config);
+            static std::wstring getConfig(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key);
+            static std::wstring getUserName(const LogConfig *logConfig, const std::wstring &workspace);
+            static std::wstring getUserEmail(const LogConfig *logConfig, const std::wstring &workspace);
             
             // Global Config
             static bool IsGlobalConfigExists(const LogConfig *logConfig, const std::wstring &key);
-            static void GetGlobalConfig(const LogConfig *logConfig, std::shared_ptr<GitConfig> config);
-            static std::wstring GetGlobalConfig(const LogConfig *logConfig, const std::wstring &key);
-            static void SetGlobalConfig(const LogConfig *logConfig, const std::wstring &key, const std::wstring &value);
+            static void getGlobalConfig(const LogConfig *logConfig, std::shared_ptr<GitConfig> config);
+            static std::wstring getGlobalConfig(const LogConfig *logConfig, const std::wstring &key);
+            static void setGlobalConfig(const LogConfig *logConfig, const std::wstring &key, const std::wstring &value);
             
-            static std::wstring GetGlobalUserName(const LogConfig *logConfig);
-            static void SetGlobalUserName(const LogConfig *logConfig, const std::wstring &value);
-            static std::wstring GetGlobalUserEmail(const LogConfig *logConfig);
-            static void SetGlobalUserEmail(const LogConfig *logConfig, const std::wstring &value);
+            static std::wstring getGlobalUserName(const LogConfig *logConfig);
+            static void setGlobalUserName(const LogConfig *logConfig, const std::wstring &value);
+            static std::wstring getGlobalUserEmail(const LogConfig *logConfig);
+            static void setGlobalUserEmail(const LogConfig *logConfig, const std::wstring &value);
 
             // Local Config
             static bool IsLocalConfigExists(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key);
-            static void GetLocalConfig(const LogConfig *logConfig, const std::wstring &workspace, std::shared_ptr<GitConfig> config);
-            static std::wstring GetLocalConfig(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key);
-            static void SetLocalConfig(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key, const std::wstring &value);
+            static void getLocalConfig(const LogConfig *logConfig, const std::wstring &workspace, std::shared_ptr<GitConfig> config);
+            static std::wstring getLocalConfig(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key);
+            static void setLocalConfig(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &key, const std::wstring &value);
 
-            static std::wstring GetLocalUserName(const LogConfig *logConfig, const std::wstring &workspace);
-            static void SetLocalUserName(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &value);
-            static std::wstring GetLocalUserEmail(const LogConfig *logConfig, const std::wstring &workspace);
-            static void SetLocalUserEmail(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &value);
+            static std::wstring getLocalUserName(const LogConfig *logConfig, const std::wstring &workspace);
+            static void setLocalUserName(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &value);
+            static std::wstring getLocalUserEmail(const LogConfig *logConfig, const std::wstring &workspace);
+            static void setLocalUserEmail(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &value);
     };
 }

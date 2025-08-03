@@ -16,35 +16,35 @@ namespace vcc
             case LockType::NoLock:\
                 break;\
             case LockType::ReadLock:\
-                ReadLock();\
+                readLock();\
                 break;\
             case LockType::WriteLock:\
             case LockType::ReadWriteLock:\
-                WriteLock();\
+                writeLock();\
                 break;\
             default:\
                 assert(false);\
         }\
         TRY
 
-    #define LOCK_END Unlock(); CATCH
+    #define LOCK_END unlock(); CATCH
 
-    void BasePropertyAccessor::ReadLock() const 
+    void BasePropertyAccessor::readLock() const 
     { 
         _Mutex.lock_shared();
     }
 
-    void BasePropertyAccessor::WriteLock() const
+    void BasePropertyAccessor::writeLock() const
     {
         _Mutex.lock();
     }
 
-    void BasePropertyAccessor::ReadWriteLock() const 
+    void BasePropertyAccessor::readWriteLock() const 
     {
-        WriteLock();
+        writeLock();
     }
 
-    void BasePropertyAccessor::Unlock() const
+    void BasePropertyAccessor::unlock() const
     {
         _Mutex.unlock();
     }

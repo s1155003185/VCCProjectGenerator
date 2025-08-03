@@ -23,14 +23,14 @@ VPGWorkspaceForm::VPGWorkspaceForm() : vcc::BaseForm()
 {
     TRY
         _ObjectType = ObjectType::WorkspaceForm;
-        Initialize();
+        initialize();
     CATCH
 }
 
-std::shared_ptr<vcc::IObject> VPGWorkspaceForm::Clone() const
+std::shared_ptr<vcc::IObject> VPGWorkspaceForm::clone() const
 {
     auto obj = std::make_shared<VPGWorkspaceForm>(*this);
-    obj->CloneGitForms(this->_GitForms);
+    obj->cloneGitForms(this->_GitForms);
     return obj;
 }
 
@@ -40,56 +40,56 @@ std::shared_ptr<vcc::Json> VPGWorkspaceForm::ToJson() const
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
         auto json = std::make_unique<vcc::Json>();
         // Name
-        json->AddString(vcc::ConvertNamingStyle(L"Name", vcc::NamingStyle::PascalCase, namestyle), GetName());
+        json->addString(vcc::convertNamingStyle(L"Name", vcc::NamingStyle::PascalCase, namestyle), getName());
         // TabOrder
-        json->AddInt(vcc::ConvertNamingStyle(L"TabOrder", vcc::NamingStyle::PascalCase, namestyle), GetTabOrder());
+        json->addInt(vcc::convertNamingStyle(L"TabOrder", vcc::NamingStyle::PascalCase, namestyle), getTabOrder());
         // GitForms
         auto tmpGitForms = std::make_shared<vcc::Json>();
-        json->AddArray(vcc::ConvertNamingStyle(L"GitForms", vcc::NamingStyle::PascalCase, namestyle), tmpGitForms);
-        for (auto const &element : GetGitForms()) {
-            tmpGitForms->AddArrayObject(element->ToJson());
+        json->addArray(vcc::convertNamingStyle(L"GitForms", vcc::NamingStyle::PascalCase, namestyle), tmpGitForms);
+        for (auto const &element : getGitForms()) {
+            tmpGitForms->addArrayObject(element->ToJson());
         }
         return json;
     CATCH
     return nullptr;
 }
 
-void VPGWorkspaceForm::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
+void VPGWorkspaceForm::deserializeJson(std::shared_ptr<vcc::IDocument> document)
 {
     TRY
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
         auto json = std::dynamic_pointer_cast<vcc::Json>(document);
         assert(json != nullptr);
         // Name
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"Name", namestyle, vcc::NamingStyle::PascalCase)))
-            SetName(json->GetString(vcc::ConvertNamingStyle(L"Name", namestyle, vcc::NamingStyle::PascalCase)));
+        if (json->isContainKey(vcc::convertNamingStyle(L"Name", namestyle, vcc::NamingStyle::PascalCase)))
+            setName(json->getString(vcc::convertNamingStyle(L"Name", namestyle, vcc::NamingStyle::PascalCase)));
         // TabOrder
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"TabOrder", namestyle, vcc::NamingStyle::PascalCase)))
-            SetTabOrder(static_cast<int64_t>(json->GetInt64(vcc::ConvertNamingStyle(L"TabOrder", namestyle, vcc::NamingStyle::PascalCase))));
+        if (json->isContainKey(vcc::convertNamingStyle(L"TabOrder", namestyle, vcc::NamingStyle::PascalCase)))
+            setTabOrder(static_cast<int64_t>(json->getInt64(vcc::convertNamingStyle(L"TabOrder", namestyle, vcc::NamingStyle::PascalCase))));
         // GitForms
-        ClearGitForms();
-        if (json->IsContainKey(vcc::ConvertNamingStyle(L"GitForms", namestyle, vcc::NamingStyle::PascalCase))) {
-            for (auto const &element : json->GetArray(vcc::ConvertNamingStyle(L"GitForms", namestyle, vcc::NamingStyle::PascalCase))) {
+        clearGitForms();
+        if (json->isContainKey(vcc::convertNamingStyle(L"GitForms", namestyle, vcc::NamingStyle::PascalCase))) {
+            for (auto const &element : json->getArray(vcc::convertNamingStyle(L"GitForms", namestyle, vcc::NamingStyle::PascalCase))) {
                 auto tmpGitForms = std::make_shared<VPGGitForm>();
-                tmpGitForms->DeserializeJson(element->GetArrayElementObject());
-                InsertGitForms(tmpGitForms);
+                tmpGitForms->deserializeJson(element->getArrayElementObject());
+                insertGitForms(tmpGitForms);
             }
         }
     CATCH
 }
 
-void VPGWorkspaceForm::InitializeComponents()
+void VPGWorkspaceForm::initializeComponents()
 {
     TRY
-        vcc::BaseForm::InitializeComponents();
+        vcc::BaseForm::initializeComponents();
         _LogConfig = nullptr;
         _ActionManager = nullptr;
         _ThreadManager = nullptr;
-        OnInitializeComponents();
+        onInitializeComponents();
     CATCH
 }
 
-std::shared_ptr<vcc::IResult> VPGWorkspaceForm::DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> /*argument*/)
+std::shared_ptr<vcc::IResult> VPGWorkspaceForm::doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> /*argument*/)
 {
     TRY
         switch(static_cast<VPGWorkspaceFormProperty>(formProperty))

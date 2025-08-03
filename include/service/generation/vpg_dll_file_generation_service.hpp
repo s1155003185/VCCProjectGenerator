@@ -15,13 +15,13 @@ class VPGDllFileGenerationServiceOption : public vcc::BaseObject
         VPGDllFileGenerationServiceOption() = default;
         virtual ~VPGDllFileGenerationServiceOption() {}
 
-        bool GetIsGenerateApplication() const
+        bool getIsGenerateApplication() const
         {
             // Generate if one of flags is true
             return _IsGeneratePropertyAccessor;
         }
         
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             return std::make_shared<VPGDllFileGenerationServiceOption>(*this);
         }

@@ -9,25 +9,25 @@
 class VPGVccGenerationManager : public VPGBaseGenerationManager
 {
     private:
-        std::wstring AdjustAppliationCpp(const std::wstring &fileContent) const;
+        std::wstring adjustAppliationCpp(const std::wstring &fileContent) const;
         
     public:
         VPGVccGenerationManager() : VPGVccGenerationManager(nullptr, L"", nullptr) {}
         VPGVccGenerationManager(std::shared_ptr<vcc::LogConfig> logConfig, std::wstring workspace, std::shared_ptr<VPGConfig> option) : VPGBaseGenerationManager(logConfig, workspace, option) {}
         virtual ~VPGVccGenerationManager() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             return std::make_shared<VPGVccGenerationManager>(*this);
         }
 
-        std::vector<std::wstring> GetUpdateList() const;
-        std::vector<std::wstring> GetUpdateUnitTestList() const;
+        std::vector<std::wstring> getUpdateList() const;
+        std::vector<std::wstring> getUpdateUnitTestList() const;
 
         void CreateVccJson(bool isNew) const;
         void ReadVccJson() const;
 
-        virtual void Add() const override;
-        virtual void Update() const override;
-        virtual void Generate() const override;
+        virtual void add() const override;
+        virtual void update() const override;
+        virtual void generate() const override;
 };

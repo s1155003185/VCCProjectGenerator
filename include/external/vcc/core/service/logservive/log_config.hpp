@@ -37,52 +37,52 @@ namespace vcc
     public:
         LogConfig() {}
         LogConfig(const LogConfigInitialType &logConfigType, const std::wstring &filePath = L"") {
-            Initialize(logConfigType, filePath);
+            initialize(logConfigType, filePath);
         }
         virtual ~LogConfig() {}
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<IObject> clone() const override
         {
             return std::make_shared<LogConfig>(*this);
         }
 
-        void Initialize(const LogConfigInitialType &logConfigType, const std::wstring &filePath = L"") {
+        void initialize(const LogConfigInitialType &logConfigType, const std::wstring &filePath = L"") {
             switch (logConfigType)
             {
             case LogConfigInitialType::None:
-                this->SetIsConsoleLog(false);
-                this->SetFilePath(L"");
+                this->setIsConsoleLog(false);
+                this->setFilePath(L"");
 
-                this->SetIsLogDebug(false);
+                this->setIsLogDebug(false);
 
-                this->SetIsLogThread(false);
+                this->setIsLogThread(false);
 
-                this->SetIsLogTerminal(false);
-                this->SetIsLogTerminalResult(false);
+                this->setIsLogTerminal(false);
+                this->setIsLogTerminalResult(false);
 
-                this->SetIsLogProcess(false);
-                this->SetIsLogProcessResult(false);
+                this->setIsLogProcess(false);
+                this->setIsLogProcessResult(false);
 
-                this->SetIsLogSQL(false);
-                this->SetIsLogSQLResult(false);
+                this->setIsLogSQL(false);
+                this->setIsLogSQLResult(false);
                 break;
             case LogConfigInitialType::All:
-                this->SetIsConsoleLog(true);
-                this->SetFilePath(filePath);
+                this->setIsConsoleLog(true);
+                this->setFilePath(filePath);
                 assert(!filePath.empty());
 
-                this->SetIsLogDebug(true);
+                this->setIsLogDebug(true);
                 
-                this->SetIsLogThread(true);
+                this->setIsLogThread(true);
 
-                this->SetIsLogTerminal(true);
-                this->SetIsLogTerminalResult(true);
+                this->setIsLogTerminal(true);
+                this->setIsLogTerminalResult(true);
 
-                this->SetIsLogProcess(true);
-                this->SetIsLogProcessResult(true);
+                this->setIsLogProcess(true);
+                this->setIsLogProcessResult(true);
 
-                this->SetIsLogSQL(true);
-                this->SetIsLogSQLResult(true);
+                this->setIsLogSQL(true);
+                this->setIsLogSQLResult(true);
                 break;            
             default:
                 assert(false);

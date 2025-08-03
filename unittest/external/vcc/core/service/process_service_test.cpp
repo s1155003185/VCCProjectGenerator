@@ -9,12 +9,12 @@
 
 TEST(ProcessServiceTest, Normal)
 {
-    EXPECT_TRUE(vcc::ProcessService::Execute(nullptr, L"", L"git --version").starts_with(L"git version"));
+    EXPECT_TRUE(vcc::ProcessService::execute(nullptr, L"", L"git --version").starts_with(L"git version"));
 }
 
 TEST(ProcessServiceTest, NormalWithWorkspace)
 {
-    EXPECT_TRUE(vcc::ProcessService::Execute(nullptr, L"", L"..", L"git --version").starts_with(L"git version"));
+    EXPECT_TRUE(vcc::ProcessService::execute(nullptr, L"", L"..", L"git --version").starts_with(L"git version"));
 }
 
 TEST(ProcessServiceTest, ParseCMDToken)
@@ -57,7 +57,7 @@ TEST(ProcessServiceTest, Exception)
 {
     bool isError = false;
     try {
-        vcc::ProcessService::Execute(nullptr, L"", L"git -version");
+        vcc::ProcessService::execute(nullptr, L"", L"git -version");
     } catch (std::exception &e) {
         std::string exceptStr(e.what());
         EXPECT_TRUE(exceptStr.find("unknown option") != std::string::npos);

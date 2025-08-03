@@ -12,5 +12,5 @@ class VPGObjectTypeFileGenerationService
         ~VPGObjectTypeFileGenerationService() {}
 
     public:
-        static void Generate(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp, const std::set<std::wstring> &propertyTypes);
+        static void generate(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp, const std::set<std::wstring> &propertyTypes);
 };

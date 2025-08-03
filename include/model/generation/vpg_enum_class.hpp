@@ -22,25 +22,25 @@ class VPGEnumClassAttribute : public vcc::BaseObject
     GETSET(std::wstring, Macro, L"")
     GETSET(VPGEnumClassMacroType, MacroType, VPGEnumClassMacroType::NA)
     GETSET(std::wstring, Type1, L"")
-    GETCUSTOM(bool, IsType1Custom, return vcc::IsCapital(vcc::SplitString(GetType1(), {L"::"}).back());)
+    GETCUSTOM(bool, IsType1Custom, return vcc::isCapital(vcc::splitString(getType1(), {L"::"}).back());)
     GETSET(std::wstring, Type2, L"")
-    GETCUSTOM(bool, IsType2Custom, return vcc::IsCapital(vcc::SplitString(GetType2(), {L"::"}).back());)
+    GETCUSTOM(bool, IsType2Custom, return vcc::isCapital(vcc::splitString(getType2(), {L"::"}).back());)
     GETSET(std::wstring, PropertyName, L"")
     GETSET(std::wstring, Validate, L"")
-    GETCUSTOM(std::wstring, DefaultValue, if (_InitializeProperties.empty()) return _DefaultValue; return vcc::Concat(_InitializeProperties, L", ");)
+    GETCUSTOM(std::wstring, DefaultValue, if (_InitializeProperties.empty()) return _DefaultValue; return vcc::concat(_InitializeProperties, L", ");)
     SETCUSTOM(DefaultValue, std::wstring, _DefaultValue = value;)
     GETSET(std::wstring, Command, L"")
-    GETCUSTOM(bool, IsGeneralType, return !GetIsCollection();)
-    GETCUSTOM(bool, IsCustom, return vcc::IsContain(GetMacro(), L"(") ? vcc::IsContain(_Macro.substr(0, _Macro.find(L"(")), L"CUSTOM") : false;)
-    GETCUSTOM(bool, IsObject, return vcc::IsContain(GetMacro(), L"(") ? vcc::IsContain(_Macro.substr(0, _Macro.find(L"(")), L"_SPTR") : false;)
-    GETCUSTOM(bool, IsVector, return vcc::IsStartWith(_Macro, L"VECTOR");)
-    GETCUSTOM(bool, IsMap, return vcc::IsStartWith(_Macro, L"MAP");)
-    GETCUSTOM(bool, IsOrderedMap, return vcc::IsStartWith(_Macro, L"ORDERED_MAP");)
-    GETCUSTOM(bool, IsSet, return vcc::IsContain(std::vector<VPGEnumClassMacroType>{ VPGEnumClassMacroType::Set, VPGEnumClassMacroType::SetSptr, VPGEnumClassMacroType::SetValidate, VPGEnumClassMacroType::SetValidateSptr }, _MacroType);)
-    GETCUSTOM(bool, IsAction, return vcc::IsStartWith(_Macro, L"ACTION");)
-    GETCUSTOM(bool, IsManager, return vcc::IsStartWith(_Macro, L"MANAGER");)
-    GETCUSTOM(bool, IsCollection, return GetIsVector() || GetIsMap() || GetIsOrderedMap() || GetIsSet();)
-    GETCUSTOM(bool, IsHavingValidate, return vcc::IsContain(GetMacro(), L"(") ? vcc::IsContain(_Macro.substr(0, _Macro.find(L"(")), L"VALIDATE") : false;)
+    GETCUSTOM(bool, IsGeneralType, return !getIsCollection();)
+    GETCUSTOM(bool, IsCustom, return vcc::isContain(getMacro(), L"(") ? vcc::isContain(_Macro.substr(0, _Macro.find(L"(")), L"CUSTOM") : false;)
+    GETCUSTOM(bool, IsObject, return vcc::isContain(getMacro(), L"(") ? vcc::isContain(_Macro.substr(0, _Macro.find(L"(")), L"_SPTR") : false;)
+    GETCUSTOM(bool, IsVector, return vcc::isStartWith(_Macro, L"VECTOR");)
+    GETCUSTOM(bool, IsMap, return vcc::isStartWith(_Macro, L"MAP");)
+    GETCUSTOM(bool, IsOrderedMap, return vcc::isStartWith(_Macro, L"ORDERED_MAP");)
+    GETCUSTOM(bool, IsSet, return vcc::isContain(std::vector<VPGEnumClassMacroType>{ VPGEnumClassMacroType::Set, VPGEnumClassMacroType::SetSptr, VPGEnumClassMacroType::SetValidate, VPGEnumClassMacroType::SetValidateSptr }, _MacroType);)
+    GETCUSTOM(bool, IsAction, return vcc::isStartWith(_Macro, L"ACTION");)
+    GETCUSTOM(bool, IsManager, return vcc::isStartWith(_Macro, L"MANAGER");)
+    GETCUSTOM(bool, IsCollection, return getIsVector() || getIsMap() || getIsOrderedMap() || getIsSet();)
+    GETCUSTOM(bool, IsHavingValidate, return vcc::isContain(getMacro(), L"(") ? vcc::isContain(_Macro.substr(0, _Macro.find(L"(")), L"VALIDATE") : false;)
     GETCUSTOM(VPGEnumClassAttributeAccessMode, AccessMode, 
                         switch (_MacroType) {
                         case VPGEnumClassMacroType::Getcustom:
@@ -84,14 +84,14 @@ class VPGEnumClassAttribute : public vcc::BaseObject
     GETSET(std::wstring, ActionResultUndoClass, L"vcc::OperationResult")
     GETSET(bool, IsNoJson, false)
     GETCUSTOM(bool, IsInitializeInClassConstructorNeeded, 
-                                                return vcc::IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::GetsetSptr, VPGEnumClassMacroType::ManagerSptr}, _MacroType)
-                                                    || (!vcc::IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Getcustom, VPGEnumClassMacroType::GetcustomSptr}, _MacroType) && !_InitializeProperties.empty());)
+                                                return vcc::isContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::GetsetSptr, VPGEnumClassMacroType::ManagerSptr}, _MacroType)
+                                                    || (!vcc::isContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Getcustom, VPGEnumClassMacroType::GetcustomSptr}, _MacroType) && !_InitializeProperties.empty());)
 
     public:
         VPGEnumClassAttribute() : vcc::BaseObject(ObjectType::EnumClassAttribute) {}
         virtual ~VPGEnumClassAttribute() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             return std::make_shared<VPGEnumClassAttribute>(*this);
         }
@@ -119,10 +119,10 @@ class VPGEnumClass : public vcc::BaseObject
         VPGEnumClass() : vcc::BaseObject(ObjectType::EnumClass) {}
         virtual ~VPGEnumClass() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             auto obj = std::make_shared<VPGEnumClass>(*this);
-            obj->CloneProperties(this->_Properties);
+            obj->cloneProperties(this->_Properties);
             return obj;
         }
 };

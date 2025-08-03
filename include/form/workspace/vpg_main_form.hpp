@@ -28,7 +28,7 @@ class VPGMainFormAddWorkspaceFormArgument : public vcc::BaseActionArgument
         VPGMainFormAddWorkspaceFormArgument() : vcc::BaseActionArgument(ObjectType::MainFormAddWorkspaceFormArgument) {}
         virtual ~VPGMainFormAddWorkspaceFormArgument() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             return std::make_shared<VPGMainFormAddWorkspaceFormArgument>(*this);
         }
@@ -42,10 +42,10 @@ class VPGMainFormDeleteWorkspaceFormArgument : public vcc::BaseActionArgument
         VPGMainFormDeleteWorkspaceFormArgument() : vcc::BaseActionArgument(ObjectType::MainFormDeleteWorkspaceFormArgument) {}
         virtual ~VPGMainFormDeleteWorkspaceFormArgument() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             auto obj = std::make_shared<VPGMainFormDeleteWorkspaceFormArgument>(*this);
-            obj->CloneWorkspaceForm(this->_WorkspaceForm.get());
+            obj->cloneWorkspaceForm(this->_WorkspaceForm.get());
             return obj;
         }
 };
@@ -59,10 +59,10 @@ class VPGMainFormRenameWorkspaceFormArgument : public vcc::BaseActionArgument
         VPGMainFormRenameWorkspaceFormArgument() : vcc::BaseActionArgument(ObjectType::MainFormRenameWorkspaceFormArgument) {}
         virtual ~VPGMainFormRenameWorkspaceFormArgument() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             auto obj = std::make_shared<VPGMainFormRenameWorkspaceFormArgument>(*this);
-            obj->CloneWorkspaceForm(this->_WorkspaceForm.get());
+            obj->cloneWorkspaceForm(this->_WorkspaceForm.get());
             return obj;
         }
 };
@@ -79,10 +79,10 @@ class VPGMainFormAddWorkspaceForm : public vcc::BaseAction
         // </vcc:customVPGMainFormAddWorkspaceFormPrivateFunctions>
 
     protected:
-        virtual std::wstring GetRedoMessageStart() const override;
-        virtual std::wstring GetRedoMessageComplete() const override;
+        virtual std::wstring getRedoMessageStart() const override;
+        virtual std::wstring getRedoMessageComplete() const override;
 
-        virtual std::shared_ptr<vcc::IResult> OnRedo() override;
+        virtual std::shared_ptr<vcc::IResult> onRedo() override;
 
         // <vcc:customVPGMainFormAddWorkspaceFormProtectedFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormAddWorkspaceFormProtectedFunctions>
@@ -109,10 +109,10 @@ class VPGMainFormDeleteWorkspaceForm : public vcc::BaseAction
         // </vcc:customVPGMainFormDeleteWorkspaceFormPrivateFunctions>
 
     protected:
-        virtual std::wstring GetRedoMessageStart() const override;
-        virtual std::wstring GetRedoMessageComplete() const override;
+        virtual std::wstring getRedoMessageStart() const override;
+        virtual std::wstring getRedoMessageComplete() const override;
 
-        virtual std::shared_ptr<vcc::IResult> OnRedo() override;
+        virtual std::shared_ptr<vcc::IResult> onRedo() override;
 
         // <vcc:customVPGMainFormDeleteWorkspaceFormProtectedFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormDeleteWorkspaceFormProtectedFunctions>
@@ -137,10 +137,10 @@ class VPGMainFormInitialize : public vcc::BaseAction
         // </vcc:customVPGMainFormInitializePrivateFunctions>
 
     protected:
-        virtual std::wstring GetRedoMessageStart() const override;
-        virtual std::wstring GetRedoMessageComplete() const override;
+        virtual std::wstring getRedoMessageStart() const override;
+        virtual std::wstring getRedoMessageComplete() const override;
 
-        virtual std::shared_ptr<vcc::IResult> OnRedo() override;
+        virtual std::shared_ptr<vcc::IResult> onRedo() override;
 
         // <vcc:customVPGMainFormInitializeProtectedFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormInitializeProtectedFunctions>
@@ -166,10 +166,10 @@ class VPGMainFormRenameWorkspaceForm : public vcc::BaseAction
         // </vcc:customVPGMainFormRenameWorkspaceFormPrivateFunctions>
 
     protected:
-        virtual std::wstring GetRedoMessageStart() const override;
-        virtual std::wstring GetRedoMessageComplete() const override;
+        virtual std::wstring getRedoMessageStart() const override;
+        virtual std::wstring getRedoMessageComplete() const override;
 
-        virtual std::shared_ptr<vcc::IResult> OnRedo() override;
+        virtual std::shared_ptr<vcc::IResult> onRedo() override;
 
         // <vcc:customVPGMainFormRenameWorkspaceFormProtectedFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormRenameWorkspaceFormProtectedFunctions>
@@ -207,16 +207,16 @@ class VPGMainForm : public vcc::BaseForm, public vcc::BaseJsonObject
         VPGMainForm();
         virtual ~VPGMainForm() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override;
+        virtual std::shared_ptr<vcc::IObject> clone() const override;
 
         virtual std::shared_ptr<vcc::Json> ToJson() const override;
-        virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;
+        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 
-        virtual void InitializeComponents() override;
+        virtual void initializeComponents() override;
 
-        virtual std::shared_ptr<vcc::IResult> DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;
+        virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;
 
         // <vcc:customVPGMainFormPublicFunctions sync="RESERVE" gen="RESERVE">
-        void SaveConfig() const;
+        void saveConfig() const;
         // </vcc:customVPGMainFormPublicFunctions>
 };

@@ -11,15 +11,15 @@
 namespace vcc
 {
     template<typename T>
-    inline bool IsEmpty(const std::set<T> &v)
+    inline bool isEmpty(const std::set<T> &v)
     {
         return v.empty();
     }
     
     template<typename T>
-    inline bool IsContain(const std::set<T> &v, const T &value) 
+    inline bool isContain(const std::set<T> &v, const T &value) 
     {
-        if (IsEmpty(v))
+        if (isEmpty(v))
             return false;
         for (auto const &element : v) {
             if (element == value)
@@ -29,22 +29,22 @@ namespace vcc
     }
     
     template<typename T>
-    inline bool IsContain(const std::set<T> &v, const std::set<T> &value) 
+    inline bool isContain(const std::set<T> &v, const std::set<T> &value) 
     {
-        if (IsEmpty(v) || v.size() < value.size())
+        if (isEmpty(v) || v.size() < value.size())
             return false;
         for (auto const &element : value) {
-            if (!IsContain(v, element))
+            if (!isContain(v, element))
                 return false;
         }
         return true;
     }
 
     // Concat
-    inline std::wstring Concat(const std::set<std::wstring> &v, const std::wstring &delimitor)
+    inline std::wstring concat(const std::set<std::wstring> &v, const std::wstring &delimitor)
     {
         std::wstring result = L"";
-        if (IsEmpty(v))
+        if (isEmpty(v))
             return result;
         for (std::wstring str : v)
             result += str + delimitor;
@@ -53,7 +53,7 @@ namespace vcc
     
     // Remove
     template <typename T>
-    inline void RemoveElement(std::set<T> &sourceSet, const T &obj)
+    inline void removeElement(std::set<T> &sourceSet, const T &obj)
     {
         for (auto it = sourceSet.begin(); it != sourceSet.end(); ) {
             if (*it == obj) {
@@ -64,7 +64,7 @@ namespace vcc
     }
     
     template <typename T>
-    inline void RemoveElementAll(std::set<T> &sourceSet, const T &obj)
+    inline void removeElementAll(std::set<T> &sourceSet, const T &obj)
     {
         for (auto it = sourceSet.begin(); it != sourceSet.end(); ) {
             if (*it == obj)
@@ -75,10 +75,10 @@ namespace vcc
     }
     
     template <typename T>
-    inline void RemoveIObject(std::set<std::shared_ptr<T>> &sourceSet, const IObject *obj)
+    inline void removeIObject(std::set<std::shared_ptr<T>> &sourceSet, const IObject *obj)
     {
         for (auto it = sourceSet.begin(); it != sourceSet.end(); ) {
-            if ((*it)->GetObjectId() == obj->GetObjectId()) {
+            if ((*it)->getObjectId() == obj->getObjectId()) {
                 it = sourceSet.erase(it);
                 break;
             }
@@ -86,10 +86,10 @@ namespace vcc
     }
 
     template <typename T>
-    inline void RemoveIObjectAll(std::set<std::shared_ptr<T>> &sourceSet, const IObject *obj)
+    inline void removeIObjectAll(std::set<std::shared_ptr<T>> &sourceSet, const IObject *obj)
     {
         for (auto it = sourceSet.begin(); it != sourceSet.end(); ) {
-            if ((*it)->GetObjectId() == obj->GetObjectId())
+            if ((*it)->getObjectId() == obj->getObjectId())
                 it = sourceSet.erase(it);
             else
                 it++;

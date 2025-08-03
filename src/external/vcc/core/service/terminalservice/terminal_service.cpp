@@ -10,15 +10,15 @@
 
 namespace vcc
 {
-    std::wstring TerminalService::Execute(const LogConfig *logConfig, std::wstring id, std::wstring cmd)
+    std::wstring TerminalService::execute(const LogConfig *logConfig, std::wstring id, std::wstring cmd)
     {
         TRY
-            return Execute(logConfig, id, L"", cmd);
+            return execute(logConfig, id, L"", cmd);
         CATCH
         return L"";
     }
 
-    std::wstring TerminalService::Execute(const LogConfig *logConfig, const std::wstring &id, const std::wstring &workspace, const std::wstring &cmd)
+    std::wstring TerminalService::execute(const LogConfig *logConfig, const std::wstring &id, const std::wstring &workspace, const std::wstring &cmd)
     {
         LogService::LogTerminal(logConfig, id, cmd);
 
@@ -26,10 +26,10 @@ namespace vcc
         std::wstring result = L"";
         try {
             currentDirectory = std::filesystem::current_path().wstring();
-            if (!IsBlank(workspace))
+            if (!isBlank(workspace))
                 std::filesystem::current_path(workspace);
         } catch (std::exception &e) {
-            if (!IsBlank(workspace))
+            if (!isBlank(workspace))
                 std::filesystem::current_path(currentDirectory);
             THROW_EXCEPTION(e);
             return result;
@@ -40,7 +40,7 @@ namespace vcc
             char buffer[1024];
             FILE* p = popen(wstr2str(cmd).c_str(), "r");
             if (p == nullptr)
-                THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Cannot Execute Command: " + cmd);
+                THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Cannot execute Command: " + cmd);
             try {            
                 while (!feof(p)) {
                     if (fgets(buffer, sizeof(buffer), p) != nullptr)
@@ -58,13 +58,13 @@ namespace vcc
                 pclose(p);
             }
         } catch (std::exception &e) {
-            if (!IsBlank(workspace))
+            if (!isBlank(workspace))
                 std::filesystem::current_path(currentDirectory);
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, str2wstr(e.what()));
         }
 
         try {
-            if (!IsBlank(workspace))
+            if (!isBlank(workspace))
                 std::filesystem::current_path(currentDirectory);
         } catch (std::exception &e) {
             THROW_EXCEPTION(e);
@@ -73,7 +73,7 @@ namespace vcc
 
         LogService::LogTerminalResult(logConfig, id, result);
 
-        Trim(result);
+        trim(result);
         return result;
     }
 };

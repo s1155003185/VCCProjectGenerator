@@ -28,41 +28,41 @@ class VPGBaseGenerationManagerTest : public testing::Test
         void CreateFolderInSourceWorkspace(std::wstring folder)
         {
             if (folder.empty())
-                vcc::CreateDirectory(this->GetWorkspaceSource());
+                vcc::createDirectory(this->getWorkspaceSource());
             else
-                vcc::CreateDirectory(vcc::ConcatPaths({this->GetWorkspaceSource(), folder}));
+                vcc::createDirectory(vcc::concatPaths({this->getWorkspaceSource(), folder}));
         }
 
         void CreateFolderInTargetWorkspace(std::wstring folder)
         {
             if (folder.empty())
-                vcc::CreateDirectory(this->GetWorkspaceTarget());
+                vcc::createDirectory(this->getWorkspaceTarget());
             else
-                vcc::CreateDirectory(vcc::ConcatPaths({this->GetWorkspaceTarget(), folder}));
+                vcc::createDirectory(vcc::concatPaths({this->getWorkspaceTarget(), folder}));
         }
 
         void CreateFileInSourceWorkspace(std::wstring fileName, std::wstring content)
         {
-            vcc::AppendFileOneLine(vcc::ConcatPaths({this->GetWorkspaceSource(), fileName}), content, true);
+            vcc::appendFileOneLine(vcc::concatPaths({this->getWorkspaceSource(), fileName}), content, true);
         }
         void CreateFileInTargetWorkspace(std::wstring fileName, std::wstring content)
         {
-            vcc::AppendFileOneLine(vcc::ConcatPaths({this->GetWorkspaceTarget(), fileName}), content, true);
+            vcc::appendFileOneLine(vcc::concatPaths({this->getWorkspaceTarget(), fileName}), content, true);
         }
 
     public:
         void SetUp() override
         {
             this->_LogConfig = std::make_shared<vcc::LogConfig>();
-            this->_LogConfig->SetIsConsoleLog(false);
+            this->_LogConfig->setIsConsoleLog(false);
             this->_WorkspaceSource = this->_Workspace + L"Source";
             this->_WorkspaceTarget = this->_Workspace + L"Target";
-            std::filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->getWorkspace()));
 
             _Option = std::make_shared<VPGConfig>();
-            _Option->GetTemplate()->SetWorkspace(L"A");
+            _Option->getTemplate()->setWorkspace(L"A");
             _Manager = std::make_shared<VPGCppGenerationManager>(_LogConfig, L"", _Option);
-            _Manager->SetWorkspace(L"B");
+            _Manager->setWorkspace(L"B");
 
             std::wstring makeFileStr = L"hi\r\n";
             makeFileStr += L"# <vcc:name sync=\"ALERT\" gen=\"ALERT\">\r\n";
@@ -80,14 +80,14 @@ class VPGBaseGenerationManagerTest : public testing::Test
 
         void TearDown() override
         {
-            std::filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->getWorkspace()));
         }
 
-        std::wstring GetResultStr(const VPGConfig *_Option) {
-            std::wstring projName = !vcc::IsBlank(_Option->GetProjectName()) ? (L" " + _Option->GetProjectName()) : L"";
-            std::wstring dllName = !vcc::IsBlank(_Option->GetProjectNameDll()) ? (L" " + _Option->GetProjectNameDll()) : L"";
-            std::wstring exeName = !vcc::IsBlank(_Option->GetProjectNameExe()) ? (L" " + _Option->GetProjectNameExe()) : L"";
-            std::wstring IsExcludeUnittest = _Option->GetTemplate()->GetIsExcludeUnittest() ? L" Y" : L" N";
+        std::wstring getResultStr(const VPGConfig *_Option) {
+            std::wstring projName = !vcc::isBlank(_Option->getProjectName()) ? (L" " + _Option->getProjectName()) : L"";
+            std::wstring dllName = !vcc::isBlank(_Option->getProjectNameDll()) ? (L" " + _Option->getProjectNameDll()) : L"";
+            std::wstring exeName = !vcc::isBlank(_Option->getProjectNameExe()) ? (L" " + _Option->getProjectNameExe()) : L"";
+            std::wstring IsExcludeUnittest = _Option->getTemplate()->getIsExcludeUnittest() ? L" Y" : L" N";
             std::wstring makeFileStr = L"hi\r\n";
             makeFileStr += L"# <vcc:name sync=\"ALERT\" gen=\"ALERT\">\r\n";
             makeFileStr += L"#----------------------------------#\r\n";
@@ -105,7 +105,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
 
         bool CheckFolderExists(std::wstring path)
         {
-            return vcc::IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspace(), path}));
+            return vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspace(), path}));
         }
 
         void CreateSyncWorkspaceFolderWithExcludeTestCase() 
@@ -129,8 +129,8 @@ class VPGBaseGenerationManagerTest : public testing::Test
             std::vector<std::wstring> includeOnly;
             std::vector<std::wstring> excludes;
             excludes.push_back(L"*FilterOut/");
-            this->GetManager()->SyncWorkspace(this->GetLogConfig().get(), 
-                this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
+            this->getManager()->syncWorkspace(this->getLogConfig().get(), 
+                this->getWorkspaceSource(), this->getWorkspaceTarget(),
                 includeOnly, excludes);
         }
 
@@ -155,8 +155,8 @@ class VPGBaseGenerationManagerTest : public testing::Test
             std::vector<std::wstring> includeOnly;
             includeOnly.push_back(L"*IncludeOnly/");
             std::vector<std::wstring> excludes;
-            this->GetManager()->SyncWorkspace(this->GetLogConfig().get(), 
-                this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
+            this->getManager()->syncWorkspace(this->getLogConfig().get(), 
+                this->getWorkspaceSource(), this->getWorkspaceTarget(),
                 includeOnly, excludes);
         }
 
@@ -182,8 +182,8 @@ class VPGBaseGenerationManagerTest : public testing::Test
             std::vector<std::wstring> includeOnly;
             std::vector<std::wstring> excludes;
             excludes.push_back(L"*FilterOut");
-            this->GetManager()->SyncWorkspace(this->GetLogConfig().get(), 
-                this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
+            this->getManager()->syncWorkspace(this->getLogConfig().get(), 
+                this->getWorkspaceSource(), this->getWorkspaceTarget(),
                 includeOnly, excludes);
         }
         
@@ -208,106 +208,106 @@ class VPGBaseGenerationManagerTest : public testing::Test
             std::vector<std::wstring> includeOnly;
             includeOnly.push_back(L"*IncludeOnly");
             std::vector<std::wstring> excludes;
-            this->GetManager()->SyncWorkspace(this->GetLogConfig().get(), 
-                this->GetWorkspaceSource(), this->GetWorkspaceTarget(),
+            this->getManager()->syncWorkspace(this->getLogConfig().get(), 
+                this->getWorkspaceSource(), this->getWorkspaceTarget(),
                 includeOnly, excludes);
         }
 };
 
 TEST_F(VPGBaseGenerationManagerTest, DllTestFileContent)
 {
-    _Option->SetProjectName(L"libvpg");
-    _Option->SetProjectNameDll(L"libvpg");
-    _Option->SetProjectNameExe(L"libvpg");
-    _Option->GetTemplate()->SetIsExcludeUnittest(false);
-    std::wstring originalText  = vcc::ReadFile(L"unittest/Dll/dll_test.cpp");
+    _Option->setProjectName(L"libvpg");
+    _Option->setProjectNameDll(L"libvpg");
+    _Option->setProjectNameExe(L"libvpg");
+    _Option->getTemplate()->setIsExcludeUnittest(false);
+    std::wstring originalText  = vcc::readFile(L"unittest/Dll/dll_test.cpp");
     std::wstring result = originalText;
-    this->GetManager()->GetDLLTestFileContent(result);
-    vcc::ReplaceAll(originalText, L"\r\n", L"\n");
-    vcc::ReplaceAll(result, L"\r\n", L"\n");
+    this->getManager()->getDLLTestFileContent(result);
+    vcc::replaceAll(originalText, L"\r\n", L"\n");
+    vcc::replaceAll(result, L"\r\n", L"\n");
     EXPECT_EQ(originalText, result);
 }
 
 TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_Complex)
 {
-    _Option->SetProjectName(L"ProjectName");
-    _Option->SetProjectNameDll(L"DllName");
-    _Option->SetProjectNameExe(L"ExeName");
-    _Option->GetTemplate()->SetIsExcludeUnittest(false);
-    std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
-    EXPECT_EQ(result, GetResultStr(_Option.get()));
+    _Option->setProjectName(L"ProjectName");
+    _Option->setProjectNameDll(L"DllName");
+    _Option->setProjectNameExe(L"ExeName");
+    _Option->getTemplate()->setIsExcludeUnittest(false);
+    std::wstring result = this->getManager()->AdjustMakefile(this->getFileContent());
+    EXPECT_EQ(result, getResultStr(_Option.get()));
 }
 
 TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_DLLOnly)
 {
-    _Option->SetProjectName(L"ProjectName");
-    _Option->SetProjectNameDll(L"DllName");
-    _Option->SetProjectNameExe(L"");
-    _Option->GetTemplate()->SetIsExcludeUnittest(false);
-    std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
-    EXPECT_EQ(result, GetResultStr(_Option.get()));
+    _Option->setProjectName(L"ProjectName");
+    _Option->setProjectNameDll(L"DllName");
+    _Option->setProjectNameExe(L"");
+    _Option->getTemplate()->setIsExcludeUnittest(false);
+    std::wstring result = this->getManager()->AdjustMakefile(this->getFileContent());
+    EXPECT_EQ(result, getResultStr(_Option.get()));
 }
 
 TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_EXEOnly)
 {
-    _Option->SetProjectName(L"ProjectName");
-    _Option->SetProjectNameDll(L"");
-    _Option->SetProjectNameExe(L"ExeName");
-    _Option->GetTemplate()->SetIsExcludeUnittest(false);
-    std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
-    EXPECT_EQ(result, GetResultStr(_Option.get()));
+    _Option->setProjectName(L"ProjectName");
+    _Option->setProjectNameDll(L"");
+    _Option->setProjectNameExe(L"ExeName");
+    _Option->getTemplate()->setIsExcludeUnittest(false);
+    std::wstring result = this->getManager()->AdjustMakefile(this->getFileContent());
+    EXPECT_EQ(result, getResultStr(_Option.get()));
 }
 
 TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_NoGtest)
 {
-    _Option->SetProjectName(L"ProjectName");
-    _Option->SetProjectNameDll(L"DllName");
-    _Option->SetProjectNameExe(L"ExeName");
-    _Option->GetTemplate()->SetIsExcludeUnittest(true);
-    std::wstring result = this->GetManager()->AdjustMakefile(this->GetFileContent());
-    EXPECT_EQ(result, GetResultStr(_Option.get()));
+    _Option->setProjectName(L"ProjectName");
+    _Option->setProjectNameDll(L"DllName");
+    _Option->setProjectNameExe(L"ExeName");
+    _Option->getTemplate()->setIsExcludeUnittest(true);
+    std::wstring result = this->getManager()->AdjustMakefile(this->getFileContent());
+    EXPECT_EQ(result, getResultStr(_Option.get()));
 }
 
 TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_SyncWorkspaceFolderWithExclude)
 {
     this->CreateSyncWorkspaceFolderWithExcludeTestCase();
-    EXPECT_TRUE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FolderAdd"})));
-    EXPECT_TRUE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FolderUpdate"})));
-    EXPECT_FALSE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FolderDelete"})));
-    EXPECT_FALSE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FolderAddFilterOut"})));
-    EXPECT_TRUE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FolderUpdateFilterOut"})));
-    EXPECT_TRUE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FolderDeleteFilterOut"})));
+    EXPECT_TRUE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderAdd"})));
+    EXPECT_TRUE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderUpdate"})));
+    EXPECT_FALSE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderDelete"})));
+    EXPECT_FALSE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderAddFilterOut"})));
+    EXPECT_TRUE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderUpdateFilterOut"})));
+    EXPECT_TRUE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderDeleteFilterOut"})));
 }
 
 TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_SyncWorkspaceFolderIncludeOnly)
 {
     this->CreateSyncWorkspaceFolderIncludeOnlyTestCase();
-    EXPECT_FALSE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FolderAdd"})));
-    EXPECT_TRUE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FolderUpdate"})));
-    EXPECT_TRUE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FolderDelete"})));
-    EXPECT_TRUE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FolderAddIncludeOnly"})));
-    EXPECT_TRUE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FolderUpdateIncludeOnly"})));
-    EXPECT_FALSE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FolderDeleteIncludeOnly"})));
+    EXPECT_FALSE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderAdd"})));
+    EXPECT_TRUE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderUpdate"})));
+    EXPECT_TRUE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderDelete"})));
+    EXPECT_TRUE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderAddIncludeOnly"})));
+    EXPECT_TRUE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderUpdateIncludeOnly"})));
+    EXPECT_FALSE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderDeleteIncludeOnly"})));
 }
 
 TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_SyncWorkspaceFileWithExclude)
 {
     this->CreateSyncWorkspaceFileWithExcludeTestCase();
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileAdd"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileModify"})));
-    EXPECT_FALSE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileDelete"})));
-    EXPECT_FALSE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileAddFilterOut"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileModifyFilterOut"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileDeleteFilterOut"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileAdd"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileModify"})));
+    EXPECT_FALSE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileDelete"})));
+    EXPECT_FALSE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileAddFilterOut"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileModifyFilterOut"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileDeleteFilterOut"})));
 }
 
 TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_SyncWorkspaceFileIncludeOnly)
 {
     this->CreateSyncWorkspaceFileIncludeOnlyTestCase();
-    EXPECT_FALSE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileAdd"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileModify"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileDelete"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileAddIncludeOnly"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileModifyIncludeOnly"})));
-    EXPECT_FALSE(vcc::IsFilePresent(vcc::ConcatPaths({this->GetWorkspaceTarget(), L"FileDeleteIncludeOnly"})));
+    EXPECT_FALSE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileAdd"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileModify"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileDelete"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileAddIncludeOnly"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileModifyIncludeOnly"})));
+    EXPECT_FALSE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileDeleteIncludeOnly"})));
 }

@@ -9,49 +9,49 @@
 
 namespace vcc
 {
-    std::shared_ptr<LogConfig> BaseForm::GetLogConfig() const
+    std::shared_ptr<LogConfig> BaseForm::getLogConfig() const
     {
         TRY
             auto baseForm = std::dynamic_pointer_cast<BaseForm>(_ParentObject);
-            return (baseForm != nullptr && _LogConfig == nullptr) ? baseForm->GetLogConfig() : _LogConfig;
+            return (baseForm != nullptr && _LogConfig == nullptr) ? baseForm->getLogConfig() : _LogConfig;
         CATCH
         return nullptr;
     }
 
-    void BaseForm::SetLogConfig(std::shared_ptr<LogConfig> logConfig)
+    void BaseForm::setLogConfig(std::shared_ptr<LogConfig> logConfig)
     {
         _LogConfig = logConfig;
     }
-    
-    std::shared_ptr<ActionManager> BaseForm::GetActionManager() const
+
+    std::shared_ptr<ActionManager> BaseForm::getActionManager() const
     {
         TRY
             auto baseForm = std::dynamic_pointer_cast<BaseForm>(_ParentObject);
-            return (baseForm != nullptr && _ActionManager == nullptr) ? baseForm->GetActionManager() : _ActionManager;
+            return (baseForm != nullptr && _ActionManager == nullptr) ? baseForm->getActionManager() : _ActionManager;
         CATCH
         return nullptr;
     }
 
-    void BaseForm::SetActionManager(std::shared_ptr<ActionManager> actionManager)
+    void BaseForm::setActionManager(std::shared_ptr<ActionManager> actionManager)
     {
         _ActionManager = actionManager;
     }
 
-    std::shared_ptr<ThreadManager> BaseForm::GetThreadManager() const
+    std::shared_ptr<ThreadManager> BaseForm::getThreadManager() const
     {
         TRY
             auto baseForm = std::dynamic_pointer_cast<BaseForm>(_ParentObject);
-            return (baseForm != nullptr && _ThreadManager == nullptr) ? baseForm->GetThreadManager() : _ThreadManager;
+            return (baseForm != nullptr && _ThreadManager == nullptr) ? baseForm->getThreadManager() : _ThreadManager;
         CATCH
         return nullptr;
     }
 
-    void BaseForm::SetThreadManager(std::shared_ptr<ThreadManager> threadManager)
+    void BaseForm::setThreadManager(std::shared_ptr<ThreadManager> threadManager)
     {
         _ThreadManager = threadManager;
     }
 
-    State BaseForm::GetState() const
+    State BaseForm::getState() const
     {
         TRY
             return _State;
@@ -59,7 +59,7 @@ namespace vcc
         return State::Active;
     }
 
-    bool BaseForm::IsClosable() const
+    bool BaseForm::isClosable() const
     {
         TRY
             return OnIsClosable();
@@ -67,7 +67,7 @@ namespace vcc
         return false;
     }
 
-    bool BaseForm::IsClosed() const
+    bool BaseForm::isClosed() const
     {
         TRY
             return _State == State::Closed;
@@ -75,127 +75,127 @@ namespace vcc
         return false;
     }
 
-    void BaseForm::Initialize()
+    void BaseForm::initialize()
     {
         TRY
-            InitializeComponents();
-            InitializeValue();
-            OnInitialize();
+            initializeComponents();
+            initializeValue();
+            onInitialize();
         CATCH
     }
 
-    void BaseForm::InitializeComponents()
+    void BaseForm::initializeComponents()
     {
         TRY
-            OnInitialize();
+            onInitialize();
         CATCH
     }
 
-    void BaseForm::InitializeValue()
+    void BaseForm::initializeValue()
     {
         TRY
-            OnInitializeValues();
+            onInitializeValues();
         CATCH
     }
 
-    std::shared_ptr<IResult> BaseForm::ExecuteAction(std::shared_ptr<IAction> action, bool isNoHistory)
+    std::shared_ptr<IResult> BaseForm::executeAction(std::shared_ptr<IAction> action, bool isNoHistory)
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (isNoHistory || actionManager == nullptr)
                 return action->Redo();
             else
-                return actionManager->DoAction(action);
+                return actionManager->doAction(action);
         CATCH
         return nullptr;
     }
-    
-    int64_t BaseForm::GetActionCurrentSeqNo() const
+
+    int64_t BaseForm::getActionCurrentSeqNo() const
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
-                return actionManager->GetCurrentSeqNo();
+                return actionManager->getCurrentSeqNo();
+        CATCH
+        return -1;
+    }
+
+    int64_t BaseForm::getActionFirstSeqNo() const
+    {
+        TRY
+            auto actionManager = getActionManager();
+            if (actionManager != nullptr)
+                return actionManager->getFirstSeqNo();
         CATCH
         return -1;
     }
     
-    int64_t BaseForm::GetActionFirstSeqNo() const
+    int64_t BaseForm::getActionLastSeqNo() const
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
-                return actionManager->GetFirstSeqNo();
+                return actionManager->getLastSeqNo();
         CATCH
         return -1;
     }
     
-    int64_t BaseForm::GetActionLastSeqNo() const
+    std::shared_ptr<IResult> BaseForm::redoAction(const int64_t &noOfStep)
     {
         TRY
-            auto actionManager = GetActionManager();
-            if (actionManager != nullptr)
-                return actionManager->GetLastSeqNo();
-        CATCH
-        return -1;
-    }
-    
-    std::shared_ptr<IResult> BaseForm::RedoAction(const int64_t &noOfStep)
-    {
-        TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
                 return actionManager->Redo(noOfStep);
         CATCH
         return nullptr;
     }
 
-    std::shared_ptr<IResult> BaseForm::RedoActionToSeqNo(const int64_t &seqNo)
+    std::shared_ptr<IResult> BaseForm::redoActionToSeqNo(const int64_t &seqNo)
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
-                return actionManager->RedoToSeqNo(seqNo);
+                return actionManager->redoToSeqNo(seqNo);
         CATCH
         return nullptr;
     }
 
-    std::shared_ptr<IResult> BaseForm::UndoAction(const int64_t &noOfStep)
+    std::shared_ptr<IResult> BaseForm::undoAction(const int64_t &noOfStep)
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
                 return actionManager->Undo(noOfStep);
         CATCH
         return nullptr;
     }
 
-    std::shared_ptr<IResult> BaseForm::UndoActionToSeqNo(const int64_t &seqNo)
+    std::shared_ptr<IResult> BaseForm::undoActionToSeqNo(const int64_t &seqNo)
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
                 return actionManager->UndoToSeqNo(seqNo);
         CATCH
         return nullptr;
     }
 
-    int64_t BaseForm::ClearAction()
+    int64_t BaseForm::clearAction()
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
-                return actionManager->GetFirstSeqNo();
+                return actionManager->getFirstSeqNo();
         CATCH
         return -1;
     }
 
-    int64_t BaseForm::TruncateAction()
+    int64_t BaseForm::truncateAction()
     {
         TRY
-            auto actionManager = GetActionManager();
+            auto actionManager = getActionManager();
             if (actionManager != nullptr)
-                return actionManager->GetFirstSeqNo();
+                return actionManager->getFirstSeqNo();
         CATCH
         return -1;
     }
@@ -203,7 +203,7 @@ namespace vcc
     bool BaseForm::Close(bool isForce)
     {
         TRY
-            if (!isForce && !IsClosable())
+            if (!isForce && !isClosable())
                 return false;
             if (!OnClose())
                 return false;

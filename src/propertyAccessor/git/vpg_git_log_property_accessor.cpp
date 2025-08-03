@@ -9,7 +9,7 @@
 #include "vpg_git_log.hpp"
 #include "vpg_git_log_property.hpp"
 
-bool VPGGitLogPropertyAccessor::_ReadBool(const int64_t &objectProperty) const
+bool VPGGitLogPropertyAccessor::_readBool(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
@@ -17,7 +17,7 @@ bool VPGGitLogPropertyAccessor::_ReadBool(const int64_t &objectProperty) const
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::IsHead:
-            return obj->GetIsHead();
+            return obj->getIsHead();
         default:
             assert(false);
         }
@@ -25,7 +25,7 @@ bool VPGGitLogPropertyAccessor::_ReadBool(const int64_t &objectProperty) const
     return false;
 }
 
-bool VPGGitLogPropertyAccessor::_ReadBoolAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+bool VPGGitLogPropertyAccessor::_readBoolAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -33,7 +33,7 @@ bool VPGGitLogPropertyAccessor::_ReadBoolAtIndex(const int64_t &objectProperty, 
     return false;
 }
 
-bool VPGGitLogPropertyAccessor::_ReadBoolAtKey(const int64_t &objectProperty, const void */*key*/) const
+bool VPGGitLogPropertyAccessor::_readBoolAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -41,7 +41,7 @@ bool VPGGitLogPropertyAccessor::_ReadBoolAtKey(const int64_t &objectProperty, co
     return false;
 }
 
-void VPGGitLogPropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool &value)
+void VPGGitLogPropertyAccessor::_writeBool(const int64_t &objectProperty, const bool &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
@@ -49,7 +49,7 @@ void VPGGitLogPropertyAccessor::_WriteBool(const int64_t &objectProperty, const 
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::IsHead:
-            obj->SetIsHead(value);
+            obj->setIsHead(value);
             break;
         default:
             assert(false);
@@ -57,28 +57,28 @@ void VPGGitLogPropertyAccessor::_WriteBool(const int64_t &objectProperty, const 
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_WriteBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
+void VPGGitLogPropertyAccessor::_writeBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_WriteBoolAtKey(const int64_t &objectProperty, const bool &/*value*/, const void */*key*/)
+void VPGGitLogPropertyAccessor::_writeBoolAtKey(const int64_t &objectProperty, const bool &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_InsertBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
+void VPGGitLogPropertyAccessor::_insertBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-long VPGGitLogPropertyAccessor::_ReadLong(const int64_t &objectProperty) const
+long VPGGitLogPropertyAccessor::_readLong(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
@@ -86,11 +86,11 @@ long VPGGitLogPropertyAccessor::_ReadLong(const int64_t &objectProperty) const
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::AuthorDate:
-            return obj->GetAuthorDate();
+            return obj->getAuthorDate();
         case VPGGitLogProperty::ColumnIndex:
-            return obj->GetColumnIndex();
+            return obj->getColumnIndex();
         case VPGGitLogProperty::CommitDate:
-            return obj->GetCommitDate();
+            return obj->getCommitDate();
         default:
             assert(false);
         }
@@ -98,7 +98,7 @@ long VPGGitLogPropertyAccessor::_ReadLong(const int64_t &objectProperty) const
     return 0L;
 }
 
-long VPGGitLogPropertyAccessor::_ReadLongAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+long VPGGitLogPropertyAccessor::_readLongAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -106,7 +106,7 @@ long VPGGitLogPropertyAccessor::_ReadLongAtIndex(const int64_t &objectProperty, 
     return 0L;
 }
 
-long VPGGitLogPropertyAccessor::_ReadLongAtKey(const int64_t &objectProperty, const void */*key*/) const
+long VPGGitLogPropertyAccessor::_readLongAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -114,7 +114,7 @@ long VPGGitLogPropertyAccessor::_ReadLongAtKey(const int64_t &objectProperty, co
     return 0L;
 }
 
-void VPGGitLogPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long &value)
+void VPGGitLogPropertyAccessor::_writeLong(const int64_t &objectProperty, const long &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
@@ -122,13 +122,13 @@ void VPGGitLogPropertyAccessor::_WriteLong(const int64_t &objectProperty, const 
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::AuthorDate:
-            obj->SetAuthorDate(value);
+            obj->setAuthorDate(value);
             break;
         case VPGGitLogProperty::ColumnIndex:
-            obj->SetColumnIndex(value);
+            obj->setColumnIndex(value);
             break;
         case VPGGitLogProperty::CommitDate:
-            obj->SetCommitDate(value);
+            obj->setCommitDate(value);
             break;
         default:
             assert(false);
@@ -136,28 +136,28 @@ void VPGGitLogPropertyAccessor::_WriteLong(const int64_t &objectProperty, const 
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_WriteLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
+void VPGGitLogPropertyAccessor::_writeLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_WriteLongAtKey(const int64_t &objectProperty, const long &/*value*/, const void */*key*/)
+void VPGGitLogPropertyAccessor::_writeLongAtKey(const int64_t &objectProperty, const long &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_InsertLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
+void VPGGitLogPropertyAccessor::_insertLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-std::wstring VPGGitLogPropertyAccessor::_ReadString(const int64_t &objectProperty) const
+std::wstring VPGGitLogPropertyAccessor::_readString(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
@@ -165,31 +165,31 @@ std::wstring VPGGitLogPropertyAccessor::_ReadString(const int64_t &objectPropert
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::AbbreviatedHashID:
-            return obj->GetAbbreviatedHashID();
+            return obj->getAbbreviatedHashID();
         case VPGGitLogProperty::AbbreviatedTreeHashID:
-            return obj->GetAbbreviatedTreeHashID();
+            return obj->getAbbreviatedTreeHashID();
         case VPGGitLogProperty::Author:
-            return obj->GetAuthor();
+            return obj->getAuthor();
         case VPGGitLogProperty::AuthorDateStr:
-            return obj->GetAuthorDateStr();
+            return obj->getAuthorDateStr();
         case VPGGitLogProperty::AuthorEmail:
-            return obj->GetAuthorEmail();
+            return obj->getAuthorEmail();
         case VPGGitLogProperty::CommitDateStr:
-            return obj->GetCommitDateStr();
+            return obj->getCommitDateStr();
         case VPGGitLogProperty::Committer:
-            return obj->GetCommitter();
+            return obj->getCommitter();
         case VPGGitLogProperty::CommitterEmail:
-            return obj->GetCommitterEmail();
+            return obj->getCommitterEmail();
         case VPGGitLogProperty::FullMessage:
-            return obj->GetFullMessage();
+            return obj->getFullMessage();
         case VPGGitLogProperty::HashID:
-            return obj->GetHashID();
+            return obj->getHashID();
         case VPGGitLogProperty::Message:
-            return obj->GetMessage();
+            return obj->getMessage();
         case VPGGitLogProperty::Title:
-            return obj->GetTitle();
+            return obj->getTitle();
         case VPGGitLogProperty::TreeHashID:
-            return obj->GetTreeHashID();
+            return obj->getTreeHashID();
         default:
             assert(false);
         }
@@ -197,7 +197,7 @@ std::wstring VPGGitLogPropertyAccessor::_ReadString(const int64_t &objectPropert
     return L"";
 }
 
-std::wstring VPGGitLogPropertyAccessor::_ReadStringAtIndex(const int64_t &objectProperty, const int64_t &index) const
+std::wstring VPGGitLogPropertyAccessor::_readStringAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -206,13 +206,13 @@ std::wstring VPGGitLogPropertyAccessor::_ReadStringAtIndex(const int64_t &object
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::AbbreviatedParentHashIDs:
-            return obj->GetAbbreviatedParentHashIDsAtIndex(index);
+            return obj->getAbbreviatedParentHashIDsAtIndex(index);
         case VPGGitLogProperty::Branches:
-            return obj->GetBranchesAtIndex(index);
+            return obj->getBranchesAtIndex(index);
         case VPGGitLogProperty::ParentHashIDs:
-            return obj->GetParentHashIDsAtIndex(index);
+            return obj->getParentHashIDsAtIndex(index);
         case VPGGitLogProperty::Tags:
-            return obj->GetTagsAtIndex(index);
+            return obj->getTagsAtIndex(index);
         default:
             assert(false);
         }
@@ -220,7 +220,7 @@ std::wstring VPGGitLogPropertyAccessor::_ReadStringAtIndex(const int64_t &object
     return L"";
 }
 
-std::wstring VPGGitLogPropertyAccessor::_ReadStringAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::wstring VPGGitLogPropertyAccessor::_readStringAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -228,7 +228,7 @@ std::wstring VPGGitLogPropertyAccessor::_ReadStringAtKey(const int64_t &objectPr
     return L"";
 }
 
-void VPGGitLogPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring &value)
+void VPGGitLogPropertyAccessor::_writeString(const int64_t &objectProperty, const std::wstring &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
@@ -236,43 +236,43 @@ void VPGGitLogPropertyAccessor::_WriteString(const int64_t &objectProperty, cons
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::AbbreviatedHashID:
-            obj->SetAbbreviatedHashID(value);
+            obj->setAbbreviatedHashID(value);
             break;
         case VPGGitLogProperty::AbbreviatedTreeHashID:
-            obj->SetAbbreviatedTreeHashID(value);
+            obj->setAbbreviatedTreeHashID(value);
             break;
         case VPGGitLogProperty::Author:
-            obj->SetAuthor(value);
+            obj->setAuthor(value);
             break;
         case VPGGitLogProperty::AuthorDateStr:
-            obj->SetAuthorDateStr(value);
+            obj->setAuthorDateStr(value);
             break;
         case VPGGitLogProperty::AuthorEmail:
-            obj->SetAuthorEmail(value);
+            obj->setAuthorEmail(value);
             break;
         case VPGGitLogProperty::CommitDateStr:
-            obj->SetCommitDateStr(value);
+            obj->setCommitDateStr(value);
             break;
         case VPGGitLogProperty::Committer:
-            obj->SetCommitter(value);
+            obj->setCommitter(value);
             break;
         case VPGGitLogProperty::CommitterEmail:
-            obj->SetCommitterEmail(value);
+            obj->setCommitterEmail(value);
             break;
         case VPGGitLogProperty::FullMessage:
-            obj->SetFullMessage(value);
+            obj->setFullMessage(value);
             break;
         case VPGGitLogProperty::HashID:
-            obj->SetHashID(value);
+            obj->setHashID(value);
             break;
         case VPGGitLogProperty::Message:
-            obj->SetMessage(value);
+            obj->setMessage(value);
             break;
         case VPGGitLogProperty::Title:
-            obj->SetTitle(value);
+            obj->setTitle(value);
             break;
         case VPGGitLogProperty::TreeHashID:
-            obj->SetTreeHashID(value);
+            obj->setTreeHashID(value);
             break;
         default:
             assert(false);
@@ -280,7 +280,7 @@ void VPGGitLogPropertyAccessor::_WriteString(const int64_t &objectProperty, cons
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_WriteStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
+void VPGGitLogPropertyAccessor::_writeStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -290,27 +290,27 @@ void VPGGitLogPropertyAccessor::_WriteStringAtIndex(const int64_t &objectPropert
         {
         case VPGGitLogProperty::AbbreviatedParentHashIDs:
             if (index > -1)
-                obj->SetAbbreviatedParentHashIDsAtIndex(index, value);
+                obj->setAbbreviatedParentHashIDsAtIndex(index, value);
             else
-                obj->InsertAbbreviatedParentHashIDs(value);
+                obj->insertAbbreviatedParentHashIDs(value);
             break;
         case VPGGitLogProperty::Branches:
             if (index > -1)
-                obj->SetBranchesAtIndex(index, value);
+                obj->setBranchesAtIndex(index, value);
             else
-                obj->InsertBranches(value);
+                obj->insertBranches(value);
             break;
         case VPGGitLogProperty::ParentHashIDs:
             if (index > -1)
-                obj->SetParentHashIDsAtIndex(index, value);
+                obj->setParentHashIDsAtIndex(index, value);
             else
-                obj->InsertParentHashIDs(value);
+                obj->insertParentHashIDs(value);
             break;
         case VPGGitLogProperty::Tags:
             if (index > -1)
-                obj->SetTagsAtIndex(index, value);
+                obj->setTagsAtIndex(index, value);
             else
-                obj->InsertTags(value);
+                obj->insertTags(value);
             break;
         default:
             assert(false);
@@ -318,14 +318,14 @@ void VPGGitLogPropertyAccessor::_WriteStringAtIndex(const int64_t &objectPropert
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_WriteStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/)
+void VPGGitLogPropertyAccessor::_writeStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
+void VPGGitLogPropertyAccessor::_insertStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -335,27 +335,27 @@ void VPGGitLogPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProper
         {
         case VPGGitLogProperty::AbbreviatedParentHashIDs:
             if (index > -1)
-                obj->InsertAbbreviatedParentHashIDsAtIndex(index, value);
+                obj->insertAbbreviatedParentHashIDsAtIndex(index, value);
             else
-                obj->InsertAbbreviatedParentHashIDs(value);
+                obj->insertAbbreviatedParentHashIDs(value);
             break;
         case VPGGitLogProperty::Branches:
             if (index > -1)
-                obj->InsertBranchesAtIndex(index, value);
+                obj->insertBranchesAtIndex(index, value);
             else
-                obj->InsertBranches(value);
+                obj->insertBranches(value);
             break;
         case VPGGitLogProperty::ParentHashIDs:
             if (index > -1)
-                obj->InsertParentHashIDsAtIndex(index, value);
+                obj->insertParentHashIDsAtIndex(index, value);
             else
-                obj->InsertParentHashIDs(value);
+                obj->insertParentHashIDs(value);
             break;
         case VPGGitLogProperty::Tags:
             if (index > -1)
-                obj->InsertTagsAtIndex(index, value);
+                obj->insertTagsAtIndex(index, value);
             else
-                obj->InsertTags(value);
+                obj->insertTags(value);
             break;
         default:
             assert(false);
@@ -363,7 +363,7 @@ void VPGGitLogPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProper
     CATCH
 }
 
-size_t VPGGitLogPropertyAccessor::_GetCount(const int64_t &objectProperty) const
+size_t VPGGitLogPropertyAccessor::_getCount(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
@@ -371,13 +371,13 @@ size_t VPGGitLogPropertyAccessor::_GetCount(const int64_t &objectProperty) const
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::ParentHashIDs:
-            return obj->GetParentHashIDs().size();
+            return obj->getParentHashIDs().size();
         case VPGGitLogProperty::AbbreviatedParentHashIDs:
-            return obj->GetAbbreviatedParentHashIDs().size();
+            return obj->getAbbreviatedParentHashIDs().size();
         case VPGGitLogProperty::Branches:
-            return obj->GetBranches().size();
+            return obj->getBranches().size();
         case VPGGitLogProperty::Tags:
-            return obj->GetTags().size();
+            return obj->getTags().size();
         default:
             assert(false);
         }
@@ -385,7 +385,7 @@ size_t VPGGitLogPropertyAccessor::_GetCount(const int64_t &objectProperty) const
     return 0;
 }
 
-std::set<void *> VPGGitLogPropertyAccessor::_GetMapKeys(const int64_t &objectProperty) const
+std::set<void *> VPGGitLogPropertyAccessor::_getMapKeys(const int64_t &objectProperty) const
 {
     std::set<void *> result;
     TRY
@@ -394,7 +394,7 @@ std::set<void *> VPGGitLogPropertyAccessor::_GetMapKeys(const int64_t &objectPro
     return result;
 }
 
-bool VPGGitLogPropertyAccessor::_IsContainKey(const int64_t &objectProperty, const void */*key*/) const
+bool VPGGitLogPropertyAccessor::_isContainKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -402,7 +402,7 @@ bool VPGGitLogPropertyAccessor::_IsContainKey(const int64_t &objectProperty, con
     return false;
 }
 
-void VPGGitLogPropertyAccessor::_Remove(const int64_t &objectProperty, const void *value)
+void VPGGitLogPropertyAccessor::_remove(const int64_t &objectProperty, const void *value)
 {
     TRY
         assert(value != nullptr);
@@ -413,25 +413,25 @@ void VPGGitLogPropertyAccessor::_Remove(const int64_t &objectProperty, const voi
         case VPGGitLogProperty::AbbreviatedParentHashIDs: {
             auto valuePtr = static_cast<const wchar_t *>(value);
             assert(valuePtr != nullptr);
-            obj->RemoveAbbreviatedParentHashIDs(valuePtr);
+            obj->removeAbbreviatedParentHashIDs(valuePtr);
             break;
         }
         case VPGGitLogProperty::Branches: {
             auto valuePtr = static_cast<const wchar_t *>(value);
             assert(valuePtr != nullptr);
-            obj->RemoveBranches(valuePtr);
+            obj->removeBranches(valuePtr);
             break;
         }
         case VPGGitLogProperty::ParentHashIDs: {
             auto valuePtr = static_cast<const wchar_t *>(value);
             assert(valuePtr != nullptr);
-            obj->RemoveParentHashIDs(valuePtr);
+            obj->removeParentHashIDs(valuePtr);
             break;
         }
         case VPGGitLogProperty::Tags: {
             auto valuePtr = static_cast<const wchar_t *>(value);
             assert(valuePtr != nullptr);
-            obj->RemoveTags(valuePtr);
+            obj->removeTags(valuePtr);
             break;
         }
         default:
@@ -440,14 +440,14 @@ void VPGGitLogPropertyAccessor::_Remove(const int64_t &objectProperty, const voi
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const vcc::IObject */*value*/)
+void VPGGitLogPropertyAccessor::_removeObject(const int64_t &objectProperty, const vcc::IObject */*value*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_RemoveAtIndex(const int64_t &objectProperty, const int64_t &index)
+void VPGGitLogPropertyAccessor::_removeAtIndex(const int64_t &objectProperty, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -456,16 +456,16 @@ void VPGGitLogPropertyAccessor::_RemoveAtIndex(const int64_t &objectProperty, co
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::AbbreviatedParentHashIDs:
-            obj->RemoveAbbreviatedParentHashIDsAtIndex(index);
+            obj->removeAbbreviatedParentHashIDsAtIndex(index);
             break;
         case VPGGitLogProperty::Branches:
-            obj->RemoveBranchesAtIndex(index);
+            obj->removeBranchesAtIndex(index);
             break;
         case VPGGitLogProperty::ParentHashIDs:
-            obj->RemoveParentHashIDsAtIndex(index);
+            obj->removeParentHashIDsAtIndex(index);
             break;
         case VPGGitLogProperty::Tags:
-            obj->RemoveTagsAtIndex(index);
+            obj->removeTagsAtIndex(index);
             break;
         default:
             assert(false);
@@ -473,14 +473,14 @@ void VPGGitLogPropertyAccessor::_RemoveAtIndex(const int64_t &objectProperty, co
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_RemoveAtKey(const int64_t &objectProperty, const void */*key*/)
+void VPGGitLogPropertyAccessor::_removeAtKey(const int64_t &objectProperty, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_Clear(const int64_t &objectProperty)
+void VPGGitLogPropertyAccessor::_clear(const int64_t &objectProperty)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
@@ -488,16 +488,16 @@ void VPGGitLogPropertyAccessor::_Clear(const int64_t &objectProperty)
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::ParentHashIDs:
-            obj->ClearParentHashIDs();
+            obj->clearParentHashIDs();
             break;
         case VPGGitLogProperty::AbbreviatedParentHashIDs:
-            obj->ClearAbbreviatedParentHashIDs();
+            obj->clearAbbreviatedParentHashIDs();
             break;
         case VPGGitLogProperty::Branches:
-            obj->ClearBranches();
+            obj->clearBranches();
             break;
         case VPGGitLogProperty::Tags:
-            obj->ClearTags();
+            obj->clearTags();
             break;
         default:
             assert(false);

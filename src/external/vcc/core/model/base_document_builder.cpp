@@ -4,10 +4,10 @@
 
 namespace vcc
 {
-    std::wstring BaseDocumentBuilder::GetErrorMessage(const std::wstring &str, const size_t &pos, const std::wstring &msg) const
+    std::wstring BaseDocumentBuilder::getErrorMessage(const std::wstring &str, const size_t &pos, const std::wstring &msg) const
     {
         size_t row = 0, column = 0;
-        GetCharacterRowAndColumn(str, pos, row, column);
+        getCharacterRowAndColumn(str, pos, row, column);
         
         size_t lengthOfPos = std::min((int64_t)pos, _NumberOfCharactersBeforePosForErrorMessage);
         size_t lengthOfSub = std::min((int64_t)(str.length() - pos), _NumberOfCharactersAfterPosForErrorMessage);

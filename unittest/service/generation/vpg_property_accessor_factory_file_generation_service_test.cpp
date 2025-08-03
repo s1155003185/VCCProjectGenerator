@@ -23,11 +23,11 @@ class VPGPropertyAccessorFactoryFileGenerationServiceTest : public testing::Test
         void SetUp() override
         {
             this->_LogConfig = std::make_shared<vcc::LogConfig>();
-            this->_LogConfig->SetIsConsoleLog(false);
-            std::filesystem::remove_all(PATH(this->GetWorkspace()));
+            this->_LogConfig->setIsConsoleLog(false);
+            std::filesystem::remove_all(PATH(this->getWorkspace()));
 
-            this->_FilePathHpp = vcc::ConcatPaths({this->GetWorkspace(), L"property_accessor_factory.hpp"});
-            this->_FilePathCpp = vcc::ConcatPaths({this->GetWorkspace(), L"property_accessor_factory.cpp"});
+            this->_FilePathHpp = vcc::concatPaths({this->getWorkspace(), L"property_accessor_factory.hpp"});
+            this->_FilePathCpp = vcc::concatPaths({this->getWorkspace(), L"property_accessor_factory.cpp"});
 
             this->_ExpectedHpp = L""
                 "#pragma once\r\n"
@@ -45,26 +45,26 @@ class VPGPropertyAccessorFactoryFileGenerationServiceTest : public testing::Test
                 "        virtual ~PropertyAccessorFactory() {}\r\n"
                 "\r\n"
                 "    public:\r\n"
-                "        static std::shared_ptr<vcc::IPropertyAccessor> Create(std::shared_ptr<vcc::IObject> object);\r\n"
+                "        static std::shared_ptr<vcc::IPropertyAccessor> create(std::shared_ptr<vcc::IObject> object);\r\n"
                 "};\r\n";
         }
 
         void TearDown() override
         {
-            std::filesystem::remove_all(PATH(this->GetWorkspace()));
+            std::filesystem::remove_all(PATH(this->getWorkspace()));
         }
 };
 
 TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Empty)
 {
     std::set<std::wstring> propertyTypes;
-    VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp());
-    VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VCC", {}, this->GetFilePathCpp(), propertyTypes);
+    VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(this->getLogConfig().get(), this->getFilePathHpp());
+    VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(this->getLogConfig().get(), L"VCC", {}, this->getFilePathCpp(), propertyTypes);
 
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), this->GetExpectedHpp());
+    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()), this->getExpectedHpp());
 
     std::wstring expectedResult = L""
         "#include \"property_accessor_factory.hpp\"\r\n"
@@ -76,11 +76,11 @@ TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Empty)
         "#include \"i_object.hpp\"\r\n"
         "#include \"i_property_accessor.hpp\"\r\n"
         "\r\n"
-        "std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_ptr<vcc::IObject> object)\r\n"
+        "std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::create(std::shared_ptr<vcc::IObject> object)\r\n"
         "{\r\n"
         "    assert(object != nullptr);\r\n"
         "\r\n"
-        "    switch (object->GetObjectType())\r\n"
+        "    switch (object->getObjectType())\r\n"
         "    {\r\n"
         "    default:\r\n"
         "        assert(false);\r\n"
@@ -88,7 +88,7 @@ TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Empty)
         "    }\r\n"
         "    return nullptr;\r\n"
         "}\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedResult);
+    EXPECT_EQ(vcc::readFile(this->getFilePathCpp()), expectedResult);
 }
 
 TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Normal)
@@ -96,13 +96,13 @@ TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Normal)
     std::set<std::wstring> propertyTypes;
     propertyTypes.insert(L"Def");
     propertyTypes.insert(L"Abc");
-    VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(this->GetLogConfig().get(), this->GetFilePathHpp());
-    VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(this->GetLogConfig().get(), L"VCC", { L"abc.hpp" }, this->GetFilePathCpp(), propertyTypes);
+    VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(this->getLogConfig().get(), this->getFilePathHpp());
+    VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(this->getLogConfig().get(), L"VCC", { L"abc.hpp" }, this->getFilePathCpp(), propertyTypes);
 
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathHpp()));
-    EXPECT_TRUE(vcc::IsFilePresent(this->GetFilePathCpp()));
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathHpp()), this->GetExpectedHpp());
+    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()), this->getExpectedHpp());
 
     std::wstring expectedResult = L""
         "#include \"property_accessor_factory.hpp\"\r\n"
@@ -115,11 +115,11 @@ TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Normal)
         "#include \"i_object.hpp\"\r\n"
         "#include \"i_property_accessor.hpp\"\r\n"
         "\r\n"
-        "std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_ptr<vcc::IObject> object)\r\n"
+        "std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::create(std::shared_ptr<vcc::IObject> object)\r\n"
         "{\r\n"
         "    assert(object != nullptr);\r\n"
         "\r\n"
-        "    switch (object->GetObjectType())\r\n"
+        "    switch (object->getObjectType())\r\n"
         "    {\r\n"
         "    case ObjectType::Abc:\r\n"
         "        return std::make_shared<VCCAbcPropertyAccessor>(object);\r\n"
@@ -131,5 +131,5 @@ TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Normal)
         "    }\r\n"
         "    return nullptr;\r\n"
         "}\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->GetFilePathCpp()), expectedResult);
+    EXPECT_EQ(vcc::readFile(this->getFilePathCpp()), expectedResult);
 }

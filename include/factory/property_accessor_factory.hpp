@@ -13,5 +13,5 @@ class PropertyAccessorFactory : public vcc::BaseFactory
         virtual ~PropertyAccessorFactory() {}
 
     public:
-        static std::shared_ptr<vcc::IPropertyAccessor> Create(std::shared_ptr<vcc::IObject> object);
+        static std::shared_ptr<vcc::IPropertyAccessor> create(std::shared_ptr<vcc::IObject> object);
 };

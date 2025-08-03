@@ -13,7 +13,7 @@ namespace vcc
             TerminalService() : BaseService() {}
             ~TerminalService() {}
 
-            static std::wstring Execute(const LogConfig *logConfig, std::wstring id, std::wstring cmd);
-            static std::wstring Execute(const LogConfig *logConfig, const std::wstring &id, const std::wstring &workspace, const std::wstring &cmd);
+            static std::wstring execute(const LogConfig *logConfig, std::wstring id, std::wstring cmd);
+            static std::wstring execute(const LogConfig *logConfig, const std::wstring &id, const std::wstring &workspace, const std::wstring &cmd);
     };
 }

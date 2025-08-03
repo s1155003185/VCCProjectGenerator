@@ -48,11 +48,11 @@ namespace vcc
                 : _LogConfig(logConfig), _Id(id), _MessageStart(messageStart), _MessageComplete(messageComplete), _DebugMessage(debugMessage), _Action(action), _Callback(callback) {}
             virtual ~Thread() {}
 
-            const ThreadManager *GetManager() const;
-            void SetManager(const ThreadManager *manager) const;
+            const ThreadManager *getManager() const;
+            void setManager(const ThreadManager *manager) const;
 
-            std::wstring GetPid() const;
+            std::wstring getPid() const;
 
-            void Execute() const;
+            void execute() const;
     };
 }

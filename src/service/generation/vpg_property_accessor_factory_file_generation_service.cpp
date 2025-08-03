@@ -13,7 +13,7 @@
 void VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp)
 {
     TRY
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor factory file: " + filePathHpp);
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate property accessor factory file: " + filePathHpp);
         std::wstring content = L""
             "#pragma once\r\n"
             "\r\n"
@@ -30,10 +30,10 @@ void VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(const vcc::Log
             "        virtual ~PropertyAccessorFactory() {}\r\n"
             "\r\n"
             "    public:\r\n"
-            "        static std::shared_ptr<vcc::IPropertyAccessor> Create(std::shared_ptr<vcc::IObject> object);\r\n"
+            "        static std::shared_ptr<vcc::IPropertyAccessor> create(std::shared_ptr<vcc::IObject> object);\r\n"
             "};\r\n";
-        vcc::WriteFile(filePathHpp, content, true);
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor factory file completed.");
+        vcc::writeFile(filePathHpp, content, true);
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate property accessor factory file completed.");
     CATCH
 }
 
@@ -41,7 +41,7 @@ void VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(const vcc::Log
     const std::wstring &filePathCpp, const std::set<std::wstring> &propertyTypes)
 {
     TRY
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor factory file: " + filePathCpp);
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate property accessor factory file: " + filePathCpp);
 
         std::set<std::wstring> tmpIncludePaths = includeFiles;
         tmpIncludePaths.insert(L"base_property_accessor.hpp");
@@ -56,14 +56,14 @@ void VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(const vcc::Log
             "\r\n";
         
         for (auto const &str : tmpIncludePaths)
-            content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
+            content += L"#include " + vcc::getEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
 
         content += L"\r\n"
-            "std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_ptr<vcc::IObject> object)\r\n"
+            "std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::create(std::shared_ptr<vcc::IObject> object)\r\n"
             "{\r\n"
             + INDENT + L"assert(object != nullptr);\r\n"
             "\r\n"
-            + INDENT + L"switch (object->GetObjectType())\r\n"
+            + INDENT + L"switch (object->getObjectType())\r\n"
             + INDENT + L"{\r\n";
         for (auto const &propertyType : propertyTypes) {
             content += INDENT + L"case ObjectType::" + propertyType + L":\r\n"
@@ -76,7 +76,7 @@ void VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(const vcc::Log
             + INDENT + L"}\r\n"
             + INDENT + L"return nullptr;\r\n"
             "}\r\n";
-        vcc::WriteFile(filePathCpp, content, true);
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor factory completed.");
+        vcc::writeFile(filePathCpp, content, true);
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate property accessor factory completed.");
     CATCH
 }

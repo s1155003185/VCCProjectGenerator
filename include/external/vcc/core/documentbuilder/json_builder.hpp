@@ -17,7 +17,7 @@ namespace vcc
         GETSET(std::wstring, ColonValueSpace, L" ");
 
         private:
-            std::wstring GetCurrentIndent() const;
+            std::wstring getCurrentIndent() const;
 
         protected:
             void ParseJsonObject(const std::wstring &str, size_t &pos, std::shared_ptr<Json> doc) const;
@@ -26,8 +26,8 @@ namespace vcc
             JsonBuilder() = default;
             virtual ~JsonBuilder() {}
 
-            virtual std::wstring Serialize(const IDocument *doc) const  override;
-            virtual void Deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc) const override;
-            virtual void Deserialize(const std::wstring &str, std::shared_ptr<IDocument> doc) const override;
+            virtual std::wstring serialize(const IDocument *doc) const  override;
+            virtual void deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc) const override;
+            virtual void deserialize(const std::wstring &str, std::shared_ptr<IDocument> doc) const override;
     };
 }

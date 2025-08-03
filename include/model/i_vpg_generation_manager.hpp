@@ -7,7 +7,7 @@ protected:
     ~IVPGGenerationManager() {}
 
 public:
-    virtual void Add() const = 0;
-    virtual void Update() const = 0;
-    virtual void Generate() const = 0;
+    virtual void add() const = 0;
+    virtual void update() const = 0;
+    virtual void generate() const = 0;
 };

@@ -9,11 +9,11 @@
 
 #define CLASS_ID L"VPGCppGenerationManager"
 
-void VPGCppGenerationManager::Add() const
+void VPGCppGenerationManager::add() const
 {
     TRY
-        vcc::LogService::LogInfo(this->GetLogConfig().get(), CLASS_ID, L"Copy Project to " + (!this->_Workspace.empty() ? this->_Workspace : vcc::GetCurrentFolderPath()));
+        vcc::LogService::logInfo(this->getLogConfig().get(), CLASS_ID, L"Copy Project to " + (!this->_Workspace.empty() ? this->_Workspace : vcc::getCurrentFolderPath()));
         this->CreateBasicProject();
-        vcc::LogService::LogInfo(this->GetLogConfig().get(), CLASS_ID, L"Done.");
+        vcc::LogService::logInfo(this->getLogConfig().get(), CLASS_ID, L"Done.");
     CATCH
 }

@@ -32,31 +32,31 @@ namespace vcc
         ThreadManager(std::shared_ptr<LogConfig> logConfig) : BaseManager(logConfig) {}
         virtual ~ThreadManager();
         
-        std::vector<std::shared_ptr<Thread>> &GetThreads() const;
-        std::vector<std::shared_ptr<Thread>> &GetActiveThreads() const;
+        std::vector<std::shared_ptr<Thread>> &getThreads() const;
+        std::vector<std::shared_ptr<Thread>> &getActiveThreads() const;
 
         // Add to Queue Tail
-        void Queue(std::shared_ptr<Thread> thread) const;
+        void queue(std::shared_ptr<Thread> thread) const;
         
         // Add to Queue First Piror
-        void Urgent(std::shared_ptr<Thread> thread) const;
+        void urgent(std::shared_ptr<Thread> thread) const;
 
         // Alert Manager to do work
-        void Trigger() const;
+        void trigger() const;
 
         // Execute Immediately
-        void Join(std::shared_ptr<Thread> thread) const;
+        void join(std::shared_ptr<Thread> thread) const;
         
         // Execute Immediately
-        void Detach(std::shared_ptr<Thread> thread) const;
+        void detach(std::shared_ptr<Thread> thread) const;
 
         // Working State
-        bool IsIdle() const;
-        void Suspend() const;
-        void Resume() const;
-        void Stop() const;
+        bool isIdle() const;
+        void suspend() const;
+        void resume() const;
+        void stop() const;
         
         // Clear Waiting Thread
-        void ClearWaitingThread() const;
+        void clearWaitingThread() const;
     };
 }

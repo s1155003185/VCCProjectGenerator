@@ -13,9 +13,9 @@ namespace vcc
             IException() {}
             virtual ~IException() {}
         public:
-            virtual ExceptionType GetErrorType() const = 0;
-            virtual int64_t GetErrorCode() const = 0;
-            virtual std::wstring GetErrorMessage() const = 0;
-            virtual void SetErrorMessage(const std::wstring &message) const = 0;
+            virtual ExceptionType getErrorType() const = 0;
+            virtual int64_t getErrorCode() const = 0;
+            virtual std::wstring getErrorMessage() const = 0;
+            virtual void setErrorMessage(const std::wstring &message) const = 0;
     };
 }

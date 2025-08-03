@@ -10,34 +10,34 @@
 
 namespace vcc
 {
-    const ThreadManager *Thread::GetManager() const
+    const ThreadManager *Thread::getManager() const
     {
         return _Manager;
     }
 
-    void Thread::SetManager(const ThreadManager *manager) const
+    void Thread::setManager(const ThreadManager *manager) const
     {
         _Manager = manager;
     }
 
-    std::wstring Thread::GetPid() const
+    std::wstring Thread::getPid() const
     {
         return ToString(_Pid);
     }
 
-    void Thread::Execute() const
+    void Thread::execute() const
     {
         TRY
             _Pid = std::this_thread::get_id();
             if (_Action) {
                 _State = ProcessState::Busy;
-                std::wstring id = IsBlank(_Id) ? (L"Thread." + GetPid()) : _Id;
-                LogService::LogThread(_LogConfig.get(), id, IsBlank(_MessageStart) ? L"Thread Start" : _MessageStart);
-                if (!IsBlank(_DebugMessage))
+                std::wstring id = isBlank(_Id) ? (L"Thread." + getPid()) : _Id;
+                LogService::LogThread(_LogConfig.get(), id, isBlank(_MessageStart) ? L"Thread Start" : _MessageStart);
+                if (!isBlank(_DebugMessage))
                     LogService::LogDebug(_LogConfig.get(), id, _DebugMessage);
 
                 _Action(this);
-                LogService::LogThread(_LogConfig.get(), id, IsBlank(_MessageComplete) ? L"Thread Terminated" : _MessageComplete);
+                LogService::LogThread(_LogConfig.get(), id, isBlank(_MessageComplete) ? L"Thread Terminated" : _MessageComplete);
                 if (_State == ProcessState::Busy || _State == ProcessState::Idle)
                     _State = ProcessState::Complete;
             }
@@ -45,7 +45,7 @@ namespace vcc
                 _Callback(this);
 
             if (_Manager)
-                _Manager->Trigger();
+                _Manager->trigger();
         CATCH
     }
 };

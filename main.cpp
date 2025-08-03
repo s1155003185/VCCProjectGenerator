@@ -13,8 +13,8 @@ int main(int argc, char **argv)
 	Application::Run();
 
 	auto logConfig = std::make_shared<vcc::LogConfig>();
-	logConfig->Initialize(vcc::LogConfigInitialType::None);
-	logConfig->SetIsConsoleLog(false);
+	logConfig->initialize(vcc::LogConfigInitialType::None);
+	logConfig->setIsConsoleLog(false);
 	try {
 		if (argc < 2) {
 			std::wcout << L"No Argument" << std::endl;
@@ -30,11 +30,11 @@ int main(int argc, char **argv)
 		// argList.push_back(L"-Generate");
 
 		VPGProcessManager process(logConfig);
-		process.Execute(argList);
+		process.execute(argList);
 	} catch (std::exception &ex) {
 		const vcc::IException *ie = dynamic_cast<const vcc::IException *>(&ex);
 		if (ie != nullptr)
-			vcc::LogService::LogError(logConfig.get(), L"", ie->GetErrorMessage());
+			vcc::LogService::LogError(logConfig.get(), L"", ie->getErrorMessage());
 		else
 			vcc::LogService::LogError(logConfig.get(), L"", vcc::str2wstr(ex.what()));
 		return -1;

@@ -13,29 +13,29 @@ class VPGGlobal
         static std::shared_ptr<VPGFileGenerationManager> _FileGenerationManager;
 
     public:
-        static std::wstring GetVersion();
-        static std::wstring GetVccLocalResponseFolder();
-        static std::wstring GetVccProjectLocalResponseDirectory(VPGProjectType projectType);
-        static std::wstring GetProjectName(VPGProjectType projectType);
-        static std::wstring GetProjecURL(VPGProjectType projectType);
-        static std::wstring GetVccJsonFileName();
+        static std::wstring getVersion();
+        static std::wstring getVccLocalResponseFolder();
+        static std::wstring getVccProjectLocalResponseDirectory(VPGProjectType projectType);
+        static std::wstring getProjectName(VPGProjectType projectType);
+        static std::wstring getProjecURL(VPGProjectType projectType);
+        static std::wstring getVccJsonFileName();
 
         // c++
-        static std::wstring GetCppDefaultIncludePathWindow();
-        static std::wstring GetCppDefaultIncludePathLinux();
-        static std::wstring GetCppDefaultIncludePathMacOs();
+        static std::wstring getCppDefaultIncludePathWindow();
+        static std::wstring getCppDefaultIncludePathLinux();
+        static std::wstring getCppDefaultIncludePathMacOs();
 
         // VPM - VCC Project Manager
-        static std::wstring GetVCCProjectManagerConfigFileName();
-        static std::wstring GetVCCProjectManagerConfigFileFullPath();
+        static std::wstring getVCCProjectManagerConfigFileName();
+        static std::wstring getVCCProjectManagerConfigFileFullPath();
 
         // Generator
-        static std::shared_ptr<VPGEnumClassReader> GetEnumClassReader();
-        static std::shared_ptr<VPGFileGenerationManager> GetFileGenerationManager();
+        static std::shared_ptr<VPGEnumClassReader> getEnumClassReader();
+        static std::shared_ptr<VPGFileGenerationManager> getFileGenerationManager();
 
         // helper
-        static std::wstring GetConvertedPath(const std::wstring &path);
+        static std::wstring getConvertedPath(const std::wstring &path);
 
         // Initialize
-        static void Initialize(const std::wstring &projectWorkspace);
+        static void initialize(const std::wstring &projectWorkspace);
 };

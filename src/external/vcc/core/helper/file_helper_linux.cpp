@@ -9,7 +9,7 @@
 
 namespace vcc
 {
-	std::wstring GetSystemFolderPathLinux(const SystemFolderType &fileType)
+	std::wstring getSystemFolderPathLinux(const SystemFolderType &fileType)
     {
         std::wstring result = L"";
         try {
@@ -74,7 +74,7 @@ namespace vcc
 				assert(false);
 				break;
 			}
-            result = TerminalService::Execute(nullptr, L"", cmd);
+            result = TerminalService::execute(nullptr, L"", cmd);
         } catch (const std::exception &e) {
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, str2wstr(e.what()));
         }

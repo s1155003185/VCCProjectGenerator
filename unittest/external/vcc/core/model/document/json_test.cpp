@@ -8,41 +8,41 @@ TEST(JsonTest, Full)
     auto builder = std::make_unique<vcc::JsonBuilder>();
 
     auto json = std::make_shared<vcc::Json>();
-    json->AddString(L"Version", L"0.0.1");
-    json->AddBool(L"IsGit", true);
-    json->AddDouble(L"Price", 2.33, 2);
-    json->AddInt(L"State", 1);
-    json->AddNull(L"Action");
+    json->addString(L"Version", L"0.0.1");
+    json->addBool(L"IsGit", true);
+    json->addDouble(L"Price", 2.33, 2);
+    json->addInt(L"State", 1);
+    json->addNull(L"Action");
     
     auto plugins = std::make_shared<vcc::Json>();
-    json->AddArray(L"Plugins", plugins);
-    plugins->AddArrayString(L"/path/of/Git");
+    json->addArray(L"Plugins", plugins);
+    plugins->addArrayString(L"/path/of/Git");
     
-    std::wstring jsonStr = builder->Serialize(json.get());
+    std::wstring jsonStr = builder->serialize(json.get());
 
     auto resultJson = std::make_shared<vcc::Json>();
-    builder->Deserialize(jsonStr, resultJson);
+    builder->deserialize(jsonStr, resultJson);
 
-    EXPECT_EQ(json->GetString(L"Version"), resultJson->GetString(L"Version"));
-    EXPECT_EQ(json->GetBool(L"IsGit"), resultJson->GetBool(L"IsGit"));
-    EXPECT_EQ(json->GetDouble(L"Price"), resultJson->GetDouble(L"Price"));
-    EXPECT_EQ(json->GetInt64(L"State"), resultJson->GetInt64(L"State"));
-    EXPECT_EQ(json->IsNull(L"Action"), resultJson->IsNull(L"Action"));
-    EXPECT_EQ(json->GetArray(L"Plugins").size(), resultJson->GetArray(L"Plugins").size());
-    EXPECT_EQ(json->GetArray(L"Plugins").at(0)->GetJsonInternalValue(), resultJson->GetArray(L"Plugins").at(0)->GetJsonInternalValue());
+    EXPECT_EQ(json->getString(L"Version"), resultJson->getString(L"Version"));
+    EXPECT_EQ(json->getBool(L"IsGit"), resultJson->getBool(L"IsGit"));
+    EXPECT_EQ(json->getDouble(L"Price"), resultJson->getDouble(L"Price"));
+    EXPECT_EQ(json->getInt64(L"State"), resultJson->getInt64(L"State"));
+    EXPECT_EQ(json->isNull(L"Action"), resultJson->isNull(L"Action"));
+    EXPECT_EQ(json->getArray(L"Plugins").size(), resultJson->getArray(L"Plugins").size());
+    EXPECT_EQ(json->getArray(L"Plugins").at(0)->getJsonInternalValue(), resultJson->getArray(L"Plugins").at(0)->getJsonInternalValue());
 
     // Set
-    json->SetString(L"Version", L"v0.0.1");
-    json->SetBool(L"IsGit", false);
-    json->SetDouble(L"Price", 1.23456, 2);
-    json->SetInt(L"State", 12);
-    json->SetNull(L"Action");
-    EXPECT_EQ(json->GetString(L"Version"), L"v0.0.1");
-    EXPECT_EQ(json->GetBool(L"IsGit"), false);
-    EXPECT_EQ(json->GetDouble(L"Price"), 1.23);
-    EXPECT_EQ(json->GetInt64(L"State"), 12);
-    EXPECT_EQ(json->IsNull(L"Action"), true);
-    // EXPECT_EQ(json->GetArray(L"Plugins").size(), resultJson->GetArray(L"Plugins").size());
-    // EXPECT_EQ(json->GetArray(L"Plugins").at(0)->GetJsonInternalValue(), resultJson->GetArray(L"Plugins").at(0)->GetJsonInternalValue());
+    json->setString(L"Version", L"v0.0.1");
+    json->setBool(L"IsGit", false);
+    json->setDouble(L"Price", 1.23456, 2);
+    json->setInt(L"State", 12);
+    json->setNull(L"Action");
+    EXPECT_EQ(json->getString(L"Version"), L"v0.0.1");
+    EXPECT_EQ(json->getBool(L"IsGit"), false);
+    EXPECT_EQ(json->getDouble(L"Price"), 1.23);
+    EXPECT_EQ(json->getInt64(L"State"), 12);
+    EXPECT_EQ(json->isNull(L"Action"), true);
+    // EXPECT_EQ(json->getArray(L"Plugins").size(), resultJson->getArray(L"Plugins").size());
+    // EXPECT_EQ(json->getArray(L"Plugins").at(0)->getJsonInternalValue(), resultJson->getArray(L"Plugins").at(0)->getJsonInternalValue());
 
 }

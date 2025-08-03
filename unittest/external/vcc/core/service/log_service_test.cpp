@@ -9,20 +9,20 @@
 
 TEST(LogServiceTest, LogTest) 
 {
-    std::wstring filePath = vcc::ConcatPaths({std::filesystem::current_path().wstring(), L"bin/Debug/AppLogs/LogServiceTest.log"});
-    vcc::RemoveFile(filePath);
+    std::wstring filePath = vcc::concatPaths({std::filesystem::current_path().wstring(), L"bin/Debug/AppLogs/LogServiceTest.log"});
+    vcc::removeFile(filePath);
     
     auto property = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
-    property->SetUserID(L"user");
-    property->SetIsConsoleLog(false);
-    property->SetIsLogTerminal(true);
-    property->SetIsLogTerminalResult(true);
-    property->SetIsLogProcess(true);
-    property->SetIsLogProcessResult(true);
-    property->SetIsLogSQL(true);
-    property->SetIsLogSQLResult(true);
-    property->SetFilePath(filePath);
-    std::wstring logInfoStr = vcc::LogService::LogInfo(property.get(), L"id", L"message");
+    property->setUserID(L"user");
+    property->setIsConsoleLog(false);
+    property->setIsLogTerminal(true);
+    property->setIsLogTerminalResult(true);
+    property->setIsLogProcess(true);
+    property->setIsLogProcessResult(true);
+    property->setIsLogSQL(true);
+    property->setIsLogSQLResult(true);
+    property->setFilePath(filePath);
+    std::wstring logInfoStr = vcc::LogService::logInfo(property.get(), L"id", L"message");
     std::wstring logWarningStr = vcc::LogService::LogWarning(property.get(), L"id", L"message");
     std::wstring logErrorStr = vcc::LogService::LogError(property.get(), L"id", L"message");
     std::wstring LogTerminalStr = vcc::LogService::LogTerminal(property.get(), L"id", L"message");
@@ -31,13 +31,13 @@ TEST(LogServiceTest, LogTest)
     std::wstring logProcessResultStr = vcc::LogService::LogProcessResult(property.get(), L"id", L"message");
     std::wstring logSQLStr = vcc::LogService::LogSQL(property.get(), L"id", L"message");
     std::wstring logSQLResultStr = vcc::LogService::LogSQLResult(property.get(), L"id", L"message");
-    EXPECT_EQ(logInfoStr, vcc::ReadFileOneLine(filePath, 0));
-    EXPECT_EQ(logWarningStr, vcc::ReadFileOneLine(filePath, 1));
-    EXPECT_EQ(logErrorStr, vcc::ReadFileOneLine(filePath, 2));
-    EXPECT_EQ(LogTerminalStr, vcc::ReadFileOneLine(filePath, 3));
-    EXPECT_EQ(LogTerminalResultStr, vcc::ReadFileOneLine(filePath, 4));
-    EXPECT_EQ(logProcessStr, vcc::ReadFileOneLine(filePath, 5));
-    EXPECT_EQ(logProcessResultStr, vcc::ReadFileOneLine(filePath, 6));
-    EXPECT_EQ(logSQLStr, vcc::ReadFileOneLine(filePath, 7));
-    EXPECT_EQ(logSQLResultStr, vcc::ReadFileOneLine(filePath, 8));
+    EXPECT_EQ(logInfoStr, vcc::readFileOneLine(filePath, 0));
+    EXPECT_EQ(logWarningStr, vcc::readFileOneLine(filePath, 1));
+    EXPECT_EQ(logErrorStr, vcc::readFileOneLine(filePath, 2));
+    EXPECT_EQ(LogTerminalStr, vcc::readFileOneLine(filePath, 3));
+    EXPECT_EQ(LogTerminalResultStr, vcc::readFileOneLine(filePath, 4));
+    EXPECT_EQ(logProcessStr, vcc::readFileOneLine(filePath, 5));
+    EXPECT_EQ(logProcessResultStr, vcc::readFileOneLine(filePath, 6));
+    EXPECT_EQ(logSQLStr, vcc::readFileOneLine(filePath, 7));
+    EXPECT_EQ(logSQLResultStr, vcc::readFileOneLine(filePath, 8));
 }

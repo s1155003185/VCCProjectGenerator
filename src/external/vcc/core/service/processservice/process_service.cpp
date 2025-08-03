@@ -144,7 +144,7 @@ namespace vcc
             return results;
         }
 
-        std::wstring ProcessService::Execute(const LogConfig *logConfig, const std::wstring &id, const std::wstring &command)
+        std::wstring ProcessService::execute(const LogConfig *logConfig, const std::wstring &id, const std::wstring &command)
         {
             LogService::LogProcess(logConfig, id, command);
 
@@ -155,33 +155,33 @@ namespace vcc
                 THROW_EXCEPTION(e);
             }
             LogService::LogProcessResult(logConfig, id, result);
-            Trim(result);
+            trim(result);
             return result;
         }
 
-        std::wstring ProcessService::Execute(const LogConfig *logConfig, const std::wstring &id, const std::wstring &workspace, const std::wstring &command)
+        std::wstring ProcessService::execute(const LogConfig *logConfig, const std::wstring &id, const std::wstring &workspace, const std::wstring &command)
         {
             std::wstring currentDirectory = L"";
             std::wstring result = L"";
             try {
                 currentDirectory = std::filesystem::current_path().wstring();
-                if (!IsBlank(workspace))
+                if (!isBlank(workspace))
                     std::filesystem::current_path(workspace);
             } catch (std::exception &e) {
-                if (!IsBlank(workspace))
+                if (!isBlank(workspace))
                     std::filesystem::current_path(currentDirectory);
                 THROW_EXCEPTION(e);
                 return result;
             }
             try {
-                result = ProcessService::Execute(logConfig, id, command);
+                result = ProcessService::execute(logConfig, id, command);
             } catch (std::exception &e) {
-                if (!IsBlank(workspace))
+                if (!isBlank(workspace))
                     std::filesystem::current_path(currentDirectory);
                 THROW_EXCEPTION(e);
             }
             try {
-                if (!IsBlank(workspace))
+                if (!isBlank(workspace))
                     std::filesystem::current_path(currentDirectory);
             } catch (std::exception &e) {
                 THROW_EXCEPTION(e);

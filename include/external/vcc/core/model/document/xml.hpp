@@ -16,7 +16,7 @@ namespace vcc
             XmlAttribute() : BaseObject() {}
             virtual ~XmlAttribute() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<XmlAttribute>(*this);
             }
@@ -38,11 +38,11 @@ namespace vcc
             Xml() : BaseDocument() {}
             virtual ~Xml() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 std::shared_ptr<Xml> obj = std::make_shared<Xml>(*this);
-                obj->CloneAttributes(this->GetAttributes());
-                obj->CloneChildren(this->GetChildren());
+                obj->cloneAttributes(this->getAttributes());
+                obj->cloneChildren(this->getChildren());
                 return obj;
             }
     };

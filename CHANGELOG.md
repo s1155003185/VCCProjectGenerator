@@ -11,6 +11,9 @@
 - TODO: Support Set for GETSET
 - TODO: Review RESERVE and REPLACE tag
 
+### [v0.4.1] - 2025-08-24: Review Function Name
+- Review function naming from PascalCase to CamelCase
+
 ### [v0.4.0] - 2025-08-03: Upgrade to support C++23
 - Support C++23 (Note: MacOS support C++23 now)
 

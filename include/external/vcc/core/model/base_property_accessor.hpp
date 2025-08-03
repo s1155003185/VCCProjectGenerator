@@ -41,9 +41,9 @@ namespace vcc
 
         public:
             // lock
-            virtual void ReadLock() const override;
-            virtual void WriteLock() const override;
-            virtual void ReadWriteLock() const override;
-            virtual void Unlock() const override;
+            virtual void readLock() const override;
+            virtual void writeLock() const override;
+            virtual void readWriteLock() const override;
+            virtual void unlock() const override;
     };
 }
