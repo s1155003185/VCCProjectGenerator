@@ -12,8 +12,8 @@ namespace vcc
             IObject() {}
             virtual ~IObject() {}
 
-            virtual std::shared_ptr<IObject> SharedPtr() { return shared_from_this(); }
-            virtual std::shared_ptr<const IObject> SharedPtr() const { return shared_from_this(); }
+            virtual std::shared_ptr<IObject> sharedPtr() { return shared_from_this(); }
+            virtual std::shared_ptr<const IObject> sharedPtr() const { return shared_from_this(); }
 
             virtual size_t getObjectId() const = 0;
             virtual const ObjectType& getObjectType() const = 0;

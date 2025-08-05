@@ -363,7 +363,7 @@ void VPGGitLogPropertyAccessor::_insertStringAtIndex(const int64_t &objectProper
     CATCH
 }
 
-size_t VPGGitLogPropertyAccessor::_GetCount(const int64_t &objectProperty) const
+size_t VPGGitLogPropertyAccessor::_getCount(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
@@ -385,7 +385,7 @@ size_t VPGGitLogPropertyAccessor::_GetCount(const int64_t &objectProperty) const
     return 0;
 }
 
-std::set<void *> VPGGitLogPropertyAccessor::_GetMapKeys(const int64_t &objectProperty) const
+std::set<void *> VPGGitLogPropertyAccessor::_getMapKeys(const int64_t &objectProperty) const
 {
     std::set<void *> result;
     TRY

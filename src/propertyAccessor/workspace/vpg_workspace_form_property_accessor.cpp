@@ -269,7 +269,7 @@ std::shared_ptr<vcc::IObject> VPGWorkspaceFormPropertyAccessor::_cloneObjectAtKe
     return nullptr;
 }
 
-size_t VPGWorkspaceFormPropertyAccessor::_GetCount(const int64_t &objectProperty) const
+size_t VPGWorkspaceFormPropertyAccessor::_getCount(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
@@ -285,7 +285,7 @@ size_t VPGWorkspaceFormPropertyAccessor::_GetCount(const int64_t &objectProperty
     return 0;
 }
 
-std::set<void *> VPGWorkspaceFormPropertyAccessor::_GetMapKeys(const int64_t &objectProperty) const
+std::set<void *> VPGWorkspaceFormPropertyAccessor::_getMapKeys(const int64_t &objectProperty) const
 {
     std::set<void *> result;
     TRY

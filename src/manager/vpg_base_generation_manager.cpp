@@ -127,7 +127,7 @@ void VPGBaseGenerationManager::SyncWorkspace(const vcc::LogConfig *logConfig, co
     TRY
         std::vector<std::wstring> needToAdd, needToModify, needToDelete;
         TRY
-            vcc::GetFileDifferenceBetweenWorkspaces(sourceWorkspace, targetWorkspace, needToAdd, needToModify, needToDelete);
+            vcc::getFileDifferenceBetweenWorkspaces(sourceWorkspace, targetWorkspace, needToAdd, needToModify, needToDelete);
         CATCH
 
         // Delete
@@ -242,19 +242,19 @@ std::wstring VPGBaseGenerationManager::AdjustMakefile(const std::wstring &fileCo
                     std::wstring workspace = exportOption->getWorkspace(); //isAbsolutePath(exportOption->getWorkspace()) ? exportOption->getWorkspace() : vcc::ConcatPaths({ _Workspace, exportOption->getWorkspace() });
 
                     if (!vcc::IsBlank(exportOption->getExportDirectoryDll())) {
-                        exportDllDirWindow += L" " + vcc::GetWindowPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryDll() }));
-                        exportDllDirLinux += L" " + vcc::GetLinuxPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryDll() }));
+                        exportDllDirWindow += L" " + vcc::getWindowPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryDll() }));
+                        exportDllDirLinux += L" " + vcc::getLinuxPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryDll() }));
                         if (exportOption->getIsExportExternalLib()) {
-                            exportExternalLibDirWindow += L" " + vcc::GetWindowPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryDll() }));
-                            exportExternalLibDirLinux += L" " + vcc::GetLinuxPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryDll() }));
+                            exportExternalLibDirWindow += L" " + vcc::getWindowPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryDll() }));
+                            exportExternalLibDirLinux += L" " + vcc::getLinuxPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryDll() }));
                         }
                     }
                     if (!vcc::IsBlank(exportOption->getExportDirectoryExe())) {
-                        exportExeDirWindow += L" " + vcc::GetWindowPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryExe() }));
-                        exportExeDirLinux += L" " + vcc::GetLinuxPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryExe() }));
+                        exportExeDirWindow += L" " + vcc::getWindowPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryExe() }));
+                        exportExeDirLinux += L" " + vcc::getLinuxPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryExe() }));
                         if (exportOption->getIsExportExternalLib()) {
-                            exportExternalLibDirWindow += L" " + vcc::GetWindowPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryExe() }));
-                            exportExternalLibDirLinux += L" " + vcc::GetLinuxPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryExe() }));                            
+                            exportExternalLibDirWindow += L" " + vcc::getWindowPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryExe() }));
+                            exportExternalLibDirLinux += L" " + vcc::getLinuxPath(vcc::concatPaths({ workspace, exportOption->getExportDirectoryExe() }));                            
                         }
                     }
                 }

@@ -27,7 +27,7 @@ class VPGVccGenerationManager : public VPGBaseGenerationManager
         void CreateVccJson(bool isNew) const;
         void ReadVccJson() const;
 
-        virtual void Add() const override;
-        virtual void Update() const override;
-        virtual void Generate() const override;
+        virtual void add() const override;
+        virtual void update() const override;
+        virtual void generate() const override;
 };

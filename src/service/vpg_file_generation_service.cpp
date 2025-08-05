@@ -73,7 +73,7 @@ std::wstring VPGFileGenerationService::GetIndent(const std::wstring &str)
                 result = line;
             else {
                 size_t pos = 0;
-                vcc::GetNextCharPos(line, pos, true);
+                vcc::getNextCharPos(line, pos, true);
                 if (pos > 0 && pos < line.length())
                     result = line.substr(0, pos);
             }

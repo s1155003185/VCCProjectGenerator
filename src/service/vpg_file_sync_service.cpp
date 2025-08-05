@@ -121,7 +121,7 @@ void VPGFileSyncService::copyFile(const vcc::LogConfig *logConfig, const VPGFile
             THROW_EXCEPTION_MSG(ExceptionType::FileNotFound, sourcePath + L": File not found.");
 \
         if (vcc::isFilePresent(originalCodePath)) {
-            std::wstring commandDelimiter = vcc::GetFileName(sourcePath) == L"Makefile" ? L"#" : L"//";
+            std::wstring commandDelimiter = vcc::getFileName(sourcePath) == L"Makefile" ? L"#" : L"//";
             std::wstring fileContent = VPGFileSyncService::SyncFileContent(mode, vcc::readFile(sourcePath), vcc::readFile(originalCodePath), VPGFileContentSyncMode::Demand, commandDelimiter);
             vcc::writeFile(originalCodePath, fileContent, true);
             vcc::LogService::LogInfo(logConfig, L"", L"Updated File: " + originalCodePath);

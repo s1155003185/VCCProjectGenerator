@@ -66,11 +66,11 @@ TEST_F(FileHelperTest, getRelativePath)
 {
     std::wstring absoluttePath = L"/abc/def/ghi.text";
     std::wstring basePath = L"/abc";
-    EXPECT_EQ(vcc::GetLinuxPath(vcc::GetRelativePath(absoluttePath, basePath)), L"def/ghi.text");
+    EXPECT_EQ(vcc::getLinuxPath(vcc::getRelativePath(absoluttePath, basePath)), L"def/ghi.text");
 
     absoluttePath = L"/abc/def/ghi.text";
     basePath = L"/abc/";
-    EXPECT_EQ(vcc::GetLinuxPath(vcc::GetRelativePath(absoluttePath, basePath)), L"def/ghi.text");
+    EXPECT_EQ(vcc::getLinuxPath(vcc::getRelativePath(absoluttePath, basePath)), L"def/ghi.text");
 }
 
 TEST_F(FileHelperTest, getFileDifferenceBetweenWorkspacesTest)
@@ -78,7 +78,7 @@ TEST_F(FileHelperTest, getFileDifferenceBetweenWorkspacesTest)
     std::vector<std::wstring> needToAdd;
     std::vector<std::wstring> needToDelete;
     std::vector<std::wstring> needToModify;
-    vcc::GetFileDifferenceBetweenWorkspaces(this->getWorkspaceSource(), this->getWorkspaceTarget(),
+    vcc::getFileDifferenceBetweenWorkspaces(this->getWorkspaceSource(), this->getWorkspaceTarget(),
         needToAdd, needToModify, needToDelete);
     EXPECT_EQ((int)needToAdd.size(), 1);
     EXPECT_TRUE((int)needToAdd.at(0).ends_with(L"FileA.txt"));
@@ -90,10 +90,10 @@ TEST_F(FileHelperTest, getFileDifferenceBetweenWorkspacesTest)
 
 TEST_F(FileHelperTest, getRegexFromFileFilter)
 {
-    EXPECT_EQ(vcc::GetRegexFromFileFilter(L"*.txt"), L".*\\.txt");
-    EXPECT_EQ(vcc::GetRegexFromFileFilter(L"*abc*.txt"), L".*abc.*\\.txt");
+    EXPECT_EQ(vcc::getRegexFromFileFilter(L"*.txt"), L".*\\.txt");
+    EXPECT_EQ(vcc::getRegexFromFileFilter(L"*abc*.txt"), L".*abc.*\\.txt");
 
-    EXPECT_TRUE(std::regex_match(L"abcdef.txt", std::wregex(vcc::GetRegexFromFileFilter(L"*def*"))));
+    EXPECT_TRUE(std::regex_match(L"abcdef.txt", std::wregex(vcc::getRegexFromFileFilter(L"*def*"))));
 }
 
 TEST_F(FileHelperTest, CopyDirectoryWithoutFilter)

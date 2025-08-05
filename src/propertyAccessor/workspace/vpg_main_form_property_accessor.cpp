@@ -301,7 +301,7 @@ std::shared_ptr<vcc::IObject> VPGMainFormPropertyAccessor::_cloneObjectAtKey(con
     return nullptr;
 }
 
-size_t VPGMainFormPropertyAccessor::_GetCount(const int64_t &objectProperty) const
+size_t VPGMainFormPropertyAccessor::_getCount(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGMainForm>(_Object);
@@ -317,7 +317,7 @@ size_t VPGMainFormPropertyAccessor::_GetCount(const int64_t &objectProperty) con
     return 0;
 }
 
-std::set<void *> VPGMainFormPropertyAccessor::_GetMapKeys(const int64_t &objectProperty) const
+std::set<void *> VPGMainFormPropertyAccessor::_getMapKeys(const int64_t &objectProperty) const
 {
     std::set<void *> result;
     TRY

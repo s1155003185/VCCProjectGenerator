@@ -179,7 +179,7 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile)
         "\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::vector<std::wstring> hppResult = {
             getHppClass(L"", L"AddWorkspace", {  }, L""),
@@ -239,7 +239,7 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile_Namespace)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::vector<std::wstring> hppResult = {
             getHppClass(L"", L"AddWorkspace", {  }, L""),
@@ -297,7 +297,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
         "\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
     
     std::map<std::wstring, std::wstring> classPathMapping;
     classPathMapping.insert(std::make_pair(L"State", L"state.hpp"));
@@ -412,7 +412,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
     std::vector<std::wstring> emptyVector;
     
     std::map<std::wstring, std::wstring> classPathMapping;

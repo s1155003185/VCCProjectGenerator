@@ -52,7 +52,7 @@ namespace vcc
         return result;
     }
 
-    bool Json::IsContainKey(const std::wstring &key/*, bool isRecursive*/) const
+    bool Json::isContainKey(const std::wstring &key/*, bool isRecursive*/) const
     {
         TRY
             auto keys = getKeys();//getKeys(isRecursive);
@@ -63,13 +63,13 @@ namespace vcc
     
     void Json::validateKeyIsFound(const std::wstring &key) const
     {
-        if (!IsContainKey(key))
+        if (!isContainKey(key))
             THROW_EXCEPTION_MSG(ExceptionType::KeyNotFound, L"Key " + key + L" not found.");
     }
 
     void Json::validateKeyNotFound(const std::wstring &key) const
     {
-        if (IsContainKey(key))
+        if (isContainKey(key))
             THROW_EXCEPTION_MSG(ExceptionType::KeyDuplicated, L"Key " + key + L" duplicated.");
     }
 
@@ -305,7 +305,7 @@ namespace vcc
         CATCH
     }
 
-    std::vector<std::shared_ptr<Json>> &Json::GetArray(const std::wstring &key) const
+    std::vector<std::shared_ptr<Json>> &Json::getArray(const std::wstring &key) const
     {
         TRY
             validateKeyIsFound(key);
@@ -343,7 +343,7 @@ namespace vcc
         CATCH
     }
 
-    bool Json::GetArrayElementBool() const
+    bool Json::getArrayElementBool() const
     {
         TRY
             return _JsonInternalValue == L"true" ? true : false; 
@@ -361,7 +361,7 @@ namespace vcc
         CATCH
     }
     
-    double Json::GetArrayElementDouble() const
+    double Json::getArrayElementDouble() const
     {
         TRY
             return std::stod(_JsonInternalValue); 
@@ -379,7 +379,7 @@ namespace vcc
         CATCH
     }
 
-    int64_t Json::GetArrayElementInt64() const
+    int64_t Json::getArrayElementInt64() const
     {
         TRY
             return std::stoi(_JsonInternalValue); 
@@ -397,7 +397,7 @@ namespace vcc
         CATCH
     }
 
-    char Json::GetArrayElementChar() const
+    char Json::getArrayElementChar() const
     {
         TRY
             if (_JsonInternalValue.length() != 1)
@@ -407,7 +407,7 @@ namespace vcc
         return '\0';
     }
 
-    wchar_t Json::GetArrayElementWchar() const
+    wchar_t Json::getArrayElementWchar() const
     {
         TRY
             if (_JsonInternalValue.length() != 1)
@@ -417,7 +417,7 @@ namespace vcc
         return L'\0';
     }
 
-    std::wstring Json::GetArrayElementString() const
+    std::wstring Json::getArrayElementString() const
     {
         TRY
             return _JsonInternalValue;
@@ -435,7 +435,7 @@ namespace vcc
         CATCH
     }
 
-    std::shared_ptr<Json> Json::GetArrayElementObject() const
+    std::shared_ptr<Json> Json::getArrayElementObject() const
     {
         TRY
             return _JsonInternalArray.empty() ? nullptr : _JsonInternalArray[0];

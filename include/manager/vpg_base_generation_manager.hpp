@@ -40,14 +40,14 @@ class VPGBaseGenerationManager : public vcc::BaseManager, public IVPGGenerationM
         void SyncWorkspace(const vcc::LogConfig *logConfig, const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
             const std::vector<std::wstring> &includeFileFilters, const std::vector<std::wstring> &excludeFileFilters) const;
         
-        virtual void Add() const override = 0;
+        virtual void add() const override = 0;
 
-        virtual void Update() const override
+        virtual void update() const override
         {
             THROW_EXCEPTION_MSG(ExceptionType::NotSupport, L"Update mode only support VCCModule.");
         }
 
-        virtual void Generate() const override
+        virtual void generate() const override
         {
             THROW_EXCEPTION_MSG(ExceptionType::NotSupport, L"Generate mode only support VCCModule.");
         }

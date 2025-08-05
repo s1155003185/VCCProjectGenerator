@@ -8,7 +8,7 @@
 
 namespace vcc
 {
-    int64_t ActionManager::_GetFirstSeqNo(const bool &fromBeginning) const
+    int64_t ActionManager::_getFirstSeqNo(const bool &fromBeginning) const
     {
         TRY
             return _Actions.empty() ? -1 : (fromBeginning ? _Actions.begin()->first : _Actions.rbegin()->first);
@@ -21,7 +21,7 @@ namespace vcc
         TRY
             std::shared_ptr<IResult> result = nullptr;
             for (int64_t i = 0; i < noOfStep; i++) {
-                if (_CurrentSeqNo < _GetFirstSeqNo(false)) {
+                if (_CurrentSeqNo < _getFirstSeqNo(false)) {
                     _CurrentSeqNo++;
                     result = _Actions.find(_CurrentSeqNo)->second->Redo();
                 }
@@ -36,7 +36,7 @@ namespace vcc
         TRY
             std::shared_ptr<IResult> result = nullptr;
             for (int64_t i = 0; i < noOfStep; i++) {
-                if (_CurrentSeqNo > -1 && _CurrentSeqNo >= _GetFirstSeqNo(true)) {
+                if (_CurrentSeqNo > -1 && _CurrentSeqNo >= _getFirstSeqNo(true)) {
                     result = _Actions.find(_CurrentSeqNo)->second->Undo();
                     _CurrentSeqNo--;
                 }
@@ -54,7 +54,7 @@ namespace vcc
                     _Actions.erase(fromBeginning ? _Actions.begin()->first : _Actions.rbegin()->first);
             }
 
-            _CurrentSeqNo = _Actions.size() > 0 ? std::min(_CurrentSeqNo, _GetFirstSeqNo(false)) : -1;
+            _CurrentSeqNo = _Actions.size() > 0 ? std::min(_CurrentSeqNo, _getFirstSeqNo(false)) : -1;
         CATCH
         return _CurrentSeqNo;
     }
@@ -90,7 +90,7 @@ namespace vcc
     {
         TRY
             //std::unique_lock lock(_mutex);
-            return _GetFirstSeqNo(true);
+            return _getFirstSeqNo(true);
         CATCH
         return _CurrentSeqNo;
     }
@@ -99,7 +99,7 @@ namespace vcc
     {
         TRY
             //std::unique_lock lock(_mutex);
-            return _GetFirstSeqNo(false);
+            return _getFirstSeqNo(false);
         CATCH
         return _CurrentSeqNo;
     }
@@ -123,13 +123,13 @@ namespace vcc
                 return result;
             }
 
-            _removeAction(_GetFirstSeqNo(false) - _CurrentSeqNo, false);
+            _removeAction(_getFirstSeqNo(false) - _CurrentSeqNo, false);
             if (_Actions.size() > 0)
-                _MaxSeqNo = _GetFirstSeqNo(false);
+                _MaxSeqNo = _getFirstSeqNo(false);
             int64_t nextSeqNo = _MaxSeqNo + 1;
             action->setSeqNo(nextSeqNo);
             _Actions.emplace(nextSeqNo, baseAction);
-            _MaxSeqNo = _CurrentSeqNo = _GetFirstSeqNo(false);
+            _MaxSeqNo = _CurrentSeqNo = _getFirstSeqNo(false);
             _ChopActionListToSize(_MaxActionListSize, true);
             return result;
         CATCH

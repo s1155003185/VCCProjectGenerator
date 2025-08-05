@@ -19,10 +19,10 @@ namespace vcc
         CATCH
     }
 
-    std::wstring GitManager::GetVersion() const
+    std::wstring GitManager::getVersion() const
     {
         TRY
-            return GitService::GetVersion(_LogConfig.get());
+            return GitService::getVersion(_LogConfig.get());
         CATCH
         return L"";
     }

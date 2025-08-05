@@ -20,7 +20,7 @@ namespace vcc
         GETSET(int64_t, MaxSeqNo, -1)
 
     private:
-        int64_t _GetFirstSeqNo(const bool &fromBeginning) const;
+        int64_t _getFirstSeqNo(const bool &fromBeginning) const;
         std::shared_ptr<IResult> _Redo(const int64_t &noOfStep);
         std::shared_ptr<IResult> _Undo(const int64_t &noOfStep);
         int64_t _removeAction(const int64_t &noOfAction, const bool &fromBeginning);

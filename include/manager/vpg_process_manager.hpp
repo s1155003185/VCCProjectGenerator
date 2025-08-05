@@ -40,8 +40,8 @@ class VPGProcessManager : public vcc::BaseManager
 
         bool IsUpdateAvaliable();
         
-        void Add();
-        void Update();
-        void Generate();
+        void add();
+        void update();
+        void generate();
         void execute(const std::vector<std::wstring> &cmds);
 };

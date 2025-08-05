@@ -20,7 +20,7 @@ constexpr auto USER_HOME_VARIABLE = L"${userHome}";
 std::shared_ptr<VPGEnumClassReader> VPGGlobal::_EnumClassReader = nullptr;
 std::shared_ptr<VPGFileGenerationManager> VPGGlobal::_FileGenerationManager = nullptr;
 
-std::wstring VPGGlobal::GetVersion()
+std::wstring VPGGlobal::getVersion()
 {
     return L"v0.4.1";
 }
@@ -91,7 +91,7 @@ std::wstring VPGGlobal::GetVCCProjectManagerConfigFileName()
     return L"vpm.config.json";
 }
 
-std::wstring VPGGlobal::GetVCCProjectManagerConfigFileFullPath()
+std::wstring VPGGlobal::getVCCProjectManagerConfigFileFullPath()
 {
     return VPGGlobal::GetConvertedPath(vcc::concatPaths({ VPGGlobal::GetVccLocalResponseFolder(), L"config", VPGGlobal::GetVCCProjectManagerConfigFileName() }));
 }
@@ -112,7 +112,7 @@ std::wstring VPGGlobal::GetConvertedPath(const std::wstring &path)
 {
     std::wstring result = path;
     TRY
-        std::wstring userHomePath = vcc::GetSystemFolderPath(vcc::SystemFolderType::UserHome);
+        std::wstring userHomePath = vcc::getSystemFolderPath(vcc::SystemFolderType::UserHome);
         vcc::ReplaceAll(result, USER_HOME_VARIABLE, userHomePath);
     CATCH
     return result;

@@ -95,7 +95,7 @@ TEST(VPGEnumClassReaderTest, TableCommand)
         L"};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    VPGGlobal::GetEnumClassReader()->Parse(code, results);
+    VPGGlobal::GetEnumClassReader()->parse(code, results);
     EXPECT_EQ(results.size(), (size_t)3);
     // first
     auto element = results.at(0);
@@ -127,7 +127,7 @@ TEST(VPGEnumClassReaderTest, TableAttribute)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    VPGGlobal::GetEnumClassReader()->Parse(code, results);
+    VPGGlobal::GetEnumClassReader()->parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     // first
     auto element = results.at(0);
@@ -148,7 +148,7 @@ TEST(VPGEnumClassReaderTest, TableAttribute)
         "};\r\n";
 
     results.clear();
-    VPGGlobal::GetEnumClassReader()->Parse(code, results);
+    VPGGlobal::GetEnumClassReader()->parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     // first
     element = results.at(0);
@@ -161,7 +161,7 @@ TEST(VPGEnumClassReaderTest, TableAttribute)
 void CheckVPGEnumClassReaderTestNormalEnumClassResult(const VPGEnumClassReader *reader, const std::wstring &code)
 {
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    reader->Parse(code, results);
+    reader->parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
 
     auto element = results.at(0);
@@ -226,7 +226,7 @@ TEST(VPGEnumClassReaderTest, NormalEnumClass3)
 void CheckVPGEnumClassReaderTestNormalResult(const VPGEnumClassReader *reader, const std::wstring &code)
 {
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    reader->Parse(code, results);
+    reader->parse(code, results);
     EXPECT_EQ(results.size(), (size_t)3);
     // first
     auto element = results.at(0);
@@ -395,7 +395,7 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassProperty)
         L"};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    VPGGlobal::GetEnumClassReader()->Parse(code, results);
+    VPGGlobal::GetEnumClassReader()->parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     // first
     auto element = results.at(0);
@@ -497,7 +497,7 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassMultiMacro)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    VPGGlobal::GetEnumClassReader()->Parse(code, results);
+    VPGGlobal::GetEnumClassReader()->parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     // first
     auto element = results.at(0);
@@ -553,7 +553,7 @@ TEST(VPGEnumClassReaderTest, AccessMode)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    VPGGlobal::GetEnumClassReader()->Parse(code, results);
+    VPGGlobal::GetEnumClassReader()->parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     // first
     auto element = results.at(0);
@@ -606,7 +606,7 @@ TEST(VPGEnumClassReaderTest, EnumClassMixedWithOthers)
         "}\r\n"
         "enum EnumAOneLine {}; enum class EnumBOneLine {}; enum class EnumCOneLine;\r\n";
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    VPGGlobal::GetEnumClassReader()->Parse(code, results);
+    VPGGlobal::GetEnumClassReader()->parse(code, results);
     EXPECT_EQ(results.size(), (size_t)7);
     auto element = results.at(0);
     EXPECT_EQ(element->getName(), L"EnumA");
@@ -639,7 +639,7 @@ TEST(VPGEnumClassReaderTest, EnumClassWithManager)
         "    Action3 // ACTION_WITH_ARG_SPTR(ModifyGitLog, GitLog) @@ActionResult { \"Redo.Class\" : \"RedoActionResult\", \"Undo.Class\" : \"UndoActionResult\" }\r\n"
         "};\r\n";
     std::vector<std::shared_ptr<VPGEnumClass>> results;
-    VPGGlobal::GetEnumClassReader()->Parse(code, results);
+    VPGGlobal::GetEnumClassReader()->parse(code, results);
     EXPECT_EQ(results.size(), (size_t)1);
     auto element = results.at(0);
     EXPECT_EQ(element->getName(), L"Property");

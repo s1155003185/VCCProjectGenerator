@@ -166,7 +166,7 @@ std::shared_ptr<vcc::IResult> VPGMainFormInitialize::OnRedo()
         form->TruncateAction();
         form->clearWorkspaceForms();
 
-        auto configFilePath = VPGGlobal::GetVCCProjectManagerConfigFileFullPath();
+        auto configFilePath = VPGGlobal::getVCCProjectManagerConfigFileFullPath();
         if (vcc::isFilePresent(configFilePath)) {
             TRY
                 auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
@@ -311,7 +311,7 @@ std::shared_ptr<vcc::IResult> VPGMainForm::DoAction(const int64_t &formProperty,
 std::shared_ptr<vcc::IResult> VPGMainForm::doInitialize()
 {
     TRY
-        auto action = std::make_shared<VPGMainFormInitialize>(_LogConfig, SharedPtr());
+        auto action = std::make_shared<VPGMainFormInitialize>(_LogConfig, sharedPtr());
         // <vcc:VPGMainFormDoInitialize sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormDoInitialize>
         return executeAction(action, true);
@@ -319,10 +319,10 @@ std::shared_ptr<vcc::IResult> VPGMainForm::doInitialize()
     return nullptr;
 }
 
-std::shared_ptr<vcc::IResult> VPGMainForm::DoAddWorkspaceForm(std::shared_ptr<VPGMainFormAddWorkspaceFormArgument> argument)
+std::shared_ptr<vcc::IResult> VPGMainForm::doAddWorkspaceForm(std::shared_ptr<VPGMainFormAddWorkspaceFormArgument> argument)
 {
     TRY
-        auto action = std::make_shared<VPGMainFormAddWorkspaceForm>(_LogConfig, SharedPtr(), argument);
+        auto action = std::make_shared<VPGMainFormAddWorkspaceForm>(_LogConfig, sharedPtr(), argument);
         // <vcc:VPGMainFormDoAddWorkspaceForm sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormDoAddWorkspaceForm>
         return executeAction(action, true);
@@ -330,10 +330,10 @@ std::shared_ptr<vcc::IResult> VPGMainForm::DoAddWorkspaceForm(std::shared_ptr<VP
     return nullptr;
 }
 
-std::shared_ptr<vcc::IResult> VPGMainForm::DoDeleteWorkspaceForm(std::shared_ptr<VPGMainFormDeleteWorkspaceFormArgument> argument)
+std::shared_ptr<vcc::IResult> VPGMainForm::doDeleteWorkspaceForm(std::shared_ptr<VPGMainFormDeleteWorkspaceFormArgument> argument)
 {
     TRY
-        auto action = std::make_shared<VPGMainFormDeleteWorkspaceForm>(_LogConfig, SharedPtr(), argument);
+        auto action = std::make_shared<VPGMainFormDeleteWorkspaceForm>(_LogConfig, sharedPtr(), argument);
         // <vcc:VPGMainFormDoDeleteWorkspaceForm sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormDoDeleteWorkspaceForm>
         return executeAction(action, true);
@@ -341,10 +341,10 @@ std::shared_ptr<vcc::IResult> VPGMainForm::DoDeleteWorkspaceForm(std::shared_ptr
     return nullptr;
 }
 
-std::shared_ptr<vcc::IResult> VPGMainForm::DoRenameWorkspaceForm(std::shared_ptr<VPGMainFormRenameWorkspaceFormArgument> argument)
+std::shared_ptr<vcc::IResult> VPGMainForm::doRenameWorkspaceForm(std::shared_ptr<VPGMainFormRenameWorkspaceFormArgument> argument)
 {
     TRY
-        auto action = std::make_shared<VPGMainFormRenameWorkspaceForm>(_LogConfig, SharedPtr(), argument);
+        auto action = std::make_shared<VPGMainFormRenameWorkspaceForm>(_LogConfig, sharedPtr(), argument);
         // <vcc:VPGMainFormDoRenameWorkspaceForm sync="RESERVE" gen="RESERVE">
         // </vcc:VPGMainFormDoRenameWorkspaceForm>
         return executeAction(action, true);
@@ -358,7 +358,7 @@ void VPGMainForm::saveConfig() const
     TRY    
         auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
         jsonBuilder->setIsBeautify(true);
-        vcc::writeFile(VPGGlobal::GetVCCProjectManagerConfigFileFullPath(), SerializeJson(jsonBuilder.get()), true);
+        vcc::writeFile(VPGGlobal::getVCCProjectManagerConfigFileFullPath(), SerializeJson(jsonBuilder.get()), true);
     CATCH
 }
 // </vcc:customFunctions>

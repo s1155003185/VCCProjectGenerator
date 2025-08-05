@@ -81,7 +81,7 @@
 #define BASE_PROPERTY_ACCESSOR_CONTAINER_HEADER \
     protected: \
         virtual size_t _getCount(const int64_t &objectProperty) const; \
-        virtual std::set<void *> _getMapKeyss(const int64_t &objectProperty) const; \
+        virtual std::set<void *> _getMapKeys(const int64_t &objectProperty) const; \
         virtual bool _isContainKey(const int64_t &objectProperty, const void *key) const;\
         virtual void _remove(const int64_t &objectProperty, const void *value); \
         virtual void _removeObject(const int64_t &objectProperty, const vcc::IObject *value); \
@@ -138,7 +138,7 @@
 
 #define BASE_PROPERTY_ACCESSOR_CONTAINER_DETAIL \
     size_t BasePropertyAccessor::_getCount(const int64_t &objectProperty) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return 0;} \
-    std::set<void *> BasePropertyAccessor::_getMapKeyss(const int64_t &objectProperty) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND std::set<void *> result; return result;} \
+    std::set<void *> BasePropertyAccessor::_getMapKeys(const int64_t &objectProperty) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND std::set<void *> result; return result;} \
     bool BasePropertyAccessor::_isContainKey(const int64_t &objectProperty, const void * /*key*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return false;} \
     void BasePropertyAccessor::_remove(const int64_t &objectProperty, const void * /*value*/) { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
     void BasePropertyAccessor::_removeObject(const int64_t &objectProperty, const vcc::IObject * /*value*/) { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
@@ -146,7 +146,7 @@
     void BasePropertyAccessor::_removeAtKey(const int64_t &objectProperty, const void * /*key*/) { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
     void BasePropertyAccessor::_clear(const int64_t &objectProperty) { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
     size_t BasePropertyAccessor::GetCount(const vcc::LockType lockType, const int64_t &objectProperty) const { size_t result = 0; LOCK_BEGIN result = _getCount(objectProperty); LOCK_END return result; } \
-    std::set<void *> BasePropertyAccessor::getMapKeyss(const vcc::LockType lockType, const int64_t &objectProperty) const { std::set<void *> result; LOCK_BEGIN result = _getMapKeyss(objectProperty); LOCK_END return result; } \
+    std::set<void *> BasePropertyAccessor::getMapKeyss(const vcc::LockType lockType, const int64_t &objectProperty) const { std::set<void *> result; LOCK_BEGIN result = _getMapKeys(objectProperty); LOCK_END return result; } \
     bool BasePropertyAccessor::isContainKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) const { bool result = false; LOCK_BEGIN result = _isContainKey(objectProperty, key); LOCK_END return result; }\
     void BasePropertyAccessor::remove(const vcc::LockType lockType, const int64_t &objectProperty, const void *value) { LOCK_BEGIN _remove(objectProperty, value); LOCK_END } \
     void BasePropertyAccessor::removeObject(const vcc::LockType lockType, const int64_t &objectProperty, const vcc::IObject *value) { LOCK_BEGIN _removeObject(objectProperty, value); LOCK_END } \
@@ -180,7 +180,7 @@
 #define PROPERTY_ACCESSOR_CONTAINER_HEADER \
     protected: \
         virtual size_t _getCount(const int64_t &objectProperty) const override; \
-        virtual std::set<void *> _getMapKeyss(const int64_t &objectProperty) const override; \
+        virtual std::set<void *> _getMapKeys(const int64_t &objectProperty) const override; \
         virtual bool _isContainKey(const int64_t &objectProperty, const void *key) const override; \
         void _remove(const int64_t &objectProperty, const void *value) override; \
         void _removeObject(const int64_t &objectProperty, const vcc::IObject *value) override; \

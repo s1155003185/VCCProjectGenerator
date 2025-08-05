@@ -56,7 +56,7 @@ void VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(const vcc::Log
             "\r\n";
         
         for (auto const &str : tmpIncludePaths)
-            content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
+            content += L"#include " + vcc::getEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
 
         content += L"\r\n"
             "std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::create(std::shared_ptr<vcc::IObject> object)\r\n"

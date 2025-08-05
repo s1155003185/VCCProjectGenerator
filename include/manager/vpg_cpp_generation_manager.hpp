@@ -17,5 +17,5 @@ class VPGCppGenerationManager : public VPGBaseGenerationManager
             return std::make_shared<VPGCppGenerationManager>(*this);
         }
 
-        virtual void Add() const override;
+        virtual void add() const override;
 };

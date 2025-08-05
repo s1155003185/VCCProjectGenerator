@@ -11,7 +11,7 @@
 
 #define LOG_ID L"Object Type File Generation"
 
-void VPGObjectTypeFileGenerationService::Generate(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp, const std::set<std::wstring> &propertyTypes)
+void VPGObjectTypeFileGenerationService::generate(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp, const std::set<std::wstring> &propertyTypes)
 {
     TRY
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object type file: " + filePathHpp);

@@ -34,7 +34,7 @@ class VPGObjectTypeFileGenerationServiceTest : public testing::Test
 TEST_F(VPGObjectTypeFileGenerationServiceTest, Empty)
 {
     std::set<std::wstring> propertyTypes;
-    VPGObjectTypeFileGenerationService::Generate(this->getLogConfig().get(), this->getFilePathHpp(), propertyTypes);
+    VPGObjectTypeFileGenerationService::generate(this->getLogConfig().get(), this->getFilePathHpp(), propertyTypes);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     std::wstring content = vcc::readFile(this->getFilePathHpp());
     std::wstring expectedResult = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
@@ -55,7 +55,7 @@ TEST_F(VPGObjectTypeFileGenerationServiceTest, Normal)
     std::set<std::wstring> propertyTypes;
     propertyTypes.insert(L"Def");
     propertyTypes.insert(L"Abc");
-    VPGObjectTypeFileGenerationService::Generate(this->getLogConfig().get(), this->getFilePathHpp(), propertyTypes);
+    VPGObjectTypeFileGenerationService::generate(this->getLogConfig().get(), this->getFilePathHpp(), propertyTypes);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     std::wstring content = vcc::readFile(this->getFilePathHpp());
     std::wstring expectedResult = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"

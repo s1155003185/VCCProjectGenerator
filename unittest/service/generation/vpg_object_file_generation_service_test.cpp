@@ -71,7 +71,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -154,7 +154,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Namespace)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -283,7 +283,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Object)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -349,7 +349,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, getSetCustom)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -414,7 +414,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, inheritClass)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -477,7 +477,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Multi)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -545,7 +545,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, includeFiles)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -600,7 +600,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Properties)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -677,7 +677,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, initializeProperties)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -750,7 +750,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form_Simple)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -884,7 +884,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form_Complex)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -1039,7 +1039,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormWithIndependentManager)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -1173,7 +1173,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, inheritForm)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -1305,7 +1305,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -1482,7 +1482,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -1809,7 +1809,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "std::shared_ptr<vcc::IResult> VPGGitForm::DoAddWorkspace()\r\n"
         "{\r\n"
         "    TRY\r\n"
-        "        auto action = std::make_shared<VPGGitFormAddWorkspace>(_LogConfig, SharedPtr());\r\n"
+        "        auto action = std::make_shared<VPGGitFormAddWorkspace>(_LogConfig, sharedPtr());\r\n"
         "        // <vcc:VPGGitFormDoAddWorkspace sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "        // </vcc:VPGGitFormDoAddWorkspace>\r\n"
         "        return executeAction(action, false);\r\n"
@@ -1820,7 +1820,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "std::shared_ptr<vcc::IResult> VPGGitForm::DoDeleteWorkspace(std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument)\r\n"
         "{\r\n"
         "    TRY\r\n"
-        "        auto action = std::make_shared<VPGGitFormDeleteWorkspace>(_LogConfig, SharedPtr(), argument);\r\n"
+        "        auto action = std::make_shared<VPGGitFormDeleteWorkspace>(_LogConfig, sharedPtr(), argument);\r\n"
         "        // <vcc:VPGGitFormDoDeleteWorkspace sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "        // </vcc:VPGGitFormDoDeleteWorkspace>\r\n"
         "        return executeAction(action, false);\r\n"
@@ -1848,7 +1848,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -2072,7 +2072,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
         "    std::shared_ptr<vcc::IResult> VPGGitForm::DoAddWorkspace()\r\n"
         "    {\r\n"
         "        TRY\r\n"
-        "            auto action = std::make_shared<Namespace::VPGGitFormAddWorkspace>(_LogConfig, SharedPtr());\r\n"
+        "            auto action = std::make_shared<Namespace::VPGGitFormAddWorkspace>(_LogConfig, sharedPtr());\r\n"
         "            // <vcc:VPGGitFormDoAddWorkspace sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "            // </vcc:VPGGitFormDoAddWorkspace>\r\n"
         "            return executeAction(action, false);\r\n"
@@ -2098,7 +2098,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, ActionArgument)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_action_argument_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -2145,7 +2145,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Result)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_action_result_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -2213,7 +2213,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -2680,7 +2680,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -2851,7 +2851,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -3174,7 +3174,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
         "}\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, Json_GetSetCustom)
+TEST_F(VPGObjectFileGenerationServiceTest, Json_getSetCustom)
 {
     std::wstring enumClass = L"#pragma once\r\n"
         "\r\n"
@@ -3190,7 +3190,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_GetSetCustom)
     vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::wstring classPrefix = L"VPG";
     auto option = std::make_shared<VPGConfig>();
@@ -3313,7 +3313,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Properties)
 vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
 
 std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
 std::wstring classPrefix = L"VPG";
 auto option = std::make_shared<VPGConfig>();

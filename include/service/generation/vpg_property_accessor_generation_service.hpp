@@ -23,7 +23,7 @@ class VPGPropertyAccessorGenerationService
         static void GenerateClone(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassPropertiesReadOnly, std::wstring &result);
         static void GenerateContainerCount(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassProperties, std::wstring &result);
         static void GenerateContainerMapKey(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassProperties, std::wstring &result);
-        static void GenerateContainerIsContainKey(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassPropertiesReadOnly, std::wstring &result);
+        static void GenerateContainerisContainKey(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassPropertiesReadOnly, std::wstring &result);
         static void GenerateContainerRemove(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassPropertiesWriteOnly, std::wstring &result);
 
     public:

@@ -26,8 +26,8 @@ enum class VPGEnumClassAttributeProperty
     
     // Properties
     , IsGeneralType // GETCUSTOM(bool, IsGeneralType, return !GetIsCollection();)
-    , IsCustom // GETCUSTOM(bool, IsCustom, return vcc::isContain(GetMacro(), L"(") ? vcc::isContain(_Macro.substr(0, _Macro.find(L"(")), L"CUSTOM") : false;)
-    , IsObject // GETCUSTOM(bool, IsObject, return vcc::isContain(GetMacro(), L"(") ? vcc::isContain(_Macro.substr(0, _Macro.find(L"(")), L"_SPTR") : false;)
+    , IsCustom // GETCUSTOM(bool, IsCustom, return vcc::isContain(getMacro(), L"(") ? vcc::isContain(_Macro.substr(0, _Macro.find(L"(")), L"CUSTOM") : false;)
+    , IsObject // GETCUSTOM(bool, IsObject, return vcc::isContain(getMacro(), L"(") ? vcc::isContain(_Macro.substr(0, _Macro.find(L"(")), L"_SPTR") : false;)
     , IsVector // GETCUSTOM(bool, IsVector, return vcc::IsStartWith(_Macro, L"VECTOR");)
     , IsMap // GETCUSTOM(bool, IsMap, return vcc::IsStartWith(_Macro, L"MAP");)
     , IsOrderedMap // GETCUSTOM(bool, IsOrderedMap, return vcc::IsStartWith(_Macro, L"ORDERED_MAP");)
@@ -35,7 +35,7 @@ enum class VPGEnumClassAttributeProperty
     , IsAction // GETCUSTOM(bool, IsAction, return vcc::IsStartWith(_Macro, L"ACTION");)
     , IsManager // GETCUSTOM(bool, IsManager, return vcc::IsStartWith(_Macro, L"MANAGER");)
     , IsCollection // GETCUSTOM(bool, IsCollection, return getIsVector() || getIsMap() || getIsOrderedMap() || getIsSet();)
-    , IsHavingValidate // GETCUSTOM(bool, IsHavingValidate, return vcc::isContain(GetMacro(), L"(") ? vcc::isContain(_Macro.substr(0, _Macro.find(L"(")), L"VALIDATE") : false;)
+    , IsHavingValidate // GETCUSTOM(bool, IsHavingValidate, return vcc::isContain(getMacro(), L"(") ? vcc::isContain(_Macro.substr(0, _Macro.find(L"(")), L"VALIDATE") : false;)
 
     // Macro
     , AccessMode /* GETCUSTOM(VPGEnumClassAttributeAccessMode, AccessMode, 

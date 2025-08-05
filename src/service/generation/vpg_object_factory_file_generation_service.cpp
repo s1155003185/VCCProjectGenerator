@@ -56,7 +56,7 @@ void VPGObjectFactoryFileGenerationService::GenerateCpp(const vcc::LogConfig *lo
             "\r\n";
         
         for (auto const &str : tmpIncludePaths)
-            content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
+            content += L"#include " + vcc::getEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
 
         content += L"\r\n"
             "std::shared_ptr<vcc::IObject> ObjectFactory::create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)\r\n"

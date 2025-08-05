@@ -98,7 +98,7 @@ void VPGVccGenerationManager::CreateVccJson(bool isNew) const
     TRY
         auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
         jsonBuilder->setIsBeautify(true);
-        _Option->setVersion(VPGGlobal::GetVersion());
+        _Option->setVersion(VPGGlobal::getVersion());
         if (isNew) {
             if (_Option->getExports().empty())
                 _Option->insertExports(std::make_shared<VPGConfigExport>());
@@ -118,7 +118,7 @@ void VPGVccGenerationManager::ReadVccJson() const
     CATCH
 }
 
-void VPGVccGenerationManager::Add() const
+void VPGVccGenerationManager::add() const
 {
     TRY
         assert(_Option->getTemplate() != nullptr);
@@ -149,7 +149,7 @@ void VPGVccGenerationManager::Add() const
     CATCH
 }
 
-void VPGVccGenerationManager::Update() const
+void VPGVccGenerationManager::update() const
 {
     TRY
         ReadVccJson();
@@ -191,7 +191,7 @@ void VPGVccGenerationManager::Update() const
     CATCH
 }
 
-void VPGVccGenerationManager::Generate() const
+void VPGVccGenerationManager::generate() const
 {
     TRY
         ReadVccJson();

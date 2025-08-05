@@ -66,7 +66,7 @@ TEST(VPGIncludePathReaderTest, Normal)
         L"int abc (...);\r\n"
         L"}\r\n";
     std::set<std::wstring> classList;
-    reader->Parse(vcc::PlatformType::NA, code, classList);
+    reader->parse(vcc::PlatformType::NA, code, classList);
 
     std::set<std::wstring> resultList;
     resultList.insert(L"vcc::type");
@@ -113,7 +113,7 @@ TEST(VPGIncludePathReaderTest, Normal)
 //         L"*/\r\n"
 //         L"#endif\r\n";
 //     std::set<std::wstring> classList;
-//     reader->Parse(vcc::PlatformType::MacOs, code, classList);
+//     reader->parse(vcc::PlatformType::MacOs, code, classList);
 
 //     std::set<std::wstring> resultList;
 //     resultList.insert(L"std::basic_string");
@@ -145,7 +145,7 @@ TEST(VPGIncludePathReaderTest, Normal)
 //         // L"_STD_END\r\n";
     
 //     std::set<std::wstring> classList;
-//     reader->Parse(vcc::PlatformType::Window, code, classList);
+//     reader->parse(vcc::PlatformType::Window, code, classList);
 
 //     std::set<std::wstring> resultList;
 //     resultList.insert(L"std::basic_string");
@@ -160,7 +160,7 @@ TEST(VPGIncludePathReaderTest, Normal)
 //     DECLARE_UPTR(VPGIncludePathReader, reader); 
 //     std::wstring code = L"";
 //     std::set<std::wstring> classList;
-//     reader->Parse(vcc::PlatformType::Linux, code, classList);
+//     reader->parse(vcc::PlatformType::Linux, code, classList);
 
 //     std::set<std::wstring> resultList;
 //     EXPECT_EQ(classList, resultList);

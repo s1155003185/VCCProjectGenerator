@@ -46,10 +46,10 @@ std::wstring VPGJavaGenerationService::GetJavaPactkage(const std::wstring &path,
         if (!vcc::IsStartWith(path, JAVA_PROJECT_SOURCE_PARENT_FOLDER))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, filePathName + L" is not start with " + JAVA_PROJECT_SOURCE_PARENT_FOLDER);
 
-        result = vcc::GetRelativePath(path, JAVA_PROJECT_SOURCE_PARENT_FOLDER);
+        result = vcc::getRelativePath(path, JAVA_PROJECT_SOURCE_PARENT_FOLDER);
         if (!middlePath.empty())
             result = vcc::concatPaths({ result, middlePath });
-        result = vcc::GetLinuxPath(result);
+        result = vcc::getLinuxPath(result);
         if (vcc::IsStartWith(result, L"/"))
             result = result.substr(1);
         if (vcc::IsEndWith(result, L"/"))
@@ -257,9 +257,9 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                     tmpPos++;
                     functionName = functionNameWithReturn.substr(tmpPos);
                 } else {
-                    returnType = vcc::GetNextString(functionNameWithReturn, tmpPos, { L" ", L"\t", L"\r", L"\n" });
+                    returnType = vcc::getNextString(functionNameWithReturn, tmpPos, { L" ", L"\t", L"\r", L"\n" });
                     tmpPos++;
-                    functionName = vcc::GetNextString(functionNameWithReturn, tmpPos, { L" ", L"\t", L"\r", L"\n" });
+                    functionName = vcc::getNextString(functionNameWithReturn, tmpPos, { L" ", L"\t", L"\r", L"\n" });
                 }
                 vcc::Trim(returnType);
                 vcc::Trim(functionName);
@@ -288,9 +288,9 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                         tmpPos++;
                         argumentName = token.substr(tmpPos);
                     } else {
-                        argumentType = vcc::GetNextString(token, tmpPos, { L" ", L"\t", L"\r", L"\n" });
+                        argumentType = vcc::getNextString(token, tmpPos, { L" ", L"\t", L"\r", L"\n" });
                         tmpPos++;
-                        argumentName = vcc::GetNextString(token, tmpPos, { L" ", L"\t", L"\r", L"\n" });
+                        argumentName = vcc::getNextString(token, tmpPos, { L" ", L"\t", L"\r", L"\n" });
                     }
                     vcc::Trim(argumentType);
                     vcc::Trim(argumentName);
@@ -331,7 +331,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                 importPackages.insert(L"com.sun.jna.Pointer");
                 result += INDENT + L"long getCount(Pointer ref, long property);\r\n"
                     + INDENT + L"Pointer getMapKeys(Pointer ref, long property);\r\n"
-                    + INDENT + L"boolean IsContainKey(Pointer ref, long property, Pointer key);\r\n"
+                    + INDENT + L"boolean isContainKey(Pointer ref, long property, Pointer key);\r\n"
                     + INDENT + L"void removeObject(Pointer ref, long property, Pointer value);\r\n"
                     + INDENT + L"void removeAtIndex(Pointer ref, long property, long index);\r\n"
                     + INDENT + L"void removeAtKey(Pointer ref, long property, Pointer key);\r\n"
@@ -367,7 +367,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                     + INDENT + L"void insert" + name + L"AtIndex(Pointer ref, long property, " + convectedType + L" value, long index);\r\n";
                 pos = endPos;
             } 
-            vcc::GetNextCharPos(content, pos, false);
+            vcc::getNextCharPos(content, pos, false);
         }
         std::wstring importPackageStr = L"";
         for (auto const &str : importPackages)
@@ -556,7 +556,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const
                 + INDENT + L"}\r\n"
                 "\r\n"
                 + INDENT + L"public boolean is" + property->getPropertyName() + L"ContainKey(" + javaType1 + L" key) {\r\n"
-                + getGetterSetterMapKeyContent(classPropertyEnum, dllInstantPrefix, javaType1, L"IsContainKey", true)
+                + getGetterSetterMapKeyContent(classPropertyEnum, dllInstantPrefix, javaType1, L"isContainKey", true)
                 + INDENT + L"}\r\n";            
         }
 
@@ -1242,8 +1242,8 @@ void VPGJavaGenerationService::GenerateEnum(const vcc::LogConfig *logConfig, con
         if (filePath.empty())
             return;
         
-        std::wstring tmpFilePath = vcc::GetParentPath(filePath);
-        tmpFilePath = vcc::concatPaths({ tmpFilePath, vcc::GetFileName(filePath) });
+        std::wstring tmpFilePath = vcc::getParentPath(filePath);
+        tmpFilePath = vcc::concatPaths({ tmpFilePath, vcc::getFileName(filePath) });
 
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Enum: " + tmpFilePath);
         vcc::writeFile(tmpFilePath, VPGJavaGenerationService::GenerateEnumContent(option->getProjectPrefix(), enumClass, cppMiddlePath, javaOption), true);
@@ -1261,8 +1261,8 @@ void VPGJavaGenerationService::GenerateObject(const vcc::LogConfig *logConfig, c
         if (filePath.empty())
             return;
             
-        std::wstring tmpFilePath = vcc::GetParentPath(filePath);
-        tmpFilePath = vcc::concatPaths({ tmpFilePath, vcc::GetFileName(filePath) });
+        std::wstring tmpFilePath = vcc::getParentPath(filePath);
+        tmpFilePath = vcc::concatPaths({ tmpFilePath, vcc::getFileName(filePath) });
        
         std::wstring objectName = getTypeOrClassWithoutNamespace(enumClass->getName());
         if (!vcc::IsEndWith(objectName, propertyClassNameSuffix))

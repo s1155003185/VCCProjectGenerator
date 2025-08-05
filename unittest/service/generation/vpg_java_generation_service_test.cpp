@@ -149,7 +149,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "    void insertObjectAtIndex(Pointer ref, long property, Pointer value, long index);\r\n"
         "    long getCount(Pointer ref, long property);\r\n"
         "    Pointer getMapKeys(Pointer ref, long property);\r\n"
-        "    boolean IsContainKey(Pointer ref, long property, Pointer key);\r\n"
+        "    boolean isContainKey(Pointer ref, long property, Pointer key);\r\n"
         "    void removeObject(Pointer ref, long property, Pointer value);\r\n"
         "    void removeAtIndex(Pointer ref, long property, long index);\r\n"
         "    void removeAtKey(Pointer ref, long property, Pointer key);\r\n"
@@ -162,8 +162,8 @@ void validateGenerateEnum(const VPGJavaGenerationServiceTest *test, const std::w
 {
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList1;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList2;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass1, enumClassList1);
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass2, enumClassList2);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass1, enumClassList1);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass2, enumClassList2);
 
     std::wstring filePath1 = vcc::concatPaths({test->getWorkspace(), test->getJavaOption()->getTypeDirectory(), L"VPGTypeA.java"});
     std::wstring filePath2 = vcc::concatPaths({test->getWorkspace(), test->getJavaOption()->getTypeDirectory(), L"VPGTypeBProperty.java"});
@@ -284,7 +284,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum_Namespace)
 void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std::wstring &code)
 {
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(code, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(code, enumClassList);
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMap;
     std::wstring filePath = vcc::concatPaths({test->getWorkspace(), test->getJavaOption()->getObjectDirectory(), L"VPGTypeB.java"});
@@ -483,7 +483,7 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    public boolean isMapContainKey(int key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(int.class));\r\n"
         "        keyPtr.setInt(0, key);\r\n"
-        "        return VPGDllFunctions.Instance.IsContainKey(Handle, VPGTypeBProperty.Map.getValue(), keyPtr);\r\n"
+        "        return VPGDllFunctions.Instance.isContainKey(Handle, VPGTypeBProperty.Map.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void removeMapAtKey(int key) {\r\n"
@@ -531,7 +531,7 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    public boolean isOrderedMapContainKey(int key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(int.class));\r\n"
         "        keyPtr.setInt(0, key);\r\n"
-        "        return VPGDllFunctions.Instance.IsContainKey(Handle, VPGTypeBProperty.OrderedMap.getValue(), keyPtr);\r\n"
+        "        return VPGDllFunctions.Instance.isContainKey(Handle, VPGTypeBProperty.OrderedMap.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void removeOrderedMapAtKey(int key) {\r\n"
@@ -619,7 +619,7 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    public boolean isMapObjectContainKey(String key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.WCHAR_SIZE * (key.length() + 1));\r\n"
         "        keyPtr.setWideString(0, key);\r\n"
-        "        return VPGDllFunctions.Instance.IsContainKey(Handle, VPGTypeBProperty.MapObject.getValue(), keyPtr);\r\n"
+        "        return VPGDllFunctions.Instance.isContainKey(Handle, VPGTypeBProperty.MapObject.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void removeMapObjectAtKey(String key) {\r\n"
@@ -667,7 +667,7 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    public boolean isOrderedMapObjectContainKey(double key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(double.class));\r\n"
         "        keyPtr.setDouble(0, key);\r\n"
-        "        return VPGDllFunctions.Instance.IsContainKey(Handle, VPGTypeBProperty.OrderedMapObject.getValue(), keyPtr);\r\n"
+        "        return VPGDllFunctions.Instance.isContainKey(Handle, VPGTypeBProperty.OrderedMapObject.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void removeOrderedMapObjectAtKey(double key) {\r\n"
@@ -742,7 +742,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
     typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));
@@ -842,7 +842,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateResult)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->Parse(enumClass, enumClassList);
+    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
     typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));

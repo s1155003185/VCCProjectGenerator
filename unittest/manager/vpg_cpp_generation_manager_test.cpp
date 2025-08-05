@@ -85,7 +85,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     this->_Option->setProjectName(L"ProjectName");
     this->_Option->getTemplate()->setIsExcludeUnittest(false);
     this->_Option->setProjectType(VPGProjectType::CppComplex);
-    this->getManager()->Add();
+    this->getManager()->add();
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L".vscode/launch.json"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L".vscode/tasks.json"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));
@@ -113,7 +113,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     this->_Option->setProjectNameDll(L"");
     this->_Option->setProjectName(L"ProjectName");
     this->_Option->getTemplate()->setIsExcludeUnittest(false);
-    this->getManager()->Add();
+    this->getManager()->add();
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L".vscode/launch.json"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L".vscode/tasks.json"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));
@@ -142,7 +142,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     this->_Option->setProjectNameDll(L"CPPDllProject");
     this->_Option->setProjectName(L"ProjectName");
     this->_Option->getTemplate()->setIsExcludeUnittest(false);
-    this->getManager()->Add();
+    this->getManager()->add();
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L".vscode/launch.json"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L".vscode/tasks.json"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));
@@ -171,7 +171,7 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     this->_Option->setProjectNameDll(L"CPPDllProject");
     this->_Option->setProjectName(L"ProjectName");
     this->_Option->getTemplate()->setIsExcludeUnittest(true);
-    this->getManager()->Add();
+    this->getManager()->add();
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L".vscode/launch.json"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L".vscode/tasks.json"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));

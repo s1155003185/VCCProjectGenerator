@@ -58,7 +58,7 @@ void VPGProcessManager::VerifyLocalResponse()
                     // if same as current version of generator, no action
                     // if not same, then check verison of genertor exists, if not exists, then master, else switch to correct branch
                     auto currentLog = vcc::GitService::GetCurrentLog(this->getLogConfig().get(), localResponseDirectoryProject);
-                    if (!vcc::isContain(currentLog->getTags(), VPGGlobal::GetVersion())) {
+                    if (!vcc::isContain(currentLog->getTags(), VPGGlobal::getVersion())) {
                         std::wstring currentBranchName = L"";
                         TRY
                             auto currentTag = vcc::GitService::GetCurrentTag(this->getLogConfig().get(), localResponseDirectoryProject);
@@ -68,8 +68,8 @@ void VPGProcessManager::VerifyLocalResponse()
                         // If version is main and current tag version not exists, then no switch
                         std::wstring mainBranch = L"main";
                         std::vector<std::wstring> allTags = vcc::GitService::GetTags(this->getLogConfig().get(), localResponseDirectoryProject);
-                        if (currentBranchName == L"main" && !vcc::isContain(allTags, VPGGlobal::GetVersion())) {
-                            vcc::LogService::LogInfo(this->getLogConfig().get(), L"", L"Currently in main branch and " + VPGGlobal::GetVersion() + L" is not found. Keep in main branch.");
+                        if (currentBranchName == L"main" && !vcc::isContain(allTags, VPGGlobal::getVersion())) {
+                            vcc::LogService::LogInfo(this->getLogConfig().get(), L"", L"Currently in main branch and " + VPGGlobal::getVersion() + L" is not found. Keep in main branch.");
                         } else {
                             isNeedToCloneGitResponse = true;
                             vcc::LogService::LogInfo(this->getLogConfig().get(), L"", L"Outdated.");
@@ -115,10 +115,10 @@ void VPGProcessManager::VerifyLocalResponse()
             }
             
             // Switch to correct version
-            vcc::LogService::LogInfo(this->getLogConfig().get(), L"", L"Switch to current version " + VPGGlobal::GetVersion());
+            vcc::LogService::LogInfo(this->getLogConfig().get(), L"", L"Switch to current version " + VPGGlobal::getVersion());
             try
             {
-                vcc::GitService::Switch(this->getLogConfig().get(), localResponseDirectoryProject, VPGGlobal::GetVersion());
+                vcc::GitService::Switch(this->getLogConfig().get(), localResponseDirectoryProject, VPGGlobal::getVersion());
                 vcc::LogService::LogInfo(this->getLogConfig().get(), L"", L"Done.");
             }
             catch(const std::exception& e)
@@ -169,21 +169,21 @@ std::shared_ptr<IVPGGenerationManager> VPGProcessManager::GetGenerationManager()
     return nullptr;
 }
 
-void VPGProcessManager::Add()
+void VPGProcessManager::add()
 {
     TRY
         this->VerifyLocalResponse();
-        getGenerationManager()->Add();
+        getGenerationManager()->add();
     CATCH
 }
 
-void VPGProcessManager::Update()
+void VPGProcessManager::update()
 {
     TRY
         if (!IsUpdateAvaliable())
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Only VCC Module can be updated.");
         this->VerifyLocalResponse();
-        getGenerationManager()->Update();
+        getGenerationManager()->update();
     CATCH
 }
 
@@ -205,11 +205,11 @@ void VPGProcessManager::execute(const std::vector<std::wstring> &cmds)
 
     this->initLogConfig();
 
-    _Workspace = vcc::GetCurrentFolderPath();
+    _Workspace = vcc::getCurrentFolderPath();
     try {
         std::wstring mode = cmds[1];
         if (mode == L"-Version") {
-            std::wcout << VPGGlobal::GetVersion() << std::endl;
+            std::wcout << VPGGlobal::getVersion() << std::endl;
             return;        
         }
 
@@ -315,9 +315,9 @@ void VPGProcessManager::execute(const std::vector<std::wstring> &cmds)
         _Option->getTemplate()->setUrl(gitUrl);
 
         if (mode == L"-Add")
-            this->Add();
+            this->add();
         else if (mode == L"-Update")
-            this->Update();
+            this->update();
         else if (mode == L"-Generate")
             this->generate();
         else

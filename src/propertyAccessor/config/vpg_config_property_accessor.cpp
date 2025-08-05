@@ -1074,7 +1074,7 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_cloneObjectAtKey(const
     return nullptr;
 }
 
-size_t VPGConfigPropertyAccessor::_GetCount(const int64_t &objectProperty) const
+size_t VPGConfigPropertyAccessor::_getCount(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -1092,7 +1092,7 @@ size_t VPGConfigPropertyAccessor::_GetCount(const int64_t &objectProperty) const
     return 0;
 }
 
-std::set<void *> VPGConfigPropertyAccessor::_GetMapKeys(const int64_t &objectProperty) const
+std::set<void *> VPGConfigPropertyAccessor::_getMapKeys(const int64_t &objectProperty) const
 {
     std::set<void *> result;
     TRY

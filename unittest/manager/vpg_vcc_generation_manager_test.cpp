@@ -109,7 +109,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->setProjectName(L"ProjectName");
     this->_Option->getTemplate()->setIsExcludeUnittest(false);
     this->_Option->getTemplate()->setIsExcludeVCCUnitTest(false);
-    this->getManager()->Add();
+    this->getManager()->add();
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
@@ -142,7 +142,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->setProjectName(L"ProjectName");
     this->_Option->getTemplate()->setIsExcludeUnittest(false);
     this->_Option->getTemplate()->setIsExcludeVCCUnitTest(false);
-    this->getManager()->Add();
+    this->getManager()->add();
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));
     EXPECT_FALSE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
     EXPECT_FALSE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
@@ -175,7 +175,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->setProjectName(L"ProjectName");
     this->_Option->getTemplate()->setIsExcludeUnittest(false);
     this->_Option->getTemplate()->setIsExcludeVCCUnitTest(false);
-    this->getManager()->Add();
+    this->getManager()->add();
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
@@ -208,7 +208,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->setProjectName(L"ProjectName");
     this->_Option->getTemplate()->setIsExcludeUnittest(true);
     this->_Option->getTemplate()->setIsExcludeVCCUnitTest(false);
-    this->getManager()->Add();
+    this->getManager()->add();
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
@@ -241,7 +241,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->setProjectName(L"ProjectName");
     this->_Option->getTemplate()->setIsExcludeUnittest(false);
     this->_Option->getTemplate()->setIsExcludeVCCUnitTest(true);
-    this->getManager()->Add();
+    this->getManager()->add();
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
@@ -275,7 +275,7 @@ TEST_F(VPGVccGenerationManagerTest, Add)
     this->_Option->getTemplate()->setIsExcludeUnittest(false);
     this->_Option->insertPlugins(L"vcc/versioning/git");
     this->_Option->getTemplate()->setIsExcludeVCCUnitTest(false);
-    this->getManager()->Add();
+    this->getManager()->add();
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
@@ -311,7 +311,7 @@ TEST_F(VPGVccGenerationManagerTest, Update)
     this->_Option->setProjectNameDll(L"VCCDllProject");
     this->_Option->setProjectName(L"ProjectName");
     this->_Option->getTemplate()->setIsExcludeUnittest(false);
-    this->getManager()->Add();
+    this->getManager()->add();
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
@@ -335,7 +335,7 @@ TEST_F(VPGVccGenerationManagerTest, Update)
     jsonBuilder->setIsBeautify(true);
     writeFile(concatPaths({this->getWorkspaceTarget(), L".vcc/vcc.json"}), jsonBuilder->serialize(this->_Option->ToJson().get()));
 
-    this->getManager()->Update();
+    this->getManager()->update();
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
@@ -355,7 +355,7 @@ TEST_F(VPGVccGenerationManagerTest, Update)
     EXPECT_TRUE(isDirectoryExists(concatPaths({this->getWorkspaceTarget(), L"include/external/vcc/versioning/git"})));
 
     if (this->getIsCopyDebugFolderToTestFolder()) {
-        std::wstring path = concatPaths({this->getTestFolder(), L"Update"});
+        std::wstring path = concatPaths({this->getTestFolder(), L"update"});
         removeDirectory(path);
         copyDirectory(this->getWorkspaceTarget(), path);
     }
@@ -370,7 +370,7 @@ TEST_F(VPGVccGenerationManagerTest, Update_Makefile)
     this->_Option->setProjectNameDll(L"VCCDllProject");
     this->_Option->setProjectName(L"ProjectName");
     this->_Option->getTemplate()->setIsExcludeUnittest(false);
-    this->getManager()->Add();
+    this->getManager()->add();
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
@@ -407,7 +407,7 @@ TEST_F(VPGVccGenerationManagerTest, Update_Makefile)
     json->getObject(L"Template")->setBool(L"IsExcludeUnittest", false);
     writeFile(concatPaths({this->getWorkspaceTarget(), L".vcc/vcc.json"}), jsonBuilder->serialize(json.get()));
 
-    this->getManager()->Update();
+    this->getManager()->update();
     std::wstring makefileFileContent = readFile(concatPaths({this->getWorkspaceTarget(), L"Makefile"}));
     EXPECT_TRUE(CountSubstring(makefileFileContent, L"PROJ_NAME := NewProjectName") == 1);
     EXPECT_TRUE(CountSubstring(makefileFileContent, L"PROJ_NAME_DLL := NewProjectNameDll") == 1);
@@ -429,7 +429,7 @@ TEST_F(VPGVccGenerationManagerTest, Generate)
     this->_Option->setProjectNameDll(L"VCCDllProject");
     this->_Option->setProjectName(L"ProjectName");
     this->_Option->getTemplate()->setIsExcludeUnittest(false);
-    this->getManager()->Add();
+    this->getManager()->add();
 
     // Empty class
     std::wstring codeEmpty =  L""

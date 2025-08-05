@@ -37,7 +37,7 @@ bool IsPropertyClassNameValidToGenerateClass(const std::wstring &str, const std:
 bool IsPropertyFile(const std::wstring &filePath, const std::wstring &projectPrefix)
 {
     TRY
-        return IsFileStartWithProjectPrefix(vcc::GetFileName(filePath), projectPrefix) && vcc::IsEndWith(filePath, propertyClassFileSuffix);
+        return IsFileStartWithProjectPrefix(vcc::getFileName(filePath), projectPrefix) && vcc::IsEndWith(filePath, propertyClassFileSuffix);
     CATCH
     return false;
 }

@@ -39,7 +39,7 @@ namespace vcc
 
             JsonInternalType getJsonType(const std::wstring &key) const;
             std::vector<std::wstring> getKeys(/*bool isRecursive = false*/) const; // TODO: Recursive
-            bool IsContainKey(const std::wstring &key/*, bool isRecursive = false*/) const; // TODO: Recursive
+            bool isContainKey(const std::wstring &key/*, bool isRecursive = false*/) const; // TODO: Recursive
 
             bool IsNull(const std::wstring &key) const;
             void setNull(const std::wstring &key) const;
@@ -70,7 +70,7 @@ namespace vcc
             //void setObject(const std::wstring &key, std::shared_ptr<Json> object) const;
             void AddObject(const std::wstring &key, std::shared_ptr<Json> object) const;
 
-            std::vector<std::shared_ptr<Json>> &GetArray(const std::wstring &key) const;
+            std::vector<std::shared_ptr<Json>> &getArray(const std::wstring &key) const;
             //void setArray(const std::wstring &key, std::shared_ptr<Json> array) const;
             void AddArray(const std::wstring &key, std::shared_ptr<Json> array) const;
             

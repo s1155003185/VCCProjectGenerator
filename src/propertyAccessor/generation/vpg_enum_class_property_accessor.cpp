@@ -352,7 +352,7 @@ void VPGEnumClassAttributePropertyAccessor::_insertStringAtIndex(const int64_t &
     CATCH
 }
 
-size_t VPGEnumClassAttributePropertyAccessor::_GetCount(const int64_t &objectProperty) const
+size_t VPGEnumClassAttributePropertyAccessor::_getCount(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClassAttribute>(_Object);
@@ -368,7 +368,7 @@ size_t VPGEnumClassAttributePropertyAccessor::_GetCount(const int64_t &objectPro
     return 0;
 }
 
-std::set<void *> VPGEnumClassAttributePropertyAccessor::_GetMapKeys(const int64_t &objectProperty) const
+std::set<void *> VPGEnumClassAttributePropertyAccessor::_getMapKeys(const int64_t &objectProperty) const
 {
     std::set<void *> result;
     TRY
@@ -939,7 +939,7 @@ std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_cloneObjectAtKey(co
     return nullptr;
 }
 
-size_t VPGEnumClassPropertyAccessor::_GetCount(const int64_t &objectProperty) const
+size_t VPGEnumClassPropertyAccessor::_getCount(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClass>(_Object);
@@ -967,7 +967,7 @@ size_t VPGEnumClassPropertyAccessor::_GetCount(const int64_t &objectProperty) co
     return 0;
 }
 
-std::set<void *> VPGEnumClassPropertyAccessor::_GetMapKeys(const int64_t &objectProperty) const
+std::set<void *> VPGEnumClassPropertyAccessor::_getMapKeys(const int64_t &objectProperty) const
 {
     std::set<void *> result;
     TRY

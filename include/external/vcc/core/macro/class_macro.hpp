@@ -180,7 +180,7 @@ public: \
     void insert##varName##AtKey(keyType key, std::shared_ptr<valueType> value) { validate##varName(value); vcc::setIObject(_##varName, key, value); } \
     void insert##varName(const std::pair<keyType, std::shared_ptr<valueType>> &value) { validate##varName(value.second); vcc::setIObject(_##varName, value.first, value.second); } \
     void insert##varName(const std::map<keyType, std::shared_ptr<valueType>> &value) { for (auto const &pair : value) validate##varName(pair.second); vcc::setIObjects(_##varName, value); } \
-    std::shared_ptr<valueType> clone##varName##AtKey(keyType key) const { return std::static_pointer_cast<valueType>(Get##varName##AtKey(key)->clone()); } \
+    std::shared_ptr<valueType> clone##varName##AtKey(keyType key) const { return std::static_pointer_cast<valueType>(get##varName##AtKey(key)->clone()); } \
     std::map<keyType, std::shared_ptr<valueType>> clone##varName() const { std::map<keyType, std::shared_ptr<valueType>> result; for (auto &pair : _##varName) { result.insert(std::make_pair(pair.first, std::dynamic_pointer_cast<valueType>(pair.second->clone()))); } return result; } \
     void clone##varName(const std::map<keyType, std::shared_ptr<valueType>> &value) { _##varName.clear(); for (auto const& element : value) { insert##varName##AtKey(element.first, element.second != nullptr ? std::dynamic_pointer_cast<valueType>(element.second->clone()) : nullptr); } }\
     void remove##varName##AtKey(keyType key) { vcc::removeIObjectAtKey(_##varName, key); } \
@@ -232,8 +232,8 @@ public: \
     void insert##varName##AtKey(keyType key, std::shared_ptr<valueType> value) { validate##varName(value); _##varName.push_back(std::make_pair(key, value)); } \
     void insert##varName(const std::pair<keyType, std::shared_ptr<valueType>> value) { validate##varName(value.second); _##varName.push_back(value); } \
     void insert##varName(const std::vector<std::pair<keyType, std::shared_ptr<valueType>>> &value) { for (auto const &pair : value) validate##varName(pair.second); _##varName.insert(_##varName.end(),value.begin(), value.end()); } \
-    std::shared_ptr<valueType> clone##varName##AtIndex(int64_t index) const { return std::static_pointer_cast<valueType>(Get##varName##AtIndex(index).second->clone()); } \
-    std::shared_ptr<valueType> clone##varName##AtKey(keyType key) const { return std::static_pointer_cast<valueType>(Get##varName##AtKey(key)->clone()); } \
+    std::shared_ptr<valueType> clone##varName##AtIndex(int64_t index) const { return std::static_pointer_cast<valueType>(get##varName##AtIndex(index).second->clone()); } \
+    std::shared_ptr<valueType> clone##varName##AtKey(keyType key) const { return std::static_pointer_cast<valueType>(get##varName##AtKey(key)->clone()); } \
     void clone##varName(const std::vector<std::pair<keyType, std::shared_ptr<valueType>>> &value) { _##varName.clear(); for (auto const& element : value) { insert##varName##AtKey(element.first, element.second != nullptr ? std::dynamic_pointer_cast<valueType>(element.second->clone()) : nullptr); } }\
     void remove##varName##AtIndex(int64_t index) { if (index >= 0) { _##varName.erase(_##varName.begin() + (size_t)index); } } \
     void remove##varName##AtKey(keyType key) { int64_t index = find##varName(key); if (index >= 0) (_##varName.erase(_##varName.begin() + (size_t)(find##varName(key)))); } \

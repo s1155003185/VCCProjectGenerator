@@ -352,7 +352,7 @@ void VPGDllFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig, c
         std::wstring propertyAccessorStr = GeneratePropertyAccessorHpp(option, customIncludeFiles);
         if (!customIncludeFiles.empty()) {
             for (auto const &file : customIncludeFiles)
-                content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, file) + L"\r\n";
+                content += L"#include " + vcc::getEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, file) + L"\r\n";
         }
         vcc::writeFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(vcc::readFile(filePathHpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
 
@@ -381,7 +381,7 @@ void VPGDllFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig, c
 
         if (!customIncludeFiles.empty()) {
             for (auto const &file : customIncludeFiles)
-                content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, file) + L"\r\n";
+                content += L"#include " + vcc::getEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, file) + L"\r\n";
         }
         vcc::writeFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(vcc::readFile(filePathCpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
 

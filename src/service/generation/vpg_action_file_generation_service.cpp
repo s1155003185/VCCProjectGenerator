@@ -123,7 +123,7 @@ void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
                 // custom include files
                 content += L"\r\n";
                 for (auto const &str : customIncludeFiles)
-                    content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
+                    content += L"#include " + vcc::getEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
 
                 content += L"\r\n"
                     + getVccTagHeaderCustomHeader(VPGCodeType::Cpp) + L"\r\n"
@@ -295,7 +295,7 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
                 // Generate to seperate files
                 std::wstring fileNameHpp = getActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".hpp";
                 std::wstring content = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-                    "#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, fileNameHpp) + L"\r\n"
+                    "#include " + vcc::getEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, fileNameHpp) + L"\r\n"
                     "\r\n";
                 // system include files
                 for (auto const &str : systemIncludeFiles)
@@ -306,7 +306,7 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
                 for (auto const &str : customIncludeFiles) {
                     if (str == fileNameHpp)
                         continue;
-                    content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
+                    content += L"#include " + vcc::getEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
                 }
 
                 std::map<std::wstring, std::vector<std::wstring>> namespaceClassMapping;

@@ -19,9 +19,9 @@ TEST(DllTest, LoadDll) {
     vcc::Dll h(dllName);
     EXPECT_TRUE(h.GetH());
     
-    typedef int (*GetVersionFunction)(wchar_t **);
-    const getVersionFunction getVersion = reinterpret_cast<GetVersionFunction>(h.GetProcedure(L"GetVersion"));
-    EXPECT_TRUE(GetVersion != nullptr);
+    typedef int (*getVersionFunction)(wchar_t **);
+    const getVersionFunction getVersion = reinterpret_cast<getVersionFunction>(h.GetProcedure(L"getVersion"));
+    EXPECT_TRUE(getVersion != nullptr);
     
     wchar_t* versionStr = nullptr;
     int result = getVersion(&versionStr);

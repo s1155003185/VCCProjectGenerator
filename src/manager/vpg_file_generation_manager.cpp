@@ -83,7 +83,7 @@ void VPGFileGenerationManager::GetFileList(const VPGEnumClassReader *reader, con
                     continue;
                 std::wstring content = vcc::readFile(filePath.path().wstring());
                 std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-                reader->Parse(GetSimpleCode(content), enumClassList);
+                reader->parse(GetSimpleCode(content), enumClassList);
                 for (auto const &enumClass : enumClassList) {
                     // enum
                     std::wstring enumClassName = enumClass->getName();
@@ -188,8 +188,8 @@ void VPGFileGenerationManager::GernerateProperty(const vcc::LogConfig *logConfig
             if (includeFileEnumClassMap.find(fileName) == includeFileEnumClassMap.end())
                 continue;
 
-            std::wstring filePathLinuxPath = vcc::GetLinuxPath(filePath.path().wstring());
-            std::wstring relativePath = vcc::GetRelativePath(filePathLinuxPath.substr(vcc::find(filePathLinuxPath, vcc::GetLinuxPath(typeWorkspaceFullPath))), typeWorkspaceFullPath);
+            std::wstring filePathLinuxPath = vcc::getLinuxPath(filePath.path().wstring());
+            std::wstring relativePath = vcc::getRelativePath(filePathLinuxPath.substr(vcc::find(filePathLinuxPath, vcc::getLinuxPath(typeWorkspaceFullPath))), typeWorkspaceFullPath);
             relativePath = PATH(relativePath).parent_path().wstring();
             if (relativePath == L".")
                 relativePath = L"";
@@ -224,9 +224,9 @@ void VPGFileGenerationManager::GernerateProperty(const vcc::LogConfig *logConfig
         for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(typeWorkspaceFullPath))) {
             if (filePath.is_directory())
                 continue;
-            std::wstring path = vcc::GetLinuxPath(filePath.path().wstring());
+            std::wstring path = vcc::getLinuxPath(filePath.path().wstring());
             std::wstring fileName = filePath.path().filename().wstring();
-            std::wstring middlePath = vcc::GetRelativePath(vcc::GetLinuxPath(filePath.path().parent_path().wstring()), vcc::GetLinuxPath(typeWorkspaceFullPath));
+            std::wstring middlePath = vcc::getRelativePath(vcc::getLinuxPath(filePath.path().parent_path().wstring()), vcc::getLinuxPath(typeWorkspaceFullPath));
             if (middlePath == L".")
                 middlePath = L"";
 
@@ -245,7 +245,7 @@ void VPGFileGenerationManager::GernerateProperty(const vcc::LogConfig *logConfig
 
             std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
             std::vector<std::shared_ptr<VPGEnumClass>> objectEnumClassList;
-            enumClassReader.Parse(fileContent, enumClassList);
+            enumClassReader.parse(fileContent, enumClassList);
             // ------------------------------------------------------------------------------------------ //
             //                              Override Enum Class based on vcc.json                         //
             // ------------------------------------------------------------------------------------------ //
@@ -331,7 +331,7 @@ void VPGFileGenerationManager::GernerateProperty(const vcc::LogConfig *logConfig
         // ------------------------------------------------------------------------------------------ //
         //                               Generate Object Type File                                    //
         // ------------------------------------------------------------------------------------------ //
-        VPGObjectTypeFileGenerationService::Generate(logConfig, vcc::concatPaths({projWorkspace, objectTypeDirectory, objectTypeHppFileName}), objectTypes);
+        VPGObjectTypeFileGenerationService::generate(logConfig, vcc::concatPaths({projWorkspace, objectTypeDirectory, objectTypeHppFileName}), objectTypes);
 
         // ------------------------------------------------------------------------------------------ //
         //                               Generate Object Factory File                                 //

@@ -46,7 +46,7 @@ namespace vcc
         return L"";
     }
     
-    std::wstring GitService::GetVersion(const LogConfig *logConfig)
+    std::wstring GitService::getVersion(const LogConfig *logConfig)
     {
         TRY
             std::wstring cmdResult = ProcessService::execute(logConfig, GIT_LOG_ID, L"git --version");

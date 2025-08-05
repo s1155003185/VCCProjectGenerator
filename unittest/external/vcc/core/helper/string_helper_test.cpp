@@ -150,37 +150,37 @@ TEST(StringHelperTest, SplitStringByUpperCase_WithSpecialChar)
 TEST(StringHelperTest, EscapeString)
 {
     // Double Quote
-    std::vector<wchar_t> specialChars = vcc::GetSpecialCharacters(vcc::EscapeStringType::DoubleQuote);
+    std::vector<wchar_t> specialChars = vcc::getSpecialCharacters(vcc::EscapeStringType::DoubleQuote);
     std::wstring originalStr = L"";
     std::wstring expectedStr = L"";
     for (auto sc : specialChars) {
         originalStr += sc;
         expectedStr += L"\\" + std::wstring(1, sc);
     }
-    EXPECT_EQ(vcc::GetEscapeString(vcc::EscapeStringType::DoubleQuote, originalStr), expectedStr);
-    EXPECT_EQ(vcc::GetUnescapeString(vcc::EscapeStringType::DoubleQuote, expectedStr), originalStr);
+    EXPECT_EQ(vcc::getEscapeString(vcc::EscapeStringType::DoubleQuote, originalStr), expectedStr);
+    EXPECT_EQ(vcc::getUnescapeString(vcc::EscapeStringType::DoubleQuote, expectedStr), originalStr);
 
     // Regex
-    specialChars = vcc::GetSpecialCharacters(vcc::EscapeStringType::Regex);
+    specialChars = vcc::getSpecialCharacters(vcc::EscapeStringType::Regex);
     originalStr = L"";
     expectedStr = L"";
     for (auto sc : specialChars) {
         originalStr += sc;
         expectedStr += L"\\" + std::wstring(1, sc);
     }
-    EXPECT_EQ(vcc::GetEscapeString(vcc::EscapeStringType::Regex, originalStr), expectedStr);
-    EXPECT_EQ(vcc::GetUnescapeString(vcc::EscapeStringType::Regex, expectedStr), originalStr);
+    EXPECT_EQ(vcc::getEscapeString(vcc::EscapeStringType::Regex, originalStr), expectedStr);
+    EXPECT_EQ(vcc::getUnescapeString(vcc::EscapeStringType::Regex, expectedStr), originalStr);
 
     // XML
-    specialChars = vcc::GetSpecialCharacters(vcc::EscapeStringType::XML);
+    specialChars = vcc::getSpecialCharacters(vcc::EscapeStringType::XML);
     originalStr = L"";
     expectedStr = L"";
     for (auto sc : specialChars) {
         originalStr += sc;
-        expectedStr += vcc::GetEscapeStringMap(vcc::EscapeStringType::XML)[sc];
+        expectedStr += vcc::getEscapeStringMap(vcc::EscapeStringType::XML)[sc];
     }
-    EXPECT_EQ(vcc::GetEscapeString(vcc::EscapeStringType::XML, originalStr), expectedStr);
-    EXPECT_EQ(vcc::GetUnescapeString(vcc::EscapeStringType::XML, expectedStr), originalStr);
+    EXPECT_EQ(vcc::getEscapeString(vcc::EscapeStringType::XML, originalStr), expectedStr);
+    EXPECT_EQ(vcc::getUnescapeString(vcc::EscapeStringType::XML, expectedStr), originalStr);
 }
 
 /* ---------------------------------------------------------------------------------------------------- */
@@ -214,11 +214,11 @@ TEST(StringHelperTest, Find_wstring)
 
 TEST(StringHelperTest, GetTailingSubstring)
 {
-    EXPECT_EQ(vcc::GetTailingSubstring(L"", 2), L"");
-    EXPECT_EQ(vcc::GetTailingSubstring(L"1", 2), L"1");
-    EXPECT_EQ(vcc::GetTailingSubstring(L"12", 2), L"12");
-    EXPECT_EQ(vcc::GetTailingSubstring(L"123", 2), L"23");
-    EXPECT_EQ(vcc::GetTailingSubstring(L"1234", 2), L"34");
+    EXPECT_EQ(vcc::getTailingSubstring(L"", 2), L"");
+    EXPECT_EQ(vcc::getTailingSubstring(L"1", 2), L"1");
+    EXPECT_EQ(vcc::getTailingSubstring(L"12", 2), L"12");
+    EXPECT_EQ(vcc::getTailingSubstring(L"123", 2), L"23");
+    EXPECT_EQ(vcc::getTailingSubstring(L"1234", 2), L"34");
 }
 
 TEST(StringHelperTest, GetNextString_Basic)
@@ -228,23 +228,23 @@ TEST(StringHelperTest, GetNextString_Basic)
     std::wstring str2 = L"\"abc\\\" def\" ghi";
     
     size_t pos = 0;
-    EXPECT_EQ(vcc::GetNextStringSplitBySpace(str, pos), L"abc");
+    EXPECT_EQ(vcc::getNextStringSplitBySpace(str, pos), L"abc");
     EXPECT_EQ(pos, (size_t)2);
     pos = 0;
-    EXPECT_EQ(vcc::GetNextStringSplitBySpace(str1, pos), L"\"abc");
+    EXPECT_EQ(vcc::getNextStringSplitBySpace(str1, pos), L"\"abc");
     EXPECT_EQ(pos, (size_t)3);
     pos = 0;
-    EXPECT_EQ(vcc::GetNextStringSplitBySpace(str2, pos), L"\"abc\\\"");
+    EXPECT_EQ(vcc::getNextStringSplitBySpace(str2, pos), L"\"abc\\\"");
     EXPECT_EQ(pos, (size_t)5);
 
     pos = 0;
-    EXPECT_EQ(vcc::GetNextStringSplitBySpace(str, pos, {L"\""}, {L"\""}, {L"\\"}), L"abc");
+    EXPECT_EQ(vcc::getNextStringSplitBySpace(str, pos, {L"\""}, {L"\""}, {L"\\"}), L"abc");
     EXPECT_EQ(pos, (size_t)2);
     pos = 0;
-    EXPECT_EQ(vcc::GetNextStringSplitBySpace(str1, pos, {L"\""}, {L"\""}, {L"\\"}), L"\"abc def\"");
+    EXPECT_EQ(vcc::getNextStringSplitBySpace(str1, pos, {L"\""}, {L"\""}, {L"\\"}), L"\"abc def\"");
     EXPECT_EQ(pos, (size_t)8);
     pos = 0;
-    EXPECT_EQ(vcc::GetNextStringSplitBySpace(str2, pos, {L"\""}, {L"\""}, {L"\\"}), L"\"abc\\\" def\"");
+    EXPECT_EQ(vcc::getNextStringSplitBySpace(str2, pos, {L"\""}, {L"\""}, {L"\\"}), L"\"abc\\\" def\"");
     EXPECT_EQ(pos, (size_t)10);
     
 }
@@ -253,10 +253,10 @@ TEST(StringHelperTest, GetNextQuotedString_Nested)
 {
     std::wstring fullStr = L"[[1, 2], 2] [1,2]";
     size_t pos = 0;
-    EXPECT_EQ(vcc::GetNextQuotedString(fullStr, pos, { L" " }, {L"["}, {L"]"}, {L""}), L"[[1, 2], 2]");
+    EXPECT_EQ(vcc::getNextQuotedString(fullStr, pos, { L" " }, {L"["}, {L"]"}, {L""}), L"[[1, 2], 2]");
     EXPECT_EQ(pos, (size_t)10);
     pos++;
-    EXPECT_EQ(vcc::GetNextQuotedString(fullStr, pos, { L" " }, {L"["}, {L"]"}, {L""}), L"[1,2]");
+    EXPECT_EQ(vcc::getNextQuotedString(fullStr, pos, { L" " }, {L"["}, {L"]"}, {L""}), L"[1,2]");
     EXPECT_EQ(pos, (size_t)16);
 }
 
@@ -264,34 +264,34 @@ TEST(StringHelperTest, GetNextQuotedString_Full)
 {
     std::wstring fullStr = L"{\"name\":\"John\"}";
     size_t pos = 0;
-    EXPECT_EQ(vcc::GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"{\"name\":\"John\"}");
+    EXPECT_EQ(vcc::getNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"{\"name\":\"John\"}");
     EXPECT_EQ(pos, (size_t)14);
     pos = 1;
-    EXPECT_EQ(vcc::GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"\"name\"");
+    EXPECT_EQ(vcc::getNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"\"name\"");
     EXPECT_EQ(pos, (size_t)6);
-    vcc::GetNextCharPos(fullStr, pos);
+    vcc::getNextCharPos(fullStr, pos);
     EXPECT_EQ(pos, (size_t)7);
-    EXPECT_EQ(vcc::GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"");
+    EXPECT_EQ(vcc::getNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"");
     EXPECT_EQ(pos, (size_t)7);
     pos = 8;
-    EXPECT_EQ(vcc::GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"\"John\"");
+    EXPECT_EQ(vcc::getNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"\"John\"");
     EXPECT_EQ(pos, (size_t)13);
-    vcc::GetNextCharPos(fullStr, pos);
+    vcc::getNextCharPos(fullStr, pos);
     EXPECT_EQ(pos, (size_t)14);
-    EXPECT_EQ(vcc::GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"}");
+    EXPECT_EQ(vcc::getNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"}");
     EXPECT_EQ(pos, (size_t)14);
-    vcc::GetNextCharPos(fullStr, pos);
+    vcc::getNextCharPos(fullStr, pos);
     EXPECT_EQ(pos, (size_t)15);
-    EXPECT_EQ(vcc::GetNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"");
+    EXPECT_EQ(vcc::getNextQuotedString(fullStr, pos, { L":", L"," }, {L"\"", L"{"}, {L"\"", L"}"}, {L"\\", L""}), L"");
     EXPECT_EQ(pos, (size_t)15);    
 }
 
 TEST(StringHelperTest, GetNextQuotedString_QuoteWihString)
 {
-    std::wstring fullStr = L"(bool, IsHavingValidate, return vcc::isContain(GetMacro(), L\"(\") ? vcc::isContain(_Macro.substr(0, _Macro.find(L\"(\")), L\"VALIDATE\") : false;)\r\n\r\n// Macro";
+    std::wstring fullStr = L"(bool, IsHavingValidate, return vcc::isContain(getMacro(), L\"(\") ? vcc::isContain(_Macro.substr(0, _Macro.find(L\"(\")), L\"VALIDATE\") : false;)\r\n\r\n// Macro";
     size_t pos = 0;
-    EXPECT_EQ(vcc::GetNextQuotedString(fullStr, pos, { L")", L" ", L"\t", L"\r", L"\n" }, { L"\"", L"'", L"{", L"[", L"(", L"/*", L"//" }, { L"\"", L"'", L"}", L"]", L")", L"*/", L"\n" }, { L"\\", L"\\", L"", L"", L"", L"", L"" }, { L"\"" }),
-        L"(bool, IsHavingValidate, return vcc::isContain(GetMacro(), L\"(\") ? vcc::isContain(_Macro.substr(0, _Macro.find(L\"(\")), L\"VALIDATE\") : false;)");
+    EXPECT_EQ(vcc::getNextQuotedString(fullStr, pos, { L")", L" ", L"\t", L"\r", L"\n" }, { L"\"", L"'", L"{", L"[", L"(", L"/*", L"//" }, { L"\"", L"'", L"}", L"]", L")", L"*/", L"\n" }, { L"\\", L"\\", L"", L"", L"", L"", L"" }, { L"\"" }),
+        L"(bool, IsHavingValidate, return vcc::isContain(getMacro(), L\"(\") ? vcc::isContain(_Macro.substr(0, _Macro.find(L\"(\")), L\"VALIDATE\") : false;)");
 }
 
 /* ---------------------------------------------------------------------------------------------------- */

@@ -46,7 +46,7 @@ class GitServiceTest : public testing::Test
 
 TEST_F(GitServiceTest, Version)
 {
-    std::wstring version = GitService::GetVersion(this->getLogConfig().get());
+    std::wstring version = GitService::getVersion(this->getLogConfig().get());
     EXPECT_TRUE(regex_match(version, std::wregex(L"[0-9]+.[0-9]+.[0-9]+")));
 }
 
