@@ -40,14 +40,14 @@ std::shared_ptr<vcc::Json> VPGWorkspaceForm::ToJson() const
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
         auto json = std::make_unique<vcc::Json>();
         // Name
-        json->AddString(vcc::ConvertNamingStyle(L"Name", vcc::NamingStyle::PascalCase, namestyle), getName());
+        json->addString(vcc::ConvertNamingStyle(L"Name", vcc::NamingStyle::PascalCase, namestyle), getName());
         // TabOrder
-        json->AddInt(vcc::ConvertNamingStyle(L"TabOrder", vcc::NamingStyle::PascalCase, namestyle), getTabOrder());
+        json->addInt(vcc::ConvertNamingStyle(L"TabOrder", vcc::NamingStyle::PascalCase, namestyle), getTabOrder());
         // GitForms
         auto tmpGitForms = std::make_shared<vcc::Json>();
-        json->AddArray(vcc::ConvertNamingStyle(L"GitForms", vcc::NamingStyle::PascalCase, namestyle), tmpGitForms);
+        json->addArray(vcc::ConvertNamingStyle(L"GitForms", vcc::NamingStyle::PascalCase, namestyle), tmpGitForms);
         for (auto const &element : getGitForms()) {
-            tmpGitForms->AddArrayObject(element->ToJson());
+            tmpGitForms->addArrayObject(element->ToJson());
         }
         return json;
     CATCH
@@ -89,7 +89,7 @@ void VPGWorkspaceForm::initializeComponents()
     CATCH
 }
 
-std::shared_ptr<vcc::IResult> VPGWorkspaceForm::DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> /*argument*/)
+std::shared_ptr<vcc::IResult> VPGWorkspaceForm::doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> /*argument*/)
 {
     TRY
         switch(static_cast<VPGWorkspaceFormProperty>(formProperty))

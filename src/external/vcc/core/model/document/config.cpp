@@ -9,7 +9,7 @@
 
 namespace vcc
 {
-    bool Config::IsValue(const std::wstring &key) const
+    bool Config::isValue(const std::wstring &key) const
     {
         return !IsBlank(key) && key != L"#";
     }

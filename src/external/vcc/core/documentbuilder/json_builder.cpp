@@ -14,7 +14,7 @@ const std::wstring falseStr = L"false";
 
 namespace vcc
 {    
-    std::wstring JsonBuilder::GetCurrentIndent() const
+    std::wstring JsonBuilder::getCurrentIndent() const
     {
         if (!_IsBeautify)
             return L"";
@@ -25,7 +25,7 @@ namespace vcc
         return result;
     }
 
-    std::wstring JsonBuilder::Serialize(const IDocument *doc) const
+    std::wstring JsonBuilder::serialize(const IDocument *doc) const
     {
         std::wstring result = L"";
         TRY
@@ -54,7 +54,7 @@ namespace vcc
                 for (auto const &element : jsonObj->getJsonInternalArray()) {
                     if (!result.empty())
                         result += L"," + currentNewLineCharacter;
-                    result += getCurrentIndent() + Serialize(element.get());
+                    result += getCurrentIndent() + serialize(element.get());
                 }
                 _Level--;
                 result = L"[" + currentNewLineCharacter + result + currentNewLineCharacter + getCurrentIndent() + L"]";
@@ -62,7 +62,7 @@ namespace vcc
             }
             case JsonInternalType::Object:
                 if (jsonObj->getJsonInternalArray().at(0).get() != nullptr)
-                    result = Serialize(jsonObj->getJsonInternalArray().at(0).get());
+                    result = serialize(jsonObj->getJsonInternalArray().at(0).get());
                 else
                     result = L"null";
                 break;
@@ -73,7 +73,7 @@ namespace vcc
                         result += L"," + currentNewLineCharacter;
                     result += getCurrentIndent() + getEscapeStringWithQuote(EscapeStringType::DoubleQuote, pair.first);
                     result += currentNameColonSpace + L":" + currentColonValueSpace;
-                    result += Serialize(pair.second.get());
+                    result += serialize(pair.second.get());
                 }
                 _Level--;
                 result = L"{" + currentNewLineCharacter + result + currentNewLineCharacter + getCurrentIndent() + L"}";
@@ -92,14 +92,14 @@ namespace vcc
         size_t startPos = pos;
         try {
             getNextCharPos(str, pos, true);
-            if (IsStartWith(str, nullStr, pos)) {
+            if (isStartWith(str, nullStr, pos)) {
                 doc->setJsonInternalType(JsonInternalType::Null);
                 pos += nullStr.length() - 1;
-            } else if (IsStartWith(str, trueStr, pos)) {
+            } else if (isStartWith(str, trueStr, pos)) {
                 doc->setJsonInternalType(JsonInternalType::Boolean);
                 doc->setJsonInternalValue(trueStr);
                 pos += trueStr.length() - 1;
-            } else if (IsStartWith(str, falseStr, pos)) {
+            } else if (isStartWith(str, falseStr, pos)) {
                 doc->setJsonInternalType(JsonInternalType::Boolean);
                 doc->setJsonInternalValue(falseStr);
                 pos += falseStr.length() - 1;
@@ -115,7 +115,7 @@ namespace vcc
                 doc->setJsonInternalValue(value);
             } else if (str[pos] == L'{') {
                 auto jsonObj = std::make_shared<Json>();
-                Deserialize(str, pos, jsonObj);
+                deserialize(str, pos, jsonObj);
                 doc->setJsonInternalType(JsonInternalType::Object);
                 doc->insertJsonInternalArray(jsonObj);
             } else if (str[pos] == L'['){
@@ -156,7 +156,7 @@ namespace vcc
         }
     }
 
-    void JsonBuilder::Deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc) const
+    void JsonBuilder::deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc) const
     {
         TRY
             auto jsonObj = std::dynamic_pointer_cast<Json>(doc);
@@ -170,9 +170,9 @@ namespace vcc
                 // name
                 std::wstring name = getNextQuotedString(str, pos, {L":"}, { L"\"", L"'", L"{", L"["}, { L"\"", L"'", L"}", L"]"}, { L"\\", L"\\", L"\\", L"\\"}, { L"\"", L"'" });
                 Trim(name);
-                if (IsStartWith(name, L"\""))
+                if (isStartWith(name, L"\""))
                     name = getUnescapeStringWithQuote(EscapeStringType::DoubleQuote, name);
-                else if (IsStartWith(name, L"\'"))
+                else if (isStartWith(name, L"\'"))
                     name = getUnescapeStringWithQuote(EscapeStringType::SingleQuote, name);
                 getNextCharPos(str, pos, false);
                 if (str[pos] != L':')
@@ -193,11 +193,11 @@ namespace vcc
         CATCH
     }
 
-    void JsonBuilder::Deserialize(const std::wstring &str, std::shared_ptr<IDocument> doc) const
+    void JsonBuilder::deserialize(const std::wstring &str, std::shared_ptr<IDocument> doc) const
     {
         TRY
             size_t pos = 0;
-            this->Deserialize(str, pos, doc);
+            this->deserialize(str, pos, doc);
         CATCH
     }
 }

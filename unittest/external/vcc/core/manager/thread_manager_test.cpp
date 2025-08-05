@@ -54,10 +54,10 @@ TEST_F(ThreadManagerTest, SuspendAndQueue)
     });
 
     getManager()->suspend();
-    getManager()->Queue(thread1);
-    getManager()->Queue(thread2);
-    getManager()->Queue(thread3);
-    getManager()->Resume();
+    getManager()->queue(thread1);
+    getManager()->queue(thread2);
+    getManager()->queue(thread3);
+    getManager()->resume();
 
     EXPECT_EQ(threadCnt, (size_t)3);
     EXPECT_EQ(callbackCnt, (size_t)3);
@@ -77,9 +77,9 @@ TEST_F(ThreadManagerTest, SuspendAndUrgent)
             threadCnt++;
         }, [](const vcc::Thread * /*thread*/) {});
     getManager()->suspend();
-    getManager()->Queue(thread1);
-    getManager()->Urgent(thread2);
-    getManager()->Resume();
+    getManager()->queue(thread1);
+    getManager()->urgent(thread2);
+    getManager()->resume();
 
     EXPECT_EQ(threadCnt, (size_t)2);
 }
@@ -88,18 +88,18 @@ TEST_F(ThreadManagerTest, Stop)
 {
     auto thread1 = std::make_shared<vcc::Thread>(GetLogConfig(), [](const vcc::Thread * /*thread*/){}, [](const vcc::Thread * /*thread*/) {});
     getManager()->suspend();
-    getManager()->Queue(thread1);
+    getManager()->queue(thread1);
     getManager()->stop();
-    EXPECT_TRUE(GetManager()->getThreads().empty());
-    EXPECT_TRUE(GetManager()->getActiveThreads().empty());
+    EXPECT_TRUE(getManager()->getThreads().empty());
+    EXPECT_TRUE(getManager()->getActiveThreads().empty());
 }
 
 TEST_F(ThreadManagerTest, ClearWaitingThread) 
 {
     auto thread1 = std::make_shared<vcc::Thread>(GetLogConfig(), [](const vcc::Thread * /*thread*/){}, [](const vcc::Thread * /*thread*/) {});
     getManager()->suspend();
-    getManager()->Queue(thread1);
+    getManager()->queue(thread1);
     getManager()->clearWaitingThread();
-    EXPECT_TRUE(GetManager()->getThreads().empty());
-    EXPECT_TRUE(GetManager()->getActiveThreads().empty());
+    EXPECT_TRUE(getManager()->getThreads().empty());
+    EXPECT_TRUE(getManager()->getActiveThreads().empty());
 }

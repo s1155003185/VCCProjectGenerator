@@ -131,14 +131,14 @@ void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
 
                 std::map<std::wstring, std::vector<std::wstring>> namespaceClassMapping;
                 namespaceClassMapping.insert({ currentNamespace, { action } });
-                content += GenerateCodeWithNamespace(namespaceClassMapping);
+                content += generateCodeWithNamespace(namespaceClassMapping);
                     
                 // Generate File
                 std::wstring filePathHpp = vcc::concatPaths({folderPathHpp, getActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".hpp"});
                 vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file: " + filePathHpp);
                 if (vcc::isFilePresent(filePathHpp))
                     content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::readFile(filePathHpp), VPGFileContentSyncMode::Full, L"//");
-                vcc::LTrim(content);
+                vcc::lTrim(content);
                 vcc::writeFile(filePathHpp, content, true);
                 vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file completed.");
             } else {
@@ -314,7 +314,7 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
                 content += L"\r\n"
                     + getVccTagHeaderCustomHeader(VPGCodeType::Cpp) + L"\r\n"
                     + getVccTagTailerCustomHeader(VPGCodeType::Cpp) + L"\r\n"
-                    + GenerateCodeWithNamespace(namespaceClassMapping)
+                    + generateCodeWithNamespace(namespaceClassMapping)
                     + L"\r\n"
                     + getVccTagHeaderCustomClassFunctions(VPGCodeType::Cpp, L"") + L"\r\n"
                     + getVccTagTailerCustomClassFunctions(VPGCodeType::Cpp, L"") + L"\r\n";
@@ -324,7 +324,7 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
                 vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file: " + filePathCpp);
                 if (vcc::isFilePresent(filePathCpp))
                     content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::readFile(filePathCpp), VPGFileContentSyncMode::Full, L"//");
-                vcc::LTrim(content);
+                vcc::lTrim(content);
                 vcc::writeFile(filePathCpp, content, true);
                 vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file completed.");
             } else {

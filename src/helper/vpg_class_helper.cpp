@@ -11,7 +11,7 @@ bool IsFileStartWithProjectPrefix(const std::wstring &str, const std::wstring &p
     TRY
         if (projectPrefix.empty())
             return true;
-        return vcc::IsStartWith(str, projectPrefix + L"_", 0, true);
+        return vcc::isStartWith(str, projectPrefix + L"_", 0, true);
     CATCH
     return false;
 }
@@ -21,7 +21,7 @@ bool IsClassStartWithProjectPrefix(const std::wstring &str, const std::wstring &
     TRY
         if (projectPrefix.empty())
             return true;
-        return vcc::IsStartWith(GetTypeOrClassWithoutNamespace(str), projectPrefix);
+        return vcc::isStartWith(GetTypeOrClassWithoutNamespace(str), projectPrefix);
     CATCH
     return false;
 }
@@ -29,7 +29,7 @@ bool IsClassStartWithProjectPrefix(const std::wstring &str, const std::wstring &
 bool IsPropertyClassNameValidToGenerateClass(const std::wstring &str, const std::wstring &projectPrefix)
 {
     TRY
-        return IsClassStartWithProjectPrefix(str, projectPrefix) && vcc::IsEndWith(str, propertyClassSuffix);
+        return IsClassStartWithProjectPrefix(str, projectPrefix) && vcc::isEndWith(str, propertyClassSuffix);
     CATCH
     return false;
 }
@@ -37,7 +37,7 @@ bool IsPropertyClassNameValidToGenerateClass(const std::wstring &str, const std:
 bool IsPropertyFile(const std::wstring &filePath, const std::wstring &projectPrefix)
 {
     TRY
-        return IsFileStartWithProjectPrefix(vcc::getFileName(filePath), projectPrefix) && vcc::IsEndWith(filePath, propertyClassFileSuffix);
+        return IsFileStartWithProjectPrefix(vcc::getFileName(filePath), projectPrefix) && vcc::isEndWith(filePath, propertyClassFileSuffix);
     CATCH
     return false;
 }
@@ -45,7 +45,7 @@ bool IsPropertyFile(const std::wstring &filePath, const std::wstring &projectPre
 bool IsPropertyClass(const std::wstring &className, const std::wstring &projectPrefix)
 {
     TRY
-        return IsClassStartWithProjectPrefix(className, projectPrefix) && vcc::IsEndWith(className, propertyClassSuffix);
+        return IsClassStartWithProjectPrefix(className, projectPrefix) && vcc::isEndWith(className, propertyClassSuffix);
     CATCH
     return false;
 }
@@ -105,7 +105,7 @@ std::wstring getActionFileNameWithoutExtension(const std::wstring &actionClassNa
         std::wstring currentActionClassName = getTypeOrClassWithoutNamespace(actionClassName);
         std::wstring projectPrefixLower = projectPrefix;
         vcc::ToLower(projectPrefixLower);
-        if (!vcc::IsBlank(projectPrefix) && vcc::IsStartWith(GetTypeOrClassWithoutNamespace(actionClassName), projectPrefix)) {
+        if (!vcc::IsBlank(projectPrefix) && vcc::isStartWith(GetTypeOrClassWithoutNamespace(actionClassName), projectPrefix)) {
             result += projectPrefixLower;
             currentActionClassName = currentActionClassName.substr(projectPrefix.length());
         }
@@ -123,7 +123,7 @@ std::wstring getActionFileNameWithoutExtension(const std::wstring &actionClassNa
 std::wstring getClassNameFromPropertyClassName(const std::wstring &className)
 {
     TRY
-        if (vcc::IsEndWith(className, propertyClassSuffix) && className.length() > propertyClassSuffix.length())
+        if (vcc::isEndWith(className, propertyClassSuffix) && className.length() > propertyClassSuffix.length())
             return className.substr(0, className.length() - propertyClassSuffix.length());
     CATCH
     return className;

@@ -122,7 +122,7 @@ namespace vcc
                     continue;
 
                 // for branch
-                if (IsStartWith(line, localBrachPrefix)) {
+                if (isStartWith(line, localBrachPrefix)) {
                     // Note: For non-remote git response, no commit return is L"## No commits yet on main"
                     // Note: For remote git response, no commit return is L"## main...origin/main"
                     std::wstring subLine = line.substr(localBrachPrefix.length());
@@ -130,7 +130,7 @@ namespace vcc
                     status->setBranch(subLine);
                     status->setRemoteBranch(L"");
                     continue;
-                } else if (IsStartWith(line, remoteBranchPrefix)) {
+                } else if (isStartWith(line, remoteBranchPrefix)) {
                     std::vector<std::wstring> tokens = SplitString(line.substr(remoteBranchPrefix.length()), { L"..." });
                     status->setBranch(tokens.at(0));
                     if (tokens.size() > 1)
@@ -534,7 +534,7 @@ namespace vcc
     void GitService::ParseGitLog(const std::wstring &str, std::shared_ptr<GitLog> log)
     {
         TRY
-            if (!IsStartWith(str, L"commit "))
+            if (!isStartWith(str, L"commit "))
                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"str not has prefix \"commit \"");
 
             std::vector<std::wstring> lines = SplitStringByLine(str);
@@ -544,7 +544,7 @@ namespace vcc
                     // second line is full message
                     // handle in seccod loop
                     break;
-                } else if (IsStartWith(line, hashIDPrefix)) {
+                } else if (isStartWith(line, hashIDPrefix)) {
                     std::wstring tmpLine = line.substr(hashIDPrefix.length());
                     Trim(tmpLine);
                     std::vector<std::wstring> tokens = SplitString(tmpLine, { L" " });
@@ -559,7 +559,7 @@ namespace vcc
                         if (std::regex_search(tmpLine, matches, pattern)) {
                             std::wstring tagsStr = matches[1].str();
                             Trim(tagsStr);
-                            if (IsStartWith(tagsStr, headerPrefix)) {
+                            if (isStartWith(tagsStr, headerPrefix)) {
                                 log->setIsHead(true);
                                 tagsStr = tagsStr.substr(headerPrefix.length());
                                 Trim(tagsStr);
@@ -569,7 +569,7 @@ namespace vcc
                             std::vector<std::wstring> tokens = SplitString(tagsStr, { L"," });
                             for (std::wstring token : tokens) {
                                 Trim(token);
-                                if (IsStartWith(token, tagPrefix)) {
+                                if (isStartWith(token, tagPrefix)) {
                                     token = token.substr(tagPrefix.length());
                                     Trim(token);
                                     log->insertTags(token);
@@ -579,7 +579,7 @@ namespace vcc
                             }
                         }
                     }
-                } else if (IsStartWith(line, authorPrefix)) {
+                } else if (isStartWith(line, authorPrefix)) {
                     std::wstring tmpLine = line.substr(authorPrefix.length());
                     Trim(tmpLine);
                     // name
@@ -594,12 +594,12 @@ namespace vcc
                         Trim(email);
                         log->setAuthorEmail(email);
                     }
-                } else if (IsStartWith(line, authorDatePrefix)) {
+                } else if (isStartWith(line, authorDatePrefix)) {
                     std::wstring tmpLine = line.substr(authorDatePrefix.length());
                     Trim(tmpLine);
                     log->setAuthorDate(GitService::ParseGitLogDatetime(tmpLine));
                     log->setAuthorDateStr(tmpLine);
-                } else if (IsStartWith(line, commitPrefix)) {
+                } else if (isStartWith(line, commitPrefix)) {
                     std::wstring tmpLine = line.substr(commitPrefix.length());
                     Trim(tmpLine);
                     // name
@@ -614,7 +614,7 @@ namespace vcc
                         Trim(email);
                         log->setCommitterEmail(email);
                     }
-                } else if (IsStartWith(line, commitDatePrefix)) {
+                } else if (isStartWith(line, commitDatePrefix)) {
                     std::wstring tmpLine = line.substr(commitDatePrefix.length());
                     Trim(tmpLine);
                     log->setCommitDate(GitService::ParseGitLogDatetime(tmpLine));
@@ -674,7 +674,7 @@ namespace vcc
             std::wstring currentHashID = L"";
             std::vector<std::wstring> lines = SplitStringByLine(ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git log --pretty=fuller" + getGitLogSearchCriteriaString(searchCriteria)));
             for (const std::wstring &line : lines) {
-                if (IsStartWith(line, hashIDPrefix)) {
+                if (isStartWith(line, hashIDPrefix)) {
                     if (!logDetail.empty()) {
                         ParseGitLog(logDetail, logMap.at(currentHashID));
                     }
@@ -696,7 +696,7 @@ namespace vcc
         return logs;
     }
 
-    std::shared_ptr<GitLog> GitService::GetCurrentLog(const LogConfig *logConfig, const std::wstring &workspace)
+    std::shared_ptr<GitLog> GitService::getCurrentLog(const LogConfig *logConfig, const std::wstring &workspace)
     {
         TRY
             auto searchCriteria = std::make_shared<GitLogSearchCriteria>();
@@ -716,7 +716,7 @@ namespace vcc
     //     CATCH
     // }
 
-    std::vector<std::wstring> GitService::GetTags(const LogConfig *logConfig, const std::wstring &workspace, const GitTagSearchCriteria *searchCriteria)
+    std::vector<std::wstring> GitService::getTags(const LogConfig *logConfig, const std::wstring &workspace, const GitTagSearchCriteria *searchCriteria)
     {
         std::vector<std::wstring> tags;
         TRY
@@ -737,7 +737,7 @@ namespace vcc
         return tags;
     }
 
-    // void GitService::GetTag(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName, std::shared_ptr<GitLog> log)
+    // void GitService::getTag(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName, std::shared_ptr<GitLog> log)
     // {
     //     TRY
     //         assert(!IsBlank(tagName));
@@ -759,7 +759,7 @@ namespace vcc
     //     CATCH
     // }
 
-    std::shared_ptr<GitTagCurrentTag> GitService::GetCurrentTag(const LogConfig *logConfig, const std::wstring &workspace)
+    std::shared_ptr<GitTagCurrentTag> GitService::getCurrentTag(const LogConfig *logConfig, const std::wstring &workspace)
     {
         TRY
             auto currentTag = std::make_shared<GitTagCurrentTag>();
@@ -855,7 +855,7 @@ namespace vcc
         TRY
             std::wstring tmpStr = str;
             std::wstring checkoutPrefix = L"*";
-            if (IsStartWith(tmpStr, checkoutPrefix)) {
+            if (isStartWith(tmpStr, checkoutPrefix)) {
                 branch->setIsActive(true);
                 tmpStr = tmpStr.substr(checkoutPrefix.size());
             }
@@ -877,7 +877,7 @@ namespace vcc
         CATCH
     }
 
-    // void GitService::GetCurrentBranch(const LogConfig *logConfig, const std::wstring &workspace, std::shared_ptr<GitBranch> branch)
+    // void GitService::getCurrentBranch(const LogConfig *logConfig, const std::wstring &workspace, std::shared_ptr<GitBranch> branch)
     // {
     //     TRY
     //         std::wstring str = ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git branch -v");
@@ -890,7 +890,7 @@ namespace vcc
     //     }
     //}
 
-    std::wstring GitService::GetCurrentBranchName(const LogConfig *logConfig, const std::wstring &workspace)
+    std::wstring GitService::getCurrentBranchName(const LogConfig *logConfig, const std::wstring &workspace)
     {
         TRY
             return SplitStringByLine(ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git branch --show-current"))[0];
@@ -1035,15 +1035,15 @@ namespace vcc
                     }
                     rowCount--;
                 } else {
-                    if (IsStartWith(line, filePathOldPrefix)) {
+                    if (isStartWith(line, filePathOldPrefix)) {
                         std::wstring tmpStr = line.substr(filePathOldPrefix.length());
                         Trim(tmpStr);
                         difference->setFilePathOld(tmpStr);
-                    } else if (IsStartWith(line, filePathNewPrefix)){
+                    } else if (isStartWith(line, filePathNewPrefix)){
                         std::wstring tmpStr = line.substr(filePathNewPrefix.length());
                         Trim(tmpStr);
                         difference->setFilePathNew(tmpStr);
-                    } else if (IsStartWith(line, lineCountPrefix)) {
+                    } else if (isStartWith(line, lineCountPrefix)) {
                         // sample new: @@ -1 +1,2 @@
                         // sample modify: @@ -116,10 +116,10 @@ xxxx
                         // 1. Chop to remove all @@
@@ -1062,7 +1062,7 @@ namespace vcc
 
                         std::wstring lineNumberStr = lineCountOld[0];
                         Trim(lineNumberStr);
-                        if (!(IsStartWith(lineNumberStr, L"-") && lineNumberStr.length() > 1))
+                        if (!(isStartWith(lineNumberStr, L"-") && lineNumberStr.length() > 1))
                             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
 
                         difference->insertLineNumberOld((size_t)stoi(lineNumberStr.substr(1)));
@@ -1080,7 +1080,7 @@ namespace vcc
 
                         lineNumberStr = lineCountNew[0];
                         Trim(lineNumberStr);
-                        if (!(IsStartWith(lineNumberStr, L"+") && lineNumberStr.length() > 1))
+                        if (!(isStartWith(lineNumberStr, L"+") && lineNumberStr.length() > 1))
                             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unexpected pattern: " + line);
 
                         difference->insertLineNumberNew((size_t)stoi(lineNumberStr.substr(1)));
@@ -1342,7 +1342,7 @@ namespace vcc
             if (!IsBlank(cmdResult)) {
                 auto element = std::make_shared<Config>();
                 auto reader = std::make_unique<ConfigBuilder>();
-                reader->Deserialize(cmdResult, element);
+                reader->deserialize(cmdResult, element);
                 for (auto it : element->getConfigs()) {
                     if (!element->isValue(it.first))
                         continue;
@@ -1425,7 +1425,7 @@ namespace vcc
                 auto element = std::make_shared<Config>();
                 auto reader = std::make_unique<ConfigBuilder>();
 
-                reader->Deserialize(cmdResult, element);
+                reader->deserialize(cmdResult, element);
                 for (auto it : element->getConfigs()) {
                     if (!element->isValue(it.first))
                         continue;

@@ -27,7 +27,7 @@ namespace vcc
         }\
         TRY
 
-    #define LOCK_END Unlock(); CATCH
+    #define LOCK_END unlock(); CATCH
 
     void BasePropertyAccessor::readLock() const 
     { 

@@ -42,12 +42,12 @@ class ActionManagerTest : public testing::Test
 
         void ResetWithFiveActions()
         {
-            this->_Manager->Truncate();
-            this->_Manager->DoAction(this->CreateAction(0));
-            this->_Manager->DoAction(this->CreateAction(1));
-            this->_Manager->DoAction(this->CreateAction(2));
-            this->_Manager->DoAction(this->CreateAction(3));
-            this->_Manager->DoAction(this->CreateAction(4));
+            this->_Manager->truncate();
+            this->_Manager->doAction(this->CreateAction(0));
+            this->_Manager->doAction(this->CreateAction(1));
+            this->_Manager->doAction(this->CreateAction(2));
+            this->_Manager->doAction(this->CreateAction(3));
+            this->_Manager->doAction(this->CreateAction(4));
         }
 
         void setUp() override
@@ -73,7 +73,7 @@ TEST_F(ActionManagerTest, EmptyTest)
     EXPECT_EQ(manager->getCurrentSeqNo(), -1);
     manager->Redo(2);
     EXPECT_EQ(manager->getCurrentSeqNo(), -1);
-    manager->RedoToSeqNo(2);
+    manager->redoToSeqNo(2);
     EXPECT_EQ(manager->getCurrentSeqNo(), -1);
     // Undo
     manager->Undo();
@@ -83,11 +83,11 @@ TEST_F(ActionManagerTest, EmptyTest)
     manager->UndoToSeqNo(2);
     EXPECT_EQ(manager->getCurrentSeqNo(), -1);
     // Chop
-    EXPECT_EQ(manager->ChopActionListToSize(1), -1);
+    EXPECT_EQ(manager->chopActionListToSize(1), -1);
     // Clear
     EXPECT_EQ(manager->clear(), -1);
-    // Truncate
-    EXPECT_EQ(manager->Truncate(), -1);
+    // truncate
+    EXPECT_EQ(manager->truncate(), -1);
 }
 
 TEST_F(ActionManagerTest, NegativeTest) 
@@ -97,7 +97,7 @@ TEST_F(ActionManagerTest, NegativeTest)
     // Redo
     manager->Redo(-1);
     EXPECT_EQ(manager->getCurrentSeqNo(), 4);
-    manager->RedoToSeqNo(-1);
+    manager->redoToSeqNo(-1);
     EXPECT_EQ(manager->getCurrentSeqNo(), 4);
     // Undo
     manager->Undo(-1);
@@ -106,7 +106,7 @@ TEST_F(ActionManagerTest, NegativeTest)
     EXPECT_EQ(manager->getCurrentSeqNo(), -1);
     // Chop
     this->ResetWithFiveActions();
-    EXPECT_EQ(manager->ChopActionListToSize(-1), -1);
+    EXPECT_EQ(manager->chopActionListToSize(-1), -1);
 }
 
 TEST_F(ActionManagerTest, ExceedTest) 
@@ -117,7 +117,7 @@ TEST_F(ActionManagerTest, ExceedTest)
     manager->Redo(100);
     EXPECT_EQ(manager->getCurrentSeqNo(), 4);
     this->ResetWithFiveActions();
-    manager->RedoToSeqNo(100);
+    manager->redoToSeqNo(100);
     EXPECT_EQ(manager->getCurrentSeqNo(), 4);
     // Undo
     this->ResetWithFiveActions();
@@ -128,7 +128,7 @@ TEST_F(ActionManagerTest, ExceedTest)
     EXPECT_EQ(manager->getCurrentSeqNo(), 4);
     // Chop
     this->ResetWithFiveActions();
-    EXPECT_EQ(manager->ChopActionListToSize(100), 4);
+    EXPECT_EQ(manager->chopActionListToSize(100), 4);
  }
 
 TEST_F(ActionManagerTest, RedoUndoTest) 
@@ -136,7 +136,7 @@ TEST_F(ActionManagerTest, RedoUndoTest)
     auto manager = this->getManager().get();
     // Add
     this->ResetWithFiveActions();
-    manager->DoAction(this->CreateAction(10));
+    manager->doAction(this->CreateAction(10));
     EXPECT_EQ(manager->getCurrentSeqNo(), 5);
     EXPECT_TRUE(manager->getActions().size() == 6);
     EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->getActions().at(0))->getMessage(), L"0");
@@ -162,7 +162,7 @@ TEST_F(ActionManagerTest, RedoUndoTest)
     this->ResetWithFiveActions();
     manager->Undo(2);
     EXPECT_EQ(manager->getCurrentSeqNo(), 2);
-    manager->DoAction(this->CreateAction(20));
+    manager->doAction(this->CreateAction(20));
     EXPECT_EQ(manager->getCurrentSeqNo(), 3);
     EXPECT_TRUE(manager->getActions().size() == 4);
     EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->getActions().at(0))->getMessage(), L"0");
@@ -176,14 +176,14 @@ TEST_F(ActionManagerTest, ChopTest)
     auto manager = this->getManager().get();
     // ChopWithSize
     this->ResetWithFiveActions();
-    EXPECT_EQ(manager->ChopActionListToSize(2), 4);
+    EXPECT_EQ(manager->chopActionListToSize(2), 4);
     EXPECT_TRUE(manager->getActions().size() == 2);
     int64_t firstSeqNo = manager->getFirstSeqNo();
     EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->getActions().at(firstSeqNo))->getMessage(), L"3");
     EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->getActions().at(firstSeqNo + 1))->getMessage(), L"4");
 
     this->ResetWithFiveActions();
-    EXPECT_EQ(manager->ChopActionListToSize(4), 4);
+    EXPECT_EQ(manager->chopActionListToSize(4), 4);
     EXPECT_TRUE(manager->getActions().size() == 4);
     firstSeqNo = manager->getFirstSeqNo();
     EXPECT_EQ(std::dynamic_pointer_cast<ActionManagerTestClass>(manager->getActions().at(firstSeqNo))->getMessage(), L"1");
@@ -197,22 +197,22 @@ TEST_F(ActionManagerTest, SeqNoContunusTest)
     auto manager = this->getManager().get();
     // Chop All and seq no can continus
     this->ResetWithFiveActions();
-    EXPECT_EQ(manager->ChopActionListToSize(0), -1);
+    EXPECT_EQ(manager->chopActionListToSize(0), -1);
     EXPECT_TRUE(manager->getActions().size() == 0);
-    manager->DoAction(this->CreateAction(10));
+    manager->doAction(this->CreateAction(10));
     EXPECT_EQ(manager->getCurrentSeqNo(), 5);
 
     // Clear
     this->ResetWithFiveActions();
     EXPECT_EQ(manager->clear(), -1);
     EXPECT_TRUE(manager->getActions().size() == 0);
-    manager->DoAction(this->CreateAction(10));
+    manager->doAction(this->CreateAction(10));
     EXPECT_EQ(manager->getCurrentSeqNo(), 5);
 
-    // Truncate
+    // truncate
     this->ResetWithFiveActions();
-    EXPECT_EQ(manager->Truncate(), -1);
+    EXPECT_EQ(manager->truncate(), -1);
     EXPECT_TRUE(manager->getActions().size() == 0);
-    manager->DoAction(this->CreateAction(10));
+    manager->doAction(this->CreateAction(10));
     EXPECT_EQ(manager->getCurrentSeqNo(), 0);
 }

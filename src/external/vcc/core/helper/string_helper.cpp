@@ -184,7 +184,7 @@ namespace vcc
 		return false;
 	}
 	
-	bool IsStartWith(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos, bool isIgnoreCase)
+	bool isStartWith(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos, bool isIgnoreCase)
 	{
 		TRY
 		 	if (str.length() - startFromPos < prefix.size())
@@ -194,12 +194,12 @@ namespace vcc
 		return false;
 	}
 	
-	bool IsStartWith(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &startFromPos, bool isIgnoreCase)
+	bool isStartWith(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &startFromPos, bool isIgnoreCase)
 	{
 		bool result = false;
 		TRY
 			for (auto const &prefix : prefixes) {
-				if (IsStartWith(str, prefix, startFromPos, isIgnoreCase)) {
+				if (isStartWith(str, prefix, startFromPos, isIgnoreCase)) {
 					result = true;
 					break;
 				}
@@ -208,7 +208,7 @@ namespace vcc
 		return result;
 	}
 
-	bool IsStartWithTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos)
+	bool isStartWithTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos)
 	{
 		TRY
 			std::wstring trimPrefix = std::wstring(prefix);
@@ -246,7 +246,7 @@ namespace vcc
 		return false;
 	}
 
-	bool IsEndWith(const std::wstring &str, const std::wstring &suffix)
+	bool isEndWith(const std::wstring &str, const std::wstring &suffix)
 	{
 		TRY
 			return str.ends_with(suffix);
@@ -269,13 +269,13 @@ namespace vcc
 			size_t pos = 0;
 			std::wstring currentStr = L"";
 			while (pos < str.length()) {
-				if (quotes.empty() && IsStartWith(str, delimiters, pos)) {
+				if (quotes.empty() && isStartWith(str, delimiters, pos)) {
 					results.push_back(currentStr);
 					currentStr = L"";
 
 					std::wstring currentDelimiter = L"";
 					for (auto const &delimiter : delimiters) {
-						if (IsStartWith(str, delimiter, pos)) {
+						if (isStartWith(str, delimiter, pos)) {
 							currentDelimiter = delimiter;
 							break;
 						}
@@ -289,7 +289,7 @@ namespace vcc
 					if (!quotes.empty()) {
 						if (!quoteEscapeList.empty()) {
 							std::wstring escapeChar = quoteEscapeList[quotes[quotes.size() - 1]];
-							if (!escapeChar.empty() && IsStartWith(str, escapeChar, pos)) {
+							if (!escapeChar.empty() && isStartWith(str, escapeChar, pos)) {
 								pos += escapeChar.length();
 								currentStr += escapeChar + str[pos];
 								pos++; // for escaped char
@@ -297,7 +297,7 @@ namespace vcc
 							}
 						}
 						std::wstring closeQuote = quoteCloseList[quotes[quotes.size() - 1]];
-						if (!closeQuote.empty() && IsStartWith(str, closeQuote, pos)) {
+						if (!closeQuote.empty() && isStartWith(str, closeQuote, pos)) {
 							pos += closeQuote.length();
 							currentStr += closeQuote;
 							quotes.pop_back();
@@ -307,7 +307,7 @@ namespace vcc
 					std::wstring currentQuoteOpen = L"";
 					for (size_t i = 0; i < quoteOpenList.size(); i++) {
 						std::wstring quoteOpen = quoteOpenList[i];
-						if (IsStartWith(str, quoteOpen, pos)) {
+						if (isStartWith(str, quoteOpen, pos)) {
 							currentQuoteOpen = quoteOpen;
 							quotes.push_back(i);
 							break;
@@ -355,7 +355,7 @@ namespace vcc
 					if (!quotes.empty()) {
 						if (!quoteEscapeList.empty()) {
 							std::wstring escapeChar = quoteEscapeList[quotes[quotes.size() - 1]];
-							if (!escapeChar.empty() && IsStartWith(str, escapeChar, pos)) {
+							if (!escapeChar.empty() && isStartWith(str, escapeChar, pos)) {
 								pos += escapeChar.length();
 								currentStr += escapeChar + str[pos];
 								pos++; // for escaped char
@@ -363,7 +363,7 @@ namespace vcc
 							}
 						}
 						std::wstring closeQuote = quoteCloseList[quotes[quotes.size() - 1]];
-						if (!closeQuote.empty() && IsStartWith(str, closeQuote, pos)) {
+						if (!closeQuote.empty() && isStartWith(str, closeQuote, pos)) {
 							pos += closeQuote.length();
 							currentStr += closeQuote;
 							quotes.pop_back();
@@ -373,7 +373,7 @@ namespace vcc
 					std::wstring currentQuoteOpen = L"";
 					for (size_t i = 0; i < quoteOpenList.size(); i++) {
 						std::wstring quoteOpen = quoteOpenList[i];
-						if (IsStartWith(str, quoteOpen, pos)) {
+						if (isStartWith(str, quoteOpen, pos)) {
 							currentQuoteOpen = quoteOpen;
 							quotes.push_back(i);
 							break;
@@ -477,7 +477,7 @@ namespace vcc
 		return L"";
 	}
 
-	void LTrim(std::string &str)
+	void lTrim(std::string &str)
 	{
 		TRY
 			str.erase(str.begin(), std::find_if(str.begin(), str.end(), [](char c) {
@@ -486,7 +486,7 @@ namespace vcc
 		CATCH
 	}
 
-	void RTrim(std::string &str)
+	void rTrim(std::string &str)
 	{
 		TRY
 			str	.erase(std::find_if(str.rbegin(), str.rend(), [](char c) {
@@ -498,12 +498,12 @@ namespace vcc
 	void Trim(std::string &str)
 	{
 		TRY
-			LTrim(str);
-			RTrim(str);
+			lTrim(str);
+			rTrim(str);
 		CATCH
 	}
 
-	void LTrim(std::wstring &str)
+	void lTrim(std::wstring &str)
 	{
 		TRY
 			str.erase(str.begin(), std::find_if(str.begin(), str.end(), [](wchar_t c) {
@@ -512,7 +512,7 @@ namespace vcc
 		CATCH
 	}
 
-	void RTrim(std::wstring &str)
+	void rTrim(std::wstring &str)
 	{
 		TRY
 			str.erase(std::find_if(str.rbegin(), str.rend(), [](wchar_t c) {
@@ -524,8 +524,8 @@ namespace vcc
 	void Trim(std::wstring &str)
 	{
 		TRY
-			LTrim(str);
-			RTrim(str);
+			lTrim(str);
+			rTrim(str);
 		CATCH
 	}
 
@@ -732,7 +732,7 @@ namespace vcc
 			size_t startPos = pos;
 			std::vector<size_t> quotes;
 			while (pos < str.length()) {
-				if (quotes.empty() && IsStartWith(str, delimiters, pos)) {
+				if (quotes.empty() && isStartWith(str, delimiters, pos)) {
 					break;
 				} else {
 					// 1. if have quotes, check if it is escape chars
@@ -742,14 +742,14 @@ namespace vcc
 					if (!quotes.empty()) {
 						if (!quoteEscapeList.empty()) {
 							std::wstring escapeChar = quoteEscapeList[quotes[quotes.size() - 1]];
-							if (!escapeChar.empty() && IsStartWith(str, escapeChar, pos)) {
+							if (!escapeChar.empty() && isStartWith(str, escapeChar, pos)) {
 								pos += escapeChar.length();
 								pos++; // for escaped char
 								continue;
 							}
 						}
 						std::wstring closeQuote = quoteCloseList[quotes[quotes.size() - 1]];
-						if (!closeQuote.empty() && IsStartWith(str, closeQuote, pos)) {
+						if (!closeQuote.empty() && isStartWith(str, closeQuote, pos)) {
 							pos += closeQuote.length();
 							quotes.pop_back();
 							continue;
@@ -758,7 +758,7 @@ namespace vcc
 					std::wstring currentQuoteOpen = L"";
 					for (size_t i = 0; i < quoteOpenList.size(); i++) {
 						std::wstring quoteOpen = quoteOpenList[i];
-						if (IsStartWith(str, quoteOpen, pos)) {
+						if (isStartWith(str, quoteOpen, pos)) {
 							currentQuoteOpen = quoteOpen;
 							quotes.push_back(i);
 							break;
@@ -795,7 +795,7 @@ namespace vcc
 				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Quote Open does not contained String Open List.");
 
 			size_t startPos = pos;
-			if (IsStartWith(str, quoteOpenList, pos)) {
+			if (isStartWith(str, quoteOpenList, pos)) {
 				std::vector<size_t> quotes;
 				bool isInString = false;
 				while (pos < str.length()) {
@@ -809,14 +809,14 @@ namespace vcc
 					if (!quotes.empty()) {
 						if (!quoteEscapeList.empty()) {
 							std::wstring escapeChar = quoteEscapeList[quotes[quotes.size() - 1]];
-							if (!escapeChar.empty() && IsStartWith(str, escapeChar, pos)) {
+							if (!escapeChar.empty() && isStartWith(str, escapeChar, pos)) {
 								pos += escapeChar.length();
 								pos++; // for escaped char
 								continue;
 							}
 						}
 						std::wstring closeQuote = quoteCloseList[quotes[quotes.size() - 1]];
-						if (!closeQuote.empty() && IsStartWith(str, closeQuote, pos)) {
+						if (!closeQuote.empty() && isStartWith(str, closeQuote, pos)) {
 							pos += closeQuote.length();
 							quotes.pop_back();
 							isInString = false;
@@ -829,13 +829,13 @@ namespace vcc
 					if (!isInString) {
 						for (size_t i = 0; i < quoteOpenList.size(); i++) {
 							std::wstring quoteOpen = quoteOpenList[i];
-							if (IsStartWith(str, quoteOpen, pos)) {
+							if (isStartWith(str, quoteOpen, pos)) {
 								currentQuoteOpen = quoteOpen;
 								quotes.push_back(i);
 	
 								for (size_t i = 0; i < stringOpenList.size(); i++) {
 									std::wstring quoteOpen = stringOpenList[i];
-									if (IsStartWith(str, quoteOpen, pos)) {
+									if (isStartWith(str, quoteOpen, pos)) {
 										isInString = true;
 										break;
 									}
@@ -854,7 +854,7 @@ namespace vcc
 			} else {
 				// check if string is quoted. If not, return string end with special char
 				while (pos < str.length()) {
-					if (IsStartWith(str, delimiters, pos))
+					if (isStartWith(str, delimiters, pos))
 						break;
 					pos++;
 				}

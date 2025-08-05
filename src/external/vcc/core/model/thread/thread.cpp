@@ -10,17 +10,17 @@
 
 namespace vcc
 {
-    const ThreadManager *Thread::GetManager() const
+    const ThreadManager *Thread::getManager() const
     {
         return _Manager;
     }
 
-    void Thread::SetManager(const ThreadManager *manager) const
+    void Thread::setManager(const ThreadManager *manager) const
     {
         _Manager = manager;
     }
 
-    std::wstring Thread::GetPid() const
+    std::wstring Thread::getPid() const
     {
         return ToString(_Pid);
     }
@@ -45,7 +45,7 @@ namespace vcc
                 _Callback(this);
 
             if (_Manager)
-                _Manager->Trigger();
+                _Manager->trigger();
         CATCH
     }
 };

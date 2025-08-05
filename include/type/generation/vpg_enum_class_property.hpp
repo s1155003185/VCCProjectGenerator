@@ -20,7 +20,7 @@ enum class VPGEnumClassAttributeProperty
     , Type2 // GETSET(std::wstring, Type2, L"")
     , IsType2Custom // GETCUSTOM(bool, IsType2Custom, return vcc::IsCapital(vcc::SplitString(GetType2(), {L"::"}).back());)
     , PropertyName // GETSET(std::wstring, PropertyName, L"");
-    , validate // GETSET(std::wstring, validate, L"")
+    , Validate // GETSET(std::wstring, validate, L"")
     , DefaultValue // GETCUSTOM(std::wstring, DefaultValue, if (_InitializeProperties.empty()) return _DefaultValue; return vcc::concat(_InitializeProperties, L", ");) SETCUSTOM(DefaultValue, std::wstring, _DefaultValue = value;)
     , Command // GETSET(std::wstring, Command, L"")
     
@@ -28,12 +28,12 @@ enum class VPGEnumClassAttributeProperty
     , IsGeneralType // GETCUSTOM(bool, IsGeneralType, return !GetIsCollection();)
     , IsCustom // GETCUSTOM(bool, IsCustom, return vcc::isContain(getMacro(), L"(") ? vcc::isContain(_Macro.substr(0, _Macro.find(L"(")), L"CUSTOM") : false;)
     , IsObject // GETCUSTOM(bool, IsObject, return vcc::isContain(getMacro(), L"(") ? vcc::isContain(_Macro.substr(0, _Macro.find(L"(")), L"_SPTR") : false;)
-    , IsVector // GETCUSTOM(bool, IsVector, return vcc::IsStartWith(_Macro, L"VECTOR");)
-    , IsMap // GETCUSTOM(bool, IsMap, return vcc::IsStartWith(_Macro, L"MAP");)
-    , IsOrderedMap // GETCUSTOM(bool, IsOrderedMap, return vcc::IsStartWith(_Macro, L"ORDERED_MAP");)
+    , IsVector // GETCUSTOM(bool, IsVector, return vcc::isStartWith(_Macro, L"VECTOR");)
+    , IsMap // GETCUSTOM(bool, IsMap, return vcc::isStartWith(_Macro, L"MAP");)
+    , IsOrderedMap // GETCUSTOM(bool, IsOrderedMap, return vcc::isStartWith(_Macro, L"ORDERED_MAP");)
     , IsSet // GETCUSTOM(bool, IsSet, return vcc::isContain(std::vector<VPGEnumClassMacroType>{ VPGEnumClassMacroType::Set, VPGEnumClassMacroType::SetSptr, VPGEnumClassMacroType::SetValidate, VPGEnumClassMacroType::SetValidateSptr }, _MacroType);)
-    , IsAction // GETCUSTOM(bool, IsAction, return vcc::IsStartWith(_Macro, L"ACTION");)
-    , IsManager // GETCUSTOM(bool, IsManager, return vcc::IsStartWith(_Macro, L"MANAGER");)
+    , IsAction // GETCUSTOM(bool, IsAction, return vcc::isStartWith(_Macro, L"ACTION");)
+    , IsManager // GETCUSTOM(bool, IsManager, return vcc::isStartWith(_Macro, L"MANAGER");)
     , IsCollection // GETCUSTOM(bool, IsCollection, return getIsVector() || getIsMap() || getIsOrderedMap() || getIsSet();)
     , IsHavingValidate // GETCUSTOM(bool, IsHavingValidate, return vcc::isContain(getMacro(), L"(") ? vcc::isContain(_Macro.substr(0, _Macro.find(L"(")), L"VALIDATE") : false;)
 

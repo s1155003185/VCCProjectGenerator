@@ -41,7 +41,7 @@ class VPGEnumClassReader
         void _parseProperties(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass) const;
         bool _parseClass(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass) const;
 
-        void ParseCustom(const std::wstring &cppCode, const std::wstring &currentNamespace, std::vector<std::shared_ptr<VPGEnumClass>> &results) const;
+        void parseCustom(const std::wstring &cppCode, const std::wstring &currentNamespace, std::vector<std::shared_ptr<VPGEnumClass>> &results) const;
     public:
         VPGEnumClassReader() = default;
         VPGEnumClassReader(const std::set<std::wstring> &classMacroList);

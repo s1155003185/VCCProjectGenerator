@@ -97,11 +97,11 @@ namespace vcc
             std::vector<std::wstring> srcFileList, tarFileList;
             TRY
                 for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(!sourceWorkspace.empty() ? sourceWorkspace : L".")))
-                    srcFileList.push_back(GetRelativePath(filePath.path().wstring(), sourceWorkspace));
+                    srcFileList.push_back(getRelativePath(filePath.path().wstring(), sourceWorkspace));
             CATCH
             TRY
                 for (auto &filePath : std::filesystem::recursive_directory_iterator(PATH(!targetWorkspace.empty() ? targetWorkspace : L".")))
-                    tarFileList.push_back(GetRelativePath(filePath.path().wstring(),targetWorkspace));
+                    tarFileList.push_back(getRelativePath(filePath.path().wstring(),targetWorkspace));
             CATCH
 
             std::sort(srcFileList.begin(), srcFileList.end());
@@ -166,7 +166,7 @@ namespace vcc
 	bool isPathMatchFileFilter(const std::wstring &filePath, const std::wstring &fileFilter)
     {
         TRY
-            return std::regex_match(GetLinuxPath(filePath), std::wregex(GetRegexFromFileFilter(GetLinuxPath(fileFilter))));
+            return std::regex_match(getLinuxPath(filePath), std::wregex(getRegexFromFileFilter(getLinuxPath(fileFilter))));
         CATCH
         return false;
     }
@@ -178,9 +178,9 @@ namespace vcc
         TRY
             std::vector<std::wstring> regexFilters;
             for (auto const &str: fileFilters) {
-                regexFilters.push_back(GetRegexFromFileFilter(GetLinuxPath(str)));
+                regexFilters.push_back(getRegexFromFileFilter(getLinuxPath(str)));
             }
-            return std::regex_match(GetLinuxPath(filePath), std::wregex(concat(regexFilters, L"|")));
+            return std::regex_match(getLinuxPath(filePath), std::wregex(concat(regexFilters, L"|")));
         CATCH
         return false;
     }

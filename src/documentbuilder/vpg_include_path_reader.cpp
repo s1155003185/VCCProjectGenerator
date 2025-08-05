@@ -8,7 +8,7 @@ size_t VPGIncludePathReader::IsQuote(const std::wstring &cppCode, const size_t &
     TRY
         size_t index = 0;
         for (auto const &quote : _OpenQuotes) {
-            if (vcc::IsStartWith(cppCode, quote, pos))
+            if (vcc::isStartWith(cppCode, quote, pos))
                 return index;
             index++;
         }
@@ -21,7 +21,7 @@ size_t VPGIncludePathReader::isCommand(const std::wstring &cppCode, const size_t
     TRY
         size_t index = 0;
         for (auto const &quote : _OpenCommands) {
-            if (vcc::IsStartWith(cppCode, quote, pos))
+            if (vcc::isStartWith(cppCode, quote, pos))
                 return index;
             index++;
         }
@@ -40,7 +40,7 @@ size_t VPGIncludePathReader::SkipCommand(const std::wstring &cppCode, const size
     return false;
 }
 
-void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::wstring &currentNamespace, std::set<std::wstring> &classList) const
+void VPGIncludePathReader::parseCustom(const std::wstring &cppCode, const std::wstring &currentNamespace, std::set<std::wstring> &classList) const
 {
     if (cppCode.empty())
         return;
@@ -63,7 +63,7 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
                         vcc::Trim(quoteStr);
                         if (!quoteStr.empty()) {
                             std::set<std::wstring> tmpClassList;
-                            ParseCustom(quoteStr.substr(1, quoteStr.length() - 2), nextToken, tmpClassList);
+                            parseCustom(quoteStr.substr(1, quoteStr.length() - 2), nextToken, tmpClassList);
                             if (!currentNamespace.empty()) {
                                 for (auto const &tmpClass : tmpClassList)
                                     classList.insert(currentNamespace + L"::" + tmpClass);
@@ -146,7 +146,7 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
 //             return;
 
 //         startCommandPos += token.length();
-//         ParseCustom(cppCode.substr(startCommandPos, endCommandPos - startCommandPos), L"", classList);       
+//         parseCustom(cppCode.substr(startCommandPos, endCommandPos - startCommandPos), L"", classList);       
 //     }
 // }
 
@@ -158,7 +158,7 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
 //         std::wstring tmpCode = cppCode;
 //         ReplaceAll(tmpCode, L"_STD_BEGIN", L"namespace std {");
 //         ReplaceAll(tmpCode, L"_STD_END", L"}");
-//         ParseCustom(tmpCode, L"", classList);  
+//         parseCustom(tmpCode, L"", classList);  
 //     }
 // }
 
@@ -168,7 +168,7 @@ void VPGIncludePathReader::parse(const vcc::PlatformType &platformType, const st
         switch (platformType)
         {
         case vcc::PlatformType::NA:
-            ParseCustom(cppCode, L"", classList);
+            parseCustom(cppCode, L"", classList);
             break;
         // case vcc::PlatformType::Linux:
         //     ParseLinux(cppCode, classList);

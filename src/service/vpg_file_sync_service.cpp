@@ -75,7 +75,7 @@ VPGFileContentSyncMode VPGFileSyncService::GetSyncMode(const VPGFileContentSyncT
     return VPGFileContentSyncMode::NA;
 }
 
-const vcc::Xml *VPGFileSyncService::GetTagFromCode(const vcc::Xml *code, const std::wstring tagName)
+const vcc::Xml *VPGFileSyncService::getTagFromCode(const vcc::Xml *code, const std::wstring tagName)
 {
     TRY
         for (size_t i = 0; i < code->getChildren().size(); i++) {
@@ -173,8 +173,8 @@ std::wstring VPGFileSyncService::GenerateFullCode(const VPGFileContentSyncTagMod
         for (std::shared_ptr<vcc::Xml> child : updatedCode->getChildren()) {
             if (!shouldSkip) {
                 // if find tag then search tag in source, if reserve, then use source
-                if (vcc::IsStartWith(child->getName(), L"vcc:")) {
-                    const vcc::Xml *originalCodeTag = VPGFileSyncService::GetTagFromCode(originalCode, child->getName());
+                if (vcc::isStartWith(child->getName(), L"vcc:")) {
+                    const vcc::Xml *originalCodeTag = VPGFileSyncService::getTagFromCode(originalCode, child->getName());
                     if (originalCodeTag != nullptr && VPGFileSyncService::IsTagReserve(mode, originalCodeTag)) {
                         result += originalCodeTag->getFullText();
                     } else
@@ -205,8 +205,8 @@ std::wstring VPGFileSyncService::GenerateDemandCode(const VPGFileContentSyncTagM
         for (std::shared_ptr<vcc::Xml> child : originalCode->getChildren()) {
             if (!shouldSkip) {
                 // if find tag then search tag in source, if reserve, then use source
-                if (vcc::IsStartWith(child->getName(), L"vcc:")) {
-                    const vcc::Xml *updatedCodeTag = VPGFileSyncService::GetTagFromCode(updatedCode, child->getName());
+                if (vcc::isStartWith(child->getName(), L"vcc:")) {
+                    const vcc::Xml *updatedCodeTag = VPGFileSyncService::getTagFromCode(updatedCode, child->getName());
                     if (updatedCodeTag != nullptr && VPGFileSyncService::IsTagReplace(mode, child.get())) {
                         result += updatedCodeTag->getFullText();
                     } else
@@ -233,8 +233,8 @@ std::wstring VPGFileSyncService::SyncFileContent(const VPGFileContentSyncTagMode
         std::unique_ptr<VPGCodeReader> reader = std::make_unique<VPGCodeReader>(commandDelimiter);
         auto updatedCodeElement = std::make_shared<vcc::Xml>();
         auto originalCodeElement = std::make_shared<vcc::Xml>();
-        reader->Deserialize(updatedCode, updatedCodeElement);
-        reader->Deserialize(originalCode, originalCodeElement);
+        reader->deserialize(updatedCode, updatedCodeElement);
+        reader->deserialize(originalCode, originalCodeElement);
 
         VPGFileContentSyncMode updatedCodeSyncMode = getSyncMode(mode, updatedCodeElement.get());
         VPGFileContentSyncMode originalCodeSyncMode = getSyncMode(mode, originalCodeElement.get());

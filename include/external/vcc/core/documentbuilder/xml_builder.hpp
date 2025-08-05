@@ -36,8 +36,8 @@ namespace vcc
             virtual void ParseXMLTag(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const;
             virtual void ParseXml(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const;
 
-            virtual std::wstring Serialize(const IDocument *doc) const  override;
-            virtual void Deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc) const override;
-            virtual void Deserialize(const std::wstring &str, std::shared_ptr<IDocument> doc) const override;
+            virtual std::wstring serialize(const IDocument *doc) const  override;
+            virtual void deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc) const override;
+            virtual void deserialize(const std::wstring &str, std::shared_ptr<IDocument> doc) const override;
     };
 }

@@ -273,7 +273,7 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const vcc::LogConfig *log
                 namespaceClassMapping.insert(std::make_pair(namespaceName, std::vector<std::wstring>{ code }));
             }
         }
-        result += GenerateCodeWithNamespace(namespaceClassMapping);
+        result += generateCodeWithNamespace(namespaceClassMapping);
 
         vcc::writeFile(filePathHpp, result, true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor hpp completed.");
@@ -1114,7 +1114,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const vcc::LogConfig *log
             }
         }
         if (count > 0) {
-            vcc::writeFile(filePathCpp, result + GenerateCodeWithNamespace(namespaceClassMapping), true);
+            vcc::writeFile(filePathCpp, result + generateCodeWithNamespace(namespaceClassMapping), true);
             vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor cpp completed.");
         } else {
             if (vcc::isFilePresent(filePathCpp)) {

@@ -15,7 +15,7 @@ TEST(ThreadServiceTest, Join)
         }, [](const vcc::Thread* /*thread*/) {
             std::wcout << L"ThreadServiceTest::Join Complete!" << std::endl;
         });
-    vcc::ThreadService::Join(thread);
+    vcc::ThreadService::join(thread);
 }
 
 TEST(ThreadServiceTest, Detach)
@@ -27,5 +27,5 @@ TEST(ThreadServiceTest, Detach)
         }, [](const vcc::Thread* /*thread*/) {
             std::wcout << L"ThreadServiceTest::Detach Complete!" << std::endl;
         });
-    vcc::ThreadService::Detach(thread);
+    vcc::ThreadService::detach(thread);
 }

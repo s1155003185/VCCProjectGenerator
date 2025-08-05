@@ -47,7 +47,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFil
         functionMap.insert(std::make_pair(L"ApplicationUndoFormActionToSeqNo", L"DLLEXPORT void ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo);\r\n"));
 
         functionMap.insert(std::make_pair(L"ApplicationClearFormAction", L"DLLEXPORT int64_t ApplicationClearFormAction(void *form);\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationTruncateFormAction", L"DLLEXPORT int64_t ApplicationTruncateFormAction(void *form);\r\n"));
+        functionMap.insert(std::make_pair(L"ApplicationtruncateFormAction", L"DLLEXPORT int64_t ApplicationtruncateFormAction(void *form);\r\n"));
 
         // Close Form
         functionMap.insert(std::make_pair(L"ApplicationIsFormClosable", L"DLLEXPORT bool ApplicationIsFormClosable(void *form);\r\n"));
@@ -57,7 +57,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationHpp(const VPGDllFil
         for (auto const &action : functionMap) {
             std::vector<std::wstring> lines = vcc::SplitStringByLine(action.second);
             for (auto &line : lines) {
-                vcc::RTrim(line);
+                vcc::rTrim(line);
                 result += line + L"\r\n";
             }
         }
@@ -223,11 +223,11 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             "    CATCH\r\n"
             "    return -1;\r\n"
             "}\r\n"));
-        functionMap.insert(std::make_pair(L"ApplicationTruncateFormAction",
-            L"int64_t ApplicationTruncateFormAction(void *form)\r\n"
+        functionMap.insert(std::make_pair(L"ApplicationtruncateFormAction",
+            L"int64_t ApplicationtruncateFormAction(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::TruncateFormAction(static_cast<vcc::IObject *>(form));\r\n"
+            "        return Application::truncateFormAction(static_cast<vcc::IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return -1;\r\n"
             "}\r\n"));
@@ -262,7 +262,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             std::vector<std::wstring> lines = vcc::SplitStringByLine(action.second);
             result += L"\r\n";
             for (auto &line : lines) {
-                vcc::RTrim(line);
+                vcc::rTrim(line);
                 result += line + L"\r\n";
             }
         }

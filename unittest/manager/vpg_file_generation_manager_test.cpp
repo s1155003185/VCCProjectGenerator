@@ -94,16 +94,16 @@ class VPGFileGenerationManagerTest : public testing::Test
 TEST_F(VPGFileGenerationManagerTest, getFileList)
 {
     std::map<std::wstring, std::wstring> classList, enumList;
-    VPGGlobal::GetFileGenerationManager()->getFileList(VPGGlobal::GetEnumClassReader().get(), this->getWorkspaceSource(), L"", false);
-    EXPECT_TRUE(VPGGlobal::GetFileGenerationManager()->getIncludeFiles().at(L"VCCObject") == L"vcc_a.hpp");
-    EXPECT_TRUE(VPGGlobal::GetFileGenerationManager()->getIncludeFiles().at(L"VCCObjectPtr") == L"vcc_a.hpp");
-    EXPECT_TRUE(VPGGlobal::GetFileGenerationManager()->getIncludeFiles().at(L"VCCObjectProperty") == L"vcc_a_property.hpp");
-    EXPECT_TRUE(VPGGlobal::GetFileGenerationManager()->getIncludeFiles().at(L"VCCObjectPtrProperty") == L"vcc_a_property.hpp");
+    VPGGlobal::getFileGenerationManager()->getFileList(VPGGlobal::getEnumClassReader().get(), this->getWorkspaceSource(), L"", false);
+    EXPECT_TRUE(VPGGlobal::getFileGenerationManager()->getIncludeFiles().at(L"VCCObject") == L"vcc_a.hpp");
+    EXPECT_TRUE(VPGGlobal::getFileGenerationManager()->getIncludeFiles().at(L"VCCObjectPtr") == L"vcc_a.hpp");
+    EXPECT_TRUE(VPGGlobal::getFileGenerationManager()->getIncludeFiles().at(L"VCCObjectProperty") == L"vcc_a_property.hpp");
+    EXPECT_TRUE(VPGGlobal::getFileGenerationManager()->getIncludeFiles().at(L"VCCObjectPtrProperty") == L"vcc_a_property.hpp");
 }
 
 TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
 {
-    VPGGlobal::GetFileGenerationManager()->setWorkspace(L"");
+    VPGGlobal::getFileGenerationManager()->setWorkspace(L"");
     VPGConfig option;
     option.SetProjectPrefix(L"VCC");
     option.GetTemplate()->setWorkspace(L"");
@@ -122,7 +122,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     option.GetOutput()->setPropertyAccessorFactoryDirectoryHpp(this->getWorkspaceTarget());
     option.GetOutput()->setPropertyAccessorFactoryDirectoryCpp(this->getWorkspaceTarget());
 
-    VPGGlobal::GetFileGenerationManager()->gernerateProperty(this->getLogConfig().get(), &option);
+    VPGGlobal::getFileGenerationManager()->generateProperty(this->getLogConfig().get(), &option);
 
     // ------------------------------------------------------------------------------------------ //
     //                                      Object Type File                                      //

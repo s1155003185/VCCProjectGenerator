@@ -145,7 +145,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "    void WriteObject(Pointer ref, long property, Pointer value);\r\n"
         "    void WriteObjectAtIndex(Pointer ref, long property, Pointer value, long index);\r\n"
         "    void WriteObjectAtKey(Pointer ref, long property, Pointer value, Pointer key);\r\n"
-        "    Pointer AddObjectAtIndex(Pointer ref, long property, long objectType, long index);\r\n"
+        "    Pointer addObjectAtIndex(Pointer ref, long property, long objectType, long index);\r\n"
         "    void insertObjectAtIndex(Pointer ref, long property, Pointer value, long index);\r\n"
         "    long getCount(Pointer ref, long property);\r\n"
         "    Pointer getMapKeys(Pointer ref, long property);\r\n"
@@ -162,8 +162,8 @@ void validateGenerateEnum(const VPGJavaGenerationServiceTest *test, const std::w
 {
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList1;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList2;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass1, enumClassList1);
-    VPGGlobal::GetEnumClassReader()->parse(enumClass2, enumClassList2);
+    VPGGlobal::getEnumClassReader()->parse(enumClass1, enumClassList1);
+    VPGGlobal::getEnumClassReader()->parse(enumClass2, enumClassList2);
 
     std::wstring filePath1 = vcc::concatPaths({test->getWorkspace(), test->getJavaOption()->getTypeDirectory(), L"VPGTypeA.java"});
     std::wstring filePath2 = vcc::concatPaths({test->getWorkspace(), test->getJavaOption()->getTypeDirectory(), L"VPGTypeBProperty.java"});
@@ -284,7 +284,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum_Namespace)
 void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std::wstring &code)
 {
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(code, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(code, enumClassList);
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMap;
     std::wstring filePath = vcc::concatPaths({test->getWorkspace(), test->getJavaOption()->getObjectDirectory(), L"VPGTypeB.java"});
@@ -561,7 +561,7 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    }\r\n"
         "\r\n"
         "    public VPGTypeB addVectorObjectAtIndex(long index) {\r\n"
-        "        return new VPGTypeB(VPGDllFunctions.Instance.AddObjectAtIndex(Handle, VPGTypeBProperty.VectorObject.getValue(), VPGObjectType.TypeB.getValue(), index));\r\n"
+        "        return new VPGTypeB(VPGDllFunctions.Instance.addObjectAtIndex(Handle, VPGTypeBProperty.VectorObject.getValue(), VPGObjectType.TypeB.getValue(), index));\r\n"
         "    }\r\n"
         "\r\n"
         "    public void insertVectorObject(VPGTypeB value) {\r\n"
@@ -742,7 +742,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
     typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));
@@ -818,7 +818,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
         "    }\r\n"
         "\r\n"
         "    public long truncateAction() {\r\n"
-        "        return VPGDllFunctions.Instance.ApplicationTruncateFormAction(Handle);\r\n"
+        "        return VPGDllFunctions.Instance.ApplicationtruncateFormAction(Handle);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void undo(long noOfStep) {\r\n"
@@ -842,7 +842,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateResult)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
     typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));

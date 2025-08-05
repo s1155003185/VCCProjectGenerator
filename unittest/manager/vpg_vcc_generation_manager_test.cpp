@@ -55,24 +55,24 @@ class VPGVccGenerationManagerTest : public testing::Test
             // Cannot use current project as time consumming
             CopyDirectoryOption dirOption;
             dirOption.SetIsRecursive(false);
-            dirOption.SetIsForce(true);
+            dirOption.setIsForce(true);
             copyDirectory(L".", this->getWorkspaceSource(), &dirOption);
 
             dirOption.SetIsRecursive(true);
-            dirOption.SetIsForce(true);
-            dirOption.InsertIncludeFileFilters(L".vscode/*");
-            dirOption.InsertIncludeFileFilters(L"include/application.hpp");
-            dirOption.InsertIncludeFileFilters(L"include/external/vcc/*");
-            dirOption.InsertIncludeFileFilters(L"include/factory/*.hpp");
-            dirOption.InsertIncludeFileFilters(L"include/type/*_type.hpp");
-            dirOption.InsertIncludeFileFilters(L"src/application.cpp");
-            dirOption.InsertIncludeFileFilters(L"src/factory/*.cpp");
-            dirOption.InsertIncludeFileFilters(L"src/external/vcc/*");
-            dirOption.InsertIncludeFileFilters(L"unittest/external/vcc/*");
-            dirOption.InsertIncludeFileFilters(L"unittest/dllTest/*");
-            dirOption.InsertIncludeFileFilters(L"unittest/gtest_main.cpp");
-            dirOption.InsertIncludeFileFilters(L"*Makefile");
-            dirOption.InsertIncludeFileFilters(L"*README.md");
+            dirOption.setIsForce(true);
+            dirOption.insertIncludeFileFilters(L".vscode/*");
+            dirOption.insertIncludeFileFilters(L"include/application.hpp");
+            dirOption.insertIncludeFileFilters(L"include/external/vcc/*");
+            dirOption.insertIncludeFileFilters(L"include/factory/*.hpp");
+            dirOption.insertIncludeFileFilters(L"include/type/*_type.hpp");
+            dirOption.insertIncludeFileFilters(L"src/application.cpp");
+            dirOption.insertIncludeFileFilters(L"src/factory/*.cpp");
+            dirOption.insertIncludeFileFilters(L"src/external/vcc/*");
+            dirOption.insertIncludeFileFilters(L"unittest/external/vcc/*");
+            dirOption.insertIncludeFileFilters(L"unittest/dllTest/*");
+            dirOption.insertIncludeFileFilters(L"unittest/gtest_main.cpp");
+            dirOption.insertIncludeFileFilters(L"*Makefile");
+            dirOption.insertIncludeFileFilters(L"*README.md");
 
             dirOption.InsertExcludeFileFilters(L"*.o");
 
@@ -400,7 +400,7 @@ TEST_F(VPGVccGenerationManagerTest, Update_Makefile)
 
     std::wstring vccJsonFileContent = readFile(concatPaths({this->getWorkspaceTarget(), L".vcc/vcc.json"}));
     auto json = std::make_shared<vcc::Json>();
-    jsonBuilder->Deserialize(vccJsonFileContent, json);
+    jsonBuilder->deserialize(vccJsonFileContent, json);
     json->setString(L"ProjectName", projectName);
     json->setString(L"ProjectNameDll", projectNameDll);
     json->setString(L"ProjectNameExe", projectNameExe);

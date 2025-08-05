@@ -116,7 +116,7 @@ TEST_F(FileHelperTest, CopyDirectoryWithIncludeFilter)
     vcc::appendFileOneLine(vcc::concatPaths({this->getWorkspaceSource(), L"FolderA", L"FileA.txt"}), L"File A", true);
     vcc::CopyDirectoryOption option;
     option.SetIsRecursive(true);
-    option.InsertIncludeFileFilters(L"*FileA*");
+    option.insertIncludeFileFilters(L"*FileA*");
     copyDirectory(this->getWorkspaceSource(), this->getWorkspaceTarget(), &option);
     EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileA.txt"})));
     EXPECT_FALSE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileC.txt"})));

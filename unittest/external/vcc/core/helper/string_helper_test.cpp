@@ -9,17 +9,17 @@
 /* ---------------------------------------------------------------------------------------------------- */
 /*                                      Has Prefix                                                      */
 /* ---------------------------------------------------------------------------------------------------- */
-TEST(StringHelperTest, IsStartWithTrimSpace_NoSpace)
+TEST(StringHelperTest, isStartWithTrimSpace_NoSpace)
 {
     std::wstring prefix = L"a<vcc:abc";
-    EXPECT_TRUE(vcc::IsStartWithTrimSpace(prefix, prefix));
+    EXPECT_TRUE(vcc::isStartWithTrimSpace(prefix, prefix));
 }
 
-TEST(StringHelperTest, IsStartWithTrimSpace_Space)
+TEST(StringHelperTest, isStartWithTrimSpace_Space)
 {
     std::wstring prefix = L"a<vcc:abc";
     std::wstring text = L"a <vcc:abc";
-    EXPECT_TRUE(vcc::IsStartWithTrimSpace(text, prefix));
+    EXPECT_TRUE(vcc::isStartWithTrimSpace(text, prefix));
 }
 
 /* ---------------------------------------------------------------------------------------------------- */

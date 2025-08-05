@@ -163,7 +163,7 @@ std::shared_ptr<vcc::IResult> VPGMainFormInitialize::OnRedo()
         auto propertyAccessor = PropertyAccessorFactory::create(_ParentObject);
         propertyAccessor->writeLock();
         auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
-        form->TruncateAction();
+        form->truncateAction();
         form->clearWorkspaceForms();
 
         auto configFilePath = VPGGlobal::getVCCProjectManagerConfigFileFullPath();
@@ -171,7 +171,7 @@ std::shared_ptr<vcc::IResult> VPGMainFormInitialize::OnRedo()
             TRY
                 auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
                 jsonBuilder->setIsBeautify(true);
-                form->DeserializeJsonString(jsonBuilder.get(), vcc::readFile(configFilePath));
+                form->deserializeJsonString(jsonBuilder.get(), vcc::readFile(configFilePath));
             CATCH_MSG(ExceptionType::ParserError, L"File " + configFilePath + L" exists but not vaild. Please adjust / remove the file and try again")
         } else {
             auto workspace = std::make_shared<VPGWorkspaceForm>();
@@ -249,9 +249,9 @@ std::shared_ptr<vcc::Json> VPGMainForm::ToJson() const
         auto json = std::make_unique<vcc::Json>();
         // WorkspaceForms
         auto tmpWorkspaceForms = std::make_shared<vcc::Json>();
-        json->AddArray(vcc::ConvertNamingStyle(L"WorkspaceForms", vcc::NamingStyle::PascalCase, namestyle), tmpWorkspaceForms);
+        json->addArray(vcc::ConvertNamingStyle(L"WorkspaceForms", vcc::NamingStyle::PascalCase, namestyle), tmpWorkspaceForms);
         for (auto const &element : getWorkspaceForms()) {
-            tmpWorkspaceForms->AddArrayObject(element->ToJson());
+            tmpWorkspaceForms->addArrayObject(element->ToJson());
         }
         return json;
     CATCH
@@ -287,7 +287,7 @@ void VPGMainForm::initializeComponents()
     CATCH
 }
 
-std::shared_ptr<vcc::IResult> VPGMainForm::DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument)
+std::shared_ptr<vcc::IResult> VPGMainForm::doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument)
 {
     TRY
         switch(static_cast<VPGMainFormProperty>(formProperty))
@@ -358,7 +358,7 @@ void VPGMainForm::saveConfig() const
     TRY    
         auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
         jsonBuilder->setIsBeautify(true);
-        vcc::writeFile(VPGGlobal::getVCCProjectManagerConfigFileFullPath(), SerializeJson(jsonBuilder.get()), true);
+        vcc::writeFile(VPGGlobal::getVCCProjectManagerConfigFileFullPath(), serializeJson(jsonBuilder.get()), true);
     CATCH
 }
 // </vcc:customFunctions>

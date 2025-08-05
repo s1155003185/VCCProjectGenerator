@@ -36,7 +36,7 @@ const std::wstring propertyFileSuffix = L"_property.hpp";
 const std::wstring propertyClassNameSuffix = L"Property";
 const std::wstring propertyAccessorFileSuffixWithoutExtention = L"property_accessor";
 
-void VPGFileGenerationManager::GetClassMacroList(const std::wstring &projWorkspace)
+void VPGFileGenerationManager::getClassMacroList(const std::wstring &projWorkspace)
 {
     TRY
         std::wstring filePath = vcc::concatPaths({projWorkspace, classMacroFilePath});
@@ -44,8 +44,8 @@ void VPGFileGenerationManager::GetClassMacroList(const std::wstring &projWorkspa
         size_t prefixLen = wcslen(prefix.c_str());
         vcc::readFilePerLine(filePath, [prefix, prefixLen, this](std::wstring line) {
             vcc::Trim(line);
-            if (vcc::IsStartWith(line, prefix) && vcc::isContain(line, L"(")) {
-                std::wstring type = line.substr(prefixLen, vcc::Find(line, L"(") - prefixLen);
+            if (vcc::isStartWith(line, prefix) && vcc::isContain(line, L"(")) {
+                std::wstring type = line.substr(prefixLen, vcc::find(line, L"(") - prefixLen);
                 vcc::Trim(type);
                 this->_ClassMacros.insert(type);
             }
@@ -55,7 +55,7 @@ void VPGFileGenerationManager::GetClassMacroList(const std::wstring &projWorkspa
     CATCH
 }
 
-std::wstring VPGFileGenerationManager::GetClassFilenameFromEnumClassFilename(const std::wstring &enumClassFileName)
+std::wstring VPGFileGenerationManager::getClassFilenameFromEnumClassFilename(const std::wstring &enumClassFileName)
 {
     TRY
         std::wstring tmpFileName = enumClassFileName;
@@ -65,14 +65,14 @@ std::wstring VPGFileGenerationManager::GetClassFilenameFromEnumClassFilename(con
     return enumClassFileName;
 }
 
-void VPGFileGenerationManager::GetFileList(const VPGEnumClassReader *reader, const std::wstring &directoryFullPath, const std::wstring &projectPrefix, const bool &isSeperateAction)
+void VPGFileGenerationManager::getFileList(const VPGEnumClassReader *reader, const std::wstring &directoryFullPath, const std::wstring &projectPrefix, const bool &isSeperateAction)
 {
     /****************************************************************************************************
     ****************************** All Generated File should be added here ******************************
     ****************************************************************************************************/
     TRY
         _EnumClasses.clear();
-        VPGIncludePathService::GetWorkspaceIncludePath(_Workspace, this->_ClassMacros, _IncludeFiles, _EnumClasses);
+        VPGIncludePathService::getWorkspaceIncludePath(_Workspace, this->_ClassMacros, _IncludeFiles, _EnumClasses);
 
         std::map<std::wstring, std::wstring> enumClassFiles;
         std::map<std::wstring, std::wstring> classFiles;
@@ -83,7 +83,7 @@ void VPGFileGenerationManager::GetFileList(const VPGEnumClassReader *reader, con
                     continue;
                 std::wstring content = vcc::readFile(filePath.path().wstring());
                 std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-                reader->parse(GetSimpleCode(content), enumClassList);
+                reader->parse(getSimpleCode(content), enumClassList);
                 for (auto const &enumClass : enumClassList) {
                     // enum
                     std::wstring enumClassName = enumClass->getName();
@@ -137,7 +137,7 @@ void VPGFileGenerationManager::GetFileList(const VPGEnumClassReader *reader, con
     CATCH
 }
 
-std::wstring VPGFileGenerationManager::GetConcatPath(const std::wstring &projWorkspace, const std::wstring &objWorkspace, const std::wstring &middlePath, const std::wstring &fileName) const
+std::wstring VPGFileGenerationManager::getConcatPath(const std::wstring &projWorkspace, const std::wstring &objWorkspace, const std::wstring &middlePath, const std::wstring &fileName) const
 {
     std::vector<std::wstring> objectFilePaths = { projWorkspace, objWorkspace };
     if (!middlePath.empty())
@@ -146,7 +146,7 @@ std::wstring VPGFileGenerationManager::GetConcatPath(const std::wstring &projWor
     return vcc::concatPaths(objectFilePaths);
 }
 
-void VPGFileGenerationManager::GernerateProperty(const vcc::LogConfig *logConfig, const VPGConfig *option)
+void VPGFileGenerationManager::generateProperty(const vcc::LogConfig *logConfig, const VPGConfig *option)
 {
     TRY
         std::wstring projPrefix = option->getProjectPrefix();
@@ -230,7 +230,7 @@ void VPGFileGenerationManager::GernerateProperty(const vcc::LogConfig *logConfig
             if (middlePath == L".")
                 middlePath = L"";
 
-            if (!vcc::IsBlank(projPrefix) && !vcc::IsStartWith(fileName, filePrefix))
+            if (!vcc::IsBlank(projPrefix) && !vcc::isStartWith(fileName, filePrefix))
                 vcc::LogService::LogWarning(logConfig, logId, L"Class Prefix " + projPrefix + L" missing. Skip: " + path);
 
             // ------------------------------------------------------------------------------------------ //
@@ -272,7 +272,7 @@ void VPGFileGenerationManager::GernerateProperty(const vcc::LogConfig *logConfig
                 //                               JAVA Export File                                             //
                 // ------------------------------------------------------------------------------------------ //
                 std::wstring javaEnumClassName = propertyClassNameWithoutNamespace;
-                if (!projPrefix.empty() && !vcc::IsStartWith(javaEnumClassName, projPrefix))
+                if (!projPrefix.empty() && !vcc::isStartWith(javaEnumClassName, projPrefix))
                     javaEnumClassName = projPrefix + javaEnumClassName;
 
                 for (auto const &javaOption : option->getExports()) {

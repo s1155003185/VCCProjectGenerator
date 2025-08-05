@@ -8,20 +8,20 @@ TEST(JsonTest, Full)
     auto builder = std::make_unique<vcc::JsonBuilder>();
 
     auto json = std::make_shared<vcc::Json>();
-    json->AddString(L"Version", L"0.0.1");
-    json->AddBool(L"IsGit", true);
-    json->AddDouble(L"Price", 2.33, 2);
-    json->AddInt(L"State", 1);
-    json->AddNull(L"Action");
+    json->addString(L"Version", L"0.0.1");
+    json->addBool(L"IsGit", true);
+    json->addDouble(L"Price", 2.33, 2);
+    json->addInt(L"State", 1);
+    json->addNull(L"Action");
     
     auto plugins = std::make_shared<vcc::Json>();
-    json->AddArray(L"Plugins", plugins);
-    plugins->AddArrayString(L"/path/of/Git");
+    json->addArray(L"Plugins", plugins);
+    plugins->addArrayString(L"/path/of/Git");
     
     std::wstring jsonStr = builder->serialize(json.get());
 
     auto resultJson = std::make_shared<vcc::Json>();
-    builder->Deserialize(jsonStr, resultJson);
+    builder->deserialize(jsonStr, resultJson);
 
     EXPECT_EQ(json->getString(L"Version"), resultJson->getString(L"Version"));
     EXPECT_EQ(json->getBool(L"IsGit"), resultJson->getBool(L"IsGit"));

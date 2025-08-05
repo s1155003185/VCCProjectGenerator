@@ -127,20 +127,20 @@ namespace vcc
         return {};
     }
     
-    std::vector<std::wstring> GitManager::GetTags(const GitTagSearchCriteria *searchCriteria)
+    std::vector<std::wstring> GitManager::getTags(const GitTagSearchCriteria *searchCriteria)
     {
         TRY
             validate();
-            return GitService::GetTags(_LogConfig.get(), _Workspace, searchCriteria);
+            return GitService::getTags(_LogConfig.get(), _Workspace, searchCriteria);
         CATCH
         return {};
     }
     
-    std::shared_ptr<GitTagCurrentTag> GitManager::GetCurrentTag()
+    std::shared_ptr<GitTagCurrentTag> GitManager::getCurrentTag()
     {
         TRY
             validate();
-            return GitService::GetCurrentTag(_LogConfig.get(), _Workspace);
+            return GitService::getCurrentTag(_LogConfig.get(), _Workspace);
         CATCH
         return nullptr;
     }
@@ -169,11 +169,11 @@ namespace vcc
         CATCH
     }
     
-    std::wstring GitManager::GetCurrentBranchName()
+    std::wstring GitManager::getCurrentBranchName()
     {
         TRY
             validate();
-            return GitService::GetCurrentBranchName(_LogConfig.get(), _Workspace);
+            return GitService::getCurrentBranchName(_LogConfig.get(), _Workspace);
         CATCH
         return L"";
     }

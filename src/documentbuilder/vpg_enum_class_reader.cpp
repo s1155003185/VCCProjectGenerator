@@ -42,7 +42,7 @@ size_t VPGEnumClassReader::isCommand(const std::wstring &cppCode, const size_t &
     TRY
         size_t index = 0;
         for (auto const &quote : _OpenCommands) {
-            if (vcc::IsStartWith(cppCode, quote, pos))
+            if (vcc::isStartWith(cppCode, quote, pos))
                 return index;
             index++;
         }
@@ -78,7 +78,7 @@ std::wstring VPGEnumClassReader::_getMacro(const std::wstring &propertyCommand, 
         vcc::getNextCharPos(propertyCommand, pos, true);
         bool hasMacroPrefix = false;
         for (auto const &str : this->_ClassMacroList) {
-            if (vcc::IsStartWith(propertyCommand, str + L"(", pos)) {
+            if (vcc::isStartWith(propertyCommand, str + L"(", pos)) {
                 hasMacroPrefix = true;
                 break;
             }
@@ -150,7 +150,7 @@ std::wstring VPGEnumClassReader::_getDefaultValue(const std::wstring &macroStr, 
     return result;
 }
 
-std::shared_ptr<vcc::Json> VPGEnumClassReader::GetJsonAttributes(const std::wstring &command, const std::wstring &attributeName) const
+std::shared_ptr<vcc::Json> VPGEnumClassReader::getJsonAttributes(const std::wstring &command, const std::wstring &attributeName) const
 {
     TRY
         size_t pos = vcc::find(command, attributeName, 0, true);
@@ -163,7 +163,7 @@ std::shared_ptr<vcc::Json> VPGEnumClassReader::GetJsonAttributes(const std::wstr
             TRY
                 auto json = std::make_shared<vcc::Json>();
                 vcc::JsonBuilder builder;
-                builder.Deserialize(jsonStr, json);
+                builder.deserialize(jsonStr, json);
                 return json;
             CATCH
         }
@@ -171,14 +171,14 @@ std::shared_ptr<vcc::Json> VPGEnumClassReader::GetJsonAttributes(const std::wstr
     return nullptr;
 }
 
-std::vector<std::wstring> VPGEnumClassReader::GetAttribute(const std::wstring &str) const
+std::vector<std::wstring> VPGEnumClassReader::getAttribute(const std::wstring &str) const
 {
     std::vector<std::wstring> result;
     TRY
         size_t pos = 0;
         vcc::getNextCharPos(str, pos, true);
 
-        if (!vcc::IsStartWith(str, attributePrefix, pos))
+        if (!vcc::isStartWith(str, attributePrefix, pos))
             return result;
         
         std::vector<std::wstring> tokens = vcc::SplitString(str.substr(pos), { attributePrefix });
@@ -278,66 +278,66 @@ void VPGEnumClassReader::_assignEnumClassProperty(const VPGEnumClass *enumClass,
             currentProperty->setMacro(macro);
 
             // virtual
-            if (vcc::IsStartWith(currentProperty->getMacro(), L"GETCUSTOM("))
+            if (vcc::isStartWith(currentProperty->getMacro(), L"GETCUSTOM("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::Getcustom);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"SETCUSTOM("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"SETCUSTOM("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::Setcustom);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"GETCUSTOM_SPTR("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"GETCUSTOM_SPTR("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::GetcustomSptr);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"SETCUSTOM_SPTR("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"SETCUSTOM_SPTR("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::SetcustomSptr);
 
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"GETSET("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"GETSET("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::Getset);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"GETSET_VALIDATE("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"GETSET_VALIDATE("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::GetsetValidate);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"GETSET_SPTR("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"GETSET_SPTR("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::GetsetSptr);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"GETSET_SPTR_NULL("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"GETSET_SPTR_NULL("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::GetsetSptrNull);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"GETSET_VALIDATE_SPTR_NULL("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"GETSET_VALIDATE_SPTR_NULL("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::GetsetValidateSptrNull);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"VECTOR("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"VECTOR("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::Vector);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"VECTOR_VALIDATE("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"VECTOR_VALIDATE("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::VectorValidate);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"VECTOR_SPTR("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"VECTOR_SPTR("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::VectorSptr);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"VECTOR_VALIDATE_SPTR("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"VECTOR_VALIDATE_SPTR("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::VectorValidateSptr);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"SET("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"SET("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::Set);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"SET_VALIDATE("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"SET_VALIDATE("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::SetValidate);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"SET_SPTR("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"SET_SPTR("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::SetSptr);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"SET_VALIDATE_SPTR("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"SET_VALIDATE_SPTR("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::SetValidateSptr);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"MAP("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"MAP("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::Map);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"MAP_VALIDATE("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"MAP_VALIDATE("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::MapValidate);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"MAP_SPTR_R("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"MAP_SPTR_R("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::MapSptrR);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"MAP_VALIDATE_SPTR_R("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"MAP_VALIDATE_SPTR_R("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::MapValidateSptrR);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"ORDERED_MAP("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"ORDERED_MAP("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::OrderedMap);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"ORDERED_MAP_VALIDATE("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"ORDERED_MAP_VALIDATE("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::OrderedMapValidate);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"ORDERED_MAP_SPTR_R("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"ORDERED_MAP_SPTR_R("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::OrderedMapSptrR);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"ORDERED_MAP_VALIDATE_SPTR_R("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"ORDERED_MAP_VALIDATE_SPTR_R("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::OrderedMapValidateSptrR);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"MANAGER_SPTR("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"MANAGER_SPTR("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::ManagerSptr);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"MANAGER_SPTR_NULL("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"MANAGER_SPTR_NULL("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::ManagerSptrNull);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"MANAGER_SPTR_PARENT("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"MANAGER_SPTR_PARENT("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::ManagerSptrParent);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"ACTION("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"ACTION("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::Action);
-            else if (vcc::IsStartWith(currentProperty->getMacro(), L"ACTION_WITH_ARG_SPTR("))
+            else if (vcc::isStartWith(currentProperty->getMacro(), L"ACTION_WITH_ARG_SPTR("))
                 currentProperty->setMacroType(VPGEnumClassMacroType::ActionWithArgSptr);
 
             pos = 0;
@@ -427,14 +427,14 @@ std::wstring VPGEnumClassReader::_getCommand(const std::wstring &cppCode, const 
     std::wstring result = L"";
     TRY
         vcc::getNextCharPos(cppCode, pos, true);
-        while (vcc::IsStartWith(cppCode, L"//", pos) || vcc::IsStartWith(cppCode, L"/*", pos)) {
+        while (vcc::isStartWith(cppCode, L"//", pos) || vcc::isStartWith(cppCode, L"/*", pos)) {
             std::wstring tmpCmd = vcc::getNextQuotedString(cppCode, pos, { L";", L"{", L"\n", L" ", L"/*", L"//" }, { L"/*", L"//"}, {L"*/", L"\n"}, { L"", L"" }, { L"/*", L"//"});
             vcc::Trim(tmpCmd);
             if (!result.empty())
                 result += L"\r\n";
-            if (vcc::IsStartWith(tmpCmd, L"//")) {
+            if (vcc::isStartWith(tmpCmd, L"//")) {
                 tmpCmd = tmpCmd.substr(2, tmpCmd.length() - 2); // only minus prefix as already vcc::Trim
-            } else if (vcc::IsStartWith(tmpCmd, L"/*")) {
+            } else if (vcc::isStartWith(tmpCmd, L"/*")) {
                 tmpCmd = tmpCmd.substr(2, tmpCmd.length() - 4);
             }
             vcc::Trim(tmpCmd);
@@ -444,7 +444,7 @@ std::wstring VPGEnumClassReader::_getCommand(const std::wstring &cppCode, const 
                 size_t nextNewLinePos = cppCode.find(L"\n", pos + 1);
                 vcc::getNextCharPos(cppCode, pos, false);
                 if (nextNewLinePos != std::wstring::npos && pos != std::wstring::npos
-                    && nextNewLinePos < pos && (vcc::IsStartWith(cppCode, L"//", pos) || vcc::IsStartWith(cppCode, L"/*", pos))) {
+                    && nextNewLinePos < pos && (vcc::isStartWith(cppCode, L"//", pos) || vcc::isStartWith(cppCode, L"/*", pos))) {
                     result = L"";
                 }
                 pos = currentPos;
@@ -463,7 +463,7 @@ void VPGEnumClassReader::_parseProperties(const std::wstring &cppCode, size_t &p
     TRY
         _EnumValue = -1;
         while (pos < cppCode.size()) {
-            if (vcc::IsStartWith(cppCode, L"//", pos) || vcc::IsStartWith(cppCode, L"/*", pos)) {
+            if (vcc::isStartWith(cppCode, L"//", pos) || vcc::isStartWith(cppCode, L"/*", pos)) {
                 _getCommand(cppCode, false, pos);
                 continue;
             }
@@ -496,7 +496,7 @@ void VPGEnumClassReader::_parseProperties(const std::wstring &cppCode, size_t &p
                 vcc::getNextCharPos(cppCode, pos, false);
             
             std::vector<std::shared_ptr<VPGEnumClassAttribute>> properties;
-            if (vcc::IsStartWith(cppCode, L"//", pos) || vcc::IsStartWith(cppCode, L"/*", pos)) {
+            if (vcc::isStartWith(cppCode, L"//", pos) || vcc::isStartWith(cppCode, L"/*", pos)) {
                 _assignEnumClassProperty(enumClass.get(), _getCommand(cppCode, false, pos), properties);
                 vcc::getNextCharPos(cppCode, pos, false);
             }
@@ -523,12 +523,12 @@ void VPGEnumClassReader::_parseProperties(const std::wstring &cppCode, size_t &p
 bool VPGEnumClassReader::_parseClass(const std::wstring &cppCode, size_t &pos, std::shared_ptr<VPGEnumClass>enumClass) const
 {
     TRY
-        if (!vcc::IsStartWith(cppCode, L"enum", pos))
+        if (!vcc::isStartWith(cppCode, L"enum", pos))
             THROW_EXCEPTION_MSG(ExceptionType::ParserError, _getErrorMessage(cppCode, pos, L"enum missing."));
             
         pos += 4; // length of "enum"
         vcc::getNextCharPos(cppCode, pos, false);
-        if (vcc::IsStartWith(cppCode, L"class", pos)) {
+        if (vcc::isStartWith(cppCode, L"class", pos)) {
             pos += 4; // length of "class"
             vcc::getNextCharPos(cppCode, pos, false);
         }
@@ -538,10 +538,10 @@ bool VPGEnumClassReader::_parseClass(const std::wstring &cppCode, size_t &pos, s
         enumClass->setName(_getEnum(cppCode, pos));
         vcc::getNextCharPos(cppCode, pos, false);
 
-        if (vcc::IsStartWith(cppCode, L"//", pos)) {
+        if (vcc::isStartWith(cppCode, L"//", pos)) {
             enumClass->setCommand(_getCommand(cppCode, false, pos));
             vcc::getNextCharPos(cppCode, pos, false);
-        } else if (vcc::IsStartWith(cppCode, L"/*", pos)) {
+        } else if (vcc::isStartWith(cppCode, L"/*", pos)) {
             enumClass->setCommand(_getCommand(cppCode, false, pos));
             vcc::getNextCharPos(cppCode, pos, false);
         }
@@ -549,16 +549,16 @@ bool VPGEnumClassReader::_parseClass(const std::wstring &cppCode, size_t &pos, s
             std::vector<std::wstring> attributes = getAttribute(enumClass->getCommand());
             std::wstring command = L"";
             for (auto const &attribute : attributes) {
-                if (vcc::IsStartWith(attribute, attributePrefix + L"Form", 0, true)) {
+                if (vcc::isStartWith(attribute, attributePrefix + L"Form", 0, true)) {
                     enumClass->setType(VPGEnumClassType::Form);
                     command = L"";
-                } else if (vcc::IsStartWith(attribute, attributePrefix + L"ActionArgument", 0, true)) {
+                } else if (vcc::isStartWith(attribute, attributePrefix + L"ActionArgument", 0, true)) {
                     enumClass->setType(VPGEnumClassType::ActionArgument);
                     command = L"";
-                } else if (vcc::IsStartWith(attribute, attributePrefix + L"Result", 0, true)) {
+                } else if (vcc::isStartWith(attribute, attributePrefix + L"Result", 0, true)) {
                     enumClass->setType(VPGEnumClassType::Result);
                     command = L"";
-                }  else if (vcc::IsStartWith(attribute, attributePrefix + L"Inherit", 0, true)) {
+                }  else if (vcc::isStartWith(attribute, attributePrefix + L"Inherit", 0, true)) {
                     auto jsonAttributes = getJsonAttributes(attribute, attributePrefix + L"Inherit");
                     assert(jsonAttributes != nullptr);
                     std::wstring className = jsonAttributes->getString(L"Class");
@@ -567,22 +567,22 @@ bool VPGEnumClassReader::_parseClass(const std::wstring &cppCode, size_t &pos, s
                     enumClass->setInheritClass(className);
                 
                     command = L"";
-                } else if (vcc::IsStartWith(attribute, attributePrefix + L"Log", 0, true)) {
+                } else if (vcc::isStartWith(attribute, attributePrefix + L"Log", 0, true)) {
                     auto jsonAttributes = getJsonAttributes(attribute, attributePrefix + L"Log");
                     if (jsonAttributes != nullptr)
                         enumClass->setIsLogConfigIndependent(jsonAttributes->getBool(L"IsIndependent"));
                     command = L"";
-                } else if (vcc::IsStartWith(attribute, attributePrefix + L"Action", 0, true)) {
+                } else if (vcc::isStartWith(attribute, attributePrefix + L"Action", 0, true)) {
                     auto jsonAttributes = getJsonAttributes(attribute, attributePrefix + L"Action");
                     if (jsonAttributes != nullptr)
                         enumClass->setIsActionManagerIndependent(jsonAttributes->getBool(L"IsIndependent"));
                     command = L"";
-                } else if (vcc::IsStartWith(attribute, attributePrefix + L"Thread", 0, true)) {
+                } else if (vcc::isStartWith(attribute, attributePrefix + L"Thread", 0, true)) {
                     auto jsonAttributes = getJsonAttributes(attribute, attributePrefix + L"Thread");
                     if (jsonAttributes != nullptr)
                         enumClass->setIsThreadManagerIndependent(jsonAttributes->getBool(L"IsIndependent"));
                     command = L"";
-                } else if (vcc::IsStartWith(attribute, attributePrefix + L"Json", 0, true)) {
+                } else if (vcc::isStartWith(attribute, attributePrefix + L"Json", 0, true)) {
                     enumClass->setIsJson(true);
                     auto jsonAttributes = getJsonAttributes(attribute, attributePrefix + L"Json");
                     if (jsonAttributes != nullptr) {
@@ -590,7 +590,7 @@ bool VPGEnumClassReader::_parseClass(const std::wstring &cppCode, size_t &pos, s
                             enumClass->insertJsonAttributesAtKey(key, jsonAttributes->getString(key));
                     }
                     command = L"";
-                } else if (vcc::IsStartWith(attribute, attributePrefix + L"Include", 0, true)) {
+                } else if (vcc::isStartWith(attribute, attributePrefix + L"Include", 0, true)) {
                     auto jsonAttributes = getJsonAttributes(attribute, attributePrefix + L"Include");
                     if (jsonAttributes != nullptr) {
                         if (jsonAttributes->isContainKey(L"SystemFiles"))
@@ -601,7 +601,7 @@ bool VPGEnumClassReader::_parseClass(const std::wstring &cppCode, size_t &pos, s
                                 enumClass->insertIncludeCustomFiles(element->getArrayElementString());
                     }
                     command = L"";
-                }  else if (vcc::IsStartWith(attribute, attributePrefix + L"Private", 0, true)) {
+                }  else if (vcc::isStartWith(attribute, attributePrefix + L"Private", 0, true)) {
                     auto jsonAttributes = getJsonAttributes(attribute, attributePrefix + L"Private");
                     if (jsonAttributes != nullptr && jsonAttributes->isContainKey(L"Properties")) {
                         auto element = jsonAttributes->getObject(L"Properties");
@@ -611,7 +611,7 @@ bool VPGEnumClassReader::_parseClass(const std::wstring &cppCode, size_t &pos, s
                         }
                     }
                     command = L"";
-                }  else if (vcc::IsStartWith(attribute, attributePrefix + L"Protected", 0, true)) {
+                }  else if (vcc::isStartWith(attribute, attributePrefix + L"Protected", 0, true)) {
                     auto jsonAttributes = getJsonAttributes(attribute, attributePrefix + L"Protected");
                     if (jsonAttributes != nullptr && jsonAttributes->isContainKey(L"Properties")) {
                         auto element = jsonAttributes->getObject(L"Properties");
@@ -621,7 +621,7 @@ bool VPGEnumClassReader::_parseClass(const std::wstring &cppCode, size_t &pos, s
                         }
                     }
                     command = L"";
-                } else if (vcc::IsStartWith(attribute, attributePrefix + L"Command", 0, true)) {
+                } else if (vcc::isStartWith(attribute, attributePrefix + L"Command", 0, true)) {
                     std::wstring commandToken = attributePrefix + L"Command";
                     commandToken = attribute.substr(commandToken.length());
                     vcc::Trim(commandToken);
@@ -654,7 +654,7 @@ std::wstring VPGEnumClassReader::getCppCodeLine(const std::wstring &str, size_t 
     TRY
         pos = vcc::find(str, L"\n", pos);
         std::wstring tailingSubstr = vcc::getTailingSubstring(str.substr(startPos, pos - startPos + 1), 3);
-        if (vcc::IsEndWith(tailingSubstr, L"\\\r\n") || vcc::IsEndWith(tailingSubstr, L"\\\n")) {
+        if (vcc::isEndWith(tailingSubstr, L"\\\r\n") || vcc::isEndWith(tailingSubstr, L"\\\n")) {
             getCppCodeLine(str, pos, false);
         }
         if (pos == std::wstring::npos)
@@ -663,7 +663,7 @@ std::wstring VPGEnumClassReader::getCppCodeLine(const std::wstring &str, size_t 
     return str.substr(startPos, pos - startPos + 1);
 }
 
-void VPGEnumClassReader::ParseCustom(const std::wstring &cppCode, const std::wstring &currentNamespace, std::vector<std::shared_ptr<VPGEnumClass>> &results) const
+void VPGEnumClassReader::parseCustom(const std::wstring &cppCode, const std::wstring &currentNamespace, std::vector<std::shared_ptr<VPGEnumClass>> &results) const
 {
     TRY
         size_t pos = 0;
@@ -690,7 +690,7 @@ void VPGEnumClassReader::ParseCustom(const std::wstring &cppCode, const std::wst
                         vcc::Trim(quoteStr);
                         if (!quoteStr.empty()) {
                             std::vector<std::shared_ptr<VPGEnumClass>> tmpClassList;
-                            ParseCustom(quoteStr.substr(1, quoteStr.length() - 2), nextToken, tmpClassList);
+                            parseCustom(quoteStr.substr(1, quoteStr.length() - 2), nextToken, tmpClassList);
                             if (!currentNamespace.empty()) {
                                 for (auto &tmpClass : tmpClassList) {
                                     tmpClass->setName(currentNamespace + L"::" + tmpClass->getName());
@@ -729,6 +729,6 @@ void VPGEnumClassReader::parse(const std::wstring &cppCode, std::vector<std::sha
 {
     TRY
         std::unique_lock lock(_mutex);
-        ParseCustom(cppCode, L"", results);
+        parseCustom(cppCode, L"", results);
     CATCH
 }

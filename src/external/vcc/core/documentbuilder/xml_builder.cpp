@@ -35,7 +35,7 @@ namespace vcc
         return result;
     }
 
-    std::wstring XmlBuilder::GetTag(const std::wstring &xmlData, size_t &pos) const
+    std::wstring XmlBuilder::getTag(const std::wstring &xmlData, size_t &pos) const
     {
         size_t endPos = pos;
         TRY
@@ -245,7 +245,7 @@ namespace vcc
         CATCH
     }
     
-    std::wstring XmlBuilder::Serialize(const IDocument */*doc*/) const
+    std::wstring XmlBuilder::serialize(const IDocument */*doc*/) const
     {
         TRY
 
@@ -253,7 +253,7 @@ namespace vcc
         return L"";
     }
 
-    void XmlBuilder::Deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc) const
+    void XmlBuilder::deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc) const
     {
         TRY
             auto xmlObject = std::dynamic_pointer_cast<Xml>(doc);
@@ -262,11 +262,11 @@ namespace vcc
         CATCH
     }
     
-    void XmlBuilder::Deserialize(const std::wstring &str, std::shared_ptr<IDocument> doc) const
+    void XmlBuilder::deserialize(const std::wstring &str, std::shared_ptr<IDocument> doc) const
     {
         TRY
             size_t pos = 0;
-            this->Deserialize(str, pos, doc);
+            this->deserialize(str, pos, doc);
         CATCH
     }
 }

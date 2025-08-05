@@ -331,7 +331,7 @@ TEST_F(GitServiceTest, Tag)
     // meaningless to test exception case
     // try
     // {
-    //     GitTagCurrentTag noTag = GitService::GetCurrentTag(this->getLogConfig().get(), this->getWorkspace());
+    //     GitTagCurrentTag noTag = GitService::getCurrentTag(this->getLogConfig().get(), this->getWorkspace());
     //     // show throw exception
     //     EXPECT_TRUE(false);
     // }
@@ -341,10 +341,10 @@ TEST_F(GitServiceTest, Tag)
     // }
     
     GitService::CreateTag(this->getLogConfig().get(), this->getWorkspace(), L"v0.0.1", nullptr);
-    std::vector<std::wstring> tags = GitService::GetTags(this->getLogConfig().get(), this->getWorkspace());
+    std::vector<std::wstring> tags = GitService::getTags(this->getLogConfig().get(), this->getWorkspace());
     EXPECT_EQ(tags.size(), (size_t)1);
     EXPECT_EQ(tags[0], L"v0.0.1");
-    auto currentTag = GitService::GetCurrentTag(this->getLogConfig().get(), this->getWorkspace());
+    auto currentTag = GitService::getCurrentTag(this->getLogConfig().get(), this->getWorkspace());
     EXPECT_EQ(currentTag->getTagName(), L"v0.0.1");
     EXPECT_EQ(currentTag->getNoOfCommit(), 0);
 
@@ -359,7 +359,7 @@ TEST_F(GitServiceTest, Tag)
     //GitService::SwitchReverse(this->getLogConfig().get(), this->getWorkspace());
 
     // DECLARE_SPTR(GitLog, log);
-    // GitService::GetTag(this->getLogConfig().get(), this->getWorkspace(), L"v0.0.1", log);
+    // GitService::getTag(this->getLogConfig().get(), this->getWorkspace(), L"v0.0.1", log);
     // EXPECT_EQ(log->getTags().size(), (size_t)1);
     // EXPECT_EQ(log->getTags().at(0), L"v0.0.1");
 
@@ -378,12 +378,12 @@ TEST_F(GitServiceTest, Branch)
     // Create Branch
     GitService::CreateBranch(this->getLogConfig().get(), this->getWorkspace(), L"branch", nullptr);
     // main for linux, master for window
-    EXPECT_TRUE(GitService::GetCurrentBranchName(this->getLogConfig().get(), this->getWorkspace()) == L"main"
-        || GitService::GetCurrentBranchName(this->getLogConfig().get(), this->getWorkspace()) == L"master");
+    EXPECT_TRUE(GitService::getCurrentBranchName(this->getLogConfig().get(), this->getWorkspace()) == L"main"
+        || GitService::getCurrentBranchName(this->getLogConfig().get(), this->getWorkspace()) == L"master");
 
     // Current Branch
     // DECLARE_SPTR(GitBranch, currentbranch);
-    // GitService::GetCurrentBranch(this->getLogConfig().get(), this->getWorkspace(), currentbranch);
+    // GitService::getCurrentBranch(this->getLogConfig().get(), this->getWorkspace(), currentbranch);
     // EXPECT_EQ(currentbranch->getName(), L"branch");
     // EXPECT_EQ(currentbranch->getIsActive(), false);
     // EXPECT_TRUE(!currentbranch->getHashID().empty());
@@ -395,13 +395,13 @@ TEST_F(GitServiceTest, Branch)
     switchBranchOption.SetIsQuite(true);
     GitService::SwitchBranch(this->getLogConfig().get(), this->getWorkspace(), L"branch", &switchBranchOption);
     // DECLARE_SPTR(GitBranch, switchBranch);
-    // GitService::GetCurrentBranch(this->getLogConfig().get(), this->getWorkspace(), switchBranch);
+    // GitService::getCurrentBranch(this->getLogConfig().get(), this->getWorkspace(), switchBranch);
     // EXPECT_EQ(switchBranch->getName(), L"branch");
     // EXPECT_EQ(switchBranch->getIsActive(), true);
     // EXPECT_TRUE(!switchBranch->getHashID().empty());
     // EXPECT_TRUE(!switchBranch->getTitle().empty());
     // EXPECT_EQ(switchBranch->getPointToBranch(), L""); 
-    EXPECT_EQ(GitService::GetCurrentBranchName(this->getLogConfig().get(), this->getWorkspace()), L"branch");
+    EXPECT_EQ(GitService::getCurrentBranchName(this->getLogConfig().get(), this->getWorkspace()), L"branch");
 
     // get Branches
     auto branches = GitService::GetBranches(this->getLogConfig().get(), this->getWorkspace());

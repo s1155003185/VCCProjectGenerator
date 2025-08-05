@@ -32,7 +32,7 @@ void VPGBaseGenerationManager::validateOption() const
     CATCH
 }
 
-void VPGBaseGenerationManager::GetDLLTestFileContent(std::wstring &fileContent) const
+void VPGBaseGenerationManager::getDLLTestFileContent(std::wstring &fileContent) const
 {
     vcc::ReplaceRegex(fileContent, L"#define DLL_NAME L\"([^\"]*)\"", L"#define DLL_NAME L\"" + _Option->getProjectNameDll() + L"\"");
 }
@@ -76,7 +76,7 @@ void VPGBaseGenerationManager::CreateBasicProject() const
         validateOption();
         this->CreateWorkspaceDirectory();
 
-        std::wstring src = VPGGlobal::GetConvertedPath(_Option->getTemplate()->getWorkspace());
+        std::wstring src = VPGGlobal::getConvertedPath(_Option->getTemplate()->getWorkspace());
         std::wstring dest = _Workspace;
         if (_Option->getIsGit()) {
             vcc::copyFile(vcc::concatPaths({src, L".gitignore"}), vcc::concatPaths({dest, L".gitignore"}), true);
@@ -211,7 +211,7 @@ std::wstring VPGBaseGenerationManager::AdjustMakefile(const std::wstring &fileCo
     TRY
         auto elements = std::make_shared<vcc::Xml>();
         VPGCodeReader reader(L"#");
-        reader.Deserialize(fileContent, elements);
+        reader.deserialize(fileContent, elements);
         for (std::shared_ptr<vcc::Xml> element : elements->getChildren()) {
             if (element->getName() == L"vcc:name") {
                 std::wstring projName = !vcc::IsBlank(_Option->getProjectName()) ? (L" " + _Option->getProjectName()) : L"";
@@ -300,7 +300,7 @@ std::wstring VPGBaseGenerationManager::AdjustVSCodeLaunchJson(const std::wstring
         jsonBuilder->setIndent(L"  ");
 
         auto json = std::make_shared<vcc::Json>();
-        jsonBuilder->Deserialize(fileContent, json);
+        jsonBuilder->deserialize(fileContent, json);
         for (std::shared_ptr<vcc::Json> element : json->getArray(L"configurations")) {
             for (std::shared_ptr<vcc::Json> arrayElement : element->getJsonInternalArray()) {
                 if (arrayElement->isContainKey(L"program"))

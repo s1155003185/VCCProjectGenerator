@@ -22,13 +22,13 @@ TEST(VPGIncludePathSerciceTest, GetWorkspaceIncludePath)
 //     std::wstring workspace = L"";
 //     #ifdef _WIN32
 //     platformType = PlatformType::Window;
-//     workspace = VPGGlobal::GetCppDefaultIncludePathWindow();
+//     workspace = VPGGlobal::getCppDefaultIncludePathWindow();
 //     #elif __APPLE__
 //     platformType = PlatformType::MacOs;
-//     workspace = VPGGlobal::GetCppDefaultIncludePathMacOs();
+//     workspace = VPGGlobal::getCppDefaultIncludePathMacOs();
 //     #else
 //     platformType = PlatformType::Linux;
-//     workspace = VPGGlobal::GetCppDefaultIncludePathLinux();
+//     workspace = VPGGlobal::getCppDefaultIncludePathLinux();
 //     #endif
 //     VPGIncludePathService::GetSystemIncludePath(platformType, workspace, classPathMapping);
 

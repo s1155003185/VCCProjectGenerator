@@ -26,7 +26,7 @@ void Application::initializeComponents()
         // <vcc:vccconfig sync="RESERVE" gen="REPLACE">
         _ActionManager = nullptr;
         // </vcc:vccconfig>
-        // Custom Initialize Log, Action, Thread by override OnInitializeComponents
+        // Custom Initialize Log, Action, Thread by override onInitializeComponents
         onInitializeComponents();
     CATCH
 }
@@ -140,7 +140,7 @@ std::shared_ptr<vcc::IObject> Application::DoFormAction(vcc::IObject *form, cons
     TRY
         if (form == nullptr)
             return nullptr;
-        auto result = getIFormPtrFromIObject(form)->DoAction(formProperty, argument != nullptr ? argument->sharedPtr() : nullptr);
+        auto result = getIFormPtrFromIObject(form)->doAction(formProperty, argument != nullptr ? argument->sharedPtr() : nullptr);
         if (argument != nullptr)
             removeIObjectAll(application->_ActionArguments, argument);
         auto obj = getIObjectPtrFromIResult(result.get())->sharedPtr();
@@ -185,7 +185,7 @@ void Application::RedoFormAction(vcc::IObject *form, const int64_t &noOfStep)
     TRY
         if (form == nullptr)
             return;
-        getIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->RedoAction(noOfStep).get())->sharedPtr();
+        getIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->redoAction(noOfStep).get())->sharedPtr();
     CATCH
 }
 
@@ -194,7 +194,7 @@ void Application::RedoFormActionToSeqNo(vcc::IObject *form, const int64_t &seqNo
     TRY
         if (form == nullptr)
             return;
-        getIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->RedoActionToSeqNo(seqNo).get())->sharedPtr();
+        getIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->redoActionToSeqNo(seqNo).get())->sharedPtr();
     CATCH
 }
 
@@ -203,7 +203,7 @@ void Application::UndoFormAction(vcc::IObject *form, const int64_t &noOfStep)
     TRY
         if (form == nullptr)
             return;
-        getIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->UndoAction(noOfStep).get())->sharedPtr();
+        getIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->undoAction(noOfStep).get())->sharedPtr();
     CATCH
 }
 
@@ -212,7 +212,7 @@ void Application::UndoFormActionToSeqNo(vcc::IObject *form, const int64_t &seqNo
     TRY
         if (form == nullptr)
             return;
-        getIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->UndoActionToSeqNo(seqNo).get())->sharedPtr();
+        getIObjectPtrFromIResult(GetIFormPtrFromIObject(form)->undoActionToSeqNo(seqNo).get())->sharedPtr();
     CATCH
 }
 
@@ -226,12 +226,12 @@ int64_t Application::clearFormAction(vcc::IObject *form)
     return -1;
 }
 
-int64_t Application::TruncateFormAction(vcc::IObject *form)
+int64_t Application::truncateFormAction(vcc::IObject *form)
 {
     TRY
         if (form == nullptr)
             return -1;
-        return getIFormPtrFromIObject(form)->TruncateAction();
+        return getIFormPtrFromIObject(form)->truncateAction();
     CATCH
     return -1;
 }

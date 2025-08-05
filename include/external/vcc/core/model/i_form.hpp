@@ -18,9 +18,9 @@ namespace vcc
             virtual ~IForm() = default;
         
             // Initialize
-            virtual void OnInitialize() = 0;
+            virtual void onInitialize() = 0;
             virtual void onInitializeComponents() = 0;
-            virtual void OnInitializeValues() = 0;
+            virtual void onInitializeValues() = 0;
 
             // Close
             virtual bool OnIsClosable() const = 0;
@@ -49,20 +49,20 @@ namespace vcc
             virtual void initializeValue() = 0;
 
             // Action
-            virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) = 0;
+            virtual std::shared_ptr<IResult> doAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) = 0;
             virtual std::shared_ptr<IResult> executeAction(std::shared_ptr<IAction> action, bool isNoHistory) = 0;
             virtual int64_t getActionCurrentSeqNo() const = 0;
             virtual int64_t getActionFirstSeqNo() const = 0;
             virtual int64_t getActionLastSeqNo() const = 0;
             
-            virtual std::shared_ptr<IResult> RedoAction(const int64_t &noOfStep = 1) = 0;
-            virtual std::shared_ptr<IResult> RedoActionToSeqNo(const int64_t &seqNo) = 0;
+            virtual std::shared_ptr<IResult> redoAction(const int64_t &noOfStep = 1) = 0;
+            virtual std::shared_ptr<IResult> redoActionToSeqNo(const int64_t &seqNo) = 0;
 
-            virtual std::shared_ptr<IResult> UndoAction(const int64_t &noOfStep = 1) = 0;
-            virtual std::shared_ptr<IResult> UndoActionToSeqNo(const int64_t &seqNo) = 0;
+            virtual std::shared_ptr<IResult> undoAction(const int64_t &noOfStep = 1) = 0;
+            virtual std::shared_ptr<IResult> undoActionToSeqNo(const int64_t &seqNo) = 0;
 
             virtual int64_t clearAction() = 0;
-            virtual int64_t TruncateAction() = 0;
+            virtual int64_t truncateAction() = 0;
 
             // Close
             virtual bool Close(bool isForce = false) = 0;

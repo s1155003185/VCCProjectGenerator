@@ -46,10 +46,10 @@ namespace vcc
 	bool IsBlank(const std::wstring &str);
 
 	bool IsEqual(const std::wstring &str1, const std::wstring &str2, const bool &isIgnoreCase = false);
-	bool IsStartWith(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos = 0, bool isIgnoreCase = false);
-	bool IsStartWith(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &startFromPos = 0, bool isIgnoreCase = false);
-	bool IsStartWithTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos = 0);
-	bool IsEndWith(const std::wstring &str, const std::wstring &suffix);
+	bool isStartWith(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos = 0, bool isIgnoreCase = false);
+	bool isStartWith(const std::wstring &str, const std::vector<std::wstring> &prefixes, const size_t &startFromPos = 0, bool isIgnoreCase = false);
+	bool isStartWithTrimSpace(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos = 0);
+	bool isEndWith(const std::wstring &str, const std::wstring &suffix);
 
 	std::vector<std::wstring> SplitString(const std::wstring &str, const std::vector<std::wstring> &delimiters,
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
@@ -66,12 +66,12 @@ namespace vcc
 	std::wstring PadRight(const std::wstring &str, const size_t &length, const wchar_t &c);
 
 	// Trim
-	void LTrim(std::string &str);
-	void RTrim(std::string &str);
+	void lTrim(std::string &str);
+	void rTrim(std::string &str);
 	void Trim(std::string &str);
 
-	void LTrim(std::wstring &str);
-	void RTrim(std::wstring &str);
+	void lTrim(std::wstring &str);
+	void rTrim(std::wstring &str);
 	void Trim(std::wstring &str);
 
 	// Conversion

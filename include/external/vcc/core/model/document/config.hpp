@@ -22,7 +22,7 @@ namespace vcc
                 return std::make_shared<Config>(*this);
             }
             
-            bool IsValue(const std::wstring &key) const;
+            bool isValue(const std::wstring &key) const;
             std::wstring getValue(const std::wstring &key) const;
             void AddValue(const std::wstring &key, const std::wstring &value);
             void AddLine(const std::wstring &value = L"");

@@ -9,7 +9,7 @@
 class VPGVccGenerationManager : public VPGBaseGenerationManager
 {
     private:
-        std::wstring AdjustAppliationCpp(const std::wstring &fileContent) const;
+        std::wstring adjustAppliationCpp(const std::wstring &fileContent) const;
         
     public:
         VPGVccGenerationManager() : VPGVccGenerationManager(nullptr, L"", nullptr) {}

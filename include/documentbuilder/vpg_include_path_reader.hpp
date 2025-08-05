@@ -21,7 +21,7 @@ class VPGIncludePathReader
         size_t isCommand(const std::wstring &cppCode, const size_t &pos) const;
         size_t SkipCommand(const std::wstring &cppCode, const size_t &openCommandIndex, size_t &pos) const;
 
-        void ParseCustom(const std::wstring &cppCode, const std::wstring &currentNamespace, std::set<std::wstring> &classList) const;
+        void parseCustom(const std::wstring &cppCode, const std::wstring &currentNamespace, std::set<std::wstring> &classList) const;
         // void ParseLinux(const std::wstring &cppCode, std::set<std::wstring> &classList) const;
         // void ParseMacOs(const std::wstring &cppCode, std::set<std::wstring> &classList) const;
         // void ParseWindow(const std::wstring &cppCode, std::set<std::wstring> &classList) const;

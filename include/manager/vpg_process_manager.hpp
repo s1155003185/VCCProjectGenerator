@@ -36,9 +36,9 @@ class VPGProcessManager : public vcc::BaseManager
 
         void initLogConfig();
         // Ensure VPG Generator have same version as Versioning Commond Codebase Response
-        void VerifyLocalResponse();
+        void verifyLocalResponse();
 
-        bool IsUpdateAvaliable();
+        bool isUpdateAvaliable();
         
         void add();
         void update();

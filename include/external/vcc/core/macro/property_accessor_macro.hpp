@@ -218,7 +218,7 @@
     DLLEXPORT void writeObject(void *ref, int64_t property, void *value); \
     DLLEXPORT void writeObjectAtIndex(void *ref, int64_t property, void *value, int64_t index); \
     DLLEXPORT void writeObjectAtKey(void *ref, int64_t property, void *value, void *key); \
-    DLLEXPORT void *AddObjectAtIndex(void *ref, int64_t property, int64_t objectType, int64_t index); \
+    DLLEXPORT void *addObjectAtIndex(void *ref, int64_t property, int64_t objectType, int64_t index); \
     DLLEXPORT void insertObjectAtIndex(void *ref, int64_t property, void *value, int64_t index);
 
 #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_HEADER_CONTAINER \
@@ -414,7 +414,7 @@ DLLEXPORT void writeObjectAtKey(void *ref, int64_t property, void *value, void *
         PropertyAccessorFactory::create(object->sharedPtr())->writeObjectAtKey(vcc::LockType::writeLock, property, resultPtr, key); \
     CATCH \
 } \
-DLLEXPORT void *AddObjectAtIndex(void *ref, int64_t property, int64_t objectType, int64_t index) \
+DLLEXPORT void *addObjectAtIndex(void *ref, int64_t property, int64_t objectType, int64_t index) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \

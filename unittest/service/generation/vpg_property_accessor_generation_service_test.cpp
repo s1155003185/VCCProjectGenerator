@@ -65,7 +65,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Single)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
@@ -361,7 +361,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Namespace)
         "\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     this->insertProjectIncludeListAtKey(L"NamespaceA::VPGObjectNamespace", L"vcc_enum.hpp");
@@ -907,7 +907,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, NoAccess)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
     
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
@@ -944,7 +944,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Normal)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
@@ -1066,7 +1066,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, AccessMode_Vector)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
     
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
@@ -1337,7 +1337,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Multi)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
@@ -1531,7 +1531,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Object)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
@@ -1688,7 +1688,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Container)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
     
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
@@ -2513,7 +2513,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, Mix)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);
@@ -3073,7 +3073,7 @@ TEST_F(VPGPropertyAccessorFileGenerationServiceTest, ManagerAndAction)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
 
     std::set<std::wstring> propertyTypes;
     VPGPropertyAccessorGenerationService::GenerateHpp(this->getLogConfig().get(), L"VPG", this->getFilePathHpp(), enumClassList);

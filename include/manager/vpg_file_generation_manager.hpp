@@ -34,5 +34,5 @@ class VPGFileGenerationManager : public vcc::BaseManager
         std::wstring getClassFilenameFromEnumClassFilename(const std::wstring &enumClassFileName);
         void getFileList(const VPGEnumClassReader *reader, const std::wstring &directoryFullPath, const std::wstring &projectPrefix, const bool &isSeperateAction);
         
-        void GernerateProperty(const vcc::LogConfig *logConfig, const VPGConfig *option);
+        void generateProperty(const vcc::LogConfig *logConfig, const VPGConfig *option);
 };

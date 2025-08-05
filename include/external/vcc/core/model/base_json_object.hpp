@@ -15,7 +15,7 @@ namespace vcc
         virtual ~BaseJsonObject() {}
 
     public:
-        virtual std::wstring SerializeJson(const IDocumentBuilder *builder) const override
+        virtual std::wstring serializeJson(const IDocumentBuilder *builder) const override
         {
             TRY
                 return builder->serialize(ToJson().get());
@@ -23,11 +23,11 @@ namespace vcc
             return L"";
         }
 
-        virtual void DeserializeJsonString(const IDocumentBuilder *builder, const std::wstring &jsonStr) override
+        virtual void deserializeJsonString(const IDocumentBuilder *builder, const std::wstring &jsonStr) override
         {
             TRY
                 auto json = std::make_shared<Json>();
-                builder->Deserialize(jsonStr, json);
+                builder->deserialize(jsonStr, json);
                 DeserializeJson(json);
             CATCH
         }

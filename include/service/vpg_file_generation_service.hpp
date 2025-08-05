@@ -21,7 +21,7 @@ class VPGFileGenerationService
     
         static size_t getLeadingSpace(const std::wstring &line);
         static size_t getMinimumLeadingSpace(const std::vector<std::wstring> &lines);
-        static const vcc::Xml *GetTagFromCode(const vcc::Xml *code, const std::wstring &tagName);
+        static const vcc::Xml *getTagFromCode(const vcc::Xml *code, const std::wstring &tagName);
 
         static bool IsGeneartionTag(const std::wstring &tag);
         static bool IsTagForce(const vcc::Xml *child);

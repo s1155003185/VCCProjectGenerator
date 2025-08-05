@@ -26,7 +26,7 @@ TEST_F(VPGCodeReaderTest, SimpleString)
 {
     std::wstring str = L"abc";
     auto element = std::make_shared<vcc::Xml>();
-    this->getReader()->Deserialize(str, element);
+    this->getReader()->deserialize(str, element);
     EXPECT_EQ(element->getChildren().size(), (size_t)1);
     EXPECT_EQ(element->getChildren().at(0)->getFullText(), str);
 }
@@ -37,7 +37,7 @@ TEST_F(VPGCodeReaderTest, Command)
                     str += L" abc // abc \r\n";
                     str += L" not for vcc // <abc edf/> \r\n";
     auto element = std::make_shared<vcc::Xml>();
-    this->getReader()->Deserialize(str, element);
+    this->getReader()->deserialize(str, element);
     EXPECT_EQ(element->getChildren().size(), (size_t)1);
     EXPECT_EQ(element->getChildren().at(0)->getFullText(), str);
 }
@@ -46,7 +46,7 @@ TEST_F(VPGCodeReaderTest, VCCTag)
 {
     std::wstring str = L"  // <vcc:vccproj sync=\"FULL\"/>\r\n";
     auto element = std::make_shared<vcc::Xml>();
-    this->getReader()->Deserialize(str, element);
+    this->getReader()->deserialize(str, element);
     EXPECT_EQ(element->getChildren().size(), (size_t)3);
     EXPECT_EQ(element->getChildren().at(0)->getFullText(), L"  ");
     EXPECT_EQ(element->getChildren().at(1)->getName(), L"vcc:vccproj");
@@ -79,7 +79,7 @@ TEST_F(VPGCodeReaderTest, Mixed)
     str += L"    END";
 
     auto element = std::make_shared<vcc::Xml>();
-    this->getReader()->Deserialize(str, element);
+    this->getReader()->deserialize(str, element);
     EXPECT_EQ(element->getChildren().size(), (size_t)5);
     EXPECT_EQ(element->getChildren().at(0)->getFullText(), L"    ");
     EXPECT_EQ(element->getChildren().at(1)->getName(), L"vcc:vccproj");
@@ -115,7 +115,7 @@ TEST_F(VPGCodeReaderTest, Nested)
     str += L"    END";
 
     auto element = std::make_shared<vcc::Xml>();
-    this->getReader()->Deserialize(str, element);
+    this->getReader()->deserialize(str, element);
     EXPECT_EQ(element->getChildren().size(), (size_t)5);
     EXPECT_EQ(element->getChildren().at(0)->getFullText(), L"    ");
     EXPECT_EQ(element->getChildren().at(1)->getName(), L"vcc:vccproj");
@@ -152,7 +152,7 @@ TEST_F(VPGCodeReaderTest, FULL)
     str += L"    END";
 
     auto element = std::make_shared<vcc::Xml>();
-    this->getReader()->Deserialize(str, element);
+    this->getReader()->deserialize(str, element);
     EXPECT_EQ(element->getChildren().size(), (size_t)7);
     EXPECT_EQ(element->getChildren().at(0)->getFullText(), L"    ");
     EXPECT_EQ(element->getChildren().at(1)->getName(), L"vcc:vccproj");
@@ -197,7 +197,7 @@ TEST_F(VPGCodeReaderTest, ReadMe)
 
     std::unique_ptr<VPGCodeReader> reader = std::make_unique<VPGCodeReader>(L"#");
     auto element = std::make_shared<vcc::Xml>();
-    reader->Deserialize(str, element);
+    reader->deserialize(str, element);
     EXPECT_EQ(element->getChildren().size(), (size_t)6);
     EXPECT_EQ(element->getChildren().at(0)->getName(), L"vcc:vccproj");
     EXPECT_EQ(element->getChildren().at(0)->getAttributes().size(), (size_t)1);

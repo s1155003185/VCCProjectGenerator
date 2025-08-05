@@ -74,7 +74,7 @@ std::wstring getHppClass(const std::wstring &np, const std::wstring &actionName,
             "};\r\n";
         std::map<std::wstring, std::vector<std::wstring>> namespaceClassMapping;
         namespaceClassMapping[np].push_back(action);
-        return GenerateCodeWithNamespace(namespaceClassMapping);
+        return generateCodeWithNamespace(namespaceClassMapping);
     CATCH
     return L"";
 }
@@ -160,7 +160,7 @@ std::wstring getCppClass(const std::wstring &np, const std::wstring &actionName,
             "}\r\n";
         std::map<std::wstring, std::vector<std::wstring>> namespaceClassMapping;
         namespaceClassMapping[np].push_back(action);
-        return GenerateCodeWithNamespace(namespaceClassMapping);
+        return generateCodeWithNamespace(namespaceClassMapping);
     CATCH
     return L"";
 }
@@ -179,7 +179,7 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile)
         "\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
 
     std::vector<std::wstring> hppResult = {
             getHppClass(L"", L"AddWorkspace", {  }, L""),
@@ -239,7 +239,7 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile_Namespace)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
 
     std::vector<std::wstring> hppResult = {
             getHppClass(L"", L"AddWorkspace", {  }, L""),
@@ -297,7 +297,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
         "\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
     
     std::map<std::wstring, std::wstring> classPathMapping;
     classPathMapping.insert(std::make_pair(L"State", L"state.hpp"));
@@ -412,7 +412,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
         "};\r\n";
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGGlobal::GetEnumClassReader()->parse(enumClass, enumClassList);
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
     std::vector<std::wstring> emptyVector;
     
     std::map<std::wstring, std::wstring> classPathMapping;
@@ -455,7 +455,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
             "#include \"i_result.hpp\"\r\n"
             "#include \"log_config.hpp\"\r\n"
             + customPropertyHeader
-            + GenerateCodeWithNamespace(GetNamespaceClassContentMap(L"Namespace", { getHppClass(L"", L"AddWorkspace", { }, L"")})));
+            + generateCodeWithNamespace(GetNamespaceClassContentMap(L"Namespace", { getHppClass(L"", L"AddWorkspace", { }, L"")})));
     EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_add_workspace.cpp"})),
             cppHeader
             + L"#include \"vpg_git_form_add_workspace.hpp\"\r\n"
@@ -470,7 +470,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
             "#include \"log_config.hpp\"\r\n"
             "#include \"operation_result.hpp\"\r\n"
             + customPropertyHeader
-            + GenerateCodeWithNamespace(GetNamespaceClassContentMap(L"Namespace", { getCppClass(L"", L"AddWorkspace", { }, L"")}))
+            + generateCodeWithNamespace(GetNamespaceClassContentMap(L"Namespace", { getCppClass(L"", L"AddWorkspace", { }, L"")}))
             + customFooter);
 
 
@@ -485,7 +485,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
             "#include \"log_config.hpp\"\r\n"
             "#include \"vpg_git_form.hpp\"\r\n"
             + customPropertyHeader
-            + GenerateCodeWithNamespace(GetNamespaceClassContentMap(L"Namespace", { getHppClass(L"", L"DeleteWorkspace", { L"GETSET_SPTR_NULL(VPGGitFormDeleteWorkspaceArgument, Argument)" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")})));
+            + generateCodeWithNamespace(GetNamespaceClassContentMap(L"Namespace", { getHppClass(L"", L"DeleteWorkspace", { L"GETSET_SPTR_NULL(VPGGitFormDeleteWorkspaceArgument, Argument)" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")})));
     EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_delete_workspace.cpp"})),
             cppHeader
             + L"#include \"vpg_git_form_delete_workspace.hpp\"\r\n"
@@ -501,6 +501,6 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
             "#include \"operation_result.hpp\"\r\n"
             "#include \"vpg_git_form.hpp\"\r\n"
             + customPropertyHeader
-            + GenerateCodeWithNamespace(GetNamespaceClassContentMap(L"Namespace", { getCppClass(L"", L"DeleteWorkspace", { L"_Argument = argument;" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")}))
+            + generateCodeWithNamespace(GetNamespaceClassContentMap(L"Namespace", { getCppClass(L"", L"DeleteWorkspace", { L"_Argument = argument;" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")}))
             + customFooter);
 }

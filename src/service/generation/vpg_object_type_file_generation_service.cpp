@@ -21,9 +21,9 @@ void VPGObjectTypeFileGenerationService::generate(const vcc::LogConfig *logConfi
             std::wstring orginalContent = vcc::readFile(filePathHpp);
             auto reader = std::make_unique<VPGCodeReader>(L"//");
             auto element = std::make_shared<vcc::Xml>();
-            reader->Deserialize(orginalContent, element);
+            reader->deserialize(orginalContent, element);
             for (std::shared_ptr<vcc::Xml> child : element->getChildren()) {
-                if (vcc::IsStartWith(child->getName(), L"vcc:custom")) {
+                if (vcc::isStartWith(child->getName(), L"vcc:custom")) {
                     customContent = child->getFullText();
                     break;
                 }

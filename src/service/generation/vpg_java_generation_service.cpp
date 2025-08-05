@@ -43,16 +43,16 @@ std::wstring VPGJavaGenerationService::GetJavaPactkage(const std::wstring &path,
 {
     std::wstring result = L"";
     TRY
-        if (!vcc::IsStartWith(path, JAVA_PROJECT_SOURCE_PARENT_FOLDER))
+        if (!vcc::isStartWith(path, JAVA_PROJECT_SOURCE_PARENT_FOLDER))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, filePathName + L" is not start with " + JAVA_PROJECT_SOURCE_PARENT_FOLDER);
 
         result = vcc::getRelativePath(path, JAVA_PROJECT_SOURCE_PARENT_FOLDER);
         if (!middlePath.empty())
             result = vcc::concatPaths({ result, middlePath });
         result = vcc::getLinuxPath(result);
-        if (vcc::IsStartWith(result, L"/"))
+        if (vcc::isStartWith(result, L"/"))
             result = result.substr(1);
-        if (vcc::IsEndWith(result, L"/"))
+        if (vcc::isEndWith(result, L"/"))
             result.pop_back();
         vcc::ReplaceAll(result, L"/", L".");
     CATCH
@@ -81,20 +81,20 @@ std::map<std::wstring, std::wstring> VPGJavaGenerationService::GetImportFileMap(
     TRY
         for (auto const &relativePath : typeWorkspaceClassRelativePathMapObject) {
             std::wstring enumClassName = getTypeOrClassWithoutNamespace(relativePath.first);
-            if (!projectPrefix .empty() && !vcc::IsStartWith(enumClassName, projectPrefix))
+            if (!projectPrefix .empty() && !vcc::isStartWith(enumClassName, projectPrefix))
                 enumClassName = projectPrefix  + enumClassName;
             importFileMap.insert(std::make_pair(enumClassName, getJavaPactkage(option->getTypeDirectory(), relativePath.second, L"Type Directory")));
-            if (vcc::IsEndWith(enumClassName, propertyClassNameSuffix)) {
+            if (vcc::isEndWith(enumClassName, propertyClassNameSuffix)) {
                 std::wstring tmpObjectName = enumClassName.substr(0, enumClassName.size() - propertyClassNameSuffix.size());
                 importFileMap.insert(std::make_pair(tmpObjectName, getJavaPactkage(option->getObjectDirectory(), relativePath.second, L"Object Directory")));
             }
         }
         for (auto const &relativePath : typeWorkspaceClassRelativePathMapForm) {
             std::wstring enumClassName = getTypeOrClassWithoutNamespace(relativePath.first);
-            if (!projectPrefix .empty() && !vcc::IsStartWith(enumClassName, projectPrefix ))
+            if (!projectPrefix .empty() && !vcc::isStartWith(enumClassName, projectPrefix ))
                 enumClassName = projectPrefix  + enumClassName;
             importFileMap.insert(std::make_pair(enumClassName, getJavaPactkage(option->getTypeDirectory(), relativePath.second, L"Type Directory")));
-            if (vcc::IsEndWith(enumClassName, propertyClassNameSuffix)) {
+            if (vcc::isEndWith(enumClassName, propertyClassNameSuffix)) {
                 std::wstring tmpObjectName = enumClassName.substr(0, enumClassName.size() - propertyClassNameSuffix.size());
                 std::wstring directory = !vcc::IsBlank(option->getFormDirectory()) ? option->getFormDirectory() : option->getObjectDirectory();
                 importFileMap.insert(std::make_pair(tmpObjectName, getJavaPactkage(directory, relativePath.second, L"Form Directory")));
@@ -213,7 +213,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
 
         pos += dllExportStart.size() - 1;
         while (pos < content.length()) {
-            if (vcc::IsStartWith(content, dllExport, pos)) {
+            if (vcc::isStartWith(content, dllExport, pos)) {
                 // normal function
                 pos += dllExport.length();
                 size_t endPos1 = vcc::find(content, L";", pos);
@@ -305,7 +305,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                 }
                 result += argumentStr + L");\r\n";
                 pos = endPos;
-            } else if (vcc::IsStartWith(content, dllInterfaceExportPropertyAccessorString, pos)) {
+            } else if (vcc::isStartWith(content, dllInterfaceExportPropertyAccessorString, pos)) {
                 importPackages.insert(L"com.sun.jna.Pointer");
                 importPackages.insert(L"com.sun.jna.ptr.PointerByReference");
                 result += INDENT + L"void ReadString(Pointer ref, long property, PointerByReference value);\r\n"
@@ -316,7 +316,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                     + INDENT + L"void WriteStringAtKey(Pointer ref, long property, PointerByReference value, Pointer key);\r\n"
                     + INDENT + L"void insertStringAtIndex(Pointer ref, long property, PointerByReference value, long index);\r\n";
                 pos += dllInterfaceExportPropertyAccessorString.length() - 1;
-            } else if (vcc::IsStartWith(content, dllInterfaceExportPropertyAccessorObject, pos)) {
+            } else if (vcc::isStartWith(content, dllInterfaceExportPropertyAccessorObject, pos)) {
                 importPackages.insert(L"com.sun.jna.Pointer");
                 result += INDENT + L"Pointer ReadObject(Pointer ref, long property);\r\n"
                     + INDENT + L"Pointer ReadObjectAtIndex(Pointer ref, long property, long index);\r\n"
@@ -324,10 +324,10 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                     + INDENT + L"void WriteObject(Pointer ref, long property, Pointer value);\r\n"
                     + INDENT + L"void WriteObjectAtIndex(Pointer ref, long property, Pointer value, long index);\r\n"
                     + INDENT + L"void WriteObjectAtKey(Pointer ref, long property, Pointer value, Pointer key);\r\n"
-                    + INDENT + L"Pointer AddObjectAtIndex(Pointer ref, long property, long objectType, long index);\r\n"
+                    + INDENT + L"Pointer addObjectAtIndex(Pointer ref, long property, long objectType, long index);\r\n"
                     + INDENT + L"void insertObjectAtIndex(Pointer ref, long property, Pointer value, long index);\r\n";
                 pos += dllInterfaceExportPropertyAccessorObject.length() - 1;
-            } else if (vcc::IsStartWith(content, dllInterfaceExportPropertyAccessorContainer, pos)) {
+            } else if (vcc::isStartWith(content, dllInterfaceExportPropertyAccessorContainer, pos)) {
                 importPackages.insert(L"com.sun.jna.Pointer");
                 result += INDENT + L"long getCount(Pointer ref, long property);\r\n"
                     + INDENT + L"Pointer getMapKeys(Pointer ref, long property);\r\n"
@@ -337,7 +337,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                     + INDENT + L"void removeAtKey(Pointer ref, long property, Pointer key);\r\n"
                     + INDENT + L"void clear(Pointer ref, long property);\r\n";
                 pos += dllInterfaceExportPropertyAccessorContainer.length() - 1;
-            } else if (vcc::IsStartWith(content, dllInterfaceExportPropertyAccessor, pos)) {
+            } else if (vcc::isStartWith(content, dllInterfaceExportPropertyAccessor, pos)) {
                 importPackages.insert(L"com.sun.jna.ptr.PointerByReference");
 
                 pos = vcc::find(content, L"(", pos);
@@ -421,7 +421,7 @@ std::wstring VPGJavaGenerationService::GenerateEnumContent(const std::wstring &p
     std::wstring result = L"";
     TRY
         std::wstring enumClassName = getTypeOrClassWithoutNamespace(enumClass->getName());
-        enumClassName = (!vcc::IsStartWith(enumClassName, projectPrefix) ? projectPrefix  : L"") + enumClassName;
+        enumClassName = (!vcc::isStartWith(enumClassName, projectPrefix) ? projectPrefix  : L"") + enumClassName;
         std::wstring packageFolder = getJavaPactkage(option->getTypeDirectory(), middlePath, L"Type Directory");
         result += L"package " + packageFolder + L";\r\n"
             "\r\n"
@@ -766,7 +766,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterWrite(const VPG
                     importFiles.insert(importFileMap.find(objectTypeClass)->second + L"." + objectTypeClass);
 
                 std::wstring objectType = cppType1;
-                if (vcc::IsStartWith(cppType1, projectPrefix))
+                if (vcc::isStartWith(cppType1, projectPrefix))
                     objectType = cppType1.substr(projectPrefix.length());
                     
                 result += L"\r\n"
@@ -775,7 +775,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterWrite(const VPG
                     + INDENT + L"}\r\n"
                     "\r\n"
                     + INDENT + L"public " + javaType1 + L" add" + property->getPropertyName() + javaFunctionNameSuffix + L"(long index) {\r\n"
-                    + INDENT + INDENT + L"return new " + cppType1 + L"(" + dllInstantPrefix + L"AddObjectAtIndex(Handle, " + classPropertyEnum + L", " + objectTypeClass + L"." + objectType + L".getValue()" + dllFunctionIndex + L"));\r\n"
+                    + INDENT + INDENT + L"return new " + cppType1 + L"(" + dllInstantPrefix + L"addObjectAtIndex(Handle, " + classPropertyEnum + L", " + objectTypeClass + L"." + objectType + L".getValue()" + dllFunctionIndex + L"));\r\n"
                     + INDENT + L"}\r\n";
             }
         }
@@ -942,8 +942,8 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
         std::wstring objectPropertyName = getTypeOrClassWithoutNamespace(enumClass->getName());
         std::wstring objectName = objectPropertyName;
         std::wstring classObjectType = objectName.substr(0, objectName.size() - propertyClassNameSuffix.size());
-        classObjectType = vcc::IsStartWith(objectName, projectPrefix) ? classObjectType.substr(projectPrefix.length()) : classObjectType;
-        objectName = (!vcc::IsStartWith(objectName, projectPrefix) ? projectPrefix : L"") + objectName.substr(0, objectName.size() - propertyClassNameSuffix.size());
+        classObjectType = vcc::isStartWith(objectName, projectPrefix) ? classObjectType.substr(projectPrefix.length()) : classObjectType;
+        objectName = (!vcc::isStartWith(objectName, projectPrefix) ? projectPrefix : L"") + objectName.substr(0, objectName.size() - propertyClassNameSuffix.size());
         
         std::set<std::wstring> importFiles;
         importFiles.insert(L"com.sun.jna.Pointer");
@@ -966,7 +966,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
         for (auto const &property : enumClass->getProperties())
             getterSetterStr += VPGJavaGenerationService::GenerateObjectGetterSetter(projectPrefix, objectPropertyName, property.get(), importFileMap, importFiles);
         if (!getterSetterStr.empty()) {
-            vcc::LTrim(getterSetterStr);
+            vcc::lTrim(getterSetterStr);
 
             getterSetterStr = L"\r\n"
                 + INDENT + L"// <editor-fold defaultstate=\"collapsed\" desc=\"Generated Properties\">\r\n"
@@ -977,7 +977,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
         // Form Action
         std::wstring  formActionStr = VPGJavaGenerationService::GenerateFormAction(projectPrefix, enumClass);
         if (!formActionStr.empty()) {
-            vcc::LTrim(formActionStr);
+            vcc::lTrim(formActionStr);
             formActionStr = L"\r\n"
                 + INDENT + L"// <editor-fold defaultstate=\"collapsed\" desc=\"Generated Form Actions\">\r\n"
                 + INDENT + formActionStr
@@ -985,7 +985,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
         }
         std::wstring  formCustomActionStr = VPGJavaGenerationService::GenerateFormCustomAction(projectPrefix, enumClass, option->getObjectDirectory(), importFileMap, importFiles);
         if (!formCustomActionStr.empty()) {
-            vcc::LTrim(formCustomActionStr);
+            vcc::lTrim(formCustomActionStr);
             formCustomActionStr = L"\r\n"
                 + INDENT + L"// <editor-fold defaultstate=\"collapsed\" desc=\"Generated Form Custom Actions\">\r\n"
                 + INDENT + formCustomActionStr
@@ -996,7 +996,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
             "\r\n";
         for (auto const &str : importFiles) {
             // same package no need to import
-            if (vcc::IsStartWith(str, packageFolder + L".")
+            if (vcc::isStartWith(str, packageFolder + L".")
                 && vcc::CountSubstring(str.substr(packageFolder.size()), L".") < 2)
                 continue;
             result += L"import " + str + L";\r\n";
@@ -1147,7 +1147,7 @@ std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &pr
             "}\r\n"));
         formActions.insert(std::make_pair(L"truncateAction",
             L"public long truncateAction() {\r\n"
-            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationTruncateFormAction(Handle);\r\n"
+            + INDENT + L"return " + projectPrefix + L"DllFunctions.Instance.ApplicationtruncateFormAction(Handle);\r\n"
             "}\r\n"));
         
         // Close
@@ -1170,7 +1170,7 @@ std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &pr
             std::vector<std::wstring> lines = vcc::SplitStringByLine(action.second);
             result += L"\r\n";
             for (auto &line : lines) {
-                vcc::RTrim(line);
+                vcc::rTrim(line);
                 result += INDENT + line + L"\r\n";
             }
         }
@@ -1226,7 +1226,7 @@ std::wstring VPGJavaGenerationService::GenerateFormCustomAction(const std::wstri
             std::vector<std::wstring> lines = vcc::SplitStringByLine(action.second);
             result += L"\r\n";
             for (auto &line : lines) {
-                vcc::RTrim(line);
+                vcc::rTrim(line);
                 result += INDENT + line + L"\r\n";
             }
         }
@@ -1265,7 +1265,7 @@ void VPGJavaGenerationService::GenerateObject(const vcc::LogConfig *logConfig, c
         tmpFilePath = vcc::concatPaths({ tmpFilePath, vcc::getFileName(filePath) });
        
         std::wstring objectName = getTypeOrClassWithoutNamespace(enumClass->getName());
-        if (!vcc::IsEndWith(objectName, propertyClassNameSuffix))
+        if (!vcc::isEndWith(objectName, propertyClassNameSuffix))
             return;
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class: " + tmpFilePath);
         vcc::writeFile(tmpFilePath, VPGJavaGenerationService::GenerateObjectContent(option->getProjectPrefix(), enumClass, cppMiddlePath, getImportFileMap(option->getProjectPrefix(), javaOption, typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm), javaOption), true);

@@ -31,7 +31,7 @@ void VPGCodeReader::ParseXml(const std::wstring &xmlData, size_t &pos, std::shar
     TRY
         size_t startPos = pos;
         while (pos < dataLength) {
-            if (vcc::IsStartWith(xmlData, this->_CommandDelimiter, pos) && vcc::IsStartWithTrimSpace(xmlData, this->_CommandDelimiter + L"<vcc:", pos)) {
+            if (vcc::isStartWith(xmlData, this->_CommandDelimiter, pos) && vcc::isStartWithTrimSpace(xmlData, this->_CommandDelimiter + L"<vcc:", pos)) {
                 if (pos > 0) {
                     pos--;
                     auto previous = std::make_shared<vcc::Xml>();

@@ -59,7 +59,7 @@ namespace vcc
         return _CurrentSeqNo;
     }
 
-    int64_t ActionManager::_ChopActionListToSize(const int64_t &size, const bool &fromBeginning)
+    int64_t ActionManager::_chopActionListToSize(const int64_t &size, const bool &fromBeginning)
     {
         TRY
             int64_t needToRemove = std::max(static_cast<int64_t>(_Actions.size()) - size, static_cast<int64_t>(0));
@@ -77,7 +77,7 @@ namespace vcc
         return _CurrentSeqNo;
     }
 
-    int64_t ActionManager::_Truncate()
+    int64_t ActionManager::_truncate()
     {
         TRY
             _MaxSeqNo = -1;
@@ -104,7 +104,7 @@ namespace vcc
         return _CurrentSeqNo;
     }
 
-    std::shared_ptr<IResult> ActionManager::DoAction(std::shared_ptr<IAction> action)
+    std::shared_ptr<IResult> ActionManager::doAction(std::shared_ptr<IAction> action)
     {
         TRY
             //std::unique_lock lock(_mutex);
@@ -130,7 +130,7 @@ namespace vcc
             action->setSeqNo(nextSeqNo);
             _Actions.emplace(nextSeqNo, baseAction);
             _MaxSeqNo = _CurrentSeqNo = _getFirstSeqNo(false);
-            _ChopActionListToSize(_MaxActionListSize, true);
+            _chopActionListToSize(_MaxActionListSize, true);
             return result;
         CATCH
         return nullptr;
@@ -145,7 +145,7 @@ namespace vcc
         return nullptr;
     }
 
-    std::shared_ptr<IResult> ActionManager::RedoToSeqNo(const int64_t &seqNo)
+    std::shared_ptr<IResult> ActionManager::redoToSeqNo(const int64_t &seqNo)
     {
         TRY
             return Redo(seqNo - _CurrentSeqNo);
@@ -170,11 +170,11 @@ namespace vcc
         return nullptr;
     }
 
-    int64_t ActionManager::ChopActionListToSize(const int64_t &size)
+    int64_t ActionManager::chopActionListToSize(const int64_t &size)
     {
         TRY
             //std::unique_lock lock(_mutex);
-            return _ChopActionListToSize(size, true);
+            return _chopActionListToSize(size, true);
         CATCH
         return _CurrentSeqNo;
     }
@@ -188,11 +188,11 @@ namespace vcc
         return _CurrentSeqNo;
     }
 
-    int64_t ActionManager::Truncate()
+    int64_t ActionManager::truncate()
     {
         TRY
             //std::unique_lock lock(_mutex);
-            return _Truncate();
+            return _truncate();
         CATCH
         return _CurrentSeqNo;
     }

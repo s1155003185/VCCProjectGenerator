@@ -62,7 +62,7 @@ std::wstring VPGObjectFileGenerationService::GetCloneFunction(const VPGEnumClass
                 if ((!property->getType1().empty() && vcc::IsCapital(GetTypeOrClassWithoutNamespace(property->getType1()))) 
                     || (!property->getType2().empty() && vcc::IsCapital(GetTypeOrClassWithoutNamespace(property->getType2())))) {
                     if (vcc::find(property->getMacro(), L"SPTR") != std::wstring::npos)
-                        cloneObjs.insert({ property->getPropertyName(), L"obj->clone" + property->getPropertyName() + L"(this->_" + property->getPropertyName() + (vcc::IsStartWith(property->getMacro(), L"GETSET") ? L".get()" : L"" ) + L")" });
+                        cloneObjs.insert({ property->getPropertyName(), L"obj->clone" + property->getPropertyName() + L"(this->_" + property->getPropertyName() + (vcc::isStartWith(property->getMacro(), L"GETSET") ? L".get()" : L"" ) + L")" });
                 }
             }
             if (!cloneObjs.empty()) {
@@ -92,7 +92,7 @@ std::wstring VPGObjectFileGenerationService::GetConstructorContent(const VPGEnum
             vcc::Trim(type);
             vcc::Trim(defaultValue);
             if (vcc::IsCapital(type) && enumClassMapping.find(type) == enumClassMapping.end() && defaultValue != L"nullptr") 
-                initializeList.push_back(property.first + L" = " + defaultValue + (!vcc::IsEndWith(defaultValue, L";") ? L";" : L""));
+                initializeList.push_back(property.first + L" = " + defaultValue + (!vcc::isEndWith(defaultValue, L";") ? L";" : L""));
         }
         for (auto property : enumClass->getProperties()) {
             if (property->getIsInitializeInClassConstructorNeeded()) {
@@ -490,7 +490,7 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
         
                 }
                 
-                if (property->getPropertyType() == VPGEnumClassAttributeType::Manager && vcc::IsStartWith(property->getMacro(), L"MANAGER_SPTR_PARENT")) {
+                if (property->getPropertyType() == VPGEnumClassAttributeType::Manager && vcc::isStartWith(property->getMacro(), L"MANAGER_SPTR_PARENT")) {
                     std::wstring type = property->getDefaultValue();
                     if (!type.empty() && vcc::IsCapital(type)) {
                         std::wstring includeFile = VPGObjectFileGenerationService::GetProjectClassIncludeFile(projectClassIncludeFiles, type);
@@ -573,7 +573,7 @@ std::wstring VPGObjectFileGenerationService::GetHppProperties(const VPGEnumClass
                 type = L"std::shared_ptr<" + type + L">";
                 defaultValue = L"nullptr";
             }
-            result += INDENT + INDENT + L"mutable " + type + L" " + property.first + (!defaultValue.empty() ? (L" = " + defaultValue) : L"") + (!vcc::IsEndWith(defaultValue, L";") ? L";" : L"") + L"\r\n";
+            result += INDENT + INDENT + L"mutable " + type + L" " + property.first + (!defaultValue.empty() ? (L" = " + defaultValue) : L"") + (!vcc::isEndWith(defaultValue, L";") ? L";" : L"") + L"\r\n";
         }
 
         if (!result.empty())
@@ -594,7 +594,7 @@ std::wstring VPGObjectFileGenerationService::GetHppProperties(const VPGEnumClass
                 type = L"std::shared_ptr<" + type + L">";
                 defaultValue = L"nullptr";
             }
-            result += INDENT + INDENT + L"mutable " + type + L" " + property.first + (!defaultValue.empty() ? (L" = " + defaultValue) : L"") + (!vcc::IsEndWith(defaultValue, L";") ? L";" : L"") + L"\r\n";
+            result += INDENT + INDENT + L"mutable " + type + L" " + property.first + (!defaultValue.empty() ? (L" = " + defaultValue) : L"") + (!vcc::isEndWith(defaultValue, L";") ? L";" : L"") + L"\r\n";
         }
 
         if (!result.empty())
@@ -675,7 +675,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnum
             result += L"\r\n"
                 + INDENT + INDENT + L"virtual void initializeComponents() override;\r\n"
                 "\r\n"
-                + INDENT + INDENT + L"virtual std::shared_ptr<vcc::IResult> DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;\r\n";
+                + INDENT + INDENT + L"virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;\r\n";
             break;
         case VPGEnumClassType::Result:
             if (option->getBehavior() != nullptr && option->getBehavior()->getIsActionResultThrowException())
@@ -867,7 +867,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
         }
 
         // 4. Generate code in namespace
-        content += GenerateCodeWithNamespace(namespaceClassMapping);
+        content += generateCodeWithNamespace(namespaceClassMapping);
         
         // ------------------------------------------------------------------------------------------ //
         //                               Handle VCC Tag                                               //
@@ -875,7 +875,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
         if (vcc::isFilePresent(filePathHpp))
             content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::readFile(filePathHpp), VPGFileContentSyncMode::Full, L"//");
         
-        vcc::LTrim(content);
+        vcc::lTrim(content);
         vcc::writeFile(filePathHpp, content, true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file completed.");
     CATCH
@@ -1074,7 +1074,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
             if (property->getIsVector() || property->getIsSet()) {
                 // To Json
                 toJsonStr += INDENT + INDENT + L"auto tmp" + propertyName + L" = std::make_shared<vcc::Json>();\r\n"
-                    + INDENT + INDENT + L"json->AddArray(vcc::ConvertNamingStyle(L" + convertedPropertyName + L", vcc::NamingStyle::PascalCase, namestyle), tmp" + propertyName + L");\r\n"
+                    + INDENT + INDENT + L"json->addArray(vcc::ConvertNamingStyle(L" + convertedPropertyName + L", vcc::NamingStyle::PascalCase, namestyle), tmp" + propertyName + L");\r\n"
                     + INDENT + INDENT + L"for (auto const &element : get" + propertyName + L"()) {\r\n";
                 
                 deserializeStr += INDENT + INDENT + L"clear" + propertyName + L"();\r\n"
@@ -1082,7 +1082,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
                     + INDENT + INDENT + INDENT + L"for (auto const &element : json->getArray(vcc::ConvertNamingStyle(L" + convertedPropertyName + L", namestyle, vcc::NamingStyle::PascalCase))) {\r\n";
                 if (vcc::isContain(originalMacro, L"SPTR")) {
                     // Object
-                    toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->AddArrayObject(element->ToJson());\r\n";
+                    toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->addArrayObject(element->ToJson());\r\n";
 
                     deserializeStr += INDENT + INDENT + INDENT + INDENT + L"auto tmp" + propertyName + L" = std::make_shared<" + originalType + L">();\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->DeserializeJson(element->getArrayElementObject());\r\n"
@@ -1102,7 +1102,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
 
             } else if (property->getIsMap() || property->getIsOrderedMap()) {
                 toJsonStr += INDENT + INDENT + L"auto tmp" + propertyName + L" = std::make_shared<vcc::Json>();\r\n"
-                    + INDENT + INDENT + L"json->AddObject(vcc::ConvertNamingStyle(L" + convertedPropertyName + L", vcc::NamingStyle::PascalCase, namestyle), tmp" + propertyName + L");\r\n"
+                    + INDENT + INDENT + L"json->addObject(vcc::ConvertNamingStyle(L" + convertedPropertyName + L", vcc::NamingStyle::PascalCase, namestyle), tmp" + propertyName + L");\r\n"
                     + INDENT + INDENT + L"for (auto const &element : get" + propertyName + L"()) {\r\n";
                 
                 deserializeStr += INDENT + INDENT + L"clear" + propertyName + L"();\r\n"
@@ -1128,7 +1128,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
                     toJsonStrKeyStr = L"std::to_wstring(element.first)";
                 if (vcc::isContain(originalMacro, L"SPTR")) {
                     // Object
-                    toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->AddObject(" + toJsonStrKeyStr + L", element.second->ToJson());\r\n";
+                    toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->addObject(" + toJsonStrKeyStr + L", element.second->ToJson());\r\n";
                 
                     deserializeStr += INDENT + INDENT + INDENT + INDENT + L"if (tmpObject->getObject(key) != nullptr) {\r\n"
                         + INDENT + INDENT + INDENT + INDENT + INDENT + L"auto tmpElementObject = std::make_shared<" + property->getType2() + L">();\r\n"
@@ -1234,7 +1234,7 @@ std::wstring VPGObjectFileGenerationService::GetCppInitialize(const VPGEnumClass
             std::set<std::wstring> customManagers;
             for (auto const &property : enumClass->getProperties()) {
                 if (property->getPropertyType() == VPGEnumClassAttributeType::Manager) {
-                    if (vcc::IsStartWith(property->getMacro(), L"MANAGER_SPTR_PARENT"))
+                    if (vcc::isStartWith(property->getMacro(), L"MANAGER_SPTR_PARENT"))
                         customManagers.insert(L"_" + property->getPropertyName() + L" = nullptr;");
                     else
                         customManagers.insert(L"_" + property->getPropertyName() + L" = std::make_shared<" + property->getType1() + L">(" + property->getDefaultValue() + L");");
@@ -1269,7 +1269,7 @@ std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *en
             }
 
             result += L"\r\n"
-                "std::shared_ptr<vcc::IResult> " + className + L"::DoAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> " + (isContainArgument ? L"argument" : L"/*argument*/") + L")\r\n"
+                "std::shared_ptr<vcc::IResult> " + className + L"::doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> " + (isContainArgument ? L"argument" : L"/*argument*/") + L")\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + L"switch(static_cast<" + enumClass->getName() + L">(formProperty))\r\n"
@@ -1435,7 +1435,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
         }
 
         // 4. Generate code in namespace
-        content += GenerateCodeWithNamespace(namespaceClassMapping);
+        content += generateCodeWithNamespace(namespaceClassMapping);
 
         // 5. Custom Functions
         content += getCppCustomFunction(isIncludeForm);
@@ -1446,7 +1446,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
         if (vcc::isFilePresent(filePathCpp))
             content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::readFile(filePathCpp), VPGFileContentSyncMode::Full, L"//");
         
-        vcc::LTrim(content);
+        vcc::lTrim(content);
         vcc::writeFile(filePathCpp, content, true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file completed.");
     CATCH

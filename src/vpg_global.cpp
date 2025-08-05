@@ -25,7 +25,7 @@ std::wstring VPGGlobal::getVersion()
     return L"v0.4.1";
 }
 
-std::wstring VPGGlobal::GetVccLocalResponseFolder()
+std::wstring VPGGlobal::getVccLocalResponseFolder()
 {
     TRY
         return vcc::concatPaths({USER_HOME_VARIABLE, L"Documents", L"vcc"});
@@ -33,15 +33,15 @@ std::wstring VPGGlobal::GetVccLocalResponseFolder()
     return L"";
 }
 
-std::wstring VPGGlobal::GetVccProjectLocalResponseDirectory(VPGProjectType projectType)
+std::wstring VPGGlobal::getVccProjectLocalResponseDirectory(VPGProjectType projectType)
 {
     TRY
-        return vcc::concatPaths({VPGGlobal::GetVccLocalResponseFolder(), VPGGlobal::GetProjectName(projectType)});
+        return vcc::concatPaths({VPGGlobal::getVccLocalResponseFolder(), VPGGlobal::getProjectName(projectType)});
     CATCH
     return L"";
 }
 
-std::wstring VPGGlobal::GetProjectName(VPGProjectType projectType)
+std::wstring VPGGlobal::getProjectName(VPGProjectType projectType)
 {
     std::wstring result = L"";
     switch (projectType) {
@@ -61,54 +61,54 @@ std::wstring VPGGlobal::GetProjectName(VPGProjectType projectType)
     return result;
 }
 
-std::wstring VPGGlobal::GetProjecURL(VPGProjectType projectType)
+std::wstring VPGGlobal::getProjecURL(VPGProjectType projectType)
 {
-    return URL + VPGGlobal::GetProjectName(projectType) + URL_GIT;
+    return URL + VPGGlobal::getProjectName(projectType) + URL_GIT;
 }
 
-std::wstring VPGGlobal::GetVccJsonFileName()
+std::wstring VPGGlobal::getVccJsonFileName()
 {
     return L".vcc/vcc.json";
 }
 
-std::wstring VPGGlobal::GetCppDefaultIncludePathWindow()
+std::wstring VPGGlobal::getCppDefaultIncludePathWindow()
 {
     return L"C:\\msys64\\mingw64\\include\\c++\\12.2.0";
 }
 
-std::wstring VPGGlobal::GetCppDefaultIncludePathLinux()
+std::wstring VPGGlobal::getCppDefaultIncludePathLinux()
 {
     return L"/usr/include";
 }
 
-std::wstring VPGGlobal::GetCppDefaultIncludePathMacOs()
+std::wstring VPGGlobal::getCppDefaultIncludePathMacOs()
 {
     return L"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/V1";
 }
 
-std::wstring VPGGlobal::GetVCCProjectManagerConfigFileName()
+std::wstring VPGGlobal::getVCCProjectManagerConfigFileName()
 {
     return L"vpm.config.json";
 }
 
 std::wstring VPGGlobal::getVCCProjectManagerConfigFileFullPath()
 {
-    return VPGGlobal::GetConvertedPath(vcc::concatPaths({ VPGGlobal::GetVccLocalResponseFolder(), L"config", VPGGlobal::GetVCCProjectManagerConfigFileName() }));
+    return VPGGlobal::getConvertedPath(vcc::concatPaths({ VPGGlobal::getVccLocalResponseFolder(), L"config", VPGGlobal::getVCCProjectManagerConfigFileName() }));
 }
 
-std::shared_ptr<VPGEnumClassReader> VPGGlobal::GetEnumClassReader()
+std::shared_ptr<VPGEnumClassReader> VPGGlobal::getEnumClassReader()
 {
     assert(VPGGlobal::_EnumClassReader != nullptr);
     return VPGGlobal::_EnumClassReader;
 }
 
-std::shared_ptr<VPGFileGenerationManager> VPGGlobal::GetFileGenerationManager()
+std::shared_ptr<VPGFileGenerationManager> VPGGlobal::getFileGenerationManager()
 {
     assert(VPGGlobal::_FileGenerationManager != nullptr);
     return VPGGlobal::_FileGenerationManager;
 }
 
-std::wstring VPGGlobal::GetConvertedPath(const std::wstring &path)
+std::wstring VPGGlobal::getConvertedPath(const std::wstring &path)
 {
     std::wstring result = path;
     TRY
@@ -118,7 +118,7 @@ std::wstring VPGGlobal::GetConvertedPath(const std::wstring &path)
     return result;
 }
 
-void VPGGlobal::Initialize(const std::wstring &projectWorkspace)
+void VPGGlobal::initialize(const std::wstring &projectWorkspace)
 {
     VPGGlobal::_FileGenerationManager = std::make_unique<VPGFileGenerationManager>(std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None), L"");
     VPGGlobal::_FileGenerationManager->getClassMacroList(projectWorkspace);

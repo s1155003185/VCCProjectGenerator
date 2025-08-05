@@ -28,9 +28,9 @@ namespace vcc
         BaseForm(const ObjectType &type) : BaseObject(type) { initialize(); }
         virtual ~BaseForm() = default;
 
-        virtual void OnInitialize() override {}
+        virtual void onInitialize() override {}
         virtual void onInitializeComponents() override {}
-        virtual void OnInitializeValues() override {}
+        virtual void onInitializeValues() override {}
         virtual bool OnIsClosable() const override { return true; }
         virtual bool OnClose() override { return true; }
     public:
@@ -62,14 +62,14 @@ namespace vcc
         virtual int64_t getActionFirstSeqNo() const override;
         virtual int64_t getActionLastSeqNo() const override;
         
-        virtual std::shared_ptr<IResult> RedoAction(const int64_t &noOfStep = 1) override;
-        virtual std::shared_ptr<IResult> RedoActionToSeqNo(const int64_t &seqNo) override;
+        virtual std::shared_ptr<IResult> redoAction(const int64_t &noOfStep = 1) override;
+        virtual std::shared_ptr<IResult> redoActionToSeqNo(const int64_t &seqNo) override;
 
-        virtual std::shared_ptr<IResult> UndoAction(const int64_t &noOfStep = 1) override;
-        virtual std::shared_ptr<IResult> UndoActionToSeqNo(const int64_t &seqNo) override;
+        virtual std::shared_ptr<IResult> undoAction(const int64_t &noOfStep = 1) override;
+        virtual std::shared_ptr<IResult> undoActionToSeqNo(const int64_t &seqNo) override;
 
         virtual int64_t clearAction() override;
-        virtual int64_t TruncateAction() override;
+        virtual int64_t truncateAction() override;
 
         // Close
         virtual bool Close(bool isForce = false) override;

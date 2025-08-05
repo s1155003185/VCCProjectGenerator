@@ -181,10 +181,10 @@ void ApplicationStart()
     CATCH
 }
 
-int64_t ApplicationTruncateFormAction(void *form)
+int64_t ApplicationtruncateFormAction(void *form)
 {
     TRY
-        return Application::TruncateFormAction(static_cast<vcc::IObject *>(form));
+        return Application::truncateFormAction(static_cast<vcc::IObject *>(form));
     CATCH
     return -1;
 }
