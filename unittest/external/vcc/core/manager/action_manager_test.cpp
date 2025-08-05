@@ -85,7 +85,7 @@ TEST_F(ActionManagerTest, EmptyTest)
     // Chop
     EXPECT_EQ(manager->ChopActionListToSize(1), -1);
     // Clear
-    EXPECT_EQ(manager->Clear(), -1);
+    EXPECT_EQ(manager->clear(), -1);
     // Truncate
     EXPECT_EQ(manager->Truncate(), -1);
 }
