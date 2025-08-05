@@ -1213,10 +1213,10 @@ std::wstring VPGObjectFileGenerationService::GetCppInitialize(const VPGEnumClass
     TRY
         if (enumClass->getType() == VPGEnumClassType::Form) {
             result += L"\r\n"
-                "void " + className + L"::InitializeComponents()\r\n"
+                "void " + className + L"::initializeComponents()\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
-                + INDENT + INDENT + baseClassName + L"::InitializeComponents();\r\n";
+                + INDENT + INDENT + baseClassName + L"::initializeComponents();\r\n";
             if (enumClass->getIsLogConfigIndependent())
                 result += INDENT + INDENT + L"_LogConfig = std::make_shared<vcc::LogConfig>();\r\n";
             else
@@ -1246,7 +1246,7 @@ std::wstring VPGObjectFileGenerationService::GetCppInitialize(const VPGEnumClass
                 for (auto const &customManager : customManagers)
                     result += INDENT + INDENT + customManager + L"\r\n";
             }
-            result += INDENT + INDENT + L"OnInitializeComponents();\r\n"
+            result += INDENT + INDENT + L"onInitializeComponents();\r\n"
                 + INDENT + L"CATCH\r\n"
                 "}\r\n";
         }

@@ -16,7 +16,7 @@
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
 // </vcc:customHeader>
 
-void Application::InitializeComponents()
+void Application::initializeComponents()
 {
     TRY
         // Initialize for Global Log and Thread Setting
@@ -27,7 +27,7 @@ void Application::InitializeComponents()
         _ActionManager = nullptr;
         // </vcc:vccconfig>
         // Custom Initialize Log, Action, Thread by override OnInitializeComponents
-        OnInitializeComponents();
+        onInitializeComponents();
     CATCH
 }
 

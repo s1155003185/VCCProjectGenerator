@@ -294,7 +294,7 @@ std::set<void *> VPGWorkspaceFormPropertyAccessor::_GetMapKeys(const int64_t &ob
     return result;
 }
 
-bool VPGWorkspaceFormPropertyAccessor::_IsContainKey(const int64_t &objectProperty, const void */*key*/) const
+bool VPGWorkspaceFormPropertyAccessor::_isContainKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND

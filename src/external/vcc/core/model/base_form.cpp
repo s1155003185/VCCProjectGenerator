@@ -84,7 +84,7 @@ namespace vcc
         CATCH
     }
 
-    void BaseForm::InitializeComponents()
+    void BaseForm::initializeComponents()
     {
         TRY
             OnInitialize();

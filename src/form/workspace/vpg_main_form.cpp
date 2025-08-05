@@ -276,14 +276,14 @@ void VPGMainForm::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
     CATCH
 }
 
-void VPGMainForm::InitializeComponents()
+void VPGMainForm::initializeComponents()
 {
     TRY
-        vcc::BaseForm::InitializeComponents();
+        vcc::BaseForm::initializeComponents();
         _LogConfig = nullptr;
         _ActionManager = nullptr;
         _ThreadManager = nullptr;
-        OnInitializeComponents();
+        onInitializeComponents();
     CATCH
 }
 
@@ -293,13 +293,13 @@ std::shared_ptr<vcc::IResult> VPGMainForm::DoAction(const int64_t &formProperty,
         switch(static_cast<VPGMainFormProperty>(formProperty))
         {
         case VPGMainFormProperty::Initialize:
-            return DoInitialize();
+            return doInitialize();
         case VPGMainFormProperty::AddWorkspaceForm:
-            return DoAddWorkspaceForm(std::dynamic_pointer_cast<VPGMainFormAddWorkspaceFormArgument>(argument));
+            return doAddWorkspaceForm(std::dynamic_pointer_cast<VPGMainFormAddWorkspaceFormArgument>(argument));
         case VPGMainFormProperty::DeleteWorkspaceForm:
-            return DoDeleteWorkspaceForm(std::dynamic_pointer_cast<VPGMainFormDeleteWorkspaceFormArgument>(argument));
+            return doDeleteWorkspaceForm(std::dynamic_pointer_cast<VPGMainFormDeleteWorkspaceFormArgument>(argument));
         case VPGMainFormProperty::RenameWorkspaceForm:
-            return DoRenameWorkspaceForm(std::dynamic_pointer_cast<VPGMainFormRenameWorkspaceFormArgument>(argument));
+            return doRenameWorkspaceForm(std::dynamic_pointer_cast<VPGMainFormRenameWorkspaceFormArgument>(argument));
         default:
             assert(false);
             break;
@@ -308,7 +308,7 @@ std::shared_ptr<vcc::IResult> VPGMainForm::DoAction(const int64_t &formProperty,
     return nullptr;
 }
 
-std::shared_ptr<vcc::IResult> VPGMainForm::DoInitialize()
+std::shared_ptr<vcc::IResult> VPGMainForm::doInitialize()
 {
     TRY
         auto action = std::make_shared<VPGMainFormInitialize>(_LogConfig, SharedPtr());

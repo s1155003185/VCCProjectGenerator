@@ -19,7 +19,7 @@ namespace vcc
         
             // Initialize
             virtual void OnInitialize() = 0;
-            virtual void OnInitializeComponents() = 0;
+            virtual void onInitializeComponents() = 0;
             virtual void OnInitializeValues() = 0;
 
             // Close

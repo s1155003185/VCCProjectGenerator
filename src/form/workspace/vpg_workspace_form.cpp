@@ -78,14 +78,14 @@ void VPGWorkspaceForm::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
     CATCH
 }
 
-void VPGWorkspaceForm::InitializeComponents()
+void VPGWorkspaceForm::initializeComponents()
 {
     TRY
-        vcc::BaseForm::InitializeComponents();
+        vcc::BaseForm::initializeComponents();
         _LogConfig = nullptr;
         _ActionManager = nullptr;
         _ThreadManager = nullptr;
-        OnInitializeComponents();
+        onInitializeComponents();
     CATCH
 }
 

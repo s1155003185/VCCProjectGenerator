@@ -1101,7 +1101,7 @@ std::set<void *> VPGConfigPropertyAccessor::_GetMapKeys(const int64_t &objectPro
     return result;
 }
 
-bool VPGConfigPropertyAccessor::_IsContainKey(const int64_t &objectProperty, const void */*key*/) const
+bool VPGConfigPropertyAccessor::_isContainKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND

@@ -29,7 +29,7 @@ namespace vcc
         virtual ~BaseForm() = default;
 
         virtual void OnInitialize() override {}
-        virtual void OnInitializeComponents() override {}
+        virtual void onInitializeComponents() override {}
         virtual void OnInitializeValues() override {}
         virtual bool OnIsClosable() const override { return true; }
         virtual bool OnClose() override { return true; }

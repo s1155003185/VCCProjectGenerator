@@ -133,7 +133,7 @@ namespace vcc
     {
         TRY
             validateKeyIsFound(key);
-            return std::stod(GetJsonInternalNameValuePairsAtKey(key)->getJsonInternalValue());
+            return std::stod(getJsonInternalNameValuePairsAtKey(key)->getJsonInternalValue());
         CATCH
         return 0.0;        
     }
@@ -142,7 +142,7 @@ namespace vcc
     {
         TRY
             validateKeyIsFound(key);
-            return std::stod(GetJsonInternalNameValuePairsAtKey(key)->getJsonInternalValue());
+            return std::stod(getJsonInternalNameValuePairsAtKey(key)->getJsonInternalValue());
         CATCH
         return 0.0;        
     }
@@ -186,7 +186,7 @@ namespace vcc
     {
         TRY
             validateKeyIsFound(key);
-            return std::stoi(GetJsonInternalNameValuePairsAtKey(key)->getJsonInternalValue());
+            return std::stoi(getJsonInternalNameValuePairsAtKey(key)->getJsonInternalValue());
         CATCH
         return 0;
     }
@@ -195,7 +195,7 @@ namespace vcc
     {
         TRY
             validateKeyIsFound(key);
-            return std::stoll(GetJsonInternalNameValuePairsAtKey(key)->getJsonInternalValue());
+            return std::stoll(getJsonInternalNameValuePairsAtKey(key)->getJsonInternalValue());
         CATCH
         return 0;
     }
@@ -277,7 +277,7 @@ namespace vcc
     {
         TRY
             validateKeyIsFound(key);
-            if (GetJsonInternalNameValuePairsAtKey(key)->getJsonInternalArray().size() > 0)
+            if (getJsonInternalNameValuePairsAtKey(key)->getJsonInternalArray().size() > 0)
                 return getJsonInternalNameValuePairsAtKey(key)->getJsonInternalArray().at(0);
         CATCH
         return nullptr;

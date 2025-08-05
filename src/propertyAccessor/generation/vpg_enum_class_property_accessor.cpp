@@ -377,7 +377,7 @@ std::set<void *> VPGEnumClassAttributePropertyAccessor::_GetMapKeys(const int64_
     return result;
 }
 
-bool VPGEnumClassAttributePropertyAccessor::_IsContainKey(const int64_t &objectProperty, const void */*key*/) const
+bool VPGEnumClassAttributePropertyAccessor::_isContainKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -990,7 +990,7 @@ std::set<void *> VPGEnumClassPropertyAccessor::_GetMapKeys(const int64_t &object
     return result;
 }
 
-bool VPGEnumClassPropertyAccessor::_IsContainKey(const int64_t &objectProperty, const void *key) const
+bool VPGEnumClassPropertyAccessor::_isContainKey(const int64_t &objectProperty, const void *key) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClass>(_Object);

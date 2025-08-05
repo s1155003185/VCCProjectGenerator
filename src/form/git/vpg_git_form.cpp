@@ -51,16 +51,16 @@ void VPGGitForm::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
     CATCH
 }
 
-void VPGGitForm::InitializeComponents()
+void VPGGitForm::initializeComponents()
 {
     TRY
-        vcc::BaseForm::InitializeComponents();
+        vcc::BaseForm::initializeComponents();
         _LogConfig = nullptr;
         _ActionManager = nullptr;
         _ThreadManager = nullptr;
         // Custom Managers
         _GitManager = std::make_shared<vcc::GitManager>(_LogConfig);
-        OnInitializeComponents();
+        onInitializeComponents();
     CATCH
 }
 
