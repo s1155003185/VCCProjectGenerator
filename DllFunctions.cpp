@@ -33,7 +33,7 @@ std::shared_ptr<vcc::IObject> obj = nullptr;
 void *CreateObject(int64_t objectType)
 {
     ObjectType tmpObjectType = static_cast<ObjectType>(objectType);
-    obj = ObjectFactory::Create(tmpObjectType);
+    obj = ObjectFactory::create(tmpObjectType);
     return obj.get();
 }
 

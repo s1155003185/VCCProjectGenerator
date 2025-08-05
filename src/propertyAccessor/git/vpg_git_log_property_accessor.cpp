@@ -440,7 +440,7 @@ void VPGGitLogPropertyAccessor::_Remove(const int64_t &objectProperty, const voi
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const vcc::IObject */*value*/)
+void VPGGitLogPropertyAccessor::_removeObject(const int64_t &objectProperty, const vcc::IObject */*value*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND

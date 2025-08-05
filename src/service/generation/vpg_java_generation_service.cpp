@@ -332,8 +332,8 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                 result += INDENT + L"long getCount(Pointer ref, long property);\r\n"
                     + INDENT + L"Pointer getMapKeys(Pointer ref, long property);\r\n"
                     + INDENT + L"boolean IsContainKey(Pointer ref, long property, Pointer key);\r\n"
-                    + INDENT + L"void RemoveObject(Pointer ref, long property, Pointer value);\r\n"
-                    + INDENT + L"void RemoveAtIndex(Pointer ref, long property, long index);\r\n"
+                    + INDENT + L"void removeObject(Pointer ref, long property, Pointer value);\r\n"
+                    + INDENT + L"void removeAtIndex(Pointer ref, long property, long index);\r\n"
                     + INDENT + L"void removeAtKey(Pointer ref, long property, Pointer key);\r\n"
                     + INDENT + L"void clear(Pointer ref, long property);\r\n";
                 pos += dllInterfaceExportPropertyAccessorContainer.length() - 1;
@@ -564,11 +564,11 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const
             if (property->getIsObject() && property->getIsVector() && !property->getIsOrderedMap())
                 result += L"\r\n"
                     + INDENT + L"public void remove" + property->getPropertyName() + L"(" + javaType1 + L" value) {\r\n"
-                    + INDENT + INDENT + dllInstantPrefix + L"RemoveObject(Handle, " + classPropertyEnum + L", value.Handle);\r\n"
+                    + INDENT + INDENT + dllInstantPrefix + L"removeObject(Handle, " + classPropertyEnum + L", value.Handle);\r\n"
                     + INDENT + L"}\r\n";
             result += L"\r\n"
                 + INDENT + L"public void remove" + property->getPropertyName() + L"AtIndex(long index) {\r\n"
-                + INDENT + INDENT + dllInstantPrefix + L"RemoveAtIndex(Handle, " + classPropertyEnum + L", index);\r\n"
+                + INDENT + INDENT + dllInstantPrefix + L"removeAtIndex(Handle, " + classPropertyEnum + L", index);\r\n"
                 + INDENT + L"}\r\n";
         }
 

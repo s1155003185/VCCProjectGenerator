@@ -309,7 +309,7 @@ void VPGWorkspaceFormPropertyAccessor::_Remove(const int64_t &objectProperty, co
     CATCH
 }
 
-void VPGWorkspaceFormPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const vcc::IObject *value)
+void VPGWorkspaceFormPropertyAccessor::_removeObject(const int64_t &objectProperty, const vcc::IObject *value)
 {
     TRY
         assert(value != nullptr);

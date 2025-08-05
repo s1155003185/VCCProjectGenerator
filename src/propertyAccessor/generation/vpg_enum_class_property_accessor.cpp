@@ -405,7 +405,7 @@ void VPGEnumClassAttributePropertyAccessor::_Remove(const int64_t &objectPropert
     CATCH
 }
 
-void VPGEnumClassAttributePropertyAccessor::_RemoveObject(const int64_t &objectProperty, const vcc::IObject */*value*/)
+void VPGEnumClassAttributePropertyAccessor::_removeObject(const int64_t &objectProperty, const vcc::IObject */*value*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -1059,7 +1059,7 @@ void VPGEnumClassPropertyAccessor::_Remove(const int64_t &objectProperty, const 
     CATCH
 }
 
-void VPGEnumClassPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const vcc::IObject *value)
+void VPGEnumClassPropertyAccessor::_removeObject(const int64_t &objectProperty, const vcc::IObject *value)
 {
     TRY
         assert(value != nullptr);

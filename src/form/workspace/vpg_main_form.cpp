@@ -42,7 +42,7 @@ VPGMainFormAddWorkspaceForm::VPGMainFormAddWorkspaceForm(std::shared_ptr<vcc::Lo
     _Argument = argument;
 }
 
-std::wstring VPGMainFormAddWorkspaceForm::GetRedoMessageStart() const
+std::wstring VPGMainFormAddWorkspaceForm::getRedoMessageStart() const
 {
     TRY
         // <vcc:VPGMainFormAddWorkspaceFormGetRedoMessageStart sync="RESERVE" gen="RESERVE">
@@ -52,7 +52,7 @@ std::wstring VPGMainFormAddWorkspaceForm::GetRedoMessageStart() const
     return L"";
 }
 
-std::wstring VPGMainFormAddWorkspaceForm::GetRedoMessageComplete() const
+std::wstring VPGMainFormAddWorkspaceForm::getRedoMessageComplete() const
 {
     TRY
         // <vcc:VPGMainFormAddWorkspaceFormGetRedoMessageComplete sync="RESERVE" gen="RESERVE">
@@ -66,14 +66,14 @@ std::shared_ptr<vcc::IResult> VPGMainFormAddWorkspaceForm::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormAddWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
-        auto propertyAccessor = PropertyAccessorFactory::Create(_ParentObject);
-        propertyAccessor->ReadWriteLock();
+        auto propertyAccessor = PropertyAccessorFactory::create(_ParentObject);
+        propertyAccessor->readWriteLock();
         auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
         auto workspaceForm = std::make_shared<VPGWorkspaceForm>();
         workspaceForm->setName(_Argument->getName());
         form->insertWorkspaceForms(workspaceForm);
         form->saveConfig();
-        propertyAccessor->Unlock();
+        propertyAccessor->unlock();
         // </vcc:VPGMainFormAddWorkspaceFormOnRedo>
     CATCH_RETURN_RESULT(vcc::OperationResult)
     return std::make_shared<vcc::OperationResult>();
@@ -92,7 +92,7 @@ VPGMainFormDeleteWorkspaceForm::VPGMainFormDeleteWorkspaceForm(std::shared_ptr<v
     _Argument = argument;
 }
 
-std::wstring VPGMainFormDeleteWorkspaceForm::GetRedoMessageStart() const
+std::wstring VPGMainFormDeleteWorkspaceForm::getRedoMessageStart() const
 {
     TRY
         // <vcc:VPGMainFormDeleteWorkspaceFormGetRedoMessageStart sync="RESERVE" gen="RESERVE">
@@ -102,7 +102,7 @@ std::wstring VPGMainFormDeleteWorkspaceForm::GetRedoMessageStart() const
     return L"";
 }
 
-std::wstring VPGMainFormDeleteWorkspaceForm::GetRedoMessageComplete() const
+std::wstring VPGMainFormDeleteWorkspaceForm::getRedoMessageComplete() const
 {
     TRY
         // <vcc:VPGMainFormDeleteWorkspaceFormGetRedoMessageComplete sync="RESERVE" gen="RESERVE">
@@ -116,15 +116,15 @@ std::shared_ptr<vcc::IResult> VPGMainFormDeleteWorkspaceForm::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormDeleteWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
-        auto propertyAccessor = PropertyAccessorFactory::Create(_ParentObject);
-        propertyAccessor->ReadWriteLock();
+        auto propertyAccessor = PropertyAccessorFactory::create(_ParentObject);
+        propertyAccessor->readWriteLock();
         auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
         auto index = form->FindWorkspaceForms(_Argument->getWorkspaceForm());
         if (index < 0)
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace not found");
         form->removeWorkspaceFormsAtIndex(index);
         form->saveConfig();
-        propertyAccessor->Unlock();
+        propertyAccessor->unlock();
         // </vcc:VPGMainFormDeleteWorkspaceFormOnRedo>
     CATCH_RETURN_RESULT(vcc::OperationResult)
     return std::make_shared<vcc::OperationResult>();
@@ -136,7 +136,7 @@ VPGMainFormInitialize::VPGMainFormInitialize(std::shared_ptr<vcc::LogConfig> log
     _ParentObject = parentForm;
 }
 
-std::wstring VPGMainFormInitialize::GetRedoMessageStart() const
+std::wstring VPGMainFormInitialize::getRedoMessageStart() const
 {
     TRY
         // <vcc:VPGMainFormInitializeGetRedoMessageStart sync="RESERVE" gen="RESERVE">
@@ -146,7 +146,7 @@ std::wstring VPGMainFormInitialize::GetRedoMessageStart() const
     return L"";
 }
 
-std::wstring VPGMainFormInitialize::GetRedoMessageComplete() const
+std::wstring VPGMainFormInitialize::getRedoMessageComplete() const
 {
     TRY
         // <vcc:VPGMainFormInitializeGetRedoMessageComplete sync="RESERVE" gen="RESERVE">
@@ -160,8 +160,8 @@ std::shared_ptr<vcc::IResult> VPGMainFormInitialize::OnRedo()
 {
     TRY
         // <vcc:VPGMainFormInitializeOnRedo sync="RESERVE" gen="RESERVE">
-        auto propertyAccessor = PropertyAccessorFactory::Create(_ParentObject);
-        propertyAccessor->WriteLock();
+        auto propertyAccessor = PropertyAccessorFactory::create(_ParentObject);
+        propertyAccessor->writeLock();
         auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
         form->TruncateAction();
         form->clearWorkspaceForms();
@@ -179,7 +179,7 @@ std::shared_ptr<vcc::IResult> VPGMainFormInitialize::OnRedo()
             form->insertWorkspaceForms(workspace);
             form->saveConfig();
         }
-        propertyAccessor->Unlock();
+        propertyAccessor->unlock();
         // </vcc:VPGMainFormInitializeOnRedo>
     CATCH_RETURN_RESULT(vcc::OperationResult)
     return std::make_shared<vcc::OperationResult>();
@@ -198,7 +198,7 @@ VPGMainFormRenameWorkspaceForm::VPGMainFormRenameWorkspaceForm(std::shared_ptr<v
     _Argument = argument;
 }
 
-std::wstring VPGMainFormRenameWorkspaceForm::GetRedoMessageStart() const
+std::wstring VPGMainFormRenameWorkspaceForm::getRedoMessageStart() const
 {
     TRY
         // <vcc:VPGMainFormRenameWorkspaceFormGetRedoMessageStart sync="RESERVE" gen="RESERVE">
@@ -208,7 +208,7 @@ std::wstring VPGMainFormRenameWorkspaceForm::GetRedoMessageStart() const
     return L"";
 }
 
-std::wstring VPGMainFormRenameWorkspaceForm::GetRedoMessageComplete() const
+std::wstring VPGMainFormRenameWorkspaceForm::getRedoMessageComplete() const
 {
     TRY
         // <vcc:VPGMainFormRenameWorkspaceFormGetRedoMessageComplete sync="RESERVE" gen="RESERVE">

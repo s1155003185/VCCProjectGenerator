@@ -869,7 +869,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
             "}\r\n";
         
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_RemoveObject(const int64_t &objectProperty, const vcc::IObject *" + (!vectorCasesObject.empty() ? L"value" : L"/*value*/") + L")\r\n"
+            "void " + propertyName + L"Accessor::_removeObject(const int64_t &objectProperty, const vcc::IObject *" + (!vectorCasesObject.empty() ? L"value" : L"/*value*/") + L")\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!vectorCasesObject.empty()) {

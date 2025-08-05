@@ -30,7 +30,7 @@ void VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(const vcc::Log
             "        virtual ~PropertyAccessorFactory() {}\r\n"
             "\r\n"
             "    public:\r\n"
-            "        static std::shared_ptr<vcc::IPropertyAccessor> Create(std::shared_ptr<vcc::IObject> object);\r\n"
+            "        static std::shared_ptr<vcc::IPropertyAccessor> create(std::shared_ptr<vcc::IObject> object);\r\n"
             "};\r\n";
         vcc::writeFile(filePathHpp, content, true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor factory file completed.");
@@ -59,7 +59,7 @@ void VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(const vcc::Log
             content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
 
         content += L"\r\n"
-            "std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_ptr<vcc::IObject> object)\r\n"
+            "std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::create(std::shared_ptr<vcc::IObject> object)\r\n"
             "{\r\n"
             + INDENT + L"assert(object != nullptr);\r\n"
             "\r\n"

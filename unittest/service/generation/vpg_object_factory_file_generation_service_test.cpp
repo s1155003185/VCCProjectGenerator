@@ -45,7 +45,7 @@ class VPGObjectFactoryFileGenerationServiceTest : public testing::Test
                 "        virtual ~ObjectFactory() {}\r\n"
                 "\r\n"
                 "    public:\r\n"
-                "        static std::shared_ptr<vcc::IObject> Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);\r\n"
+                "        static std::shared_ptr<vcc::IObject> create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);\r\n"
                 "};\r\n";
         }
 
@@ -76,7 +76,7 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Empty)
         "#include \"i_object.hpp\"\r\n"
         "#include \"object_type.hpp\"\r\n"
         "\r\n"
-        "std::shared_ptr<vcc::IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)\r\n"
+        "std::shared_ptr<vcc::IObject> ObjectFactory::create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)\r\n"
         "{\r\n"
         "    std::shared_ptr<vcc::IObject> result = nullptr;\r\n"
         "    TRY\r\n"
@@ -118,7 +118,7 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Normal)
         "#include \"i_object.hpp\"\r\n"
         "#include \"object_type.hpp\"\r\n"
         "\r\n"
-        "std::shared_ptr<vcc::IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)\r\n"
+        "std::shared_ptr<vcc::IObject> ObjectFactory::create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)\r\n"
         "{\r\n"
         "    std::shared_ptr<vcc::IObject> result = nullptr;\r\n"
         "    TRY\r\n"

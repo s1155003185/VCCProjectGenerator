@@ -30,7 +30,7 @@ void VPGObjectFactoryFileGenerationService::GenerateHpp(const vcc::LogConfig *lo
             "        virtual ~ObjectFactory() {}\r\n"
             "\r\n"
             "    public:\r\n"
-            "        static std::shared_ptr<vcc::IObject> Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);\r\n"
+            "        static std::shared_ptr<vcc::IObject> create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);\r\n"
             "};\r\n";
         vcc::writeFile(filePathHpp, content, true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object factory file completed.");
@@ -59,7 +59,7 @@ void VPGObjectFactoryFileGenerationService::GenerateCpp(const vcc::LogConfig *lo
             content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, str) + L"\r\n";
 
         content += L"\r\n"
-            "std::shared_ptr<vcc::IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)\r\n"
+            "std::shared_ptr<vcc::IObject> ObjectFactory::create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)\r\n"
             "{\r\n"
             + INDENT + L"std::shared_ptr<vcc::IObject> result = nullptr;\r\n"
             + INDENT + L"TRY\r\n"

@@ -101,7 +101,7 @@ std::wstring getCppClass(const std::wstring &np, const std::wstring &actionName,
                 + propertyStr
                 + L"}\r\n";
         action += L"\r\n"
-            "std::wstring VPGGitForm" + actionName + L"::GetRedoMessageStart() const\r\n"
+            "std::wstring VPGGitForm" + actionName + L"::getRedoMessageStart() const\r\n"
             "{\r\n"
             "    TRY\r\n"
             "        // <vcc:VPGGitForm" + actionName + L"GetRedoMessageStart sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
@@ -111,7 +111,7 @@ std::wstring getCppClass(const std::wstring &np, const std::wstring &actionName,
             "    return L\"\";\r\n"
             "}\r\n"
             "\r\n"
-            "std::wstring VPGGitForm" + actionName + L"::GetRedoMessageComplete() const\r\n"
+            "std::wstring VPGGitForm" + actionName + L"::getRedoMessageComplete() const\r\n"
             "{\r\n"
             "    TRY\r\n"
             "        // <vcc:VPGGitForm" + actionName + L"GetRedoMessageComplete sync=\"RESERVE\" gen=\"RESERVE\">\r\n"

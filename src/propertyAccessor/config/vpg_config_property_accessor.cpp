@@ -1129,7 +1129,7 @@ void VPGConfigPropertyAccessor::_Remove(const int64_t &objectProperty, const voi
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const vcc::IObject *value)
+void VPGConfigPropertyAccessor::_removeObject(const int64_t &objectProperty, const vcc::IObject *value)
 {
     TRY
         assert(value != nullptr);

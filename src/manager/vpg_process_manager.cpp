@@ -90,7 +90,7 @@ void VPGProcessManager::VerifyLocalResponse()
             try
             {
                 if (vcc::isDirectoryExists(localResponseDirectoryProject)) {
-                    vcc::LogService::LogInfo(this->getLogConfig().get(), L"", L"Remove current response.");
+                    vcc::LogService::LogInfo(this->getLogConfig().get(), L"", L"remove current response.");
                     vcc::removeDirectory(localResponseDirectoryProject);
                     vcc::LogService::LogInfo(this->getLogConfig().get(), L"", L"Done.");
                 }

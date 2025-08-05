@@ -45,7 +45,7 @@ class VPGPropertyAccessorFactoryFileGenerationServiceTest : public testing::Test
                 "        virtual ~PropertyAccessorFactory() {}\r\n"
                 "\r\n"
                 "    public:\r\n"
-                "        static std::shared_ptr<vcc::IPropertyAccessor> Create(std::shared_ptr<vcc::IObject> object);\r\n"
+                "        static std::shared_ptr<vcc::IPropertyAccessor> create(std::shared_ptr<vcc::IObject> object);\r\n"
                 "};\r\n";
         }
 
@@ -76,7 +76,7 @@ TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Empty)
         "#include \"i_object.hpp\"\r\n"
         "#include \"i_property_accessor.hpp\"\r\n"
         "\r\n"
-        "std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_ptr<vcc::IObject> object)\r\n"
+        "std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::create(std::shared_ptr<vcc::IObject> object)\r\n"
         "{\r\n"
         "    assert(object != nullptr);\r\n"
         "\r\n"
@@ -115,7 +115,7 @@ TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Normal)
         "#include \"i_object.hpp\"\r\n"
         "#include \"i_property_accessor.hpp\"\r\n"
         "\r\n"
-        "std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_ptr<vcc::IObject> object)\r\n"
+        "std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::create(std::shared_ptr<vcc::IObject> object)\r\n"
         "{\r\n"
         "    assert(object != nullptr);\r\n"
         "\r\n"

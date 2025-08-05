@@ -13,7 +13,7 @@
 #include "vpg_main_form.hpp"
 #include "vpg_workspace_form.hpp"
 
-std::shared_ptr<vcc::IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)
+std::shared_ptr<vcc::IObject> ObjectFactory::create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)
 {
     std::shared_ptr<vcc::IObject> result = nullptr;
     TRY

@@ -485,7 +485,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    CATCH\r\n"
         "}\r\n"
         "\r\n"
-        "void VCCObjectPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const vcc::IObject */*value*/)\r\n"
+        "void VCCObjectPropertyAccessor::_removeObject(const int64_t &objectProperty, const vcc::IObject */*value*/)\r\n"
         "{\r\n"
         "    TRY\r\n"
         "        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND\r\n"
@@ -724,7 +724,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    CATCH\r\n"
         "}\r\n"
         "\r\n"
-        "void VCCObjectPtrPropertyAccessor::_RemoveObject(const int64_t &objectProperty, const vcc::IObject *value)\r\n"
+        "void VCCObjectPtrPropertyAccessor::_removeObject(const int64_t &objectProperty, const vcc::IObject *value)\r\n"
         "{\r\n"
         "    TRY\r\n"
         "        assert(value != nullptr);\r\n"
@@ -801,7 +801,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "        virtual ~ObjectFactory() {}\r\n"
         "\r\n"
         "    public:\r\n"
-        "        static std::shared_ptr<vcc::IObject> Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);\r\n"
+        "        static std::shared_ptr<vcc::IObject> create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);\r\n"
         "};\r\n");
     EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"object_factory.cpp"})));
     EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspaceTarget(), L"object_factory.cpp"})),
@@ -815,7 +815,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "#include \"object_type.hpp\"\r\n"
         "#include \"vcc_a.hpp\"\r\n"
         "\r\n"
-        "std::shared_ptr<vcc::IObject> ObjectFactory::Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)\r\n"
+        "std::shared_ptr<vcc::IObject> ObjectFactory::create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)\r\n"
         "{\r\n"
         "    std::shared_ptr<vcc::IObject> result = nullptr;\r\n"
         "    TRY\r\n"
@@ -857,7 +857,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "        virtual ~PropertyAccessorFactory() {}\r\n"
         "\r\n"
         "    public:\r\n"
-        "        static std::shared_ptr<vcc::IPropertyAccessor> Create(std::shared_ptr<vcc::IObject> object);\r\n"
+        "        static std::shared_ptr<vcc::IPropertyAccessor> create(std::shared_ptr<vcc::IObject> object);\r\n"
         "};\r\n");
     EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"property_accessor_factory.cpp"})));
     EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspaceTarget(), L"property_accessor_factory.cpp"})),
@@ -871,7 +871,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "#include \"i_property_accessor.hpp\"\r\n"
         "#include \"vcc_a_property_accessor.hpp\"\r\n"
         "\r\n"
-        "std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::Create(std::shared_ptr<vcc::IObject> object)\r\n"
+        "std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::create(std::shared_ptr<vcc::IObject> object)\r\n"
         "{\r\n"
         "    assert(object != nullptr);\r\n"
         "\r\n"

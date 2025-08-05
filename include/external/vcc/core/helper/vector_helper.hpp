@@ -46,11 +46,11 @@ namespace vcc
 
     // Remove
     template <typename T>
-    void Remove(std::vector<T> &sourceVector, const T &obj);
+    void remove(std::vector<T> &sourceVector, const T &obj);
     template <typename T>
-    void Remove(std::vector<T> &sourceVector, const std::vector<T> &filters);
+    void remove(std::vector<T> &sourceVector, const std::vector<T> &filters);
     template <typename T>
-    void RemoveAtIndex(std::vector<T> &sourceVector, const int64_t &index);
+    void removeAtIndex(std::vector<T> &sourceVector, const int64_t &index);
     template <typename T>
     void RemoveAll(std::vector<T> &sourceVector, const T &obj);
 
@@ -174,7 +174,7 @@ namespace vcc
     }
 
     template <typename T>
-    void Remove(std::vector<T> &sourceVector, const T &obj)
+    void remove(std::vector<T> &sourceVector, const T &obj)
     {
         auto it = std::find(sourceVector.begin(), sourceVector.end(), obj);
         if (it != sourceVector.end())
@@ -182,7 +182,7 @@ namespace vcc
     }
     
     template <typename T>
-    void Remove(std::vector<T> &sourceVector, const std::vector<T> &filters)
+    void remove(std::vector<T> &sourceVector, const std::vector<T> &filters)
     {
         sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(), [&](const T &element) {
             return isContain(filters, element);
@@ -190,7 +190,7 @@ namespace vcc
     }
 
     template <typename T>
-    void RemoveAtIndex(std::vector<T> &sourceVector, const int64_t &index)
+    void removeAtIndex(std::vector<T> &sourceVector, const int64_t &index)
     {
         if (index >= 0)
             sourceVector.erase(sourceVector.begin() + (size_t)index);
@@ -214,7 +214,7 @@ namespace vcc
     template <typename T>
     void removeIObjecttAtIndex(std::vector<T> &sourceVector, const int64_t &index)
     {
-        RemoveAtIndex(sourceVector, index);
+        removeAtIndex(sourceVector, index);
     }
     
     template <typename T>

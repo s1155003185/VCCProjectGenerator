@@ -77,7 +77,7 @@ void Application::Run()
 std::shared_ptr<vcc::IObject> Application::CreateForm(const ObjectType &objectType)
 {
     TRY
-        auto form = ObjectFactory::Create(objectType);
+        auto form = ObjectFactory::create(objectType);
         assert(form != nullptr);
         form->setParentObject(application);
         application->_Forms.insert(form);
@@ -128,7 +128,7 @@ void Application::EraseResult(vcc::IObject *result)
 std::shared_ptr<vcc::IObject> Application::CreateActionArgument(const ObjectType &objectType)
 {
     TRY
-        auto actionArgument = ObjectFactory::Create(objectType);
+        auto actionArgument = ObjectFactory::create(objectType);
         application->_ActionArguments.insert(actionArgument);
         return actionArgument;
     CATCH

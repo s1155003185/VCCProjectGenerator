@@ -225,7 +225,7 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
             }
 
             action += L"\r\n"
-                "std::wstring " + actionClassName + L"::GetRedoMessageStart() const\r\n"
+                "std::wstring " + actionClassName + L"::getRedoMessageStart() const\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetRedoMessageStart") + L"\r\n"
@@ -235,7 +235,7 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
                 + INDENT + L"return L\"\";\r\n"
                 "}\r\n"
                 "\r\n"
-                "std::wstring " + actionClassName + L"::GetRedoMessageComplete() const\r\n"
+                "std::wstring " + actionClassName + L"::getRedoMessageComplete() const\r\n"
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetRedoMessageComplete") + L"\r\n"
