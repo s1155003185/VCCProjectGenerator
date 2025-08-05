@@ -17,7 +17,7 @@ namespace vcc
             Config() : BaseDocument() {}
             virtual ~Config() {}
             
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<Config>(*this);
             }

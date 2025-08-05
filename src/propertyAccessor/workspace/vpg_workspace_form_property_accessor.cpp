@@ -236,7 +236,7 @@ void VPGWorkspaceFormPropertyAccessor::_InsertObjectAtIndex(const int64_t &objec
     CATCH
 }
 
-std::shared_ptr<vcc::IObject> VPGWorkspaceFormPropertyAccessor::_CloneObject(const int64_t &objectProperty) const
+std::shared_ptr<vcc::IObject> VPGWorkspaceFormPropertyAccessor::_cloneObject(const int64_t &objectProperty) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -244,7 +244,7 @@ std::shared_ptr<vcc::IObject> VPGWorkspaceFormPropertyAccessor::_CloneObject(con
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> VPGWorkspaceFormPropertyAccessor::_CloneObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
+std::shared_ptr<vcc::IObject> VPGWorkspaceFormPropertyAccessor::_cloneObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -253,7 +253,7 @@ std::shared_ptr<vcc::IObject> VPGWorkspaceFormPropertyAccessor::_CloneObjectAtIn
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
         case VPGWorkspaceFormProperty::GitForms:
-            return std::static_pointer_cast<vcc::IObject>(obj->CloneGitFormsAtIndex(index));
+            return std::static_pointer_cast<vcc::IObject>(obj->cloneGitFormsAtIndex(index));
         default:
             assert(false);
         }
@@ -261,7 +261,7 @@ std::shared_ptr<vcc::IObject> VPGWorkspaceFormPropertyAccessor::_CloneObjectAtIn
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> VPGWorkspaceFormPropertyAccessor::_CloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::shared_ptr<vcc::IObject> VPGWorkspaceFormPropertyAccessor::_cloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -318,7 +318,7 @@ void VPGWorkspaceFormPropertyAccessor::_RemoveObject(const int64_t &objectProper
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
         case VPGWorkspaceFormProperty::GitForms:
-            obj->RemoveGitForms(value);
+            obj->removeGitForms(value);
             break;
         default:
             assert(false);
@@ -335,7 +335,7 @@ void VPGWorkspaceFormPropertyAccessor::_RemoveAtIndex(const int64_t &objectPrope
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
         case VPGWorkspaceFormProperty::GitForms:
-            obj->RemoveGitFormsAtIndex(index);
+            obj->removeGitFormsAtIndex(index);
             break;
         default:
             assert(false);
@@ -350,7 +350,7 @@ void VPGWorkspaceFormPropertyAccessor::_RemoveAtKey(const int64_t &objectPropert
     CATCH
 }
 
-void VPGWorkspaceFormPropertyAccessor::_Clear(const int64_t &objectProperty)
+void VPGWorkspaceFormPropertyAccessor::_clear(const int64_t &objectProperty)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGWorkspaceForm>(_Object);
@@ -358,7 +358,7 @@ void VPGWorkspaceFormPropertyAccessor::_Clear(const int64_t &objectProperty)
         switch(static_cast<VPGWorkspaceFormProperty>(objectProperty))
         {
         case VPGWorkspaceFormProperty::GitForms:
-            obj->ClearGitForms();
+            obj->clearGitForms();
             break;
         default:
             assert(false);

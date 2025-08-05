@@ -58,7 +58,7 @@ void VPGProcessManager::VerifyLocalResponse()
                     // if same as current version of generator, no action
                     // if not same, then check verison of genertor exists, if not exists, then master, else switch to correct branch
                     auto currentLog = vcc::GitService::GetCurrentLog(this->getLogConfig().get(), localResponseDirectoryProject);
-                    if (!vcc::IsContain(currentLog->getTags(), VPGGlobal::GetVersion())) {
+                    if (!vcc::isContain(currentLog->getTags(), VPGGlobal::GetVersion())) {
                         std::wstring currentBranchName = L"";
                         TRY
                             auto currentTag = vcc::GitService::GetCurrentTag(this->getLogConfig().get(), localResponseDirectoryProject);
@@ -68,7 +68,7 @@ void VPGProcessManager::VerifyLocalResponse()
                         // If version is main and current tag version not exists, then no switch
                         std::wstring mainBranch = L"main";
                         std::vector<std::wstring> allTags = vcc::GitService::GetTags(this->getLogConfig().get(), localResponseDirectoryProject);
-                        if (currentBranchName == L"main" && !vcc::IsContain(allTags, VPGGlobal::GetVersion())) {
+                        if (currentBranchName == L"main" && !vcc::isContain(allTags, VPGGlobal::GetVersion())) {
                             vcc::LogService::LogInfo(this->getLogConfig().get(), L"", L"Currently in main branch and " + VPGGlobal::GetVersion() + L" is not found. Keep in main branch.");
                         } else {
                             isNeedToCloneGitResponse = true;
@@ -105,7 +105,7 @@ void VPGProcessManager::VerifyLocalResponse()
                 vcc::LogService::LogInfo(this->getLogConfig().get(), L"", L"Clone from " + gitUrl);
                 vcc::GitCloneOption cloneOption;
                 cloneOption.SetIsQuiet(true);
-                vcc::GitService::CloneGitResponse(this->getLogConfig().get(), localResponseDirectoryBase, gitUrl, &cloneOption);
+                vcc::GitService::cloneGitResponse(this->getLogConfig().get(), localResponseDirectoryBase, gitUrl, &cloneOption);
                 vcc::LogService::LogInfo(this->getLogConfig().get(), L"", L"Done.");
             }
             catch(const std::exception& e)

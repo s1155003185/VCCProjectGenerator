@@ -11,7 +11,7 @@
 // Cannot use exception_macro.hpp, will throw compile error
 namespace vcc
 {
-    // Validate
+    // validate
     template<typename A, typename B>
     bool IsEmpty(const std::map<A, B> &sourceMap);
     template<typename A, typename B>
@@ -31,7 +31,7 @@ namespace vcc
     template <typename A, typename B>
     std::set<A> Find(const std::map<A, B> &sourceMap, const B &obj);
     template <typename A, typename B>
-    std::set<A> FindIObject(std::map<A, std::shared_ptr<B>> &sourceMap, const std::shared_ptr<IObject> &obj);
+    std::set<A> findIObject(std::map<A, std::shared_ptr<B>> &sourceMap, const std::shared_ptr<IObject> &obj);
 
     // Set
     template <typename A, typename B>
@@ -46,7 +46,7 @@ namespace vcc
     template <typename A, typename B>
     void RemoveAtKey(std::map<A, B> &sourceMap, const A& key);
     template <typename A, typename B>
-    void RemoveIObjectAtKey(std::map<A, B> &sourceMap, const A& key);
+    void removeIObjectAtKey(std::map<A, B> &sourceMap, const A& key);
     
     // ----------------------------------------------------------------------------------------------------
     // ---------------------------------------- Implement -------------------------------------------------
@@ -108,7 +108,7 @@ namespace vcc
     }
 
     template <typename A, typename B>
-    std::set<A> FindIObject(std::map<A, std::shared_ptr<B>> &sourceMap, const std::shared_ptr<IObject> &obj)
+    std::set<A> findIObject(std::map<A, std::shared_ptr<B>> &sourceMap, const std::shared_ptr<IObject> &obj)
     {
         auto derivedObj = std::dynamic_pointer_cast<B>(obj);
         if (derivedObj != nullptr)
@@ -157,7 +157,7 @@ namespace vcc
     }
 
     template <typename A, typename B>
-    void RemoveIObjectAtKey(std::map<A, B> &sourceMap, const A& key)
+    void removeIObjectAtKey(std::map<A, B> &sourceMap, const A& key)
     {
         RemoveAtKey(sourceMap, key);
     }

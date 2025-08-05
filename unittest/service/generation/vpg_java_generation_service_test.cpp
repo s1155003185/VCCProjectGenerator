@@ -153,12 +153,12 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "    void RemoveObject(Pointer ref, long property, Pointer value);\r\n"
         "    void RemoveAtIndex(Pointer ref, long property, long index);\r\n"
         "    void RemoveAtKey(Pointer ref, long property, Pointer key);\r\n"
-        "    void Clear(Pointer ref, long property);\r\n"
+        "    void clear(Pointer ref, long property);\r\n"
         "}\r\n"
         );
 }
 
-void ValidateGenerateEnum(const VPGJavaGenerationServiceTest *test, const std::wstring &enumClass1, const std::wstring &enumClass2)
+void validateGenerateEnum(const VPGJavaGenerationServiceTest *test, const std::wstring &enumClass1, const std::wstring &enumClass2)
 {
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList1;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList2;
@@ -253,7 +253,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
         "   EnumB, // GETSET(int64_t, EnumB, 1)\r\n"
         "   EnumC = 999 // VECTOR(double, EnumC)\r\n"
         "};\r\n";
-    ValidateGenerateEnum(this, enumClass1, enumClass2);
+    validateGenerateEnum(this, enumClass1, enumClass2);
 }
 
 TEST_F(VPGJavaGenerationServiceTest, GenerateEnum_Namespace)
@@ -278,10 +278,10 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum_Namespace)
         "        EnumC = 999 // VECTOR(double, EnumC)\r\n"
         "    };\r\n"
         "};\r\n";
-    ValidateGenerateEnum(this, enumClass1, enumClass2);
+    validateGenerateEnum(this, enumClass1, enumClass2);
 }
 
-void ValidateGenerateObject(const VPGJavaGenerationServiceTest *test, const std::wstring &code)
+void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std::wstring &code)
 {
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::GetEnumClassReader()->Parse(code, enumClassList);
@@ -407,7 +407,7 @@ void ValidateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    }\r\n"
         "\r\n"
         "    public void clearVectorDouble() {\r\n"
-        "        VPGDllFunctions.Instance.Clear(Handle, VPGTypeBProperty.VectorDouble.getValue());\r\n"
+        "        VPGDllFunctions.Instance.clear(Handle, VPGTypeBProperty.VectorDouble.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public long getVectorStringCount() {\r\n"
@@ -445,7 +445,7 @@ void ValidateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    }\r\n"
         "\r\n"
         "    public void clearVectorString() {\r\n"
-        "        VPGDllFunctions.Instance.Clear(Handle, VPGTypeBProperty.VectorString.getValue());\r\n"
+        "        VPGDllFunctions.Instance.clear(Handle, VPGTypeBProperty.VectorString.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public long getMapCount() {\r\n"
@@ -493,7 +493,7 @@ void ValidateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    }\r\n"
         "\r\n"
         "    public void clearMap() {\r\n"
-        "        VPGDllFunctions.Instance.Clear(Handle, VPGTypeBProperty.Map.getValue());\r\n"
+        "        VPGDllFunctions.Instance.clear(Handle, VPGTypeBProperty.Map.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public long getOrderedMapCount() {\r\n"
@@ -541,7 +541,7 @@ void ValidateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    }\r\n"
         "\r\n"
         "    public void clearOrderedMap() {\r\n"
-        "        VPGDllFunctions.Instance.Clear(Handle, VPGTypeBProperty.OrderedMap.getValue());\r\n"
+        "        VPGDllFunctions.Instance.clear(Handle, VPGTypeBProperty.OrderedMap.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public long getVectorObjectCount() {\r\n"
@@ -581,7 +581,7 @@ void ValidateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    }\r\n"
         "\r\n"
         "    public void clearVectorObject() {\r\n"
-        "        VPGDllFunctions.Instance.Clear(Handle, VPGTypeBProperty.VectorObject.getValue());\r\n"
+        "        VPGDllFunctions.Instance.clear(Handle, VPGTypeBProperty.VectorObject.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public long getMapObjectCount() {\r\n"
@@ -629,7 +629,7 @@ void ValidateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    }\r\n"
         "\r\n"
         "    public void clearMapObject() {\r\n"
-        "        VPGDllFunctions.Instance.Clear(Handle, VPGTypeBProperty.MapObject.getValue());\r\n"
+        "        VPGDllFunctions.Instance.clear(Handle, VPGTypeBProperty.MapObject.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public long getOrderedMapObjectCount() {\r\n"
@@ -677,7 +677,7 @@ void ValidateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    }\r\n"
         "\r\n"
         "    public void clearOrderedMapObject() {\r\n"
-        "        VPGDllFunctions.Instance.Clear(Handle, VPGTypeBProperty.OrderedMapObject.getValue());\r\n"
+        "        VPGDllFunctions.Instance.clear(Handle, VPGTypeBProperty.OrderedMapObject.getValue());\r\n"
         "    }\r\n"
         "    // </editor-fold>\r\n"
         "}\r\n");
@@ -685,7 +685,7 @@ void ValidateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
 
 TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
 {
-    ValidateGenerateObject(this, 
+    validateGenerateObject(this, 
         L"#param once\r\n"
         "enum class VPGTypeBProperty {\r\n"
         "    Bool = 0, // GETSET(bool, Bool, false)\r\n"
@@ -708,7 +708,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
 
 TEST_F(VPGJavaGenerationServiceTest, GenerateObjectWithNamespace)
 {   
-    ValidateGenerateObject(
+    validateGenerateObject(
         this,
         L"#param once\r\n"
         "namespace vcc {\r\n"

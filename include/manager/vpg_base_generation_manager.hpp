@@ -19,7 +19,7 @@ class VPGBaseGenerationManager : public vcc::BaseManager, public IVPGGenerationM
         VPGBaseGenerationManager() = delete;
     
     protected:
-        void ValidateOption() const;
+        void validateOption() const;
     public:
         VPGBaseGenerationManager(std::shared_ptr<vcc::LogConfig> logConfig, std::wstring &workspace, std::shared_ptr<VPGConfig> option) : BaseManager(logConfig)
         { 

@@ -42,7 +42,7 @@ void *CreateObject(int64_t objectType)
 int64_t ApplicationClearFormAction(void *form)
 {
     TRY
-        return Application::ClearFormAction(static_cast<vcc::IObject *>(form));
+        return Application::clearFormAction(static_cast<vcc::IObject *>(form));
     CATCH
     return -1;
 }

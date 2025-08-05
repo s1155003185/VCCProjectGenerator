@@ -66,7 +66,7 @@ class Application : public vcc::BaseForm
         static void UndoFormAction(vcc::IObject *form, const int64_t &noOfStep = 1);
         static void UndoFormActionToSeqNo(vcc::IObject *form, const int64_t &seqNo);
 
-        static int64_t ClearFormAction(vcc::IObject *form);
+        static int64_t clearFormAction(vcc::IObject *form);
         static int64_t TruncateFormAction(vcc::IObject *form);
 
         // Close Form
@@ -75,7 +75,7 @@ class Application : public vcc::BaseForm
         static bool CloseForm(vcc::IObject *form, const bool &isForce = false);
 
         // Useless
-        virtual std::shared_ptr<vcc::IObject> Clone() const override { return nullptr; }
+        virtual std::shared_ptr<vcc::IObject> clone() const override { return nullptr; }
         virtual std::shared_ptr<vcc::IResult> DoAction(const int64_t &/*formProperty*/, std::shared_ptr<vcc::IObject> /*argument*/) override { return nullptr; }
 
         // <vcc:customApplicationPublicFunctions sync="RESERVE" gen="RESERVE">

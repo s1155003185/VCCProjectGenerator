@@ -15,7 +15,7 @@ class ClassMacroTestClassElement : public vcc::BaseObject
         ClassMacroTestClassElement(int i) : vcc::BaseObject(ObjectType::NA) { this->_Index = i; }
         virtual ~ClassMacroTestClassElement() {}
         
-    virtual std::shared_ptr<vcc::IObject> Clone() const override
+    virtual std::shared_ptr<vcc::IObject> clone() const override
     {
         return std::make_shared<ClassMacroTestClassElement>(*this);
     }
@@ -69,36 +69,36 @@ class ClassMacroTestClass : public vcc::BaseObject
         ClassMacroTestClass() : vcc::BaseObject(ObjectType::NA) {}
         virtual ~ClassMacroTestClass() {}
         
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             auto obj = std::make_shared<ClassMacroTestClass>(*this);
-            obj->CloneVector(this->getVector());
-            obj->CloneVectorSPTR(this->getVectorSPTR());
-            obj->CloneSet(this->getSet());
-            obj->CloneSetSPTR(this->getSetSPTR());
-            obj->CloneMap(this->getMap());
-            obj->CloneMapVector(this->getMapVector());
-            obj->CloneMapSPTR(this->getMapSPTR());
-            obj->CloneOrderedMap(this->getOrderedMap());
-            obj->CloneOrderedMapSPTR(this->getOrderedMapSPTR());
+            obj->cloneVector(this->getVector());
+            obj->cloneVectorSPTR(this->getVectorSPTR());
+            obj->cloneSet(this->getSet());
+            obj->cloneSetSPTR(this->getSetSPTR());
+            obj->cloneMap(this->getMap());
+            obj->cloneMapVector(this->getMapVector());
+            obj->cloneMapSPTR(this->getMapSPTR());
+            obj->cloneOrderedMap(this->getOrderedMap());
+            obj->cloneOrderedMapSPTR(this->getOrderedMapSPTR());
             return obj;
         };
 };
 
-TEST(ClassMacroTest, CloneSingle)
+TEST(ClassMacroTest, cloneSingle)
 {
     int i = 10;
     auto testClass = std::make_unique<ClassMacroTestClassElement>(i);
-    auto cloneClass = std::dynamic_pointer_cast<ClassMacroTestClassElement>(testClass->Clone());
+    auto cloneClass = std::dynamic_pointer_cast<ClassMacroTestClassElement>(testClass->clone());
     EXPECT_EQ(cloneClass->getIndex(), i);
 }
 
-TEST(ClassMacroTest, Clone) 
+TEST(ClassMacroTest, clone) 
 {
     std::unique_ptr<ClassMacroTestClass> testClass = std::make_unique<ClassMacroTestClass>();
     testClass->setNumber(1);
 
-    auto cloneClass = std::dynamic_pointer_cast<ClassMacroTestClass>(testClass->Clone());
+    auto cloneClass = std::dynamic_pointer_cast<ClassMacroTestClass>(testClass->clone());
     EXPECT_EQ(testClass->getNumber(), cloneClass->getNumber());
 }
 
@@ -135,7 +135,7 @@ TEST(ClassMacroTest, Vector)
     EXPECT_EQ(testClass->getVector().at(5), 4);
     EXPECT_EQ(testClass->getVector().at(6), 3);
 
-    testClass->RemoveVectorAtIndex(1);
+    testClass->removeVectorAtIndex(1);
     EXPECT_TRUE(testClass->getVector().size() == 6);
     EXPECT_EQ(testClass->getVector().at(0), 10);
     EXPECT_EQ(testClass->getVector().at(1), 12);
@@ -144,7 +144,7 @@ TEST(ClassMacroTest, Vector)
     EXPECT_EQ(testClass->getVector().at(4), 4);
     EXPECT_EQ(testClass->getVector().at(5), 3);
 
-    testClass->ClearVector();
+    testClass->clearVector();
     EXPECT_TRUE(testClass->getVector().size() == 0);
 
     // Object
@@ -171,7 +171,7 @@ TEST(ClassMacroTest, Vector)
     EXPECT_EQ(testClass->getVectorSPTR().at(5)->getIndex(), 4);
     EXPECT_EQ(testClass->getVectorSPTR().at(6)->getIndex(), 3);
 
-    testClass->RemoveVectorSPTRAtIndex(1);
+    testClass->removeVectorSPTRAtIndex(1);
     EXPECT_TRUE(testClass->getVectorSPTR().size() == 6);
     EXPECT_EQ(testClass->getVectorSPTR().at(0)->getIndex(), 10);
     EXPECT_EQ(testClass->getVectorSPTR().at(1)->getIndex(), 12);
@@ -180,7 +180,7 @@ TEST(ClassMacroTest, Vector)
     EXPECT_EQ(testClass->getVectorSPTR().at(4)->getIndex(), 4);
     EXPECT_EQ(testClass->getVectorSPTR().at(5)->getIndex(), 3);
 
-    testClass->ClearVectorSPTR();
+    testClass->clearVectorSPTR();
     EXPECT_TRUE(testClass->getVectorSPTR().size() == 0);
 }
 
@@ -196,10 +196,10 @@ TEST(ClassMacroTest, set)
     testClass->insertSet(insertSet);
     EXPECT_TRUE(testClass->getSet().size() == 5);
 
-    testClass->RemoveSet(1);
+    testClass->removeSet(1);
     EXPECT_TRUE(testClass->getSet().size() == 4);
 
-    testClass->ClearSet();
+    testClass->clearSet();
     EXPECT_TRUE(testClass->getSet().size() == 0);
 }
 

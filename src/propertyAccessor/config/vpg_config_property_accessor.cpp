@@ -1027,7 +1027,7 @@ void VPGConfigPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProper
     CATCH
 }
 
-std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObject(const int64_t &objectProperty) const
+std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_cloneObject(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -1035,13 +1035,13 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObject(const int6
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Behavior:
-            return std::static_pointer_cast<vcc::IObject>(obj->getBehavior()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->getBehavior()->clone());
         case VPGConfigProperty::Input:
-            return std::static_pointer_cast<vcc::IObject>(obj->getInput()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->getInput()->clone());
         case VPGConfigProperty::Output:
-            return std::static_pointer_cast<vcc::IObject>(obj->getOutput()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->getOutput()->clone());
         case VPGConfigProperty::Template:
-            return std::static_pointer_cast<vcc::IObject>(obj->getTemplate()->Clone());
+            return std::static_pointer_cast<vcc::IObject>(obj->getTemplate()->clone());
         default:
             assert(false);
         }
@@ -1049,7 +1049,7 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObject(const int6
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
+std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_cloneObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -1058,7 +1058,7 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObjectAtIndex(con
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Exports:
-            return std::static_pointer_cast<vcc::IObject>(obj->CloneExportsAtIndex(index));
+            return std::static_pointer_cast<vcc::IObject>(obj->cloneExportsAtIndex(index));
         default:
             assert(false);
         }
@@ -1066,7 +1066,7 @@ std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObjectAtIndex(con
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_CloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::shared_ptr<vcc::IObject> VPGConfigPropertyAccessor::_cloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -1120,7 +1120,7 @@ void VPGConfigPropertyAccessor::_Remove(const int64_t &objectProperty, const voi
         case VPGConfigProperty::Plugins: {
             auto valuePtr = static_cast<const wchar_t *>(value);
             assert(valuePtr != nullptr);
-            obj->RemovePlugins(valuePtr);
+            obj->removePlugins(valuePtr);
             break;
         }
         default:
@@ -1138,7 +1138,7 @@ void VPGConfigPropertyAccessor::_RemoveObject(const int64_t &objectProperty, con
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Exports:
-            obj->RemoveExports(value);
+            obj->removeExports(value);
             break;
         default:
             assert(false);
@@ -1155,10 +1155,10 @@ void VPGConfigPropertyAccessor::_RemoveAtIndex(const int64_t &objectProperty, co
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Exports:
-            obj->RemoveExportsAtIndex(index);
+            obj->removeExportsAtIndex(index);
             break;
         case VPGConfigProperty::Plugins:
-            obj->RemovePluginsAtIndex(index);
+            obj->removePluginsAtIndex(index);
             break;
         default:
             assert(false);
@@ -1173,7 +1173,7 @@ void VPGConfigPropertyAccessor::_RemoveAtKey(const int64_t &objectProperty, cons
     CATCH
 }
 
-void VPGConfigPropertyAccessor::_Clear(const int64_t &objectProperty)
+void VPGConfigPropertyAccessor::_clear(const int64_t &objectProperty)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGConfig>(_Object);
@@ -1181,10 +1181,10 @@ void VPGConfigPropertyAccessor::_Clear(const int64_t &objectProperty)
         switch(static_cast<VPGConfigProperty>(objectProperty))
         {
         case VPGConfigProperty::Plugins:
-            obj->ClearPlugins();
+            obj->clearPlugins();
             break;
         case VPGConfigProperty::Exports:
-            obj->ClearExports();
+            obj->clearExports();
             break;
         default:
             assert(false);

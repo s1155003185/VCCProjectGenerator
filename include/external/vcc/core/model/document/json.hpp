@@ -28,14 +28,14 @@ namespace vcc
         VECTOR_SPTR(Json, JsonInternalArray);
 
         private:
-            void ValidateKeyIsFound(const std::wstring &key) const;
-            void ValidateKeyNotFound(const std::wstring &key) const;
+            void validateKeyIsFound(const std::wstring &key) const;
+            void validateKeyNotFound(const std::wstring &key) const;
 
         public:
             Json() : BaseDocument() {}
             virtual ~Json() {}
             
-            virtual std::shared_ptr<IObject> Clone() const override;
+            virtual std::shared_ptr<IObject> clone() const override;
 
             JsonInternalType getJsonType(const std::wstring &key) const;
             std::vector<std::wstring> getKeys(/*bool isRecursive = false*/) const; // TODO: Recursive

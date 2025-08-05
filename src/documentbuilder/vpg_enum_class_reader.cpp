@@ -273,7 +273,7 @@ void VPGEnumClassReader::_AssignEnumClassProperty(const VPGEnumClass *enumClass,
         }
 
         for (auto macro : macroList) {
-            auto currentProperty = std::dynamic_pointer_cast<VPGEnumClassAttribute>(property->Clone());
+            auto currentProperty = std::dynamic_pointer_cast<VPGEnumClassAttribute>(property->clone());
             // split macro
             currentProperty->setMacro(macro);
 

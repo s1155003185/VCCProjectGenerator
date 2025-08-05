@@ -32,7 +32,7 @@ namespace vcc
 
         public:
             // No Clone Method for Action
-            virtual std::shared_ptr<IObject> Clone() const override;
+            virtual std::shared_ptr<IObject> clone() const override;
             
             // Log
             virtual std::shared_ptr<LogConfig> getLogConfig() const override;

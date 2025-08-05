@@ -50,18 +50,18 @@ TEST_F(VPGDllFileGenerationServiceTest, Normal)
     EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathCpp()));
 
     std::wstring contentHpp = vcc::ReadFile(this->getFilePathHpp());
-    if (!vcc::IsContain(contentHpp, L"// <vcc:dllInterfaceHeader gen=\"REPLACE\">") || !vcc::IsContain(contentHpp, L"// </vcc:dllInterfaceHeader>")) {
+    if (!vcc::isContain(contentHpp, L"// <vcc:dllInterfaceHeader gen=\"REPLACE\">") || !vcc::isContain(contentHpp, L"// </vcc:dllInterfaceHeader>")) {
         EXPECT_EQ(contentHpp, L"Generate Hpp Not Contain: dllInterfaceHeader");  
     }      
-    if (!vcc::IsContain(contentHpp, L"// <vcc:dllInterface gen=\"REPLACE\">") || !vcc::IsContain(contentHpp, L"// </vcc:dllInterface>")) {
+    if (!vcc::isContain(contentHpp, L"// <vcc:dllInterface gen=\"REPLACE\">") || !vcc::isContain(contentHpp, L"// </vcc:dllInterface>")) {
         EXPECT_EQ(contentHpp, L"Generate Hpp Not Contain: dllInterface");
     }
 
     std::wstring contentCpp = vcc::ReadFile(this->getFilePathCpp());
-    if (!vcc::IsContain(contentCpp, L"// <vcc:dllInterfaceHeader gen=\"REPLACE\">") || !vcc::IsContain(contentCpp, L"// </vcc:dllInterfaceHeader>")) {
+    if (!vcc::isContain(contentCpp, L"// <vcc:dllInterfaceHeader gen=\"REPLACE\">") || !vcc::isContain(contentCpp, L"// </vcc:dllInterfaceHeader>")) {
         EXPECT_EQ(contentCpp, L"Generate Cpp Not Contain: dllInterfaceHeader");
     }
-    if (!vcc::IsContain(contentCpp, L"// <vcc:dllInterface gen=\"REPLACE\">") || !vcc::IsContain(contentCpp, L"// </vcc:dllInterface>")) {
+    if (!vcc::isContain(contentCpp, L"// <vcc:dllInterface gen=\"REPLACE\">") || !vcc::isContain(contentCpp, L"// </vcc:dllInterface>")) {
         EXPECT_EQ(contentCpp, L"Generate Cpp Not Contain: dllInterface");
     }
 }

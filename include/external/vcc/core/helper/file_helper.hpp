@@ -45,7 +45,7 @@ namespace vcc
 			CopyDirectoryOption() = default;
 			virtual ~CopyDirectoryOption() {}
 
-			virtual std::shared_ptr<IObject> Clone() const override
+			virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<CopyDirectoryOption>(*this);
             }
@@ -80,7 +80,7 @@ namespace vcc
 	
 	bool IsFile(const std::wstring &path);
 	bool IsFilePresent(const std::wstring &path);
-    void ValidateFile(const std::wstring &path);
+    void validateFile(const std::wstring &path);
 	bool IsFileEqual(const std::wstring &pathA, const std::wstring &pathB);
 
 	// action

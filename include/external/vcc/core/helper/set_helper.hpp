@@ -75,7 +75,7 @@ namespace vcc
     }
     
     template <typename T>
-    inline void RemoveIObject(std::set<std::shared_ptr<T>> &sourceSet, const IObject *obj)
+    inline void removeIObject(std::set<std::shared_ptr<T>> &sourceSet, const IObject *obj)
     {
         for (auto it = sourceSet.begin(); it != sourceSet.end(); ) {
             if ((*it)->getObjectId() == obj->getObjectId()) {
@@ -86,7 +86,7 @@ namespace vcc
     }
 
     template <typename T>
-    inline void RemoveIObjectAll(std::set<std::shared_ptr<T>> &sourceSet, const IObject *obj)
+    inline void removeIObjectAll(std::set<std::shared_ptr<T>> &sourceSet, const IObject *obj)
     {
         for (auto it = sourceSet.begin(); it != sourceSet.end(); ) {
             if ((*it)->getObjectId() == obj->getObjectId())

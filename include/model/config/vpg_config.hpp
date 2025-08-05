@@ -23,7 +23,7 @@ class VPGConfigTemplate : public vcc::BaseObject, public vcc::BaseJsonObject
         VPGConfigTemplate() : vcc::BaseObject(ObjectType::ConfigTemplate) {}
         virtual ~VPGConfigTemplate() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             return std::make_shared<VPGConfigTemplate>(*this);
         }
@@ -41,7 +41,7 @@ class VPGConfigBehavior : public vcc::BaseObject, public vcc::BaseJsonObject
         VPGConfigBehavior() : vcc::BaseObject(ObjectType::ConfigBehavior) {}
         virtual ~VPGConfigBehavior() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             return std::make_shared<VPGConfigBehavior>(*this);
         }
@@ -58,7 +58,7 @@ class VPGConfigInput : public vcc::BaseObject, public vcc::BaseJsonObject
         VPGConfigInput() : vcc::BaseObject(ObjectType::ConfigInput) {}
         virtual ~VPGConfigInput() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             return std::make_shared<VPGConfigInput>(*this);
         }
@@ -90,7 +90,7 @@ class VPGConfigOutput : public vcc::BaseObject, public vcc::BaseJsonObject
         VPGConfigOutput() : vcc::BaseObject(ObjectType::ConfigOutput) {}
         virtual ~VPGConfigOutput() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             return std::make_shared<VPGConfigOutput>(*this);
         }
@@ -115,7 +115,7 @@ class VPGConfigExport : public vcc::BaseObject, public vcc::BaseJsonObject
         VPGConfigExport() : vcc::BaseObject(ObjectType::ConfigExport) {}
         virtual ~VPGConfigExport() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             return std::make_shared<VPGConfigExport>(*this);
         }
@@ -174,14 +174,14 @@ class VPGConfig : public vcc::BaseObject, public vcc::BaseJsonObject
 
         virtual ~VPGConfig() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             auto obj = std::make_shared<VPGConfig>(*this);
-            obj->CloneBehavior(this->_Behavior.get());
-            obj->CloneExports(this->_Exports);
-            obj->CloneInput(this->_Input.get());
-            obj->CloneOutput(this->_Output.get());
-            obj->CloneTemplate(this->_Template.get());
+            obj->cloneBehavior(this->_Behavior.get());
+            obj->cloneExports(this->_Exports);
+            obj->cloneInput(this->_Input.get());
+            obj->cloneOutput(this->_Output.get());
+            obj->cloneTemplate(this->_Template.get());
             return obj;
         }
 

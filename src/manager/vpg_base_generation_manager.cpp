@@ -19,7 +19,7 @@
 #include "vpg_global.hpp"
 #include "vpg_project_type.hpp"
 
-void VPGBaseGenerationManager::ValidateOption() const
+void VPGBaseGenerationManager::validateOption() const
 {
     TRY
         VALIDATE(L"Template Workspace is emtpy.", (_Option->getTemplate() != nullptr && !vcc::IsBlank(_Option->getTemplate()->getWorkspace())));
@@ -40,7 +40,7 @@ void VPGBaseGenerationManager::GetDLLTestFileContent(std::wstring &fileContent) 
 void VPGBaseGenerationManager::CreateWorkspaceDirectory() const
 {
     TRY
-        ValidateOption();
+        validateOption();
         // All type has same project structure
         std::vector<std::wstring> checkList;
         // bin
@@ -73,7 +73,7 @@ void VPGBaseGenerationManager::CreateWorkspaceDirectory() const
 void VPGBaseGenerationManager::CreateBasicProject() const
 {
     TRY
-        ValidateOption();
+        validateOption();
         this->CreateWorkspaceDirectory();
 
         std::wstring src = VPGGlobal::GetConvertedPath(_Option->getTemplate()->getWorkspace());
@@ -206,7 +206,7 @@ void VPGBaseGenerationManager::SyncWorkspace(const vcc::LogConfig *logConfig, co
 
 std::wstring VPGBaseGenerationManager::AdjustMakefile(const std::wstring &fileContent) const
 {
-    ValidateOption();
+    validateOption();
     std::wstring result = L"";
     TRY
         auto elements = std::make_shared<vcc::Xml>();

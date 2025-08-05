@@ -204,7 +204,7 @@ TEST_F(ActionManagerTest, SeqNoContunusTest)
 
     // Clear
     this->ResetWithFiveActions();
-    EXPECT_EQ(manager->Clear(), -1);
+    EXPECT_EQ(manager->clear(), -1);
     EXPECT_TRUE(manager->getActions().size() == 0);
     manager->DoAction(this->CreateAction(10));
     EXPECT_EQ(manager->getCurrentSeqNo(), 5);

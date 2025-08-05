@@ -208,7 +208,7 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile)
 
     for (auto const &pair : hppClass) {
         for (auto const &hpp : hppResult) {
-            if (vcc::IsContain(hpp, pair.first)) {
+            if (vcc::isContain(hpp, pair.first)) {
                 EXPECT_EQ(pair.second, hpp);
                 break;
             }
@@ -216,7 +216,7 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile)
     }
     for (auto const &pair : cppClass) {
         for (auto const &cpp : cppResult) {
-            if (vcc::IsContain(cpp, pair.first)) {
+            if (vcc::isContain(cpp, pair.first)) {
                 EXPECT_EQ(pair.second, cpp);
                 break;
             }
@@ -268,7 +268,7 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile_Namespace)
 
     for (auto const &pair : hppClass) {
         for (auto const &hpp : hppResult) {
-            if (vcc::IsContain(hpp, pair.first)) {
+            if (vcc::isContain(hpp, pair.first)) {
                 EXPECT_EQ(pair.second, hpp);
                 break;
             }
@@ -276,7 +276,7 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile_Namespace)
     }
     for (auto const &pair : cppClass) {
         for (auto const &cpp : cppResult) {
-            if (vcc::IsContain(cpp, pair.first)) {
+            if (vcc::isContain(cpp, pair.first)) {
                 EXPECT_EQ(pair.second, cpp);
                 break;
             }

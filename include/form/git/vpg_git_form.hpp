@@ -36,7 +36,7 @@ class VPGGitForm : public vcc::BaseForm, public vcc::BaseJsonObject
         VPGGitForm();
         virtual ~VPGGitForm() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override;
+        virtual std::shared_ptr<vcc::IObject> clone() const override;
 
         virtual std::shared_ptr<vcc::Json> ToJson() const override;
         virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;

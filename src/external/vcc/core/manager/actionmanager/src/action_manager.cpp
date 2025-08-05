@@ -68,7 +68,7 @@ namespace vcc
         return _CurrentSeqNo;
     }
 
-    int64_t ActionManager::_Clear()
+    int64_t ActionManager::_clear()
     {
         TRY
             _Actions.clear();
@@ -81,7 +81,7 @@ namespace vcc
     {
         TRY
             _MaxSeqNo = -1;
-            return _Clear();
+            return _clear();
         CATCH
         return _CurrentSeqNo;
     }
@@ -179,11 +179,11 @@ namespace vcc
         return _CurrentSeqNo;
     }
 
-    int64_t ActionManager::Clear()
+    int64_t ActionManager::clear()
     {
         TRY
             //std::unique_lock lock(_mutex);
-            return _Clear();
+            return _clear();
         CATCH
         return _CurrentSeqNo;
     }

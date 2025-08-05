@@ -183,7 +183,7 @@ std::vector<std::wstring> VPGPropertyAccessorGenerationService::GetPropertyAcces
 std::wstring VPGPropertyAccessorGenerationService::GetIncludeFile(const std::map<std::wstring, std::wstring> &projectClassIncludeFiles, const std::wstring &className)
 {
     TRY
-        if (vcc::IsContain(projectClassIncludeFiles, className))
+        if (vcc::isContain(projectClassIncludeFiles, className))
             return projectClassIncludeFiles.at(className);
         else
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Include file of Class " + className + L" NOT FOUND");
@@ -642,12 +642,12 @@ void VPGPropertyAccessorGenerationService::GenerateClone(const std::wstring &pro
                 continue;
             // General
             if (property->getIsGeneralType()) {
-                std::wstring returnStr = L"std::static_pointer_cast<vcc::IObject>(obj->get" + property->getPropertyName() + L"()->Clone())";
+                std::wstring returnStr = L"std::static_pointer_cast<vcc::IObject>(obj->get" + property->getPropertyName() + L"()->clone())";
                 generalCases.insert(std::make_pair(property->getEnum(), returnStr));
             }
             // Vector
             if (property->getIsVector() || property->getIsOrderedMap()) {
-                std::wstring returnStr = L"std::static_pointer_cast<vcc::IObject>(obj->Clone" + property->getPropertyName() + L"AtIndex(index))";
+                std::wstring returnStr = L"std::static_pointer_cast<vcc::IObject>(obj->clone" + property->getPropertyName() + L"AtIndex(index))";
                 vectorCases.insert(std::make_pair(property->getEnum(), returnStr));
             }
             // Map
@@ -658,14 +658,14 @@ void VPGPropertyAccessorGenerationService::GenerateClone(const std::wstring &pro
                     + INDENT + INDENT + INDENT + L"assert(keyPtr != nullptr);\r\n"
                     + INDENT + INDENT + INDENT + L"if (keyPtr == nullptr)\r\n"
                     + INDENT + INDENT + INDENT + INDENT + L"THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-                    + INDENT + INDENT + INDENT + L"return std::static_pointer_cast<vcc::IObject>(obj->Clone" + property->getPropertyName() + L"AtKey(" + mapGetKey + L"));\r\n";
+                    + INDENT + INDENT + INDENT + L"return std::static_pointer_cast<vcc::IObject>(obj->clone" + property->getPropertyName() + L"AtKey(" + mapGetKey + L"));\r\n";
                 mapCases.insert(std::make_pair(property->getEnum(), returnStr));
             }
         }
 
         // General Type
         result += L"\r\n"
-            + convertedType + L" " + propertyName + L"Accessor::_Clone" + convertedName + L"(const int64_t &objectProperty) const\r\n"
+            + convertedType + L" " + propertyName + L"Accessor::_clone" + convertedName + L"(const int64_t &objectProperty) const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!generalCases.empty()) {
@@ -682,7 +682,7 @@ void VPGPropertyAccessorGenerationService::GenerateClone(const std::wstring &pro
         
         // Vector
         result += L"\r\n"
-            + convertedType + L" " + propertyName + L"Accessor::_Clone" + convertedName + L"AtIndex(const int64_t &objectProperty, const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L") const\r\n"
+            + convertedType + L" " + propertyName + L"Accessor::_clone" + convertedName + L"AtIndex(const int64_t &objectProperty, const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L") const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!vectorCases.empty()) {
@@ -699,7 +699,7 @@ void VPGPropertyAccessorGenerationService::GenerateClone(const std::wstring &pro
             
         // Map
         result += L"\r\n"
-            + convertedType + L" " + propertyName + L"Accessor::_Clone" + convertedName + L"AtKey(const int64_t &objectProperty, const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L") const\r\n"
+            + convertedType + L" " + propertyName + L"Accessor::_clone" + convertedName + L"AtKey(const int64_t &objectProperty, const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L") const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!mapCases.empty()) {
@@ -819,19 +819,19 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
         for (auto const &property : enumClassProperties) {
             if (property->getIsVector()) {
                 if (property->getIsObject()) {
-                    std::wstring result = INDENT + INDENT + INDENT + L"obj->Remove" + property->getPropertyName() + L"(value);\r\n";
+                    std::wstring result = INDENT + INDENT + INDENT + L"obj->remove" + property->getPropertyName() + L"(value);\r\n";
                     vectorCasesObject.insert(std::make_pair(property->getEnum(), result));
                 } else {
                     std::wstring castType = (property->getType1() == L"wstring" || property->getType1() == L"std::wstring") ? L"wchar_t" : property->getType1();
                     std::wstring valueAssign = (property->getType1() == L"wstring" || property->getType1() == L"std::wstring") ? L"valuePtr" : L"*valuePtr";
                     std::wstring result = INDENT + INDENT + INDENT + L"auto valuePtr = static_cast<const " + castType + L" *>(value);\r\n"
                         + INDENT + INDENT + INDENT + L"assert(valuePtr != nullptr);\r\n"
-                        + INDENT + INDENT + INDENT + L"obj->Remove" + property->getPropertyName() + L"(" + valueAssign + L");\r\n";
+                        + INDENT + INDENT + INDENT + L"obj->remove" + property->getPropertyName() + L"(" + valueAssign + L");\r\n";
                     vectorCasesGeneral.insert(std::make_pair(property->getEnum(), result));
                 }
             }
             if (property->getIsVector() || property->getIsOrderedMap())
-                vectorCasesIndex.insert(std::make_pair(property->getEnum(), L"obj->Remove" + property->getPropertyName() + L"AtIndex(index)"));
+                vectorCasesIndex.insert(std::make_pair(property->getEnum(), L"obj->remove" + property->getPropertyName() + L"AtIndex(index)"));
             if (property->getIsMap() || property->getIsOrderedMap()) {
                 std::wstring castType = (property->getType1() == L"wstring" || property->getType1() == L"std::wstring") ? L"wchar_t" : property->getType1();
                 std::wstring mapGetKey = (property->getType1() == L"wstring" || property->getType1() == L"std::wstring") ? L"keyPtr" : L"*keyPtr";
@@ -839,7 +839,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
                     + INDENT + INDENT + INDENT + L"assert(keyPtr != nullptr);\r\n"
                     + INDENT + INDENT + INDENT + L"if (keyPtr == nullptr)\r\n"
                     + INDENT + INDENT + INDENT + INDENT + L"THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L\"Invalid Property Accessor Map Key\");\r\n"
-                    + INDENT + INDENT + INDENT + L"obj->Remove" + property->getPropertyName() + L"AtKey(" + mapGetKey + L");\r\n";
+                    + INDENT + INDENT + INDENT + L"obj->remove" + property->getPropertyName() + L"AtKey(" + mapGetKey + L");\r\n";
                 mapCases.insert(std::make_pair(property->getEnum(), result));
             }
         }
@@ -923,7 +923,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
             "}\r\n";
 
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Clear(const int64_t &objectProperty)\r\n"
+            "void " + propertyName + L"Accessor::_clear(const int64_t &objectProperty)\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n"
             + getGeneralContentHeader(propertyName);
@@ -931,7 +931,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
             if (!property->getIsCollection())
                 continue;
             result += INDENT + INDENT + L"case " + propertyName + L"::" + property->getEnum() + L":\r\n"
-                + INDENT + INDENT + INDENT + L"obj->Clear" + property->getPropertyName() + L"();\r\n"
+                + INDENT + INDENT + INDENT + L"obj->clear" + property->getPropertyName() + L"();\r\n"
                 + INDENT + INDENT + INDENT + L"break;\r\n";
         }
         result += generalTypeContentFooter;
@@ -998,7 +998,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const vcc::LogConfig *log
 
                 // container
                 if (isContainer) {
-                    if (!vcc::IsContain(typeMacroMap[enumClass->getName()], containerToken)) {
+                    if (!vcc::isContain(typeMacroMap[enumClass->getName()], containerToken)) {
                         std::vector<std::shared_ptr<VPGEnumClassAttribute>> initVector;
                         typeMacroMap[enumClass->getName()].insert(std::make_pair(containerToken, initVector));
                     }
@@ -1029,7 +1029,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const vcc::LogConfig *log
                 // object
                 if (property->getIsObject()) {
                     systemIncludeFiles.insert(L"memory");
-                    if (!vcc::IsContain(typeMacroMap[enumClass->getName()], (objectToken))) {
+                    if (!vcc::isContain(typeMacroMap[enumClass->getName()], (objectToken))) {
                         std::vector<std::shared_ptr<VPGEnumClassAttribute>> initVector;
                         typeMacroMap[enumClass->getName()].insert(std::make_pair(objectToken, initVector));
                     }

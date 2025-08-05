@@ -61,7 +61,7 @@ namespace vcc
             virtual std::shared_ptr<IResult> UndoAction(const int64_t &noOfStep = 1) = 0;
             virtual std::shared_ptr<IResult> UndoActionToSeqNo(const int64_t &seqNo) = 0;
 
-            virtual int64_t ClearAction() = 0;
+            virtual int64_t clearAction() = 0;
             virtual int64_t TruncateAction() = 0;
 
             // Close

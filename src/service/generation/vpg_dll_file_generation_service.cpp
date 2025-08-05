@@ -219,7 +219,7 @@ std::wstring VPGDllFileGenerationService::GenerateApplicationCpp(const VPGDllFil
             L"int64_t ApplicationClearFormAction(void *form)\r\n"
             "{\r\n"
             "    TRY\r\n"
-            "        return Application::ClearFormAction(static_cast<vcc::IObject *>(form));\r\n"
+            "        return Application::clearFormAction(static_cast<vcc::IObject *>(form));\r\n"
             "    CATCH\r\n"
             "    return -1;\r\n"
             "}\r\n"));

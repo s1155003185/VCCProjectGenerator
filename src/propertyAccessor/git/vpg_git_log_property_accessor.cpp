@@ -413,25 +413,25 @@ void VPGGitLogPropertyAccessor::_Remove(const int64_t &objectProperty, const voi
         case VPGGitLogProperty::AbbreviatedParentHashIDs: {
             auto valuePtr = static_cast<const wchar_t *>(value);
             assert(valuePtr != nullptr);
-            obj->RemoveAbbreviatedParentHashIDs(valuePtr);
+            obj->removeAbbreviatedParentHashIDs(valuePtr);
             break;
         }
         case VPGGitLogProperty::Branches: {
             auto valuePtr = static_cast<const wchar_t *>(value);
             assert(valuePtr != nullptr);
-            obj->RemoveBranches(valuePtr);
+            obj->removeBranches(valuePtr);
             break;
         }
         case VPGGitLogProperty::ParentHashIDs: {
             auto valuePtr = static_cast<const wchar_t *>(value);
             assert(valuePtr != nullptr);
-            obj->RemoveParentHashIDs(valuePtr);
+            obj->removeParentHashIDs(valuePtr);
             break;
         }
         case VPGGitLogProperty::Tags: {
             auto valuePtr = static_cast<const wchar_t *>(value);
             assert(valuePtr != nullptr);
-            obj->RemoveTags(valuePtr);
+            obj->removeTags(valuePtr);
             break;
         }
         default:
@@ -456,16 +456,16 @@ void VPGGitLogPropertyAccessor::_RemoveAtIndex(const int64_t &objectProperty, co
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::AbbreviatedParentHashIDs:
-            obj->RemoveAbbreviatedParentHashIDsAtIndex(index);
+            obj->removeAbbreviatedParentHashIDsAtIndex(index);
             break;
         case VPGGitLogProperty::Branches:
-            obj->RemoveBranchesAtIndex(index);
+            obj->removeBranchesAtIndex(index);
             break;
         case VPGGitLogProperty::ParentHashIDs:
-            obj->RemoveParentHashIDsAtIndex(index);
+            obj->removeParentHashIDsAtIndex(index);
             break;
         case VPGGitLogProperty::Tags:
-            obj->RemoveTagsAtIndex(index);
+            obj->removeTagsAtIndex(index);
             break;
         default:
             assert(false);
@@ -480,7 +480,7 @@ void VPGGitLogPropertyAccessor::_RemoveAtKey(const int64_t &objectProperty, cons
     CATCH
 }
 
-void VPGGitLogPropertyAccessor::_Clear(const int64_t &objectProperty)
+void VPGGitLogPropertyAccessor::_clear(const int64_t &objectProperty)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGGitLog>(_Object);
@@ -488,16 +488,16 @@ void VPGGitLogPropertyAccessor::_Clear(const int64_t &objectProperty)
         switch(static_cast<VPGGitLogProperty>(objectProperty))
         {
         case VPGGitLogProperty::ParentHashIDs:
-            obj->ClearParentHashIDs();
+            obj->clearParentHashIDs();
             break;
         case VPGGitLogProperty::AbbreviatedParentHashIDs:
-            obj->ClearAbbreviatedParentHashIDs();
+            obj->clearAbbreviatedParentHashIDs();
             break;
         case VPGGitLogProperty::Branches:
-            obj->ClearBranches();
+            obj->clearBranches();
             break;
         case VPGGitLogProperty::Tags:
-            obj->ClearTags();
+            obj->clearTags();
             break;
         default:
             assert(false);

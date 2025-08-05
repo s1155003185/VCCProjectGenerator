@@ -200,7 +200,7 @@ namespace vcc
         return std::filesystem::exists(path) && std::filesystem::is_regular_file(path);
     }
 
-    void ValidateFile(const std::wstring &path)
+    void validateFile(const std::wstring &path)
     {
         if (!std::filesystem::exists(path))
             THROW_EXCEPTION_MSG(ExceptionType::FileNotFound, path + L": File not found.");
@@ -212,7 +212,7 @@ namespace vcc
             THROW_EXCEPTION_MSG(ExceptionType::FileBlocked, path + L": File is blocked.");
     }
 
-    void ValidateDirectory(const std::wstring &path)
+    void validateDirectory(const std::wstring &path)
     {
         if (!std::filesystem::exists(path))
             THROW_EXCEPTION_MSG(ExceptionType::FileNotFound, path + L": Directory not found.");
@@ -224,8 +224,8 @@ namespace vcc
     bool IsFileEqual(const std::wstring &pathA, const std::wstring &pathB)
     {
         try {
-            ValidateFile(pathA);
-            ValidateFile(pathB);
+            validateFile(pathA);
+            validateFile(pathB);
 
             std::ifstream f1(PATH(pathA), std::ifstream::binary|std::ifstream::ate);
             std::ifstream f2(PATH(pathB), std::ifstream::binary|std::ifstream::ate);
@@ -250,7 +250,7 @@ namespace vcc
     void CopyFile(const std::wstring &srcFilePath, const std::wstring &destFilePath, const bool &isForce)
     {
         TRY
-            ValidateFile(srcFilePath);
+            validateFile(srcFilePath);
             if (isForce)
                 CreateDirectory(PATH(destFilePath).parent_path().wstring());
             if (isForce && IsFilePresent(destFilePath))
@@ -339,7 +339,7 @@ namespace vcc
     {
         std::wstring result = L"";
         TRY
-            ValidateFile(filePath);
+            validateFile(filePath);
 
             std::wifstream fileStream(PATH(filePath), std::ios_base::binary);
             if (!fileStream)
@@ -356,7 +356,7 @@ namespace vcc
 	void ReadFilePerLine(const std::wstring &filePath, std::function<void(std::wstring)> action)
     {
         TRY
-            ValidateFile(filePath);
+            validateFile(filePath);
 
             std::wifstream fileStream(PATH(filePath), std::ios_base::in);
             std::wstring line;
@@ -370,7 +370,7 @@ namespace vcc
     std::wstring ReadFileOneLine(const std::wstring &filePath, int index) 
     {
         TRY
-            ValidateFile(filePath);
+            validateFile(filePath);
 
             std::wifstream fileStream(PATH(filePath), std::ios_base::in);
             std::wstring line, result;

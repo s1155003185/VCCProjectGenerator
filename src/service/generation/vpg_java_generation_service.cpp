@@ -136,9 +136,9 @@ std::wstring VPGJavaGenerationService::GetJavaGetterSetterCppToJavaConvertedType
             return L"char";
         } else if (cppType == L"int") {
             return L"int";
-        } else if (vcc::IsContain(cppType, L"int")
-            || vcc::IsContain(cppType, L"short")
-            || vcc::IsContain(cppType, L"long")
+        } else if (vcc::isContain(cppType, L"int")
+            || vcc::isContain(cppType, L"short")
+            || vcc::isContain(cppType, L"long")
             || cppType == L"size_t"
             || cppType == L"time_t") {
             return L"long";
@@ -246,12 +246,12 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                 std::wstring returnType = L"";
                 std::wstring functionName = L"";
                 size_t tmpPos = 0;
-                if (vcc::IsContain(functionNameWithReturn, L"**")) {
+                if (vcc::isContain(functionNameWithReturn, L"**")) {
                     returnType = L"void **";
                     tmpPos = functionNameWithReturn.find_last_of(L"*");
                     tmpPos++;
                     functionName = functionNameWithReturn.substr(tmpPos);
-                } else if (vcc::IsContain(functionNameWithReturn, L"*")) {
+                } else if (vcc::isContain(functionNameWithReturn, L"*")) {
                     returnType = L"void *";
                     tmpPos = functionNameWithReturn.find_last_of(L"*");
                     tmpPos++;
@@ -277,12 +277,12 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                     if (!argumentStr.empty())
                         argumentStr += L", ";
 
-                    if (vcc::IsContain(token, L"**")) {
+                    if (vcc::isContain(token, L"**")) {
                         argumentType = L"void **";
                         tmpPos = token.find_last_of(L"*");
                         tmpPos++;
                         argumentName = token.substr(tmpPos);
-                    } else if (vcc::IsContain(token, L"*")) {
+                    } else if (vcc::isContain(token, L"*")) {
                         argumentType = L"void *";
                         tmpPos = token.find_last_of(L"*");
                         tmpPos++;
@@ -335,7 +335,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                     + INDENT + L"void RemoveObject(Pointer ref, long property, Pointer value);\r\n"
                     + INDENT + L"void RemoveAtIndex(Pointer ref, long property, long index);\r\n"
                     + INDENT + L"void RemoveAtKey(Pointer ref, long property, Pointer key);\r\n"
-                    + INDENT + L"void Clear(Pointer ref, long property);\r\n";
+                    + INDENT + L"void clear(Pointer ref, long property);\r\n";
                 pos += dllInterfaceExportPropertyAccessorContainer.length() - 1;
             } else if (vcc::IsStartWith(content, dllInterfaceExportPropertyAccessor, pos)) {
                 importPackages.insert(L"com.sun.jna.ptr.PointerByReference");
@@ -533,7 +533,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const
                 getFromPointer = L"ptr.getWideString(0)";
             else if (vcc::IsCapital(cppType1)) {
                 // not support Left type is pointer
-                // if (vcc::IsContain(macro, L"SPTR"))
+                // if (vcc::isContain(macro, L"SPTR"))
                 //     getFromPointer = L"ptr.getLong(0)";
                 // else
                     getFromPointer = javaType1 + L".parse((int)ptr.getLong(0))";
@@ -586,7 +586,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const
         if (isAllowWrite)
             result += L"\r\n"
                 + INDENT + L"public void clear" + property->getPropertyName() + L"() {\r\n"
-                + INDENT + INDENT + dllInstantPrefix + L"Clear(Handle, " + classPropertyEnum + L");\r\n"
+                + INDENT + INDENT + dllInstantPrefix + L"clear(Handle, " + classPropertyEnum + L");\r\n"
                 + INDENT + L"}\r\n";
     CATCH
     return result;
@@ -654,7 +654,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterRead(const VPGE
             result += INDENT + INDENT + L"PointerByReference result = new PointerByReference();\r\n"
                 + INDENT + INDENT + dllInstantPrefix + L"ReadString" + (isMap ? L"AtKey" : (isVector ? L"AtIndex" : L"")) + L"(Handle, " + classPropertyEnum + L", result" + dllFunctionIndex + L");\r\n"
                 + INDENT + INDENT + L"return result.getValue().getWideString(0);\r\n"; 
-        } else if (vcc::IsContain(macro, L"SPTR")) {
+        } else if (vcc::isContain(macro, L"SPTR")) {
             // Object
             result += INDENT + INDENT + L"return new " + returnJavaType + L"(" + dllInstantPrefix + L"ReadObject" + (isMap ? L"AtKey" : (isVector ? L"AtIndex" : L"")) + L"(Handle, " + classPropertyEnum + dllFunctionIndex + L"));\r\n";
         } else if (vcc::IsCapital(returnJavaType)) {
@@ -748,7 +748,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterWrite(const VPG
                 + INDENT + INDENT + L"PointerByReference valueReference = new PointerByReference();\r\n"
                 + INDENT + INDENT + L"valueReference.setValue(valuePtr);\r\n"
                 + INDENT + INDENT + dllInstantPrefix + L"WriteString" + (isMap ? L"AtKey" : (isVector ? L"AtIndex" : L"")) + L"(Handle, " + classPropertyEnum + L", valueReference" + dllFunctionIndex + L");\r\n";
-        } else if (vcc::IsContain(macro, L"SPTR")) {
+        } else if (vcc::isContain(macro, L"SPTR")) {
             // Object
             result += INDENT + INDENT + dllInstantPrefix + L"WriteObject" + (isMap ? L"AtKey" : (isVector ? L"AtIndex" : L""))  + L"(Handle, " + classPropertyEnum + L", value.Handle" + dllFunctionIndex + L");\r\n";
         } else if (vcc::IsCapital(cppType)) {

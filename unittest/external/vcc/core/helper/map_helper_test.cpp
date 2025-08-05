@@ -15,7 +15,7 @@ class MapHelperTestObj : public vcc::BaseObject
         MapHelperTestObj() = default;
         ~MapHelperTestObj() {}
         
-        virtual std::shared_ptr<vcc::IObject> Clone() const override { return nullptr; };
+        virtual std::shared_ptr<vcc::IObject> clone() const override { return nullptr; };
 };
 
 TEST(MapHelperTest, FlipMap)
@@ -34,7 +34,7 @@ TEST(MapHelperTest, FlipPair)
 TEST(MapHelperTest, Find)
 {
     std::map<int64_t, std::shared_ptr<MapHelperTestObj>> tmp;
-    vcc::SetIObject(tmp, (int64_t)1, std::make_shared<MapHelperTestObj>());
+    vcc::setIObject(tmp, (int64_t)1, std::make_shared<MapHelperTestObj>());
     std::set<int64_t> result;
     result.insert(1);
     EXPECT_EQ(vcc::Find(tmp, tmp[1]), result);

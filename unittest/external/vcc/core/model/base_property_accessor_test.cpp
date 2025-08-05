@@ -21,7 +21,7 @@ class BasePropertyAccessorTestObject : public vcc::BaseObject
         BasePropertyAccessorTestObject() : vcc::BaseObject() {}
         virtual ~BasePropertyAccessorTestObject() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             return std::make_shared<BasePropertyAccessorTestObject>(*this);
         }

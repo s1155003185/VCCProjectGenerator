@@ -121,7 +121,7 @@ bool Application::IsWarningResult(vcc::IObject *result)
 void Application::EraseResult(vcc::IObject *result)
 {
     TRY
-        RemoveIObjectAll(application->_Results, result);
+        removeIObjectAll(application->_Results, result);
     CATCH
 }
 
@@ -142,7 +142,7 @@ std::shared_ptr<vcc::IObject> Application::DoFormAction(vcc::IObject *form, cons
             return nullptr;
         auto result = getIFormPtrFromIObject(form)->DoAction(formProperty, argument != nullptr ? argument->sharedPtr() : nullptr);
         if (argument != nullptr)
-            RemoveIObjectAll(application->_ActionArguments, argument);
+            removeIObjectAll(application->_ActionArguments, argument);
         auto obj = getIObjectPtrFromIResult(result.get())->sharedPtr();
         application->_Results.insert(obj);
         return obj;
@@ -216,12 +216,12 @@ void Application::UndoFormActionToSeqNo(vcc::IObject *form, const int64_t &seqNo
     CATCH
 }
 
-int64_t Application::ClearFormAction(vcc::IObject *form)
+int64_t Application::clearFormAction(vcc::IObject *form)
 {
     TRY
         if (form == nullptr)
             return -1;
-        return getIFormPtrFromIObject(form)->ClearAction();
+        return getIFormPtrFromIObject(form)->clearAction();
     CATCH
     return -1;
 }

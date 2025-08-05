@@ -180,7 +180,7 @@ namespace vcc
         return nullptr;
     }
 
-    int64_t BaseForm::ClearAction()
+    int64_t BaseForm::clearAction()
     {
         TRY
             auto actionManager = getActionManager();

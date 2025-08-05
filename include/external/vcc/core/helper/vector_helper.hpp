@@ -26,7 +26,7 @@ namespace vcc
     template <typename T>
     int64_t Find(const std::vector<T> &sourceVector, const T &obj);
     template <typename T>
-    int64_t FindIObject(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj);
+    int64_t findIObject(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj);
 
     // Set
     template <typename T>
@@ -55,11 +55,11 @@ namespace vcc
     void RemoveAll(std::vector<T> &sourceVector, const T &obj);
 
     template <typename T>
-    void RemoveIObject(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj);
+    void removeIObject(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj);
     template <typename T>
-    void RemoveIObjecttAtIndex(std::vector<T> &sourceVector, const int64_t &index);
+    void removeIObjecttAtIndex(std::vector<T> &sourceVector, const int64_t &index);
     template <typename T>
-    void RemoveIObjectAll(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj);
+    void removeIObjectAll(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj);
 
     // ----------------------------------------------------------------------------------------------------
     // ---------------------------------------- Implement -------------------------------------------------
@@ -107,7 +107,7 @@ namespace vcc
     }
 
     template <typename T>
-    int64_t FindIObject(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj)
+    int64_t findIObject(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj)
     {
         if (IsEmpty(sourceVector))
             return -1;
@@ -206,19 +206,19 @@ namespace vcc
     }
 
     template <typename T>
-    void RemoveIObject(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj)
+    void removeIObject(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj)
     {
-        RemoveIObjecttAtIndex(sourceVector, FindIObject(sourceVector, obj));
+        removeIObjecttAtIndex(sourceVector, findIObject(sourceVector, obj));
     }
 
     template <typename T>
-    void RemoveIObjecttAtIndex(std::vector<T> &sourceVector, const int64_t &index)
+    void removeIObjecttAtIndex(std::vector<T> &sourceVector, const int64_t &index)
     {
         RemoveAtIndex(sourceVector, index);
     }
     
     template <typename T>
-    void RemoveIObjectAll(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj)
+    void removeIObjectAll(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj)
     {
         sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(),
             [&](const T &element) {

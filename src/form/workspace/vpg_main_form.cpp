@@ -122,7 +122,7 @@ std::shared_ptr<vcc::IResult> VPGMainFormDeleteWorkspaceForm::OnRedo()
         auto index = form->FindWorkspaceForms(_Argument->getWorkspaceForm());
         if (index < 0)
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace not found");
-        form->RemoveWorkspaceFormsAtIndex(index);
+        form->removeWorkspaceFormsAtIndex(index);
         form->saveConfig();
         propertyAccessor->Unlock();
         // </vcc:VPGMainFormDeleteWorkspaceFormOnRedo>
@@ -164,7 +164,7 @@ std::shared_ptr<vcc::IResult> VPGMainFormInitialize::OnRedo()
         propertyAccessor->WriteLock();
         auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
         form->TruncateAction();
-        form->ClearWorkspaceForms();
+        form->clearWorkspaceForms();
 
         auto configFilePath = VPGGlobal::GetVCCProjectManagerConfigFileFullPath();
         if (vcc::IsFilePresent(configFilePath)) {
@@ -235,10 +235,10 @@ VPGMainForm::VPGMainForm() : vcc::BaseForm()
     CATCH
 }
 
-std::shared_ptr<vcc::IObject> VPGMainForm::Clone() const
+std::shared_ptr<vcc::IObject> VPGMainForm::clone() const
 {
     auto obj = std::make_shared<VPGMainForm>(*this);
-    obj->CloneWorkspaceForms(this->_WorkspaceForms);
+    obj->cloneWorkspaceForms(this->_WorkspaceForms);
     return obj;
 }
 
@@ -265,7 +265,7 @@ void VPGMainForm::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
         auto json = std::dynamic_pointer_cast<vcc::Json>(document);
         assert(json != nullptr);
         // WorkspaceForms
-        ClearWorkspaceForms();
+        clearWorkspaceForms();
         if (json->isContainKey(vcc::ConvertNamingStyle(L"WorkspaceForms", namestyle, vcc::NamingStyle::PascalCase))) {
             for (auto const &element : json->getArray(vcc::ConvertNamingStyle(L"WorkspaceForms", namestyle, vcc::NamingStyle::PascalCase))) {
                 auto tmpWorkspaceForms = std::make_shared<VPGWorkspaceForm>();

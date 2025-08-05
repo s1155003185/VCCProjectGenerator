@@ -16,7 +16,7 @@ namespace vcc
         VECTOR_SPTR(GitLog, GitLog)
        
         private:
-            void Validate() const;
+            void validate() const;
         public:
             GitManager(std::shared_ptr<LogConfig> logConfig, const std::wstring &workspace = L"");
             ~GitManager() {}
@@ -28,7 +28,7 @@ namespace vcc
 
             // Initialize
             void initializeGitResponse();
-            void CloneGitResponse(const std::wstring &url, const GitCloneOption *option = nullptr);
+            void cloneGitResponse(const std::wstring &url, const GitCloneOption *option = nullptr);
 
             /*-----------------------------------*
             * ----------- Remote     -----------*

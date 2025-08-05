@@ -16,7 +16,7 @@ namespace vcc
             OperationResult(const ExceptionType &exceptionType, const std::wstring &message) : BaseResult(ObjectType::OperationResult, exceptionType, message) {}
             virtual ~OperationResult() {}
             
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<OperationResult>();
             }

@@ -28,7 +28,7 @@ class VPGMainFormAddWorkspaceFormArgument : public vcc::BaseActionArgument
         VPGMainFormAddWorkspaceFormArgument() : vcc::BaseActionArgument(ObjectType::MainFormAddWorkspaceFormArgument) {}
         virtual ~VPGMainFormAddWorkspaceFormArgument() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             return std::make_shared<VPGMainFormAddWorkspaceFormArgument>(*this);
         }
@@ -42,10 +42,10 @@ class VPGMainFormDeleteWorkspaceFormArgument : public vcc::BaseActionArgument
         VPGMainFormDeleteWorkspaceFormArgument() : vcc::BaseActionArgument(ObjectType::MainFormDeleteWorkspaceFormArgument) {}
         virtual ~VPGMainFormDeleteWorkspaceFormArgument() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             auto obj = std::make_shared<VPGMainFormDeleteWorkspaceFormArgument>(*this);
-            obj->CloneWorkspaceForm(this->_WorkspaceForm.get());
+            obj->cloneWorkspaceForm(this->_WorkspaceForm.get());
             return obj;
         }
 };
@@ -59,10 +59,10 @@ class VPGMainFormRenameWorkspaceFormArgument : public vcc::BaseActionArgument
         VPGMainFormRenameWorkspaceFormArgument() : vcc::BaseActionArgument(ObjectType::MainFormRenameWorkspaceFormArgument) {}
         virtual ~VPGMainFormRenameWorkspaceFormArgument() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override
+        virtual std::shared_ptr<vcc::IObject> clone() const override
         {
             auto obj = std::make_shared<VPGMainFormRenameWorkspaceFormArgument>(*this);
-            obj->CloneWorkspaceForm(this->_WorkspaceForm.get());
+            obj->cloneWorkspaceForm(this->_WorkspaceForm.get());
             return obj;
         }
 };
@@ -207,7 +207,7 @@ class VPGMainForm : public vcc::BaseForm, public vcc::BaseJsonObject
         VPGMainForm();
         virtual ~VPGMainForm() {}
 
-        virtual std::shared_ptr<vcc::IObject> Clone() const override;
+        virtual std::shared_ptr<vcc::IObject> clone() const override;
 
         virtual std::shared_ptr<vcc::Json> ToJson() const override;
         virtual void DeserializeJson(std::shared_ptr<vcc::IDocument> document) override;

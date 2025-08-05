@@ -27,10 +27,10 @@ VPGWorkspaceForm::VPGWorkspaceForm() : vcc::BaseForm()
     CATCH
 }
 
-std::shared_ptr<vcc::IObject> VPGWorkspaceForm::Clone() const
+std::shared_ptr<vcc::IObject> VPGWorkspaceForm::clone() const
 {
     auto obj = std::make_shared<VPGWorkspaceForm>(*this);
-    obj->CloneGitForms(this->_GitForms);
+    obj->cloneGitForms(this->_GitForms);
     return obj;
 }
 
@@ -67,7 +67,7 @@ void VPGWorkspaceForm::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
         if (json->isContainKey(vcc::ConvertNamingStyle(L"TabOrder", namestyle, vcc::NamingStyle::PascalCase)))
             setTabOrder(static_cast<int64_t>(json->getInt64(vcc::ConvertNamingStyle(L"TabOrder", namestyle, vcc::NamingStyle::PascalCase))));
         // GitForms
-        ClearGitForms();
+        clearGitForms();
         if (json->isContainKey(vcc::ConvertNamingStyle(L"GitForms", namestyle, vcc::NamingStyle::PascalCase))) {
             for (auto const &element : json->getArray(vcc::ConvertNamingStyle(L"GitForms", namestyle, vcc::NamingStyle::PascalCase))) {
                 auto tmpGitForms = std::make_shared<VPGGitForm>();

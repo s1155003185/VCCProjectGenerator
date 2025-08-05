@@ -164,7 +164,7 @@ namespace vcc
         CATCH
     }
 
-    void GitService::CloneGitResponse(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &url, const GitCloneOption *option)
+    void GitService::cloneGitResponse(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &url, const GitCloneOption *option)
     {
         TRY
             std::wstring optionStr = L"";
@@ -703,7 +703,7 @@ namespace vcc
             searchCriteria->setLogCount(1);
             auto logs = GitService::GetLogs(logConfig, workspace, searchCriteria.get());
             if (!logs.empty())
-                return std::dynamic_pointer_cast<GitLog>(logs.at(0)->Clone());
+                return std::dynamic_pointer_cast<GitLog>(logs.at(0)->clone());
         CATCH
         return nullptr;
     }

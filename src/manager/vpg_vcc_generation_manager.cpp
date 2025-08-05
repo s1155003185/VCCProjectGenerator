@@ -136,7 +136,7 @@ void VPGVccGenerationManager::Add() const
 
         // handle unittest in next loop as unit test name can be changed
         if (_Option->getTemplate() == nullptr || !_Option->getTemplate()->getIsExcludeUnittest()) {
-            copyDirectoryOption.ClearIncludeFileFilters();
+            copyDirectoryOption.clearIncludeFileFilters();
             for (auto const &str : getUpdateUnitTestList())
                 copyDirectoryOption.InsertIncludeFileFilters(str);
             if (!copyDirectoryOption.GetIncludeFileFilters().empty())

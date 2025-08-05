@@ -99,7 +99,7 @@ TEST_F(ThreadManagerTest, ClearWaitingThread)
     auto thread1 = std::make_shared<vcc::Thread>(GetLogConfig(), [](const vcc::Thread * /*thread*/){}, [](const vcc::Thread * /*thread*/) {});
     getManager()->suspend();
     getManager()->Queue(thread1);
-    getManager()->ClearWaitingThread();
+    getManager()->clearWaitingThread();
     EXPECT_TRUE(GetManager()->getThreads().empty());
     EXPECT_TRUE(GetManager()->getActiveThreads().empty());
 }

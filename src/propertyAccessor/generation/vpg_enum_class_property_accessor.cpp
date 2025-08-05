@@ -396,7 +396,7 @@ void VPGEnumClassAttributePropertyAccessor::_Remove(const int64_t &objectPropert
         case VPGEnumClassAttributeProperty::InitializeProperties: {
             auto valuePtr = static_cast<const wchar_t *>(value);
             assert(valuePtr != nullptr);
-            obj->RemoveInitializeProperties(valuePtr);
+            obj->removeInitializeProperties(valuePtr);
             break;
         }
         default:
@@ -421,7 +421,7 @@ void VPGEnumClassAttributePropertyAccessor::_RemoveAtIndex(const int64_t &object
         switch(static_cast<VPGEnumClassAttributeProperty>(objectProperty))
         {
         case VPGEnumClassAttributeProperty::InitializeProperties:
-            obj->RemoveInitializePropertiesAtIndex(index);
+            obj->removeInitializePropertiesAtIndex(index);
             break;
         default:
             assert(false);
@@ -436,7 +436,7 @@ void VPGEnumClassAttributePropertyAccessor::_RemoveAtKey(const int64_t &objectPr
     CATCH
 }
 
-void VPGEnumClassAttributePropertyAccessor::_Clear(const int64_t &objectProperty)
+void VPGEnumClassAttributePropertyAccessor::_clear(const int64_t &objectProperty)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClassAttribute>(_Object);
@@ -444,7 +444,7 @@ void VPGEnumClassAttributePropertyAccessor::_Clear(const int64_t &objectProperty
         switch(static_cast<VPGEnumClassAttributeProperty>(objectProperty))
         {
         case VPGEnumClassAttributeProperty::InitializeProperties:
-            obj->ClearInitializeProperties();
+            obj->clearInitializeProperties();
             break;
         default:
             assert(false);
@@ -906,7 +906,7 @@ void VPGEnumClassPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectPro
     CATCH
 }
 
-std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_CloneObject(const int64_t &objectProperty) const
+std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_cloneObject(const int64_t &objectProperty) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -914,7 +914,7 @@ std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_CloneObject(const i
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_CloneObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
+std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_cloneObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -923,7 +923,7 @@ std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_CloneObjectAtIndex(
         switch(static_cast<VPGEnumClassProperty>(objectProperty))
         {
         case VPGEnumClassProperty::Properties:
-            return std::static_pointer_cast<vcc::IObject>(obj->ClonePropertiesAtIndex(index));
+            return std::static_pointer_cast<vcc::IObject>(obj->clonePropertiesAtIndex(index));
         default:
             assert(false);
         }
@@ -931,7 +931,7 @@ std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_CloneObjectAtIndex(
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_CloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_cloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -1044,13 +1044,13 @@ void VPGEnumClassPropertyAccessor::_Remove(const int64_t &objectProperty, const 
         case VPGEnumClassProperty::IncludeCustomFiles: {
             auto valuePtr = static_cast<const wchar_t *>(value);
             assert(valuePtr != nullptr);
-            obj->RemoveIncludeCustomFiles(valuePtr);
+            obj->removeIncludeCustomFiles(valuePtr);
             break;
         }
         case VPGEnumClassProperty::IncludeSystemFiles: {
             auto valuePtr = static_cast<const wchar_t *>(value);
             assert(valuePtr != nullptr);
-            obj->RemoveIncludeSystemFiles(valuePtr);
+            obj->removeIncludeSystemFiles(valuePtr);
             break;
         }
         default:
@@ -1068,7 +1068,7 @@ void VPGEnumClassPropertyAccessor::_RemoveObject(const int64_t &objectProperty, 
         switch(static_cast<VPGEnumClassProperty>(objectProperty))
         {
         case VPGEnumClassProperty::Properties:
-            obj->RemoveProperties(value);
+            obj->removeProperties(value);
             break;
         default:
             assert(false);
@@ -1085,13 +1085,13 @@ void VPGEnumClassPropertyAccessor::_RemoveAtIndex(const int64_t &objectProperty,
         switch(static_cast<VPGEnumClassProperty>(objectProperty))
         {
         case VPGEnumClassProperty::IncludeCustomFiles:
-            obj->RemoveIncludeCustomFilesAtIndex(index);
+            obj->removeIncludeCustomFilesAtIndex(index);
             break;
         case VPGEnumClassProperty::IncludeSystemFiles:
-            obj->RemoveIncludeSystemFilesAtIndex(index);
+            obj->removeIncludeSystemFilesAtIndex(index);
             break;
         case VPGEnumClassProperty::Properties:
-            obj->RemovePropertiesAtIndex(index);
+            obj->removePropertiesAtIndex(index);
             break;
         default:
             assert(false);
@@ -1112,7 +1112,7 @@ void VPGEnumClassPropertyAccessor::_RemoveAtKey(const int64_t &objectProperty, c
             assert(keyPtr != nullptr);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
-            obj->RemoveInheritClassAttributesAtKey(keyPtr);
+            obj->removeInheritClassAttributesAtKey(keyPtr);
             break;
         }
         case VPGEnumClassProperty::JsonAttributes: {
@@ -1120,7 +1120,7 @@ void VPGEnumClassPropertyAccessor::_RemoveAtKey(const int64_t &objectProperty, c
             assert(keyPtr != nullptr);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
-            obj->RemoveJsonAttributesAtKey(keyPtr);
+            obj->removeJsonAttributesAtKey(keyPtr);
             break;
         }
         case VPGEnumClassProperty::PrivateProperties: {
@@ -1128,7 +1128,7 @@ void VPGEnumClassPropertyAccessor::_RemoveAtKey(const int64_t &objectProperty, c
             assert(keyPtr != nullptr);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
-            obj->RemovePrivatePropertiesAtKey(keyPtr);
+            obj->removePrivatePropertiesAtKey(keyPtr);
             break;
         }
         case VPGEnumClassProperty::ProtectedProperties: {
@@ -1136,7 +1136,7 @@ void VPGEnumClassPropertyAccessor::_RemoveAtKey(const int64_t &objectProperty, c
             assert(keyPtr != nullptr);
             if (keyPtr == nullptr)
                 THROW_EXCEPTION_MSG(ExceptionType::KeyInvalid, L"Invalid Property Accessor Map Key");
-            obj->RemoveProtectedPropertiesAtKey(keyPtr);
+            obj->removeProtectedPropertiesAtKey(keyPtr);
             break;
         }
         default:
@@ -1145,7 +1145,7 @@ void VPGEnumClassPropertyAccessor::_RemoveAtKey(const int64_t &objectProperty, c
     CATCH
 }
 
-void VPGEnumClassPropertyAccessor::_Clear(const int64_t &objectProperty)
+void VPGEnumClassPropertyAccessor::_clear(const int64_t &objectProperty)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClass>(_Object);
@@ -1153,25 +1153,25 @@ void VPGEnumClassPropertyAccessor::_Clear(const int64_t &objectProperty)
         switch(static_cast<VPGEnumClassProperty>(objectProperty))
         {
         case VPGEnumClassProperty::Properties:
-            obj->ClearProperties();
+            obj->clearProperties();
             break;
         case VPGEnumClassProperty::IncludeSystemFiles:
-            obj->ClearIncludeSystemFiles();
+            obj->clearIncludeSystemFiles();
             break;
         case VPGEnumClassProperty::IncludeCustomFiles:
-            obj->ClearIncludeCustomFiles();
+            obj->clearIncludeCustomFiles();
             break;
         case VPGEnumClassProperty::PrivateProperties:
-            obj->ClearPrivateProperties();
+            obj->clearPrivateProperties();
             break;
         case VPGEnumClassProperty::ProtectedProperties:
-            obj->ClearProtectedProperties();
+            obj->clearProtectedProperties();
             break;
         case VPGEnumClassProperty::JsonAttributes:
-            obj->ClearJsonAttributes();
+            obj->clearJsonAttributes();
             break;
         case VPGEnumClassProperty::InheritClassAttributes:
-            obj->ClearInheritClassAttributes();
+            obj->clearInheritClassAttributes();
             break;
         default:
             assert(false);

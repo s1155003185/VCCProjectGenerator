@@ -123,7 +123,7 @@ namespace vcc
     void ThreadManager::Stop() const
     {
         TRY
-            ClearWaitingThread();
+            clearWaitingThread();
             for (auto &thread : _ActiveThreads)
                 thread->setState(ProcessState::Stop);
             
@@ -165,7 +165,7 @@ namespace vcc
         CATCH
     }
     
-    void ThreadManager::ClearWaitingThread() const
+    void ThreadManager::clearWaitingThread() const
     {
         TRY
             _Threads.clear();

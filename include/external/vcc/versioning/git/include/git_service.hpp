@@ -22,7 +22,7 @@ namespace vcc
             GitStatusSearchCriteria() : BaseObject() {}
             virtual ~GitStatusSearchCriteria() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitStatusSearchCriteria>(*this);
             }
@@ -38,7 +38,7 @@ namespace vcc
             GitCloneOption() : BaseObject() {}
             virtual ~GitCloneOption() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitCloneOption>(*this);
             }
@@ -70,7 +70,7 @@ namespace vcc
             GitStatus() : BaseObject() {}
             virtual ~GitStatus() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitStatus>(*this);
             }
@@ -93,7 +93,7 @@ namespace vcc
             GitRemote() : BaseObject() {}
             virtual ~GitRemote() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitRemote>(*this);
             }
@@ -118,7 +118,7 @@ namespace vcc
             GitPullOption() : BaseObject() {}
             virtual ~GitPullOption() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitPullOption>(*this);
             }
@@ -135,7 +135,7 @@ namespace vcc
             GitPushOption() : BaseObject() {}
             virtual ~GitPushOption() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitPushOption>(*this);
             }
@@ -203,7 +203,7 @@ namespace vcc
             GitLogSearchCriteria() : BaseObject() {}
             virtual ~GitLogSearchCriteria() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitLogSearchCriteria>(*this);
             }
@@ -237,7 +237,7 @@ namespace vcc
             GitLog() : BaseObject() {}
             virtual ~GitLog() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitLog>(*this);
             }
@@ -254,7 +254,7 @@ namespace vcc
             GitTagSearchCriteria() : BaseObject() {}
             virtual ~GitTagSearchCriteria() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitTagSearchCriteria>(*this);
             }
@@ -270,7 +270,7 @@ namespace vcc
             GitTagCurrentTag() : BaseObject() {}
             virtual ~GitTagCurrentTag() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitTagCurrentTag>(*this);
             }
@@ -297,7 +297,7 @@ namespace vcc
             GitTagCreateTagOption() : BaseObject() {}
             virtual ~GitTagCreateTagOption() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitTagCreateTagOption>(*this);
             }
@@ -315,7 +315,7 @@ namespace vcc
             GitBranch() : BaseObject() {}
             virtual ~GitBranch() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitBranch>(*this);
             }
@@ -338,7 +338,7 @@ namespace vcc
             GitBranchCreateBranchOption() : BaseObject() {}
             virtual ~GitBranchCreateBranchOption() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitBranchCreateBranchOption>(*this);
             }
@@ -352,7 +352,7 @@ namespace vcc
             GitBranchSwitchBranchOption() : BaseObject() {}
             virtual ~GitBranchSwitchBranchOption() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitBranchSwitchBranchOption>(*this);
             }
@@ -367,7 +367,7 @@ namespace vcc
             GitDifferentSearchCriteria() : BaseObject() {}
             virtual ~GitDifferentSearchCriteria() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitDifferentSearchCriteria>(*this);
             }
@@ -383,7 +383,7 @@ namespace vcc
             GitDifferenceSummary() : BaseObject() {}
             virtual ~GitDifferenceSummary() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitDifferenceSummary>(*this);
             }
@@ -403,7 +403,7 @@ namespace vcc
             GitDifference() : BaseObject() {}
             virtual ~GitDifference() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 return std::make_shared<GitDifference>(*this);
             }
@@ -429,10 +429,10 @@ namespace vcc
             GitConfig() : BaseObject() {}
             virtual ~GitConfig() {}
 
-            virtual std::shared_ptr<IObject> Clone() const override
+            virtual std::shared_ptr<IObject> clone() const override
             {
                 std::shared_ptr<GitConfig> obj = std::make_shared<GitConfig>(*this);
-                obj->CloneConfigs(this->getConfigs());
+                obj->cloneConfigs(this->getConfigs());
                 return obj;
             }
     };
@@ -452,7 +452,7 @@ namespace vcc
 
             // Initialize
             static void initializeGitResponse(const LogConfig *logConfig, const std::wstring &workspace);
-            static void CloneGitResponse(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &url, const GitCloneOption *option = nullptr);
+            static void cloneGitResponse(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &url, const GitCloneOption *option = nullptr);
 
             /*-----------------------------------*
             * ----------- Remote     -----------*

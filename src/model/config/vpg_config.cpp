@@ -475,14 +475,14 @@ void VPGConfig::DeserializeJson(std::shared_ptr<vcc::IDocument> document)
             setOutput(tmpObject);
         }
         // Plugins
-        ClearPlugins();
+        clearPlugins();
         if (json->isContainKey(vcc::ConvertNamingStyle(L"Plugins", namestyle, vcc::NamingStyle::PascalCase))) {
             for (auto const &element : json->getArray(vcc::ConvertNamingStyle(L"Plugins", namestyle, vcc::NamingStyle::PascalCase))) {
                 insertPlugins(element->getArrayElementString());
             }
         }
         // Exports
-        ClearExports();
+        clearExports();
         if (json->isContainKey(vcc::ConvertNamingStyle(L"Exports", namestyle, vcc::NamingStyle::PascalCase))) {
             for (auto const &element : json->getArray(vcc::ConvertNamingStyle(L"Exports", namestyle, vcc::NamingStyle::PascalCase))) {
                 auto tmpExports = std::make_shared<VPGConfigExport>();

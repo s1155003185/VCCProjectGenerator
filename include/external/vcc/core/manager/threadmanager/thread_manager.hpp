@@ -57,6 +57,6 @@ namespace vcc
         void Stop() const;
         
         // Clear Waiting Thread
-        void ClearWaitingThread() const;
+        void clearWaitingThread() const;
     };
 }

@@ -20,22 +20,22 @@ enum class VPGEnumClassAttributeProperty
     , Type2 // GETSET(std::wstring, Type2, L"")
     , IsType2Custom // GETCUSTOM(bool, IsType2Custom, return vcc::IsCapital(vcc::SplitString(GetType2(), {L"::"}).back());)
     , PropertyName // GETSET(std::wstring, PropertyName, L"");
-    , Validate // GETSET(std::wstring, Validate, L"")
+    , validate // GETSET(std::wstring, validate, L"")
     , DefaultValue // GETCUSTOM(std::wstring, DefaultValue, if (_InitializeProperties.empty()) return _DefaultValue; return vcc::Concat(_InitializeProperties, L", ");) SETCUSTOM(DefaultValue, std::wstring, _DefaultValue = value;)
     , Command // GETSET(std::wstring, Command, L"")
     
     // Properties
     , IsGeneralType // GETCUSTOM(bool, IsGeneralType, return !GetIsCollection();)
-    , IsCustom // GETCUSTOM(bool, IsCustom, return vcc::IsContain(GetMacro(), L"(") ? vcc::IsContain(_Macro.substr(0, _Macro.find(L"(")), L"CUSTOM") : false;)
-    , IsObject // GETCUSTOM(bool, IsObject, return vcc::IsContain(GetMacro(), L"(") ? vcc::IsContain(_Macro.substr(0, _Macro.find(L"(")), L"_SPTR") : false;)
+    , IsCustom // GETCUSTOM(bool, IsCustom, return vcc::isContain(GetMacro(), L"(") ? vcc::isContain(_Macro.substr(0, _Macro.find(L"(")), L"CUSTOM") : false;)
+    , IsObject // GETCUSTOM(bool, IsObject, return vcc::isContain(GetMacro(), L"(") ? vcc::isContain(_Macro.substr(0, _Macro.find(L"(")), L"_SPTR") : false;)
     , IsVector // GETCUSTOM(bool, IsVector, return vcc::IsStartWith(_Macro, L"VECTOR");)
     , IsMap // GETCUSTOM(bool, IsMap, return vcc::IsStartWith(_Macro, L"MAP");)
     , IsOrderedMap // GETCUSTOM(bool, IsOrderedMap, return vcc::IsStartWith(_Macro, L"ORDERED_MAP");)
-    , IsSet // GETCUSTOM(bool, IsSet, return vcc::IsContain(std::vector<VPGEnumClassMacroType>{ VPGEnumClassMacroType::Set, VPGEnumClassMacroType::SetSptr, VPGEnumClassMacroType::SetValidate, VPGEnumClassMacroType::SetValidateSptr }, _MacroType);)
+    , IsSet // GETCUSTOM(bool, IsSet, return vcc::isContain(std::vector<VPGEnumClassMacroType>{ VPGEnumClassMacroType::Set, VPGEnumClassMacroType::SetSptr, VPGEnumClassMacroType::SetValidate, VPGEnumClassMacroType::SetValidateSptr }, _MacroType);)
     , IsAction // GETCUSTOM(bool, IsAction, return vcc::IsStartWith(_Macro, L"ACTION");)
     , IsManager // GETCUSTOM(bool, IsManager, return vcc::IsStartWith(_Macro, L"MANAGER");)
     , IsCollection // GETCUSTOM(bool, IsCollection, return getIsVector() || getIsMap() || getIsOrderedMap() || getIsSet();)
-    , IsHavingValidate // GETCUSTOM(bool, IsHavingValidate, return vcc::IsContain(GetMacro(), L"(") ? vcc::IsContain(_Macro.substr(0, _Macro.find(L"(")), L"VALIDATE") : false;)
+    , IsHavingValidate // GETCUSTOM(bool, IsHavingValidate, return vcc::isContain(GetMacro(), L"(") ? vcc::isContain(_Macro.substr(0, _Macro.find(L"(")), L"VALIDATE") : false;)
 
     // Macro
     , AccessMode /* GETCUSTOM(VPGEnumClassAttributeAccessMode, AccessMode, 
@@ -89,8 +89,8 @@ enum class VPGEnumClassAttributeProperty
 
     // Generator Behavior
     , IsInitializeInClassConstructorNeeded /* GETCUSTOM(bool, IsInitializeInClassConstructorNeeded, 
-                                                return vcc::IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::GetsetSptr, VPGEnumClassMacroType::ManagerSptr}, _MacroType)
-                                                    || (!vcc::IsContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Getcustom, VPGEnumClassMacroType::GetcustomSptr}, _MacroType) && !_InitializeProperties.empty());)*/
+                                                return vcc::isContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::GetsetSptr, VPGEnumClassMacroType::ManagerSptr}, _MacroType)
+                                                    || (!vcc::isContain(std::vector<VPGEnumClassMacroType>{VPGEnumClassMacroType::Getcustom, VPGEnumClassMacroType::GetcustomSptr}, _MacroType) && !_InitializeProperties.empty());)*/
 };
 
 enum class VPGEnumClassProperty

@@ -59,8 +59,8 @@ namespace vcc
         CATCH
     }
 
-    // No Clone Method for Action
-    std::shared_ptr<IObject> BaseAction::Clone() const
+    // No clone Method for Action
+    std::shared_ptr<IObject> BaseAction::clone() const
     {
         assert(false);
         return nullptr;

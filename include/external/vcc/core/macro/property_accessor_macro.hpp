@@ -21,9 +21,9 @@
         virtual void Write##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, type value, const int64_t &index = -1) = 0; \
         virtual void Write##name##AtKey(const vcc::LockType lockType, const int64_t &objectProperty, type value, const void *key) = 0; \
         virtual void insert##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, type value, const int64_t &index = -1) = 0; \
-        virtual type Clone##name(const vcc::LockType lockType, const int64_t &objectProperty) const = 0; \
-        virtual type Clone##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const int64_t &index) const = 0; \
-        virtual type Clone##name##AtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) const = 0; \
+        virtual type clone##name(const vcc::LockType lockType, const int64_t &objectProperty) const = 0; \
+        virtual type clone##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const int64_t &index) const = 0; \
+        virtual type clone##name##AtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) const = 0; \
 
 #define I_PROPERTY_ACCESSOR_CONTAINER_HEADER \
     public: \
@@ -34,7 +34,7 @@
         virtual void RemoveObject(const vcc::LockType lockType, const int64_t &objectProperty, const vcc::IObject *value) = 0; \
         virtual void RemoveAtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const int64_t &index = -1) = 0; \
         virtual void RemoveAtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) = 0; \
-        virtual void Clear(const vcc::LockType lockType, const int64_t &objectProperty) = 0;
+        virtual void clear(const vcc::LockType lockType, const int64_t &objectProperty) = 0;
 
 #define BASE_PROPERTY_ACCESSOR_HEADER(type, name) \
     protected: \
@@ -63,9 +63,9 @@
         virtual void _Write##name##AtIndex(const int64_t &objectProperty, type value, const int64_t &index = -1); \
         virtual void _Write##name##AtKey(const int64_t &objectProperty, type value, const void *key); \
         virtual void _Insert##name##AtIndex(const int64_t &objectProperty, type value, const int64_t &index = -1); \
-        virtual type _Clone##name(const int64_t &objectProperty) const; \
-        virtual type _Clone##name##AtIndex(const int64_t &objectProperty, const int64_t &index) const; \
-        virtual type _Clone##name##AtKey(const int64_t &objectProperty, const void *key) const; \
+        virtual type _clone##name(const int64_t &objectProperty) const; \
+        virtual type _clone##name##AtIndex(const int64_t &objectProperty, const int64_t &index) const; \
+        virtual type _clone##name##AtKey(const int64_t &objectProperty, const void *key) const; \
     public: \
         virtual type Read##name(const vcc::LockType lockType, const int64_t &objectProperty) const override; \
         virtual type Read##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const int64_t &index = -1) const override; \
@@ -74,9 +74,9 @@
         virtual void Write##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, type value, const int64_t &index = -1) override; \
         virtual void Write##name##AtKey(const vcc::LockType lockType, const int64_t &objectProperty, type value, const void *key) override; \
         virtual void insert##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, type value, const int64_t &index = -1) override; \
-        virtual type Clone##name(const vcc::LockType lockType, const int64_t &objectProperty) const override; \
-        virtual type Clone##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const int64_t &index) const override; \
-        virtual type Clone##name##AtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) const override;
+        virtual type clone##name(const vcc::LockType lockType, const int64_t &objectProperty) const override; \
+        virtual type clone##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const int64_t &index) const override; \
+        virtual type clone##name##AtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) const override;
 
 #define BASE_PROPERTY_ACCESSOR_CONTAINER_HEADER \
     protected: \
@@ -87,7 +87,7 @@
         virtual void _RemoveObject(const int64_t &objectProperty, const vcc::IObject *value); \
         virtual void _RemoveAtIndex(const int64_t &objectProperty, const int64_t &index = -1); \
         virtual void _RemoveAtKey(const int64_t &objectProperty, const void *key); \
-        virtual void _Clear(const int64_t &objectProperty); \
+        virtual void _clear(const int64_t &objectProperty); \
     public: \
         virtual size_t getCount(const vcc::LockType lockType, const int64_t &objectProperty) const override; \
         virtual std::set<void *> getMapKeys(const vcc::LockType lockType, const int64_t &objectProperty) const override; \
@@ -96,7 +96,7 @@
         virtual void RemoveObject(const vcc::LockType lockType, const int64_t &objectProperty, const vcc::IObject *value) override; \
         virtual void RemoveAtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const int64_t &index = -1) override; \
         virtual void RemoveAtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) override; \
-        virtual void Clear(const vcc::LockType lockType, const int64_t &objectProperty) override;
+        virtual void clear(const vcc::LockType lockType, const int64_t &objectProperty) override;
 
 #define BASE_PROPERTY_ACCESSOR_DETAIL(type, name, defaultValue) \
     type BasePropertyAccessor::_Read##name(const int64_t &objectProperty) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
@@ -122,9 +122,9 @@
     void BasePropertyAccessor::_Write##name##AtIndex(const int64_t &objectProperty, type /*value*/, const int64_t & /*index*/) { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
     void BasePropertyAccessor::_Write##name##AtKey(const int64_t &objectProperty, type /*value*/, const void * /*key*/) { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
     void BasePropertyAccessor::_Insert##name##AtIndex(const int64_t &objectProperty, type /*value*/, const int64_t & /*index*/) { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
-    type BasePropertyAccessor::_Clone##name(const int64_t &objectProperty) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
-    type BasePropertyAccessor::_Clone##name##AtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
-    type BasePropertyAccessor::_Clone##name##AtKey(const int64_t &objectProperty, const void * /*key*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
+    type BasePropertyAccessor::_clone##name(const int64_t &objectProperty) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
+    type BasePropertyAccessor::_clone##name##AtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
+    type BasePropertyAccessor::_clone##name##AtKey(const int64_t &objectProperty, const void * /*key*/) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return defaultValue; } \
     type BasePropertyAccessor::Read##name(const vcc::LockType lockType, const int64_t &objectProperty) const { type result = defaultValue; LOCK_BEGIN result = _Read##name(objectProperty); LOCK_END return result; } \
     type BasePropertyAccessor::Read##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const int64_t &index) const { type result = defaultValue; LOCK_BEGIN result = _Read##name##AtIndex(objectProperty, index); LOCK_END return result; } \
     type BasePropertyAccessor::Read##name##AtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) const { type result = defaultValue; LOCK_BEGIN result = _Read##name##AtKey(objectProperty, key); LOCK_END return result; } \
@@ -132,9 +132,9 @@
     void BasePropertyAccessor::Write##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, type value, const int64_t &index) { LOCK_BEGIN _Write##name##AtIndex(objectProperty, value, index); LOCK_END } \
     void BasePropertyAccessor::Write##name##AtKey(const vcc::LockType lockType, const int64_t &objectProperty, type value, const void *key) { LOCK_BEGIN _Write##name##AtKey(objectProperty, value, key); LOCK_END } \
     void BasePropertyAccessor::Insert##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, type value, const int64_t &index) { LOCK_BEGIN _Insert##name##AtIndex(objectProperty, value, index); LOCK_END } \
-    type BasePropertyAccessor::Clone##name(const vcc::LockType lockType, const int64_t &objectProperty) const { type result = nullptr; LOCK_BEGIN result = _Clone##name(objectProperty); LOCK_END return result; } \
-    type BasePropertyAccessor::Clone##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const int64_t &index) const { type result = nullptr; LOCK_BEGIN result = _Clone##name##AtIndex(objectProperty, index); LOCK_END return result; } \
-    type BasePropertyAccessor::Clone##name##AtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) const { type result = nullptr; LOCK_BEGIN result = _Clone##name##AtKey(objectProperty, key); LOCK_END return result; } \
+    type BasePropertyAccessor::clone##name(const vcc::LockType lockType, const int64_t &objectProperty) const { type result = nullptr; LOCK_BEGIN result = _clone##name(objectProperty); LOCK_END return result; } \
+    type BasePropertyAccessor::clone##name##AtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const int64_t &index) const { type result = nullptr; LOCK_BEGIN result = _clone##name##AtIndex(objectProperty, index); LOCK_END return result; } \
+    type BasePropertyAccessor::clone##name##AtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) const { type result = nullptr; LOCK_BEGIN result = _clone##name##AtKey(objectProperty, key); LOCK_END return result; } \
 
 #define BASE_PROPERTY_ACCESSOR_CONTAINER_DETAIL \
     size_t BasePropertyAccessor::_GetCount(const int64_t &objectProperty) const { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND return 0;} \
@@ -144,7 +144,7 @@
     void BasePropertyAccessor::_RemoveObject(const int64_t &objectProperty, const vcc::IObject * /*value*/) { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
     void BasePropertyAccessor::_RemoveAtIndex(const int64_t &objectProperty, const int64_t & /*index*/) { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
     void BasePropertyAccessor::_RemoveAtKey(const int64_t &objectProperty, const void * /*key*/) { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
-    void BasePropertyAccessor::_Clear(const int64_t &objectProperty) { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
+    void BasePropertyAccessor::_clear(const int64_t &objectProperty) { THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND } \
     size_t BasePropertyAccessor::GetCount(const vcc::LockType lockType, const int64_t &objectProperty) const { size_t result = 0; LOCK_BEGIN result = _GetCount(objectProperty); LOCK_END return result; } \
     std::set<void *> BasePropertyAccessor::GetMapKeys(const vcc::LockType lockType, const int64_t &objectProperty) const { std::set<void *> result; LOCK_BEGIN result = _GetMapKeys(objectProperty); LOCK_END return result; } \
     bool BasePropertyAccessor::IsContainKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) const { bool result = false; LOCK_BEGIN result = _IsContainKey(objectProperty, key); LOCK_END return result; }\
@@ -152,7 +152,7 @@
     void BasePropertyAccessor::RemoveObject(const vcc::LockType lockType, const int64_t &objectProperty, const vcc::IObject *value) { LOCK_BEGIN _RemoveObject(objectProperty, value); LOCK_END } \
     void BasePropertyAccessor::RemoveAtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const int64_t &index) { LOCK_BEGIN _RemoveAtIndex(objectProperty, index); LOCK_END } \
     void BasePropertyAccessor::RemoveAtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) { LOCK_BEGIN _RemoveAtKey(objectProperty, key); LOCK_END } \
-    void BasePropertyAccessor::Clear(const vcc::LockType lockType, const int64_t &objectProperty) { LOCK_BEGIN _Clear(objectProperty); LOCK_END }
+    void BasePropertyAccessor::clear(const vcc::LockType lockType, const int64_t &objectProperty) { LOCK_BEGIN _clear(objectProperty); LOCK_END }
 
 #define PROPERTY_ACCESSOR_HEADER(type, name) \
     protected: \
@@ -173,9 +173,9 @@
         virtual void _Write##name##AtIndex(const int64_t &objectProperty, type value, const int64_t &index = -1) override; \
         virtual void _Write##name##AtKey(const int64_t &objectProperty, type value, const void *key) override; \
         virtual void _Insert##name##AtIndex(const int64_t &objectProperty, type value, const int64_t &index = -1) override; \
-        virtual type _Clone##name(const int64_t &objectProperty) const override; \
-        virtual type _Clone##name##AtIndex(const int64_t &objectProperty, const int64_t &index) const override; \
-        virtual type _Clone##name##AtKey(const int64_t &objectProperty, const void *key) const override; \
+        virtual type _clone##name(const int64_t &objectProperty) const override; \
+        virtual type _clone##name##AtIndex(const int64_t &objectProperty, const int64_t &index) const override; \
+        virtual type _clone##name##AtKey(const int64_t &objectProperty, const void *key) const override; \
         
 #define PROPERTY_ACCESSOR_CONTAINER_HEADER \
     protected: \
@@ -186,7 +186,7 @@
         void _RemoveObject(const int64_t &objectProperty, const vcc::IObject *value) override; \
         virtual void _RemoveAtIndex(const int64_t &objectProperty, const int64_t &index) override; \
         virtual void _RemoveAtKey(const int64_t &objectProperty, const void *key) override; \
-        virtual void _Clear(const int64_t &objectProperty) override;
+        virtual void _clear(const int64_t &objectProperty) override;
 
 
 // ------------------------------------------------------------------------------------------ //
@@ -229,7 +229,7 @@
     DLLEXPORT void RemoveObject(void *ref, int64_t property, void *value); \
     DLLEXPORT void RemoveAtIndex(void *ref, int64_t property, int64_t index); \
     DLLEXPORT void RemoveAtKey(void *ref, int64_t property, void *key); \
-    DLLEXPORT void Clear(void *ref, int64_t property);
+    DLLEXPORT void clear(void *ref, int64_t property);
 
 #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(exportType, typeName, defaultValue) \
 exportType Read##typeName(void *ref, int64_t property) \
@@ -469,34 +469,34 @@ void Remove(void *ref, int64_t property, void *value) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        PropertyAccessorFactory::Create(object->sharedPtr())->Remove(vcc::LockType::WriteLock, property, value); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->remove(vcc::LockType::WriteLock, property, value); \
     CATCH \
 } \
 void RemoveObject(void *ref, int64_t property, void *value) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        PropertyAccessorFactory::Create(object->sharedPtr())->RemoveObject(vcc::LockType::WriteLock, property, static_cast<vcc::IObject *>(value)); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->removeObject(vcc::LockType::WriteLock, property, static_cast<vcc::IObject *>(value)); \
     CATCH \
 } \
 void RemoveAtIndex(void *ref, int64_t property, int64_t index) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        PropertyAccessorFactory::Create(object->sharedPtr())->RemoveAtIndex(vcc::LockType::WriteLock, property, index); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->removeAtIndex(vcc::LockType::WriteLock, property, index); \
     CATCH \
 } \
 void RemoveAtKey(void *ref, int64_t property, void *key) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        PropertyAccessorFactory::Create(object->sharedPtr())->RemoveAtKey(vcc::LockType::WriteLock, property, key); \
+        PropertyAccessorFactory::Create(object->sharedPtr())->removeAtKey(vcc::LockType::WriteLock, property, key); \
     CATCH \
 } \
-void Clear(void *ref, int64_t property) \
+void clear(void *ref, int64_t property) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \
-        return PropertyAccessorFactory::Create(object->sharedPtr())->Clear(vcc::LockType::WriteLock, property); \
+        return PropertyAccessorFactory::Create(object->sharedPtr())->clear(vcc::LockType::WriteLock, property); \
     CATCH \
 }

@@ -29,7 +29,7 @@ class VPGProcessManager : public vcc::BaseManager
         
         ~VPGProcessManager() {};
 
-        virtual std::shared_ptr<IObject> Clone() const override
+        virtual std::shared_ptr<IObject> clone() const override
         {
             return std::make_shared<VPGProcessManager>(*this);
         }
