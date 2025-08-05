@@ -10,7 +10,7 @@
 
 namespace vcc
 {
-    std::wstring XmlBuilder::GetString(const std::wstring &xmlData, size_t &pos) const
+    std::wstring XmlBuilder::getString(const std::wstring &xmlData, size_t &pos) const
     {
         size_t endPos = pos;
         TRY

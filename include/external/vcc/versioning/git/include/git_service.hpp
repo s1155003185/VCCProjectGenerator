@@ -478,10 +478,10 @@ namespace vcc
             * -----------   Log      -----------*
             * ----------------------------------*/
             // only parse git log --graph --oneline --pretty=format:"(%H)(%h)(%T)(%t)(%P)(%p)"
-            static std::vector<std::shared_ptr<GitLog>> ParseGitLogGraph(const std::wstring &str);
+            static std::vector<std::shared_ptr<GitLog>> parseGitLogGraph(const std::wstring &str);
             // only parse pattern L"Thu Jan 25 22:47:35 2024 +0800"
-            static time_t ParseGitLogDatetime(const std::wstring &datimeStr);
-            static void ParseGitLog(const std::wstring &str, std::shared_ptr<GitLog> log);
+            static time_t parseGitLogDatetime(const std::wstring &datimeStr);
+            static void parseGitLog(const std::wstring &str, std::shared_ptr<GitLog> log);
             // To draw graph, mark the point by column index first, then link nodes if having same ParentHashID and HashID
             static std::vector<std::shared_ptr<GitLog>> getLogs(const LogConfig *logConfig, const std::wstring &workspace, const GitLogSearchCriteria *searchCriteria = nullptr);
             static std::shared_ptr<GitLog> getCurrentLog(const LogConfig *logConfig, const std::wstring &workspace);
@@ -538,7 +538,7 @@ namespace vcc
             // hashIDs.size() > 1, then different between commit
             static std::shared_ptr<GitDifferenceSummary> getDifferenceSummary(const LogConfig *logConfig, const std::wstring &workspace, const std::vector<std::wstring> &hashIDs);
             // filePath must be filled
-            static std::shared_ptr<GitDifference> ParseGitDiff(const std::wstring &str);
+            static std::shared_ptr<GitDifference> parseGitDiff(const std::wstring &str);
             static std::shared_ptr<GitDifference> getDifferenceIndexFile(const LogConfig *logConfig, const std::wstring &workspace, const GitDifferentSearchCriteria *searchCriteria = nullptr);
             static std::shared_ptr<GitDifference> getDifferenceWorkingFile(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria = nullptr);
             static std::shared_ptr<GitDifference> getDifferenceFile(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria = nullptr);
@@ -557,10 +557,10 @@ namespace vcc
             /*-----------------------------------*
             * ----------- Commit     -----------*
             * ----------------------------------*/
-            static void Stage(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath);
-            static void StageAll(const LogConfig *logConfig, const std::wstring &workspace);
-            static void Unstage(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath);
-            static void UnstageAll(const LogConfig *logConfig, const std::wstring &workspace);
+            static void stage(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath);
+            static void stageAll(const LogConfig *logConfig, const std::wstring &workspace);
+            static void unstage(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath);
+            static void unstageAll(const LogConfig *logConfig, const std::wstring &workspace);
             static void Commit(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &command);
             static void Amend(const LogConfig *logConfig, const std::wstring &workspace);
 

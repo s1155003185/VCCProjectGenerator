@@ -139,7 +139,7 @@ namespace vcc
 		return false;
 	}
 
-	bool IsCapital(const std::wstring &str)
+	bool isCapital(const std::wstring &str)
 	{
 		TRY
 			if (str.empty())
@@ -394,7 +394,7 @@ namespace vcc
 		return results;
 	}
 
-	std::vector<std::wstring> SplitStringByLine(const std::wstring &str)
+	std::vector<std::wstring> splitStringByLine(const std::wstring &str)
 	{
 		std::vector<std::wstring> results;
 		if (str.empty())
@@ -725,7 +725,7 @@ namespace vcc
 		}
 		std::wstring result = L"";
 		TRY
-			GetNextCharPos(str, pos, true);
+			getNextCharPos(str, pos, true);
 			if (!(quoteOpenList.size() == quoteCloseList.size() && (quoteEscapeList.empty() || quoteCloseList.size() == quoteEscapeList.size())))
 				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Quote Open, Close, Escape List having different size.");
 
@@ -788,7 +788,7 @@ namespace vcc
 			return L"";
 		std::wstring result = L"";
 		TRY
-			GetNextCharPos(str, pos, true);
+			getNextCharPos(str, pos, true);
 			if (!(quoteOpenList.size() == quoteCloseList.size() && (quoteEscapeList.empty() || quoteCloseList.size() == quoteEscapeList.size())))
 				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Quote Open, Close, Escape List having different size.");
 			if (!isContain(quoteOpenList, stringOpenList))

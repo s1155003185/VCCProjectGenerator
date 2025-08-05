@@ -50,7 +50,7 @@ int64_t ApplicationClearFormAction(void *form)
 bool ApplicationCloseForm(void *form, bool isForce)
 {
     TRY
-        return Application::CloseForm(static_cast<vcc::IObject *>(form), isForce);
+        return Application::closeForm(static_cast<vcc::IObject *>(form), isForce);
     CATCH
     return false;
 }
@@ -58,7 +58,7 @@ bool ApplicationCloseForm(void *form, bool isForce)
 void *ApplicationCreateActionArgument(int64_t objectType)
 {
     TRY
-        return Application::CreateActionArgument(static_cast<ObjectType>(objectType)).get();
+        return Application::createActionArgument(static_cast<ObjectType>(objectType)).get();
     CATCH
     return nullptr;
 }
@@ -66,7 +66,7 @@ void *ApplicationCreateActionArgument(int64_t objectType)
 void *ApplicationCreateForm(int64_t objectType)
 {
     TRY
-        return Application::CreateForm(static_cast<ObjectType>(objectType)).get();
+        return Application::createForm(static_cast<ObjectType>(objectType)).get();
     CATCH
     return nullptr;
 }
@@ -74,7 +74,7 @@ void *ApplicationCreateForm(int64_t objectType)
 void *ApplicationDoFormAction(void *form, int64_t formProperty, void *argument)
 {
     TRY
-        return Application::DoFormAction(static_cast<vcc::IObject *>(form), formProperty, static_cast<vcc::IObject *>(argument)).get();
+        return Application::doFormAction(static_cast<vcc::IObject *>(form), formProperty, static_cast<vcc::IObject *>(argument)).get();
     CATCH
     return nullptr;
 }
@@ -82,14 +82,14 @@ void *ApplicationDoFormAction(void *form, int64_t formProperty, void *argument)
 void ApplicationEraseResult(void *result)
 {
     TRY
-        Application::EraseResult(static_cast<vcc::IObject *>(result));
+        Application::eraseResult(static_cast<vcc::IObject *>(result));
     CATCH
 }
 
 int64_t ApplicationGetFormActionCurrentSeqNo(void *form)
 {
     TRY
-        return Application::GetFormActionCurrentSeqNo(static_cast<vcc::IObject *>(form));
+        return Application::getFormActionCurrentSeqNo(static_cast<vcc::IObject *>(form));
     CATCH
     return -1;
 }
@@ -97,7 +97,7 @@ int64_t ApplicationGetFormActionCurrentSeqNo(void *form)
 int64_t ApplicationGetFormActionFirstSeqNo(void *form)
 {
     TRY
-        return Application::GetFormActionFirstSeqNo(static_cast<vcc::IObject *>(form));
+        return Application::getFormActionFirstSeqNo(static_cast<vcc::IObject *>(form));
     CATCH
     return -1;
 }
@@ -105,7 +105,7 @@ int64_t ApplicationGetFormActionFirstSeqNo(void *form)
 int64_t ApplicationGetFormActionLastSeqNo(void *form)
 {
     TRY
-        return Application::GetFormActionLastSeqNo(static_cast<vcc::IObject *>(form));
+        return Application::getFormActionLastSeqNo(static_cast<vcc::IObject *>(form));
     CATCH
     return -1;
 }
@@ -113,7 +113,7 @@ int64_t ApplicationGetFormActionLastSeqNo(void *form)
 int64_t ApplicationGetResultErrorCode(void *result)
 {
     TRY
-        return Application::GetResultErrorCode(static_cast<vcc::IObject *>(result));
+        return Application::getResultErrorCode(static_cast<vcc::IObject *>(result));
     CATCH
     return 0;
 }
@@ -121,7 +121,7 @@ int64_t ApplicationGetResultErrorCode(void *result)
 void ApplicationGetResultMessage(void *result, wchar_t **value)
 {
     TRY
-        std::wstring message = Application::GetResultMessage(static_cast<vcc::IObject *>(result));
+        std::wstring message = Application::getResultMessage(static_cast<vcc::IObject *>(result));
         size_t size = (message.length() + 1) * sizeof(wchar_t);
         *value = static_cast<wchar_t*>(malloc(size));
         wcscpy(*value, message.c_str());
@@ -131,7 +131,7 @@ void ApplicationGetResultMessage(void *result, wchar_t **value)
 bool ApplicationIsErrorResult(void *result)
 {
     TRY
-        return Application::IsErrorResult(static_cast<vcc::IObject *>(result));
+        return Application::isErrorResult(static_cast<vcc::IObject *>(result));
     CATCH
     return false;
 }
@@ -139,7 +139,7 @@ bool ApplicationIsErrorResult(void *result)
 bool ApplicationIsFormClosed(void *form)
 {
     TRY
-        return Application::IsFormClosed(static_cast<vcc::IObject *>(form));
+        return Application::isFormClosed(static_cast<vcc::IObject *>(form));
     CATCH
     return false;
 }
@@ -147,7 +147,7 @@ bool ApplicationIsFormClosed(void *form)
 bool ApplicationIsFormClosable(void *form)
 {
     TRY
-        return Application::IsFormClosable(static_cast<vcc::IObject *>(form));
+        return Application::isFormClosable(static_cast<vcc::IObject *>(form));
     CATCH
     return false;
 }
@@ -155,7 +155,7 @@ bool ApplicationIsFormClosable(void *form)
 bool ApplicationIsWarningResult(void *result)
 {
     TRY
-        return Application::IsWarningResult(static_cast<vcc::IObject *>(result));
+        return Application::isWarningResult(static_cast<vcc::IObject *>(result));
     CATCH
     return false;
 }
@@ -163,14 +163,14 @@ bool ApplicationIsWarningResult(void *result)
 void ApplicationRedoFormAction(void *form, int64_t noOfStep)
 {
     TRY
-        Application::RedoFormAction(static_cast<vcc::IObject *>(form), noOfStep);
+        Application::redoFormAction(static_cast<vcc::IObject *>(form), noOfStep);
     CATCH
 }
 
 void ApplicationRedoFormActionToSeqNo(void *form, int64_t seqNo)
 {
     TRY
-        Application::RedoFormActionToSeqNo(static_cast<vcc::IObject *>(form), seqNo);
+        Application::redoFormActionToSeqNo(static_cast<vcc::IObject *>(form), seqNo);
     CATCH
 }
 
@@ -181,7 +181,7 @@ void ApplicationStart()
     CATCH
 }
 
-int64_t ApplicationtruncateFormAction(void *form)
+int64_t ApplicationTruncateFormAction(void *form)
 {
     TRY
         return Application::truncateFormAction(static_cast<vcc::IObject *>(form));
@@ -192,14 +192,14 @@ int64_t ApplicationtruncateFormAction(void *form)
 void ApplicationUndoFormAction(void *form, int64_t noOfStep)
 {
     TRY
-        Application::UndoFormAction(static_cast<vcc::IObject *>(form), noOfStep);
+        Application::undoFormAction(static_cast<vcc::IObject *>(form), noOfStep);
     CATCH
 }
 
 void ApplicationUndoFormActionToSeqNo(void *form, int64_t seqNo)
 {
     TRY
-        Application::UndoFormActionToSeqNo(static_cast<vcc::IObject *>(form), seqNo);
+        Application::undoFormActionToSeqNo(static_cast<vcc::IObject *>(form), seqNo);
     CATCH
 }
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(bool, Bool, false)

@@ -39,7 +39,7 @@ namespace vcc
             auto configObj = std::dynamic_pointer_cast<Config>(doc);
             assert(configObj != nullptr);
 
-            std::vector<std::wstring> lines = SplitStringByLine(str);
+            std::vector<std::wstring> lines = splitStringByLine(str);
             for (std::wstring line : lines) {
                 Trim(line);
 

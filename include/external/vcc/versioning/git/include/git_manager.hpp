@@ -114,10 +114,10 @@ namespace vcc
             /*-----------------------------------*
             * ----------- Commit     -----------*
             * ----------------------------------*/
-            void Stage(const std::wstring &filePath);
-            void StageAll();
-            void Unstage(const std::wstring &filePath);
-            void UnstageAll();
+            void stage(const std::wstring &filePath);
+            void stageAll();
+            void unstage(const std::wstring &filePath);
+            void unstageAll();
             void Commit(const std::wstring &command);
             void Amend();
 

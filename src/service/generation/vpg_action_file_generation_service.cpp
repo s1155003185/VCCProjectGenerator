@@ -60,8 +60,8 @@ void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
             
             std::wstring type1 = property->getType1();
             // Only Support shared point argument
-            if (!type1.empty() && vcc::IsCapital(type1)) {
-                customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, type1));
+            if (!type1.empty() && vcc::isCapital(type1)) {
+                customIncludeFiles.insert(VPGObjectFileGenerationService::getProjectClassIncludeFile(classPathMapping, type1));
                 
                 propertyStr = INDENT + L"GETSET_SPTR_NULL(" + type1 + L", Argument)\r\n";
 
@@ -195,8 +195,8 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
             propertyAssignments.insert(propertyAssignments.end(), propertyAssignmentsSimple.begin(), propertyAssignmentsSimple.end());
 
             std::wstring type1 = property->getType1();
-            if (!type1.empty() && vcc::IsCapital(type1)) {
-                customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, type1));
+            if (!type1.empty() && vcc::isCapital(type1)) {
+                customIncludeFiles.insert(VPGObjectFileGenerationService::getProjectClassIncludeFile(classPathMapping, type1));
                 
                 if (!assignmentStr.empty())
                     assignmentStr += L", ";
@@ -205,9 +205,9 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
                 propertyAssignments.push_back(L"_Argument = argument");
             }
             if (!vcc::isBlank(property->getActionResultRedoClass()))
-                customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, property->getActionResultRedoClass()));
+                customIncludeFiles.insert(VPGObjectFileGenerationService::getProjectClassIncludeFile(classPathMapping, property->getActionResultRedoClass()));
             if (!vcc::isBlank(property->getActionResultUndoClass()))
-                customIncludeFiles.insert(VPGObjectFileGenerationService::GetProjectClassIncludeFile(classPathMapping, property->getActionResultUndoClass()));
+                customIncludeFiles.insert(VPGObjectFileGenerationService::getProjectClassIncludeFile(classPathMapping, property->getActionResultUndoClass()));
 
 
             std::wstring action = L"\r\n"

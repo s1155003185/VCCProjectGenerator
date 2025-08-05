@@ -33,7 +33,7 @@ constexpr auto FORCE_MODE = L"FORCE";
 constexpr auto REPLACE_TAG = L"REPLACE";
 constexpr auto RESERVE_TAG = L"RESERVE";
 
-bool VPGFileSyncService::IsSyncTag(const VPGFileContentSyncTagMode &mode, const std::wstring &tag)
+bool VPGFileSyncService::isSyncTag(const VPGFileContentSyncTagMode &mode, const std::wstring &tag)
 {
     switch (mode)
     {
@@ -48,13 +48,13 @@ bool VPGFileSyncService::IsSyncTag(const VPGFileContentSyncTagMode &mode, const 
     return false;
 }
 
-VPGFileContentSyncMode VPGFileSyncService::GetSyncMode(const VPGFileContentSyncTagMode &mode, const vcc::Xml *codeElemet)
+VPGFileContentSyncMode VPGFileSyncService::getSyncMode(const VPGFileContentSyncTagMode &mode, const vcc::Xml *codeElemet)
 {
     TRY
         for (std::shared_ptr<vcc::Xml> child : codeElemet->getChildren()) {
             if (child->getName() == VCC_NAME) {
                 for (std::shared_ptr<vcc::XmlAttribute> attr : child->getAttributes()) {
-                    if (IsSyncTag(mode, attr->getName())) {
+                    if (isSyncTag(mode, attr->getName())) {
                         std::wstring value = attr->getValue();
                         vcc::ToUpper(value);
                         if (value == FORCE_MODE) {
@@ -90,7 +90,7 @@ bool VPGFileSyncService::IsTagReplace(const VPGFileContentSyncTagMode &mode, con
 {
     TRY
         for (std::shared_ptr<vcc::XmlAttribute> attr : child->getAttributes()){
-            if (IsSyncTag(mode, attr->getName())) {
+            if (isSyncTag(mode, attr->getName())) {
                 std::wstring value = attr->getValue();
                 vcc::ToUpper(value);
                 return value == REPLACE_TAG;
@@ -104,7 +104,7 @@ bool VPGFileSyncService::IsTagReserve(const VPGFileContentSyncTagMode &mode, con
 {
     TRY
         for (std::shared_ptr<vcc::XmlAttribute> attr : child->getAttributes()){
-            if (IsSyncTag(mode, attr->getName())) {
+            if (isSyncTag(mode, attr->getName())) {
                 std::wstring value = attr->getValue();
                 vcc::ToUpper(value);
                 return value == RESERVE_TAG;

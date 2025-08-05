@@ -53,11 +53,11 @@ size_t VPGFileGenerationService::GetMinimumLeadingSpace(const std::vector<std::w
     return result;
 }
 
-std::wstring VPGFileGenerationService::GetIndent(const std::wstring &str)
+std::wstring VPGFileGenerationService::getIndent(const std::wstring &str)
 {
     std::wstring result = L"";
     TRY
-        std::vector<std::wstring> lines = vcc::SplitStringByLine(str);
+        std::vector<std::wstring> lines = vcc::splitStringByLine(str);
         if (lines.empty())
             return L"";
 
@@ -127,7 +127,7 @@ bool VPGFileGenerationService::IsTagSkip(const vcc::Xml *child)
     return false;
 }
 
-VPGFileContentGenerationMode VPGFileGenerationService::GetGenerationMode(const vcc::Xml *codeElemet)
+VPGFileContentGenerationMode VPGFileGenerationService::getGenerationMode(const vcc::Xml *codeElemet)
 {
     TRY
         for (std::shared_ptr<vcc::Xml> child : codeElemet->getChildren()) {
@@ -157,7 +157,7 @@ std::wstring VPGFileGenerationService::GenerateForceCode(const vcc::Xml *src, co
     std::wstring result = L"";
     TRY
         // split replacement to lines
-        std::vector<std::wstring> lines = vcc::SplitStringByLine(generatedContent);
+        std::vector<std::wstring> lines = vcc::splitStringByLine(generatedContent);
         bool isFound = false;
         std::wstring indent = L"";
         for (const auto &child : src->getChildren()) {
@@ -192,7 +192,7 @@ std::wstring VPGFileGenerationService::GenerateDemandCode(const vcc::Xml *src, c
     std::wstring result = L"";
     TRY
         // split replacement to lines
-        std::vector<std::wstring> lines = vcc::SplitStringByLine(generatedContent);
+        std::vector<std::wstring> lines = vcc::splitStringByLine(generatedContent);
         std::wstring indent = L"";
         for (const auto &child : src->getChildren()) {
             if (vcc::isStartWith(child->getName(), L"vcc:") && child->getName() == tagName) {            
@@ -231,7 +231,7 @@ std::wstring VPGFileGenerationService::GenerateFileContent(const std::wstring &c
         auto codeElement = std::make_shared<vcc::Xml>();
         reader->deserialize(code, codeElement);
 
-        switch (GetGenerationMode(codeElement.get()))
+        switch (getGenerationMode(codeElement.get()))
         {
         case VPGFileContentGenerationMode::Force:
             return VPGFileGenerationService::GenerateForceCode(codeElement.get(), tagName, generatedContent, commandDelimiter);

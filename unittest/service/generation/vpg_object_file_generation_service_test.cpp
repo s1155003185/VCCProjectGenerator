@@ -38,7 +38,7 @@ class VPGObjectFileGenerationServiceTest : public testing::Test
             this->_FilePathCpp = vcc::concatPaths({this->_Workspace, L"vcc_object.cpp"});
 
             if (_IncludeFiles.empty())
-                VPGIncludePathService::GetWorkspaceIncludePath(L"", VPGGlobal::getFileGenerationManager()->getClassMacros(), _IncludeFiles, _EnumClasses);
+                VPGIncludePathService::getWorkspaceIncludePath(L"", VPGGlobal::getFileGenerationManager()->getClassMacros(), _IncludeFiles, _EnumClasses);
         }
 
         void TearDown() override
@@ -2343,7 +2343,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "        // Double\r\n"
         "        json->addDouble(vcc::ConvertNamingStyle(L\"Double\", vcc::NamingStyle::PascalCase, namestyle), getDouble(), decimalPlaces >= 0 ? decimalPlaces : getDecimalPlaces(GetDouble()));\r\n"
         "        // String\r\n"
-        "        json->addString(vcc::ConvertNamingStyle(L\"String\", vcc::NamingStyle::PascalCase, namestyle), str2wstr(GetString()));\r\n"
+        "        json->addString(vcc::ConvertNamingStyle(L\"String\", vcc::NamingStyle::PascalCase, namestyle), str2wstr(getString()));\r\n"
         "        // Wstring\r\n"
         "        json->addString(vcc::ConvertNamingStyle(L\"Wstring\", vcc::NamingStyle::PascalCase, namestyle), getWstring());\r\n"
         "        // Vector\r\n"
@@ -2980,7 +2980,7 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
         "        // Double\r\n"
         "        json->addDouble(vcc::ConvertNamingStyle(L\"Double\", vcc::NamingStyle::PascalCase, namestyle), getDouble(), decimalPlaces >= 0 ? decimalPlaces : getDecimalPlaces(GetDouble()));\r\n"
         "        // String\r\n"
-        "        json->addString(vcc::ConvertNamingStyle(L\"String\", vcc::NamingStyle::PascalCase, namestyle), str2wstr(GetString()));\r\n"
+        "        json->addString(vcc::ConvertNamingStyle(L\"String\", vcc::NamingStyle::PascalCase, namestyle), str2wstr(getString()));\r\n"
         "        // Wstring\r\n"
         "        json->addString(vcc::ConvertNamingStyle(L\"Wstring\", vcc::NamingStyle::PascalCase, namestyle), getWstring());\r\n"
         "        // Vector\r\n"

@@ -16,9 +16,9 @@ enum class VPGEnumClassAttributeProperty
     , Macro // GETSET(std::wstring, Macro, L"")
     , MacroType // GETSET(VPGEnumClassMacroType, MacroType, VPGEnumClassMacroType::NA);
     , Type1 // GETSET(std::wstring, Type1, L"")
-    , IsType1Custom // GETCUSTOM(bool, IsType1Custom, return vcc::IsCapital(vcc::SplitString(GetType1(), {L"::"}).back());)
+    , IsType1Custom // GETCUSTOM(bool, IsType1Custom, return vcc::isCapital(vcc::SplitString(GetType1(), {L"::"}).back());)
     , Type2 // GETSET(std::wstring, Type2, L"")
-    , IsType2Custom // GETCUSTOM(bool, IsType2Custom, return vcc::IsCapital(vcc::SplitString(GetType2(), {L"::"}).back());)
+    , IsType2Custom // GETCUSTOM(bool, IsType2Custom, return vcc::isCapital(vcc::SplitString(GetType2(), {L"::"}).back());)
     , PropertyName // GETSET(std::wstring, PropertyName, L"");
     , Validate // GETSET(std::wstring, validate, L"")
     , DefaultValue // GETCUSTOM(std::wstring, DefaultValue, if (_InitializeProperties.empty()) return _DefaultValue; return vcc::concat(_InitializeProperties, L", ");) SETCUSTOM(DefaultValue, std::wstring, _DefaultValue = value;)

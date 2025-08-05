@@ -35,7 +35,7 @@ class VPGFileSyncService
         VPGFileSyncService() = delete;
         virtual ~VPGFileSyncService() {}
 
-        static bool IsSyncTag(const VPGFileContentSyncTagMode &mode, const std::wstring &tag);
+        static bool isSyncTag(const VPGFileContentSyncTagMode &mode, const std::wstring &tag);
 
         static VPGFileContentSyncMode getSyncMode(const VPGFileContentSyncTagMode &mode, const vcc::Xml *codeElemet);
         static const vcc::Xml *getTagFromCode(const vcc::Xml *code, const std::wstring tagName);

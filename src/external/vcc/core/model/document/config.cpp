@@ -14,7 +14,7 @@ namespace vcc
         return !isBlank(key) && key != L"#";
     }
 
-    std::wstring Config::GetValue(const std::wstring &key) const
+    std::wstring Config::getValue(const std::wstring &key) const
     {
         TRY
             if (isBlank(key) || key == L"#")

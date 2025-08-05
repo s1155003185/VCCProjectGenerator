@@ -42,12 +42,12 @@ namespace vcc
                 _Message = message;
             }
             
-            virtual bool IsError() const override
+            virtual bool isError() const override
             {
                 return _ExceptionType != ExceptionType::NoError && _ExceptionType != ExceptionType::Warning;
             }
 
-            virtual bool IsWarning() const override
+            virtual bool isWarning() const override
             {
                 return _ExceptionType == ExceptionType::Warning;
             }

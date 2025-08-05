@@ -40,7 +40,7 @@ namespace vcc
 
 	bool IsLower(const std::wstring &str);
 	bool IsUpper(const std::wstring &str);
-	bool IsCapital(const std::wstring &str);
+	bool isCapital(const std::wstring &str);
 
 	bool isEmpty(const std::wstring &str);
 	bool isBlank(const std::wstring &str);
@@ -55,7 +55,7 @@ namespace vcc
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
 	std::vector<std::wstring> SplitStringBySpace(const std::wstring &str,
 		const std::vector<std::wstring> &quoteOpenList = {}, const std::vector<std::wstring> &quoteCloseList = {}, const std::vector<std::wstring> &quoteEscapeList = {});
-	std::vector<std::wstring> SplitStringByLine(const std::wstring &str);
+	std::vector<std::wstring> splitStringByLine(const std::wstring &str);
 	std::vector<std::wstring> SplitStringByUpperCase(const std::wstring &str, bool splitDigit, bool splitSpecialChar);
 
 	// Padding

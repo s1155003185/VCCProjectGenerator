@@ -67,7 +67,7 @@ namespace vcc
         return false;
     }
 
-    bool BaseForm::IsClosed() const
+    bool BaseForm::isClosed() const
     {
         TRY
             return _State == State::Closed;

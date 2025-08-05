@@ -41,7 +41,7 @@ namespace vcc
             // State
             virtual State getState() const = 0;
             virtual bool IsClosable() const = 0;
-            virtual bool IsClosed() const = 0;
+            virtual bool isClosed() const = 0;
 
             // Initialize
             virtual void initialize() = 0;

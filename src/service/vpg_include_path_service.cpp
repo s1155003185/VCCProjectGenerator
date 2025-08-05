@@ -17,7 +17,7 @@
 #include "vpg_enum_class_reader.hpp"
 #include "vpg_include_path_reader.hpp"
 
-void VPGIncludePathService::GetWorkspaceIncludePath(const std::wstring &workspace, const std::set<std::wstring> &classMacroList, std::map<std::wstring, std::wstring> &classPathMapping, std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping)
+void VPGIncludePathService::getWorkspaceIncludePath(const std::wstring &workspace, const std::set<std::wstring> &classMacroList, std::map<std::wstring, std::wstring> &classPathMapping, std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping)
 {
     TRY
         auto reader = std::make_unique<VPGEnumClassReader>(classMacroList);

@@ -43,16 +43,16 @@ class VPGFileGenerationServiceTest : public testing::Test
         }
 };
 
-TEST_F(VPGFileGenerationServiceTest, GetIndent)
+TEST_F(VPGFileGenerationServiceTest, getIndent)
 {
-    EXPECT_EQ(VPGFileGenerationService::GetIndent(L""), L"");
-    EXPECT_EQ(VPGFileGenerationService::GetIndent(L"   "), L"   ");
-    EXPECT_EQ(VPGFileGenerationService::GetIndent(L"   \r"), L"   ");
-    EXPECT_EQ(VPGFileGenerationService::GetIndent(L"   \r\n"), L"   ");
-    EXPECT_EQ(VPGFileGenerationService::GetIndent(L"   \r\n "), L" ");
-    EXPECT_EQ(VPGFileGenerationService::GetIndent(L"a"), L"");
-    EXPECT_EQ(VPGFileGenerationService::GetIndent(L" a"), L" ");
-    EXPECT_EQ(VPGFileGenerationService::GetIndent(L" a \r"), L" ");
+    EXPECT_EQ(VPGFileGenerationService::getIndent(L""), L"");
+    EXPECT_EQ(VPGFileGenerationService::getIndent(L"   "), L"   ");
+    EXPECT_EQ(VPGFileGenerationService::getIndent(L"   \r"), L"   ");
+    EXPECT_EQ(VPGFileGenerationService::getIndent(L"   \r\n"), L"   ");
+    EXPECT_EQ(VPGFileGenerationService::getIndent(L"   \r\n "), L" ");
+    EXPECT_EQ(VPGFileGenerationService::getIndent(L"a"), L"");
+    EXPECT_EQ(VPGFileGenerationService::getIndent(L" a"), L" ");
+    EXPECT_EQ(VPGFileGenerationService::getIndent(L" a \r"), L" ");
 }
 
 TEST_F(VPGFileGenerationServiceTest, Empty)

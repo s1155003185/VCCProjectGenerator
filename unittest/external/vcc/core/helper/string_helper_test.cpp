@@ -86,11 +86,11 @@ TEST(StringHelperTest, SplitString_Nested)
 /* ---------------------------------------------------------------------------------------------------- */
 /*                                      Split String By Line                                            */
 /* ---------------------------------------------------------------------------------------------------- */
-TEST(StringHelperTest, SplitStringByLine)
+TEST(StringHelperTest, splitStringByLine)
 {
     std::wstring str = L"Ab\r\nCd\r\n\"Command\\r\\nCommand\"\r\nLast Line\r\n";
     std::vector<std::wstring> expectedResult = { L"Ab\r", L"Cd\r", L"\"Command\\r\\nCommand\"\r", L"Last Line\r"};
-    EXPECT_EQ(expectedResult,  vcc::SplitStringByLine(str));
+    EXPECT_EQ(expectedResult,  vcc::splitStringByLine(str));
 }
 
 /* ---------------------------------------------------------------------------------------------------- */
