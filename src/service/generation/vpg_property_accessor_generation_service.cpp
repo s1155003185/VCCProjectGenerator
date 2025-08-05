@@ -195,7 +195,7 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const vcc::LogConfig *log
     const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor hpp file: " + filePathHpp);
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate property accessor hpp file: " + filePathHpp);
 
         std::wstring result = L"#pragma once\r\n\r\n";
 
@@ -276,7 +276,7 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const vcc::LogConfig *log
         result += generateCodeWithNamespace(namespaceClassMapping);
 
         vcc::writeFile(filePathHpp, result, true);
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor hpp completed.");
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate property accessor hpp completed.");
     CATCH
 }
 
@@ -945,7 +945,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const vcc::LogConfig *log
     const std::wstring &filePathCpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor cpp file: " + filePathCpp);
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate property accessor cpp file: " + filePathCpp);
 
         std::set<std::wstring> systemIncludeFiles;
         std::set<std::wstring> projectIncludeFiles;
@@ -1115,13 +1115,13 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const vcc::LogConfig *log
         }
         if (count > 0) {
             vcc::writeFile(filePathCpp, result + generateCodeWithNamespace(namespaceClassMapping), true);
-            vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor cpp completed.");
+            vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate property accessor cpp completed.");
         } else {
             if (vcc::isFilePresent(filePathCpp)) {
                 vcc::removeFile(filePathCpp);
-                vcc::LogService::LogInfo(logConfig, LOG_ID, L"Removed property accessor cpp as no properties are acceesable.");
+                vcc::LogService::logInfo(logConfig, LOG_ID, L"Removed property accessor cpp as no properties are acceesable.");
             } else
-                vcc::LogService::LogInfo(logConfig, LOG_ID, L"No property accessor cpp need to be generated.");
+                vcc::LogService::logInfo(logConfig, LOG_ID, L"No property accessor cpp need to be generated.");
         }
     CATCH
 }

@@ -25,7 +25,7 @@ namespace vcc
 		~LogService() {}
 
 		// General
-		static std::wstring LogInfo(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
+		static std::wstring logInfo(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
 		static std::wstring LogDebug(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
 		static std::wstring LogWarning(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
 		static std::wstring LogError(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);

@@ -15,7 +15,7 @@ namespace vcc
     void GitManager::validate() const
     {
         TRY
-            VALIDATE(L"Workspace is empty", !IsBlank(_Workspace))
+            VALIDATE(L"Workspace is empty", !isBlank(_Workspace))
         CATCH
     }
 

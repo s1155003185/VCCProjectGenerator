@@ -26,10 +26,10 @@ namespace vcc
         std::wstring result = L"";
         try {
             currentDirectory = std::filesystem::current_path().wstring();
-            if (!IsBlank(workspace))
+            if (!isBlank(workspace))
                 std::filesystem::current_path(workspace);
         } catch (std::exception &e) {
-            if (!IsBlank(workspace))
+            if (!isBlank(workspace))
                 std::filesystem::current_path(currentDirectory);
             THROW_EXCEPTION(e);
             return result;
@@ -58,13 +58,13 @@ namespace vcc
                 pclose(p);
             }
         } catch (std::exception &e) {
-            if (!IsBlank(workspace))
+            if (!isBlank(workspace))
                 std::filesystem::current_path(currentDirectory);
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, str2wstr(e.what()));
         }
 
         try {
-            if (!IsBlank(workspace))
+            if (!isBlank(workspace))
                 std::filesystem::current_path(currentDirectory);
         } catch (std::exception &e) {
             THROW_EXCEPTION(e);

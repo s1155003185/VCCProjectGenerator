@@ -84,9 +84,9 @@ class VPGBaseGenerationManagerTest : public testing::Test
         }
 
         std::wstring getResultStr(const VPGConfig *_Option) {
-            std::wstring projName = !vcc::IsBlank(_Option->getProjectName()) ? (L" " + _Option->getProjectName()) : L"";
-            std::wstring dllName = !vcc::IsBlank(_Option->getProjectNameDll()) ? (L" " + _Option->getProjectNameDll()) : L"";
-            std::wstring exeName = !vcc::IsBlank(_Option->getProjectNameExe()) ? (L" " + _Option->getProjectNameExe()) : L"";
+            std::wstring projName = !vcc::isBlank(_Option->getProjectName()) ? (L" " + _Option->getProjectName()) : L"";
+            std::wstring dllName = !vcc::isBlank(_Option->getProjectNameDll()) ? (L" " + _Option->getProjectNameDll()) : L"";
+            std::wstring exeName = !vcc::isBlank(_Option->getProjectNameExe()) ? (L" " + _Option->getProjectNameExe()) : L"";
             std::wstring IsExcludeUnittest = _Option->getTemplate()->getIsExcludeUnittest() ? L" Y" : L" N";
             std::wstring makeFileStr = L"hi\r\n";
             makeFileStr += L"# <vcc:name sync=\"ALERT\" gen=\"ALERT\">\r\n";

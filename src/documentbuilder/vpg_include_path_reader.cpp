@@ -54,7 +54,7 @@ void VPGIncludePathReader::parseCustom(const std::wstring &cppCode, const std::w
                 SkipCommand(cppCode, commandIndex, pos);
             } else {
                 std::wstring nextToken = vcc::getNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
-                if (!vcc::IsBlank(nextToken)) {
+                if (!vcc::isBlank(nextToken)) {
                     if (isNamespaceTriggered) {
                         // namespace name
                         vcc::Trim(nextToken);

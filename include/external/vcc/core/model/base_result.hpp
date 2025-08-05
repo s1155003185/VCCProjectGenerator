@@ -52,7 +52,7 @@ namespace vcc
                 return _ExceptionType == ExceptionType::Warning;
             }
 
-            virtual bool IsThrowException() const override
+            virtual bool isThrowException() const override
             {
                 return false;
             }

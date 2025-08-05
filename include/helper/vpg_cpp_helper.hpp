@@ -120,14 +120,14 @@ inline std::wstring generateCodeWithNamespace(const std::map<std::wstring, std::
                 vcc::rTrim(tmpStr);
                 auto lines = vcc::SplitString(tmpStr, { L"\r\n" });
                 for (auto &line : lines) {
-                    if (isFirstClass && vcc::IsBlank(line)) {
+                    if (isFirstClass && vcc::isBlank(line)) {
                         isFirstClass = false;
                         continue;
                     }
                     vcc::rTrim(line);
-                    if (vcc::IsBlank(content))
+                    if (vcc::isBlank(content))
                         content += L"\r\n";
-                    if (!vcc::IsBlank(line))
+                    if (!vcc::isBlank(line))
                         content += getIndentStringWithNamespaceLevel(namespaceLevel) + line;
                     content += L"\r\n";
                 }

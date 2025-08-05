@@ -22,7 +22,7 @@ TEST(LogServiceTest, LogTest)
     property->setIsLogSQL(true);
     property->setIsLogSQLResult(true);
     property->setFilePath(filePath);
-    std::wstring logInfoStr = vcc::LogService::LogInfo(property.get(), L"id", L"message");
+    std::wstring logInfoStr = vcc::LogService::logInfo(property.get(), L"id", L"message");
     std::wstring logWarningStr = vcc::LogService::LogWarning(property.get(), L"id", L"message");
     std::wstring logErrorStr = vcc::LogService::LogError(property.get(), L"id", L"message");
     std::wstring LogTerminalStr = vcc::LogService::LogTerminal(property.get(), L"id", L"message");

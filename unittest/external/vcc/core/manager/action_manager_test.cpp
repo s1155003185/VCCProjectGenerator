@@ -15,8 +15,8 @@ class ActionManagerTestClass final : public vcc::BaseAction
         int uuid = 0;
     
     protected:
-        virtual std::shared_ptr<vcc::IResult> OnRedo() override { return std::make_shared<vcc::OperationResult>(); }
-        virtual std::shared_ptr<vcc::IResult> OnUndo() override { return std::make_shared<vcc::OperationResult>(); }
+        virtual std::shared_ptr<vcc::IResult> onRedo() override { return std::make_shared<vcc::OperationResult>(); }
+        virtual std::shared_ptr<vcc::IResult> onUndo() override { return std::make_shared<vcc::OperationResult>(); }
         
         virtual std::wstring getRedoMessageStart() const override { return L""; }
         virtual std::wstring getRedoMessageComplete() const override { return L""; }

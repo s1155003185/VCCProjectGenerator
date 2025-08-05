@@ -11,13 +11,13 @@ namespace vcc
 {
     bool Config::isValue(const std::wstring &key) const
     {
-        return !IsBlank(key) && key != L"#";
+        return !isBlank(key) && key != L"#";
     }
 
     std::wstring Config::GetValue(const std::wstring &key) const
     {
         TRY
-            if (IsBlank(key) || key == L"#")
+            if (isBlank(key) || key == L"#")
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"key is blank or #");
             return getConfigsAtKey(key);
         CATCH
@@ -27,7 +27,7 @@ namespace vcc
     void Config::AddValue(const std::wstring &key, const std::wstring &value)
     {
         TRY
-            if (IsBlank(key) || key == L"#")
+            if (isBlank(key) || key == L"#")
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"key is blank or #");
             insertConfigsAtKey(key, value);
         CATCH

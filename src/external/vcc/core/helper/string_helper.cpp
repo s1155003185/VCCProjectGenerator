@@ -154,7 +154,7 @@ namespace vcc
 		return str.empty();
 	}
 
-	bool IsBlank(const std::wstring &str)
+	bool isBlank(const std::wstring &str)
 	{
 		TRY
 			for (const wchar_t &c : str) {

@@ -21,6 +21,6 @@ namespace vcc
 
             virtual bool IsError() const = 0;
             virtual bool IsWarning() const = 0;
-            virtual bool IsThrowException() const = 0;
+            virtual bool isThrowException() const = 0;
     };
 }

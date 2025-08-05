@@ -62,7 +62,7 @@ std::wstring VPGMainFormAddWorkspaceForm::getRedoMessageComplete() const
     return L"";
 }
 
-std::shared_ptr<vcc::IResult> VPGMainFormAddWorkspaceForm::OnRedo()
+std::shared_ptr<vcc::IResult> VPGMainFormAddWorkspaceForm::onRedo()
 {
     TRY
         // <vcc:VPGMainFormAddWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
@@ -112,7 +112,7 @@ std::wstring VPGMainFormDeleteWorkspaceForm::getRedoMessageComplete() const
     return L"";
 }
 
-std::shared_ptr<vcc::IResult> VPGMainFormDeleteWorkspaceForm::OnRedo()
+std::shared_ptr<vcc::IResult> VPGMainFormDeleteWorkspaceForm::onRedo()
 {
     TRY
         // <vcc:VPGMainFormDeleteWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">
@@ -156,7 +156,7 @@ std::wstring VPGMainFormInitialize::getRedoMessageComplete() const
     return L"";
 }
 
-std::shared_ptr<vcc::IResult> VPGMainFormInitialize::OnRedo()
+std::shared_ptr<vcc::IResult> VPGMainFormInitialize::onRedo()
 {
     TRY
         // <vcc:VPGMainFormInitializeOnRedo sync="RESERVE" gen="RESERVE">
@@ -218,7 +218,7 @@ std::wstring VPGMainFormRenameWorkspaceForm::getRedoMessageComplete() const
     return L"";
 }
 
-std::shared_ptr<vcc::IResult> VPGMainFormRenameWorkspaceForm::OnRedo()
+std::shared_ptr<vcc::IResult> VPGMainFormRenameWorkspaceForm::onRedo()
 {
     TRY
         // <vcc:VPGMainFormRenameWorkspaceFormOnRedo sync="RESERVE" gen="RESERVE">

@@ -13,49 +13,49 @@
 
 namespace vcc
 {
-    std::shared_ptr<LogConfig> BaseAction::GetLogConfig() const
+    std::shared_ptr<LogConfig> BaseAction::getLogConfig() const
     {
         return _LogConfig;
     }
 
-    void BaseAction::SetLogConfig(std::shared_ptr<LogConfig> logConfig) const
+    void BaseAction::setLogConfig(std::shared_ptr<LogConfig> logConfig) const
     {
         _LogConfig = logConfig;
     }
 
-    void BaseAction::LogRedoStart() const
+    void BaseAction::logRedoStart() const
     { 
         TRY
             std::wstring message = getRedoMessageStart();
-            if (!IsBlank(message))
-                LogService::LogInfo(_LogConfig.get(), L"", message);
+            if (!isBlank(message))
+                LogService::logInfo(_LogConfig.get(), L"", message);
         CATCH
     }
     
-    void BaseAction::LogRedoComplete() const
+    void BaseAction::logRedoComplete() const
     { 
         TRY
             std::wstring message = getRedoMessageComplete();
-            if (!IsBlank(message))
-                LogService::LogInfo(_LogConfig.get(), L"", message);
+            if (!isBlank(message))
+                LogService::logInfo(_LogConfig.get(), L"", message);
         CATCH
     }
 
-    void BaseAction::LogUndoStart() const
+    void BaseAction::logUndoStart() const
     {
         TRY
             std::wstring message = getUndoMessageStart();
-            if (!IsBlank(message))
-                LogService::LogInfo(_LogConfig.get(), L"", message);
+            if (!isBlank(message))
+                LogService::logInfo(_LogConfig.get(), L"", message);
         CATCH
     }
 
-    void BaseAction::LogUndoComplete() const
+    void BaseAction::logUndoComplete() const
     {
         TRY
             std::wstring message = getUndoMessageComplete();
-            if (!IsBlank(message))
-                LogService::LogInfo(_LogConfig.get(), L"", message);
+            if (!isBlank(message))
+                LogService::logInfo(_LogConfig.get(), L"", message);
         CATCH
     }
 
@@ -66,12 +66,12 @@ namespace vcc
         return nullptr;
     }
     
-    size_t BaseAction::GetSeqNo() const
+    size_t BaseAction::getSeqNo() const
     { 
         return _SeqNo;
     }
 
-    void BaseAction::SetSeqNo(const size_t &seqNo) const 
+    void BaseAction::setSeqNo(const size_t &seqNo) const 
     { 
         _SeqNo = seqNo; 
     }
@@ -79,9 +79,9 @@ namespace vcc
     std::shared_ptr<IResult> BaseAction::Redo() 
     {
         TRY
-            LogRedoStart();
-            auto result = OnRedo();
-            LogRedoComplete();
+            logRedoStart();
+            auto result = onRedo();
+            logRedoComplete();
             return result;
         CATCH_RETURN_RESULT(vcc::OperationResult)
         return std::make_shared<OperationResult>();
@@ -90,9 +90,9 @@ namespace vcc
     std::shared_ptr<IResult> BaseAction::Undo()
     {
         TRY
-            LogUndoStart();
-            auto result = OnUndo();
-            LogUndoComplete();
+            logUndoStart();
+            auto result = onUndo();
+            logUndoComplete();
             return result;
         CATCH_RETURN_RESULT(vcc::OperationResult)
         return std::make_shared<OperationResult>();

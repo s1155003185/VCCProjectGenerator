@@ -83,7 +83,7 @@ namespace vcc
     std::wstring getRelativePath(const std::wstring &absolutePath, const std::wstring &basePath)
     {
         TRY
-            if (IsBlank(basePath))
+            if (isBlank(basePath))
                 return absolutePath;
             return PATH(absolutePath).lexically_relative(PATH(basePath)).wstring();
         CATCH
@@ -274,7 +274,7 @@ namespace vcc
 
     void createDirectory(const std::wstring &path)
     {
-        if (IsBlank(path) || isDirectoryExists(path))
+        if (isBlank(path) || isDirectoryExists(path))
             return;
 
         TRY
@@ -286,8 +286,8 @@ namespace vcc
 
     void copyDirectory(const std::wstring &srcDirectory, const std::wstring &destDirectory, const CopyDirectoryOption *option)
     {
-        assert(!IsBlank(srcDirectory));
-        assert(!IsBlank(destDirectory));
+        assert(!isBlank(srcDirectory));
+        assert(!isBlank(destDirectory));
         TRY
             bool isForce = option != nullptr && option->getIsForce();
             std::vector<std::wstring> srcFileList;
@@ -329,7 +329,7 @@ namespace vcc
 
 	void removeDirectory(const std::wstring &directory)
     {
-        assert(!IsBlank(directory));
+        assert(!isBlank(directory));
         TRY
             std::filesystem::remove_all(PATH(directory));
         CATCH

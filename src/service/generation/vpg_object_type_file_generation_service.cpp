@@ -14,7 +14,7 @@
 void VPGObjectTypeFileGenerationService::generate(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp, const std::set<std::wstring> &propertyTypes)
 {
     TRY
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object type file: " + filePathHpp);
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate object type file: " + filePathHpp);
 
         std::wstring customContent = L"";
         if (vcc::isFilePresent(filePathHpp)) {
@@ -42,13 +42,13 @@ void VPGObjectTypeFileGenerationService::generate(const vcc::LogConfig *logConfi
         if (!overallPropertyTypes.empty())
             content += INDENT + L", " + vcc::concat(overallPropertyTypes, L"\r\n" + INDENT + L", ") + L"\r\n";
         
-        if (!vcc::IsBlank(customContent))
+        if (!vcc::isBlank(customContent))
             content += INDENT + customContent + L"\r\n";
         else
             content += INDENT + getVccTagHeaderCustomTypes(VPGCodeType::Cpp, L"ObjectType") + L"\r\n"
                 + INDENT + getVccTagTailerCustomTypes(VPGCodeType::Cpp, L"ObjectType") + L"\r\n";
         content += L"};\r\n";
         vcc::writeFile(filePathHpp, content, true);
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object type file completed.");
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate object type file completed.");
     CATCH
 }

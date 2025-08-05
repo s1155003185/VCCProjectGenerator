@@ -33,21 +33,21 @@ namespace vcc
 		}
 
 		logMessage += L" " + getCurrentDatetimeString();
-		if (!IsBlank(id))
+		if (!isBlank(id))
 			logMessage += L" [" + id + L"]";
-		if (!IsBlank(logConfig->getUserID()))
+		if (!isBlank(logConfig->getUserID()))
 			logMessage += L" [" + logConfig->getUserID() + L"] ";
 		logMessage += L" " + message;
 		if (logConfig->getIsConsoleLog())
 			std::wcout << logMessage << std::endl;
 
-		if (!IsBlank(logConfig->getFilePath())) {
+		if (!isBlank(logConfig->getFilePath())) {
 			appendFileOneLine(logConfig->getFilePath(), logMessage, true);
 		}
 		return logMessage;
 	}
 
-	std::wstring LogService::LogInfo(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
+	std::wstring LogService::logInfo(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
 	{
 		return LogService::_logMessage(logConfig, LogType::Info, id, message);
 	}

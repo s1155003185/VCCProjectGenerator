@@ -43,7 +43,7 @@ namespace vcc
 	bool IsCapital(const std::wstring &str);
 
 	bool isEmpty(const std::wstring &str);
-	bool IsBlank(const std::wstring &str);
+	bool isBlank(const std::wstring &str);
 
 	bool IsEqual(const std::wstring &str1, const std::wstring &str2, const bool &isIgnoreCase = false);
 	bool isStartWith(const std::wstring &str, const std::wstring &prefix, const size_t &startFromPos = 0, bool isIgnoreCase = false);

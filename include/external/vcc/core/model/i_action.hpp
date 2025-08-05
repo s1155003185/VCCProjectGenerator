@@ -14,8 +14,8 @@ namespace vcc
         IAction() {}
         virtual ~IAction() {}
 
-        virtual std::shared_ptr<IResult> OnRedo() = 0;
-        virtual std::shared_ptr<IResult> OnUndo() = 0;
+        virtual std::shared_ptr<IResult> onRedo() = 0;
+        virtual std::shared_ptr<IResult> onUndo() = 0;
 
         virtual std::wstring getRedoMessageStart() const = 0;
         virtual std::wstring getRedoMessageComplete() const = 0;

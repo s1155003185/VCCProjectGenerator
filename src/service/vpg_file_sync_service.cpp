@@ -124,10 +124,10 @@ void VPGFileSyncService::copyFile(const vcc::LogConfig *logConfig, const VPGFile
             std::wstring commandDelimiter = vcc::getFileName(sourcePath) == L"Makefile" ? L"#" : L"//";
             std::wstring fileContent = VPGFileSyncService::SyncFileContent(mode, vcc::readFile(sourcePath), vcc::readFile(originalCodePath), VPGFileContentSyncMode::Demand, commandDelimiter);
             vcc::writeFile(originalCodePath, fileContent, true);
-            vcc::LogService::LogInfo(logConfig, L"", L"Updated File: " + originalCodePath);
+            vcc::LogService::logInfo(logConfig, L"", L"Updated File: " + originalCodePath);
         } else {
             std::filesystem::copy_file(PATH(sourcePath), PATH(originalCodePath), std::filesystem::copy_options::overwrite_existing);
-            vcc::LogService::LogInfo(logConfig, L"", L"Added File: " + originalCodePath);
+            vcc::LogService::logInfo(logConfig, L"", L"Added File: " + originalCodePath);
         }
     CATCH
 }

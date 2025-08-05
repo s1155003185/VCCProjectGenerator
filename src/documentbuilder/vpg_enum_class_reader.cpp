@@ -252,12 +252,12 @@ void VPGEnumClassReader::_assignEnumClassProperty(const VPGEnumClass *enumClass,
             else if (vcc::IsEqual(attributeToken, attributePrefix + L"ActionResult", true)) {
                 auto jsonAttributes = getJsonAttributes(attribute, attributePrefix + L"ActionResult");
                 if (jsonAttributes == nullptr
-                    || !((jsonAttributes->isContainKey(L"Redo.Class") && !vcc::IsBlank(jsonAttributes->getString(L"Redo.Class")))
-                        || (jsonAttributes->isContainKey(L"Undo.Class") && !vcc::IsBlank(jsonAttributes->getString(L"Undo.Class")))))
+                    || !((jsonAttributes->isContainKey(L"Redo.Class") && !vcc::isBlank(jsonAttributes->getString(L"Redo.Class")))
+                        || (jsonAttributes->isContainKey(L"Undo.Class") && !vcc::isBlank(jsonAttributes->getString(L"Undo.Class")))))
                     THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Enum Class " + enumClass->getName() + L" has attribute @@ActionResult but missing Attribute \"Redo.Class\" or \"Undo.Class\"");
-                if (jsonAttributes->isContainKey(L"Redo.Class") && !vcc::IsBlank(jsonAttributes->getString(L"Redo.Class")))
+                if (jsonAttributes->isContainKey(L"Redo.Class") && !vcc::isBlank(jsonAttributes->getString(L"Redo.Class")))
                     property->setActionResultRedoClass(jsonAttributes->getString(L"Redo.Class"));
-                if (jsonAttributes->isContainKey(L"Undo.Class") && !vcc::IsBlank(jsonAttributes->getString(L"Undo.Class")))
+                if (jsonAttributes->isContainKey(L"Undo.Class") && !vcc::isBlank(jsonAttributes->getString(L"Undo.Class")))
                     property->setActionResultUndoClass(jsonAttributes->getString(L"Undo.Class"));
             }
             // Json
@@ -562,7 +562,7 @@ bool VPGEnumClassReader::_parseClass(const std::wstring &cppCode, size_t &pos, s
                     auto jsonAttributes = getJsonAttributes(attribute, attributePrefix + L"Inherit");
                     assert(jsonAttributes != nullptr);
                     std::wstring className = jsonAttributes->getString(L"Class");
-                    if (vcc::IsBlank(className))
+                    if (vcc::isBlank(className))
                         THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"Enum Class " + enumClass->getName() + L" has attribute @@Inherit but missing Attribute \"Class\"");
                     enumClass->setInheritClass(className);
                 
@@ -681,7 +681,7 @@ void VPGEnumClassReader::parseCustom(const std::wstring &cppCode, const std::wst
             } else {
                 size_t previousPos = pos;
                 std::wstring nextToken = vcc::getNextString(cppCode, pos, _Delimiter, _OpenCommandAndQuotes, _CloseCommandAndQuotes);
-                if (!vcc::IsBlank(nextToken)) {
+                if (!vcc::isBlank(nextToken)) {
                     if (isNamespaceTriggered) {
                         // namespace name
                         vcc::Trim(nextToken);

@@ -105,7 +105,7 @@ std::wstring getActionFileNameWithoutExtension(const std::wstring &actionClassNa
         std::wstring currentActionClassName = getTypeOrClassWithoutNamespace(actionClassName);
         std::wstring projectPrefixLower = projectPrefix;
         vcc::ToLower(projectPrefixLower);
-        if (!vcc::IsBlank(projectPrefix) && vcc::isStartWith(GetTypeOrClassWithoutNamespace(actionClassName), projectPrefix)) {
+        if (!vcc::isBlank(projectPrefix) && vcc::isStartWith(GetTypeOrClassWithoutNamespace(actionClassName), projectPrefix)) {
             result += projectPrefixLower;
             currentActionClassName = currentActionClassName.substr(projectPrefix.length());
         }

@@ -408,7 +408,7 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
                 projectFileList.insert(L"json.hpp");
                 projectFileList.insert(L"i_document.hpp");
             }
-            if (!vcc::IsBlank(enumClass->getInheritClass())) {
+            if (!vcc::isBlank(enumClass->getInheritClass())) {
                 std::wstring inheritClass = enumClass->getInheritClass();
                 // remove template
                 size_t pos = vcc::find(inheritClass, L"<");
@@ -464,7 +464,7 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
 
                 for (auto i = 0; i < 2; i++) {
                     std::wstring type = i != 0 ? property->getType2() : property->getType1();
-                    if (vcc::IsBlank(type))
+                    if (vcc::isBlank(type))
                         continue;
 
                     if (i != 0 ? property->getIsType2Custom() : property->getIsType1Custom()) {
@@ -525,7 +525,7 @@ std::wstring VPGObjectFileGenerationService::GetHppConstructor(const VPGEnumClas
                 } else
                     result += L" {}\r\n";
             } else {
-                if (!vcc::IsBlank(enumClass->getInheritClass()))
+                if (!vcc::isBlank(enumClass->getInheritClass()))
                     result += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote + L"()\r\n"
                         + INDENT + INDENT + L"{\r\n"
                         + INDENT + INDENT + INDENT + L"_ObjectType = ObjectType::" +  className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L";\r\n"
@@ -680,7 +680,7 @@ std::wstring VPGObjectFileGenerationService::GetHppPublicFunctions(const VPGEnum
         case VPGEnumClassType::Result:
             if (option->getBehavior() != nullptr && option->getBehavior()->getIsActionResultThrowException())
                 result += L"\r\n"
-                    + INDENT + INDENT + L"virtual bool IsThrowException() const override\r\n"
+                    + INDENT + INDENT + L"virtual bool isThrowException() const override\r\n"
                     + INDENT + INDENT + L"{\r\n"
                     + INDENT + INDENT + INDENT + L"return true;\r\n"
                     + INDENT + INDENT + L"}\r\n";
@@ -732,7 +732,7 @@ std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass
             baseClassName = L"vcc::BaseObject";
             break;
         }
-        if (!vcc::IsBlank(enumClass->getInheritClass()))
+        if (!vcc::isBlank(enumClass->getInheritClass()))
             baseClassName = enumClass->getInheritClass();
         std::wstring baseClassNameWithoutQuote = baseClassName;
         if (vcc::isContain(baseClassNameWithoutQuote, L"<"))
@@ -786,7 +786,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
         
         std::wstring classPrefix = option->getProjectPrefix();
         std::wstring filePathHpp = isContainForm && !formFilePathHpp.empty() ? formFilePathHpp : objectFilePathHpp;
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file: " + filePathHpp);
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate object class file: " + filePathHpp);
 
         // ------------------------------------------------------------------------------------------ //
         //                               Action  Files                                                //
@@ -877,7 +877,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
         
         vcc::lTrim(content);
         vcc::writeFile(filePathHpp, content, true);
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file completed.");
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate object class file completed.");
     CATCH
 }
 
@@ -904,7 +904,7 @@ void VPGObjectFileGenerationService::GetCppIncludeFiles(
             customIncludeFiles.insert(GetProjectClassIncludeFile(classPathMapping, enumClass->getName()));
 
             // inherit Form
-            if (!vcc::IsBlank(enumClass->getInheritClass())) {
+            if (!vcc::isBlank(enumClass->getInheritClass())) {
                 std::wstring inheritClass = enumClass->getInheritClass();
                 // remove template
                 size_t pos = vcc::find(inheritClass, L"<");
@@ -1358,7 +1358,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
         std::wstring includeFileName = vcc::getFileName(filePathCpp);
         vcc::Replace(includeFileName, L".cpp", L".hpp");
 
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file: " + filePathCpp);
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate object class file: " + filePathCpp);
         
         // ------------------------------------------------------------------------------------------ //
         //                               include Files                                                //
@@ -1417,7 +1417,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
             std::wstring className = getClassNameFromPropertyClassName(GetTypeOrClassWithoutNamespace(enumClass->getName()));
 
             std::wstring baseClassName = (enumClass->getType() == VPGEnumClassType::Form ? L"vcc::BaseForm" : L"vcc::BaseObject");
-            if (!vcc::IsBlank(enumClass->getInheritClass()))
+            if (!vcc::isBlank(enumClass->getInheritClass()))
                 baseClassName = enumClass->getInheritClass();                
             std::wstring baseClassNameWithoutQuote = baseClassName;
             if (vcc::isContain(baseClassNameWithoutQuote, L"<"))
@@ -1448,6 +1448,6 @@ void VPGObjectFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
         
         vcc::lTrim(content);
         vcc::writeFile(filePathCpp, content, true);
-        vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file completed.");
+        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate object class file completed.");
     CATCH
 }

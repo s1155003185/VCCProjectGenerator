@@ -39,7 +39,7 @@ size_t VPGFileGenerationService::GetMinimumLeadingSpace(const std::vector<std::w
     TRY
         bool isFirstLine = true;
         for (auto const &line : lines) {
-            if (!vcc::IsBlank(line)) {
+            if (!vcc::isBlank(line)) {
                 size_t noOfSpace = getLeadingSpace(line);
                 if (isFirstLine) {
                     result = noOfSpace;
@@ -69,7 +69,7 @@ std::wstring VPGFileGenerationService::GetIndent(const std::wstring &str)
             if (line.empty())
                 continue;
             
-            if (vcc::IsBlank(line))
+            if (vcc::isBlank(line))
                 result = line;
             else {
                 size_t pos = 0;
@@ -201,7 +201,7 @@ std::wstring VPGFileGenerationService::GenerateDemandCode(const vcc::Xml *src, c
                     result += commandDelimiter + L" " + child->getOpeningTag() + L"\r\n";
                     size_t noOfSpace = getMinimumLeadingSpace(lines);
                     for (auto line : lines) {
-                        if (!vcc::IsBlank(line)) {
+                        if (!vcc::isBlank(line)) {
                             vcc::rTrim(line);
                             result += indent + line.substr(noOfSpace) + L"\r\n";
                         } else

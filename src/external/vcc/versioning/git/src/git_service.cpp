@@ -169,7 +169,7 @@ namespace vcc
         TRY
             std::wstring optionStr = L"";
             if (option != nullptr) {
-                if (!IsBlank(option->getBranch()))
+                if (!isBlank(option->getBranch()))
                     optionStr += L" -b " + getEscapeStringWithQuote(EscapeStringType::DoubleQuote, option->getBranch());
                 if (option->getDepth() > 0)
                     optionStr +=L" --depth " + std::to_wstring(option->getDepth());
@@ -185,7 +185,7 @@ namespace vcc
         std::vector<std::shared_ptr<GitRemote>> remotes;
         TRY
             std::wstring result = ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git remote -v");
-            if (IsBlank(result))
+            if (isBlank(result))
                 return remotes;
             std::vector<std::wstring> lines = SplitStringByLine(result);
             for (const std::wstring &line : lines) {
@@ -210,8 +210,8 @@ namespace vcc
     void GitService::AddRemote(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &name, const std::wstring &url, const GitRemoteMirror &mirror)
     {
         TRY
-            assert(!IsBlank(name));
-            assert(!IsBlank(url));
+            assert(!isBlank(name));
+            assert(!isBlank(url));
             std::wstring mirrorStr = L"";
             switch (mirror)
             {
@@ -235,8 +235,8 @@ namespace vcc
     void GitService::RenameRemote(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &oldName, const std::wstring &newName)
     {
         TRY
-            assert(!IsBlank(oldName));
-            assert(!IsBlank(newName));
+            assert(!isBlank(oldName));
+            assert(!isBlank(newName));
             ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git rename " + oldName + L" " + newName);
         CATCH
     }
@@ -244,7 +244,7 @@ namespace vcc
     void GitService::RemoveRemote(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &name)
     {
         TRY
-            assert(!IsBlank(name));
+            assert(!isBlank(name));
             ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git remove " + name);
         CATCH
     }
@@ -322,19 +322,19 @@ namespace vcc
             if (searchCriteria->getSkip() > 0)
                 optionStr += L" --skip=" + std::to_wstring(searchCriteria->getSkip());
 
-            if (!IsBlank(searchCriteria->getDateAfter()))
+            if (!isBlank(searchCriteria->getDateAfter()))
                 optionStr += L" --after=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getDateAfter()) + L"\"";
 
-            if (!IsBlank(searchCriteria->getDateBefore()))
+            if (!isBlank(searchCriteria->getDateBefore()))
                 optionStr += L" --before=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getDateBefore()) + L"\"";
             
-            if (!IsBlank(searchCriteria->getAuthor()))
+            if (!isBlank(searchCriteria->getAuthor()))
                 optionStr += L" --author=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getAuthor()) + L"\"";
 
-            if (!IsBlank(searchCriteria->getCommitter()))
+            if (!isBlank(searchCriteria->getCommitter()))
                 optionStr += L" --committer=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getCommitter()) + L"\"";
 
-            if (!IsBlank(searchCriteria->getGrep()))
+            if (!isBlank(searchCriteria->getGrep()))
                 optionStr += L" --grep=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getGrep()) + L"\"";
             
             if (searchCriteria->getIsGrepAllMatch())
@@ -372,25 +372,25 @@ namespace vcc
 
             if (searchCriteria->getIsAllBranches())
                 optionStr += L" --branches";
-            else if (!IsBlank(searchCriteria->getBranches()))
+            else if (!isBlank(searchCriteria->getBranches()))
                 optionStr += L" --branches=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getBranches()) + L"\"";
             
             if (searchCriteria->getIsAllTags())
                 optionStr += L" --tags";
-            else if (!IsBlank(searchCriteria->getTags()))
+            else if (!isBlank(searchCriteria->getTags()))
                 optionStr += L" --tags=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getTags()) + L"\"";
             
             if (searchCriteria->getIsAllRemotes())
                 optionStr += L" --remotes";
-            else if (!IsBlank(searchCriteria->getRemotes()))
+            else if (!isBlank(searchCriteria->getRemotes()))
                 optionStr += L" --remotes=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getRemotes()) + L"\"";
             
             if (searchCriteria->getIsAllGlob())
                 optionStr += L" --glob";
-            else if (!IsBlank(searchCriteria->getGlob()))
+            else if (!isBlank(searchCriteria->getGlob()))
                 optionStr += L" --glob=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getGlob()) + L"\"";
             
-            if (!IsBlank(searchCriteria->getExcludeGlob()))
+            if (!isBlank(searchCriteria->getExcludeGlob()))
                 optionStr += L" --exclude=\"" + getEscapeString(EscapeStringType::DoubleQuote, searchCriteria->getExcludeGlob()) + L"\"";
             
             // History Simplification
@@ -409,7 +409,7 @@ namespace vcc
             if (searchCriteria->getIsSimplifyMerges())
                 optionStr += L" --simplify-merges";
 
-            if (!IsBlank(searchCriteria->getAncestryPath()))
+            if (!isBlank(searchCriteria->getAncestryPath()))
                 optionStr += L" --ancestry-path=" + searchCriteria->getAncestryPath();
             
             switch (searchCriteria->getOrderBy())
@@ -434,12 +434,12 @@ namespace vcc
             }
 
             // Revision Range
-            if (!IsBlank(searchCriteria->getRevisionFrom()) || !IsBlank(searchCriteria->getRevisionTo())) {
+            if (!isBlank(searchCriteria->getRevisionFrom()) || !isBlank(searchCriteria->getRevisionTo())) {
                 std::wstring revisionStr = L"";
-                if (!IsBlank(searchCriteria->getRevisionFrom()))
+                if (!isBlank(searchCriteria->getRevisionFrom()))
                     revisionStr += searchCriteria->getRevisionFrom();
                 revisionStr += L"..";
-                if (!IsBlank(searchCriteria->getRevisionTo()))
+                if (!isBlank(searchCriteria->getRevisionTo()))
                     revisionStr += searchCriteria->getRevisionTo();
                 optionStr += L" " + revisionStr;
             }
@@ -492,7 +492,7 @@ namespace vcc
                         std::wstring parentID = match[1];
                         std::vector<std::wstring> tokens = SplitString(parentID, { L" " });
                         for (std::wstring token : tokens) {
-                            if (IsBlank(token))
+                            if (isBlank(token))
                                 continue;
                             Trim(token);
                             log->insertParentHashIDs(token);
@@ -503,7 +503,7 @@ namespace vcc
                         std::wstring parentID = match[1];
                         std::vector<std::wstring> tokens = SplitString(parentID, { L" " });
                         for (std::wstring token : tokens) {
-                            if (IsBlank(token))
+                            if (isBlank(token))
                                 continue;
                             Trim(token);
                             log->insertAbbreviatedParentHashIDs(token);
@@ -539,7 +539,7 @@ namespace vcc
 
             std::vector<std::wstring> lines = SplitStringByLine(str);
             for (const std::wstring &line : lines) {
-                if (IsBlank(line)) {
+                if (isBlank(line)) {
                     // first line is title
                     // second line is full message
                     // handle in seccod loop
@@ -550,7 +550,7 @@ namespace vcc
                     std::vector<std::wstring> tokens = SplitString(tmpLine, { L" " });
                     if (tokens.empty())
                         THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"HashID missing: " + str);
-                    if (!IsBlank(log->getHashID()) && log->getHashID() != tokens.at(0))
+                    if (!isBlank(log->getHashID()) && log->getHashID() != tokens.at(0))
                         THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"HashID " + log->getHashID() + L" + not match: " + str);
                     log->setHashID(tokens.at(0));
                     if (find(tmpLine, L"(") != std::wstring::npos) {
@@ -711,7 +711,7 @@ namespace vcc
     // void GitService::GetLog(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &hashID, std::shared_ptr<GitLog> log)
     // {
     //     TRY
-    //         assert(!IsBlank(hashID));
+    //         assert(!isBlank(hashID));
     //         GitService::ParseGitLog(ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git log --pretty=fuller -n 1 " + hashID), log);
     //     CATCH
     // }
@@ -722,13 +722,13 @@ namespace vcc
         TRY
             std::wstring optionStr = L"";
             if (searchCriteria != nullptr) {
-                if (!IsBlank(searchCriteria->getContains()))
+                if (!isBlank(searchCriteria->getContains()))
                     optionStr += L" --contains " + searchCriteria->getContains();
 
-                if (!IsBlank(searchCriteria->getNoContains()))
+                if (!isBlank(searchCriteria->getNoContains()))
                     optionStr += L" --no-contains " + searchCriteria->getNoContains();
 
-                if (!IsBlank(searchCriteria->getOrderBy()))
+                if (!isBlank(searchCriteria->getOrderBy()))
                     optionStr += L" --sort=" + searchCriteria->getOrderBy();
             }
             std::vector<std::wstring> lines = SplitStringByLine(ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git tag -l"));
@@ -740,7 +740,7 @@ namespace vcc
     // void GitService::getTag(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName, std::shared_ptr<GitLog> log)
     // {
     //     TRY
-    //         assert(!IsBlank(tagName));
+    //         assert(!isBlank(tagName));
     //          std::vector<std::wstring> lines = SplitStringByLine(ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git show --format=fuller " + tagName));
     //         bool isAfterFirstHeader = false;
     //         std::wstring str = L"";
@@ -751,7 +751,7 @@ namespace vcc
     //                 str += line + L"\n";
     //             } else {
     //                 str += line + L"\n";
-    //                 if (IsBlank(line))
+    //                 if (isBlank(line))
     //                     isAfterFirstHeader = true;
     //             }
     //         }
@@ -789,7 +789,7 @@ namespace vcc
     void GitService::CreateTag(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName, const GitTagCreateTagOption *option)
     {
         TRY
-            assert(!IsBlank(tagName));
+            assert(!isBlank(tagName));
             std::wstring optionStr = L"";
             std::wstring suffixOptionStr = L"";
             if (option != nullptr) {
@@ -805,7 +805,7 @@ namespace vcc
                     optionStr += L" -s";
                     break;
                 case GitTagCreateTagOptionSignMode::LocalUser:
-                    assert(!IsBlank(option->getSignLocalUserKeyID()));
+                    assert(!isBlank(option->getSignLocalUserKeyID()));
                     optionStr += L" -local-user=" + option->getSignLocalUserKeyID();
                     break;
                 default:
@@ -816,10 +816,10 @@ namespace vcc
                 if (option->getIsForce())
                     optionStr += L" -f";
                 
-                if (!IsBlank(option->getMessage()))
+                if (!isBlank(option->getMessage()))
                     optionStr += L" -m \"" + getEscapeString(EscapeStringType::DoubleQuote, option->getMessage()) + L"\"";
 
-                if (!IsBlank(option->getHashID()))
+                if (!isBlank(option->getHashID()))
                     suffixOptionStr += L" " + option->getHashID();
             }
             ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git tag" + optionStr + L" " + tagName + L" " + suffixOptionStr);
@@ -829,7 +829,7 @@ namespace vcc
     void GitService::Switch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName, bool isForce)
     {
         TRY
-            assert(!IsBlank(tagName));
+            assert(!isBlank(tagName));
             std::wstring optionStr = isForce ? L" -f" : L"";
             ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git checkout " + optionStr + L" " + tagName);
         CATCH
@@ -845,7 +845,7 @@ namespace vcc
     void GitService::DeleteTag(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &tagName)
     {
         TRY
-            assert(!IsBlank(tagName));
+            assert(!isBlank(tagName));
             ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git tag -d " + tagName);
         CATCH
     }
@@ -920,7 +920,7 @@ namespace vcc
     void GitService::CreateBranch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &branchName, const GitBranchCreateBranchOption *option)
     {
         TRY
-            assert(!IsBlank(branchName));
+            assert(!isBlank(branchName));
             std::wstring optionStr = L"";
             if (option != nullptr) {
                 if (option->getIsForce())
@@ -954,7 +954,7 @@ namespace vcc
     void GitService::SwitchBranch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &branchName, const GitBranchSwitchBranchOption *option)
     {
         TRY
-            assert(!IsBlank(branchName));
+            assert(!isBlank(branchName));
             std::wstring optionStr = L"";
             if (option != nullptr) {
                 if (option->getIsQuite()) {
@@ -971,8 +971,8 @@ namespace vcc
     void GitService::RenameBranch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce)
     {
         TRY
-            assert(!IsBlank(oldBranchName));
-            assert(!IsBlank(newBranchName));
+            assert(!isBlank(oldBranchName));
+            assert(!isBlank(newBranchName));
             std::wstring optionStr = isForce ? L" -M" : L" -m";
             ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git branch" + optionStr + L" " + oldBranchName + L" " + newBranchName);
         CATCH
@@ -981,8 +981,8 @@ namespace vcc
     void GitService::CopyBranch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &oldBranchName, const std::wstring &newBranchName, bool isForce)
     {
         TRY
-            assert(!IsBlank(oldBranchName));
-            assert(!IsBlank(newBranchName));
+            assert(!isBlank(oldBranchName));
+            assert(!isBlank(newBranchName));
             std::wstring optionStr = isForce ? L" -C" : L" -c";
             ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git branch" + optionStr + L" " + oldBranchName + L" " + newBranchName);
         CATCH
@@ -991,7 +991,7 @@ namespace vcc
     void GitService::DeleteBranch(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &branchName, bool isForce)
     {
         TRY
-            assert(!IsBlank(branchName));
+            assert(!isBlank(branchName));
             std::wstring optionStr = isForce ? L" -D" : L" -d";
             ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git branch" + optionStr + L" " + branchName);
         CATCH
@@ -1121,7 +1121,7 @@ namespace vcc
     std::shared_ptr<GitDifference> GitService::GetDifferenceWorkingFile(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria)
     {
         TRY
-            assert(!IsBlank(filePath));
+            assert(!isBlank(filePath));
             std::wstring optionStr = L"";
             if (searchCriteria != nullptr) {
                 if (searchCriteria->getNoOfLines() > -1)
@@ -1138,7 +1138,7 @@ namespace vcc
     std::shared_ptr<GitDifference> GitService::GetDifferenceFile(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria)
     {
         TRY
-            assert(!IsBlank(filePath));
+            assert(!isBlank(filePath));
             std::wstring optionStr = L"";
             if (searchCriteria != nullptr) {
                 if (searchCriteria->getNoOfLines() > -1)
@@ -1155,7 +1155,7 @@ namespace vcc
     std::shared_ptr<GitDifference> GitService::GetDifferenceCommit(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &fromHashID, const std::wstring &toHashID, const std::wstring &filePath, const GitDifferentSearchCriteria *searchCriteria)
     {
         TRY
-            assert(!IsBlank(filePath));
+            assert(!isBlank(filePath));
             std::wstring optionStr = L"";
             if (searchCriteria != nullptr) {
                 if (searchCriteria->getNoOfLines() > -1)
@@ -1217,7 +1217,7 @@ namespace vcc
     void GitService::RestoreFileToParticularCommit(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &filePath, const std::wstring &hashID)
     {
         TRY
-            assert(!IsBlank(hashID));
+            assert(!isBlank(hashID));
             ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git restore --source=" + hashID + L" \"" + getEscapeString(EscapeStringType::DoubleQuote, filePath) + L"\"");
         CATCH
     }
@@ -1339,7 +1339,7 @@ namespace vcc
     {
         TRY
             std::wstring cmdResult = ProcessService::execute(logConfig, GIT_LOG_ID, L"git config --global --list");
-            if (!IsBlank(cmdResult)) {
+            if (!isBlank(cmdResult)) {
                 auto element = std::make_shared<Config>();
                 auto reader = std::make_unique<ConfigBuilder>();
                 reader->deserialize(cmdResult, element);
@@ -1363,7 +1363,7 @@ namespace vcc
     {
         TRY
             std::wstring cmdResult = ProcessService::execute(logConfig, GIT_LOG_ID, L"git config --global " + key);
-            return IsBlank(cmdResult) ? L"" : SplitStringByLine(cmdResult).at(0);
+            return isBlank(cmdResult) ? L"" : SplitStringByLine(cmdResult).at(0);
         CATCH
         return L"";
     }
@@ -1421,7 +1421,7 @@ namespace vcc
     {
         TRY
             std::wstring cmdResult = ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git config --local --list");
-            if (!IsBlank(cmdResult)) {
+            if (!isBlank(cmdResult)) {
                 auto element = std::make_shared<Config>();
                 auto reader = std::make_unique<ConfigBuilder>();
 
@@ -1444,7 +1444,7 @@ namespace vcc
     {
         TRY
             std::wstring cmdResult = ProcessService::execute(logConfig, GIT_LOG_ID, workspace, L"git config --local " + key);
-            return IsBlank(cmdResult) ? L"" : SplitStringByLine(cmdResult).at(0);
+            return isBlank(cmdResult) ? L"" : SplitStringByLine(cmdResult).at(0);
         CATCH
         return L"";
     }

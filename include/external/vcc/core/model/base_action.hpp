@@ -20,13 +20,13 @@ namespace vcc
             BaseAction() : BaseObject() {}
             virtual ~BaseAction() {}
         
-            virtual void LogRedoStart() const;
-            virtual void LogRedoComplete() const;
-            virtual void LogUndoStart() const;
-            virtual void LogUndoComplete() const;
+            virtual void logRedoStart() const;
+            virtual void logRedoComplete() const;
+            virtual void logUndoStart() const;
+            virtual void logUndoComplete() const;
             
             // Need to override if Acion has undo
-            virtual std::shared_ptr<IResult> OnUndo() override { THROW_EXCEPTION_MSG(ExceptionType::NotImplement, L"OnUndo() has not been implemented"); return nullptr; };
+            virtual std::shared_ptr<IResult> onUndo() override { THROW_EXCEPTION_MSG(ExceptionType::NotImplement, L"OnUndo() has not been implemented"); return nullptr; };
             virtual std::wstring getUndoMessageStart() const override { THROW_EXCEPTION_MSG(ExceptionType::NotImplement, L"GetUndoMessageStart() has not been implemented"); return L""; }
             virtual std::wstring getUndoMessageComplete() const override { THROW_EXCEPTION_MSG(ExceptionType::NotImplement, L"GetUndoMessageComplete() has not been implemented"); return L""; }
 

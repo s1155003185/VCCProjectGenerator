@@ -82,7 +82,7 @@ class VPGMainFormAddWorkspaceForm : public vcc::BaseAction
         virtual std::wstring getRedoMessageStart() const override;
         virtual std::wstring getRedoMessageComplete() const override;
 
-        virtual std::shared_ptr<vcc::IResult> OnRedo() override;
+        virtual std::shared_ptr<vcc::IResult> onRedo() override;
 
         // <vcc:customVPGMainFormAddWorkspaceFormProtectedFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormAddWorkspaceFormProtectedFunctions>
@@ -112,7 +112,7 @@ class VPGMainFormDeleteWorkspaceForm : public vcc::BaseAction
         virtual std::wstring getRedoMessageStart() const override;
         virtual std::wstring getRedoMessageComplete() const override;
 
-        virtual std::shared_ptr<vcc::IResult> OnRedo() override;
+        virtual std::shared_ptr<vcc::IResult> onRedo() override;
 
         // <vcc:customVPGMainFormDeleteWorkspaceFormProtectedFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormDeleteWorkspaceFormProtectedFunctions>
@@ -140,7 +140,7 @@ class VPGMainFormInitialize : public vcc::BaseAction
         virtual std::wstring getRedoMessageStart() const override;
         virtual std::wstring getRedoMessageComplete() const override;
 
-        virtual std::shared_ptr<vcc::IResult> OnRedo() override;
+        virtual std::shared_ptr<vcc::IResult> onRedo() override;
 
         // <vcc:customVPGMainFormInitializeProtectedFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormInitializeProtectedFunctions>
@@ -169,7 +169,7 @@ class VPGMainFormRenameWorkspaceForm : public vcc::BaseAction
         virtual std::wstring getRedoMessageStart() const override;
         virtual std::wstring getRedoMessageComplete() const override;
 
-        virtual std::shared_ptr<vcc::IResult> OnRedo() override;
+        virtual std::shared_ptr<vcc::IResult> onRedo() override;
 
         // <vcc:customVPGMainFormRenameWorkspaceFormProtectedFunctions sync="RESERVE" gen="RESERVE">
         // </vcc:customVPGMainFormRenameWorkspaceFormProtectedFunctions>
