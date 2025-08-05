@@ -1118,7 +1118,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const vcc::LogConfig *log
             vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor cpp completed.");
         } else {
             if (vcc::IsFilePresent(filePathCpp)) {
-                vcc::RemoveFile(filePathCpp);
+                vcc::removeFile(filePathCpp);
                 vcc::LogService::LogInfo(logConfig, LOG_ID, L"Removed property accessor cpp as no properties are acceesable.");
             } else
                 vcc::LogService::LogInfo(logConfig, LOG_ID, L"No property accessor cpp need to be generated.");

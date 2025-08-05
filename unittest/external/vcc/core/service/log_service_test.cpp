@@ -10,7 +10,7 @@
 TEST(LogServiceTest, LogTest) 
 {
     std::wstring filePath = vcc::ConcatPaths({std::filesystem::current_path().wstring(), L"bin/Debug/AppLogs/LogServiceTest.log"});
-    vcc::RemoveFile(filePath);
+    vcc::removeFile(filePath);
     
     auto property = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
     property->setUserID(L"user");
