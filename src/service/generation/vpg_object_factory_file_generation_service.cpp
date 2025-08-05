@@ -32,7 +32,7 @@ void VPGObjectFactoryFileGenerationService::GenerateHpp(const vcc::LogConfig *lo
             "    public:\r\n"
             "        static std::shared_ptr<vcc::IObject> Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);\r\n"
             "};\r\n";
-        vcc::WriteFile(filePathHpp, content, true);
+        vcc::writeFile(filePathHpp, content, true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object factory file completed.");
     CATCH
 }
@@ -80,7 +80,7 @@ void VPGObjectFactoryFileGenerationService::GenerateCpp(const vcc::LogConfig *lo
             + INDENT + L"CATCH\r\n"
             + INDENT + L"return result;\r\n"
             "}\r\n";
-        vcc::WriteFile(filePathCpp, content, true);
+        vcc::writeFile(filePathCpp, content, true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object factory completed.");
     CATCH
 }

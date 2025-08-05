@@ -134,12 +134,12 @@ void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
                 content += GenerateCodeWithNamespace(namespaceClassMapping);
                     
                 // Generate File
-                std::wstring filePathHpp = vcc::ConcatPaths({folderPathHpp, getActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".hpp"});
+                std::wstring filePathHpp = vcc::concatPaths({folderPathHpp, getActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".hpp"});
                 vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file: " + filePathHpp);
-                if (vcc::IsFilePresent(filePathHpp))
-                    content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::ReadFile(filePathHpp), VPGFileContentSyncMode::Full, L"//");
+                if (vcc::isFilePresent(filePathHpp))
+                    content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::readFile(filePathHpp), VPGFileContentSyncMode::Full, L"//");
                 vcc::LTrim(content);
-                vcc::WriteFile(filePathHpp, content, true);
+                vcc::writeFile(filePathHpp, content, true);
                 vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file completed.");
             } else {
                 // Generate to form files
@@ -229,7 +229,7 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetRedoMessageStart") + L"\r\n"
-                + INDENT + INDENT + L"return L\"Execute " + actionClassName + L" start\";\r\n"
+                + INDENT + INDENT + L"return L\"execute " + actionClassName + L" start\";\r\n"
                 + INDENT + INDENT + getVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetRedoMessageStart") + L"\r\n"
                 + INDENT + L"CATCH\r\n"
                 + INDENT + L"return L\"\";\r\n"
@@ -239,7 +239,7 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
                 "{\r\n"
                 + INDENT + L"TRY\r\n"
                 + INDENT + INDENT + getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetRedoMessageComplete") + L"\r\n"
-                + INDENT + INDENT + L"return L\"Execute " + actionClassName + L" complete\";\r\n"
+                + INDENT + INDENT + L"return L\"execute " + actionClassName + L" complete\";\r\n"
                 + INDENT + INDENT + getVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName, L"GetRedoMessageComplete") + L"\r\n"
                 + INDENT + L"CATCH\r\n"
                 + INDENT + L"return L\"\";\r\n"
@@ -320,12 +320,12 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
                     + getVccTagTailerCustomClassFunctions(VPGCodeType::Cpp, L"") + L"\r\n";
                     
                 // Generate File
-                std::wstring filePathCpp = vcc::ConcatPaths({folderPathCpp, getActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".cpp"});
+                std::wstring filePathCpp = vcc::concatPaths({folderPathCpp, getActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".cpp"});
                 vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file: " + filePathCpp);
-                if (vcc::IsFilePresent(filePathCpp))
-                    content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::ReadFile(filePathCpp), VPGFileContentSyncMode::Full, L"//");
+                if (vcc::isFilePresent(filePathCpp))
+                    content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::readFile(filePathCpp), VPGFileContentSyncMode::Full, L"//");
                 vcc::LTrim(content);
-                vcc::WriteFile(filePathCpp, content, true);
+                vcc::writeFile(filePathCpp, content, true);
                 vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate action class file completed.");
             } else {
                 // Generate to form files

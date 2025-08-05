@@ -138,10 +138,10 @@ namespace vcc
         
     //     while (true)
     //     { 
-    //         bSuccess = ReadFile(hFile, chBuf, BUFSIZE, &dwRead, NULL);
+    //         bSuccess = readFile(hFile, chBuf, BUFSIZE, &dwRead, NULL);
     //         if (!bSuccess || dwRead == 0 ) break; 
             
-    //         bSuccess = WriteFile(pStdInWrite, chBuf, dwRead, &dwWritten, NULL);
+    //         bSuccess = writeFile(pStdInWrite, chBuf, dwRead, &dwWritten, NULL);
     //         if (!bSuccess ) break; 
     //     }
     //     if (!CloseHandle(pStdInWrite))
@@ -158,11 +158,11 @@ namespace vcc
         std::wstring result = L"";
         while (true)
         { 
-            bSuccess = ReadFile(pStdOutRead, buffer, BUFSIZE, &dwRead, NULL);
+            bSuccess = readFile(pStdOutRead, buffer, BUFSIZE, &dwRead, NULL);
             if(!bSuccess || dwRead == 0) break;
             result += vcc::str2wstr(buffer);
 
-            bSuccess = WriteFile(hParentStdOut, buffer, dwRead, &dwWritten, NULL);
+            bSuccess = writeFile(hParentStdOut, buffer, dwRead, &dwWritten, NULL);
             if (!bSuccess) break;
         }
         return result;
@@ -178,11 +178,11 @@ namespace vcc
         std::wstring result = L"";
         while (true)
         { 
-            bSuccess = ReadFile(pStdErrorRead, buffer, BUFSIZE, &dwRead, NULL);
+            bSuccess = readFile(pStdErrorRead, buffer, BUFSIZE, &dwRead, NULL);
             if(!bSuccess || dwRead == 0) break; 
             result += vcc::str2wstr(buffer);
 
-            bSuccess = WriteFile(hParentStdError, buffer, dwRead, &dwWritten, NULL);
+            bSuccess = writeFile(hParentStdError, buffer, dwRead, &dwWritten, NULL);
             if (!bSuccess) break; 
         } 
         return result;

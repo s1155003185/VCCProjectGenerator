@@ -37,21 +37,21 @@ class VPGProcessManagerTest : public testing::Test
 TEST_F(VPGProcessManagerTest, Empty)
 {
     std::vector<std::wstring> cmds;
-    this->getManager()->Execute(cmds);
+    this->getManager()->execute(cmds);
 }
 
 TEST_F(VPGProcessManagerTest, Version)
 {
-    this->getManager()->Execute({L"vpg", L"-Version"});
+    this->getManager()->execute({L"vpg", L"-Version"});
 }
 
 // TEST_F(VPGProcessManagerTest, AddUpdateGenerate)
 // {
-//     this->getManager()->Execute({L"vpg", L"-Add", L"-interface", L"CPPCOMPLEX", L"-workspace-destination", this->getWorkspace()});
+//     this->getManager()->execute({L"vpg", L"-Add", L"-interface", L"CPPCOMPLEX", L"-workspace-destination", this->getWorkspace()});
 
 //     if (this->getIsCopyDebugFolderToTestFolder()) {
 //         std::wstring path = ConcatPaths({this->getTestFolder(), L"VCCComplex"});
-//         RemoveDirectory(path);
-//         CopyDirectory(this->getWorkspace(), path);
+//         removeDirectory(path);
+//         copyDirectory(this->getWorkspace(), path);
 //     }
 // }

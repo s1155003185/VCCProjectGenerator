@@ -28,26 +28,26 @@ class VPGBaseGenerationManagerTest : public testing::Test
         void CreateFolderInSourceWorkspace(std::wstring folder)
         {
             if (folder.empty())
-                vcc::CreateDirectory(this->getWorkspaceSource());
+                vcc::createDirectory(this->getWorkspaceSource());
             else
-                vcc::CreateDirectory(vcc::ConcatPaths({this->getWorkspaceSource(), folder}));
+                vcc::createDirectory(vcc::concatPaths({this->getWorkspaceSource(), folder}));
         }
 
         void CreateFolderInTargetWorkspace(std::wstring folder)
         {
             if (folder.empty())
-                vcc::CreateDirectory(this->getWorkspaceTarget());
+                vcc::createDirectory(this->getWorkspaceTarget());
             else
-                vcc::CreateDirectory(vcc::ConcatPaths({this->getWorkspaceTarget(), folder}));
+                vcc::createDirectory(vcc::concatPaths({this->getWorkspaceTarget(), folder}));
         }
 
         void CreateFileInSourceWorkspace(std::wstring fileName, std::wstring content)
         {
-            vcc::AppendFileOneLine(vcc::ConcatPaths({this->getWorkspaceSource(), fileName}), content, true);
+            vcc::appendFileOneLine(vcc::concatPaths({this->getWorkspaceSource(), fileName}), content, true);
         }
         void CreateFileInTargetWorkspace(std::wstring fileName, std::wstring content)
         {
-            vcc::AppendFileOneLine(vcc::ConcatPaths({this->getWorkspaceTarget(), fileName}), content, true);
+            vcc::appendFileOneLine(vcc::concatPaths({this->getWorkspaceTarget(), fileName}), content, true);
         }
 
     public:
@@ -105,7 +105,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
 
         bool CheckFolderExists(std::wstring path)
         {
-            return vcc::IsDirectoryExists(vcc::ConcatPaths({this->getWorkspace(), path}));
+            return vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspace(), path}));
         }
 
         void CreateSyncWorkspaceFolderWithExcludeTestCase() 
@@ -220,7 +220,7 @@ TEST_F(VPGBaseGenerationManagerTest, DllTestFileContent)
     _Option->setProjectNameDll(L"libvpg");
     _Option->setProjectNameExe(L"libvpg");
     _Option->getTemplate()->setIsExcludeUnittest(false);
-    std::wstring originalText  = vcc::ReadFile(L"unittest/Dll/dll_test.cpp");
+    std::wstring originalText  = vcc::readFile(L"unittest/Dll/dll_test.cpp");
     std::wstring result = originalText;
     this->getManager()->getDLLTestFileContent(result);
     vcc::ReplaceAll(originalText, L"\r\n", L"\n");
@@ -271,43 +271,43 @@ TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_NoGtest)
 TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_SyncWorkspaceFolderWithExclude)
 {
     this->CreateSyncWorkspaceFolderWithExcludeTestCase();
-    EXPECT_TRUE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FolderAdd"})));
-    EXPECT_TRUE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FolderUpdate"})));
-    EXPECT_FALSE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FolderDelete"})));
-    EXPECT_FALSE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FolderAddFilterOut"})));
-    EXPECT_TRUE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FolderUpdateFilterOut"})));
-    EXPECT_TRUE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FolderDeleteFilterOut"})));
+    EXPECT_TRUE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderAdd"})));
+    EXPECT_TRUE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderUpdate"})));
+    EXPECT_FALSE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderDelete"})));
+    EXPECT_FALSE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderAddFilterOut"})));
+    EXPECT_TRUE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderUpdateFilterOut"})));
+    EXPECT_TRUE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderDeleteFilterOut"})));
 }
 
 TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_SyncWorkspaceFolderIncludeOnly)
 {
     this->CreateSyncWorkspaceFolderIncludeOnlyTestCase();
-    EXPECT_FALSE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FolderAdd"})));
-    EXPECT_TRUE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FolderUpdate"})));
-    EXPECT_TRUE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FolderDelete"})));
-    EXPECT_TRUE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FolderAddIncludeOnly"})));
-    EXPECT_TRUE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FolderUpdateIncludeOnly"})));
-    EXPECT_FALSE(vcc::IsDirectoryExists(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FolderDeleteIncludeOnly"})));
+    EXPECT_FALSE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderAdd"})));
+    EXPECT_TRUE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderUpdate"})));
+    EXPECT_TRUE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderDelete"})));
+    EXPECT_TRUE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderAddIncludeOnly"})));
+    EXPECT_TRUE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderUpdateIncludeOnly"})));
+    EXPECT_FALSE(vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspaceTarget(), L"FolderDeleteIncludeOnly"})));
 }
 
 TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_SyncWorkspaceFileWithExclude)
 {
     this->CreateSyncWorkspaceFileWithExcludeTestCase();
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FileAdd"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FileModify"})));
-    EXPECT_FALSE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FileDelete"})));
-    EXPECT_FALSE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FileAddFilterOut"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FileModifyFilterOut"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FileDeleteFilterOut"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileAdd"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileModify"})));
+    EXPECT_FALSE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileDelete"})));
+    EXPECT_FALSE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileAddFilterOut"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileModifyFilterOut"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileDeleteFilterOut"})));
 }
 
 TEST_F(VPGBaseGenerationManagerTest, AdjustMakefile_SyncWorkspaceFileIncludeOnly)
 {
     this->CreateSyncWorkspaceFileIncludeOnlyTestCase();
-    EXPECT_FALSE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FileAdd"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FileModify"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FileDelete"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FileAddIncludeOnly"})));
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FileModifyIncludeOnly"})));
-    EXPECT_FALSE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"FileDeleteIncludeOnly"})));
+    EXPECT_FALSE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileAdd"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileModify"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileDelete"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileAddIncludeOnly"})));
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileModifyIncludeOnly"})));
+    EXPECT_FALSE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileDeleteIncludeOnly"})));
 }

@@ -37,6 +37,6 @@ TEST(MapHelperTest, Find)
     vcc::setIObject(tmp, (int64_t)1, std::make_shared<MapHelperTestObj>());
     std::set<int64_t> result;
     result.insert(1);
-    EXPECT_EQ(vcc::Find(tmp, tmp[1]), result);
+    EXPECT_EQ(vcc::find(tmp, tmp[1]), result);
 }
 

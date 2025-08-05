@@ -22,7 +22,7 @@ class VPGObjectTypeFileGenerationServiceTest : public testing::Test
             this->_LogConfig->setIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->getWorkspace()));
 
-            this->_FilePathHpp = vcc::ConcatPaths({this->getWorkspace(), L"object_type.hpp"});
+            this->_FilePathHpp = vcc::concatPaths({this->getWorkspace(), L"object_type.hpp"});
         }
 
         void TearDown() override
@@ -35,8 +35,8 @@ TEST_F(VPGObjectTypeFileGenerationServiceTest, Empty)
 {
     std::set<std::wstring> propertyTypes;
     VPGObjectTypeFileGenerationService::Generate(this->getLogConfig().get(), this->getFilePathHpp(), propertyTypes);
-    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
-    std::wstring content = vcc::ReadFile(this->getFilePathHpp());
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
+    std::wstring content = vcc::readFile(this->getFilePathHpp());
     std::wstring expectedResult = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         L"#pragma once\r\n"
         "\r\n"
@@ -56,8 +56,8 @@ TEST_F(VPGObjectTypeFileGenerationServiceTest, Normal)
     propertyTypes.insert(L"Def");
     propertyTypes.insert(L"Abc");
     VPGObjectTypeFileGenerationService::Generate(this->getLogConfig().get(), this->getFilePathHpp(), propertyTypes);
-    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
-    std::wstring content = vcc::ReadFile(this->getFilePathHpp());
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
+    std::wstring content = vcc::readFile(this->getFilePathHpp());
     std::wstring expectedResult = L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         L"#pragma once\r\n"
         "\r\n"

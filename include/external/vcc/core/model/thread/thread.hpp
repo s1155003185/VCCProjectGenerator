@@ -53,6 +53,6 @@ namespace vcc
 
             std::wstring getPid() const;
 
-            void Execute() const;
+            void execute() const;
     };
 }

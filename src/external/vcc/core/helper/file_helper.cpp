@@ -34,7 +34,7 @@ namespace vcc
         #endif
     }
     
-	bool IsAbsolutePath(const std::wstring &filePath)
+	bool isAbsolutePath(const std::wstring &filePath)
     {
         TRY
             return PATH(filePath).is_absolute();
@@ -60,7 +60,7 @@ namespace vcc
         return fileName;
     }
 
-    std::wstring ConcatPaths(const std::vector<std::wstring>& paths)
+    std::wstring concatPaths(const std::vector<std::wstring>& paths)
     {
         if (paths.empty())
             return L"";
@@ -117,10 +117,10 @@ namespace vcc
             needToDelete.assign(tarFileList.begin(), tarFileList.end());
 
             for (auto &str : equalFiles) {
-                std::wstring srcFile = ConcatPaths({sourceWorkspace, str});
-                std::wstring tarFile = ConcatPaths({targetWorkspace, str});
-                if (IsFile(srcFile) && IsFile(tarFile)) {
-                    if (!IsFileEqual(srcFile, tarFile))
+                std::wstring srcFile = concatPaths({sourceWorkspace, str});
+                std::wstring tarFile = concatPaths({targetWorkspace, str});
+                if (isFile(srcFile) && isFile(tarFile)) {
+                    if (!isFileEqual(srcFile, tarFile))
                         needToModify.push_back(std::wstring(str));
                 }
             }
@@ -163,7 +163,7 @@ namespace vcc
         return patten;
     }
 
-	bool IsPathMatchFileFilter(const std::wstring &filePath, const std::wstring &fileFilter)
+	bool isPathMatchFileFilter(const std::wstring &filePath, const std::wstring &fileFilter)
     {
         TRY
             return std::regex_match(GetLinuxPath(filePath), std::wregex(GetRegexFromFileFilter(GetLinuxPath(fileFilter))));
@@ -171,7 +171,7 @@ namespace vcc
         return false;
     }
 
-    bool IsPathMatchFileFilters(const std::wstring &filePath, const std::vector<std::wstring> &fileFilters)
+    bool isPathMatchFileFilters(const std::wstring &filePath, const std::vector<std::wstring> &fileFilters)
     {
         if (fileFilters.empty())
             return false;
@@ -180,22 +180,22 @@ namespace vcc
             for (auto const &str: fileFilters) {
                 regexFilters.push_back(GetRegexFromFileFilter(GetLinuxPath(str)));
             }
-            return std::regex_match(GetLinuxPath(filePath), std::wregex(Concat(regexFilters, L"|")));
+            return std::regex_match(GetLinuxPath(filePath), std::wregex(concat(regexFilters, L"|")));
         CATCH
         return false;
     }
 
-    bool IsDirectoryExists(const std::wstring &path)
+    bool isDirectoryExists(const std::wstring &path)
     {
         return std::filesystem::exists(path) && std::filesystem::is_directory(path);
     }
 
-    bool IsFile(const std::wstring &path)
+    bool isFile(const std::wstring &path)
     {
         return std::filesystem::exists(path) && std::filesystem::is_regular_file(path);
     }
 
-	bool IsFilePresent(const std::wstring &path)
+	bool isFilePresent(const std::wstring &path)
     {
         return std::filesystem::exists(path) && std::filesystem::is_regular_file(path);
     }
@@ -221,7 +221,7 @@ namespace vcc
             THROW_EXCEPTION_MSG(ExceptionType::FileNotFound, path + L": Path is not a directory.");
     }
 
-    bool IsFileEqual(const std::wstring &pathA, const std::wstring &pathB)
+    bool isFileEqual(const std::wstring &pathA, const std::wstring &pathB)
     {
         try {
             validateFile(pathA);
@@ -247,24 +247,24 @@ namespace vcc
         return false;
     }
 
-    void CopyFile(const std::wstring &srcFilePath, const std::wstring &destFilePath, const bool &isForce)
+    void copyFile(const std::wstring &srcFilePath, const std::wstring &destFilePath, const bool &isForce)
     {
         TRY
             validateFile(srcFilePath);
             if (isForce)
-                CreateDirectory(PATH(destFilePath).parent_path().wstring());
-            if (isForce && IsFilePresent(destFilePath))
+                createDirectory(PATH(destFilePath).parent_path().wstring());
+            if (isForce && isFilePresent(destFilePath))
                 std::filesystem::remove(destFilePath);
             std::filesystem::copy(PATH(srcFilePath), PATH(destFilePath));
         CATCH
     }
 
-	void RemoveFile(const std::wstring &filePath)
+	void removeFile(const std::wstring &filePath)
     {
         if (filePath.empty())
             return;
         TRY
-            if (!IsFilePresent(filePath))
+            if (!isFilePresent(filePath))
                 return;
                 
             PATH currentPath(filePath);
@@ -272,19 +272,19 @@ namespace vcc
         CATCH
     }
 
-    void CreateDirectory(const std::wstring &path)
+    void createDirectory(const std::wstring &path)
     {
-        if (IsBlank(path) || IsDirectoryExists(path))
+        if (IsBlank(path) || isDirectoryExists(path))
             return;
 
         TRY
             PATH currentPath(path);
-            CreateDirectory(currentPath.parent_path().wstring());
+            createDirectory(currentPath.parent_path().wstring());
             std::filesystem::create_directories(path);
         CATCH
     }
 
-    void CopyDirectory(const std::wstring &srcDirectory, const std::wstring &destDirectory, const CopyDirectoryOption *option)
+    void copyDirectory(const std::wstring &srcDirectory, const std::wstring &destDirectory, const CopyDirectoryOption *option)
     {
         assert(!IsBlank(srcDirectory));
         assert(!IsBlank(destDirectory));
@@ -299,35 +299,35 @@ namespace vcc
                 std::wstring relativePath =  getRelativePath(filePath.path().wstring(), srcDirectory);
                 if (filePath.is_directory() && !(relativePath.ends_with(L"/") || relativePath.ends_with(L"\\")))
                     relativePath += L"/";
-                std::wstring destAbsolutePath = ConcatPaths({destDirectory, relativePath});
+                std::wstring destAbsolutePath = concatPaths({destDirectory, relativePath});
                 if (filePath.is_directory() && !(destAbsolutePath.ends_with(L"/") || destAbsolutePath.ends_with(L"\\")))
                     destAbsolutePath += L"/";
                 if (option != nullptr) {
-                    if (!option->getIncludeFileFilters().empty() && !IsPathMatchFileFilters(relativePath, option->getIncludeFileFilters()))
+                    if (!option->getIncludeFileFilters().empty() && !isPathMatchFileFilters(relativePath, option->getIncludeFileFilters()))
                         continue;
-                    if (!option->getExcludeFileFilters().empty() && IsPathMatchFileFilters(relativePath, option->getExcludeFileFilters()))
+                    if (!option->getExcludeFileFilters().empty() && isPathMatchFileFilters(relativePath, option->getExcludeFileFilters()))
                         continue;
                 }
                 if (filePath.is_directory()) {
-                    if (!IsDirectoryExists(destAbsolutePath))
-                        CreateDirectory(destAbsolutePath);
+                    if (!isDirectoryExists(destAbsolutePath))
+                        createDirectory(destAbsolutePath);
                 } else {
-                    if (IsFilePresent(destAbsolutePath)) {
+                    if (isFilePresent(destAbsolutePath)) {
                         if (isForce)
                             std::filesystem::remove(destAbsolutePath);
                         else
                             THROW_EXCEPTION_MSG(ExceptionType::FileAlreadyExist, L"File " + destAbsolutePath + L" already exists.");
                     }
                     std::wstring parentPath = PATH(destAbsolutePath).parent_path().wstring();
-                    if (!IsDirectoryExists(parentPath))
-                        CreateDirectory(parentPath);
-                    CopyFile(filePath.path().wstring(), destAbsolutePath);
+                    if (!isDirectoryExists(parentPath))
+                        createDirectory(parentPath);
+                    copyFile(filePath.path().wstring(), destAbsolutePath);
                 }
             }
         CATCH
     }
 
-	void RemoveDirectory(const std::wstring &directory)
+	void removeDirectory(const std::wstring &directory)
     {
         assert(!IsBlank(directory));
         TRY
@@ -335,7 +335,7 @@ namespace vcc
         CATCH
     }
 
-    std::wstring ReadFile(const std::wstring &filePath)
+    std::wstring readFile(const std::wstring &filePath)
     {
         std::wstring result = L"";
         TRY
@@ -353,7 +353,7 @@ namespace vcc
         return result;
     }
 
-	void ReadFilePerLine(const std::wstring &filePath, std::function<void(std::wstring)> action)
+	void readFilePerLine(const std::wstring &filePath, std::function<void(std::wstring)> action)
     {
         TRY
             validateFile(filePath);
@@ -367,7 +367,7 @@ namespace vcc
         CATCH
     }
 
-    std::wstring ReadFileOneLine(const std::wstring &filePath, int index) 
+    std::wstring readFileOneLine(const std::wstring &filePath, int index) 
     {
         TRY
             validateFile(filePath);
@@ -391,12 +391,12 @@ namespace vcc
         return L"";
     }
 
-	void WriteFile(const std::wstring &filePath, const std::wstring &content, const bool &isForce)
+	void writeFile(const std::wstring &filePath, const std::wstring &content, const bool &isForce)
     {
         TRY
             PATH _filePath(filePath);		
             PATH dir = _filePath.parent_path();
-            if (!dir.wstring().empty() && !IsDirectoryExists(dir.wstring()))
+            if (!dir.wstring().empty() && !isDirectoryExists(dir.wstring()))
             {
                 if (!isForce)
                     THROW_EXCEPTION_MSG(ExceptionType::DirectoryNotFound, dir.wstring() + L"Directory not found.");
@@ -414,7 +414,7 @@ namespace vcc
         CATCH
     }
 
-    void AppendFileOneLine(const std::wstring &filePath, const std::wstring &line, const bool &isForce) 
+    void appendFileOneLine(const std::wstring &filePath, const std::wstring &line, const bool &isForce) 
     {
         TRY
             // 1. Check directory exists
@@ -423,7 +423,7 @@ namespace vcc
             // 4. Write file
             PATH _filePath(filePath);		
             PATH dir = PATH(_filePath).parent_path();
-            if (!IsDirectoryExists(dir.wstring()))
+            if (!isDirectoryExists(dir.wstring()))
             {
                 if (!isForce)
                     THROW_EXCEPTION_MSG(ExceptionType::DirectoryNotFound, dir.wstring() + L"Directory not found.");

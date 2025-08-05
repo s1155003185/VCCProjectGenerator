@@ -13,18 +13,18 @@ namespace vcc
 {
     // Validate
     template<typename T>
-    bool IsEmpty(const std::vector<T> &v);
+    bool isEmpty(const std::vector<T> &v);
     template<typename T>
-    bool IsContain(const std::vector<T> &v, const T &value);
+    bool isContain(const std::vector<T> &v, const T &value);
     template<typename T>
-    bool IsContain(const std::vector<T> &v, const std::vector<T> &value);
+    bool isContain(const std::vector<T> &v, const std::vector<T> &value);
 
     // Concat
-    std::wstring Concat(const std::vector<std::wstring> &v, const std::wstring &delimitor);
+    std::wstring concat(const std::vector<std::wstring> &v, const std::wstring &delimitor);
 
     // Search
     template <typename T>
-    int64_t Find(const std::vector<T> &sourceVector, const T &obj);
+    int64_t find(const std::vector<T> &sourceVector, const T &obj);
     template <typename T>
     int64_t findIObject(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj);
 
@@ -66,15 +66,15 @@ namespace vcc
     // ----------------------------------------------------------------------------------------------------
 
     template<typename T>
-    bool IsEmpty(const std::vector<T> &v)
+    bool isEmpty(const std::vector<T> &v)
     {
         return v.empty();
     }
     
     template<typename T>
-    bool IsContain(const std::vector<T> &v, const T &value) 
+    bool isContain(const std::vector<T> &v, const T &value) 
     {
-        if (IsEmpty(v))
+        if (isEmpty(v))
             return false;
         for (auto const &element : v) {
             if (element == value)
@@ -84,21 +84,21 @@ namespace vcc
     }
     
     template<typename T>
-    bool IsContain(const std::vector<T> &v, const std::vector<T> &value)
+    bool isContain(const std::vector<T> &v, const std::vector<T> &value)
     {
-        if (IsEmpty(v) || v.size() < value.size())
+        if (isEmpty(v) || v.size() < value.size())
             return false;
         for (auto const &element : value) {
-            if (!IsContain(v, element))
+            if (!isContain(v, element))
                 return false;
         }
         return true;
     }
     
     template <typename T>
-    int64_t Find(const std::vector<T> &sourceVector, const T &value)
+    int64_t find(const std::vector<T> &sourceVector, const T &value)
     {
-        if (IsEmpty(sourceVector))
+        if (isEmpty(sourceVector))
             return -1;
         auto it = find(sourceVector.begin(), sourceVector.end(), value);
         if (it != sourceVector.end())
@@ -109,7 +109,7 @@ namespace vcc
     template <typename T>
     int64_t findIObject(std::vector<std::shared_ptr<T>> &sourceVector, const IObject *obj)
     {
-        if (IsEmpty(sourceVector))
+        if (isEmpty(sourceVector))
             return -1;
         for (size_t i = 0; i < sourceVector.size(); i++) {
             if (sourceVector.at(i)->getObjectId() == obj->getObjectId())
@@ -185,7 +185,7 @@ namespace vcc
     void Remove(std::vector<T> &sourceVector, const std::vector<T> &filters)
     {
         sourceVector.erase(std::remove_if(sourceVector.begin(), sourceVector.end(), [&](const T &element) {
-            return IsContain(filters, element);
+            return isContain(filters, element);
         }), sourceVector.end());
     }
 

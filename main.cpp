@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 		// argList.push_back(L"-Generate");
 
 		VPGProcessManager process(logConfig);
-		process.Execute(argList);
+		process.execute(argList);
 	} catch (std::exception &ex) {
 		const vcc::IException *ie = dynamic_cast<const vcc::IException *>(&ex);
 		if (ie != nullptr)

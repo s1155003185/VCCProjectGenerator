@@ -11,7 +11,7 @@ TEST(ThreadServiceTest, Join)
     auto logConfig = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
     auto thread = std::make_shared<vcc::Thread>(logConfig,
         [](const vcc::Thread* /*thread*/) {
-            std::wcout << L"ThreadServiceTest::Join Execute!" << std::endl;
+            std::wcout << L"ThreadServiceTest::Join execute!" << std::endl;
         }, [](const vcc::Thread* /*thread*/) {
             std::wcout << L"ThreadServiceTest::Join Complete!" << std::endl;
         });
@@ -23,7 +23,7 @@ TEST(ThreadServiceTest, Detach)
     auto logConfig = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
     auto thread = std::make_shared<vcc::Thread>(logConfig,
         [](const vcc::Thread* /*thread*/) {
-            std::wcout << L"ThreadServiceTest::Detach Execute!" << std::endl;
+            std::wcout << L"ThreadServiceTest::Detach execute!" << std::endl;
         }, [](const vcc::Thread* /*thread*/) {
             std::wcout << L"ThreadServiceTest::Detach Complete!" << std::endl;
         });

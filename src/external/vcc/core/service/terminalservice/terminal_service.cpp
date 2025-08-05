@@ -10,15 +10,15 @@
 
 namespace vcc
 {
-    std::wstring TerminalService::Execute(const LogConfig *logConfig, std::wstring id, std::wstring cmd)
+    std::wstring TerminalService::execute(const LogConfig *logConfig, std::wstring id, std::wstring cmd)
     {
         TRY
-            return Execute(logConfig, id, L"", cmd);
+            return execute(logConfig, id, L"", cmd);
         CATCH
         return L"";
     }
 
-    std::wstring TerminalService::Execute(const LogConfig *logConfig, const std::wstring &id, const std::wstring &workspace, const std::wstring &cmd)
+    std::wstring TerminalService::execute(const LogConfig *logConfig, const std::wstring &id, const std::wstring &workspace, const std::wstring &cmd)
     {
         LogService::LogTerminal(logConfig, id, cmd);
 
@@ -40,7 +40,7 @@ namespace vcc
             char buffer[1024];
             FILE* p = popen(wstr2str(cmd).c_str(), "r");
             if (p == nullptr)
-                THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Cannot Execute Command: " + cmd);
+                THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Cannot execute Command: " + cmd);
             try {            
                 while (!feof(p)) {
                     if (fgets(buffer, sizeof(buffer), p) != nullptr)

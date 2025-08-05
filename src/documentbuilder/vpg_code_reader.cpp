@@ -42,7 +42,7 @@ void VPGCodeReader::ParseXml(const std::wstring &xmlData, size_t &pos, std::shar
                     startPos = pos;
                 }
 
-                pos = vcc::Find(xmlData, L"<", pos);
+                pos = vcc::find(xmlData, L"<", pos);
 
                 auto tmp = std::make_shared<vcc::Xml>();
                 ParseXMLTag(xmlData, pos, tmp);

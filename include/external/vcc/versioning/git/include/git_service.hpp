@@ -443,7 +443,7 @@ namespace vcc
             GitService() : BaseService() {}
             ~GitService() {}
 
-            static std::wstring Execute(const LogConfig *logConfig, const std::wstring &command);
+            static std::wstring execute(const LogConfig *logConfig, const std::wstring &command);
 
             // General
             static std::wstring getVersion(const LogConfig *logConfig);

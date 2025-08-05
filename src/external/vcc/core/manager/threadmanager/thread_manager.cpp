@@ -137,9 +137,9 @@ namespace vcc
                     for (auto &thread : _ActiveThreads) {
                         TRY
                         #ifdef _WIN32
-                            TerminalService::Execute(_LogConfig.get(), L"Thread", L"taskkill /PID " + thread->getPid() + L" /F");
+                            TerminalService::execute(_LogConfig.get(), L"Thread", L"taskkill /PID " + thread->getPid() + L" /F");
                         #else
-                            TerminalService::Execute(_LogConfig.get(), L"Thread", L"kill " + thread->getPid());
+                            TerminalService::execute(_LogConfig.get(), L"Thread", L"kill " + thread->getPid());
                         #endif
                         // wait 1s
                         Sleep(1000);

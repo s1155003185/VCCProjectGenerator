@@ -13,9 +13,9 @@ namespace vcc
 {
     // validate
     template<typename A, typename B>
-    bool IsEmpty(const std::map<A, B> &sourceMap);
+    bool isEmpty(const std::map<A, B> &sourceMap);
     template<typename A, typename B>
-    bool IsContain(const std::map<A, B> &sourceMap, const A &key);
+    bool isContain(const std::map<A, B> &sourceMap, const A &key);
 
     // Flip
     template<typename A, typename B>
@@ -29,7 +29,7 @@ namespace vcc
     template <typename A, typename B>
     std::set<void *> getVoidKeys(const std::map<A, B> &sourceMap);
     template <typename A, typename B>
-    std::set<A> Find(const std::map<A, B> &sourceMap, const B &obj);
+    std::set<A> find(const std::map<A, B> &sourceMap, const B &obj);
     template <typename A, typename B>
     std::set<A> findIObject(std::map<A, std::shared_ptr<B>> &sourceMap, const std::shared_ptr<IObject> &obj);
 
@@ -44,7 +44,7 @@ namespace vcc
     void setIObjects(std::map<A, std::shared_ptr<B>> &sourceMap, const std::map<A, std::shared_ptr<B>> &appendMap);
     
     template <typename A, typename B>
-    void RemoveAtKey(std::map<A, B> &sourceMap, const A& key);
+    void removeAtKey(std::map<A, B> &sourceMap, const A& key);
     template <typename A, typename B>
     void removeIObjectAtKey(std::map<A, B> &sourceMap, const A& key);
     
@@ -52,13 +52,13 @@ namespace vcc
     // ---------------------------------------- Implement -------------------------------------------------
     // ----------------------------------------------------------------------------------------------------
     template<typename A, typename B>
-    bool IsEmpty(const std::map<A, B> &sourceMap)
+    bool isEmpty(const std::map<A, B> &sourceMap)
     {
         return sourceMap.empty();
     }
 
     template<typename A, typename B>
-    bool IsContain(const std::map<A, B> &sourceMap, const A &key)
+    bool isContain(const std::map<A, B> &sourceMap, const A &key)
     {
         return sourceMap.find(key) != sourceMap.end();
     }
@@ -97,7 +97,7 @@ namespace vcc
     }
 
     template <typename A, typename B>
-    std::set<A> Find(const std::map<A, B> &sourceMap, const B &obj)
+    std::set<A> find(const std::map<A, B> &sourceMap, const B &obj)
     {
         std::set<A> result;
         for (auto const &pair : sourceMap) {
@@ -112,7 +112,7 @@ namespace vcc
     {
         auto derivedObj = std::dynamic_pointer_cast<B>(obj);
         if (derivedObj != nullptr)
-            return Find(sourceMap, derivedObj);
+            return find(sourceMap, derivedObj);
         std::set<A> result;
         return result;
     }
@@ -151,7 +151,7 @@ namespace vcc
     }
 
     template <typename A, typename B>
-    void RemoveAtKey(std::map<A, B> &sourceMap, const A& key)
+    void removeAtKey(std::map<A, B> &sourceMap, const A& key)
     {
         sourceMap.erase(sourceMap.find(key));
     }
@@ -159,6 +159,6 @@ namespace vcc
     template <typename A, typename B>
     void removeIObjectAtKey(std::map<A, B> &sourceMap, const A& key)
     {
-        RemoveAtKey(sourceMap, key);
+        removeAtKey(sourceMap, key);
     }
 }

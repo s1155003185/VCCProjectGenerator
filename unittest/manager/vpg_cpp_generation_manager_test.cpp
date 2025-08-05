@@ -37,9 +37,9 @@ class VPGCppGenerationManagerTest : public testing::Test
             std::filesystem::remove_all(PATH(this->getWorkspaceSource()));
             std::filesystem::remove_all(PATH(this->getWorkspaceTarget()));
 
-            CreateDirectory(this->getWorkspace());
-            CreateDirectory(this->getWorkspaceSource());
-            CreateDirectory(this->getWorkspaceTarget());
+            createDirectory(this->getWorkspace());
+            createDirectory(this->getWorkspaceSource());
+            createDirectory(this->getWorkspaceTarget());
 
             // option for initialize source
             _Option = std::make_shared<VPGConfig>();
@@ -53,10 +53,10 @@ class VPGCppGenerationManagerTest : public testing::Test
             this->_Option->getTemplate()->setIsExcludeUnittest(false);
             this->_Manager->CreateBasicProject();
             // replace main so that the project can be compile
-            std::wstring mainFilePath = ConcatPaths({this->getWorkspaceSource(), L"main.cpp"});
+            std::wstring mainFilePath = concatPaths({this->getWorkspaceSource(), L"main.cpp"});
             std::wstring mainFileContent = L"int main() {}";
             std::filesystem::remove(PATH(mainFilePath));
-            AppendFileOneLine(mainFilePath, mainFileContent);
+            appendFileOneLine(mainFilePath, mainFileContent);
 
             // option for testing
             this->_Manager->setWorkspace(this->getWorkspaceTarget());
@@ -86,15 +86,15 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     this->_Option->getTemplate()->setIsExcludeUnittest(false);
     this->_Option->setProjectType(VPGProjectType::CppComplex);
     this->getManager()->Add();
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L".vscode/launch.json"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L".vscode/tasks.json"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"Makefile"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"DllFunctions.h"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"main.cpp"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->getWorkspaceTarget(), L"unittest"})));
-    // ProcessService::Execute(this->getLogConfig().get(), L"", this->getWorkspaceTarget(), L"make");
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L".vscode/launch.json"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L".vscode/tasks.json"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(isDirectoryExists(concatPaths({this->getWorkspaceTarget(), L"unittest"})));
+    // ProcessService::execute(this->getLogConfig().get(), L"", this->getWorkspaceTarget(), L"make");
     // EXPECT_TRUE(IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPProject.exe"))
     //     || IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPProject")));
     // EXPECT_TRUE(IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPDllProject.dll"))
@@ -102,9 +102,9 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     // EXPECT_TRUE(IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPUnitTest.exe"))
     //     || IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPUnitTest")));
     if (this->getIsCopyDebugFolderToTestFolder()) {
-        std::wstring path = ConcatPaths({this->getTestFolder(), L"CPPComplex"});
-        RemoveDirectory(path);
-        CopyDirectory(this->getWorkspaceSource(), path);
+        std::wstring path = concatPaths({this->getTestFolder(), L"CPPComplex"});
+        removeDirectory(path);
+        copyDirectory(this->getWorkspaceSource(), path);
     }
     
     // EXE only
@@ -114,15 +114,15 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     this->_Option->setProjectName(L"ProjectName");
     this->_Option->getTemplate()->setIsExcludeUnittest(false);
     this->getManager()->Add();
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L".vscode/launch.json"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L".vscode/tasks.json"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"Makefile"})));
-    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
-    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
-    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"DllFunctions.h"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"main.cpp"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->getWorkspaceTarget(), L"unittest"})));
-    // ProcessService::Execute(this->getLogConfig().get(), L"", this->getWorkspaceTarget(), L"make");
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L".vscode/launch.json"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L".vscode/tasks.json"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));
+    EXPECT_FALSE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_FALSE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_FALSE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(isDirectoryExists(concatPaths({this->getWorkspaceTarget(), L"unittest"})));
+    // ProcessService::execute(this->getLogConfig().get(), L"", this->getWorkspaceTarget(), L"make");
     // EXPECT_TRUE(IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPProject.exe"))
     //     || IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPProject")));
     // EXPECT_FALSE(IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPDllProject.dll"))
@@ -131,9 +131,9 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     //     || IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPUnitTest")));
         
     if (this->getIsCopyDebugFolderToTestFolder()) {
-        std::wstring path = ConcatPaths({this->getTestFolder(), L"CPPEXE"});
-        RemoveDirectory(path);
-        CopyDirectory(this->getWorkspaceSource(), path);
+        std::wstring path = concatPaths({this->getTestFolder(), L"CPPEXE"});
+        removeDirectory(path);
+        copyDirectory(this->getWorkspaceSource(), path);
     }
 
     // DLL only
@@ -143,15 +143,15 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     this->_Option->setProjectName(L"ProjectName");
     this->_Option->getTemplate()->setIsExcludeUnittest(false);
     this->getManager()->Add();
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L".vscode/launch.json"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L".vscode/tasks.json"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"Makefile"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"DllFunctions.h"})));
-    EXPECT_FALSE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"main.cpp"})));
-    EXPECT_TRUE(IsDirectoryExists(ConcatPaths({this->getWorkspaceTarget(), L"unittest"})));
-    // ProcessService::Execute(this->getLogConfig().get(), L"", this->getWorkspaceTarget(), L"make");
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L".vscode/launch.json"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L".vscode/tasks.json"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_FALSE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_TRUE(isDirectoryExists(concatPaths({this->getWorkspaceTarget(), L"unittest"})));
+    // ProcessService::execute(this->getLogConfig().get(), L"", this->getWorkspaceTarget(), L"make");
     // EXPECT_FALSE(IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPProject.exe"))
     //     || IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPProject")));
     // EXPECT_TRUE(IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPDllProject.dll"))
@@ -160,9 +160,9 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     //     || IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPUnitTest")));        
         
     if (this->getIsCopyDebugFolderToTestFolder()) {
-        std::wstring path = ConcatPaths({this->getTestFolder(), L"CPPDLL"});
-        RemoveDirectory(path);
-        CopyDirectory(this->getWorkspaceSource(), path);
+        std::wstring path = concatPaths({this->getTestFolder(), L"CPPDLL"});
+        removeDirectory(path);
+        copyDirectory(this->getWorkspaceSource(), path);
     }
 
     // No unittest
@@ -172,15 +172,15 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     this->_Option->setProjectName(L"ProjectName");
     this->_Option->getTemplate()->setIsExcludeUnittest(true);
     this->getManager()->Add();
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L".vscode/launch.json"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L".vscode/tasks.json"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"Makefile"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"DllFunctions.h"})));
-    EXPECT_TRUE(IsFilePresent(ConcatPaths({this->getWorkspaceTarget(), L"main.cpp"})));
-    EXPECT_FALSE(IsDirectoryExists(ConcatPaths({this->getWorkspaceTarget(), L"unittest"})));
-    // ProcessService::Execute(this->getLogConfig().get(), L"", this->getWorkspaceTarget(), L"make");
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L".vscode/launch.json"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L".vscode/tasks.json"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllEntryPoint.cpp"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.cpp"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"DllFunctions.h"})));
+    EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"main.cpp"})));
+    EXPECT_FALSE(isDirectoryExists(concatPaths({this->getWorkspaceTarget(), L"unittest"})));
+    // ProcessService::execute(this->getLogConfig().get(), L"", this->getWorkspaceTarget(), L"make");
     // EXPECT_TRUE(IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPProject.exe"))
     //     || IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPProject")));
     // EXPECT_TRUE(IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPDllProject.dll"))
@@ -189,8 +189,8 @@ TEST_F(VPGCppGenerationManagerTest, Add)
     //     || IsFilePresent(ConcatPaths({ConcatPaths({this->getWorkspaceTarget(), L"bin/Debug/"), L"CPPUnitTest")));
         
     if (this->getIsCopyDebugFolderToTestFolder()) {
-        std::wstring path = ConcatPaths({this->getTestFolder(), L"NoUnittest"});
-        RemoveDirectory(path);
-        CopyDirectory(this->getWorkspaceSource(), path);
+        std::wstring path = concatPaths({this->getTestFolder(), L"NoUnittest"});
+        removeDirectory(path);
+        copyDirectory(this->getWorkspaceSource(), path);
     }
 }

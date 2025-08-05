@@ -77,7 +77,7 @@ std::wstring getNamespaceFromClassName(const std::wstring &className)
         if (namespaceList.size() < 2)
             return L"";
         namespaceList.pop_back();
-        return vcc::Concat(namespaceList, L"::");
+        return vcc::concat(namespaceList, L"::");
     CATCH
     return L"";
 }

@@ -50,7 +50,7 @@ namespace vcc
 
             // Action
             virtual std::shared_ptr<IResult> DoAction(const int64_t &formProperty, std::shared_ptr<IObject> argument) = 0;
-            virtual std::shared_ptr<IResult> ExecuteAction(std::shared_ptr<IAction> action, bool isNoHistory) = 0;
+            virtual std::shared_ptr<IResult> executeAction(std::shared_ptr<IAction> action, bool isNoHistory) = 0;
             virtual int64_t getActionCurrentSeqNo() const = 0;
             virtual int64_t getActionFirstSeqNo() const = 0;
             virtual int64_t getActionLastSeqNo() const = 0;

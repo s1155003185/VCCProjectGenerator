@@ -26,8 +26,8 @@ class VPGPropertyAccessorFactoryFileGenerationServiceTest : public testing::Test
             this->_LogConfig->setIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->getWorkspace()));
 
-            this->_FilePathHpp = vcc::ConcatPaths({this->getWorkspace(), L"property_accessor_factory.hpp"});
-            this->_FilePathCpp = vcc::ConcatPaths({this->getWorkspace(), L"property_accessor_factory.cpp"});
+            this->_FilePathHpp = vcc::concatPaths({this->getWorkspace(), L"property_accessor_factory.hpp"});
+            this->_FilePathCpp = vcc::concatPaths({this->getWorkspace(), L"property_accessor_factory.cpp"});
 
             this->_ExpectedHpp = L""
                 "#pragma once\r\n"
@@ -61,10 +61,10 @@ TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Empty)
     VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(this->getLogConfig().get(), this->getFilePathHpp());
     VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(this->getLogConfig().get(), L"VCC", {}, this->getFilePathCpp(), propertyTypes);
 
-    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
-    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathCpp()));
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::ReadFile(this->getFilePathHpp()), this->getExpectedHpp());
+    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()), this->getExpectedHpp());
 
     std::wstring expectedResult = L""
         "#include \"property_accessor_factory.hpp\"\r\n"
@@ -88,7 +88,7 @@ TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Empty)
         "    }\r\n"
         "    return nullptr;\r\n"
         "}\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->getFilePathCpp()), expectedResult);
+    EXPECT_EQ(vcc::readFile(this->getFilePathCpp()), expectedResult);
 }
 
 TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Normal)
@@ -99,10 +99,10 @@ TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Normal)
     VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(this->getLogConfig().get(), this->getFilePathHpp());
     VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(this->getLogConfig().get(), L"VCC", { L"abc.hpp" }, this->getFilePathCpp(), propertyTypes);
 
-    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
-    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathCpp()));
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::ReadFile(this->getFilePathHpp()), this->getExpectedHpp());
+    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()), this->getExpectedHpp());
 
     std::wstring expectedResult = L""
         "#include \"property_accessor_factory.hpp\"\r\n"
@@ -131,5 +131,5 @@ TEST_F(VPGPropertyAccessorFactoryFileGenerationServiceTest, Normal)
         "    }\r\n"
         "    return nullptr;\r\n"
         "}\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->getFilePathCpp()), expectedResult);
+    EXPECT_EQ(vcc::readFile(this->getFilePathCpp()), expectedResult);
 }

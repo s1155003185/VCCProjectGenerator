@@ -32,7 +32,7 @@ void VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(const vcc::Log
             "    public:\r\n"
             "        static std::shared_ptr<vcc::IPropertyAccessor> Create(std::shared_ptr<vcc::IObject> object);\r\n"
             "};\r\n";
-        vcc::WriteFile(filePathHpp, content, true);
+        vcc::writeFile(filePathHpp, content, true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor factory file completed.");
     CATCH
 }
@@ -76,7 +76,7 @@ void VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(const vcc::Log
             + INDENT + L"}\r\n"
             + INDENT + L"return nullptr;\r\n"
             "}\r\n";
-        vcc::WriteFile(filePathCpp, content, true);
+        vcc::writeFile(filePathCpp, content, true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor factory completed.");
     CATCH
 }

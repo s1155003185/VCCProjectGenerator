@@ -57,7 +57,7 @@ namespace vcc
         virtual void initializeValue() override;
         
         // Action
-        virtual std::shared_ptr<IResult> ExecuteAction(std::shared_ptr<IAction> action, bool isNoHistory) override;
+        virtual std::shared_ptr<IResult> executeAction(std::shared_ptr<IAction> action, bool isNoHistory) override;
         virtual int64_t getActionCurrentSeqNo() const override;
         virtual int64_t getActionFirstSeqNo() const override;
         virtual int64_t getActionLastSeqNo() const override;

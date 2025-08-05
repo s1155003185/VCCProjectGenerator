@@ -88,7 +88,7 @@ namespace vcc
 			if (str.empty())
 				return;
 			if (str.length() > 1) {
-				if (IsContain(str, L" ")) {
+				if (isContain(str, L" ")) {
 					ToLower(str);
 					auto tokens = SplitString(str, { L" " });
 					str = L"";
@@ -149,7 +149,7 @@ namespace vcc
 		return false;
 	}
 
-	bool IsEmpty(const std::wstring &str)
+	bool isEmpty(const std::wstring &str)
 	{
 		return str.empty();
 	}
@@ -616,7 +616,7 @@ namespace vcc
 		return result;
 	}
 
-	size_t Find(const std::wstring &str, const wchar_t &c, const size_t &pos, const bool &isIgnoreCase)
+	size_t find(const std::wstring &str, const wchar_t &c, const size_t &pos, const bool &isIgnoreCase)
 	{
 		if (str.empty())
 			return std::wstring::npos;
@@ -636,20 +636,20 @@ namespace vcc
 		return std::wstring::npos;
 	}
 
-	size_t Find(const std::wstring &str, const std::wstring &subStr, const size_t &pos, const bool &isIgnoreCase)
+	size_t find(const std::wstring &str, const std::wstring &subStr, const size_t &pos, const bool &isIgnoreCase)
 	{
 		if (str.empty() || str.length() - pos < subStr.length())
 			return std::wstring::npos;
 		TRY
 			if (subStr.length() == 1)
-				return Find(str, subStr[0], pos, isIgnoreCase);
+				return find(str, subStr[0], pos, isIgnoreCase);
 
 			if (isIgnoreCase) {
 				std::wstring tmpStr = str.substr(pos);
 				std::wstring tmpSubStr = subStr;
 				ToUpper(tmpStr);
 				ToUpper(tmpSubStr);
-				return Find(tmpStr, tmpSubStr);
+				return find(tmpStr, tmpSubStr);
 			} else {
 				// cannot check at beginning as there is ignoreCase
 				if (str.length() == subStr.length() && str != subStr)
@@ -791,7 +791,7 @@ namespace vcc
 			GetNextCharPos(str, pos, true);
 			if (!(quoteOpenList.size() == quoteCloseList.size() && (quoteEscapeList.empty() || quoteCloseList.size() == quoteEscapeList.size())))
 				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Quote Open, Close, Escape List having different size.");
-			if (!IsContain(quoteOpenList, stringOpenList))
+			if (!isContain(quoteOpenList, stringOpenList))
 				THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Quote Open does not contained String Open List.");
 
 			size_t startPos = pos;
@@ -867,10 +867,10 @@ namespace vcc
 		return result;
 	}
 	
-	bool IsContain(const std::wstring &str, const std::wstring &subStr, const size_t &pos, const bool &isIgnoreCase)
+	bool isContain(const std::wstring &str, const std::wstring &subStr, const size_t &pos, const bool &isIgnoreCase)
 	{
 		TRY
-			return Find(str, subStr, pos, isIgnoreCase) != std::wstring::npos;
+			return find(str, subStr, pos, isIgnoreCase) != std::wstring::npos;
 		CATCH
 		return false;
 	}
@@ -883,7 +883,7 @@ namespace vcc
 		TRY
 			while (pos < str.length())
 			{
-				pos = Find(str, subStr, pos, isIgnoreCase);
+				pos = find(str, subStr, pos, isIgnoreCase);
 				if (pos == std::wstring::npos)
 					break;
 				count++;
@@ -896,7 +896,7 @@ namespace vcc
     void Replace(std::wstring &str, const std::wstring& from, const std::wstring &to)
     {
 		TRY
-			size_t pos = Find(str, from);
+			size_t pos = find(str, from);
 			if (pos == std::wstring::npos)
 				return;
 			str.replace(pos, from.length(), to);
@@ -915,7 +915,7 @@ namespace vcc
 		TRY
 			size_t startPos = 0;
 			size_t foundPos;
-			while ((foundPos = Find(str, from, startPos)) != std::wstring::npos) {
+			while ((foundPos = find(str, from, startPos)) != std::wstring::npos) {
 				str.replace(foundPos, from.length(), to);
 				startPos = foundPos + to.length();
 			}

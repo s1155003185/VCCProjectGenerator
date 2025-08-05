@@ -188,28 +188,28 @@ TEST(StringHelperTest, EscapeString)
 /* ---------------------------------------------------------------------------------------------------- */
 TEST(StringHelperTest, Find_wchar)
 {
-    EXPECT_EQ(vcc::Find(L"", L'a', 0, false), std::wstring::npos);
-    EXPECT_EQ(vcc::Find(L"a", L'a', 0, false), 0UL);
-    EXPECT_EQ(vcc::Find(L"a", L'A', 0, false), std::wstring::npos);
-    EXPECT_EQ(vcc::Find(L"a", L'A', 0, true), 0UL);
-    EXPECT_EQ(vcc::Find(L"aA", L'A', 0, false), 1UL);
-    EXPECT_EQ(vcc::Find(L"aA", L'A', 0, true), 0UL);
-    EXPECT_EQ(vcc::Find(L"aA", L'A', 1, false), 1UL);
+    EXPECT_EQ(vcc::find(L"", L'a', 0, false), std::wstring::npos);
+    EXPECT_EQ(vcc::find(L"a", L'a', 0, false), 0UL);
+    EXPECT_EQ(vcc::find(L"a", L'A', 0, false), std::wstring::npos);
+    EXPECT_EQ(vcc::find(L"a", L'A', 0, true), 0UL);
+    EXPECT_EQ(vcc::find(L"aA", L'A', 0, false), 1UL);
+    EXPECT_EQ(vcc::find(L"aA", L'A', 0, true), 0UL);
+    EXPECT_EQ(vcc::find(L"aA", L'A', 1, false), 1UL);
 }
 
 TEST(StringHelperTest, Find_wstring)
 {
-    EXPECT_EQ(vcc::Find(L"", L"", 0, false), std::wstring::npos);
-    EXPECT_EQ(vcc::Find(L"a", L"ab", 0, false), std::wstring::npos);
-    EXPECT_EQ(vcc::Find(L"a", L"a", 0, false), 0UL);
-    EXPECT_EQ(vcc::Find(L"a", L"A", 0, false), std::wstring::npos);
-    EXPECT_EQ(vcc::Find(L"a", L"A", 0, true), 0UL);
-    EXPECT_EQ(vcc::Find(L"aA", L"A", 0, false), 1UL);
-    EXPECT_EQ(vcc::Find(L"aA", L"A", 0, true), 0UL);
-    EXPECT_EQ(vcc::Find(L"aA", L"A", 1, false), 1UL);
-    EXPECT_EQ(vcc::Find(L"aAb", L"Ab", 1, false), 1UL);
-    EXPECT_EQ(vcc::Find(L"aAbc", L"Ab", 1, false), 1UL);
-    EXPECT_EQ(vcc::Find(L"aAbcAb", L"Ab", 1, false), 1UL);
+    EXPECT_EQ(vcc::find(L"", L"", 0, false), std::wstring::npos);
+    EXPECT_EQ(vcc::find(L"a", L"ab", 0, false), std::wstring::npos);
+    EXPECT_EQ(vcc::find(L"a", L"a", 0, false), 0UL);
+    EXPECT_EQ(vcc::find(L"a", L"A", 0, false), std::wstring::npos);
+    EXPECT_EQ(vcc::find(L"a", L"A", 0, true), 0UL);
+    EXPECT_EQ(vcc::find(L"aA", L"A", 0, false), 1UL);
+    EXPECT_EQ(vcc::find(L"aA", L"A", 0, true), 0UL);
+    EXPECT_EQ(vcc::find(L"aA", L"A", 1, false), 1UL);
+    EXPECT_EQ(vcc::find(L"aAb", L"Ab", 1, false), 1UL);
+    EXPECT_EQ(vcc::find(L"aAbc", L"Ab", 1, false), 1UL);
+    EXPECT_EQ(vcc::find(L"aAbcAb", L"Ab", 1, false), 1UL);
 }
 
 TEST(StringHelperTest, GetTailingSubstring)

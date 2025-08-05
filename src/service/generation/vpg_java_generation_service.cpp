@@ -48,7 +48,7 @@ std::wstring VPGJavaGenerationService::GetJavaPactkage(const std::wstring &path,
 
         result = vcc::GetRelativePath(path, JAVA_PROJECT_SOURCE_PARENT_FOLDER);
         if (!middlePath.empty())
-            result = vcc::ConcatPaths({ result, middlePath });
+            result = vcc::concatPaths({ result, middlePath });
         result = vcc::GetLinuxPath(result);
         if (vcc::IsStartWith(result, L"/"))
             result = result.substr(1);
@@ -107,7 +107,7 @@ std::map<std::wstring, std::wstring> VPGJavaGenerationService::GetImportFileMap(
 std::wstring VPGJavaGenerationService::GetOperationResultFilePath(const std::wstring &projectPrefix, const VPGConfigExport *option)
 {
     TRY
-        return vcc::ConcatPaths({ option->getObjectDirectory(), projectPrefix + L"OperationResult.java" });
+        return vcc::concatPaths({ option->getObjectDirectory(), projectPrefix + L"OperationResult.java" });
     CATCH
     return L"";
 }
@@ -207,7 +207,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
         importPackages.insert(L"com.sun.jna.Native");
         std::wstring packageFolder = getJavaPactkage(javaOption->getDllBridgeDirectory(), L"", L"Dll Bridge Directory");
 
-        size_t pos = vcc::Find(content, dllExportStart);
+        size_t pos = vcc::find(content, dllExportStart);
         if (pos == std::wstring::npos)
             THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"DllFunctions.h missing 'extern \"C\"'");
 
@@ -216,8 +216,8 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
             if (vcc::IsStartWith(content, dllExport, pos)) {
                 // normal function
                 pos += dllExport.length();
-                size_t endPos1 = vcc::Find(content, L";", pos);
-                size_t endPos2 = vcc::Find(content, L"{", pos);
+                size_t endPos1 = vcc::find(content, L";", pos);
+                size_t endPos2 = vcc::find(content, L"{", pos);
                 size_t endPos = 0;
                 if (endPos1 == std::wstring::npos && endPos2 == std::wstring::npos)
                     THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"DllFunctions.h DLLEXPORT missing ; or {");
@@ -233,10 +233,10 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                 // 1. determine return is void * or not
                 // 2. get function name
                 // 3. pharse argument list
-                size_t argumentStartPos = vcc::Find(cppFunction, L"(");
+                size_t argumentStartPos = vcc::find(cppFunction, L"(");
                 if (argumentStartPos == std::wstring::npos)
                     THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"DllFunctions.h DLLEXPORT function " + cppFunction + L" missing arguments");
-                size_t argumentEndPos = vcc::Find(cppFunction, L")", argumentStartPos);
+                size_t argumentEndPos = vcc::find(cppFunction, L")", argumentStartPos);
                 if (argumentEndPos == std::wstring::npos)
                     THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"DllFunctions.h DLLEXPORT function " + cppFunction + L" argument list missing ending )");
                 std::wstring functionNameWithReturn = cppFunction.substr(0, argumentStartPos);
@@ -334,17 +334,17 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
                     + INDENT + L"boolean IsContainKey(Pointer ref, long property, Pointer key);\r\n"
                     + INDENT + L"void RemoveObject(Pointer ref, long property, Pointer value);\r\n"
                     + INDENT + L"void RemoveAtIndex(Pointer ref, long property, long index);\r\n"
-                    + INDENT + L"void RemoveAtKey(Pointer ref, long property, Pointer key);\r\n"
+                    + INDENT + L"void removeAtKey(Pointer ref, long property, Pointer key);\r\n"
                     + INDENT + L"void clear(Pointer ref, long property);\r\n";
                 pos += dllInterfaceExportPropertyAccessorContainer.length() - 1;
             } else if (vcc::IsStartWith(content, dllInterfaceExportPropertyAccessor, pos)) {
                 importPackages.insert(L"com.sun.jna.ptr.PointerByReference");
 
-                pos = vcc::Find(content, L"(", pos);
+                pos = vcc::find(content, L"(", pos);
                 if (pos == std::wstring::npos)
                     THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"DllFunctions.h macro " + dllInterfaceExportPropertyAccessor + L" missing (");
                 pos++;
-                size_t endPos = vcc::Find(content, L")", pos);
+                size_t endPos = vcc::find(content, L")", pos);
                 if (endPos == std::wstring::npos)
                     THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"DllFunctions.h macro " + dllInterfaceExportPropertyAccessor + L" missing )");
 
@@ -397,7 +397,7 @@ void VPGJavaGenerationService::GenerateJavaBridge(const vcc::LogConfig *logConfi
 {
     TRY
         assert(option != nullptr);
-        if (!vcc::IsFilePresent(dllInterfacehppFilePath))
+        if (!vcc::isFilePresent(dllInterfacehppFilePath))
             return;
 
         auto javaOption = VPGJavaGenerationService::GetJavaOption(option);
@@ -408,10 +408,10 @@ void VPGJavaGenerationService::GenerateJavaBridge(const vcc::LogConfig *logConfi
         vcc::Trim(filePrefix);
         vcc::ToUpper(filePrefix);
         std::wstring javaFileName = filePrefix + JAVA_BRIDGE_FILE_NAME;
-        std::wstring workspace = vcc::IsAbsolutePath(javaOption->getWorkspace()) ? javaOption->getWorkspace() : vcc::ConcatPaths({ targetWorkspace, javaOption->getWorkspace() });
-        std::wstring filePath = vcc::ConcatPaths({ workspace, javaOption->getDllBridgeDirectory(), javaFileName });
+        std::wstring workspace = vcc::isAbsolutePath(javaOption->getWorkspace()) ? javaOption->getWorkspace() : vcc::concatPaths({ targetWorkspace, javaOption->getWorkspace() });
+        std::wstring filePath = vcc::concatPaths({ workspace, javaOption->getDllBridgeDirectory(), javaFileName });
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Bridge: " + filePath);
-        vcc::WriteFile(filePath, VPGJavaGenerationService::GenerateJavaBridgeContent(vcc::ReadFile(dllInterfacehppFilePath), option), true);
+        vcc::writeFile(filePath, VPGJavaGenerationService::GenerateJavaBridgeContent(vcc::readFile(dllInterfacehppFilePath), option), true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Bridge completed.");
     CATCH
 }
@@ -575,7 +575,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const
         if (isMap && isAllowWrite) {
             result += L"\r\n"
                 + INDENT + L"public void remove" + property->getPropertyName() + L"AtKey(" + javaType1 + L" key) {\r\n"
-                + getGetterSetterMapKeyContent(classPropertyEnum, dllInstantPrefix, javaType1, L"RemoveAtKey", false)
+                + getGetterSetterMapKeyContent(classPropertyEnum, dllInstantPrefix, javaType1, L"removeAtKey", false)
                 + INDENT + L"}\r\n";
         }
             
@@ -1243,10 +1243,10 @@ void VPGJavaGenerationService::GenerateEnum(const vcc::LogConfig *logConfig, con
             return;
         
         std::wstring tmpFilePath = vcc::GetParentPath(filePath);
-        tmpFilePath = vcc::ConcatPaths({ tmpFilePath, vcc::GetFileName(filePath) });
+        tmpFilePath = vcc::concatPaths({ tmpFilePath, vcc::GetFileName(filePath) });
 
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Enum: " + tmpFilePath);
-        vcc::WriteFile(tmpFilePath, VPGJavaGenerationService::GenerateEnumContent(option->getProjectPrefix(), enumClass, cppMiddlePath, javaOption), true);
+        vcc::writeFile(tmpFilePath, VPGJavaGenerationService::GenerateEnumContent(option->getProjectPrefix(), enumClass, cppMiddlePath, javaOption), true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Enum completed.");
     CATCH
 }
@@ -1262,13 +1262,13 @@ void VPGJavaGenerationService::GenerateObject(const vcc::LogConfig *logConfig, c
             return;
             
         std::wstring tmpFilePath = vcc::GetParentPath(filePath);
-        tmpFilePath = vcc::ConcatPaths({ tmpFilePath, vcc::GetFileName(filePath) });
+        tmpFilePath = vcc::concatPaths({ tmpFilePath, vcc::GetFileName(filePath) });
        
         std::wstring objectName = getTypeOrClassWithoutNamespace(enumClass->getName());
         if (!vcc::IsEndWith(objectName, propertyClassNameSuffix))
             return;
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class: " + tmpFilePath);
-        vcc::WriteFile(tmpFilePath, VPGJavaGenerationService::GenerateObjectContent(option->getProjectPrefix(), enumClass, cppMiddlePath, getImportFileMap(option->getProjectPrefix(), javaOption, typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm), javaOption), true);
+        vcc::writeFile(tmpFilePath, VPGJavaGenerationService::GenerateObjectContent(option->getProjectPrefix(), enumClass, cppMiddlePath, getImportFileMap(option->getProjectPrefix(), javaOption, typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm), javaOption), true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class completed.");
     CATCH
 }
@@ -1279,9 +1279,9 @@ void VPGJavaGenerationService::GenerateOperationResult(const vcc::LogConfig *log
     TRY
         if (option == nullptr || option->getInterface() != VPGConfigInterfaceType::Java || vcc::IsBlank(option->getObjectDirectory()))
             return;
-        std::wstring filePath = vcc::ConcatPaths({option->getWorkspace(), getOperationResultFilePath(projectPrefix, option)});
+        std::wstring filePath = vcc::concatPaths({option->getWorkspace(), getOperationResultFilePath(projectPrefix, option)});
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class: " + filePath);
-        vcc::WriteFile(filePath, GenerateOperationResultContent(projectPrefix, option, getImportFileMap(projectPrefix, option, typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm)), true);
+        vcc::writeFile(filePath, GenerateOperationResultContent(projectPrefix, option, getImportFileMap(projectPrefix, option, typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm)), true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate Java Class completed.");
         return;
     CATCH

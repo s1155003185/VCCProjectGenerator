@@ -53,14 +53,14 @@ namespace vcc
 
 	// system
 	std::wstring getCurrentFolderPath();
-	void ChangeCurrentFolderPath(const std::wstring &path);
+	void changeCurrentFolderPath(const std::wstring &path);
 	std::wstring getSystemFolderPath(const SystemFolderType &fileType);
 
     // helper
-	bool IsAbsolutePath(const std::wstring &filePath);
+	bool isAbsolutePath(const std::wstring &filePath);
 	std::wstring getParentPath(const std::wstring &filePath);
 	std::wstring getFileName(const std::wstring &filePath);
-    std::wstring ConcatPaths(const std::vector<std::wstring>& paths);
+    std::wstring concatPaths(const std::vector<std::wstring>& paths);
 	std::wstring getRelativePath(const std::wstring &absolutePath, const std::wstring &basePath);
 	void getFileDifferenceBetweenWorkspaces(const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
 		std::vector<std::wstring> &needToAdd, std::vector<std::wstring> &needToModify, std::vector<std::wstring> &needToDelete);
@@ -72,31 +72,31 @@ namespace vcc
 	std::wstring getWindowPath(const std::wstring &path);
 	std::wstring getLinuxPath(const std::wstring &path);
 	std::wstring getRegexFromFileFilter(const std::wstring &fileFilter);
-	bool IsPathMatchFileFilter(const std::wstring &filePath, const std::wstring &fileFilter);
-	bool IsPathMatchFileFilters(const std::wstring &filePath, const std::vector<std::wstring> &fileFilters);
+	bool isPathMatchFileFilter(const std::wstring &filePath, const std::wstring &fileFilter);
+	bool isPathMatchFileFilters(const std::wstring &filePath, const std::vector<std::wstring> &fileFilters);
 
 	// validation
-	bool IsDirectoryExists(const std::wstring &path);
+	bool isDirectoryExists(const std::wstring &path);
 	
-	bool IsFile(const std::wstring &path);
-	bool IsFilePresent(const std::wstring &path);
+	bool isFile(const std::wstring &path);
+	bool isFilePresent(const std::wstring &path);
     void validateFile(const std::wstring &path);
-	bool IsFileEqual(const std::wstring &pathA, const std::wstring &pathB);
+	bool isFileEqual(const std::wstring &pathA, const std::wstring &pathB);
 
 	// action
-	void CopyFile(const std::wstring &srcFilePath, const std::wstring &destFilePath, const bool &isForce = false);
-	void RemoveFile(const std::wstring &filePath);
-	void CreateDirectory(const std::wstring &path);
-	void CopyDirectory(const std::wstring &srcDirectory, const std::wstring &destDirectory, const CopyDirectoryOption *option = nullptr);
-	void RemoveDirectory(const std::wstring &directory);
+	void copyFile(const std::wstring &srcFilePath, const std::wstring &destFilePath, const bool &isForce = false);
+	void removeFile(const std::wstring &filePath);
+	void createDirectory(const std::wstring &path);
+	void copyDirectory(const std::wstring &srcDirectory, const std::wstring &destDirectory, const CopyDirectoryOption *option = nullptr);
+	void removeDirectory(const std::wstring &directory);
 
 	// Read File
-	std::wstring ReadFile(const std::wstring &filePath);
-	void ReadFilePerLine(const std::wstring &filePath, std::function<void(std::wstring)> action);
-	std::wstring ReadFileOneLine(const std::wstring &filePath, int index);
+	std::wstring readFile(const std::wstring &filePath);
+	void readFilePerLine(const std::wstring &filePath, std::function<void(std::wstring)> action);
+	std::wstring readFileOneLine(const std::wstring &filePath, int index);
 
 	// Write file
-	void WriteFile(const std::wstring &filePath, const std::wstring &content, const bool &isForce = false);
-	void AppendFileOneLine(const std::wstring &filePath, const std::wstring &line, const bool &isForce = false);
+	void writeFile(const std::wstring &filePath, const std::wstring &content, const bool &isForce = false);
+	void appendFileOneLine(const std::wstring &filePath, const std::wstring &line, const bool &isForce = false);
 
 }

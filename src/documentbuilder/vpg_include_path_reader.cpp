@@ -33,7 +33,7 @@ size_t VPGIncludePathReader::SkipCommand(const std::wstring &cppCode, const size
 {
     TRY
         std::wstring closeCommand = _CloseCommands[openCommandIndex];
-        size_t tmpPos = vcc::Find(cppCode, closeCommand, pos);
+        size_t tmpPos = vcc::find(cppCode, closeCommand, pos);
         if (tmpPos != std::wstring::npos)
             pos = tmpPos + closeCommand.length() - 1;
     CATCH
@@ -84,7 +84,7 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
                                 if (cppCode[pos] == L';')
                                     continue;
                                 if (cppCode[pos] == L':') {
-                                    pos = vcc::Find(cppCode, L"{", pos);
+                                    pos = vcc::find(cppCode, L"{", pos);
                                 }
                                 // drop class quote
                                 if (!vcc::GetNextQuotedString(cppCode, pos, { L";" }).empty())
@@ -107,7 +107,7 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
                                 else if (cppCode[pos] == L'=') {
                                     classList.insert((!currentNamespace.empty() ? (currentNamespace + L"::") : L"") + nextToken);
                                 }
-                                pos = vcc::Find(cppCode, L";", pos);
+                                pos = vcc::find(cppCode, L";", pos);
                             }
                         }
                     }
@@ -132,16 +132,16 @@ void VPGIncludePathReader::ParseCustom(const std::wstring &cppCode, const std::w
 //     if (cppCode.empty())
 //         return;
 //     TRY_CATCH () {
-//         size_t startCommandPos = vcc::Find(cppCode, L"/*");
+//         size_t startCommandPos = vcc::find(cppCode, L"/*");
 //         if (startCommandPos == std::wstring::npos)
 //             return;
 
-//         size_t endCommandPos = vcc::Find(cppCode, L"*/", startCommandPos);
+//         size_t endCommandPos = vcc::find(cppCode, L"*/", startCommandPos);
 //         if (endCommandPos == std::wstring::npos)
 //             return;
 
 //         std::wstring token = L"synopsis";
-//         startCommandPos = vcc::Find(cppCode, token, startCommandPos);
+//         startCommandPos = vcc::find(cppCode, token, startCommandPos);
 //         if (startCommandPos == std::wstring::npos || endCommandPos < startCommandPos)
 //             return;
 

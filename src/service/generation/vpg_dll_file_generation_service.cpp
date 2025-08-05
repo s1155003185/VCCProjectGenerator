@@ -340,7 +340,7 @@ void VPGDllFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig, c
 {
     TRY
         assert(option != nullptr);
-        if (!vcc::IsFilePresent(filePathHpp))
+        if (!vcc::isFilePresent(filePathHpp))
             return;
         
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file: " + filePathHpp);
@@ -354,13 +354,13 @@ void VPGDllFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig, c
             for (auto const &file : customIncludeFiles)
                 content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, file) + L"\r\n";
         }
-        vcc::WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(vcc::ReadFile(filePathHpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
+        vcc::writeFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(vcc::readFile(filePathHpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
 
         // content
         content = applicationStr;
         content += propertyAccessorStr;
 
-        vcc::WriteFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(vcc::ReadFile(filePathHpp), L"vcc:dllInterface", content, L"//"), true);
+        vcc::writeFile(filePathHpp, VPGFileGenerationService::GenerateFileContent(vcc::readFile(filePathHpp), L"vcc:dllInterface", content, L"//"), true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file completed.");
     CATCH
 }
@@ -369,7 +369,7 @@ void VPGDllFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig, c
 {
     TRY
         assert(option != nullptr);
-        if (!vcc::IsFilePresent(filePathCpp))
+        if (!vcc::isFilePresent(filePathCpp))
             return;
 
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp file: " + filePathCpp);
@@ -383,12 +383,12 @@ void VPGDllFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig, c
             for (auto const &file : customIncludeFiles)
                 content += L"#include " + vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, file) + L"\r\n";
         }
-        vcc::WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(vcc::ReadFile(filePathCpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
+        vcc::writeFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(vcc::readFile(filePathCpp), L"vcc:dllInterfaceHeader", content, L"//"), true);
 
         // content
         content = applicationStr;
         content += propertyAccessorStr;
-        vcc::WriteFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(vcc::ReadFile(filePathCpp), L"vcc:dllInterface", content, L"//"), true);
+        vcc::writeFile(filePathCpp, VPGFileGenerationService::GenerateFileContent(vcc::readFile(filePathCpp), L"vcc:dllInterface", content, L"//"), true);
 
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp completed.");
     CATCH

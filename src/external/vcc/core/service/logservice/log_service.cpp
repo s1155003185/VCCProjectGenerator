@@ -42,7 +42,7 @@ namespace vcc
 			std::wcout << logMessage << std::endl;
 
 		if (!IsBlank(logConfig->getFilePath())) {
-			AppendFileOneLine(logConfig->getFilePath(), logMessage, true);
+			appendFileOneLine(logConfig->getFilePath(), logMessage, true);
 		}
 		return logMessage;
 	}

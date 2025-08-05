@@ -98,7 +98,7 @@ namespace vcc
         CATCH
     }
 
-    std::shared_ptr<IResult> BaseForm::ExecuteAction(std::shared_ptr<IAction> action, bool isNoHistory)
+    std::shared_ptr<IResult> BaseForm::executeAction(std::shared_ptr<IAction> action, bool isNoHistory)
     {
         TRY
             auto actionManager = getActionManager();

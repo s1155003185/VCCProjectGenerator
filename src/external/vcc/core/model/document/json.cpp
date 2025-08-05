@@ -44,7 +44,7 @@ namespace vcc
                 //         }
                 //     } else if (pair.second->getJsonInternalType() == JsonInternalType::Object) {
                 //         for (auto const &str : pair.second->getKeys(true))
-                //             result.push_back(ConcatPaths({pair.first, str}));
+                //             result.push_back(concatPaths({pair.first, str}));
                 //     }
                 // }
             }
@@ -56,7 +56,7 @@ namespace vcc
     {
         TRY
             auto keys = getKeys();//GetKeys(isRecursive);
-            return IsContain(keys, key);
+            return isContain(keys, key);
         CATCH
         return false;
     }

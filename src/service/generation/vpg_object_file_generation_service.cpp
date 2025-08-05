@@ -61,7 +61,7 @@ std::wstring VPGObjectFileGenerationService::GetCloneFunction(const VPGEnumClass
                     continue;
                 if ((!property->getType1().empty() && vcc::IsCapital(GetTypeOrClassWithoutNamespace(property->getType1()))) 
                     || (!property->getType2().empty() && vcc::IsCapital(GetTypeOrClassWithoutNamespace(property->getType2())))) {
-                    if (vcc::Find(property->getMacro(), L"SPTR") != std::wstring::npos)
+                    if (vcc::find(property->getMacro(), L"SPTR") != std::wstring::npos)
                         cloneObjs.insert({ property->getPropertyName(), L"obj->clone" + property->getPropertyName() + L"(this->_" + property->getPropertyName() + (vcc::IsStartWith(property->getMacro(), L"GETSET") ? L".get()" : L"" ) + L")" });
                 }
             }
@@ -105,7 +105,7 @@ std::wstring VPGObjectFileGenerationService::GetConstructorContent(const VPGEnum
                             initializeList.push_back(L"Insert" + property->getPropertyName() + L"(" + element + L");");
                     } else if (property->getIsObject()){
                         if (property->getInitializeProperties().size() > 0)
-                            initializeList.push_back(L"_" + property->getPropertyName() + L" = std::make_shared<" + property->getType1() + L">(" + vcc::Concat(property->getInitializeProperties(), L", ") + L");");
+                            initializeList.push_back(L"_" + property->getPropertyName() + L" = std::make_shared<" + property->getType1() + L">(" + vcc::concat(property->getInitializeProperties(), L", ") + L");");
                         else
                             initializeList.push_back(L"_" + property->getPropertyName() + L" = std::make_shared<" + property->getType1() + L">(" + property->getDefaultValue() + L");");
                     } else {
@@ -411,7 +411,7 @@ void VPGObjectFileGenerationService::GetHppIncludeFiles(const std::map<std::wstr
             if (!vcc::IsBlank(enumClass->getInheritClass())) {
                 std::wstring inheritClass = enumClass->getInheritClass();
                 // remove template
-                size_t pos = vcc::Find(inheritClass, L"<");
+                size_t pos = vcc::find(inheritClass, L"<");
                 if (pos != std::wstring::npos) {
                     inheritClass = inheritClass.substr(0, pos);
                 }
@@ -736,7 +736,7 @@ std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass
             baseClassName = enumClass->getInheritClass();
         std::wstring baseClassNameWithoutQuote = baseClassName;
         if (vcc::isContain(baseClassNameWithoutQuote, L"<"))
-            baseClassNameWithoutQuote = baseClassNameWithoutQuote.substr(0, vcc::Find(baseClassNameWithoutQuote, L"<"));
+            baseClassNameWithoutQuote = baseClassNameWithoutQuote.substr(0, vcc::find(baseClassNameWithoutQuote, L"<"));
 
         result += L"\r\n"
             "class " + className + L" : public " + baseClassName + inheritClass + L"\r\n"
@@ -872,11 +872,11 @@ void VPGObjectFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
         // ------------------------------------------------------------------------------------------ //
         //                               Handle VCC Tag                                               //
         // ------------------------------------------------------------------------------------------ //
-        if (vcc::IsFilePresent(filePathHpp))
-            content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::ReadFile(filePathHpp), VPGFileContentSyncMode::Full, L"//");
+        if (vcc::isFilePresent(filePathHpp))
+            content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::readFile(filePathHpp), VPGFileContentSyncMode::Full, L"//");
         
         vcc::LTrim(content);
-        vcc::WriteFile(filePathHpp, content, true);
+        vcc::writeFile(filePathHpp, content, true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file completed.");
     CATCH
 }
@@ -907,7 +907,7 @@ void VPGObjectFileGenerationService::GetCppIncludeFiles(
             if (!vcc::IsBlank(enumClass->getInheritClass())) {
                 std::wstring inheritClass = enumClass->getInheritClass();
                 // remove template
-                size_t pos = vcc::Find(inheritClass, L"<");
+                size_t pos = vcc::find(inheritClass, L"<");
                 if (pos != std::wstring::npos) {
                     inheritClass = inheritClass.substr(0, pos);
                 }
@@ -1024,8 +1024,8 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
         for (auto const &property : enumClass->getProperties()) {
             if (property->getIsNoJson())
                 continue;
-            isHavingDecimal = (vcc::Find(property->getMacro(), L"MAP") != std::wstring::npos && (property->getType2() == L"float" || property->getType2() == L"double"))
-                || (vcc::Find(property->getMacro(), L"MAP") == std::wstring::npos && (property->getType1() == L"float" || property->getType1() == L"double"));
+            isHavingDecimal = (vcc::find(property->getMacro(), L"MAP") != std::wstring::npos && (property->getType2() == L"float" || property->getType2() == L"double"))
+                || (vcc::find(property->getMacro(), L"MAP") == std::wstring::npos && (property->getType1() == L"float" || property->getType1() == L"double"));
             if (isHavingDecimal)
                 break;
         }
@@ -1044,7 +1044,7 @@ std::wstring VPGObjectFileGenerationService::GetCppJsonFunction(const std::wstri
             std::wstring propertyName = property->getPropertyName();
             std::wstring convertedPropertyName = vcc::GetEscapeStringWithQuote(vcc::EscapeStringType::DoubleQuote, property->getPropertyName());
             std::wstring originalType = getTypeOrClassWithoutNamespace(property->getType1());
-            std::wstring originalMacro = vcc::Find(property->getMacro(), L"(") != std::wstring::npos ? property->getMacro().substr(0, vcc::Find(property->getMacro(), L"(")) : L"";
+            std::wstring originalMacro = vcc::find(property->getMacro(), L"(") != std::wstring::npos ? property->getMacro().substr(0, vcc::find(property->getMacro(), L"(")) : L"";
             if (originalMacro.empty() || originalType.empty())
                 continue;
 
@@ -1310,7 +1310,7 @@ std::wstring VPGObjectFileGenerationService::GetCppAction(const VPGEnumClass *en
                     + INDENT + INDENT + L"auto action = std::make_shared<" + getActionClassName(enumClass, property.get()) + L">(" + assignmentStr + L");\r\n"
                     + INDENT + INDENT + getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", className, functionName) + L"\r\n"
                     + INDENT + INDENT + getVccTagTailerCustomClassCustomFunctions(VPGCodeType::Cpp, L"", className, functionName) + L"\r\n"
-                    + INDENT + INDENT + L"return ExecuteAction(action, " + (property->getIsNoHistory() ? L"true" : L"false") + L");\r\n"
+                    + INDENT + INDENT + L"return executeAction(action, " + (property->getIsNoHistory() ? L"true" : L"false") + L");\r\n"
                     + INDENT + L"CATCH\r\n"
                     + INDENT + L"return nullptr;\r\n"
                     "}\r\n";
@@ -1421,7 +1421,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
                 baseClassName = enumClass->getInheritClass();                
             std::wstring baseClassNameWithoutQuote = baseClassName;
             if (vcc::isContain(baseClassNameWithoutQuote, L"<"))
-                baseClassNameWithoutQuote = baseClassNameWithoutQuote.substr(0, vcc::Find(baseClassNameWithoutQuote, L"<"));
+                baseClassNameWithoutQuote = baseClassNameWithoutQuote.substr(0, vcc::find(baseClassNameWithoutQuote, L"<"));
                 
             std::wstring currentNamespace = getNamespaceFromClassName(enumClass->getName());
             if (!vcc::isContain(namespaceClassMapping, currentNamespace))
@@ -1443,11 +1443,11 @@ void VPGObjectFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
         // ------------------------------------------------------------------------------------------ //
         //                               Handle VCC Tag                                               //
         // ------------------------------------------------------------------------------------------ //
-        if (vcc::IsFilePresent(filePathCpp))
-            content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::ReadFile(filePathCpp), VPGFileContentSyncMode::Full, L"//");
+        if (vcc::isFilePresent(filePathCpp))
+            content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::readFile(filePathCpp), VPGFileContentSyncMode::Full, L"//");
         
         vcc::LTrim(content);
-        vcc::WriteFile(filePathCpp, content, true);
+        vcc::writeFile(filePathCpp, content, true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate object class file completed.");
     CATCH
 }

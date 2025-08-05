@@ -27,7 +27,7 @@ class VPGEnumClassAttribute : public vcc::BaseObject
     GETCUSTOM(bool, IsType2Custom, return vcc::IsCapital(vcc::SplitString(GetType2(), {L"::"}).back());)
     GETSET(std::wstring, PropertyName, L"")
     GETSET(std::wstring, Validate, L"")
-    GETCUSTOM(std::wstring, DefaultValue, if (_InitializeProperties.empty()) return _DefaultValue; return vcc::Concat(_InitializeProperties, L", ");)
+    GETCUSTOM(std::wstring, DefaultValue, if (_InitializeProperties.empty()) return _DefaultValue; return vcc::concat(_InitializeProperties, L", ");)
     SETCUSTOM(DefaultValue, std::wstring, _DefaultValue = value;)
     GETSET(std::wstring, Command, L"")
     GETCUSTOM(bool, IsGeneralType, return !GetIsCollection();)

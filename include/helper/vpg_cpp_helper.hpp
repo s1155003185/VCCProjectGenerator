@@ -17,7 +17,7 @@ inline std::wstring getSimpleCode(const std::wstring &str) {
             bool isCommand = false;
             for (size_t j = 0; j < prefixes.size(); j++) {
                 if (vcc::IsStartWith(str, prefixes[j], i)) {
-                    size_t pos = vcc::Find(str, suffixes[j], i + prefixes[j].size());
+                    size_t pos = vcc::find(str, suffixes[j], i + prefixes[j].size());
                     if (pos != std::wstring::npos)
                         i = pos + suffixes[j].size() - 1;
                     else

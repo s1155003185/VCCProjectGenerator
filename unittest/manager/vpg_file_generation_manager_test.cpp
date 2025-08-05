@@ -24,26 +24,26 @@ class VPGFileGenerationManagerTest : public testing::Test
         void CreateFolderInSourceWorkspace(std::wstring folder)
         {
             if (folder.empty())
-                vcc::CreateDirectory(this->getWorkspaceSource());
+                vcc::createDirectory(this->getWorkspaceSource());
             else
-                vcc::CreateDirectory(vcc::ConcatPaths({this->getWorkspaceSource(), folder}));
+                vcc::createDirectory(vcc::concatPaths({this->getWorkspaceSource(), folder}));
         }
 
         void CreateFolderInTargetWorkspace(std::wstring folder)
         {
             if (folder.empty())
-                vcc::CreateDirectory(this->getWorkspaceTarget());
+                vcc::createDirectory(this->getWorkspaceTarget());
             else
-                vcc::CreateDirectory(vcc::ConcatPaths({this->getWorkspaceTarget(), folder}));
+                vcc::createDirectory(vcc::concatPaths({this->getWorkspaceTarget(), folder}));
         }
 
         void CreateFileInSourceWorkspace(std::wstring fileName, std::wstring content)
         {
-            vcc::AppendFileOneLine(vcc::ConcatPaths({this->getWorkspaceSource(), fileName}), content, true);
+            vcc::appendFileOneLine(vcc::concatPaths({this->getWorkspaceSource(), fileName}), content, true);
         }
         void CreateFileInTargetWorkspace(std::wstring fileName, std::wstring content)
         {
-            vcc::AppendFileOneLine(vcc::ConcatPaths({this->getWorkspaceTarget(), fileName}), content, true);
+            vcc::appendFileOneLine(vcc::concatPaths({this->getWorkspaceTarget(), fileName}), content, true);
         }
     public:
 
@@ -53,8 +53,8 @@ class VPGFileGenerationManagerTest : public testing::Test
         void setUp() override
         {
             this->_LogConfig = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
-            this->_WorkspaceSource = vcc::ConcatPaths({this->_Workspace, L"Source"});
-            this->_WorkspaceTarget = vcc::ConcatPaths({this->_Workspace, L"Target"});
+            this->_WorkspaceSource = vcc::concatPaths({this->_Workspace, L"Source"});
+            this->_WorkspaceTarget = vcc::concatPaths({this->_Workspace, L"Target"});
 
             std::filesystem::remove_all(PATH(this->getWorkspace()));
 
@@ -87,7 +87,7 @@ class VPGFileGenerationManagerTest : public testing::Test
 
         bool CheckFolderExists(std::wstring path)
         {
-            return vcc::IsDirectoryExists(vcc::ConcatPaths({this->getWorkspace(), path}));
+            return vcc::isDirectoryExists(vcc::concatPaths({this->getWorkspace(), path}));
         }
 };
 
@@ -127,8 +127,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     // ------------------------------------------------------------------------------------------ //
     //                                      Object Type File                                      //
     // ------------------------------------------------------------------------------------------ //
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"object_type.hpp"})));
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->getWorkspaceTarget(), L"object_type.hpp"})),
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"object_type.hpp"})));
+    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspaceTarget(), L"object_type.hpp"})),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
@@ -145,8 +145,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     // ------------------------------------------------------------------------------------------ //
     //                                      Class File                                            //
     // ------------------------------------------------------------------------------------------ //
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"vcc_a.hpp"})));    
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->getWorkspaceTarget(), L"vcc_a.hpp"})),
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"vcc_a.hpp"})));    
+    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspaceTarget(), L"vcc_a.hpp"})),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
@@ -206,8 +206,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     // ------------------------------------------------------------------------------------------ //
     //                                      Property Accessor File                                //
     // ------------------------------------------------------------------------------------------ //
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"vcc_a_property_accessor.hpp"})));
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->getWorkspaceTarget(), L"vcc_a_property_accessor.hpp"})),
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"vcc_a_property_accessor.hpp"})));
+    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspaceTarget(), L"vcc_a_property_accessor.hpp"})),
         L"#pragma once\r\n"
         "\r\n"
         "#include <string>\r\n"
@@ -238,8 +238,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "        virtual ~VCCObjectPtrPropertyAccessor() {}\r\n"
         "};\r\n");
 
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"vcc_a_property_accessor.cpp"})));
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->getWorkspaceTarget(), L"vcc_a_property_accessor.cpp"})),
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"vcc_a_property_accessor.cpp"})));
+    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspaceTarget(), L"vcc_a_property_accessor.cpp"})),
         L"#include \"vcc_a_property_accessor.hpp\"\r\n"
         "\r\n"
         "#include <memory>\r\n"
@@ -784,8 +784,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     // ------------------------------------------------------------------------------------------ //
     //                                      Object Factory                                        //
     // ------------------------------------------------------------------------------------------ //
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"object_factory.hpp"})));
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->getWorkspaceTarget(), L"object_factory.hpp"})),
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"object_factory.hpp"})));
+    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspaceTarget(), L"object_factory.hpp"})),
         L"#pragma once\r\n"
         "\r\n"
         "#include <memory>\r\n"
@@ -803,8 +803,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    public:\r\n"
         "        static std::shared_ptr<vcc::IObject> Create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);\r\n"
         "};\r\n");
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"object_factory.cpp"})));
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->getWorkspaceTarget(), L"object_factory.cpp"})),
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"object_factory.cpp"})));
+    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspaceTarget(), L"object_factory.cpp"})),
         L"#include \"object_factory.hpp\"\r\n"
         "\r\n"
         "#include <assert.h>\r\n"
@@ -840,8 +840,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
     // ------------------------------------------------------------------------------------------ //
     //                                      Property Accessor Factory                             //
     // ------------------------------------------------------------------------------------------ //
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"property_accessor_factory.hpp"})));
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->getWorkspaceTarget(), L"property_accessor_factory.hpp"})),
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"property_accessor_factory.hpp"})));
+    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspaceTarget(), L"property_accessor_factory.hpp"})),
         L"#pragma once\r\n"
         "\r\n"
         "#include <memory>\r\n"
@@ -859,8 +859,8 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
         "    public:\r\n"
         "        static std::shared_ptr<vcc::IPropertyAccessor> Create(std::shared_ptr<vcc::IObject> object);\r\n"
         "};\r\n");
-    EXPECT_TRUE(vcc::IsFilePresent(vcc::ConcatPaths({this->getWorkspaceTarget(), L"property_accessor_factory.cpp"})));
-    EXPECT_EQ(vcc::ReadFile(vcc::ConcatPaths({this->getWorkspaceTarget(), L"property_accessor_factory.cpp"})),
+    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"property_accessor_factory.cpp"})));
+    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspaceTarget(), L"property_accessor_factory.cpp"})),
         L"#include \"property_accessor_factory.hpp\"\r\n"
         "\r\n"
         "#include <assert.h>\r\n"

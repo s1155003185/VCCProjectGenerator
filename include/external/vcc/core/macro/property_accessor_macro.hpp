@@ -33,7 +33,7 @@
         virtual void Remove(const vcc::LockType lockType, const int64_t &objectProperty, const void *value) = 0; \
         virtual void RemoveObject(const vcc::LockType lockType, const int64_t &objectProperty, const vcc::IObject *value) = 0; \
         virtual void RemoveAtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const int64_t &index = -1) = 0; \
-        virtual void RemoveAtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) = 0; \
+        virtual void removeAtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) = 0; \
         virtual void clear(const vcc::LockType lockType, const int64_t &objectProperty) = 0;
 
 #define BASE_PROPERTY_ACCESSOR_HEADER(type, name) \
@@ -95,7 +95,7 @@
         virtual void Remove(const vcc::LockType lockType, const int64_t &objectProperty, const void *value) override; \
         virtual void RemoveObject(const vcc::LockType lockType, const int64_t &objectProperty, const vcc::IObject *value) override; \
         virtual void RemoveAtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const int64_t &index = -1) override; \
-        virtual void RemoveAtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) override; \
+        virtual void removeAtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) override; \
         virtual void clear(const vcc::LockType lockType, const int64_t &objectProperty) override;
 
 #define BASE_PROPERTY_ACCESSOR_DETAIL(type, name, defaultValue) \
@@ -151,7 +151,7 @@
     void BasePropertyAccessor::Remove(const vcc::LockType lockType, const int64_t &objectProperty, const void *value) { LOCK_BEGIN _Remove(objectProperty, value); LOCK_END } \
     void BasePropertyAccessor::RemoveObject(const vcc::LockType lockType, const int64_t &objectProperty, const vcc::IObject *value) { LOCK_BEGIN _RemoveObject(objectProperty, value); LOCK_END } \
     void BasePropertyAccessor::RemoveAtIndex(const vcc::LockType lockType, const int64_t &objectProperty, const int64_t &index) { LOCK_BEGIN _RemoveAtIndex(objectProperty, index); LOCK_END } \
-    void BasePropertyAccessor::RemoveAtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) { LOCK_BEGIN _RemoveAtKey(objectProperty, key); LOCK_END } \
+    void BasePropertyAccessor::removeAtKey(const vcc::LockType lockType, const int64_t &objectProperty, const void *key) { LOCK_BEGIN _RemoveAtKey(objectProperty, key); LOCK_END } \
     void BasePropertyAccessor::clear(const vcc::LockType lockType, const int64_t &objectProperty) { LOCK_BEGIN _clear(objectProperty); LOCK_END }
 
 #define PROPERTY_ACCESSOR_HEADER(type, name) \
@@ -228,7 +228,7 @@
     DLLEXPORT void Remove(void *ref, int64_t property, void *value); \
     DLLEXPORT void RemoveObject(void *ref, int64_t property, void *value); \
     DLLEXPORT void RemoveAtIndex(void *ref, int64_t property, int64_t index); \
-    DLLEXPORT void RemoveAtKey(void *ref, int64_t property, void *key); \
+    DLLEXPORT void removeAtKey(void *ref, int64_t property, void *key); \
     DLLEXPORT void clear(void *ref, int64_t property);
 
 #define PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL(exportType, typeName, defaultValue) \
@@ -486,7 +486,7 @@ void RemoveAtIndex(void *ref, int64_t property, int64_t index) \
         PropertyAccessorFactory::Create(object->sharedPtr())->removeAtIndex(vcc::LockType::WriteLock, property, index); \
     CATCH \
 } \
-void RemoveAtKey(void *ref, int64_t property, void *key) \
+void removeAtKey(void *ref, int64_t property, void *key) \
 { \
     TRY \
         vcc::IObject *object = static_cast<vcc::IObject *>(ref); \

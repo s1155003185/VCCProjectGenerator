@@ -37,7 +37,7 @@ void VPGProcessManager::VerifyLocalResponse()
 
         vcc::LogService::LogInfo(this->getLogConfig().get(), L"", L"Check VCC Local response existance: " + localResponseDirectoryProject);
         bool isNeedToCloneGitResponse = false;
-        if (vcc::IsDirectoryExists(localResponseDirectoryProject)) {
+        if (vcc::isDirectoryExists(localResponseDirectoryProject)) {
             if (vcc::GitService::IsGitResponse(this->getLogConfig().get(), localResponseDirectoryProject)) {
                 vcc::LogService::LogInfo(this->getLogConfig().get(), L"", L"Done.");
 
@@ -89,7 +89,7 @@ void VPGProcessManager::VerifyLocalResponse()
             // Note: Window version will hold folder for a while because of some threads of project have not been terminated. Cannot use drop create
             try
             {
-                if (vcc::IsDirectoryExists(localResponseDirectoryProject)) {
+                if (vcc::isDirectoryExists(localResponseDirectoryProject)) {
                     vcc::LogService::LogInfo(this->getLogConfig().get(), L"", L"Remove current response.");
                     vcc::removeDirectory(localResponseDirectoryProject);
                     vcc::LogService::LogInfo(this->getLogConfig().get(), L"", L"Done.");
@@ -198,7 +198,7 @@ void VPGProcessManager::Generate()
     CATCH
 }
 
-void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
+void VPGProcessManager::execute(const std::vector<std::wstring> &cmds)
 {
     if (cmds.size() < 2)
         return;
@@ -298,10 +298,10 @@ void VPGProcessManager::Execute(const std::vector<std::wstring> &cmds)
             if (this->_Option->getProjectType() == VPGProjectType::VccModule)
                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Interface Type missing.");
         } else {
-            std::wstring vccJsonFilePath = vcc::ConcatPaths({_Workspace, VPGGlobal::GetVccJsonFileName()});
-            if (!vcc::IsFilePresent(vccJsonFilePath))
+            std::wstring vccJsonFilePath = vcc::concatPaths({_Workspace, VPGGlobal::GetVccJsonFileName()});
+            if (!vcc::isFilePresent(vccJsonFilePath))
                 THROW_EXCEPTION_MSG(ExceptionType::CustomError, vccJsonFilePath + L": File not found.");
-            std::wstring fileContent = vcc::ReadFile(vccJsonFilePath);
+            std::wstring fileContent = vcc::readFile(vccJsonFilePath);
             auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
             auto json = std::make_shared<vcc::Json>();
             jsonBuilder->Deserialize(fileContent, json);

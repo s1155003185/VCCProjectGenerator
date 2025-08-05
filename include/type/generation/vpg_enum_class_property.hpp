@@ -21,7 +21,7 @@ enum class VPGEnumClassAttributeProperty
     , IsType2Custom // GETCUSTOM(bool, IsType2Custom, return vcc::IsCapital(vcc::SplitString(GetType2(), {L"::"}).back());)
     , PropertyName // GETSET(std::wstring, PropertyName, L"");
     , validate // GETSET(std::wstring, validate, L"")
-    , DefaultValue // GETCUSTOM(std::wstring, DefaultValue, if (_InitializeProperties.empty()) return _DefaultValue; return vcc::Concat(_InitializeProperties, L", ");) SETCUSTOM(DefaultValue, std::wstring, _DefaultValue = value;)
+    , DefaultValue // GETCUSTOM(std::wstring, DefaultValue, if (_InitializeProperties.empty()) return _DefaultValue; return vcc::concat(_InitializeProperties, L", ");) SETCUSTOM(DefaultValue, std::wstring, _DefaultValue = value;)
     , Command // GETSET(std::wstring, Command, L"")
     
     // Properties

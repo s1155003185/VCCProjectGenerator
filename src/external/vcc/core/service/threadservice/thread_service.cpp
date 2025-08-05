@@ -6,7 +6,7 @@ namespace vcc
 {
     void ThreadService::ExecuteThread(std::shared_ptr<Thread> thread)
     {
-        thread->Execute();
+        thread->execute();
     }
 
     void ThreadService::Join(std::shared_ptr<Thread> thread)

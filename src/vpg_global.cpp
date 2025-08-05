@@ -28,7 +28,7 @@ std::wstring VPGGlobal::GetVersion()
 std::wstring VPGGlobal::GetVccLocalResponseFolder()
 {
     TRY
-        return vcc::ConcatPaths({USER_HOME_VARIABLE, L"Documents", L"vcc"});
+        return vcc::concatPaths({USER_HOME_VARIABLE, L"Documents", L"vcc"});
     CATCH
     return L"";
 }
@@ -36,7 +36,7 @@ std::wstring VPGGlobal::GetVccLocalResponseFolder()
 std::wstring VPGGlobal::GetVccProjectLocalResponseDirectory(VPGProjectType projectType)
 {
     TRY
-        return vcc::ConcatPaths({VPGGlobal::GetVccLocalResponseFolder(), VPGGlobal::GetProjectName(projectType)});
+        return vcc::concatPaths({VPGGlobal::GetVccLocalResponseFolder(), VPGGlobal::GetProjectName(projectType)});
     CATCH
     return L"";
 }
@@ -93,7 +93,7 @@ std::wstring VPGGlobal::GetVCCProjectManagerConfigFileName()
 
 std::wstring VPGGlobal::GetVCCProjectManagerConfigFileFullPath()
 {
-    return VPGGlobal::GetConvertedPath(vcc::ConcatPaths({ VPGGlobal::GetVccLocalResponseFolder(), L"config", VPGGlobal::GetVCCProjectManagerConfigFileName() }));
+    return VPGGlobal::GetConvertedPath(vcc::concatPaths({ VPGGlobal::GetVccLocalResponseFolder(), L"config", VPGGlobal::GetVCCProjectManagerConfigFileName() }));
 }
 
 std::shared_ptr<VPGEnumClassReader> VPGGlobal::GetEnumClassReader()

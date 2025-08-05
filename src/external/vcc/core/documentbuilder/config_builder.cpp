@@ -48,7 +48,7 @@ namespace vcc
                 else if (IsStartWith(line, L"#"))
                     configObj->AddCommand(line);
                 else {
-                    size_t eqPos = Find(line, L"=");
+                    size_t eqPos = find(line, L"=");
                     if (eqPos != std::wstring::npos) {
                         std::wstring key = line.substr(0, eqPos);
                         std::wstring value = line.substr(eqPos + 1);

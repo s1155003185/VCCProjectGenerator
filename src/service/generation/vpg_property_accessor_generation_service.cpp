@@ -60,8 +60,8 @@ bool VPGPropertyAccessorGenerationService::IsIncludeString(const std::vector<std
     TRY
         for (auto const &enumClass : enumClassList) {
             for (auto const &property : enumClass->getProperties()) {
-                if (vcc::Find(property->getType1(), L"string") != std::wstring::npos
-                    || vcc::Find(property->getType2(), L"string") != std::wstring::npos) {
+                if (vcc::find(property->getType1(), L"string") != std::wstring::npos
+                    || vcc::find(property->getType2(), L"string") != std::wstring::npos) {
                     result = true;
                     break;
                 }
@@ -275,7 +275,7 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const vcc::LogConfig *log
         }
         result += GenerateCodeWithNamespace(namespaceClassMapping);
 
-        vcc::WriteFile(filePathHpp, result, true);
+        vcc::writeFile(filePathHpp, result, true);
         vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor hpp completed.");
     CATCH
 }
@@ -1013,7 +1013,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const vcc::LogConfig *log
                         if (includePath.empty())
                             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Header file of class " + type1 + L" not found");
                         projectIncludeFiles.insert(includePath);
-                    } else if (vcc::Find(type1, L"string") != std::wstring::npos)
+                    } else if (vcc::find(type1, L"string") != std::wstring::npos)
                         systemIncludeFiles.insert(L"string");
                 }
                 if (!type2.empty()) {
@@ -1022,7 +1022,7 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const vcc::LogConfig *log
                         if (includePath.empty())
                             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Header file of class " + type2 + L" not found");
                         projectIncludeFiles.insert(includePath);
-                    } else if (vcc::Find(type2, L"string") != std::wstring::npos)
+                    } else if (vcc::find(type2, L"string") != std::wstring::npos)
                         systemIncludeFiles.insert(L"string");
                 }
 
@@ -1114,10 +1114,10 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const vcc::LogConfig *log
             }
         }
         if (count > 0) {
-            vcc::WriteFile(filePathCpp, result + GenerateCodeWithNamespace(namespaceClassMapping), true);
+            vcc::writeFile(filePathCpp, result + GenerateCodeWithNamespace(namespaceClassMapping), true);
             vcc::LogService::LogInfo(logConfig, LOG_ID, L"Generate property accessor cpp completed.");
         } else {
-            if (vcc::IsFilePresent(filePathCpp)) {
+            if (vcc::isFilePresent(filePathCpp)) {
                 vcc::removeFile(filePathCpp);
                 vcc::LogService::LogInfo(logConfig, LOG_ID, L"Removed property accessor cpp as no properties are acceesable.");
             } else

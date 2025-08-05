@@ -43,5 +43,5 @@ class VPGProcessManager : public vcc::BaseManager
         void Add();
         void Update();
         void Generate();
-        void Execute(const std::vector<std::wstring> &cmds);
+        void execute(const std::vector<std::wstring> &cmds);
 };

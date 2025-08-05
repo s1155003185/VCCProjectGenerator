@@ -88,7 +88,7 @@ std::wstring VPGEnumClassReader::_GetMacro(const std::wstring &propertyCommand, 
             return result;
         }
 
-        size_t posOfQuote = vcc::Find(propertyCommand, L"(", pos);
+        size_t posOfQuote = vcc::find(propertyCommand, L"(", pos);
         result = propertyCommand.substr(pos, posOfQuote - pos);
         pos = posOfQuote;
         result += vcc::GetNextQuotedString(propertyCommand, pos, { L")", L" ", L"\t", L"\r", L"\n" }, { L"\"", L"'", L"{", L"[", L"(", L"/*", L"//" }, { L"\"", L"'", L"}", L"]", L")", L"*/", L"\n" }, { L"\\", L"\\", L"", L"", L"", L"", L"" }, { L"\"", L"//", L"/*" });
@@ -101,13 +101,13 @@ std::wstring VPGEnumClassReader::_GetType(const std::wstring &macroStr, size_t &
 {
     std::wstring result = L"";
     TRY
-        pos = vcc::Find(macroStr, L"(");
+        pos = vcc::find(macroStr, L"(");
         if (pos == std::wstring::npos)
             THROW_EXCEPTION_MSG(ExceptionType::ParserError, macroStr + L": Macro ( missing");
         pos++;
-        size_t endPos = vcc::Find(macroStr, L",");
+        size_t endPos = vcc::find(macroStr, L",");
         if (endPos == std::wstring::npos) {
-            endPos = vcc::Find(macroStr, L")");
+            endPos = vcc::find(macroStr, L")");
             if (endPos == std::wstring::npos)
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, macroStr + L": Macro , or ) missing");
         }
@@ -122,7 +122,7 @@ std::wstring VPGEnumClassReader::_GetPropertyName(const std::wstring &macroStr, 
 {
     std::wstring result = L"";
     TRY
-        size_t endPos = vcc::Find(macroStr, L",", pos);
+        size_t endPos = vcc::find(macroStr, L",", pos);
         if (endPos == std::wstring::npos) {
             endPos = macroStr.find_last_of(L")");
             if (endPos == std::wstring::npos) 
@@ -153,7 +153,7 @@ std::wstring VPGEnumClassReader::_GetDefaultValue(const std::wstring &macroStr, 
 std::shared_ptr<vcc::Json> VPGEnumClassReader::GetJsonAttributes(const std::wstring &command, const std::wstring &attributeName) const
 {
     TRY
-        size_t pos = vcc::Find(command, attributeName, 0, true);
+        size_t pos = vcc::find(command, attributeName, 0, true);
         if (pos == std::wstring::npos)
             return nullptr;
         pos += attributeName.length();
@@ -652,7 +652,7 @@ std::wstring VPGEnumClassReader::GetCppCodeLine(const std::wstring &str, size_t 
         pos++;
     size_t startPos = pos;
     TRY
-        pos = vcc::Find(str, L"\n", pos);
+        pos = vcc::find(str, L"\n", pos);
         std::wstring tailingSubstr = vcc::GetTailingSubstring(str.substr(startPos, pos - startPos + 1), 3);
         if (vcc::IsEndWith(tailingSubstr, L"\\\r\n") || vcc::IsEndWith(tailingSubstr, L"\\\n")) {
             getCppCodeLine(str, pos, false);

@@ -26,8 +26,8 @@ class VPGObjectFactoryFileGenerationServiceTest : public testing::Test
             this->_LogConfig->setIsConsoleLog(false);
             std::filesystem::remove_all(PATH(this->getWorkspace()));
 
-            this->_FilePathHpp = vcc::ConcatPaths({this->getWorkspace(), L"object_factory.hpp"});
-            this->_FilePathCpp = vcc::ConcatPaths({this->getWorkspace(), L"object_factory.cpp"});
+            this->_FilePathHpp = vcc::concatPaths({this->getWorkspace(), L"object_factory.hpp"});
+            this->_FilePathCpp = vcc::concatPaths({this->getWorkspace(), L"object_factory.cpp"});
 
             this->_ExpectedHpp = L""
                 "#pragma once\r\n"
@@ -61,10 +61,10 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Empty)
     VPGObjectFactoryFileGenerationService::GenerateHpp(this->getLogConfig().get(), this->getFilePathHpp());
     VPGObjectFactoryFileGenerationService::GenerateCpp(this->getLogConfig().get(), L"VCC", {}, this->getFilePathCpp(), propertyTypes);
 
-    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
-    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathCpp()));
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::ReadFile(this->getFilePathHpp()), this->getExpectedHpp());
+    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()), this->getExpectedHpp());
 
     std::wstring expectedResult = L""
         "#include \"object_factory.hpp\"\r\n"
@@ -91,7 +91,7 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Empty)
         "    CATCH\r\n"
         "    return result;\r\n"
         "}\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->getFilePathCpp()), expectedResult);
+    EXPECT_EQ(vcc::readFile(this->getFilePathCpp()), expectedResult);
 }
 
 TEST_F(VPGObjectFactoryFileGenerationServiceTest, Normal)
@@ -102,10 +102,10 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Normal)
     VPGObjectFactoryFileGenerationService::GenerateHpp(this->getLogConfig().get(), this->getFilePathHpp());
     VPGObjectFactoryFileGenerationService::GenerateCpp(this->getLogConfig().get(), L"VCC", { L"abc.hpp" }, this->getFilePathCpp(), propertyTypes);
 
-    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathHpp()));
-    EXPECT_TRUE(vcc::IsFilePresent(this->getFilePathCpp()));
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::ReadFile(this->getFilePathHpp()), this->getExpectedHpp());
+    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()), this->getExpectedHpp());
 
     std::wstring expectedResult = L""
         "#include \"object_factory.hpp\"\r\n"
@@ -139,5 +139,5 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Normal)
         "    CATCH\r\n"
         "    return result;\r\n"
         "}\r\n";
-    EXPECT_EQ(vcc::ReadFile(this->getFilePathCpp()), expectedResult);
+    EXPECT_EQ(vcc::readFile(this->getFilePathCpp()), expectedResult);
 }

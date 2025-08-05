@@ -25,7 +25,7 @@ namespace vcc
         return ToString(_Pid);
     }
 
-    void Thread::Execute() const
+    void Thread::execute() const
     {
         TRY
             _Pid = std::this_thread::get_id();

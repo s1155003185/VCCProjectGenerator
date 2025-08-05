@@ -26,16 +26,16 @@ class GitServiceTest : public testing::Test
             this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->setIsConsoleLog(false);
 
-            if (IsDirectoryExists(this->getWorkspace())) {
+            if (isDirectoryExists(this->getWorkspace())) {
                 #ifdef __WIN32
                     // window git will hold some files in bin/Debug/Git folder, cannot delete whole folder by c++ remove_all 
-                    TerminalService::Execute(this->getLogConfig().get(), L"", L"rmdir /s /q \"" + ConcatPaths({std::filesystem::current_path().wstring(), this->getWorkspace()}) + L"\"");
+                    TerminalService::execute(this->getLogConfig().get(), L"", L"rmdir /s /q \"" + ConcatPaths({std::filesystem::current_path().wstring(), this->getWorkspace()}) + L"\"");
                 #else
                     std::filesystem::remove_all(this->getWorkspace());
                 #endif
             }
             
-            CreateDirectory(this->getWorkspace());
+            createDirectory(this->getWorkspace());
         }
 
         void TearDown() override
@@ -325,7 +325,7 @@ TEST_F(GitServiceTest, Tag)
     // init
     GitService::InitializeGitResponse(this->getLogConfig().get(), this->getWorkspace());
 
-    WriteFile(ConcatPaths({this->getWorkspace(), L"test.txt"}), L"hi\r\n", true);
+    writeFile(concatPaths({this->getWorkspace(), L"test.txt"}), L"hi\r\n", true);
     GitService::Stage(this->getLogConfig().get(), this->getWorkspace(), L"test.txt");
     GitService::Commit(this->getLogConfig().get(), this->getWorkspace(), L"Test Commit");
     // meaningless to test exception case
@@ -371,7 +371,7 @@ TEST_F(GitServiceTest, Branch)
     // init
     GitService::InitializeGitResponse(this->getLogConfig().get(), this->getWorkspace());
 
-    WriteFile(ConcatPaths({this->getWorkspace(), L"test.txt"}), L"hi\r\n", true);
+    writeFile(concatPaths({this->getWorkspace(), L"test.txt"}), L"hi\r\n", true);
     GitService::Stage(this->getLogConfig().get(), this->getWorkspace(), L"test.txt");
     GitService::Commit(this->getLogConfig().get(), this->getWorkspace(), L"Test Commit");
    
@@ -467,7 +467,7 @@ TEST_F(GitServiceTest, StageAndDifference)
     EXPECT_EQ(statusEmpty->getRemoteBranch(), L"");
 
     // Case: New File
-    WriteFile(ConcatPaths({this->getWorkspace(), L"test.txt"}), L"hi\r\n", true);
+    writeFile(concatPaths({this->getWorkspace(), L"test.txt"}), L"hi\r\n", true);
     auto statusCreateFile = GitService::GetStatus(this->getLogConfig().get(), this->getWorkspace());
     EXPECT_EQ(statusCreateFile->getIndexFiles().size(), (size_t)0);
     EXPECT_EQ(statusCreateFile->getWorkingTreeFiles().size(), (size_t)1);
@@ -493,7 +493,7 @@ TEST_F(GitServiceTest, StageAndDifference)
     EXPECT_EQ(statusNewCommit->getWorkingTreeFiles().size(), (size_t)0);
     
     // Case: Modified
-    AppendFileOneLine(ConcatPaths({this->getWorkspace(), L"test.txt"}), L"HI", false);
+    appendFileOneLine(concatPaths({this->getWorkspace(), L"test.txt"}), L"HI", false);
     auto statusModify = GitService::GetStatus(this->getLogConfig().get(), this->getWorkspace());
     EXPECT_EQ(statusModify->getIndexFiles().size(), (size_t)0);
     EXPECT_EQ(statusModify->getWorkingTreeFiles().size(), (size_t)1);
@@ -517,7 +517,7 @@ TEST_F(GitServiceTest, StageAndDifference)
     EXPECT_EQ(statusModifyState->getIndexFiles()[GitFileStatus::Modified].size(), (size_t)1);
     EXPECT_EQ(statusModifyState->getIndexFiles()[GitFileStatus::Modified].at(0), L"test.txt");
     EXPECT_EQ(statusModifyState->getWorkingTreeFiles().size(), (size_t)0);
-    AppendFileOneLine(ConcatPaths({this->getWorkspace(), L"test.txt"}), L"BI", false);
+    appendFileOneLine(concatPaths({this->getWorkspace(), L"test.txt"}), L"BI", false);
     auto statusModifyState2 = GitService::GetStatus(this->getLogConfig().get(), this->getWorkspace());
     EXPECT_EQ(statusModifyState2->getIndexFiles().size(), (size_t)1);
     EXPECT_EQ(statusModifyState2->getIndexFiles()[GitFileStatus::Modified].size(), (size_t)1);
@@ -530,7 +530,7 @@ TEST_F(GitServiceTest, StageAndDifference)
     GitService::Commit(this->getLogConfig().get(), this->getWorkspace(), L"Test Modify");
 
     // Case: Renamed
-    std::filesystem::rename(ConcatPaths({this->getWorkspace(), L"test.txt"}), ConcatPaths({this->getWorkspace(), L"test2.txt"}));
+    std::filesystem::rename(concatPaths({this->getWorkspace(), L"test.txt"}), concatPaths({this->getWorkspace(), L"test2.txt"}));
     auto statusRename = GitService::GetStatus(this->getLogConfig().get(), this->getWorkspace());
     EXPECT_EQ(statusRename->getIndexFiles().size(), (size_t)0);
     EXPECT_EQ(statusRename->getWorkingTreeFiles().size(), (size_t)2);
@@ -547,7 +547,7 @@ TEST_F(GitServiceTest, StageAndDifference)
     GitService::Commit(this->getLogConfig().get(), this->getWorkspace(), L"Test Rename");
 
     // Case: Deleted
-    RemoveFile(ConcatPaths({this->getWorkspace(), L"test2.txt"}));
+    removeFile(concatPaths({this->getWorkspace(), L"test2.txt"}));
     auto statusDelete = GitService::GetStatus(this->getLogConfig().get(), this->getWorkspace());
     EXPECT_EQ(statusDelete->getIndexFiles().size(), (size_t)0);
     EXPECT_EQ(statusDelete->getWorkingTreeFiles().size(), (size_t)1);

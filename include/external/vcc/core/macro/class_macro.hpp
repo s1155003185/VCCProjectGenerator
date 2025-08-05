@@ -76,8 +76,8 @@ protected: \
 public: \
     std::vector<type> &get##varName() const { return _##varName; } \
     type get##varName##AtIndex(const int64_t &index) const { return _##varName[index]; } \
-    void set##varName##AtIndex(const int64_t &index, const type &value) { validate##varName(value); vcc::Set(_##varName, value, index); } \
-    int64_t Find##varName(const type &value) const { return vcc::Find(_##varName, value); } \
+    void set##varName##AtIndex(const int64_t &index, const type &value) { validate##varName(value); vcc::set(_##varName, value, index); } \
+    int64_t find##varName(const type &value) const { return vcc::find(_##varName, value); } \
     void insert##varName(const type &value) { validate##varName(value); vcc::insert(_##varName, value); } \
     void insert##varName##AtIndex(const int64_t &index, const type &value) { validate##varName(value); vcc::insert(_##varName, value, index); } \
     void insert##varName(const std::vector<type> &value) { for (auto &element : value) validate##varName(element); vcc::insert(_##varName, value); } \
@@ -98,7 +98,7 @@ public: \
     std::vector<std::shared_ptr<type>> &get##varName() const { return _##varName; } \
     std::shared_ptr<type> get##varName##AtIndex(int64_t index) const { return _##varName[index]; } \
     void set##varName##AtIndex(int64_t index, std::shared_ptr<vcc::IObject> value) { validate##varName(value); vcc::setIObject(_##varName, value, index); } \
-    int64_t Find##varName(const std::shared_ptr<vcc::IObject> value) const { return vcc::findIObject(_##varName, value.get()); } \
+    int64_t find##varName(const std::shared_ptr<vcc::IObject> value) const { return vcc::findIObject(_##varName, value.get()); } \
     void insert##varName(std::shared_ptr<vcc::IObject> value) { validate##varName(value); vcc::insertIObject(_##varName, value); } \
     void insert##varName##AtIndex(int64_t index, std::shared_ptr<vcc::IObject> value) { validate##varName(value); vcc::insertIObject(_##varName, value, index); } \
     void insert##varName(std::vector<std::shared_ptr<type>> &value) { for (auto &element : value) validate##varName(element); vcc::insertIObjects(_##varName, value); } \
@@ -155,10 +155,10 @@ public: \
     std::set<void *> get##varName##VoidKeys() const { return vcc::GetVoidKeys(_##varName); } \
     bool is##varName##ContainKey(keyType key) const { return vcc::isContain(_##varName, key); } \
     valueType get##varName##AtKey(keyType key) const { return _##varName[key]; } \
-    void set##varName##AtKey(keyType key, valueType value) { validate##varName(value); vcc::Set(_##varName, key, value); } \
-    void insert##varName##AtKey(keyType key, valueType value) { validate##varName(value); vcc::Set(_##varName, key, value); } \
-    void insert##varName(const std::pair<keyType, valueType> &value) { validate##varName(value.second); vcc::Set(_##varName, value.first, value.second); } \
-    void insert##varName(const std::map<keyType, valueType> &value) { for (auto const &pair : value) validate##varName(pair.second); vcc::Set(_##varName, value); } \
+    void set##varName##AtKey(keyType key, valueType value) { validate##varName(value); vcc::set(_##varName, key, value); } \
+    void insert##varName##AtKey(keyType key, valueType value) { validate##varName(value); vcc::set(_##varName, key, value); } \
+    void insert##varName(const std::pair<keyType, valueType> &value) { validate##varName(value.second); vcc::set(_##varName, value.first, value.second); } \
+    void insert##varName(const std::map<keyType, valueType> &value) { for (auto const &pair : value) validate##varName(pair.second); vcc::set(_##varName, value); } \
     std::map<keyType, valueType> clone##varName() const { return _##varName; } \
     void clone##varName(const std::map<keyType, valueType> &value) { _##varName.clear(); insert##varName(value); } \
     void remove##varName##AtKey(keyType key) { vcc::removeAtKey(_##varName, key); } \
@@ -200,8 +200,8 @@ public: \
     valueType get##varName##AtKey(keyType key) const { for (auto const &pair : _##varName) {  if (pair.first == key) return pair.second; } throw vcc::Exception(ExceptionType::CustomError, L"key not found");  } \
     void set##varName##AtIndex(int64_t index, std::pair<keyType, valueType> value) { validate##varName(value.second); _##varName[index] = value; } \
     void set##varName##AtKey(keyType key, valueType value) { for (auto &pair : _##varName) {  validate##varName(value); if (pair.first == key) { pair.second = value; return; } } insert##varName##AtKey(key, value); } \
-    int64_t Find##varName(keyType key) const { for (size_t i = 0; i < _##varName.size(); i++) { if (_##varName[i].first == key) return i; } return -1; } \
-    bool is##varName##ContainKey(keyType key) const { return Find##varName(key) > -1; } \
+    int64_t find##varName(keyType key) const { for (size_t i = 0; i < _##varName.size(); i++) { if (_##varName[i].first == key) return i; } return -1; } \
+    bool is##varName##ContainKey(keyType key) const { return find##varName(key) > -1; } \
     void insert##varName##AtIndex(int64_t index, std::pair<keyType, valueType> value) { validate##varName(value.second); vcc::insert(_##varName, value, index); } \
     void insert##varName##AtKey(keyType key, valueType value) { validate##varName(value); _##varName.push_back(std::make_pair(key, value)); } \
     void insert##varName(const std::pair<keyType, valueType> value) { validate##varName(value.second); _##varName.push_back(value); } \
@@ -209,7 +209,7 @@ public: \
     std::vector<std::pair<keyType, valueType>> clone##varName() const { return _##varName; } \
     void clone##varName(const std::vector<std::pair<keyType, valueType>> &value) { _##varName.clear(); insert##varName(value); } \
     void remove##varName##AtIndex(int64_t index) { if (index >= 0) { _##varName.erase(_##varName.begin() + (size_t)index); } } \
-    void remove##varName##AtKey(keyType key) { int64_t index = Find##varName(key); if (index >= 0) (_##varName.erase(_##varName.begin() + (size_t)(Find##varName(key)))); } \
+    void remove##varName##AtKey(keyType key) { int64_t index = find##varName(key); if (index >= 0) (_##varName.erase(_##varName.begin() + (size_t)(find##varName(key)))); } \
     void clear##varName() { _##varName.clear(); }
 
 #define ORDERED_MAP_SPTR_R(keyType, valueType, varName) ORDERED_MAP_VALIDATE_SPTR_R(keyType, valueType, varName, (void)value; )
@@ -224,8 +224,8 @@ public: \
     std::set<void *> get##varName##VoidKeys() const { std::set<void *> result; for (auto const &pair : _##varName) result.insert((void *)&pair.first); return result; } \
     std::pair<keyType, std::shared_ptr<valueType>> get##varName##AtIndex(int64_t index) const { return _##varName[index]; } \
     std::shared_ptr<valueType> get##varName##AtKey(keyType key) const { for (auto const &pair : _##varName) { if (pair.first == key) return pair.second; } throw vcc::Exception(ExceptionType::CustomError, L"key not found"); return nullptr; } \
-    int64_t Find##varName(keyType key) const { for (size_t i = 0; i < _##varName.size(); i++) { if (_##varName[i].first == key) return i; } return -1; } \
-    bool is##varName##ContainKey(keyType key) const { return Find##varName(key) > -1; } \
+    int64_t find##varName(keyType key) const { for (size_t i = 0; i < _##varName.size(); i++) { if (_##varName[i].first == key) return i; } return -1; } \
+    bool is##varName##ContainKey(keyType key) const { return find##varName(key) > -1; } \
     void set##varName##AtIndex(int64_t index, std::pair<keyType, std::shared_ptr<valueType>> value) { validate##varName(value.second); _##varName[index] = value; } \
     void set##varName##AtKey(keyType key, std::shared_ptr<valueType> value) { for (auto &pair : _##varName) { validate##varName(value); if (pair.first == key) { pair.second = value; return; } } insert##varName##AtKey(key, value); } \
     void insert##varName##AtIndex(int64_t index, std::pair<keyType, std::shared_ptr<valueType>> value) { validate##varName(value.second); vcc::insert(_##varName, value, index); } \
@@ -236,7 +236,7 @@ public: \
     std::shared_ptr<valueType> clone##varName##AtKey(keyType key) const { return std::static_pointer_cast<valueType>(Get##varName##AtKey(key)->clone()); } \
     void clone##varName(const std::vector<std::pair<keyType, std::shared_ptr<valueType>>> &value) { _##varName.clear(); for (auto const& element : value) { insert##varName##AtKey(element.first, element.second != nullptr ? std::dynamic_pointer_cast<valueType>(element.second->clone()) : nullptr); } }\
     void remove##varName##AtIndex(int64_t index) { if (index >= 0) { _##varName.erase(_##varName.begin() + (size_t)index); } } \
-    void remove##varName##AtKey(keyType key) { int64_t index = Find##varName(key); if (index >= 0) (_##varName.erase(_##varName.begin() + (size_t)(Find##varName(key)))); } \
+    void remove##varName##AtKey(keyType key) { int64_t index = find##varName(key); if (index >= 0) (_##varName.erase(_##varName.begin() + (size_t)(find##varName(key)))); } \
     void clear##varName() { _##varName.clear(); }
 
 //------------------------------------------------------------------------------------------------------//
@@ -266,8 +266,8 @@ public: \
 //------------------------------------------------------------------------------------------------------//
 #define ACTION(name) \
     public: \
-        virtual std::shared_ptr<vcc::IResult> Do##name();
+        virtual std::shared_ptr<vcc::IResult> do##name();
         
 #define ACTION_WITH_ARG_SPTR(name, type) \
     public: \
-        virtual std::shared_ptr<vcc::IResult> Do##name(std::shared_ptr<type> value);
+        virtual std::shared_ptr<vcc::IResult> do##name(std::shared_ptr<type> value);
