@@ -12,7 +12,7 @@
 #include "vpg_enum_class_property.hpp"
 #include "vpg_enum_class_type.hpp"
 
-bool VPGEnumClassAttributePropertyAccessor::_ReadBool(const int64_t &objectProperty) const
+bool VPGEnumClassAttributePropertyAccessor::_readBool(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClassAttribute>(_Object);
@@ -60,7 +60,7 @@ bool VPGEnumClassAttributePropertyAccessor::_ReadBool(const int64_t &objectPrope
     return false;
 }
 
-bool VPGEnumClassAttributePropertyAccessor::_ReadBoolAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+bool VPGEnumClassAttributePropertyAccessor::_readBoolAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -68,7 +68,7 @@ bool VPGEnumClassAttributePropertyAccessor::_ReadBoolAtIndex(const int64_t &obje
     return false;
 }
 
-bool VPGEnumClassAttributePropertyAccessor::_ReadBoolAtKey(const int64_t &objectProperty, const void */*key*/) const
+bool VPGEnumClassAttributePropertyAccessor::_readBoolAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -76,7 +76,7 @@ bool VPGEnumClassAttributePropertyAccessor::_ReadBoolAtKey(const int64_t &object
     return false;
 }
 
-void VPGEnumClassAttributePropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool &value)
+void VPGEnumClassAttributePropertyAccessor::_writeBool(const int64_t &objectProperty, const bool &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClassAttribute>(_Object);
@@ -98,28 +98,28 @@ void VPGEnumClassAttributePropertyAccessor::_WriteBool(const int64_t &objectProp
     CATCH
 }
 
-void VPGEnumClassAttributePropertyAccessor::_WriteBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
+void VPGEnumClassAttributePropertyAccessor::_writeBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGEnumClassAttributePropertyAccessor::_WriteBoolAtKey(const int64_t &objectProperty, const bool &/*value*/, const void */*key*/)
+void VPGEnumClassAttributePropertyAccessor::_writeBoolAtKey(const int64_t &objectProperty, const bool &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGEnumClassAttributePropertyAccessor::_InsertBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
+void VPGEnumClassAttributePropertyAccessor::_insertBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-long VPGEnumClassAttributePropertyAccessor::_ReadLong(const int64_t &objectProperty) const
+long VPGEnumClassAttributePropertyAccessor::_readLong(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClassAttribute>(_Object);
@@ -141,7 +141,7 @@ long VPGEnumClassAttributePropertyAccessor::_ReadLong(const int64_t &objectPrope
     return 0L;
 }
 
-long VPGEnumClassAttributePropertyAccessor::_ReadLongAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+long VPGEnumClassAttributePropertyAccessor::_readLongAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -149,7 +149,7 @@ long VPGEnumClassAttributePropertyAccessor::_ReadLongAtIndex(const int64_t &obje
     return 0L;
 }
 
-long VPGEnumClassAttributePropertyAccessor::_ReadLongAtKey(const int64_t &objectProperty, const void */*key*/) const
+long VPGEnumClassAttributePropertyAccessor::_readLongAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -157,7 +157,7 @@ long VPGEnumClassAttributePropertyAccessor::_ReadLongAtKey(const int64_t &object
     return 0L;
 }
 
-void VPGEnumClassAttributePropertyAccessor::_WriteLong(const int64_t &objectProperty, const long &value)
+void VPGEnumClassAttributePropertyAccessor::_writeLong(const int64_t &objectProperty, const long &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClassAttribute>(_Object);
@@ -182,28 +182,28 @@ void VPGEnumClassAttributePropertyAccessor::_WriteLong(const int64_t &objectProp
     CATCH
 }
 
-void VPGEnumClassAttributePropertyAccessor::_WriteLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
+void VPGEnumClassAttributePropertyAccessor::_writeLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGEnumClassAttributePropertyAccessor::_WriteLongAtKey(const int64_t &objectProperty, const long &/*value*/, const void */*key*/)
+void VPGEnumClassAttributePropertyAccessor::_writeLongAtKey(const int64_t &objectProperty, const long &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGEnumClassAttributePropertyAccessor::_InsertLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
+void VPGEnumClassAttributePropertyAccessor::_insertLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-std::wstring VPGEnumClassAttributePropertyAccessor::_ReadString(const int64_t &objectProperty) const
+std::wstring VPGEnumClassAttributePropertyAccessor::_readString(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClassAttribute>(_Object);
@@ -237,7 +237,7 @@ std::wstring VPGEnumClassAttributePropertyAccessor::_ReadString(const int64_t &o
     return L"";
 }
 
-std::wstring VPGEnumClassAttributePropertyAccessor::_ReadStringAtIndex(const int64_t &objectProperty, const int64_t &index) const
+std::wstring VPGEnumClassAttributePropertyAccessor::_readStringAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -254,7 +254,7 @@ std::wstring VPGEnumClassAttributePropertyAccessor::_ReadStringAtIndex(const int
     return L"";
 }
 
-std::wstring VPGEnumClassAttributePropertyAccessor::_ReadStringAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::wstring VPGEnumClassAttributePropertyAccessor::_readStringAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -262,7 +262,7 @@ std::wstring VPGEnumClassAttributePropertyAccessor::_ReadStringAtKey(const int64
     return L"";
 }
 
-void VPGEnumClassAttributePropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring &value)
+void VPGEnumClassAttributePropertyAccessor::_writeString(const int64_t &objectProperty, const std::wstring &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClassAttribute>(_Object);
@@ -305,7 +305,7 @@ void VPGEnumClassAttributePropertyAccessor::_WriteString(const int64_t &objectPr
     CATCH
 }
 
-void VPGEnumClassAttributePropertyAccessor::_WriteStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
+void VPGEnumClassAttributePropertyAccessor::_writeStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -325,14 +325,14 @@ void VPGEnumClassAttributePropertyAccessor::_WriteStringAtIndex(const int64_t &o
     CATCH
 }
 
-void VPGEnumClassAttributePropertyAccessor::_WriteStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/)
+void VPGEnumClassAttributePropertyAccessor::_writeStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGEnumClassAttributePropertyAccessor::_InsertStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
+void VPGEnumClassAttributePropertyAccessor::_insertStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -385,7 +385,7 @@ bool VPGEnumClassAttributePropertyAccessor::_IsContainKey(const int64_t &objectP
     return false;
 }
 
-void VPGEnumClassAttributePropertyAccessor::_Remove(const int64_t &objectProperty, const void *value)
+void VPGEnumClassAttributePropertyAccessor::_remove(const int64_t &objectProperty, const void *value)
 {
     TRY
         assert(value != nullptr);
@@ -412,7 +412,7 @@ void VPGEnumClassAttributePropertyAccessor::_removeObject(const int64_t &objectP
     CATCH
 }
 
-void VPGEnumClassAttributePropertyAccessor::_RemoveAtIndex(const int64_t &objectProperty, const int64_t &index)
+void VPGEnumClassAttributePropertyAccessor::_removeAtIndex(const int64_t &objectProperty, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -429,7 +429,7 @@ void VPGEnumClassAttributePropertyAccessor::_RemoveAtIndex(const int64_t &object
     CATCH
 }
 
-void VPGEnumClassAttributePropertyAccessor::_RemoveAtKey(const int64_t &objectProperty, const void */*key*/)
+void VPGEnumClassAttributePropertyAccessor::_removeAtKey(const int64_t &objectProperty, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -452,7 +452,7 @@ void VPGEnumClassAttributePropertyAccessor::_clear(const int64_t &objectProperty
     CATCH
 }
 
-bool VPGEnumClassPropertyAccessor::_ReadBool(const int64_t &objectProperty) const
+bool VPGEnumClassPropertyAccessor::_readBool(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClass>(_Object);
@@ -474,7 +474,7 @@ bool VPGEnumClassPropertyAccessor::_ReadBool(const int64_t &objectProperty) cons
     return false;
 }
 
-bool VPGEnumClassPropertyAccessor::_ReadBoolAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+bool VPGEnumClassPropertyAccessor::_readBoolAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -482,7 +482,7 @@ bool VPGEnumClassPropertyAccessor::_ReadBoolAtIndex(const int64_t &objectPropert
     return false;
 }
 
-bool VPGEnumClassPropertyAccessor::_ReadBoolAtKey(const int64_t &objectProperty, const void */*key*/) const
+bool VPGEnumClassPropertyAccessor::_readBoolAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -490,7 +490,7 @@ bool VPGEnumClassPropertyAccessor::_ReadBoolAtKey(const int64_t &objectProperty,
     return false;
 }
 
-void VPGEnumClassPropertyAccessor::_WriteBool(const int64_t &objectProperty, const bool &value)
+void VPGEnumClassPropertyAccessor::_writeBool(const int64_t &objectProperty, const bool &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClass>(_Object);
@@ -515,28 +515,28 @@ void VPGEnumClassPropertyAccessor::_WriteBool(const int64_t &objectProperty, con
     CATCH
 }
 
-void VPGEnumClassPropertyAccessor::_WriteBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
+void VPGEnumClassPropertyAccessor::_writeBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGEnumClassPropertyAccessor::_WriteBoolAtKey(const int64_t &objectProperty, const bool &/*value*/, const void */*key*/)
+void VPGEnumClassPropertyAccessor::_writeBoolAtKey(const int64_t &objectProperty, const bool &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGEnumClassPropertyAccessor::_InsertBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
+void VPGEnumClassPropertyAccessor::_insertBoolAtIndex(const int64_t &objectProperty, const bool &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-long VPGEnumClassPropertyAccessor::_ReadLong(const int64_t &objectProperty) const
+long VPGEnumClassPropertyAccessor::_readLong(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClass>(_Object);
@@ -552,7 +552,7 @@ long VPGEnumClassPropertyAccessor::_ReadLong(const int64_t &objectProperty) cons
     return 0L;
 }
 
-long VPGEnumClassPropertyAccessor::_ReadLongAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+long VPGEnumClassPropertyAccessor::_readLongAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -560,7 +560,7 @@ long VPGEnumClassPropertyAccessor::_ReadLongAtIndex(const int64_t &objectPropert
     return 0L;
 }
 
-long VPGEnumClassPropertyAccessor::_ReadLongAtKey(const int64_t &objectProperty, const void */*key*/) const
+long VPGEnumClassPropertyAccessor::_readLongAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -568,7 +568,7 @@ long VPGEnumClassPropertyAccessor::_ReadLongAtKey(const int64_t &objectProperty,
     return 0L;
 }
 
-void VPGEnumClassPropertyAccessor::_WriteLong(const int64_t &objectProperty, const long &value)
+void VPGEnumClassPropertyAccessor::_writeLong(const int64_t &objectProperty, const long &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClass>(_Object);
@@ -584,28 +584,28 @@ void VPGEnumClassPropertyAccessor::_WriteLong(const int64_t &objectProperty, con
     CATCH
 }
 
-void VPGEnumClassPropertyAccessor::_WriteLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
+void VPGEnumClassPropertyAccessor::_writeLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGEnumClassPropertyAccessor::_WriteLongAtKey(const int64_t &objectProperty, const long &/*value*/, const void */*key*/)
+void VPGEnumClassPropertyAccessor::_writeLongAtKey(const int64_t &objectProperty, const long &/*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGEnumClassPropertyAccessor::_InsertLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
+void VPGEnumClassPropertyAccessor::_insertLongAtIndex(const int64_t &objectProperty, const long &/*value*/, const int64_t &/*index*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-std::wstring VPGEnumClassPropertyAccessor::_ReadString(const int64_t &objectProperty) const
+std::wstring VPGEnumClassPropertyAccessor::_readString(const int64_t &objectProperty) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClass>(_Object);
@@ -625,7 +625,7 @@ std::wstring VPGEnumClassPropertyAccessor::_ReadString(const int64_t &objectProp
     return L"";
 }
 
-std::wstring VPGEnumClassPropertyAccessor::_ReadStringAtIndex(const int64_t &objectProperty, const int64_t &index) const
+std::wstring VPGEnumClassPropertyAccessor::_readStringAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -644,7 +644,7 @@ std::wstring VPGEnumClassPropertyAccessor::_ReadStringAtIndex(const int64_t &obj
     return L"";
 }
 
-std::wstring VPGEnumClassPropertyAccessor::_ReadStringAtKey(const int64_t &objectProperty, const void *key) const
+std::wstring VPGEnumClassPropertyAccessor::_readStringAtKey(const int64_t &objectProperty, const void *key) const
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClass>(_Object);
@@ -687,7 +687,7 @@ std::wstring VPGEnumClassPropertyAccessor::_ReadStringAtKey(const int64_t &objec
     return L"";
 }
 
-void VPGEnumClassPropertyAccessor::_WriteString(const int64_t &objectProperty, const std::wstring &value)
+void VPGEnumClassPropertyAccessor::_writeString(const int64_t &objectProperty, const std::wstring &value)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClass>(_Object);
@@ -709,7 +709,7 @@ void VPGEnumClassPropertyAccessor::_WriteString(const int64_t &objectProperty, c
     CATCH
 }
 
-void VPGEnumClassPropertyAccessor::_WriteStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
+void VPGEnumClassPropertyAccessor::_writeStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -735,7 +735,7 @@ void VPGEnumClassPropertyAccessor::_WriteStringAtIndex(const int64_t &objectProp
     CATCH
 }
 
-void VPGEnumClassPropertyAccessor::_WriteStringAtKey(const int64_t &objectProperty, const std::wstring &value, const void *key)
+void VPGEnumClassPropertyAccessor::_writeStringAtKey(const int64_t &objectProperty, const std::wstring &value, const void *key)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClass>(_Object);
@@ -793,7 +793,7 @@ void VPGEnumClassPropertyAccessor::_WriteStringAtKey(const int64_t &objectProper
     CATCH
 }
 
-void VPGEnumClassPropertyAccessor::_InsertStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
+void VPGEnumClassPropertyAccessor::_insertStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -819,7 +819,7 @@ void VPGEnumClassPropertyAccessor::_InsertStringAtIndex(const int64_t &objectPro
     CATCH
 }
 
-std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_ReadObject(const int64_t &objectProperty) const
+std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_readObject(const int64_t &objectProperty) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -827,7 +827,7 @@ std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_ReadObject(const in
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_ReadObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
+std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_readObjectAtIndex(const int64_t &objectProperty, const int64_t &index) const
 {
     TRY
         assert(index >= -1);
@@ -844,7 +844,7 @@ std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_ReadObjectAtIndex(c
     return nullptr;
 }
 
-std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_ReadObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_readObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
@@ -852,14 +852,14 @@ std::shared_ptr<vcc::IObject> VPGEnumClassPropertyAccessor::_ReadObjectAtKey(con
     return nullptr;
 }
 
-void VPGEnumClassPropertyAccessor::_WriteObject(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/)
+void VPGEnumClassPropertyAccessor::_writeObject(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGEnumClassPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index)
+void VPGEnumClassPropertyAccessor::_writeObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -879,14 +879,14 @@ void VPGEnumClassPropertyAccessor::_WriteObjectAtIndex(const int64_t &objectProp
     CATCH
 }
 
-void VPGEnumClassPropertyAccessor::_WriteObjectAtKey(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const void */*key*/)
+void VPGEnumClassPropertyAccessor::_writeObjectAtKey(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const void */*key*/)
 {
     TRY
         THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
     CATCH
 }
 
-void VPGEnumClassPropertyAccessor::_InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index)
+void VPGEnumClassPropertyAccessor::_insertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -1033,7 +1033,7 @@ bool VPGEnumClassPropertyAccessor::_IsContainKey(const int64_t &objectProperty, 
     return false;
 }
 
-void VPGEnumClassPropertyAccessor::_Remove(const int64_t &objectProperty, const void *value)
+void VPGEnumClassPropertyAccessor::_remove(const int64_t &objectProperty, const void *value)
 {
     TRY
         assert(value != nullptr);
@@ -1076,7 +1076,7 @@ void VPGEnumClassPropertyAccessor::_removeObject(const int64_t &objectProperty, 
     CATCH
 }
 
-void VPGEnumClassPropertyAccessor::_RemoveAtIndex(const int64_t &objectProperty, const int64_t &index)
+void VPGEnumClassPropertyAccessor::_removeAtIndex(const int64_t &objectProperty, const int64_t &index)
 {
     TRY
         assert(index >= -1);
@@ -1099,7 +1099,7 @@ void VPGEnumClassPropertyAccessor::_RemoveAtIndex(const int64_t &objectProperty,
     CATCH
 }
 
-void VPGEnumClassPropertyAccessor::_RemoveAtKey(const int64_t &objectProperty, const void *key)
+void VPGEnumClassPropertyAccessor::_removeAtKey(const int64_t &objectProperty, const void *key)
 {
     TRY
         auto obj = std::static_pointer_cast<VPGEnumClass>(_Object);

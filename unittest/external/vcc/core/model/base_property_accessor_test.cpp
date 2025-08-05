@@ -31,7 +31,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public vcc::BasePropertyA
 {
     protected:
 
-        virtual std::wstring _ReadStringAtIndex(const int64_t &objectProperty, const int64_t &index = -1) const override
+        virtual std::wstring _readStringAtIndex(const int64_t &objectProperty, const int64_t &index = -1) const override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -39,7 +39,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public vcc::BasePropertyA
             return obj->getString();
         }
 
-        virtual void _WriteStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index = -1) override
+        virtual void _writeStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index = -1) override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -48,7 +48,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public vcc::BasePropertyA
             obj->getString();
         }
             
-        virtual int _ReadIntAtIndex(const int64_t &objectProperty, const int64_t &index = -1) const override
+        virtual int _readIntAtIndex(const int64_t &objectProperty, const int64_t &index = -1) const override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -56,7 +56,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public vcc::BasePropertyA
             return obj->getInteger();
         }
 
-        virtual void _WriteIntAtIndex(const int64_t &objectProperty, const int &value, const int64_t &index = -1) override
+        virtual void _writeIntAtIndex(const int64_t &objectProperty, const int &value, const int64_t &index = -1) override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -64,14 +64,14 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public vcc::BasePropertyA
             obj->setInteger(value);
         }
 
-        virtual std::shared_ptr<vcc::IObject> _ReadObject(const int64_t &objectProperty) const override
+        virtual std::shared_ptr<vcc::IObject> _readObject(const int64_t &objectProperty) const override
         {
             assert(objectProperty == 0L);
             auto obj = std::static_pointer_cast<BasePropertyAccessorTestObject>(_Object);
             return obj->getObject();
         }
 
-        virtual void _WriteObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index = -1) override
+        virtual void _writeObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index = -1) override
         {
             assert(objectProperty == 0L);
             assert(index == -1);
@@ -79,7 +79,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public vcc::BasePropertyA
             obj->setObject(std::static_pointer_cast<BasePropertyAccessorTestObject>(value));
         }
 
-        void _InsertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index) override
+        void _insertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value, const int64_t &index) override
         {
             TRY
                 assert(objectProperty == 0L);
@@ -90,7 +90,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public vcc::BasePropertyA
             CATCH
         }
         
-        virtual std::wstring _ReadStringAtKey(const int64_t &objectProperty, const void *key) const override
+        virtual std::wstring _readStringAtKey(const int64_t &objectProperty, const void *key) const override
         {
             assert(objectProperty == 0L);
             assert(key != nullptr);
@@ -101,7 +101,7 @@ class BasePropertyAccessorTestObjectPropertyAccessor : public vcc::BasePropertyA
             return obj->getMapStringAtKey(*keyPtr);
         }
 
-        virtual void _WriteStringAtKey(const int64_t &objectProperty, const std::wstring &value, const void *key) override
+        virtual void _writeStringAtKey(const int64_t &objectProperty, const std::wstring &value, const void *key) override
         {
             assert(objectProperty == 0L);
             assert(key != nullptr);

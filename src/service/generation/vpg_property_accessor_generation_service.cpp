@@ -352,7 +352,7 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
 
         // General Type
         result += L"\r\n"
-            + convertedType + L" " + propertyName + L"Accessor::_Read" + convertedName + L"(const int64_t &objectProperty) const\r\n"
+            + convertedType + L" " + propertyName + L"Accessor::_read" + convertedName + L"(const int64_t &objectProperty) const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!generalCases.empty()) {
@@ -369,7 +369,7 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
 
         // Vector Type
         result += L"\r\n"
-            + convertedType + L" " + propertyName + L"Accessor::_Read" + convertedName + L"AtIndex(const int64_t &objectProperty, const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L") const\r\n"
+            + convertedType + L" " + propertyName + L"Accessor::_read" + convertedName + L"AtIndex(const int64_t &objectProperty, const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L") const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!vectorCases.empty()) {
@@ -386,7 +386,7 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
 
         // Map Type
         result += L"\r\n"
-            + convertedType + L" " + propertyName + L"Accessor::_Read" + convertedName + L"AtKey(const int64_t &objectProperty, const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L") const\r\n"
+            + convertedType + L" " + propertyName + L"Accessor::_read" + convertedName + L"AtKey(const int64_t &objectProperty, const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L") const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!mapCases.empty()) {
@@ -507,7 +507,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
 
         // General Type
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Write" + convertedName + L"(const int64_t &objectProperty, " + (vcc::IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (vcc::IsEqual(type, objectToken) ? L"" : L"&") + (!generalCases.empty() ? L"value" : L"/*value*/") + L")\r\n"
+            "void " + propertyName + L"Accessor::_write" + convertedName + L"(const int64_t &objectProperty, " + (vcc::IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (vcc::IsEqual(type, objectToken) ? L"" : L"&") + (!generalCases.empty() ? L"value" : L"/*value*/") + L")\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!generalCases.empty()) {
@@ -524,7 +524,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
 
         // vector
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Write" + convertedName + L"AtIndex(const int64_t &objectProperty, " + (vcc::IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (vcc::IsEqual(type, objectToken) ? L"" : L"&") + (!vectorCases.empty() ? L"value" : L"/*value*/") + L", const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L")\r\n"
+            "void " + propertyName + L"Accessor::_write" + convertedName + L"AtIndex(const int64_t &objectProperty, " + (vcc::IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (vcc::IsEqual(type, objectToken) ? L"" : L"&") + (!vectorCases.empty() ? L"value" : L"/*value*/") + L", const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L")\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!vectorCases.empty()) {
@@ -541,7 +541,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
 
         // map
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Write" + convertedName + L"AtKey(const int64_t &objectProperty, " + (vcc::IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (vcc::IsEqual(type, objectToken) ? L"" : L"&") + (!mapCases.empty() ? L"value" : L"/*value*/") + L", const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L")\r\n"
+            "void " + propertyName + L"Accessor::_write" + convertedName + L"AtKey(const int64_t &objectProperty, " + (vcc::IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (vcc::IsEqual(type, objectToken) ? L"" : L"&") + (!mapCases.empty() ? L"value" : L"/*value*/") + L", const void *" + (!mapCases.empty() ? L"key" : L"/*key*/") + L")\r\n"
             "{\r\n"
                 + INDENT + L"TRY\r\n";
         if (!mapCases.empty()) {
@@ -606,7 +606,7 @@ void VPGPropertyAccessorGenerationService::GenerateInsert(const std::wstring &pr
             }
         }
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Insert" + convertedName + L"AtIndex(const int64_t &objectProperty, " + (vcc::IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (vcc::IsEqual(type, objectToken) ? L"" : L"&") + (!vectorCases.empty() ? L"value" : L"/*value*/") + L", const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L")\r\n"
+            "void " + propertyName + L"Accessor::_insert" + convertedName + L"AtIndex(const int64_t &objectProperty, " + (vcc::IsEqual(type, objectToken) ? L"" : L"const ")  + convertedType + L" " + (vcc::IsEqual(type, objectToken) ? L"" : L"&") + (!vectorCases.empty() ? L"value" : L"/*value*/") + L", const int64_t &" + (!vectorCases.empty() ? L"index" : L"/*index*/") + L")\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!vectorCases.empty()) {
@@ -846,7 +846,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
 
         const std::wstring className = getClassNameFromPropertyClassName(propertyName);
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_Remove(const int64_t &objectProperty, const void *" + (!vectorCasesGeneral.empty() ? L"value" : L"/*value*/") + L")\r\n"
+            "void " + propertyName + L"Accessor::_remove(const int64_t &objectProperty, const void *" + (!vectorCasesGeneral.empty() ? L"value" : L"/*value*/") + L")\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!vectorCasesGeneral.empty()) {
@@ -890,7 +890,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
             "}\r\n";
 
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_RemoveAtIndex(const int64_t &objectProperty, const int64_t &" + (!vectorCasesIndex.empty() ? L"index" : L"/*index*/" ) + L")\r\n"
+            "void " + propertyName + L"Accessor::_removeAtIndex(const int64_t &objectProperty, const int64_t &" + (!vectorCasesIndex.empty() ? L"index" : L"/*index*/" ) + L")\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n";
         if (!vectorCasesIndex.empty()) {
@@ -906,7 +906,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
             "}\r\n";
 
         result += L"\r\n"
-            "void " + propertyName + L"Accessor::_RemoveAtKey(const int64_t &objectProperty, const void *" + (!mapCases.empty()? L"key" : L"/*key*/") + L")\r\n";
+            "void " + propertyName + L"Accessor::_removeAtKey(const int64_t &objectProperty, const void *" + (!mapCases.empty()? L"key" : L"/*key*/") + L")\r\n";
         result += L"{\r\n"
             + INDENT + L"TRY\r\n";
         if (!mapCases.empty()) {

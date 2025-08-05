@@ -46,7 +46,7 @@ namespace vcc
         return nullptr;
     }
 
-    int64_t ActionManager::_RemoveAction(const int64_t &noOfAction, const bool &fromBeginning)
+    int64_t ActionManager::_removeAction(const int64_t &noOfAction, const bool &fromBeginning)
     {
         TRY
             for (auto i = 0; i < noOfAction; i++) {
@@ -63,7 +63,7 @@ namespace vcc
     {
         TRY
             int64_t needToRemove = std::max(static_cast<int64_t>(_Actions.size()) - size, static_cast<int64_t>(0));
-            return _RemoveAction(needToRemove, fromBeginning);
+            return _removeAction(needToRemove, fromBeginning);
         CATCH
         return _CurrentSeqNo;
     }
@@ -123,7 +123,7 @@ namespace vcc
                 return result;
             }
 
-            _RemoveAction(_GetFirstSeqNo(false) - _CurrentSeqNo, false);
+            _removeAction(_GetFirstSeqNo(false) - _CurrentSeqNo, false);
             if (_Actions.size() > 0)
                 _MaxSeqNo = _GetFirstSeqNo(false);
             int64_t nextSeqNo = _MaxSeqNo + 1;

@@ -119,7 +119,7 @@ std::shared_ptr<vcc::IResult> VPGMainFormDeleteWorkspaceForm::OnRedo()
         auto propertyAccessor = PropertyAccessorFactory::create(_ParentObject);
         propertyAccessor->readWriteLock();
         auto form = std::dynamic_pointer_cast<VPGMainForm>(_ParentObject);
-        auto index = form->FindWorkspaceForms(_Argument->getWorkspaceForm());
+        auto index = form->findWorkspaceForms(_Argument->getWorkspaceForm());
         if (index < 0)
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Workspace not found");
         form->removeWorkspaceFormsAtIndex(index);
@@ -353,7 +353,7 @@ std::shared_ptr<vcc::IResult> VPGMainForm::DoRenameWorkspaceForm(std::shared_ptr
 }
 
 // <vcc:customFunctions sync="RESERVE" gen="RESERVE">
-void VPGMainForm::SaveConfig() const
+void VPGMainForm::saveConfig() const
 {
     TRY    
         auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();

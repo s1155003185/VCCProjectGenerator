@@ -23,7 +23,7 @@ namespace vcc
         int64_t _GetFirstSeqNo(const bool &fromBeginning) const;
         std::shared_ptr<IResult> _Redo(const int64_t &noOfStep);
         std::shared_ptr<IResult> _Undo(const int64_t &noOfStep);
-        int64_t _RemoveAction(const int64_t &noOfAction, const bool &fromBeginning);
+        int64_t _removeAction(const int64_t &noOfAction, const bool &fromBeginning);
         int64_t _ChopActionListToSize(const int64_t &size, const bool &fromBeginning);
         int64_t _clear();
         int64_t _Truncate();

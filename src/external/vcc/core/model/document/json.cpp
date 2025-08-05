@@ -31,7 +31,7 @@ namespace vcc
         return result;
     }
 
-    std::vector<std::wstring> Json::GetKeys(/*bool isRecursive*/) const
+    std::vector<std::wstring> Json::getKeys(/*bool isRecursive*/) const
     {
         std::vector<std::wstring> result;
         TRY
@@ -55,7 +55,7 @@ namespace vcc
     bool Json::IsContainKey(const std::wstring &key/*, bool isRecursive*/) const
     {
         TRY
-            auto keys = getKeys();//GetKeys(isRecursive);
+            auto keys = getKeys();//getKeys(isRecursive);
             return isContain(keys, key);
         CATCH
         return false;

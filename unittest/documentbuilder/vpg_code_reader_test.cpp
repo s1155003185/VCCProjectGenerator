@@ -13,7 +13,7 @@ class VPGCodeReaderTest : public testing::Test
 
         void setUp() override
         {
-            _Reader = std::make_shared<VPGCodeReader>(L"//");
+            _reader = std::make_shared<VPGCodeReader>(L"//");
         }
 
         void TearDown() override

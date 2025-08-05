@@ -151,8 +151,8 @@ protected: \
     void validate##varName(const valueType &value) const { validateValue; } \
 public: \
     std::map<keyType, valueType> &get##varName() const { return _##varName; } \
-    std::set<keyType> get##varName##Keys() const { return vcc::GetKeys(_##varName); } \
-    std::set<void *> get##varName##VoidKeys() const { return vcc::GetVoidKeys(_##varName); } \
+    std::set<keyType> get##varName##Keys() const { return vcc::getKeys(_##varName); } \
+    std::set<void *> get##varName##VoidKeys() const { return vcc::getVoidKeys(_##varName); } \
     bool is##varName##ContainKey(keyType key) const { return vcc::isContain(_##varName, key); } \
     valueType get##varName##AtKey(keyType key) const { return _##varName[key]; } \
     void set##varName##AtKey(keyType key, valueType value) { validate##varName(value); vcc::set(_##varName, key, value); } \
