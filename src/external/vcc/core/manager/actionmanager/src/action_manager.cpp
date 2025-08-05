@@ -95,7 +95,7 @@ namespace vcc
         return _CurrentSeqNo;
     }
 
-    int64_t ActionManager::GetLastSeqNo() const
+    int64_t ActionManager::getLastSeqNo() const
     {
         TRY
             //std::unique_lock lock(_mutex);

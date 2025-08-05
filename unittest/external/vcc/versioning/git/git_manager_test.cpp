@@ -8,7 +8,7 @@ class GitManagerTest : public testing::Test
         MANAGER_SPTR_NULL(vcc::GitManager, Manager);
 
     public:
-        void setUp() override
+        void SetUp() override
         {
             _Manager = std::make_shared<vcc::GitManager>(nullptr);
         }

@@ -162,12 +162,12 @@ void VPGVccGenerationManager::update() const
         vcc::LogService::logInfo(this->_LogConfig.get(), CLASS_ID, L"From " + src);
         vcc::LogService::logInfo(this->_LogConfig.get(), CLASS_ID, L"To " + dest);
 
-        SyncWorkspace(this->_LogConfig.get(), src, dest, getUpdateList(), {});
+        syncWorkspace(this->_LogConfig.get(), src, dest, getUpdateList(), {});
         
         if (_Option->getTemplate() == nullptr || !_Option->getTemplate()->getIsExcludeUnittest()) {
             auto list = getUpdateUnitTestList();
             if (!list.empty())
-                SyncWorkspace(this->_LogConfig.get(), vcc::concatPaths({src, unittestFolderName}), vcc::concatPaths({dest, unittestFolderName}), list, {});
+                syncWorkspace(this->_LogConfig.get(), vcc::concatPaths({src, unittestFolderName}), vcc::concatPaths({dest, unittestFolderName}), list, {});
         }
 
         // Update Makefile and unittest

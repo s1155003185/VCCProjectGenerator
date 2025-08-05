@@ -51,7 +51,7 @@ class VPGBaseGenerationManagerTest : public testing::Test
         }
 
     public:
-        void setUp() override
+        void SetUp() override
         {
             this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->setIsConsoleLog(false);

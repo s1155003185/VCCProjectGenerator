@@ -14,7 +14,7 @@ class VPGFileGenerationServiceTest : public testing::Test
     GETSET(std::wstring, ReplaceCode, L"")
 
     public:
-        void setUp() override
+        void SetUp() override
         {
             this->_CodeA = L"    a\r\n"
                 "    // <vcc:tagA gen=\"REPLACE\">\r\n"

@@ -59,7 +59,7 @@ namespace vcc
         return State::Active;
     }
 
-    bool BaseForm::IsClosable() const
+    bool BaseForm::isClosable() const
     {
         TRY
             return OnIsClosable();
@@ -203,7 +203,7 @@ namespace vcc
     bool BaseForm::Close(bool isForce)
     {
         TRY
-            if (!isForce && !IsClosable())
+            if (!isForce && !isClosable())
                 return false;
             if (!OnClose())
                 return false;

@@ -19,7 +19,7 @@ class VPGFileSyncServiceTest : public testing::Test
     GETSET(std::wstring, CodeB, L"")
 
     public:
-        void setUp() override
+        void SetUp() override
         {
             this->_StrA = L"a\r\n";
             this->_StrA += L"b\r\n";

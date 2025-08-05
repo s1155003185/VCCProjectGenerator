@@ -50,7 +50,7 @@ class VPGFileGenerationManagerTest : public testing::Test
         VPGFileGenerationManagerTest() {}
         virtual ~VPGFileGenerationManagerTest() {}
 
-        void setUp() override
+        void SetUp() override
         {
             this->_LogConfig = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
             this->_WorkspaceSource = vcc::concatPaths({this->_Workspace, L"Source"});
@@ -105,22 +105,22 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty)
 {
     VPGGlobal::getFileGenerationManager()->setWorkspace(L"");
     VPGConfig option;
-    option.SetProjectPrefix(L"VCC");
-    option.GetTemplate()->setWorkspace(L"");
-    if (option.GetInput() == nullptr)
-        option.SetInput(std::make_shared<VPGConfigInput>());
-    option.GetInput()->setTypeWorkspace(this->getWorkspaceSource());
-    option.GetOutput()->setObjectTypeDirectory(this->getWorkspaceTarget());
+    option.setProjectPrefix(L"VCC");
+    option.getTemplate()->setWorkspace(L"");
+    if (option.getInput() == nullptr)
+        option.setInput(std::make_shared<VPGConfigInput>());
+    option.getInput()->setTypeWorkspace(this->getWorkspaceSource());
+    option.getOutput()->setObjectTypeDirectory(this->getWorkspaceTarget());
     
-    option.GetOutput()->setObjectDirectoryHpp(this->getWorkspaceTarget());
-    option.GetOutput()->setObjectDirectoryCpp(this->getWorkspaceTarget());
-    option.GetOutput()->setPropertyAccessorDirectoryHpp(this->getWorkspaceTarget());
-    option.GetOutput()->setPropertyAccessorDirectoryCpp(this->getWorkspaceTarget());
+    option.getOutput()->setObjectDirectoryHpp(this->getWorkspaceTarget());
+    option.getOutput()->setObjectDirectoryCpp(this->getWorkspaceTarget());
+    option.getOutput()->setPropertyAccessorDirectoryHpp(this->getWorkspaceTarget());
+    option.getOutput()->setPropertyAccessorDirectoryCpp(this->getWorkspaceTarget());
 
-    option.GetOutput()->setObjectFactoryDirectoryHpp(this->getWorkspaceTarget());
-    option.GetOutput()->setObjectFactoryDirectoryCpp(this->getWorkspaceTarget());
-    option.GetOutput()->setPropertyAccessorFactoryDirectoryHpp(this->getWorkspaceTarget());
-    option.GetOutput()->setPropertyAccessorFactoryDirectoryCpp(this->getWorkspaceTarget());
+    option.getOutput()->setObjectFactoryDirectoryHpp(this->getWorkspaceTarget());
+    option.getOutput()->setObjectFactoryDirectoryCpp(this->getWorkspaceTarget());
+    option.getOutput()->setPropertyAccessorFactoryDirectoryHpp(this->getWorkspaceTarget());
+    option.getOutput()->setPropertyAccessorFactoryDirectoryCpp(this->getWorkspaceTarget());
 
     VPGGlobal::getFileGenerationManager()->generateProperty(this->getLogConfig().get(), &option);
 

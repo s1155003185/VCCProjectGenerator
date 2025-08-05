@@ -10,7 +10,7 @@ class VPGGitFormTest : public testing::Test
         VPGGitFormTest() {}
         virtual ~VPGGitFormTest() {}
 
-        void setUp() override
+        void SetUp() override
         {
             _LogConfig = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
             _Form = std::make_shared<VPGGitForm>();

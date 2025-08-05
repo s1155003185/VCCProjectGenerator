@@ -26,7 +26,7 @@ class VPGCppGenerationManagerTest : public testing::Test
     MANAGER_SPTR_NULL(VPGCppGenerationManager, Manager);
 
     public:
-        void setUp() override
+        void SetUp() override
         {
             this->_WorkspaceSource = this->_Workspace + L"Source";
             this->_WorkspaceTarget = this->_Workspace + L"Target";

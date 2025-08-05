@@ -50,7 +50,7 @@ class ActionManagerTest : public testing::Test
             this->_Manager->doAction(this->CreateAction(4));
         }
 
-        void setUp() override
+        void SetUp() override
         {
             _Manager = std::make_shared<vcc::ActionManager>(nullptr);
             this->_Manager->setMaxActionListSize(10);

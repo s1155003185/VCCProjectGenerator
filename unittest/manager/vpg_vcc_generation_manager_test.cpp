@@ -27,7 +27,7 @@ class VPGVccGenerationManagerTest : public testing::Test
     MANAGER_SPTR_NULL(VPGVccGenerationManager, Manager);
 
     public:
-        void setUp() override
+        void SetUp() override
         {
             this->_WorkspaceSource = this->_Workspace + L"Source";
             this->_WorkspaceTarget = this->_Workspace + L"Target";
@@ -54,11 +54,11 @@ class VPGVccGenerationManagerTest : public testing::Test
 
             // Cannot use current project as time consumming
             CopyDirectoryOption dirOption;
-            dirOption.SetIsRecursive(false);
+            dirOption.setIsRecursive(false);
             dirOption.setIsForce(true);
             copyDirectory(L".", this->getWorkspaceSource(), &dirOption);
 
-            dirOption.SetIsRecursive(true);
+            dirOption.setIsRecursive(true);
             dirOption.setIsForce(true);
             dirOption.insertIncludeFileFilters(L".vscode/*");
             dirOption.insertIncludeFileFilters(L"include/application.hpp");
@@ -74,7 +74,7 @@ class VPGVccGenerationManagerTest : public testing::Test
             dirOption.insertIncludeFileFilters(L"*Makefile");
             dirOption.insertIncludeFileFilters(L"*README.md");
 
-            dirOption.InsertExcludeFileFilters(L"*.o");
+            dirOption.insertExcludeFileFilters(L"*.o");
 
             copyDirectory(L".", this->getWorkspaceSource(), &dirOption);
 

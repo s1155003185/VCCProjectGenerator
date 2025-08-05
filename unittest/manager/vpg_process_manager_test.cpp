@@ -20,7 +20,7 @@ class VPGProcessManagerTest : public testing::Test
 
     public:
 
-        void setUp() override
+        void SetUp() override
         {
             //auto logConfig = std::make_shared<vcc::LogConfig>(LogConfigType::None);
             //logConfig->setIsConsoleLog(true);

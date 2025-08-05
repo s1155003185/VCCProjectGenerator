@@ -121,7 +121,7 @@ void VPGBaseGenerationManager::CreateBasicProject() const
     CATCH
 }
 
-void VPGBaseGenerationManager::SyncWorkspace(const vcc::LogConfig *logConfig, const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
+void VPGBaseGenerationManager::syncWorkspace(const vcc::LogConfig *logConfig, const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
             const std::vector<std::wstring> &includeFileFilters, const std::vector<std::wstring> &excludeFileFilters) const
 {
     TRY

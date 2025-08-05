@@ -37,7 +37,7 @@ class VPGBaseGenerationManager : public vcc::BaseManager, public IVPGGenerationM
         std::wstring AdjustMakefile(const std::wstring &fileContent) const;
         std::wstring AdjustVSCodeLaunchJson(const std::wstring &fileContent) const;
 
-        void SyncWorkspace(const vcc::LogConfig *logConfig, const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
+        void syncWorkspace(const vcc::LogConfig *logConfig, const std::wstring &sourceWorkspace, const std::wstring &targetWorkspace,
             const std::vector<std::wstring> &includeFileFilters, const std::vector<std::wstring> &excludeFileFilters) const;
         
         virtual void add() const override = 0;

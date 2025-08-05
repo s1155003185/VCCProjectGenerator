@@ -18,7 +18,7 @@ class VPGActionFileGenerationServiceTest : public testing::Test
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGActionFileGenerationServiceTest/");
 
     public:
-        void setUp() override
+        void SetUp() override
         {
             this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->setIsConsoleLog(false);

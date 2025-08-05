@@ -11,9 +11,9 @@ class VPGCodeReaderTest : public testing::Test
     MANAGER_SPTR_NULL(VPGCodeReader, Reader)
     public:
 
-        void setUp() override
+        void SetUp() override
         {
-            _reader = std::make_shared<VPGCodeReader>(L"//");
+            _Reader = std::make_shared<VPGCodeReader>(L"//");
         }
 
         void TearDown() override

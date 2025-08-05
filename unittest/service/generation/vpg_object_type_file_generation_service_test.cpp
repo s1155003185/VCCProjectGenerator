@@ -16,7 +16,7 @@ class VPGObjectTypeFileGenerationServiceTest : public testing::Test
     
     GETSET(std::wstring, FilePathHpp, L"");
     public:
-        void setUp() override
+        void SetUp() override
         {
             this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->setIsConsoleLog(false);

@@ -27,7 +27,7 @@ class VPGPropertyAccessorFileGenerationServiceTest : public testing::Test
 
     MAP(std::wstring, std::wstring, ProjectIncludeList);
     public:
-        void setUp() override
+        void SetUp() override
         {
             this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->setIsConsoleLog(false);

@@ -19,7 +19,7 @@ class VPGJavaGenerationServiceTest : public testing::Test
     GETSET_SPTR_NULL(VPGConfig, Option);
     
     public:
-        void setUp() override
+        void SetUp() override
         {
             this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->setIsConsoleLog(false);

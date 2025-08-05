@@ -48,7 +48,7 @@ namespace vcc
 
         // State
         virtual State getState() const override;
-        virtual bool IsClosable() const override;
+        virtual bool isClosable() const override;
         virtual bool isClosed() const override;
 
         // Initialize

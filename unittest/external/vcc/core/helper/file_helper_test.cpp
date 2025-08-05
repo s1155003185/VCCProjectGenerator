@@ -24,7 +24,7 @@ class FileHelperTest : public testing::Test
 
     public:
 
-        void setUp() override
+        void SetUp() override
         {
             this->_LogConfig = std::make_shared<vcc::LogConfig>();
             this->_LogConfig->setIsConsoleLog(false);
@@ -102,7 +102,7 @@ TEST_F(FileHelperTest, CopyDirectoryWithoutFilter)
     vcc::createDirectory(this->getWorkspaceTarget());
     vcc::appendFileOneLine(vcc::concatPaths({this->getWorkspaceSource(), L"FolderA", L"FileA.txt"}), L"File A", true);
     vcc::CopyDirectoryOption option;
-    option.SetIsRecursive(true);
+    option.setIsRecursive(true);
     copyDirectory(this->getWorkspaceSource(), this->getWorkspaceTarget(), &option);
     EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileA.txt"})));
     EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileC.txt"})));
@@ -115,7 +115,7 @@ TEST_F(FileHelperTest, CopyDirectoryWithIncludeFilter)
     vcc::createDirectory(this->getWorkspaceTarget());
     vcc::appendFileOneLine(vcc::concatPaths({this->getWorkspaceSource(), L"FolderA", L"FileA.txt"}), L"File A", true);
     vcc::CopyDirectoryOption option;
-    option.SetIsRecursive(true);
+    option.setIsRecursive(true);
     option.insertIncludeFileFilters(L"*FileA*");
     copyDirectory(this->getWorkspaceSource(), this->getWorkspaceTarget(), &option);
     EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileA.txt"})));
@@ -129,8 +129,8 @@ TEST_F(FileHelperTest, CopyDirectoryWithExcludeFilter)
     vcc::createDirectory(this->getWorkspaceTarget());
     vcc::appendFileOneLine(vcc::concatPaths({this->getWorkspaceSource(), L"FolderA", L"FileA.txt"}), L"File A", true);
     vcc::CopyDirectoryOption option;
-    option.SetIsRecursive(true);
-    option.InsertExcludeFileFilters(L"*FileA*");
+    option.setIsRecursive(true);
+    option.insertExcludeFileFilters(L"*FileA*");
     copyDirectory(this->getWorkspaceSource(), this->getWorkspaceTarget(), &option);
     EXPECT_FALSE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileA.txt"})));
     EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspaceTarget(), L"FileC.txt"})));
