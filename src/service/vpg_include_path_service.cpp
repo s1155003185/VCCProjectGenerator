@@ -24,7 +24,7 @@ void VPGIncludePathService::getWorkspaceIncludePath(const std::wstring &workspac
         for (auto const &filePath : std::filesystem::recursive_directory_iterator(PATH(!workspace.empty() ? workspace : L"."))) {
             if (filePath.is_directory() || !filePath.path().wstring().ends_with(L".hpp"))
                 continue;
-            std::wstring fileContent = vcc::readFile(filePath.path().wstring());//GetSimpleCode(vcc::ReadFile(filePath.path().wstring()));
+            std::wstring fileContent = vcc::readFile(filePath.path().wstring());//getSimpleCode(vcc::ReadFile(filePath.path().wstring()));
             std::vector<std::shared_ptr<VPGEnumClass>> curremtnEnumClasses;
             reader->parse(fileContent, curremtnEnumClasses);
             for (auto const &enumClass : curremtnEnumClasses)

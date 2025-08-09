@@ -22,7 +22,7 @@ constexpr auto RESERVE_TAG = L"RESERVE";
 constexpr auto REPLACE_TAG = L"REPLACE";
 
 
-size_t VPGFileGenerationService::GetLeadingSpace(const std::wstring &line)
+size_t VPGFileGenerationService::getLeadingSpace(const std::wstring &line)
 {
     TRY
         for (size_t i = 0; i < line.size(); i++) {
@@ -33,7 +33,7 @@ size_t VPGFileGenerationService::GetLeadingSpace(const std::wstring &line)
     return 0;
 }
 
-size_t VPGFileGenerationService::GetMinimumLeadingSpace(const std::vector<std::wstring> &lines)
+size_t VPGFileGenerationService::getMinimumLeadingSpace(const std::vector<std::wstring> &lines)
 {
     size_t result = 0;
     TRY

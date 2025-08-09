@@ -89,7 +89,7 @@ void ApplicationEraseResult(void *result)
 int64_t ApplicationGetFormActionCurrentSeqNo(void *form)
 {
     TRY
-        return Application::getFormActionCurrentSeqNo(static_cast<vcc::IObject *>(form));
+        return Application::GetFormActionCurrentSeqNo(static_cast<vcc::IObject *>(form));
     CATCH
     return -1;
 }
@@ -97,7 +97,7 @@ int64_t ApplicationGetFormActionCurrentSeqNo(void *form)
 int64_t ApplicationGetFormActionFirstSeqNo(void *form)
 {
     TRY
-        return Application::getFormActionFirstSeqNo(static_cast<vcc::IObject *>(form));
+        return Application::GetFormActionFirstSeqNo(static_cast<vcc::IObject *>(form));
     CATCH
     return -1;
 }
@@ -105,7 +105,7 @@ int64_t ApplicationGetFormActionFirstSeqNo(void *form)
 int64_t ApplicationGetFormActionLastSeqNo(void *form)
 {
     TRY
-        return Application::getFormActionLastSeqNo(static_cast<vcc::IObject *>(form));
+        return Application::GetFormActionLastSeqNo(static_cast<vcc::IObject *>(form));
     CATCH
     return -1;
 }
@@ -113,7 +113,7 @@ int64_t ApplicationGetFormActionLastSeqNo(void *form)
 int64_t ApplicationGetResultErrorCode(void *result)
 {
     TRY
-        return Application::getResultErrorCode(static_cast<vcc::IObject *>(result));
+        return Application::GetResultErrorCode(static_cast<vcc::IObject *>(result));
     CATCH
     return 0;
 }

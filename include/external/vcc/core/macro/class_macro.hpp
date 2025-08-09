@@ -129,10 +129,10 @@ public: \
 
 #define SET_SPTR(type, varName) SET_VALIDATE_SPTR(type, varName, (void)value;)
 
-#define SET_VALIDATE_SPTR(type, varName, validate) \
+#define SET_VALIDATE_SPTR(type, varName, validateValue) \
 protected: \
     mutable std::set<std::shared_ptr<type>> _##varName; \
-    void validate##varName(const std::shared_ptr<vcc::IObject> value) const { validate } \
+    void validate##varName(const std::shared_ptr<vcc::IObject> value) const { validateValue; } \
 public: \
     std::set<std::shared_ptr<type>> &get##varName() const { return _##varName; } \
     void insert##varName(std::shared_ptr<type> value) { validate##varName(value); _##varName.insert(value); } \

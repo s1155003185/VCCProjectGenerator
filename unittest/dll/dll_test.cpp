@@ -17,10 +17,10 @@ TEST(DllTest, LoadDll) {
     dllName = L"bin/Debug/" + dllName + L".so";
     #endif
     vcc::Dll h(dllName);
-    EXPECT_TRUE(h.GetH());
+    EXPECT_TRUE(h.getH());
     
     typedef int (*getVersionFunction)(wchar_t **);
-    const getVersionFunction getVersion = reinterpret_cast<getVersionFunction>(h.GetProcedure(L"getVersion"));
+    const getVersionFunction getVersion = reinterpret_cast<getVersionFunction>(h.getProcedure(L"getVersion"));
     EXPECT_TRUE(getVersion != nullptr);
     
     wchar_t* versionStr = nullptr;

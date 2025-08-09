@@ -4,7 +4,7 @@
 
 namespace vcc
 {
-    std::wstring BaseDocumentBuilder::GetErrorMessage(const std::wstring &str, const size_t &pos, const std::wstring &msg) const
+    std::wstring BaseDocumentBuilder::getErrorMessage(const std::wstring &str, const size_t &pos, const std::wstring &msg) const
     {
         size_t row = 0, column = 0;
         getCharacterRowAndColumn(str, pos, row, column);

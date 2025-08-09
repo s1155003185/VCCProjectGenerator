@@ -135,7 +135,7 @@ TEST(BasePropertyAccessorTest, Full)
     EXPECT_EQ(accessor->readIntAtIndex(vcc::LockType::ReadLock, 0L), 2);
     EXPECT_TRUE(accessor->readObject(vcc::LockType::ReadLock, 0L) != nullptr);
 
-    std::shared_ptr<vcc::IObject> newObj = Create();
+    std::shared_ptr<vcc::IObject> newObj = create();
     accessor->insertObjectAtIndex(vcc::LockType::NoLock, 0L, newObj);
 
     std::wstring mapKey1 = L"key";

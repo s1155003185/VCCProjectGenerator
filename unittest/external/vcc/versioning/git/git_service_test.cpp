@@ -392,7 +392,7 @@ TEST_F(GitServiceTest, Branch)
 
     // Switch Branch
     GitBranchSwitchBranchOption switchBranchOption;
-    switchBranchOption.SetIsQuite(true);
+    switchBranchOption.setIsQuite(true);
     GitService::SwitchBranch(this->getLogConfig().get(), this->getWorkspace(), L"branch", &switchBranchOption);
     // DECLARE_SPTR(GitBranch, switchBranch);
     // GitService::getCurrentBranch(this->getLogConfig().get(), this->getWorkspace(), switchBranch);
@@ -415,7 +415,7 @@ TEST_F(GitServiceTest, Branch)
     //GitService::DeleteBranch(this->getLogConfig().get(), this->getWorkspace(), L"branch");
 }
 
-TEST_F(GitServiceTest, ParseGitDiff)
+TEST_F(GitServiceTest, parseGitDiff)
 {
     std::wstring str = L"diff --git a/test.txt b/test.txt\r\n";
     str += L"index edf0eff..ab966a8 100644\r\n";
@@ -427,7 +427,7 @@ TEST_F(GitServiceTest, ParseGitDiff)
     std::wstring expectedChangedLine = L"";
     expectedChangedLine += L" hi\r\n";
     expectedChangedLine += L"+HI\r\n";
-    auto diff = GitService::ParseGitDiff(str);
+    auto diff = GitService::parseGitDiff(str);
     EXPECT_EQ(diff->getFilePathOld(), L"test.txt");
     EXPECT_EQ(diff->getFilePathNew(), L"test.txt");
     EXPECT_EQ(diff->getLineNumberOld()[0], (size_t)1);
@@ -504,7 +504,7 @@ TEST_F(GitServiceTest, stageAndDifference)
     EXPECT_EQ(differentSummary->getFiles().at(0), L"test.txt");
     EXPECT_EQ(differentSummary->getAddLineCounts().at(0), (size_t)1);
     EXPECT_EQ(differentSummary->getDeleteLineCounts().at(0), (size_t)0);
-    auto diff = GitService::getDifferenceWorkingFile(this->getLogConfig().get(), this->getWorkspace(), L"test.txt"); // output in ParseGitDiff
+    auto diff = GitService::getDifferenceWorkingFile(this->getLogConfig().get(), this->getWorkspace(), L"test.txt"); // output in parseGitDiff
     EXPECT_EQ(diff->getFilePathOld(), L"test.txt");
     EXPECT_EQ(diff->getFilePathNew(), L"test.txt");
     EXPECT_EQ(diff->getLineNumberOld()[0], (size_t)1);

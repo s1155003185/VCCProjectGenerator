@@ -455,7 +455,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
             "#include \"i_result.hpp\"\r\n"
             "#include \"log_config.hpp\"\r\n"
             + customPropertyHeader
-            + generateCodeWithNamespace(GetNamespaceClassContentMap(L"Namespace", { getHppClass(L"", L"AddWorkspace", { }, L"")})));
+            + generateCodeWithNamespace(getNamespaceClassContentMap(L"Namespace", { getHppClass(L"", L"AddWorkspace", { }, L"")})));
     EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_add_workspace.cpp"})),
             cppHeader
             + L"#include \"vpg_git_form_add_workspace.hpp\"\r\n"
@@ -470,7 +470,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
             "#include \"log_config.hpp\"\r\n"
             "#include \"operation_result.hpp\"\r\n"
             + customPropertyHeader
-            + generateCodeWithNamespace(GetNamespaceClassContentMap(L"Namespace", { getCppClass(L"", L"AddWorkspace", { }, L"")}))
+            + generateCodeWithNamespace(getNamespaceClassContentMap(L"Namespace", { getCppClass(L"", L"AddWorkspace", { }, L"")}))
             + customFooter);
 
 
@@ -485,7 +485,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
             "#include \"log_config.hpp\"\r\n"
             "#include \"vpg_git_form.hpp\"\r\n"
             + customPropertyHeader
-            + generateCodeWithNamespace(GetNamespaceClassContentMap(L"Namespace", { getHppClass(L"", L"DeleteWorkspace", { L"GETSET_SPTR_NULL(VPGGitFormDeleteWorkspaceArgument, Argument)" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")})));
+            + generateCodeWithNamespace(getNamespaceClassContentMap(L"Namespace", { getHppClass(L"", L"DeleteWorkspace", { L"GETSET_SPTR_NULL(VPGGitFormDeleteWorkspaceArgument, Argument)" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")})));
     EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspace(), L"vpg_git_form_delete_workspace.cpp"})),
             cppHeader
             + L"#include \"vpg_git_form_delete_workspace.hpp\"\r\n"
@@ -501,6 +501,6 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
             "#include \"operation_result.hpp\"\r\n"
             "#include \"vpg_git_form.hpp\"\r\n"
             + customPropertyHeader
-            + generateCodeWithNamespace(GetNamespaceClassContentMap(L"Namespace", { getCppClass(L"", L"DeleteWorkspace", { L"_Argument = argument;" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")}))
+            + generateCodeWithNamespace(getNamespaceClassContentMap(L"Namespace", { getCppClass(L"", L"DeleteWorkspace", { L"_Argument = argument;" }, L"std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument")}))
             + customFooter);
 }

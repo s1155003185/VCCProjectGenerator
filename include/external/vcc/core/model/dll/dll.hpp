@@ -50,7 +50,7 @@ namespace vcc
             }
 
             //win version: FARPROC getProc(HINSTANCE h, const char* procName)
-            void *GetProcedure(const std::wstring &procName) const
+            void *getProcedure(const std::wstring &procName) const
             {
                 #ifdef _WIN32
                 return (void *)GetProcAddress((HINSTANCE)h, wstr2str(procName).c_str());
