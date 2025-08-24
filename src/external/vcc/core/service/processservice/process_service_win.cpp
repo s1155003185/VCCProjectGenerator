@@ -112,8 +112,8 @@ namespace vcc
             if (hNullDevice != INVALID_HANDLE_VALUE)
             {
                 // Redirect the stdout handle to the null device handle
-                setHandleInformation(si.hStdOutput, HANDLE_FLAG_INHERIT, 0);
-                setStdHandle(STD_OUTPUT_HANDLE, hNullDevice);
+                SetHandleInformation(si.hStdOutput, HANDLE_FLAG_INHERIT, 0);
+                SetStdHandle(STD_OUTPUT_HANDLE, hNullDevice);
                 CloseHandle(hNullDevice);
             }
 
@@ -153,16 +153,16 @@ namespace vcc
         DWORD dwRead, dwWritten; 
         CHAR buffer[BUFSIZE]; 
         BOOL bSuccess = FALSE;
-        HANDLE hParentStdOut = getStdHandle(STD_OUTPUT_HANDLE);
+        HANDLE hParentStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
         std::wstring result = L"";
         while (true)
         { 
-            bSuccess = readFile(pStdOutRead, buffer, BUFSIZE, &dwRead, NULL);
+            bSuccess = ReadFile(pStdOutRead, buffer, BUFSIZE, &dwRead, NULL);
             if(!bSuccess || dwRead == 0) break;
             result += vcc::str2wstr(buffer);
 
-            bSuccess = writeFile(hParentStdOut, buffer, dwRead, &dwWritten, NULL);
+            bSuccess = WriteFile(hParentStdOut, buffer, dwRead, &dwWritten, NULL);
             if (!bSuccess) break;
         }
         return result;
@@ -173,16 +173,16 @@ namespace vcc
         DWORD dwRead, dwWritten; 
         CHAR buffer[BUFSIZE]; 
         BOOL bSuccess = FALSE;
-        HANDLE hParentStdError = getStdHandle(STD_ERROR_HANDLE);
+        HANDLE hParentStdError = GetStdHandle(STD_ERROR_HANDLE);
 
         std::wstring result = L"";
         while (true)
         { 
-            bSuccess = readFile(pStdErrorRead, buffer, BUFSIZE, &dwRead, NULL);
+            bSuccess = ReadFile(pStdErrorRead, buffer, BUFSIZE, &dwRead, NULL);
             if(!bSuccess || dwRead == 0) break; 
             result += vcc::str2wstr(buffer);
 
-            bSuccess = writeFile(hParentStdError, buffer, dwRead, &dwWritten, NULL);
+            bSuccess = WriteFile(hParentStdError, buffer, dwRead, &dwWritten, NULL);
             if (!bSuccess) break; 
         } 
         return result;

@@ -29,7 +29,7 @@ class GitServiceTest : public testing::Test
             if (isDirectoryExists(this->getWorkspace())) {
                 #ifdef __WIN32
                     // window git will hold some files in bin/Debug/Git folder, cannot delete whole folder by c++ remove_all 
-                    TerminalService::execute(this->getLogConfig().get(), L"", L"rmdir /s /q \"" + ConcatPaths({std::filesystem::current_path().wstring(), this->getWorkspace()}) + L"\"");
+                    TerminalService::execute(this->getLogConfig().get(), L"", L"rmdir /s /q \"" + concatPaths({std::filesystem::current_path().wstring(), this->getWorkspace()}) + L"\"");
                 #else
                     std::filesystem::remove_all(this->getWorkspace());
                 #endif
