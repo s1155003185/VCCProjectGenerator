@@ -19,7 +19,7 @@ class Application : public vcc::BaseForm
         std::set<std::shared_ptr<vcc::IObject>> _ActionArguments;
         std::set<std::shared_ptr<vcc::IObject>> _Results;
 
-        static std::shared_ptr<vcc::IObject> getFormsharedPtr(vcc::IObject *IObject);
+        static std::shared_ptr<vcc::IObject> getFormSharedPtr(vcc::IObject *IObject);
         static vcc::IForm *getIFormPtrFromIObject(vcc::IObject *obj);
         static vcc::IObject *getIObjectPtrFromIResult(vcc::IResult *obj);
         static vcc::IResult *getIResultPtrFromIObject(vcc::IObject *obj);

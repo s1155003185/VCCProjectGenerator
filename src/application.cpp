@@ -31,7 +31,7 @@ void Application::initializeComponents()
     CATCH
 }
 
-std::shared_ptr<vcc::IObject> Application::getFormsharedPtr(vcc::IObject *form)
+std::shared_ptr<vcc::IObject> Application::getFormSharedPtr(vcc::IObject *form)
 {
     TRY
         for (auto tmpForm : application->_Forms) {
@@ -264,8 +264,8 @@ bool Application::closeForm(vcc::IObject *form, const bool &isForce)
     
     TRY
         if (getIFormPtrFromIObject(form)->Close(isForce)) {
-            if (getFormsharedPtr(form) != nullptr)
-                application->_Forms.erase(getFormsharedPtr(form));
+            if (getFormSharedPtr(form) != nullptr)
+                application->_Forms.erase(getFormSharedPtr(form));
             return true;
         }
     CATCH
