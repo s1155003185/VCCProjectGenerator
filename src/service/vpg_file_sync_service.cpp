@@ -132,7 +132,7 @@ void VPGFileSyncService::copyFile(const vcc::LogConfig *logConfig, const VPGFile
     CATCH
 }
 
-std::wstring VPGFileSyncService::GenerateForceCode(const VPGFileContentSyncMode updatedCodeMode, const VPGFileContentSyncMode originalCodeMode, const vcc::Xml *updatedCode, const vcc::Xml *originalCode)
+std::wstring VPGFileSyncService::generateForceCode(const VPGFileContentSyncMode updatedCodeMode, const VPGFileContentSyncMode originalCodeMode, const vcc::Xml *updatedCode, const vcc::Xml *originalCode)
 {
     std::wstring result = L"";
     TRY
@@ -189,7 +189,7 @@ std::wstring VPGFileSyncService::GenerateFullCode(const VPGFileContentSyncTagMod
     return result;
 }
 
-std::wstring VPGFileSyncService::GenerateDemandCode(const VPGFileContentSyncTagMode &mode, const VPGFileContentSyncMode updatedCodeMode, const VPGFileContentSyncMode originalCodeMode, const vcc::Xml *updatedCode, const vcc::Xml *originalCode)
+std::wstring VPGFileSyncService::generateDemandCode(const VPGFileContentSyncTagMode &mode, const VPGFileContentSyncMode updatedCodeMode, const VPGFileContentSyncMode originalCodeMode, const vcc::Xml *updatedCode, const vcc::Xml *originalCode)
 {
     std::wstring result = L"";
     TRY
@@ -221,7 +221,7 @@ std::wstring VPGFileSyncService::GenerateDemandCode(const VPGFileContentSyncTagM
     return result;
 }
 
-std::wstring VPGFileSyncService::GenerateSkipCode(const std::wstring &originalCode)
+std::wstring VPGFileSyncService::generateSkipCode(const std::wstring &originalCode)
 {
     return originalCode;
 }
@@ -244,13 +244,13 @@ std::wstring VPGFileSyncService::SyncFileContent(const VPGFileContentSyncTagMode
         switch (syncMode)
         {
         case VPGFileContentSyncMode::Force:
-            return VPGFileSyncService::GenerateForceCode(updatedCodeSyncMode, originalCodeSyncMode, updatedCodeElement.get(), originalCodeElement.get());
+            return VPGFileSyncService::generateForceCode(updatedCodeSyncMode, originalCodeSyncMode, updatedCodeElement.get(), originalCodeElement.get());
         case VPGFileContentSyncMode::Full:
             return VPGFileSyncService::GenerateFullCode(mode, updatedCodeSyncMode, originalCodeSyncMode, updatedCodeElement.get(), originalCodeElement.get());
         case VPGFileContentSyncMode::Demand:
-            return VPGFileSyncService::GenerateDemandCode(mode, updatedCodeSyncMode, originalCodeSyncMode, updatedCodeElement.get(), originalCodeElement.get());
+            return VPGFileSyncService::generateDemandCode(mode, updatedCodeSyncMode, originalCodeSyncMode, updatedCodeElement.get(), originalCodeElement.get());
         case VPGFileContentSyncMode::Skip:
-            return VPGFileSyncService::GenerateSkipCode(originalCode);
+            return VPGFileSyncService::generateSkipCode(originalCode);
         default:
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknown File Content Sync Mode");
             break;

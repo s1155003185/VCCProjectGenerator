@@ -58,8 +58,8 @@ class VPGObjectFactoryFileGenerationServiceTest : public testing::Test
 TEST_F(VPGObjectFactoryFileGenerationServiceTest, Empty)
 {
     std::set<std::wstring> propertyTypes;
-    VPGObjectFactoryFileGenerationService::GenerateHpp(this->getLogConfig().get(), this->getFilePathHpp());
-    VPGObjectFactoryFileGenerationService::GenerateCpp(this->getLogConfig().get(), L"VCC", {}, this->getFilePathCpp(), propertyTypes);
+    VPGObjectFactoryFileGenerationService::generateHpp(this->getLogConfig().get(), this->getFilePathHpp());
+    VPGObjectFactoryFileGenerationService::generateCpp(this->getLogConfig().get(), L"VCC", {}, this->getFilePathCpp(), propertyTypes);
 
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
@@ -99,8 +99,8 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Normal)
     std::set<std::wstring> propertyTypes;
     propertyTypes.insert(L"Def");
     propertyTypes.insert(L"Abc");
-    VPGObjectFactoryFileGenerationService::GenerateHpp(this->getLogConfig().get(), this->getFilePathHpp());
-    VPGObjectFactoryFileGenerationService::GenerateCpp(this->getLogConfig().get(), L"VCC", { L"abc.hpp" }, this->getFilePathCpp(), propertyTypes);
+    VPGObjectFactoryFileGenerationService::generateHpp(this->getLogConfig().get(), this->getFilePathHpp());
+    VPGObjectFactoryFileGenerationService::generateCpp(this->getLogConfig().get(), L"VCC", { L"abc.hpp" }, this->getFilePathCpp(), propertyTypes);
 
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));

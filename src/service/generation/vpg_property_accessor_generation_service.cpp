@@ -54,7 +54,7 @@ std::wstring getGeneralContentHeader(const std::wstring &classPropertyName)
         + INDENT + INDENT + L"{\r\n";
 }
 
-bool VPGPropertyAccessorGenerationService::IsIncludeString(const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
+bool VPGPropertyAccessorGenerationService::isIncludeString(const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     bool result = false;
     TRY
@@ -191,7 +191,7 @@ std::wstring VPGPropertyAccessorGenerationService::getIncludeFile(const std::map
     return L"";
 }
 
-void VPGPropertyAccessorGenerationService::GenerateHpp(const vcc::LogConfig *logConfig, const std::wstring &projectPrefix,
+void VPGPropertyAccessorGenerationService::generateHpp(const vcc::LogConfig *logConfig, const std::wstring &projectPrefix,
     const std::wstring &filePathHpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
     TRY
@@ -199,7 +199,7 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const vcc::LogConfig *log
 
         std::wstring result = L"#pragma once\r\n\r\n";
 
-        if (VPGPropertyAccessorGenerationService::IsIncludeString(enumClassList))
+        if (VPGPropertyAccessorGenerationService::isIncludeString(enumClassList))
             result += L"#include <string>\r\n\r\n";
 
         result += L"#include \"base_property_accessor.hpp\"\r\n"
@@ -280,7 +280,7 @@ void VPGPropertyAccessorGenerationService::GenerateHpp(const vcc::LogConfig *log
     CATCH
 }
 
-void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassPropertiesReadOnly, std::wstring &result)
+void VPGPropertyAccessorGenerationService::generateRead(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassPropertiesReadOnly, std::wstring &result)
 {
     if (type == containerToken || enumClassPropertiesReadOnly.empty())
         return;
@@ -408,7 +408,7 @@ void VPGPropertyAccessorGenerationService::GenerateRead(const std::wstring &prop
     CATCH
 }
 
-void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassPropertiesWriteOnly, std::wstring &result)
+void VPGPropertyAccessorGenerationService::generateWrite(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassPropertiesWriteOnly, std::wstring &result)
 {
     if (type == containerToken || enumClassPropertiesWriteOnly.empty())
         return;
@@ -563,7 +563,7 @@ void VPGPropertyAccessorGenerationService::GenerateWrite(const std::wstring &pro
     CATCH
 }
 
-void VPGPropertyAccessorGenerationService::GenerateInsert(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassPropertiesWriteOnly, std::wstring &result)
+void VPGPropertyAccessorGenerationService::generateInsert(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassPropertiesWriteOnly, std::wstring &result)
 {
     if (type == containerToken || enumClassPropertiesWriteOnly.empty())
         return;
@@ -623,7 +623,7 @@ void VPGPropertyAccessorGenerationService::GenerateInsert(const std::wstring &pr
     CATCH
 }
 
-void VPGPropertyAccessorGenerationService::GenerateClone(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassPropertiesReadOnly, std::wstring &result)
+void VPGPropertyAccessorGenerationService::generateClone(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassPropertiesReadOnly, std::wstring &result)
 {
     if (type == containerToken || type != objectToken || enumClassPropertiesReadOnly.empty())
         return;
@@ -717,7 +717,7 @@ void VPGPropertyAccessorGenerationService::GenerateClone(const std::wstring &pro
     CATCH
 }
 
-void VPGPropertyAccessorGenerationService::GenerateContainerCount(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassProperties, std::wstring &result)
+void VPGPropertyAccessorGenerationService::generateContainerCount(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassProperties, std::wstring &result)
 {
     if (type != containerToken || enumClassProperties.empty())
         return;
@@ -740,7 +740,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerCount(const std::wst
     CATCH
 }
 
-void VPGPropertyAccessorGenerationService::GenerateContainerMapKey(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassProperties, std::wstring &result)
+void VPGPropertyAccessorGenerationService::generateContainerMapKey(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassProperties, std::wstring &result)
 {
     if (type != containerToken || enumClassProperties.empty())
         return;
@@ -769,7 +769,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerMapKey(const std::ws
     CATCH
 }
 
-void VPGPropertyAccessorGenerationService::GenerateContainerisContainKey(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassProperties, std::wstring &result)
+void VPGPropertyAccessorGenerationService::generateContainerIsContainKey(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassProperties, std::wstring &result)
 {
     if (type != containerToken || enumClassProperties.empty())
         return;
@@ -806,7 +806,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerisContainKey(const s
     CATCH
 }
 
-void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassProperties, std::wstring &result)
+void VPGPropertyAccessorGenerationService::generateContainerRemove(const std::wstring &propertyName, const std::wstring &type, const std::vector<std::shared_ptr<VPGEnumClassAttribute>> &enumClassProperties, std::wstring &result)
 {
     if (type != containerToken || enumClassProperties.empty())
         return;
@@ -940,7 +940,7 @@ void VPGPropertyAccessorGenerationService::GenerateContainerRemove(const std::ws
     CATCH
 }
 
-void VPGPropertyAccessorGenerationService::GenerateCpp(const vcc::LogConfig *logConfig, const std::wstring &projectPrefix,
+void VPGPropertyAccessorGenerationService::generateCpp(const vcc::LogConfig *logConfig, const std::wstring &projectPrefix,
     const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
     const std::wstring &filePathCpp, const std::vector<std::shared_ptr<VPGEnumClass>> &enumClassList)
 {
@@ -1096,14 +1096,14 @@ void VPGPropertyAccessorGenerationService::GenerateCpp(const vcc::LogConfig *log
 
                     std::wstring className = getTypeOrClassWithoutNamespace(enumClass.first);
                     std::wstring code = L"";
-                    VPGPropertyAccessorGenerationService::GenerateRead(className, type, readOnly, code);
-                    VPGPropertyAccessorGenerationService::GenerateWrite(className, type, writeOnly, code);
-                    VPGPropertyAccessorGenerationService::GenerateInsert(className, type, writeOnly, code);
-                    VPGPropertyAccessorGenerationService::GenerateClone(className, type, readOnly, code);
-                    VPGPropertyAccessorGenerationService::GenerateContainerCount(className, type, readWrite, code);
-                    VPGPropertyAccessorGenerationService::GenerateContainerMapKey(className, type, readWrite, code);
-                    VPGPropertyAccessorGenerationService::GenerateContainerisContainKey(className, type, readOnly, code);
-                    VPGPropertyAccessorGenerationService::GenerateContainerRemove(className, type, writeOnly, code);
+                    VPGPropertyAccessorGenerationService::generateRead(className, type, readOnly, code);
+                    VPGPropertyAccessorGenerationService::generateWrite(className, type, writeOnly, code);
+                    VPGPropertyAccessorGenerationService::generateInsert(className, type, writeOnly, code);
+                    VPGPropertyAccessorGenerationService::generateClone(className, type, readOnly, code);
+                    VPGPropertyAccessorGenerationService::generateContainerCount(className, type, readWrite, code);
+                    VPGPropertyAccessorGenerationService::generateContainerMapKey(className, type, readWrite, code);
+                    VPGPropertyAccessorGenerationService::generateContainerIsContainKey(className, type, readOnly, code);
+                    VPGPropertyAccessorGenerationService::generateContainerRemove(className, type, writeOnly, code);
                 
                     std::wstring namespaceName = getNamespaceFromClassName(enumClass.first);
                     if (namespaceClassMapping.find(namespaceName) == namespaceClassMapping.end()) {

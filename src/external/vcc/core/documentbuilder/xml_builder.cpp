@@ -55,7 +55,7 @@ namespace vcc
         return result;
     }
 
-    bool XmlBuilder::IsNextCharTagEnd(const std::wstring &xmlData, size_t &pos) const
+    bool XmlBuilder::isNextCharTagEnd(const std::wstring &xmlData, size_t &pos) const
     {
         TRY
             if (xmlData[pos] == L'/') {
@@ -70,18 +70,18 @@ namespace vcc
                 return true;
             }else if (std::iswspace(xmlData[pos])) {
                 getNextCharPos(xmlData, pos, false);
-                return IsNextCharTagEnd(xmlData, pos);
+                return isNextCharTagEnd(xmlData, pos);
             }
         CATCH
         return false;
     }
 
-    bool XmlBuilder::IsXMLHeader(const std::wstring &xmlData, size_t &pos) const
+    bool XmlBuilder::isXMLHeader(const std::wstring &xmlData, size_t &pos) const
     {
         return xmlData.substr(pos).starts_with(L"<!") || xmlData.substr(pos).starts_with(L"<?");
     }
 
-    void XmlBuilder::ParseXMLHeader(const std::wstring &xmlData, size_t &pos) const
+    void XmlBuilder::parseXMLHeader(const std::wstring &xmlData, size_t &pos) const
     {
         TRY
             // TODO: handle <?...?> and <!...>
@@ -97,7 +97,7 @@ namespace vcc
         CATCH
     }
             
-    bool XmlBuilder::ParseXMLTagHeader(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
+    bool XmlBuilder::parseXMLTagHeader(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
     {
         TRY
             if (xmlData[pos] != L'<')
@@ -133,7 +133,7 @@ namespace vcc
                     THROW_EXCEPTION_MSG(ExceptionType::ParserError, getErrorMessage(xmlData, pos, L"> missing"));
             }
             element->_Name += tagName;
-            while (!IsNextCharTagEnd(xmlData, pos)) {
+            while (!isNextCharTagEnd(xmlData, pos)) {
                 auto attr = std::make_shared<XmlAttribute>();
                 attr->_Name = getTag(xmlData, pos);
                 pos++;
@@ -151,13 +151,13 @@ namespace vcc
         return false;
     }
 
-    void XmlBuilder::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
+    void XmlBuilder::parseXMLTagContent(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
     {
         TRY
             while (pos < xmlData.length())
             {
                 auto child = std::make_shared<Xml>();
-                ParseXml(xmlData, pos, child);
+                parseXml(xmlData, pos, child);
                 if (!child->_Name.empty()) {
                     element->_Children.push_back(child);
                     
@@ -174,7 +174,7 @@ namespace vcc
         CATCH
     }
     
-    void XmlBuilder::RemoveXMLTagTail(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
+    void XmlBuilder::removeXMLTagTail(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
     {
         TRY
             getNextCharPos(xmlData, pos, true);
@@ -186,7 +186,7 @@ namespace vcc
         CATCH
     }
     
-    void XmlBuilder::ParseXMLTag(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
+    void XmlBuilder::parseXMLTag(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
     {
         TRY
             if (xmlData.empty())
@@ -195,21 +195,21 @@ namespace vcc
                 THROW_EXCEPTION_MSG(ExceptionType::ParserError, getErrorMessage(xmlData, pos, L"char is not < but " + std::wstring(1, xmlData[pos])));
             
             // remove xml header
-            while (IsXMLHeader(xmlData, pos)) {
-                ParseXMLHeader(xmlData, pos);
+            while (isXMLHeader(xmlData, pos)) {
+                parseXMLHeader(xmlData, pos);
                 getNextCharPos(xmlData, pos, false);
             }
             // content
-            if (!ParseXMLTagHeader(xmlData, pos, element))
+            if (!parseXMLTagHeader(xmlData, pos, element))
                 return;
             pos++;
-            ParseXMLTagContent(xmlData, pos, element);
+            parseXMLTagContent(xmlData, pos, element);
             pos++;
-            RemoveXMLTagTail(xmlData, pos, element);
+            removeXMLTagTail(xmlData, pos, element);
         CATCH
     }
 
-    void XmlBuilder::ParseXml(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
+    void XmlBuilder::parseXml(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const
     {
         size_t dataLength = xmlData.length();
         TRY
@@ -222,7 +222,7 @@ namespace vcc
                     pos--;
                     return;
                 }else if (xmlData[pos] == L'<') {
-                    ParseXMLTag(xmlData, pos, element);
+                    parseXMLTag(xmlData, pos, element);
                     break;
                 } else {
                     size_t endPos = pos;
@@ -258,7 +258,7 @@ namespace vcc
         TRY
             auto xmlObject = std::dynamic_pointer_cast<Xml>(doc);
             assert(xmlObject != nullptr);
-            ParseXml(str, pos, xmlObject);
+            parseXml(str, pos, xmlObject);
         CATCH
     }
     

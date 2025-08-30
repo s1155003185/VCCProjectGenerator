@@ -61,13 +61,13 @@ TEST_F(VPGFileGenerationServiceTest, Empty)
     std::wstring tagName = L"";
     std::wstring generatedContent = L"";
     std::wstring commandDelimiter = L"//";
-    std::wstring result = VPGFileGenerationService::GenerateFileContent(code, tagName, generatedContent, commandDelimiter);
+    std::wstring result = VPGFileGenerationService::generateFileContent(code, tagName, generatedContent, commandDelimiter);
     EXPECT_EQ(result, L"");
 }
 
 TEST_F(VPGFileGenerationServiceTest, DEMAND_MODE_FORCE)
 {
-    EXPECT_EQ(VPGFileGenerationService::GenerateFileContent(this->getDemandHeader() + this->getCodeA(), L"vcc:tagA", this->getReplaceCode(), L"//"),
+    EXPECT_EQ(VPGFileGenerationService::generateFileContent(this->getDemandHeader() + this->getCodeA(), L"vcc:tagA", this->getReplaceCode(), L"//"),
         this->getDemandHeader() + L"    a\r\n"
             "    // <vcc:tagA gen=\"REPLACE\">\r\n"
             "    line A\r\n"
@@ -90,13 +90,13 @@ TEST_F(VPGFileGenerationServiceTest, DEMAND_MODE_FORCE)
 
 TEST_F(VPGFileGenerationServiceTest, DEMAND_MODE_SKIP)
 {
-    EXPECT_EQ(VPGFileGenerationService::GenerateFileContent(this->getDemandHeader() + this->getCodeA(), L"vcc:tagB", this->getReplaceCode(), L"//"),
+    EXPECT_EQ(VPGFileGenerationService::generateFileContent(this->getDemandHeader() + this->getCodeA(), L"vcc:tagB", this->getReplaceCode(), L"//"),
         this->getDemandHeader() + this->getCodeA());
 }
 
 TEST_F(VPGFileGenerationServiceTest, REPLACE_MODE_FORCE)
 {
-    EXPECT_EQ(VPGFileGenerationService::GenerateFileContent(this->getForceHeader() + this->getCodeA(), L"vcc:tagA", this->getReplaceCode(), L"//"),
+    EXPECT_EQ(VPGFileGenerationService::generateFileContent(this->getForceHeader() + this->getCodeA(), L"vcc:tagA", this->getReplaceCode(), L"//"),
         this->getForceHeader() + L"    a\r\n"
             "    // <vcc:tagA gen=\"REPLACE\">\r\n"
             "    line A\r\n"
@@ -119,7 +119,7 @@ TEST_F(VPGFileGenerationServiceTest, REPLACE_MODE_FORCE)
 
 TEST_F(VPGFileGenerationServiceTest, REPLACE_MODE_SKIP)
 {
-    EXPECT_EQ(VPGFileGenerationService::GenerateFileContent(this->getForceHeader() + this->getCodeA(), L"vcc:tagB", this->getReplaceCode(), L"//"),
+    EXPECT_EQ(VPGFileGenerationService::generateFileContent(this->getForceHeader() + this->getCodeA(), L"vcc:tagB", this->getReplaceCode(), L"//"),
         this->getForceHeader() + L"    a\r\n"
             "    // <vcc:tagA gen=\"REPLACE\">\r\n"
             "    BLOCK A\r\n"
@@ -142,7 +142,7 @@ TEST_F(VPGFileGenerationServiceTest, REPLACE_MODE_SKIP)
 
 TEST_F(VPGFileGenerationServiceTest, REPLACE_MODE_NONE)
 {
-    EXPECT_EQ(VPGFileGenerationService::GenerateFileContent(this->getForceHeader() + this->getCodeA(), L"vcc:tagNone", this->getReplaceCode(), L"//"),
+    EXPECT_EQ(VPGFileGenerationService::generateFileContent(this->getForceHeader() + this->getCodeA(), L"vcc:tagNone", this->getReplaceCode(), L"//"),
         this->getForceHeader() + this->getCodeA() + L"\r\n"
             "    // <vcc:tagNone gen=\"REPLACE\">\r\n"
             "    line A\r\n"
@@ -152,12 +152,12 @@ TEST_F(VPGFileGenerationServiceTest, REPLACE_MODE_NONE)
 
 TEST_F(VPGFileGenerationServiceTest, RESERVE_MODE_FORCE)
 {
-    EXPECT_EQ(VPGFileGenerationService::GenerateFileContent(this->getSkipHeader() + this->getCodeA(), L"vcc:tagA", this->getReplaceCode(), L"//"),
+    EXPECT_EQ(VPGFileGenerationService::generateFileContent(this->getSkipHeader() + this->getCodeA(), L"vcc:tagA", this->getReplaceCode(), L"//"),
         this->getSkipHeader() + this->getCodeA());
 }
 
 TEST_F(VPGFileGenerationServiceTest, RESERVE_MODE_SKIP)
 {
-    EXPECT_EQ(VPGFileGenerationService::GenerateFileContent(this->getSkipHeader() + this->getCodeA(), L"vcc:tagB", this->getReplaceCode(), L"//"),
+    EXPECT_EQ(VPGFileGenerationService::generateFileContent(this->getSkipHeader() + this->getCodeA(), L"vcc:tagB", this->getReplaceCode(), L"//"),
         this->getSkipHeader() + this->getCodeA());
 }

@@ -190,7 +190,7 @@ std::wstring VPGJavaGenerationService::getJavaGetterSetterJavaTypeToJavaCaptialT
     return L"";
 }
 
-std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstring &content, const VPGConfig *option)
+std::wstring VPGJavaGenerationService::generateJavaBridgeContent(const std::wstring &content, const VPGConfig *option)
 {
     std::wstring result = L"";
     TRY
@@ -393,7 +393,7 @@ std::wstring VPGJavaGenerationService::GenerateJavaBridgeContent(const std::wstr
     return result;
 }
 
-void VPGJavaGenerationService::GenerateJavaBridge(const vcc::LogConfig *logConfig, const std::wstring &targetWorkspace, const std::wstring &dllInterfacehppFilePath, const VPGConfig *option)
+void VPGJavaGenerationService::generateJavaBridge(const vcc::LogConfig *logConfig, const std::wstring &targetWorkspace, const std::wstring &dllInterfacehppFilePath, const VPGConfig *option)
 {
     TRY
         assert(option != nullptr);
@@ -411,12 +411,12 @@ void VPGJavaGenerationService::GenerateJavaBridge(const vcc::LogConfig *logConfi
         std::wstring workspace = vcc::isAbsolutePath(javaOption->getWorkspace()) ? javaOption->getWorkspace() : vcc::concatPaths({ targetWorkspace, javaOption->getWorkspace() });
         std::wstring filePath = vcc::concatPaths({ workspace, javaOption->getDllBridgeDirectory(), javaFileName });
         vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate Java Bridge: " + filePath);
-        vcc::writeFile(filePath, VPGJavaGenerationService::GenerateJavaBridgeContent(vcc::readFile(dllInterfacehppFilePath), option), true);
+        vcc::writeFile(filePath, VPGJavaGenerationService::generateJavaBridgeContent(vcc::readFile(dllInterfacehppFilePath), option), true);
         vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate Java Bridge completed.");
     CATCH
 }
 
-std::wstring VPGJavaGenerationService::GenerateEnumContent(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &middlePath, const VPGConfigExport *option)
+std::wstring VPGJavaGenerationService::generateEnumContent(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &middlePath, const VPGConfigExport *option)
 {
     std::wstring result = L"";
     TRY
@@ -491,7 +491,7 @@ std::wstring VPGJavaGenerationService::getGetterSetterMapKeyContent(const std::w
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainerCount(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty, bool isVector, bool isMap, bool isSet)
+std::wstring VPGJavaGenerationService::generateObjectGetterSetterContainerCount(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty, bool isVector, bool isMap, bool isSet)
 {
     std::wstring result = L"";
     TRY
@@ -509,7 +509,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainerCount(
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
+std::wstring VPGJavaGenerationService::generateObjectGetterSetterContainer(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
     const std::wstring &cppType1, const std::wstring &javaType1,
     bool isVector, bool isMap, bool isSet, std::set<std::wstring> &importFiles)
 {
@@ -592,7 +592,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterContainer(const
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterRead(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
+std::wstring VPGJavaGenerationService::generateObjectGetterSetterRead(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
     const std::wstring &macro, const std::wstring &cppType1, const std::wstring &javaType1, const std::wstring &cppType2, const std::wstring &javaType2,
     bool isVector, bool isMap, bool isSet, std::set<std::wstring> &importFiles)
 {
@@ -669,7 +669,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterRead(const VPGE
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterWrite(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
+std::wstring VPGJavaGenerationService::generateObjectGetterSetterWrite(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
     const std::wstring &macro, const std::wstring &cppType1, const std::wstring &javaType1, const std::wstring &cppType2, const std::wstring &javaType2,
     bool isVector, bool isMap, bool isSet,
     const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles)
@@ -783,7 +783,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterWrite(const VPG
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterInsert(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
+std::wstring VPGJavaGenerationService::generateObjectGetterSetterInsert(const VPGEnumClassAttribute *property, const std::wstring &projectPrefix, const std::wstring &objectProperty,
     const std::wstring &cppType1, const std::wstring &javaType1,
     bool isVector, std::set<std::wstring> &importFiles)
 {
@@ -837,7 +837,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetterInsert(const VP
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateObjectGetterSetter(const std::wstring &projectPrefix, const std::wstring &objectProperty, const VPGEnumClassAttribute *property, const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles)
+std::wstring VPGJavaGenerationService::generateObjectGetterSetter(const std::wstring &projectPrefix, const std::wstring &objectProperty, const VPGEnumClassAttribute *property, const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles)
 {
     std::wstring result = L"";
     TRY
@@ -877,56 +877,56 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetter(const std::wst
         bool isVector = property->getIsVector();
         bool isMap = property->getIsMap() || property->getIsOrderedMap();
         bool isSet = property->getIsSet();
-        result += GenerateObjectGetterSetterContainerCount(property, projectPrefix, objectProperty, isVector, isMap, isSet);
+        result += generateObjectGetterSetterContainerCount(property, projectPrefix, objectProperty, isVector, isMap, isSet);
 
         if (!isVector && !isMap && !isSet) {
-            result += GenerateObjectGetterSetterRead(property, projectPrefix, objectProperty,
+            result += generateObjectGetterSetterRead(property, projectPrefix, objectProperty,
                 macro, cppType1, javaType1, cppType2, javaType2,
                 false, false, false,
                 importFiles);
-            result += GenerateObjectGetterSetterWrite(property, projectPrefix, objectProperty,
+            result += generateObjectGetterSetterWrite(property, projectPrefix, objectProperty,
                 macro, cppType1, javaType1, cppType2, javaType2,
                 false, false, false,
                 importFileMap, importFiles);
         } else {
             if (isVector) {
-                result += GenerateObjectGetterSetterRead(property, projectPrefix, objectProperty,
+                result += generateObjectGetterSetterRead(property, projectPrefix, objectProperty,
                     macro, cppType1, javaType1, cppType2, javaType2,
                     true, false, false,
                     importFiles);
-                result += GenerateObjectGetterSetterWrite(property, projectPrefix, objectProperty,
+                result += generateObjectGetterSetterWrite(property, projectPrefix, objectProperty,
                     macro, cppType1, javaType1, cppType2, javaType2,
                     true, false, false,
                     importFileMap, importFiles);
             }
             if (isMap) {
-                result += GenerateObjectGetterSetterRead(property, projectPrefix, objectProperty,
+                result += generateObjectGetterSetterRead(property, projectPrefix, objectProperty,
                     macro, cppType1, javaType1, cppType2, javaType2,
                     false, true, false,
                     importFiles);
-                result += GenerateObjectGetterSetterWrite(property, projectPrefix, objectProperty,
+                result += generateObjectGetterSetterWrite(property, projectPrefix, objectProperty,
                     macro, cppType1, javaType1, cppType2, javaType2,
                     false, true, false,
                     importFileMap, importFiles);
             }
             if (isSet) {
-                result += GenerateObjectGetterSetterRead(property, projectPrefix, objectProperty,
+                result += generateObjectGetterSetterRead(property, projectPrefix, objectProperty,
                     macro, cppType1, javaType1, cppType2, javaType2,
                     false, false, true,
                     importFiles);
-                result += GenerateObjectGetterSetterWrite(property, projectPrefix, objectProperty,
+                result += generateObjectGetterSetterWrite(property, projectPrefix, objectProperty,
                     macro, cppType1, javaType1, cppType2, javaType2,
                     false, false, true,
                     importFileMap, importFiles);
             }
         }
 
-        result += GenerateObjectGetterSetterInsert(property, projectPrefix, objectProperty,
+        result += generateObjectGetterSetterInsert(property, projectPrefix, objectProperty,
             cppType1, javaType1,
             isVector, importFiles);
 
         // container
-        result += GenerateObjectGetterSetterContainer(property, projectPrefix, objectProperty,
+        result += generateObjectGetterSetterContainer(property, projectPrefix, objectProperty,
             cppType1, javaType1,
             isVector, isMap, isSet,
             importFiles);
@@ -934,7 +934,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectGetterSetter(const std::wst
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &middlePath, const std::map<std::wstring, std::wstring> &importFileMap, const VPGConfigExport *option)
+std::wstring VPGJavaGenerationService::generateObjectContent(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &middlePath, const std::map<std::wstring, std::wstring> &importFileMap, const VPGConfigExport *option)
 {
     std::wstring result = L"";
     TRY
@@ -964,7 +964,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
         // Property
         std::wstring getterSetterStr = L"";
         for (auto const &property : enumClass->getProperties())
-            getterSetterStr += VPGJavaGenerationService::GenerateObjectGetterSetter(projectPrefix, objectPropertyName, property.get(), importFileMap, importFiles);
+            getterSetterStr += VPGJavaGenerationService::generateObjectGetterSetter(projectPrefix, objectPropertyName, property.get(), importFileMap, importFiles);
         if (!getterSetterStr.empty()) {
             vcc::lTrim(getterSetterStr);
 
@@ -975,7 +975,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
         }
         
         // Form Action
-        std::wstring  formActionStr = VPGJavaGenerationService::GenerateFormAction(projectPrefix, enumClass);
+        std::wstring  formActionStr = VPGJavaGenerationService::generateFormAction(projectPrefix, enumClass);
         if (!formActionStr.empty()) {
             vcc::lTrim(formActionStr);
             formActionStr = L"\r\n"
@@ -983,7 +983,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
                 + INDENT + formActionStr
                 + INDENT + L"// </editor-fold>\r\n";
         }
-        std::wstring  formCustomActionStr = VPGJavaGenerationService::GenerateFormCustomAction(projectPrefix, enumClass, option->getObjectDirectory(), importFileMap, importFiles);
+        std::wstring  formCustomActionStr = VPGJavaGenerationService::generateFormCustomAction(projectPrefix, enumClass, option->getObjectDirectory(), importFileMap, importFiles);
         if (!formCustomActionStr.empty()) {
             vcc::lTrim(formCustomActionStr);
             formCustomActionStr = L"\r\n"
@@ -1046,7 +1046,7 @@ std::wstring VPGJavaGenerationService::GenerateObjectContent(const std::wstring 
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateOperationResultContent(const std::wstring &projectPrefix, const VPGConfigExport *option, const std::map<std::wstring, std::wstring> &importFileMap)
+std::wstring VPGJavaGenerationService::generateOperationResultContent(const std::wstring &projectPrefix, const VPGConfigExport *option, const std::map<std::wstring, std::wstring> &importFileMap)
 {
     std::wstring result = L"";
     TRY
@@ -1100,7 +1100,7 @@ std::wstring VPGJavaGenerationService::GenerateOperationResultContent(const std:
     return result;
 }
 
-std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass)
+std::wstring VPGJavaGenerationService::generateFormAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass)
 {
     assert(enumClass != nullptr);
     if (enumClass->getType() != VPGEnumClassType::Form)
@@ -1179,7 +1179,7 @@ std::wstring VPGJavaGenerationService::GenerateFormAction(const std::wstring &pr
 }
 
 #include <iostream>
-std::wstring VPGJavaGenerationService::GenerateFormCustomAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &optionResultParent,
+std::wstring VPGJavaGenerationService::generateFormCustomAction(const std::wstring &projectPrefix, const VPGEnumClass *enumClass, const std::wstring &optionResultParent,
     const std::map<std::wstring, std::wstring> &importFileMap, std::set<std::wstring> &importFiles)
 {
     assert(enumClass != nullptr);
@@ -1234,7 +1234,7 @@ std::wstring VPGJavaGenerationService::GenerateFormCustomAction(const std::wstri
     return result;
 }
 
-void VPGJavaGenerationService::GenerateEnum(const vcc::LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass, const VPGConfig *option, const VPGConfigExport *javaOption)
+void VPGJavaGenerationService::generateEnum(const vcc::LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass, const VPGConfig *option, const VPGConfigExport *javaOption)
 {
     TRY
         assert(option != nullptr);
@@ -1246,12 +1246,12 @@ void VPGJavaGenerationService::GenerateEnum(const vcc::LogConfig *logConfig, con
         tmpFilePath = vcc::concatPaths({ tmpFilePath, vcc::getFileName(filePath) });
 
         vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate Java Enum: " + tmpFilePath);
-        vcc::writeFile(tmpFilePath, VPGJavaGenerationService::GenerateEnumContent(option->getProjectPrefix(), enumClass, cppMiddlePath, javaOption), true);
+        vcc::writeFile(tmpFilePath, VPGJavaGenerationService::generateEnumContent(option->getProjectPrefix(), enumClass, cppMiddlePath, javaOption), true);
         vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate Java Enum completed.");
     CATCH
 }
 
-void VPGJavaGenerationService::GenerateObject(const vcc::LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass,
+void VPGJavaGenerationService::generateObject(const vcc::LogConfig *logConfig, const std::wstring &filePath, const std::wstring &cppMiddlePath, const VPGEnumClass *enumClass,
     const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapObject, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapForm,
     const VPGConfig *option, const VPGConfigExport *javaOption)
 {
@@ -1268,12 +1268,12 @@ void VPGJavaGenerationService::GenerateObject(const vcc::LogConfig *logConfig, c
         if (!vcc::isEndWith(objectName, propertyClassNameSuffix))
             return;
         vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate Java Class: " + tmpFilePath);
-        vcc::writeFile(tmpFilePath, VPGJavaGenerationService::GenerateObjectContent(option->getProjectPrefix(), enumClass, cppMiddlePath, getImportFileMap(option->getProjectPrefix(), javaOption, typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm), javaOption), true);
+        vcc::writeFile(tmpFilePath, VPGJavaGenerationService::generateObjectContent(option->getProjectPrefix(), enumClass, cppMiddlePath, getImportFileMap(option->getProjectPrefix(), javaOption, typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm), javaOption), true);
         vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate Java Class completed.");
     CATCH
 }
 
-void VPGJavaGenerationService::GenerateOperationResult(const vcc::LogConfig *logConfig, const std::wstring &projectPrefix, const VPGConfigExport *option,
+void VPGJavaGenerationService::generateOperationResult(const vcc::LogConfig *logConfig, const std::wstring &projectPrefix, const VPGConfigExport *option,
     const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapObject, const std::map<std::wstring, std::wstring> &typeWorkspaceClassRelativePathMapForm)
 {
     TRY
@@ -1281,7 +1281,7 @@ void VPGJavaGenerationService::GenerateOperationResult(const vcc::LogConfig *log
             return;
         std::wstring filePath = vcc::concatPaths({option->getWorkspace(), getOperationResultFilePath(projectPrefix, option)});
         vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate Java Class: " + filePath);
-        vcc::writeFile(filePath, GenerateOperationResultContent(projectPrefix, option, getImportFileMap(projectPrefix, option, typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm)), true);
+        vcc::writeFile(filePath, generateOperationResultContent(projectPrefix, option, getImportFileMap(projectPrefix, option, typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm)), true);
         vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate Java Class completed.");
         return;
     CATCH

@@ -10,7 +10,7 @@
 
 #define LOG_ID L"Prorperty Accessor Factory File Generation"
 
-void VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp)
+void VPGPropertyAccessorFactoryFileGenerationService::generateHpp(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp)
 {
     TRY
         vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate property accessor factory file: " + filePathHpp);
@@ -37,7 +37,7 @@ void VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(const vcc::Log
     CATCH
 }
 
-void VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig, const std::wstring &projectPrefix, const std::set<std::wstring> &includeFiles,
+void VPGPropertyAccessorFactoryFileGenerationService::generateCpp(const vcc::LogConfig *logConfig, const std::wstring &projectPrefix, const std::set<std::wstring> &includeFiles,
     const std::wstring &filePathCpp, const std::set<std::wstring> &propertyTypes)
 {
     TRY
