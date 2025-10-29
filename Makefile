@@ -54,7 +54,7 @@ PROJ_NAME := VCCProjGenerator
 PROJ_NAME_DLL := libvpg
 PROJ_NAME_EXE := vpg
 IS_EXCLUDE_UNITTEST := N
-IS_CPPCHECK := Y
+IS_CPPCHECK_ENABLED := Y
 # </vcc:name>
 # <vcc:export sync="ALERT" gen="ALERT">
 #----------------------------------#
