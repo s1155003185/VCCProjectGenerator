@@ -94,21 +94,6 @@ CPPCHECK_DEFS_FILE := cppcheck_defines.txt
 #  - put suppressions (cppcheck suppression entries) in cppcheck_suppressions.txt
 CPPCHECK_SUPPRESS_FILE := cppcheck_suppressions.txt
 
-ifeq ($(OS),Windows_NT)
-ifneq ($(CPPCHECK_DEFS_FILE),)
-CPPCHECK_DEFS := $(shell powershell -NoProfile -Command "if (Test-Path '$(CPPCHECK_DEFS_FILE)') { $list = Get-Content '$(CPPCHECK_DEFS_FILE)' | Where-Object { $$_ -and -not ($$_ -match '^\s*#') } | ForEach-Object { '-D' + $$_ }; if ($list) { $list -join ' ' } }")
-endif
-ifneq ($(CPPCHECK_SUPPRESS_FILE),)
-CPPCHECK_SUPPRESS := $(shell powershell -NoProfile -Command "if (Test-Path '$(CPPCHECK_SUPPRESS_FILE)') { Write-Output '--suppressions-list=$(CPPCHECK_SUPPRESS_FILE)' }")
-endif
-else
-ifneq ($(CPPCHECK_DEFS_FILE),)
-CPPCHECK_DEFS := $(shell if [ -f $(CPPCHECK_DEFS_FILE) ]; then awk '!/^\s*$$/ && !/^\s*#/{printf "-D%s ",$$0}' $(CPPCHECK_DEFS_FILE); fi)
-endif
-ifneq ($(CPPCHECK_SUPPRESS_FILE),)
-CPPCHECK_SUPPRESS := $(shell if [ -f $(CPPCHECK_SUPPRESS_FILE) ]; then printf "--suppressions-list=%s" $(CPPCHECK_SUPPRESS_FILE); fi)
-endif
-endif
 #----------------------------------#
 #---------- Compile Info ----------#
 #----------------------------------#
@@ -238,6 +223,18 @@ INCDIRS = -I$(INC) $(INCDIRS_SUB)
 # System Lib with -Lpath
 #LFLAGS :=
 
+# cppcheck
+ifneq ($(CPPCHECK_DEFS_FILE),)
+CPPCHECK_DEFS := $(shell powershell -NoProfile -Command "if (Test-Path '$(CPPCHECK_DEFS_FILE)') { $list = Get-Content '$(CPPCHECK_DEFS_FILE)' | Where-Object { $$_ -and -not ($$_ -match '^\s*#') } | ForEach-Object { '-D' + $$_ }; if ($list) { $list -join ' ' } }")
+else
+CPPCHECK_DEFS :=
+endif
+ifneq ($(CPPCHECK_SUPPRESS_FILE),)
+CPPCHECK_SUPPRESS := $(shell powershell -NoProfile -Command "if (Test-Path '$(CPPCHECK_SUPPRESS_FILE)') { Write-Output '--suppressions-list=$(CPPCHECK_SUPPRESS_FILE)' }")
+else 
+CPPCHECK_SUPPRESS :=
+endif
+
 # Command
 RM := del /q /f
 RMDIR := rmdir /s /q
@@ -290,6 +287,18 @@ INCDIRS = $(INCDIRS_SUB)
 
 # System Lib with -Lpath
 #LFLAGS :=
+
+# cppcheck
+ifneq ($(CPPCHECK_DEFS_FILE),)
+CPPCHECK_DEFS := $(shell if [ -f $(CPPCHECK_DEFS_FILE) ]; then awk '!/^\s*$$/ && !/^\s*#/{printf "-D%s ",$$0}' $(CPPCHECK_DEFS_FILE); fi)
+else
+CPPCHECK_DEFS :=
+endif
+ifneq ($(CPPCHECK_SUPPRESS_FILE),)
+CPPCHECK_SUPPRESS := $(shell if [ -f $(CPPCHECK_SUPPRESS_FILE) ]; then printf "--suppressions-list=%s" $(CPPCHECK_SUPPRESS_FILE); fi)
+else
+CPPCHECK_SUPPRESS :=
+endif
 
 # Command
 RM := rm -f
