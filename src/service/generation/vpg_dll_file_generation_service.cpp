@@ -10,7 +10,9 @@
 
 #include "vpg_file_generation_service.hpp"
 
-#define LOG_ID L"Dll File Generation"
+#include <string>
+
+const std::wstring logId = L"Dll File Generation";
 
 std::wstring VPGDllFileGenerationService::generateApplicationHpp(const VPGDllFileGenerationServiceOption *option)
 {
@@ -343,7 +345,7 @@ void VPGDllFileGenerationService::generateHpp(const vcc::LogConfig *logConfig, c
         if (!vcc::isFilePresent(filePathHpp))
             return;
         
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file: " + filePathHpp);
+    vcc::LogService::logInfo(logConfig, logId, L"Modify DllFunctions.hpp file: " + filePathHpp);
 
         // header
         std::wstring content = L"";
@@ -361,7 +363,7 @@ void VPGDllFileGenerationService::generateHpp(const vcc::LogConfig *logConfig, c
         content += propertyAccessorStr;
 
         vcc::writeFile(filePathHpp, VPGFileGenerationService::generateFileContent(vcc::readFile(filePathHpp), L"vcc:dllInterface", content, L"//"), true);
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Modify DllFunctions.hpp file completed.");
+    vcc::LogService::logInfo(logConfig, logId, L"Modify DllFunctions.hpp file completed.");
     CATCH
 }
 
@@ -372,7 +374,7 @@ void VPGDllFileGenerationService::generateCpp(const vcc::LogConfig *logConfig, c
         if (!vcc::isFilePresent(filePathCpp))
             return;
 
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp file: " + filePathCpp);
+    vcc::LogService::logInfo(logConfig, logId, L"Modify DllFunctions.cpp file: " + filePathCpp);
         // header
         std::wstring content = L"";
         std::set<std::wstring> customIncludeFiles;
@@ -390,6 +392,6 @@ void VPGDllFileGenerationService::generateCpp(const vcc::LogConfig *logConfig, c
         content += propertyAccessorStr;
         vcc::writeFile(filePathCpp, VPGFileGenerationService::generateFileContent(vcc::readFile(filePathCpp), L"vcc:dllInterface", content, L"//"), true);
 
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Modify DllFunctions.cpp completed.");
+    vcc::LogService::logInfo(logConfig, logId, L"Modify DllFunctions.cpp completed.");
     CATCH
 }

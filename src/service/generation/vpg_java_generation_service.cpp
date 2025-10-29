@@ -14,9 +14,9 @@
 #include "vpg_config_type.hpp"
 #include "vpg_property_accessor_generation_service.hpp"
 
-#define LOG_ID L"Java Generation"
-#define JAVA_BRIDGE_FILE_NAME L"DllFunctions.java"
-#define JAVA_PROJECT_SOURCE_PARENT_FOLDER L"src/main/java"
+const std::wstring logId = L"Java Generation";
+const std::wstring javaBridgeFileName = L"DllFunctions.java";
+const std::wstring javaProjectSourceParentFolder = L"src/main/java";
 
 const std::wstring propertyClassNameSuffix = L"Property";
 
@@ -43,10 +43,10 @@ std::wstring VPGJavaGenerationService::getJavaPactkage(const std::wstring &path,
 {
     std::wstring result = L"";
     TRY
-        if (!vcc::isStartWith(path, JAVA_PROJECT_SOURCE_PARENT_FOLDER))
-            THROW_EXCEPTION_MSG(ExceptionType::CustomError, filePathName + L" is not start with " + JAVA_PROJECT_SOURCE_PARENT_FOLDER);
+        if (!vcc::isStartWith(path, javaProjectSourceParentFolder))
+            THROW_EXCEPTION_MSG(ExceptionType::CustomError, filePathName + L" is not start with " + javaProjectSourceParentFolder);
 
-        result = vcc::getRelativePath(path, JAVA_PROJECT_SOURCE_PARENT_FOLDER);
+    result = vcc::getRelativePath(path, javaProjectSourceParentFolder);
         if (!middlePath.empty())
             result = vcc::concatPaths({ result, middlePath });
         result = vcc::getLinuxPath(result);
@@ -407,12 +407,12 @@ void VPGJavaGenerationService::generateJavaBridge(const vcc::LogConfig *logConfi
         std::wstring filePrefix = option->getProjectPrefix();
         vcc::trim(filePrefix);
         vcc::toUpper(filePrefix);
-        std::wstring javaFileName = filePrefix + JAVA_BRIDGE_FILE_NAME;
+            std::wstring javaFileName = filePrefix + javaBridgeFileName;
         std::wstring workspace = vcc::isAbsolutePath(javaOption->getWorkspace()) ? javaOption->getWorkspace() : vcc::concatPaths({ targetWorkspace, javaOption->getWorkspace() });
         std::wstring filePath = vcc::concatPaths({ workspace, javaOption->getDllBridgeDirectory(), javaFileName });
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate Java Bridge: " + filePath);
+            vcc::LogService::logInfo(logConfig, logId, L"Generate Java Bridge: " + filePath);
         vcc::writeFile(filePath, VPGJavaGenerationService::generateJavaBridgeContent(vcc::readFile(dllInterfacehppFilePath), option), true);
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate Java Bridge completed.");
+            vcc::LogService::logInfo(logConfig, logId, L"Generate Java Bridge completed.");
     CATCH
 }
 
@@ -439,7 +439,7 @@ std::wstring VPGJavaGenerationService::generateEnumContent(const std::wstring &p
             enumValueSet.insert(property->getEnum());
             if (property->getEnumValue() > -1)
                 enumValue = property->getEnumValue();
-            result += INDENT + property->getEnum() + L"(" + std::to_wstring(enumValue) + L")" 
+            result += INDENT + property->getEnum() + L"(" + std::to_wstring(enumValue) + L")"
                 + (i == enumClass->getProperties().size() - 1 ? L";" : L",") + L"\r\n";
             enumValue++;
         }
@@ -1245,9 +1245,9 @@ void VPGJavaGenerationService::generateEnum(const vcc::LogConfig *logConfig, con
         std::wstring tmpFilePath = vcc::getParentPath(filePath);
         tmpFilePath = vcc::concatPaths({ tmpFilePath, vcc::getFileName(filePath) });
 
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate Java Enum: " + tmpFilePath);
-        vcc::writeFile(tmpFilePath, VPGJavaGenerationService::generateEnumContent(option->getProjectPrefix(), enumClass, cppMiddlePath, javaOption), true);
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate Java Enum completed.");
+    vcc::LogService::logInfo(logConfig, logId, L"Generate Java Enum: " + tmpFilePath);
+    vcc::writeFile(tmpFilePath, VPGJavaGenerationService::generateEnumContent(option->getProjectPrefix(), enumClass, cppMiddlePath, javaOption), true);
+    vcc::LogService::logInfo(logConfig, logId, L"Generate Java Enum completed.");
     CATCH
 }
 
@@ -1267,9 +1267,9 @@ void VPGJavaGenerationService::generateObject(const vcc::LogConfig *logConfig, c
         std::wstring objectName = getTypeOrClassWithoutNamespace(enumClass->getName());
         if (!vcc::isEndWith(objectName, propertyClassNameSuffix))
             return;
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate Java Class: " + tmpFilePath);
-        vcc::writeFile(tmpFilePath, VPGJavaGenerationService::generateObjectContent(option->getProjectPrefix(), enumClass, cppMiddlePath, getImportFileMap(option->getProjectPrefix(), javaOption, typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm), javaOption), true);
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate Java Class completed.");
+    vcc::LogService::logInfo(logConfig, logId, L"Generate Java Class: " + tmpFilePath);
+    vcc::writeFile(tmpFilePath, VPGJavaGenerationService::generateObjectContent(option->getProjectPrefix(), enumClass, cppMiddlePath, getImportFileMap(option->getProjectPrefix(), javaOption, typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm), javaOption), true);
+    vcc::LogService::logInfo(logConfig, logId, L"Generate Java Class completed.");
     CATCH
 }
 
@@ -1280,9 +1280,9 @@ void VPGJavaGenerationService::generateOperationResult(const vcc::LogConfig *log
         if (option == nullptr || option->getInterface() != VPGConfigInterfaceType::Java || vcc::isBlank(option->getObjectDirectory()))
             return;
         std::wstring filePath = vcc::concatPaths({option->getWorkspace(), getOperationResultFilePath(projectPrefix, option)});
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate Java Class: " + filePath);
-        vcc::writeFile(filePath, generateOperationResultContent(projectPrefix, option, getImportFileMap(projectPrefix, option, typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm)), true);
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate Java Class completed.");
+    vcc::LogService::logInfo(logConfig, logId, L"Generate Java Class: " + filePath);
+    vcc::writeFile(filePath, generateOperationResultContent(projectPrefix, option, getImportFileMap(projectPrefix, option, typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm)), true);
+    vcc::LogService::logInfo(logConfig, logId, L"Generate Java Class completed.");
         return;
     CATCH
 }

@@ -9,7 +9,9 @@
 #include "vpg_file_sync_service.hpp"
 #include "vpg_tag_helper.hpp"
 
-#define LOG_ID L"Unittest File Generation"
+#include <string>
+
+const std::wstring logId = L"Unittest File Generation";
 
 std::wstring VPGUnittestFileGenerationService::generateUnittestClass(const std::wstring &className)
 {
@@ -137,12 +139,12 @@ void VPGUnittestFileGenerationService::generateCppAction(const vcc::LogConfig *l
                 
                     // Generate File
                     std::wstring filePathCpp = vcc::concatPaths({folderPathCpp, fileNameCpp});
-                    vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate unittest action unittest file: " + filePathCpp);
+                    vcc::LogService::logInfo(logConfig, logId, L"Generate unittest action unittest file: " + filePathCpp);
                     if (vcc::isFilePresent(filePathCpp))
                         content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::readFile(filePathCpp), VPGFileContentSyncMode::Full, L"//");
                     vcc::lTrim(content);
                     vcc::writeFile(filePathCpp, content, true);
-                    vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate unittest action unittest file completed.");
+                    vcc::LogService::logInfo(logConfig, logId, L"Generate unittest action unittest file completed.");
 
                     isGenerated = false;
                 }
@@ -153,12 +155,12 @@ void VPGUnittestFileGenerationService::generateCppAction(const vcc::LogConfig *l
         if (!isSeperateFile && isGenerated) {
             // Generate File
             std::wstring filePathCpp = vcc::concatPaths({folderPathCpp, fileName});
-            vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate action unittest file: " + filePathCpp);
+            vcc::LogService::logInfo(logConfig, logId, L"Generate action unittest file: " + filePathCpp);
             if (vcc::isFilePresent(filePathCpp))
                 content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::readFile(filePathCpp), VPGFileContentSyncMode::Full, L"//");
             vcc::lTrim(content);
             vcc::writeFile(filePathCpp, content, true);
-            vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate action unittest file completed.");
+            vcc::LogService::logInfo(logConfig, logId, L"Generate action unittest file completed.");
         }
     CATCH
 }

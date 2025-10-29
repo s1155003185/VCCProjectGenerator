@@ -1,6 +1,5 @@
 # Add project-specific macro definitions here, one per line.
 # Lines starting with # or empty lines are ignored.
-#DEBUG=1
 BASE_PROPERTY_ACCESSOR_CONTAINER_DETAIL
 BASE_PROPERTY_ACCESSOR_CONTAINER_HEADER
 BUFSIZE=4096
@@ -20,14 +19,8 @@ JAVA_PROJECT_SOURCE_PARENT_FOLDER=L"src/main/java"
 LOCK_BEGIN
 LOCK_END=unlock(); CATCH
 LOG_ID=L"Action File Generation"
-LOG_ID=L"Dll File Generation"
-LOG_ID=L"Java Generation"
-LOG_ID=L"Object Factory File Generation"
 LOG_ID=L"Object File Generation"
 LOG_ID=L"Object Type File Generation"
-LOG_ID=L"Property Accessor Generation"
-LOG_ID=L"Prorperty Accessor Factory File Generation"
-LOG_ID=L"Unittest File Generation"
 PATH=std::filesystem::path
 PROPERTY_ACCESSOR_CONTAINER_HEADER
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL_CONTAINER

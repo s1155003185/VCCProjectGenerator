@@ -8,12 +8,14 @@
 #include "log_service.hpp"
 #include "set_helper.hpp"
 
-#define LOG_ID L"Object Factory File Generation"
+#include <string>
+
+const std::wstring logId = L"Object Factory File Generation";
 
 void VPGObjectFactoryFileGenerationService::generateHpp(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp)
 {
     TRY
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate object factory file: " + filePathHpp);
+    vcc::LogService::logInfo(logConfig, logId, L"Generate object factory file: " + filePathHpp);
         std::wstring content = L""
             "#pragma once\r\n"
             "\r\n"
@@ -33,7 +35,7 @@ void VPGObjectFactoryFileGenerationService::generateHpp(const vcc::LogConfig *lo
             "        static std::shared_ptr<vcc::IObject> create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);\r\n"
             "};\r\n";
         vcc::writeFile(filePathHpp, content, true);
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate object factory file completed.");
+    vcc::LogService::logInfo(logConfig, logId, L"Generate object factory file completed.");
     CATCH
 }
 
@@ -41,7 +43,7 @@ void VPGObjectFactoryFileGenerationService::generateCpp(const vcc::LogConfig *lo
     const std::wstring &filePathCpp, const std::set<std::wstring> &propertyTypes)
 {
     TRY
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate object factory file: " + filePathCpp);
+    vcc::LogService::logInfo(logConfig, logId, L"Generate object factory file: " + filePathCpp);
 
         std::set<std::wstring> tmpIncludePaths = includeFiles;
         tmpIncludePaths.insert(L"exception_macro.hpp");
@@ -81,6 +83,6 @@ void VPGObjectFactoryFileGenerationService::generateCpp(const vcc::LogConfig *lo
             + INDENT + L"return result;\r\n"
             "}\r\n";
         vcc::writeFile(filePathCpp, content, true);
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate object factory completed.");
+    vcc::LogService::logInfo(logConfig, logId, L"Generate object factory completed.");
     CATCH
 }
