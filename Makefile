@@ -223,22 +223,6 @@ INCDIRS = -I$(INC) $(INCDIRS_SUB)
 # System Lib with -Lpath
 #LFLAGS :=
 
-# cppcheck
-ifneq ($(CPPCHECK_DEFS_FILE),)
-# Use cmd.exe on Windows to read the defines file, skip empty lines and lines
-# starting with '#', prefix each entry with -D and echo them as one space-separated
-# string. This uses delayed expansion to build the output variable.
-CPPCHECK_DEFS := $(shell cmd /C "if exist \"$(CPPCHECK_DEFS_FILE)\" (setlocal enabledelayedexpansion & set \"_out=\" & for /f \"usebackq delims=\" %%A in (\"$(CPPCHECK_DEFS_FILE)\") do (set \"_line=%%A\" & if defined _line (if not \"!_line:~0,1!\"==\"#\" (if defined _out (set \"_out=!_out! -D!_line!\") else (set \"_out=-D!_line!\")))) & if defined _out @echo !_out! )")
-else
-CPPCHECK_DEFS :=
-endif
-ifneq ($(CPPCHECK_SUPPRESS_FILE),)
-# Simple cmd echo for suppression list if file exists
-CPPCHECK_SUPPRESS := $(shell cmd /C "if exist \"$(CPPCHECK_SUPPRESS_FILE)\" (echo --suppressions-list=$(CPPCHECK_SUPPRESS_FILE))")
-else 
-CPPCHECK_SUPPRESS :=
-endif
-
 # Command
 RM := del /q /f
 RMDIR := rmdir /s /q
@@ -292,18 +276,6 @@ INCDIRS = $(INCDIRS_SUB)
 # System Lib with -Lpath
 #LFLAGS :=
 
-# cppcheck
-ifneq ($(CPPCHECK_DEFS_FILE),)
-CPPCHECK_DEFS := $(shell if [ -f $(CPPCHECK_DEFS_FILE) ]; then awk '!/^\s*$$/ && !/^\s*#/{printf "-D%s ",$$0}' $(CPPCHECK_DEFS_FILE); fi)
-else
-CPPCHECK_DEFS :=
-endif
-ifneq ($(CPPCHECK_SUPPRESS_FILE),)
-CPPCHECK_SUPPRESS := $(shell if [ -f $(CPPCHECK_SUPPRESS_FILE) ]; then printf "--suppressions-list=%s" $(CPPCHECK_SUPPRESS_FILE); fi)
-else
-CPPCHECK_SUPPRESS :=
-endif
-
 # Command
 RM := rm -f
 RMDIR := rm -rf
@@ -314,6 +286,18 @@ endif
 ALL_PROJECT_O_FILES_EXE := $(ALL_PROJECT_CPP_FILES_EXE:.cpp=.o)
 ALL_PROJECT_O_FILES_DLL := $(ALL_PROJECT_CPP_FILES_DLL:.cpp=.o)
 GTEST_O_FILES := $(GTEST_CPP_FILES:.cpp=.o)
+
+#----------------------------------#
+#----------- cppcheck   -----------#
+#----------------------------------#
+CPPCHECK_DEFS :=
+CPPCHECK_SUPPRESS :=
+ifneq ($(CPPCHECK_DEFS_FILE),)
+CPPCHECK_DEFS := --include=$(CPPCHECK_DEFS_FILE)
+endif
+ifneq ($(CPPCHECK_SUPPRESS_FILE),)
+CPPCHECK_SUPPRESS := --suppressions-list=$(CPPCHECK_SUPPRESS_FILE)
+endif
 
 #------------------------------------------------------------------------------------------------------#
 #------------------------------------------ Customize Begin  ------------------------------------------#

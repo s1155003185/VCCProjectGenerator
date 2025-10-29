@@ -47,6 +47,7 @@ C++ (c++23)
 3. make
 4. gtest
 5. cppcheck
+6. clang-format
 
 Optional if using Java Interface
 1. Maven Project
