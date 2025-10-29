@@ -11,8 +11,7 @@
 #include "vpg_code_reader.hpp"
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_global.hpp"
-
-#define CLASS_ID L"VPGVccGenerationManager"
+const std::wstring classId = L"VPGVccGenerationManager";
 
 std::wstring VPGVccGenerationManager::adjustAppliationCpp(const std::wstring &fileContent) const
 {
@@ -125,7 +124,7 @@ void VPGVccGenerationManager::add() const
         VPGBaseGenerationManager::CreateBasicProject();
         std::wstring src = VPGGlobal::getConvertedPath(_Option->getTemplate()->getWorkspace());
         std::wstring dest = _Workspace;
-        vcc::LogService::logInfo(this->_LogConfig.get(), CLASS_ID, L"Copy Project to " + dest + L" ...");
+    vcc::LogService::logInfo(this->_LogConfig.get(), classId, L"Copy Project to " + dest + L" ...");
         vcc::CopyDirectoryOption copyDirectoryOption;
         copyDirectoryOption.setIsForce(true);
         copyDirectoryOption.setIsRecursive(true);
@@ -145,7 +144,7 @@ void VPGVccGenerationManager::add() const
         
         // Create Json file at the end to force override
         CreateVccJson(true);
-        vcc::LogService::logInfo(this->_LogConfig.get(), CLASS_ID, L"Done");
+    vcc::LogService::logInfo(this->_LogConfig.get(), classId, L"Done");
     CATCH
 }
 

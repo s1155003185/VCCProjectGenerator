@@ -11,7 +11,7 @@
 
 namespace vcc
 {
-    #define BUFSIZE 4096 
+    constexpr int bufSize = 4096;
  
     //HANDLE pStdInRead = NULL;
     //HANDLE pStdInWrite = NULL;
@@ -133,12 +133,12 @@ namespace vcc
     // void WriteToPipe(void)
     // { 
     //     DWORD dwRead, dwWritten; 
-    //     CHAR chBuf[BUFSIZE];
+    //     CHAR chBuf[bufSize];
     //     BOOL bSuccess = FALSE;
-        
+    //     
     //     while (true)
     //     { 
-    //         bSuccess = readFile(hFile, chBuf, BUFSIZE, &dwRead, NULL);
+    //         bSuccess = readFile(hFile, chBuf, bufSize, &dwRead, NULL);
     //         if (!bSuccess || dwRead == 0 ) break; 
             
     //         bSuccess = writeFile(pStdInWrite, chBuf, dwRead, &dwWritten, NULL);
@@ -151,14 +151,14 @@ namespace vcc
     std::wstring ReadStdOut(void)
     { 
         DWORD dwRead, dwWritten; 
-        CHAR buffer[BUFSIZE]; 
+    CHAR buffer[bufSize]; 
         BOOL bSuccess = FALSE;
         HANDLE hParentStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
         std::wstring result = L"";
         while (true)
         { 
-            bSuccess = ReadFile(pStdOutRead, buffer, BUFSIZE, &dwRead, NULL);
+            bSuccess = ReadFile(pStdOutRead, buffer, bufSize, &dwRead, NULL);
             if(!bSuccess || dwRead == 0) break;
             result += vcc::str2wstr(buffer);
 
@@ -171,14 +171,14 @@ namespace vcc
     std::wstring ReadStdError(void)
     { 
         DWORD dwRead, dwWritten; 
-        CHAR buffer[BUFSIZE]; 
+    CHAR buffer[bufSize]; 
         BOOL bSuccess = FALSE;
         HANDLE hParentStdError = GetStdHandle(STD_ERROR_HANDLE);
 
         std::wstring result = L"";
         while (true)
         { 
-            bSuccess = ReadFile(pStdErrorRead, buffer, BUFSIZE, &dwRead, NULL);
+            bSuccess = ReadFile(pStdErrorRead, buffer, bufSize, &dwRead, NULL);
             if(!bSuccess || dwRead == 0) break; 
             result += vcc::str2wstr(buffer);
 
