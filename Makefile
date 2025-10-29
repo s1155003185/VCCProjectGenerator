@@ -225,12 +225,16 @@ INCDIRS = -I$(INC) $(INCDIRS_SUB)
 
 # cppcheck
 ifneq ($(CPPCHECK_DEFS_FILE),)
-CPPCHECK_DEFS := $(shell powershell -NoProfile -Command "if (Test-Path '$(CPPCHECK_DEFS_FILE)') { $list = Get-Content '$(CPPCHECK_DEFS_FILE)' | Where-Object { $$_ -and -not ($$_ -match '^\s*#') } | ForEach-Object { '-D' + $$_ }; if ($list) { $list -join ' ' } }")
+# Use cmd.exe on Windows to read the defines file, skip empty lines and lines
+# starting with '#', prefix each entry with -D and echo them as one space-separated
+# string. This uses delayed expansion to build the output variable.
+CPPCHECK_DEFS := $(shell cmd /C "if exist \"$(CPPCHECK_DEFS_FILE)\" (setlocal enabledelayedexpansion & set \"_out=\" & for /f \"usebackq delims=\" %%A in (\"$(CPPCHECK_DEFS_FILE)\") do (set \"_line=%%A\" & if defined _line (if not \"!_line:~0,1!\"==\"#\" (if defined _out (set \"_out=!_out! -D!_line!\") else (set \"_out=-D!_line!\")))) & if defined _out @echo !_out! )")
 else
 CPPCHECK_DEFS :=
 endif
 ifneq ($(CPPCHECK_SUPPRESS_FILE),)
-CPPCHECK_SUPPRESS := $(shell powershell -NoProfile -Command "if (Test-Path '$(CPPCHECK_SUPPRESS_FILE)') { Write-Output '--suppressions-list=$(CPPCHECK_SUPPRESS_FILE)' }")
+# Simple cmd echo for suppression list if file exists
+CPPCHECK_SUPPRESS := $(shell cmd /C "if exist \"$(CPPCHECK_SUPPRESS_FILE)\" (echo --suppressions-list=$(CPPCHECK_SUPPRESS_FILE))")
 else 
 CPPCHECK_SUPPRESS :=
 endif
