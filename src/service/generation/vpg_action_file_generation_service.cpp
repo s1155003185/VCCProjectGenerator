@@ -19,7 +19,7 @@
 #include "vpg_object_file_generation_service.hpp"
 #include "vpg_tag_helper.hpp"
 
-#define LOG_ID L"Action File Generation"
+#define logId L"Action File Generation"
 
 void VPGActionFileGenerationService::generateHpp(const vcc::LogConfig *logConfig,
     const std::map<std::wstring, std::wstring> &classPathMapping,
@@ -135,12 +135,12 @@ void VPGActionFileGenerationService::generateHpp(const vcc::LogConfig *logConfig
                     
                 // Generate File
                 std::wstring filePathHpp = vcc::concatPaths({folderPathHpp, getActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".hpp"});
-                vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate action class file: " + filePathHpp);
+                vcc::LogService::logInfo(logConfig, logId, L"Generate action class file: " + filePathHpp);
                 if (vcc::isFilePresent(filePathHpp))
                     content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::readFile(filePathHpp), VPGFileContentSyncMode::Full, L"//");
                 vcc::lTrim(content);
                 vcc::writeFile(filePathHpp, content, true);
-                vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate action class file completed.");
+                vcc::LogService::logInfo(logConfig, logId, L"Generate action class file completed.");
             } else {
                 // Generate to form files
                 globalSystemIncludeFiles.insert(systemIncludeFiles.begin(), systemIncludeFiles.end());
@@ -321,12 +321,12 @@ void VPGActionFileGenerationService::generateCpp(const vcc::LogConfig *logConfig
                     
                 // Generate File
                 std::wstring filePathCpp = vcc::concatPaths({folderPathCpp, getActionFileNameWithoutExtension(actionClassName, projectPrefix) + L".cpp"});
-                vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate action class file: " + filePathCpp);
+                vcc::LogService::logInfo(logConfig, logId, L"Generate action class file: " + filePathCpp);
                 if (vcc::isFilePresent(filePathCpp))
                     content = VPGFileSyncService::SyncFileContent(VPGFileContentSyncTagMode::Generation, content, vcc::readFile(filePathCpp), VPGFileContentSyncMode::Full, L"//");
                 vcc::lTrim(content);
                 vcc::writeFile(filePathCpp, content, true);
-                vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate action class file completed.");
+                vcc::LogService::logInfo(logConfig, logId, L"Generate action class file completed.");
             } else {
                 // Generate to form files
                 globalSystemIncludeFiles.insert(systemIncludeFiles.begin(), systemIncludeFiles.end());

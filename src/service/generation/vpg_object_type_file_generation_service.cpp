@@ -9,12 +9,12 @@
 #include "vpg_code_reader.hpp"
 #include "vpg_tag_helper.hpp"
 
-#define LOG_ID L"Object Type File Generation"
+#define logId L"Object Type File Generation"
 
 void VPGObjectTypeFileGenerationService::generate(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp, const std::set<std::wstring> &propertyTypes)
 {
     TRY
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate object type file: " + filePathHpp);
+        vcc::LogService::logInfo(logConfig, logId, L"Generate object type file: " + filePathHpp);
 
         std::wstring customContent = L"";
         if (vcc::isFilePresent(filePathHpp)) {
@@ -49,6 +49,6 @@ void VPGObjectTypeFileGenerationService::generate(const vcc::LogConfig *logConfi
                 + INDENT + getVccTagTailerCustomTypes(VPGCodeType::Cpp, L"ObjectType") + L"\r\n";
         content += L"};\r\n";
         vcc::writeFile(filePathHpp, content, true);
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate object type file completed.");
+        vcc::LogService::logInfo(logConfig, logId, L"Generate object type file completed.");
     CATCH
 }

@@ -24,8 +24,8 @@
 
 namespace vcc
 {   
-    #define GIT_CONFIG_USER_NAME L"user.name"
-    #define GIT_CONFIG_USER_EMAIL L"user.email"
+    #define gitConfigUserName L"user.name"
+    #define gitConfigUserEmail L"user.email"
 
     const std::wstring hashIDPrefix = L"commit ";
     const std::wstring authorPrefix = L"Author:";
@@ -1309,7 +1309,7 @@ namespace vcc
     std::wstring GitService::getUserName(const LogConfig *logConfig, const std::wstring &workspace)
     {
         TRY
-            return GitService::getConfig(logConfig, workspace, GIT_CONFIG_USER_NAME);
+            return GitService::getConfig(logConfig, workspace, gitConfigUserName);
         CATCH
         return L"";        
     }
@@ -1317,7 +1317,7 @@ namespace vcc
     std::wstring GitService::getUserEmail(const LogConfig *logConfig, const std::wstring &workspace)
     {
         TRY
-            return GitService::getConfig(logConfig, workspace, GIT_CONFIG_USER_EMAIL);
+            return GitService::getConfig(logConfig, workspace, gitConfigUserEmail);
         CATCH
         return L"";
     }
@@ -1347,9 +1347,9 @@ namespace vcc
                     if (!element->isValue(it.first))
                         continue;
 
-                    if (it.first == GIT_CONFIG_USER_NAME) {
+                    if (it.first == gitConfigUserName) {
                         config->setUserName(it.second);
-                    } else if (it.first == GIT_CONFIG_USER_EMAIL) {
+                    } else if (it.first == gitConfigUserEmail) {
                         config->setUserEmail(it.second);
                     }
                     config->insertConfigsAtKey(it.first, it.second);
@@ -1378,7 +1378,7 @@ namespace vcc
     std::wstring GitService::getGlobalUserName(const LogConfig *logConfig)
     {
         TRY
-            return GitService::getGlobalConfig(logConfig, GIT_CONFIG_USER_NAME);
+            return GitService::getGlobalConfig(logConfig, gitConfigUserName);
         CATCH
         return L"";
     }
@@ -1386,14 +1386,14 @@ namespace vcc
     void GitService::setGlobalUserName(const LogConfig *logConfig, const std::wstring &value)
     {
         TRY
-            GitService::setGlobalConfig(logConfig, GIT_CONFIG_USER_NAME, value);
+            GitService::setGlobalConfig(logConfig, gitConfigUserName, value);
         CATCH
     }
 
     std::wstring GitService::getGlobalUserEmail(const LogConfig *logConfig)
     {
         TRY
-            return GitService::getGlobalConfig(logConfig, GIT_CONFIG_USER_EMAIL);
+            return GitService::getGlobalConfig(logConfig, gitConfigUserEmail);
         CATCH
         return L"";
     }
@@ -1401,7 +1401,7 @@ namespace vcc
     void GitService::setGlobalUserEmail(const LogConfig *logConfig, const std::wstring &value)
     {
         TRY
-            GitService::setGlobalConfig(logConfig, GIT_CONFIG_USER_EMAIL, value);
+            GitService::setGlobalConfig(logConfig, gitConfigUserEmail, value);
         CATCH
     }
 
@@ -1429,9 +1429,9 @@ namespace vcc
                 for (auto it : element->getConfigs()) {
                     if (!element->isValue(it.first))
                         continue;
-                    if (it.first == GIT_CONFIG_USER_NAME) {
+                    if (it.first == gitConfigUserName) {
                         config->setUserName(it.second);
-                    } else if (it.first == GIT_CONFIG_USER_EMAIL) {
+                    } else if (it.first == gitConfigUserEmail) {
                         config->setUserEmail(it.second);
                     }
                     config->insertConfigsAtKey(it.first, it.second);
@@ -1459,7 +1459,7 @@ namespace vcc
     std::wstring GitService::getLocalUserName(const LogConfig *logConfig, const std::wstring &workspace)
     {
         TRY
-            return GitService::getLocalConfig(logConfig, workspace, GIT_CONFIG_USER_NAME);
+            return GitService::getLocalConfig(logConfig, workspace, gitConfigUserName);
         CATCH
         return L"";
     }
@@ -1467,14 +1467,14 @@ namespace vcc
     void GitService::setLocalUserName(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &value)
     {
         TRY
-            GitService::setLocalConfig(logConfig, workspace, GIT_CONFIG_USER_NAME, value);
+            GitService::setLocalConfig(logConfig, workspace, gitConfigUserName, value);
         CATCH
     }
 
     std::wstring GitService::getLocalUserEmail(const LogConfig *logConfig, const std::wstring &workspace)
     {
         TRY
-            return GitService::getLocalConfig(logConfig, workspace, GIT_CONFIG_USER_EMAIL);
+            return GitService::getLocalConfig(logConfig, workspace, gitConfigUserEmail);
         CATCH
         return L"";
     }
@@ -1482,7 +1482,7 @@ namespace vcc
     void GitService::setLocalUserEmail(const LogConfig *logConfig, const std::wstring &workspace, const std::wstring &value)
     {
         TRY
-            GitService::setLocalConfig(logConfig, workspace, GIT_CONFIG_USER_EMAIL, value);
+            GitService::setLocalConfig(logConfig, workspace, gitConfigUserEmail, value);
         CATCH
     }
 }

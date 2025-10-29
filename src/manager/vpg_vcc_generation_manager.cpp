@@ -11,6 +11,7 @@
 #include "vpg_code_reader.hpp"
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_global.hpp"
+
 const std::wstring classId = L"VPGVccGenerationManager";
 
 std::wstring VPGVccGenerationManager::adjustAppliationCpp(const std::wstring &fileContent) const
@@ -157,9 +158,9 @@ void VPGVccGenerationManager::update() const
         std::wstring src = VPGGlobal::getConvertedPath(_Option->getTemplate()->getWorkspace());
         std::wstring dest = _Workspace;
         
-        vcc::LogService::logInfo(this->_LogConfig.get(), CLASS_ID, L"Sync Project ...");
-        vcc::LogService::logInfo(this->_LogConfig.get(), CLASS_ID, L"From " + src);
-        vcc::LogService::logInfo(this->_LogConfig.get(), CLASS_ID, L"To " + dest);
+        vcc::LogService::logInfo(this->_LogConfig.get(), classId, L"Sync Project ...");
+        vcc::LogService::logInfo(this->_LogConfig.get(), classId, L"From " + src);
+        vcc::LogService::logInfo(this->_LogConfig.get(), classId, L"To " + dest);
 
         syncWorkspace(this->_LogConfig.get(), src, dest, getUpdateList(), {});
         
@@ -170,7 +171,7 @@ void VPGVccGenerationManager::update() const
         }
 
         // Update Makefile and unittest
-        vcc::LogService::logInfo(this->_LogConfig.get(), CLASS_ID, L"Update Project according to vcc.json");
+        vcc::LogService::logInfo(this->_LogConfig.get(), classId, L"Update Project according to vcc.json");
         if (!vcc::isFilePresent(vcc::concatPaths({dest, MakeFileName})))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Cannot find " + vcc::concatPaths({dest, MakeFileName}));
         
@@ -186,7 +187,7 @@ void VPGVccGenerationManager::update() const
 
         // Create Json file at the end to force override
         CreateVccJson(false);
-        vcc::LogService::logInfo(this->_LogConfig.get(), CLASS_ID, L"Done");        
+        vcc::LogService::logInfo(this->_LogConfig.get(), classId, L"Done");        
     CATCH
 }
 
@@ -196,7 +197,7 @@ void VPGVccGenerationManager::generate() const
         ReadVccJson();
         
         // Update Makefile
-        vcc::LogService::logInfo(this->_LogConfig.get(), CLASS_ID, L"Update Project according to vcc.json");
+        vcc::LogService::logInfo(this->_LogConfig.get(), classId, L"Update Project according to vcc.json");
         if (!vcc::isFilePresent(vcc::concatPaths({_Workspace, MakeFileName})))
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Cannot find " + vcc::concatPaths({_Workspace, MakeFileName}));
         std::wstring makefilePath = vcc::concatPaths({_Workspace, MakeFileName});
@@ -209,8 +210,8 @@ void VPGVccGenerationManager::generate() const
             vcc::writeFile(applicationFilePath, this->adjustAppliationCpp(vcc::readFile(applicationFilePath)), true);
 
         auto manager = std::make_unique<VPGFileGenerationManager>(this->_LogConfig, _Workspace);
-        vcc::LogService::logInfo(this->_LogConfig.get(), CLASS_ID, L"Generate Project ...");
+        vcc::LogService::logInfo(this->_LogConfig.get(), classId, L"Generate Project ...");
         manager->generateProperty(_LogConfig.get(), _Option.get());
-        vcc::LogService::logInfo(this->_LogConfig.get(), CLASS_ID, L"Done");
+        vcc::LogService::logInfo(this->_LogConfig.get(), classId, L"Done");
     CATCH
 }

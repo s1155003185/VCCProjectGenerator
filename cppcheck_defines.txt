@@ -2,25 +2,15 @@
 # Lines starting with # or empty lines are ignored.
 BASE_PROPERTY_ACCESSOR_CONTAINER_DETAIL
 BASE_PROPERTY_ACCESSOR_CONTAINER_HEADER
-BUFSIZE=4096
 CATCH=} catch (const std::exception &e) { THROW_EXCEPTION(e); }
 CATCH_SLIENT=} catch (...) { }
-CLASS_ID=L"VPGCppGenerationManager"
-CLASS_ID=L"VPGVccGenerationManager"
 DLLEXPORT=__declspec (dllexport)
 DLLEXPORT=extern
 DLL_FUNCTIONS_H
 DLL_NAME=L"libvpg"
-GIT_CONFIG_USER_EMAIL=L"user.email"
-GIT_CONFIG_USER_NAME=L"user.name"
 I_PROPERTY_ACCESSOR_CONTAINER_HEADER
-JAVA_BRIDGE_FILE_NAME=L"DllFunctions.java"
-JAVA_PROJECT_SOURCE_PARENT_FOLDER=L"src/main/java"
 LOCK_BEGIN
 LOCK_END=unlock(); CATCH
-LOG_ID=L"Action File Generation"
-LOG_ID=L"Object File Generation"
-LOG_ID=L"Object Type File Generation"
 PATH=std::filesystem::path
 PROPERTY_ACCESSOR_CONTAINER_HEADER
 PROPERTY_ACCESSOR_DLL_EXPORT_MACRO_DETAIL_CONTAINER

@@ -18,7 +18,7 @@
 #include "vpg_include_path_service.hpp"
 #include "vpg_tag_helper.hpp"
 
-#define LOG_ID L"Object File Generation"
+#define logId L"Object File Generation"
 
 std::wstring VPGObjectFileGenerationService::getCloneFunction(const VPGEnumClass *enumClass, const std::wstring &className, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping, const bool &isCpp)
 {
@@ -786,7 +786,7 @@ void VPGObjectFileGenerationService::generateHpp(const vcc::LogConfig *logConfig
         
         std::wstring classPrefix = option->getProjectPrefix();
         std::wstring filePathHpp = isContainForm && !formFilePathHpp.empty() ? formFilePathHpp : objectFilePathHpp;
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate object class file: " + filePathHpp);
+        vcc::LogService::logInfo(logConfig, logId, L"Generate object class file: " + filePathHpp);
 
         // ------------------------------------------------------------------------------------------ //
         //                               Action  Files                                                //
@@ -877,7 +877,7 @@ void VPGObjectFileGenerationService::generateHpp(const vcc::LogConfig *logConfig
         
         vcc::lTrim(content);
         vcc::writeFile(filePathHpp, content, true);
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate object class file completed.");
+        vcc::LogService::logInfo(logConfig, logId, L"Generate object class file completed.");
     CATCH
 }
 
@@ -1357,7 +1357,7 @@ void VPGObjectFileGenerationService::generateCpp(const vcc::LogConfig *logConfig
         std::wstring includeFileName = vcc::getFileName(filePathCpp);
         vcc::replace(includeFileName, L".cpp", L".hpp");
 
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate object class file: " + filePathCpp);
+        vcc::LogService::logInfo(logConfig, logId, L"Generate object class file: " + filePathCpp);
         
         // ------------------------------------------------------------------------------------------ //
         //                               include Files                                                //
@@ -1447,6 +1447,6 @@ void VPGObjectFileGenerationService::generateCpp(const vcc::LogConfig *logConfig
         
         vcc::lTrim(content);
         vcc::writeFile(filePathCpp, content, true);
-        vcc::LogService::logInfo(logConfig, LOG_ID, L"Generate object class file completed.");
+        vcc::LogService::logInfo(logConfig, logId, L"Generate object class file completed.");
     CATCH
 }
