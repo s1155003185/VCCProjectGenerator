@@ -1,0 +1,11 @@
+# Add project-specific macro definitions here, one per line.
+# Lines starting with # or empty lines are ignored.
+# Examples:
+#DEBUG=1
+#MY_FLAG
+#SOME_MACRO=100
+
+# If your code uses platform-specific macros that confuse cppcheck, define them here.
+# For example:
+#PLATFORM_MACOS
+#USE_LEGACY_API=0

@@ -54,6 +54,7 @@ PROJ_NAME := VCCProjGenerator
 PROJ_NAME_DLL := libvpg
 PROJ_NAME_EXE := vpg
 IS_EXCLUDE_UNITTEST := N
+IS_CPPCHECK := Y
 # </vcc:name>
 # <vcc:export sync="ALERT" gen="ALERT">
 #----------------------------------#
@@ -84,6 +85,29 @@ DLL_MAIN_CPP_FILES := DllEntryPoint.cpp DllFunctions.cpp
 else
 DLL_MAIN_HPP_FILES :=
 DLL_MAIN_CPP_FILES :=
+endif
+#----------------------------------#
+#---------- CppCheck     ----------#
+#----------------------------------#
+#  - put macro defs (one per line, comments with #) in cppcheck_defines.txt
+CPPCHECK_DEFS_FILE := cppcheck_defines.txt
+#  - put suppressions (cppcheck suppression entries) in cppcheck_suppressions.txt
+CPPCHECK_SUPPRESS_FILE := cppcheck_suppressions.txt
+
+ifeq ($(OS),Windows_NT)
+ifneq ($(CPPCHECK_DEFS_FILE),)
+CPPCHECK_DEFS := $(shell powershell -NoProfile -Command "if (Test-Path '$(CPPCHECK_DEFS_FILE)') { $list = Get-Content '$(CPPCHECK_DEFS_FILE)' | Where-Object { $$_ -and -not ($$_ -match '^\s*#') } | ForEach-Object { '-D' + $$_ }; if ($list) { $list -join ' ' } }")
+endif
+ifneq ($(CPPCHECK_SUPPRESS_FILE),)
+CPPCHECK_SUPPRESS := $(shell powershell -NoProfile -Command "if (Test-Path '$(CPPCHECK_SUPPRESS_FILE)') { Write-Output '--suppressions-list=$(CPPCHECK_SUPPRESS_FILE)' }")
+endif
+else
+ifneq ($(CPPCHECK_DEFS_FILE),)
+CPPCHECK_DEFS := $(shell if [ -f $(CPPCHECK_DEFS_FILE) ]; then awk '!/^\s*$$/ && !/^\s*#/{printf "-D%s ",$$0}' $(CPPCHECK_DEFS_FILE); fi)
+endif
+ifneq ($(CPPCHECK_SUPPRESS_FILE),)
+CPPCHECK_SUPPRESS := $(shell if [ -f $(CPPCHECK_SUPPRESS_FILE) ]; then printf "--suppressions-list=%s" $(CPPCHECK_SUPPRESS_FILE); fi)
+endif
 endif
 #----------------------------------#
 #---------- Compile Info ----------#
@@ -126,6 +150,8 @@ else
 EXCLUDE_FOLDER := ./.git% ./.svn% ./.vscode%
 endif
 # </vcc:property>
+# <vcc:property sync="ALERT" gen="ALERT">
+
 #------------------------------------------------------------------------------------------------------#
 #------------------------------------------- Customize End  -------------------------------------------#
 #------------------------------------------------------------------------------------------------------#
@@ -540,7 +566,6 @@ endif
 #----------------------------------#
 #----------- CPP Check ------------#
 #----------------------------------#
-
 .PHONY: cppcheck format
 
 format:
@@ -557,7 +582,7 @@ format:
 cppcheck: format
 	@command -v cppcheck >/dev/null 2>&1 || { echo "cppcheck not found. Install with: brew install cppcheck"; exit 1; }
 	@echo "Running cppcheck..."
-	@cppcheck --enable=all --inconclusive --std=$(CXXVERSION) . 2> cppcheck_report.txt || true
+	@cppcheck --enable=all --inconclusive --std=$(CXXVERSION) $(INCDIRS) $(CPPCHECK_DEFS) $(CPPCHECK_SUPPRESS) . 2> cppcheck_report.txt || true
 	@echo "cppcheck finished, report at cppcheck_report.txt"
 
 #----------------------------------#

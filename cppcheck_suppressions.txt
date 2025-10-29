@@ -1,0 +1,8 @@
+# cppcheck suppressions list
+# Each line is a suppression pattern used by cppcheck CLI --suppressions-list
+# Format examples:
+# path:warningId
+# src/somefile.cpp:unusedFunction
+# */generated/*:missingInclude
+
+# Add project-specific suppressions below (one per line)
