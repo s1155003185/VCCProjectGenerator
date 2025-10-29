@@ -6,16 +6,16 @@
 #include "vpg_base_generation_manager.hpp"
 #include "vpg_project_type.hpp"
 
-class VPGCppGenerationManager : public VPGBaseGenerationManager
-{
-    public:
-        VPGCppGenerationManager(std::shared_ptr<vcc::LogConfig> logConfig, std::wstring workspace, std::shared_ptr<VPGConfig> option) : VPGBaseGenerationManager(logConfig, workspace, option) {}
-        virtual ~VPGCppGenerationManager() {}
+class VPGCppGenerationManager : public VPGBaseGenerationManager {
+   public:
+    VPGCppGenerationManager(std::shared_ptr<vcc::LogConfig> logConfig, std::wstring workspace,
+                            std::shared_ptr<VPGConfig> option)
+        : VPGBaseGenerationManager(logConfig, workspace, option) {}
+    virtual ~VPGCppGenerationManager() {}
 
-        virtual std::shared_ptr<IObject> clone() const override
-        {
-            return std::make_shared<VPGCppGenerationManager>(*this);
-        }
+    virtual std::shared_ptr<IObject> clone() const override {
+        return std::make_shared<VPGCppGenerationManager>(*this);
+    }
 
-        virtual void add() const override;
+    virtual void add() const override;
 };

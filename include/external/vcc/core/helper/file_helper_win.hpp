@@ -3,9 +3,8 @@
 
 #include "file_helper.hpp"
 
-namespace vcc
-{
-	std::wstring getSystemFolderPathWindow(const SystemFolderType &fileType);
+namespace vcc {
+std::wstring getSystemFolderPathWindow(const SystemFolderType& fileType);
 };
 
 #endif

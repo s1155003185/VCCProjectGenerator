@@ -6,12 +6,11 @@
 #include "i_object.hpp"
 #include "i_property_accessor.hpp"
 
-class PropertyAccessorFactory : public vcc::BaseFactory
-{
-    private:
-        PropertyAccessorFactory() = delete;
-        virtual ~PropertyAccessorFactory() {}
+class PropertyAccessorFactory : public vcc::BaseFactory {
+   private:
+    PropertyAccessorFactory() = delete;
+    virtual ~PropertyAccessorFactory() {}
 
-    public:
-        static std::shared_ptr<vcc::IPropertyAccessor> create(std::shared_ptr<vcc::IObject> object);
+   public:
+    static std::shared_ptr<vcc::IPropertyAccessor> create(std::shared_ptr<vcc::IObject> object);
 };

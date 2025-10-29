@@ -5,13 +5,15 @@
 
 #include "log_config.hpp"
 
-class VPGPropertyAccessorFactoryFileGenerationService
-{
-    private:
-        VPGPropertyAccessorFactoryFileGenerationService() = default;
-        ~VPGPropertyAccessorFactoryFileGenerationService() {}
+class VPGPropertyAccessorFactoryFileGenerationService {
+   private:
+    VPGPropertyAccessorFactoryFileGenerationService() = default;
+    ~VPGPropertyAccessorFactoryFileGenerationService() {}
 
-    public:
-        static void generateHpp(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp);
-        static void generateCpp(const vcc::LogConfig *logConfig, const std::wstring &projectPrefix, const std::set<std::wstring> &includeFiles, const std::wstring &filePathCpp, const std::set<std::wstring> &propertyTypes);
+   public:
+    static void generateHpp(const vcc::LogConfig* logConfig, const std::wstring& filePathHpp);
+    static void generateCpp(const vcc::LogConfig* logConfig, const std::wstring& projectPrefix,
+                            const std::set<std::wstring>& includeFiles,
+                            const std::wstring& filePathCpp,
+                            const std::set<std::wstring>& propertyTypes);
 };

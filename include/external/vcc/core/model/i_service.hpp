@@ -1,11 +1,9 @@
 #pragma once
 
-namespace vcc
-{
-    class IService
-    {
-        protected:
-            IService() {}
-            virtual ~IService() {}
-    };
-}
+namespace vcc {
+class IService {
+   protected:
+    IService() {}
+    virtual ~IService() {}
+};
+}  // namespace vcc

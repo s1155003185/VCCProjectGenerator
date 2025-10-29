@@ -1,54 +1,48 @@
 #pragma once
 
 #include <assert.h>
+
 #include <string>
 
 #include "base_object.hpp"
 #include "class_macro.hpp"
 
-namespace vcc
-{
-    enum class LogConfigInitialType
-    {
-        None,
-        All
-    };
+namespace vcc {
+enum class LogConfigInitialType { None, All };
 
-    class LogConfig : public BaseObject
-    {
-        // General
-        GETSET(std::wstring, UserID, L"");
-        
-        GETSET(bool, IsConsoleLog, false);
-        GETSET(std::wstring, FilePath, L"");
-        // Debug
-        GETSET(bool, IsLogDebug, false);
-        // Thread
-        GETSET(bool, IsLogThread, false);
-        // Terminal
-        GETSET(bool, IsLogTerminal, false);
-        GETSET(bool, IsLogTerminalResult, false);
-        // Process
-        GETSET(bool, IsLogProcess, false);
-        GETSET(bool, IsLogProcessResult, false);
-        // SQL
-        GETSET(bool, IsLogSQL, false);
-        GETSET(bool, IsLogSQLResult, false);
-    public:
-        LogConfig() {}
-        LogConfig(const LogConfigInitialType &logConfigType, const std::wstring &filePath = L"") {
-            initialize(logConfigType, filePath);
-        }
-        virtual ~LogConfig() {}
+class LogConfig : public BaseObject {
+    // General
+    GETSET(std::wstring, UserID, L"");
 
-        virtual std::shared_ptr<IObject> clone() const override
-        {
-            return std::make_shared<LogConfig>(*this);
-        }
+    GETSET(bool, IsConsoleLog, false);
+    GETSET(std::wstring, FilePath, L"");
+    // Debug
+    GETSET(bool, IsLogDebug, false);
+    // Thread
+    GETSET(bool, IsLogThread, false);
+    // Terminal
+    GETSET(bool, IsLogTerminal, false);
+    GETSET(bool, IsLogTerminalResult, false);
+    // Process
+    GETSET(bool, IsLogProcess, false);
+    GETSET(bool, IsLogProcessResult, false);
+    // SQL
+    GETSET(bool, IsLogSQL, false);
+    GETSET(bool, IsLogSQLResult, false);
 
-        void initialize(const LogConfigInitialType &logConfigType, const std::wstring &filePath = L"") {
-            switch (logConfigType)
-            {
+   public:
+    LogConfig() {}
+    LogConfig(const LogConfigInitialType& logConfigType, const std::wstring& filePath = L"") {
+        initialize(logConfigType, filePath);
+    }
+    virtual ~LogConfig() {}
+
+    virtual std::shared_ptr<IObject> clone() const override {
+        return std::make_shared<LogConfig>(*this);
+    }
+
+    void initialize(const LogConfigInitialType& logConfigType, const std::wstring& filePath = L"") {
+        switch (logConfigType) {
             case LogConfigInitialType::None:
                 this->setIsConsoleLog(false);
                 this->setFilePath(L"");
@@ -72,7 +66,7 @@ namespace vcc
                 assert(!filePath.empty());
 
                 this->setIsLogDebug(true);
-                
+
                 this->setIsLogThread(true);
 
                 this->setIsLogTerminal(true);
@@ -83,11 +77,11 @@ namespace vcc
 
                 this->setIsLogSQL(true);
                 this->setIsLogSQLResult(true);
-                break;            
+                break;
             default:
                 assert(false);
                 break;
-            }
         }
-    };
-}
+    }
+};
+}  // namespace vcc

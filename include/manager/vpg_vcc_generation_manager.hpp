@@ -6,28 +6,28 @@
 #include "vpg_base_generation_manager.hpp"
 #include "vpg_project_type.hpp"
 
-class VPGVccGenerationManager : public VPGBaseGenerationManager
-{
-    private:
-        std::wstring adjustAppliationCpp(const std::wstring &fileContent) const;
-        
-    public:
-        VPGVccGenerationManager() : VPGVccGenerationManager(nullptr, L"", nullptr) {}
-        VPGVccGenerationManager(std::shared_ptr<vcc::LogConfig> logConfig, std::wstring workspace, std::shared_ptr<VPGConfig> option) : VPGBaseGenerationManager(logConfig, workspace, option) {}
-        virtual ~VPGVccGenerationManager() {}
+class VPGVccGenerationManager : public VPGBaseGenerationManager {
+   private:
+    std::wstring adjustAppliationCpp(const std::wstring& fileContent) const;
 
-        virtual std::shared_ptr<vcc::IObject> clone() const override
-        {
-            return std::make_shared<VPGVccGenerationManager>(*this);
-        }
+   public:
+    VPGVccGenerationManager() : VPGVccGenerationManager(nullptr, L"", nullptr) {}
+    VPGVccGenerationManager(std::shared_ptr<vcc::LogConfig> logConfig, std::wstring workspace,
+                            std::shared_ptr<VPGConfig> option)
+        : VPGBaseGenerationManager(logConfig, workspace, option) {}
+    virtual ~VPGVccGenerationManager() {}
 
-        std::vector<std::wstring> getUpdateList() const;
-        std::vector<std::wstring> getUpdateUnitTestList() const;
+    virtual std::shared_ptr<vcc::IObject> clone() const override {
+        return std::make_shared<VPGVccGenerationManager>(*this);
+    }
 
-        void CreateVccJson(bool isNew) const;
-        void ReadVccJson() const;
+    std::vector<std::wstring> getUpdateList() const;
+    std::vector<std::wstring> getUpdateUnitTestList() const;
 
-        virtual void add() const override;
-        virtual void update() const override;
-        virtual void generate() const override;
+    void CreateVccJson(bool isNew) const;
+    void ReadVccJson() const;
+
+    virtual void add() const override;
+    virtual void update() const override;
+    virtual void generate() const override;
 };

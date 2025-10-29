@@ -5,48 +5,47 @@
 #include "log_config.hpp"
 #include "vpg_code_reader.hpp"
 
-enum class VPGFileContentSyncMode
-{
-    NA,
-    Force,
-    Full,
-    Demand,
-    Skip
-};
+enum class VPGFileContentSyncMode { NA, Force, Full, Demand, Skip };
 
 // TODO: PropertyReserve / PropertyAltert
-enum class VPGFileContentSyncTag
-{
-    NA,
-    Replace,
-    Reserve
-};
+enum class VPGFileContentSyncTag { NA, Replace, Reserve };
 
-enum class VPGFileContentSyncTagMode
-{
-    Synchronization,
-    Generation
-};
+enum class VPGFileContentSyncTagMode { Synchronization, Generation };
 
+class VPGFileSyncService {
+   private:
+    VPGFileSyncService() = delete;
+    virtual ~VPGFileSyncService() {}
 
-class VPGFileSyncService
-{
-    private:
-        VPGFileSyncService() = delete;
-        virtual ~VPGFileSyncService() {}
+    static bool isSyncTag(const VPGFileContentSyncTagMode& mode, const std::wstring& tag);
 
-        static bool isSyncTag(const VPGFileContentSyncTagMode &mode, const std::wstring &tag);
+    static VPGFileContentSyncMode getSyncMode(const VPGFileContentSyncTagMode& mode,
+                                              const vcc::Xml* codeElemet);
+    static const vcc::Xml* getTagFromCode(const vcc::Xml* code, const std::wstring tagName);
+    static bool IsTagReplace(const VPGFileContentSyncTagMode& mode, const vcc::Xml* child);
+    static bool IsTagReserve(const VPGFileContentSyncTagMode& mode, const vcc::Xml* child);
 
-        static VPGFileContentSyncMode getSyncMode(const VPGFileContentSyncTagMode &mode, const vcc::Xml *codeElemet);
-        static const vcc::Xml *getTagFromCode(const vcc::Xml *code, const std::wstring tagName);
-        static bool IsTagReplace(const VPGFileContentSyncTagMode &mode, const vcc::Xml *child);
-        static bool IsTagReserve(const VPGFileContentSyncTagMode &mode, const vcc::Xml *child);
+    static std::wstring generateForceCode(const VPGFileContentSyncMode updatedCodeMode,
+                                          const VPGFileContentSyncMode originalCodeMode,
+                                          const vcc::Xml* updatedCode,
+                                          const vcc::Xml* originalCode);
+    static std::wstring GenerateFullCode(const VPGFileContentSyncTagMode& mode,
+                                         const VPGFileContentSyncMode updatedCodeMode,
+                                         const VPGFileContentSyncMode originalCodeMode,
+                                         const vcc::Xml* updatedCode, const vcc::Xml* originalCode);
+    static std::wstring generateDemandCode(const VPGFileContentSyncTagMode& mode,
+                                           const VPGFileContentSyncMode updatedCodeMode,
+                                           const VPGFileContentSyncMode originalCodeMode,
+                                           const vcc::Xml* updatedCode,
+                                           const vcc::Xml* originalCode);
+    static std::wstring generateSkipCode(const std::wstring& originalCode);
 
-        static std::wstring generateForceCode(const VPGFileContentSyncMode updatedCodeMode, const VPGFileContentSyncMode originalCodeMode, const vcc::Xml *updatedCode, const vcc::Xml *originalCode);
-        static std::wstring GenerateFullCode(const VPGFileContentSyncTagMode &mode, const VPGFileContentSyncMode updatedCodeMode, const VPGFileContentSyncMode originalCodeMode, const vcc::Xml *updatedCode, const vcc::Xml *originalCode);
-        static std::wstring generateDemandCode(const VPGFileContentSyncTagMode &mode, const VPGFileContentSyncMode updatedCodeMode, const VPGFileContentSyncMode originalCodeMode, const vcc::Xml *updatedCode, const vcc::Xml *originalCode);
-        static std::wstring generateSkipCode(const std::wstring &originalCode);
-    public:
-        static void copyFile(const vcc::LogConfig *logConfig, const VPGFileContentSyncTagMode &mode, const std::wstring &sourcePath, const std::wstring &originalCodePath);
-        static std::wstring SyncFileContent(const VPGFileContentSyncTagMode &mode, const std::wstring &updatedCode, const std::wstring &originalCode, const VPGFileContentSyncMode defaultMode, const std::wstring &commandDelimiter);
+   public:
+    static void copyFile(const vcc::LogConfig* logConfig, const VPGFileContentSyncTagMode& mode,
+                         const std::wstring& sourcePath, const std::wstring& originalCodePath);
+    static std::wstring SyncFileContent(const VPGFileContentSyncTagMode& mode,
+                                        const std::wstring& updatedCode,
+                                        const std::wstring& originalCode,
+                                        const VPGFileContentSyncMode defaultMode,
+                                        const std::wstring& commandDelimiter);
 };

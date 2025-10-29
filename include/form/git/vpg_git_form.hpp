@@ -16,35 +16,35 @@
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
 // </vcc:customHeader>
 
-class VPGGitForm : public vcc::BaseForm, public vcc::BaseJsonObject
-{
+class VPGGitForm : public vcc::BaseForm, public vcc::BaseJsonObject {
     GETSET_SPTR_NULL(VPGGitLog, Log)
     MANAGER_SPTR_NULL(vcc::GitManager, GitManager, _LogConfig)
 
     // <vcc:customVPGGitFormProperties sync="RESERVE" gen="RESERVE">
     // </vcc:customVPGGitFormProperties>
 
-    private:
-        // <vcc:customVPGGitFormPrivateFunctions sync="RESERVE" gen="RESERVE">
-        // </vcc:customVPGGitFormPrivateFunctions>
+   private:
+    // <vcc:customVPGGitFormPrivateFunctions sync="RESERVE" gen="RESERVE">
+    // </vcc:customVPGGitFormPrivateFunctions>
 
-    protected:
-        // <vcc:customVPGGitFormProtectedFunctions sync="RESERVE" gen="RESERVE">
-        // </vcc:customVPGGitFormProtectedFunctions>
+   protected:
+    // <vcc:customVPGGitFormProtectedFunctions sync="RESERVE" gen="RESERVE">
+    // </vcc:customVPGGitFormProtectedFunctions>
 
-    public:
-        VPGGitForm();
-        virtual ~VPGGitForm() {}
+   public:
+    VPGGitForm();
+    virtual ~VPGGitForm() {}
 
-        virtual std::shared_ptr<vcc::IObject> clone() const override;
+    virtual std::shared_ptr<vcc::IObject> clone() const override;
 
-        virtual std::shared_ptr<vcc::Json> toJson() const override;
-        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) override;
+    virtual std::shared_ptr<vcc::Json> toJson() const override;
+    virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) override;
 
-        virtual void initializeComponents() override;
+    virtual void initializeComponents() override;
 
-        virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;
+    virtual std::shared_ptr<vcc::IResult> doAction(const int64_t& formProperty,
+                                                   std::shared_ptr<vcc::IObject> argument) override;
 
-        // <vcc:customVPGGitFormPublicFunctions sync="RESERVE" gen="RESERVE">
-        // </vcc:customVPGGitFormPublicFunctions>
+    // <vcc:customVPGGitFormPublicFunctions sync="RESERVE" gen="RESERVE">
+    // </vcc:customVPGGitFormPublicFunctions>
 };

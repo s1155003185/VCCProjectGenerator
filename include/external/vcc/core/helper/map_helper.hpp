@@ -1,7 +1,8 @@
 #pragma once
 
-#include <algorithm>
 #include <assert.h>
+
+#include <algorithm>
 #include <map>
 #include <memory>
 #include <set>
@@ -9,156 +10,141 @@
 #include "i_object.hpp"
 
 // Cannot use exception_macro.hpp, will throw compile error
-namespace vcc
-{
-    // validate
-    template<typename A, typename B>
-    bool isEmpty(const std::map<A, B> &sourceMap);
-    template<typename A, typename B>
-    bool isContain(const std::map<A, B> &sourceMap, const A &key);
+namespace vcc {
+// validate
+template <typename A, typename B>
+bool isEmpty(const std::map<A, B>& sourceMap);
+template <typename A, typename B>
+bool isContain(const std::map<A, B>& sourceMap, const A& key);
 
-    // Flip
-    template<typename A, typename B>
-    std::pair<B,A> flip(const std::pair<A,B> &pair);
-    template<typename A, typename B>
-    std::map<B,A> flip(const std::map<A,B> &map);
+// Flip
+template <typename A, typename B>
+std::pair<B, A> flip(const std::pair<A, B>& pair);
+template <typename A, typename B>
+std::map<B, A> flip(const std::map<A, B>& map);
 
-    // Search
-    template <typename A, typename B>
-    std::set<A> getKeys(const std::map<A, B> &sourceMap);
-    template <typename A, typename B>
-    std::set<void *> getVoidKeys(const std::map<A, B> &sourceMap);
-    template <typename A, typename B>
-    std::set<A> find(const std::map<A, B> &sourceMap, const B &obj);
-    template <typename A, typename B>
-    std::set<A> findIObject(std::map<A, std::shared_ptr<B>> &sourceMap, const std::shared_ptr<IObject> &obj);
+// Search
+template <typename A, typename B>
+std::set<A> getKeys(const std::map<A, B>& sourceMap);
+template <typename A, typename B>
+std::set<void*> getVoidKeys(const std::map<A, B>& sourceMap);
+template <typename A, typename B>
+std::set<A> find(const std::map<A, B>& sourceMap, const B& obj);
+template <typename A, typename B>
+std::set<A> findIObject(std::map<A, std::shared_ptr<B>>& sourceMap,
+                        const std::shared_ptr<IObject>& obj);
 
-    // Set
-    template <typename A, typename B>
-    void set(std::map<A, B> &sourceMap, const A &key, const B &value);
-    template <typename A, typename B>
-    void set(std::map<A, B> &sourceMap, const std::map<A, B> &appendMap);
-    template <typename A, typename B>
-    void setIObject(std::map<A, std::shared_ptr<B>> &sourceMap, A key, std::shared_ptr<IObject> value);
-    template <typename A, typename B>
-    void setIObjects(std::map<A, std::shared_ptr<B>> &sourceMap, const std::map<A, std::shared_ptr<B>> &appendMap);
-    
-    template <typename A, typename B>
-    void removeAtKey(std::map<A, B> &sourceMap, const A& key);
-    template <typename A, typename B>
-    void removeIObjectAtKey(std::map<A, B> &sourceMap, const A& key);
-    
-    // ----------------------------------------------------------------------------------------------------
-    // ---------------------------------------- Implement -------------------------------------------------
-    // ----------------------------------------------------------------------------------------------------
-    template<typename A, typename B>
-    bool isEmpty(const std::map<A, B> &sourceMap)
-    {
-        return sourceMap.empty();
-    }
+// Set
+template <typename A, typename B>
+void set(std::map<A, B>& sourceMap, const A& key, const B& value);
+template <typename A, typename B>
+void set(std::map<A, B>& sourceMap, const std::map<A, B>& appendMap);
+template <typename A, typename B>
+void setIObject(std::map<A, std::shared_ptr<B>>& sourceMap, A key, std::shared_ptr<IObject> value);
+template <typename A, typename B>
+void setIObjects(std::map<A, std::shared_ptr<B>>& sourceMap,
+                 const std::map<A, std::shared_ptr<B>>& appendMap);
 
-    template<typename A, typename B>
-    bool isContain(const std::map<A, B> &sourceMap, const A &key)
-    {
-        return sourceMap.find(key) != sourceMap.end();
-    }
-    
-    template<typename A, typename B>
-    std::pair<B,A> flip(const std::pair<A,B> &pair)
-    {
-        return std::pair<B,A>(pair.second, pair.first);
-    }
+template <typename A, typename B>
+void removeAtKey(std::map<A, B>& sourceMap, const A& key);
+template <typename A, typename B>
+void removeIObjectAtKey(std::map<A, B>& sourceMap, const A& key);
 
-    template<typename A, typename B>
-    std::map<B,A> flip(const std::map<A,B> &map)
-    {
-        std::map<B,A> result;
-        transform(map.begin(), map.end(), inserter(result, result.begin()),
-            [](const std::pair<A, B>& p) { return flip(p); });
-        return result;
-    }
-
-    template <typename A, typename B>
-    std::set<A> getKeys(const std::map<A, B> &sourceMap)
-    {
-        std::set<A> result;
-        for (auto const &pair : sourceMap)
-            result.insert(pair.first);
-        return result;
-    }
-
-    template <typename A, typename B>
-    std::set<void *> getVoidKeys(const std::map<A, B> &sourceMap)
-    {
-        std::set<void *> result;
-        for (auto const &pair : sourceMap)
-            result.insert((void *)&pair.first);
-        return result;
-    }
-
-    template <typename A, typename B>
-    std::set<A> find(const std::map<A, B> &sourceMap, const B &obj)
-    {
-        std::set<A> result;
-        for (auto const &pair : sourceMap) {
-            if (pair.second == obj)
-                result.insert(pair.first);
-        }
-        return result;
-    }
-
-    template <typename A, typename B>
-    std::set<A> findIObject(std::map<A, std::shared_ptr<B>> &sourceMap, const std::shared_ptr<IObject> &obj)
-    {
-        auto derivedObj = std::dynamic_pointer_cast<B>(obj);
-        if (derivedObj != nullptr)
-            return find(sourceMap, derivedObj);
-        std::set<A> result;
-        return result;
-    }
-
-    template <typename A, typename B>
-    void set(std::map<A, B> &sourceMap, const A &key, const B &value)
-    {
-        if (sourceMap.find(key) != sourceMap.end())
-            sourceMap[key] = value;
-        else
-            sourceMap.insert(std::make_pair(key, value));
-    }
-
-    template <typename A, typename B>
-    void set(std::map<A, B> &sourceMap, const std::map<A, B> &appendMap)
-    {
-        for (auto const &pair : appendMap)
-            set(sourceMap, pair.first, pair.second);
-    }
-
-    template <typename A, typename B>
-    void setIObject(std::map<A, std::shared_ptr<B>> &sourceMap, A key, std::shared_ptr<IObject> value)
-    {
-        auto derivedObj = std::dynamic_pointer_cast<B>(value);
-        assert(derivedObj != nullptr);
-        if (sourceMap.find(key) != sourceMap.end())
-            sourceMap[key] = derivedObj;
-        else
-            sourceMap.insert(std::make_pair(key, derivedObj));
-    }
-
-    template <typename A, typename B>
-    void setIObjects(std::map<A, std::shared_ptr<B>> &sourceMap, const std::map<A, std::shared_ptr<B>> &appendMap)
-    {
-        set(sourceMap, appendMap);
-    }
-
-    template <typename A, typename B>
-    void removeAtKey(std::map<A, B> &sourceMap, const A& key)
-    {
-        sourceMap.erase(sourceMap.find(key));
-    }
-
-    template <typename A, typename B>
-    void removeIObjectAtKey(std::map<A, B> &sourceMap, const A& key)
-    {
-        removeAtKey(sourceMap, key);
-    }
+// ----------------------------------------------------------------------------------------------------
+// ---------------------------------------- Implement
+// -------------------------------------------------
+// ----------------------------------------------------------------------------------------------------
+template <typename A, typename B>
+bool isEmpty(const std::map<A, B>& sourceMap) {
+    return sourceMap.empty();
 }
+
+template <typename A, typename B>
+bool isContain(const std::map<A, B>& sourceMap, const A& key) {
+    return sourceMap.find(key) != sourceMap.end();
+}
+
+template <typename A, typename B>
+std::pair<B, A> flip(const std::pair<A, B>& pair) {
+    return std::pair<B, A>(pair.second, pair.first);
+}
+
+template <typename A, typename B>
+std::map<B, A> flip(const std::map<A, B>& map) {
+    std::map<B, A> result;
+    transform(map.begin(), map.end(), inserter(result, result.begin()),
+              [](const std::pair<A, B>& p) { return flip(p); });
+    return result;
+}
+
+template <typename A, typename B>
+std::set<A> getKeys(const std::map<A, B>& sourceMap) {
+    std::set<A> result;
+    for (auto const& pair : sourceMap) result.insert(pair.first);
+    return result;
+}
+
+template <typename A, typename B>
+std::set<void*> getVoidKeys(const std::map<A, B>& sourceMap) {
+    std::set<void*> result;
+    for (auto const& pair : sourceMap) result.insert((void*)&pair.first);
+    return result;
+}
+
+template <typename A, typename B>
+std::set<A> find(const std::map<A, B>& sourceMap, const B& obj) {
+    std::set<A> result;
+    for (auto const& pair : sourceMap) {
+        if (pair.second == obj) result.insert(pair.first);
+    }
+    return result;
+}
+
+template <typename A, typename B>
+std::set<A> findIObject(std::map<A, std::shared_ptr<B>>& sourceMap,
+                        const std::shared_ptr<IObject>& obj) {
+    auto derivedObj = std::dynamic_pointer_cast<B>(obj);
+    if (derivedObj != nullptr) return find(sourceMap, derivedObj);
+    std::set<A> result;
+    return result;
+}
+
+template <typename A, typename B>
+void set(std::map<A, B>& sourceMap, const A& key, const B& value) {
+    if (sourceMap.find(key) != sourceMap.end())
+        sourceMap[key] = value;
+    else
+        sourceMap.insert(std::make_pair(key, value));
+}
+
+template <typename A, typename B>
+void set(std::map<A, B>& sourceMap, const std::map<A, B>& appendMap) {
+    for (auto const& pair : appendMap) set(sourceMap, pair.first, pair.second);
+}
+
+template <typename A, typename B>
+void setIObject(std::map<A, std::shared_ptr<B>>& sourceMap, A key, std::shared_ptr<IObject> value) {
+    auto derivedObj = std::dynamic_pointer_cast<B>(value);
+    assert(derivedObj != nullptr);
+    if (sourceMap.find(key) != sourceMap.end())
+        sourceMap[key] = derivedObj;
+    else
+        sourceMap.insert(std::make_pair(key, derivedObj));
+}
+
+template <typename A, typename B>
+void setIObjects(std::map<A, std::shared_ptr<B>>& sourceMap,
+                 const std::map<A, std::shared_ptr<B>>& appendMap) {
+    set(sourceMap, appendMap);
+}
+
+template <typename A, typename B>
+void removeAtKey(std::map<A, B>& sourceMap, const A& key) {
+    sourceMap.erase(sourceMap.find(key));
+}
+
+template <typename A, typename B>
+void removeIObjectAtKey(std::map<A, B>& sourceMap, const A& key) {
+    removeAtKey(sourceMap, key);
+}
+}  // namespace vcc

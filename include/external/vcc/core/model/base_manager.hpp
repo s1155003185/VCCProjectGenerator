@@ -1,27 +1,29 @@
 #pragma once
 
 #include <assert.h>
+
 #include <memory>
 
-#include "i_manager.hpp"
 #include "base_object.hpp"
 #include "class_macro.hpp"
+#include "i_manager.hpp"
 #include "log_config.hpp"
 
-namespace vcc
-{
-    class BaseManager : public IManager, public BaseObject
-    {
-        GETSET_SPTR_NULL(LogConfig, LogConfig);
-    
-    private:
-        BaseManager() = default;
+namespace vcc {
+class BaseManager : public IManager, public BaseObject {
+    GETSET_SPTR_NULL(LogConfig, LogConfig);
 
-    protected:
-        BaseManager(std::shared_ptr<LogConfig> logConfig) : _LogConfig(logConfig) {}
-        virtual ~BaseManager() {}
-        
-        // No clone for Manager
-        virtual std::shared_ptr<IObject> clone() const override { assert(false);  return nullptr; }
-    };
-}
+   private:
+    BaseManager() = default;
+
+   protected:
+    BaseManager(std::shared_ptr<LogConfig> logConfig) : _LogConfig(logConfig) {}
+    virtual ~BaseManager() {}
+
+    // No clone for Manager
+    virtual std::shared_ptr<IObject> clone() const override {
+        assert(false);
+        return nullptr;
+    }
+};
+}  // namespace vcc

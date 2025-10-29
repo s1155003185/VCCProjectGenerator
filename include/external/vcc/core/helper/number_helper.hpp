@@ -2,9 +2,8 @@
 
 #include <string>
 
-namespace vcc
-{
-    int getDecimalPlaces(const double &value);
+namespace vcc {
+int getDecimalPlaces(const double& value);
 
-	std::wstring ToString(const double &value, const size_t &decimalPlaces);
-};
+std::wstring ToString(const double& value, const size_t& decimalPlaces);
+};  // namespace vcc

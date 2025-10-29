@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "base_manager.hpp"
@@ -11,37 +11,34 @@
 #include "vpg_config.hpp"
 #include "vpg_project_type.hpp"
 
-class VPGProcessManager : public vcc::BaseManager
-{
+class VPGProcessManager : public vcc::BaseManager {
     // project
     GETSET(std::wstring, Workspace, L"");
     GETSET_SPTR_NULL(VPGConfig, Option);
 
-    private:
-        VPGProcessManager() = delete;
-        std::shared_ptr<IVPGGenerationManager> getGenerationManager();
+   private:
+    VPGProcessManager() = delete;
+    std::shared_ptr<IVPGGenerationManager> getGenerationManager();
 
-    public:
-        VPGProcessManager(std::shared_ptr<vcc::LogConfig> logConfig) : BaseManager(logConfig)
-        {
-            this->_Option = std::make_shared<VPGConfig>();
-        }
-        
-        ~VPGProcessManager() {};
+   public:
+    VPGProcessManager(std::shared_ptr<vcc::LogConfig> logConfig) : BaseManager(logConfig) {
+        this->_Option = std::make_shared<VPGConfig>();
+    }
 
-        virtual std::shared_ptr<IObject> clone() const override
-        {
-            return std::make_shared<VPGProcessManager>(*this);
-        }
+    ~VPGProcessManager() {};
 
-        void initLogConfig();
-        // Ensure VPG Generator have same version as Versioning Commond Codebase Response
-        void verifyLocalResponse();
+    virtual std::shared_ptr<IObject> clone() const override {
+        return std::make_shared<VPGProcessManager>(*this);
+    }
 
-        bool isUpdateAvaliable();
-        
-        void add();
-        void update();
-        void generate();
-        void execute(const std::vector<std::wstring> &cmds);
+    void initLogConfig();
+    // Ensure VPG Generator have same version as Versioning Commond Codebase Response
+    void verifyLocalResponse();
+
+    bool isUpdateAvaliable();
+
+    void add();
+    void update();
+    void generate();
+    void execute(const std::vector<std::wstring>& cmds);
 };

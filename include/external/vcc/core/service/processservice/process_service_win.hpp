@@ -3,11 +3,11 @@
 // win only
 // need to be sepearate as cannot use namespace std
 #ifdef _WIN32
-#include <string>
 #include <tchar.h>
 
-namespace vcc 
-{
-    std::wstring ProcessServiceWin(const std::wstring &command);
+#include <string>
+
+namespace vcc {
+std::wstring ProcessServiceWin(const std::wstring& command);
 }
 #endif

@@ -5,9 +5,8 @@
 
 #include "file_helper.hpp"
 
-namespace vcc
-{
-	std::wstring getSystemFolderPathLinux(const SystemFolderType &fileType);
+namespace vcc {
+std::wstring getSystemFolderPathLinux(const SystemFolderType& fileType);
 };
 
 #endif

@@ -2,7 +2,6 @@
 
 #include <thread>
 
-namespace vcc
-{
-    std::wstring ToString(const std::thread::id &threadId);
+namespace vcc {
+std::wstring ToString(const std::thread::id& threadId);
 }

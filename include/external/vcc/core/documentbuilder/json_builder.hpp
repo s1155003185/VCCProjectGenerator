@@ -3,31 +3,31 @@
 #include "base_document_builder.hpp"
 #include "json.hpp"
 
-namespace vcc
-{
-    class IDocument;
-    class JsonBuilder : public BaseDocumentBuilder
-    {
-        // For Serialize Only
-        GETSET(bool, IsBeautify, false);
-        GETSET(int64_t, Level, 0);
-        GETSET(std::wstring, Indent, INDENT);
-        GETSET(std::wstring, NewLineCharacter, L"\r\n");
-        GETSET(std::wstring, NameColonSpace, L"");
-        GETSET(std::wstring, ColonValueSpace, L" ");
+namespace vcc {
+class IDocument;
+class JsonBuilder : public BaseDocumentBuilder {
+    // For Serialize Only
+    GETSET(bool, IsBeautify, false);
+    GETSET(int64_t, Level, 0);
+    GETSET(std::wstring, Indent, INDENT);
+    GETSET(std::wstring, NewLineCharacter, L"\r\n");
+    GETSET(std::wstring, NameColonSpace, L"");
+    GETSET(std::wstring, ColonValueSpace, L" ");
 
-        private:
-            std::wstring getCurrentIndent() const;
+   private:
+    std::wstring getCurrentIndent() const;
 
-        protected:
-            void ParseJsonObject(const std::wstring &str, size_t &pos, std::shared_ptr<Json> doc) const;
-            
-        public:
-            JsonBuilder() = default;
-            virtual ~JsonBuilder() {}
+   protected:
+    void ParseJsonObject(const std::wstring& str, size_t& pos, std::shared_ptr<Json> doc) const;
 
-            virtual std::wstring serialize(const IDocument *doc) const  override;
-            virtual void deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc) const override;
-            virtual void deserialize(const std::wstring &str, std::shared_ptr<IDocument> doc) const override;
-    };
-}
+   public:
+    JsonBuilder() = default;
+    virtual ~JsonBuilder() {}
+
+    virtual std::wstring serialize(const IDocument* doc) const override;
+    virtual void deserialize(const std::wstring& str, size_t& pos,
+                             std::shared_ptr<IDocument> doc) const override;
+    virtual void deserialize(const std::wstring& str,
+                             std::shared_ptr<IDocument> doc) const override;
+};
+}  // namespace vcc

@@ -6,12 +6,12 @@
 #include "i_object.hpp"
 #include "object_type.hpp"
 
-class ObjectFactory : public vcc::BaseFactory
-{
-    private:
-        ObjectFactory() = default;
-        virtual ~ObjectFactory() {}
+class ObjectFactory : public vcc::BaseFactory {
+   private:
+    ObjectFactory() = default;
+    virtual ~ObjectFactory() {}
 
-    public:
-        static std::shared_ptr<vcc::IObject> create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);
+   public:
+    static std::shared_ptr<vcc::IObject> create(
+        const ObjectType& objectType, std::shared_ptr<vcc::IObject> parentObject = nullptr);
 };

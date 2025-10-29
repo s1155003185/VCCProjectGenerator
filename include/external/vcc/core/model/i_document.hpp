@@ -2,12 +2,10 @@
 #include <memory>
 #include <string>
 
-namespace vcc
-{
-    class IDocument
-    {
-        protected:
-            IDocument() {}
-            virtual ~IDocument() {}
-    };
-}
+namespace vcc {
+class IDocument {
+   protected:
+    IDocument() {}
+    virtual ~IDocument() {}
+};
+}  // namespace vcc

@@ -5,65 +5,54 @@
 
 #include "exception_macro.hpp"
 #include "exception_type.hpp"
-#include "property_accessor_macro.hpp"
 #include "lock_type.hpp"
+#include "property_accessor_macro.hpp"
 
-namespace vcc
-{
+namespace vcc {
 
-    #define LOCK_BEGIN switch(lockType) \
-        {\
-            case LockType::NoLock:\
-                break;\
-            case LockType::ReadLock:\
-                readLock();\
-                break;\
-            case LockType::WriteLock:\
-            case LockType::ReadWriteLock:\
-                writeLock();\
-                break;\
-            default:\
-                assert(false);\
-        }\
-        TRY
+#define LOCK_BEGIN                    \
+    switch (lockType) {               \
+        case LockType::NoLock:        \
+            break;                    \
+        case LockType::ReadLock:      \
+            readLock();               \
+            break;                    \
+        case LockType::WriteLock:     \
+        case LockType::ReadWriteLock: \
+            writeLock();              \
+            break;                    \
+        default:                      \
+            assert(false);            \
+    }                                 \
+    TRY
 
-    #define LOCK_END unlock(); CATCH
+#define LOCK_END \
+    unlock();    \
+    CATCH
 
-    void BasePropertyAccessor::readLock() const 
-    { 
-        _Mutex.lock_shared();
-    }
+void BasePropertyAccessor::readLock() const { _Mutex.lock_shared(); }
 
-    void BasePropertyAccessor::writeLock() const
-    {
-        _Mutex.lock();
-    }
+void BasePropertyAccessor::writeLock() const { _Mutex.lock(); }
 
-    void BasePropertyAccessor::readWriteLock() const 
-    {
-        writeLock();
-    }
+void BasePropertyAccessor::readWriteLock() const { writeLock(); }
 
-    void BasePropertyAccessor::unlock() const
-    {
-        _Mutex.unlock();
-    }
+void BasePropertyAccessor::unlock() const { _Mutex.unlock(); }
 
-    BASE_PROPERTY_ACCESSOR_DETAIL(bool, Bool, false)
-    BASE_PROPERTY_ACCESSOR_DETAIL(char, Char, '\0')
-    BASE_PROPERTY_ACCESSOR_DETAIL(wchar_t, Wchar, L'\0')
-    BASE_PROPERTY_ACCESSOR_DETAIL(int8_t, Int8, 0)
-    BASE_PROPERTY_ACCESSOR_DETAIL(uint8_t, Uint8, 0)
-    BASE_PROPERTY_ACCESSOR_DETAIL(short, Short, 0)
-    BASE_PROPERTY_ACCESSOR_DETAIL(uint16_t, UnsignedShort, 0)
-    BASE_PROPERTY_ACCESSOR_DETAIL(int, Int, 0)
-    BASE_PROPERTY_ACCESSOR_DETAIL(uint32_t, UnsignedInt, 0)
-    BASE_PROPERTY_ACCESSOR_DETAIL(long, Long, 0)
-    BASE_PROPERTY_ACCESSOR_DETAIL(size_t, UnsignedLong, 0)
-    BASE_PROPERTY_ACCESSOR_DETAIL(float, Float, 0)
-    BASE_PROPERTY_ACCESSOR_DETAIL(double, Double, 0)
-    BASE_PROPERTY_ACCESSOR_DETAIL(std::wstring, String, L"")
-    BASE_PROPERTY_ACCESSOR_OBJECT_DETAIL(std::shared_ptr<IObject>, Object, nullptr)
-    
-    BASE_PROPERTY_ACCESSOR_CONTAINER_DETAIL
-}
+BASE_PROPERTY_ACCESSOR_DETAIL(bool, Bool, false)
+BASE_PROPERTY_ACCESSOR_DETAIL(char, Char, '\0')
+BASE_PROPERTY_ACCESSOR_DETAIL(wchar_t, Wchar, L'\0')
+BASE_PROPERTY_ACCESSOR_DETAIL(int8_t, Int8, 0)
+BASE_PROPERTY_ACCESSOR_DETAIL(uint8_t, Uint8, 0)
+BASE_PROPERTY_ACCESSOR_DETAIL(short, Short, 0)
+BASE_PROPERTY_ACCESSOR_DETAIL(uint16_t, UnsignedShort, 0)
+BASE_PROPERTY_ACCESSOR_DETAIL(int, Int, 0)
+BASE_PROPERTY_ACCESSOR_DETAIL(uint32_t, UnsignedInt, 0)
+BASE_PROPERTY_ACCESSOR_DETAIL(long, Long, 0)
+BASE_PROPERTY_ACCESSOR_DETAIL(size_t, UnsignedLong, 0)
+BASE_PROPERTY_ACCESSOR_DETAIL(float, Float, 0)
+BASE_PROPERTY_ACCESSOR_DETAIL(double, Double, 0)
+BASE_PROPERTY_ACCESSOR_DETAIL(std::wstring, String, L"")
+BASE_PROPERTY_ACCESSOR_OBJECT_DETAIL(std::shared_ptr<IObject>, Object, nullptr)
+
+BASE_PROPERTY_ACCESSOR_CONTAINER_DETAIL
+}  // namespace vcc

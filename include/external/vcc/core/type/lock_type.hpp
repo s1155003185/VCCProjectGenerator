@@ -1,12 +1,5 @@
 #pragma once
 
-namespace vcc
-{
-    enum class LockType
-    {
-        NoLock
-        , ReadLock
-        , WriteLock
-        , ReadWriteLock
-    };
+namespace vcc {
+enum class LockType { NoLock, ReadLock, WriteLock, ReadWriteLock };
 };

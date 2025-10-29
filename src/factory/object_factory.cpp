@@ -1,6 +1,7 @@
 #include "object_factory.hpp"
 
 #include <assert.h>
+
 #include <memory>
 
 #include "exception_macro.hpp"
@@ -13,12 +14,10 @@
 #include "vpg_main_form.hpp"
 #include "vpg_workspace_form.hpp"
 
-std::shared_ptr<vcc::IObject> ObjectFactory::create(const ObjectType &objectType, std::shared_ptr<vcc::IObject> parentObject)
-{
+std::shared_ptr<vcc::IObject> ObjectFactory::create(const ObjectType& objectType,
+                                                    std::shared_ptr<vcc::IObject> parentObject) {
     std::shared_ptr<vcc::IObject> result = nullptr;
-    TRY
-        switch (objectType)
-        {
+    TRY switch (objectType) {
         case ObjectType::Config:
             result = std::make_shared<VPGConfig>();
             break;
@@ -70,9 +69,8 @@ std::shared_ptr<vcc::IObject> ObjectFactory::create(const ObjectType &objectType
         default:
             assert(false);
             break;
-        }
-        if (result != nullptr)
-            result->setParentObject(parentObject);
+    }
+    if (result != nullptr) result->setParentObject(parentObject);
     CATCH
     return result;
 }

@@ -2,12 +2,10 @@
 
 #include "i_service.hpp"
 
-namespace vcc
-{
-    class BaseService : public IService
-    {
-        protected:
-            BaseService() {}
-            virtual ~BaseService() {}
-    };
-}
+namespace vcc {
+class BaseService : public IService {
+   protected:
+    BaseService() {}
+    virtual ~BaseService() {}
+};
+}  // namespace vcc

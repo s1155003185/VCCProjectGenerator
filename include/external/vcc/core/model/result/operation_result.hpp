@@ -7,18 +7,16 @@
 #include "exception_type.hpp"
 #include "object_type.hpp"
 
-namespace vcc
-{
-    class OperationResult : public BaseResult
-    {
-        public:
-            OperationResult() : OperationResult(ExceptionType::NoError, L"") {}
-            OperationResult(const ExceptionType &exceptionType, const std::wstring &message) : BaseResult(ObjectType::OperationResult, exceptionType, message) {}
-            virtual ~OperationResult() {}
-            
-            virtual std::shared_ptr<IObject> clone() const override
-            {
-                return std::make_shared<OperationResult>();
-            }
-    };
-}
+namespace vcc {
+class OperationResult : public BaseResult {
+   public:
+    OperationResult() : OperationResult(ExceptionType::NoError, L"") {}
+    OperationResult(const ExceptionType& exceptionType, const std::wstring& message)
+        : BaseResult(ObjectType::OperationResult, exceptionType, message) {}
+    virtual ~OperationResult() {}
+
+    virtual std::shared_ptr<IObject> clone() const override {
+        return std::make_shared<OperationResult>();
+    }
+};
+}  // namespace vcc

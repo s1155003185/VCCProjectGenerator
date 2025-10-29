@@ -5,69 +5,68 @@
 #include "base_property_accessor.hpp"
 #include "property_accessor_macro.hpp"
 
-class VPGConfigTemplatePropertyAccessor : public vcc::BasePropertyAccessor
-{
+class VPGConfigTemplatePropertyAccessor : public vcc::BasePropertyAccessor {
     PROPERTY_ACCESSOR_HEADER(bool, Bool)
     PROPERTY_ACCESSOR_HEADER(std::wstring, String)
 
-    public:
-        VPGConfigTemplatePropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}
-        virtual ~VPGConfigTemplatePropertyAccessor() {}
+   public:
+    VPGConfigTemplatePropertyAccessor(std::shared_ptr<vcc::IObject> object)
+        : vcc::BasePropertyAccessor(object) {}
+    virtual ~VPGConfigTemplatePropertyAccessor() {}
 };
 
-class VPGConfigBehaviorPropertyAccessor : public vcc::BasePropertyAccessor
-{
+class VPGConfigBehaviorPropertyAccessor : public vcc::BasePropertyAccessor {
     PROPERTY_ACCESSOR_HEADER(bool, Bool)
     PROPERTY_ACCESSOR_HEADER(long, Long)
 
-    public:
-        VPGConfigBehaviorPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}
-        virtual ~VPGConfigBehaviorPropertyAccessor() {}
+   public:
+    VPGConfigBehaviorPropertyAccessor(std::shared_ptr<vcc::IObject> object)
+        : vcc::BasePropertyAccessor(object) {}
+    virtual ~VPGConfigBehaviorPropertyAccessor() {}
 };
 
-class VPGConfigInputPropertyAccessor : public vcc::BasePropertyAccessor
-{
+class VPGConfigInputPropertyAccessor : public vcc::BasePropertyAccessor {
     PROPERTY_ACCESSOR_HEADER(std::wstring, String)
 
-    public:
-        VPGConfigInputPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}
-        virtual ~VPGConfigInputPropertyAccessor() {}
+   public:
+    VPGConfigInputPropertyAccessor(std::shared_ptr<vcc::IObject> object)
+        : vcc::BasePropertyAccessor(object) {}
+    virtual ~VPGConfigInputPropertyAccessor() {}
 };
 
-class VPGConfigOutputUnittestPropertyAccessor : public vcc::BasePropertyAccessor
-{
+class VPGConfigOutputUnittestPropertyAccessor : public vcc::BasePropertyAccessor {
     PROPERTY_ACCESSOR_HEADER(std::wstring, String)
 
     PROPERTY_ACCESSOR_CONTAINER_HEADER
 
-    public:
-        VPGConfigOutputUnittestPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}
-        virtual ~VPGConfigOutputUnittestPropertyAccessor() {}
+   public:
+    VPGConfigOutputUnittestPropertyAccessor(std::shared_ptr<vcc::IObject> object)
+        : vcc::BasePropertyAccessor(object) {}
+    virtual ~VPGConfigOutputUnittestPropertyAccessor() {}
 };
 
-class VPGConfigOutputPropertyAccessor : public vcc::BasePropertyAccessor
-{
+class VPGConfigOutputPropertyAccessor : public vcc::BasePropertyAccessor {
     PROPERTY_ACCESSOR_HEADER(std::wstring, String)
     PROPERTY_ACCESSOR_OBJECT_HEADER(std::shared_ptr<vcc::IObject>, Object)
 
-    public:
-        VPGConfigOutputPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}
-        virtual ~VPGConfigOutputPropertyAccessor() {}
+   public:
+    VPGConfigOutputPropertyAccessor(std::shared_ptr<vcc::IObject> object)
+        : vcc::BasePropertyAccessor(object) {}
+    virtual ~VPGConfigOutputPropertyAccessor() {}
 };
 
-class VPGConfigExportPropertyAccessor : public vcc::BasePropertyAccessor
-{
+class VPGConfigExportPropertyAccessor : public vcc::BasePropertyAccessor {
     PROPERTY_ACCESSOR_HEADER(bool, Bool)
     PROPERTY_ACCESSOR_HEADER(long, Long)
     PROPERTY_ACCESSOR_HEADER(std::wstring, String)
 
-    public:
-        VPGConfigExportPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}
-        virtual ~VPGConfigExportPropertyAccessor() {}
+   public:
+    VPGConfigExportPropertyAccessor(std::shared_ptr<vcc::IObject> object)
+        : vcc::BasePropertyAccessor(object) {}
+    virtual ~VPGConfigExportPropertyAccessor() {}
 };
 
-class VPGConfigPropertyAccessor : public vcc::BasePropertyAccessor
-{
+class VPGConfigPropertyAccessor : public vcc::BasePropertyAccessor {
     PROPERTY_ACCESSOR_HEADER(bool, Bool)
     PROPERTY_ACCESSOR_HEADER(long, Long)
     PROPERTY_ACCESSOR_HEADER(std::wstring, String)
@@ -75,7 +74,8 @@ class VPGConfigPropertyAccessor : public vcc::BasePropertyAccessor
 
     PROPERTY_ACCESSOR_CONTAINER_HEADER
 
-    public:
-        VPGConfigPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}
-        virtual ~VPGConfigPropertyAccessor() {}
+   public:
+    VPGConfigPropertyAccessor(std::shared_ptr<vcc::IObject> object)
+        : vcc::BasePropertyAccessor(object) {}
+    virtual ~VPGConfigPropertyAccessor() {}
 };
