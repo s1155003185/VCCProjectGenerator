@@ -29,6 +29,8 @@ std::shared_ptr<vcc::IPropertyAccessor> PropertyAccessorFactory::create(std::sha
         return std::make_shared<VPGConfigInputPropertyAccessor>(object);
     case ObjectType::ConfigOutput:
         return std::make_shared<VPGConfigOutputPropertyAccessor>(object);
+    case ObjectType::ConfigOutputUnittest:
+        return std::make_shared<VPGConfigOutputUnittestPropertyAccessor>(object);
     case ObjectType::ConfigTemplate:
         return std::make_shared<VPGConfigTemplatePropertyAccessor>(object);
     case ObjectType::EnumClass:

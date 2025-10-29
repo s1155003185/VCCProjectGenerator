@@ -20,7 +20,7 @@ namespace vcc
 
     std::wstring TerminalService::execute(const LogConfig *logConfig, const std::wstring &id, const std::wstring &workspace, const std::wstring &cmd)
     {
-        LogService::LogTerminal(logConfig, id, cmd);
+        LogService::logTerminal(logConfig, id, cmd);
 
         std::wstring currentDirectory = L"";
         std::wstring result = L"";
@@ -71,7 +71,7 @@ namespace vcc
             return result;
         }
 
-        LogService::LogTerminalResult(logConfig, id, result);
+        LogService::logTerminalResult(logConfig, id, result);
 
         trim(result);
         return result;

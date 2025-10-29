@@ -34,9 +34,21 @@ class VPGConfigInputPropertyAccessor : public vcc::BasePropertyAccessor
         virtual ~VPGConfigInputPropertyAccessor() {}
 };
 
+class VPGConfigOutputUnittestPropertyAccessor : public vcc::BasePropertyAccessor
+{
+    PROPERTY_ACCESSOR_HEADER(std::wstring, String)
+
+    PROPERTY_ACCESSOR_CONTAINER_HEADER
+
+    public:
+        VPGConfigOutputUnittestPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}
+        virtual ~VPGConfigOutputUnittestPropertyAccessor() {}
+};
+
 class VPGConfigOutputPropertyAccessor : public vcc::BasePropertyAccessor
 {
     PROPERTY_ACCESSOR_HEADER(std::wstring, String)
+    PROPERTY_ACCESSOR_OBJECT_HEADER(std::shared_ptr<vcc::IObject>, Object)
 
     public:
         VPGConfigOutputPropertyAccessor(std::shared_ptr<vcc::IObject> object) : vcc::BasePropertyAccessor(object) {}

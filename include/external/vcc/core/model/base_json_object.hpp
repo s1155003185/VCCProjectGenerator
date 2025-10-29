@@ -18,7 +18,7 @@ namespace vcc
         virtual std::wstring serializeJson(const IDocumentBuilder *builder) const override
         {
             TRY
-                return builder->serialize(ToJson().get());
+                return builder->serialize(toJson().get());
             CATCH
             return L"";
         }

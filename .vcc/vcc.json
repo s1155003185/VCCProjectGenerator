@@ -1,5 +1,5 @@
 {
-    "Version": "v0.3.4",
+    "Version": "v0.4.2",
     "ProjectType": "VccModule",
     "ProjectPrefix": "VPG",
     "ProjectName": "VCCProjGenerator",
@@ -35,7 +35,14 @@
         "ObjectFactoryDirectoryHpp": "include/factory",
         "ObjectFactoryDirectoryCpp": "src/factory",
         "PropertyAccessorFactoryDirectoryHpp": "include/factory",
-        "PropertyAccessorFactoryDirectoryCpp": "src/factory"
+        "PropertyAccessorFactoryDirectoryCpp": "src/factory",
+        "Unittest": {
+            "ActionDirectoryCpp": "unittest/action",
+            "UnittestNames": [
+                "EmptyTest",
+                "FullTest"
+            ]
+        }
     },
     "Plugins": [
         "vcc/versioning/git"

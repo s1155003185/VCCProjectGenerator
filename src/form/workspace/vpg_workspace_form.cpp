@@ -34,7 +34,7 @@ std::shared_ptr<vcc::IObject> VPGWorkspaceForm::clone() const
     return obj;
 }
 
-std::shared_ptr<vcc::Json> VPGWorkspaceForm::ToJson() const
+std::shared_ptr<vcc::Json> VPGWorkspaceForm::toJson() const
 {
     TRY
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
@@ -47,7 +47,7 @@ std::shared_ptr<vcc::Json> VPGWorkspaceForm::ToJson() const
         auto tmpGitForms = std::make_shared<vcc::Json>();
         json->addArray(vcc::convertNamingStyle(L"GitForms", vcc::NamingStyle::PascalCase, namestyle), tmpGitForms);
         for (auto const &element : getGitForms()) {
-            tmpGitForms->addArrayObject(element->ToJson());
+            tmpGitForms->addArrayObject(element->toJson());
         }
         return json;
     CATCH

@@ -94,16 +94,16 @@ const vcc::Xml *VPGFileGenerationService::getTagFromCode(const vcc::Xml *code, c
     return nullptr;
 }
 
-bool VPGFileGenerationService::IsGeneartionTag(const std::wstring &tag)
+bool VPGFileGenerationService::isGeneartionTag(const std::wstring &tag)
 {
     return tag == GEN_TOKEN_SHORT || tag == GEN_TOKEN_LONG;
 }
 
-bool VPGFileGenerationService::IsTagForce(const vcc::Xml *child)
+bool VPGFileGenerationService::isTagForce(const vcc::Xml *child)
 {
     TRY
         for (std::shared_ptr<vcc::XmlAttribute> attr : child->getAttributes()){
-            if (IsGeneartionTag(attr->getName())) {
+            if (isGeneartionTag(attr->getName())) {
                 std::wstring value = attr->getValue();
                 vcc::toUpper(value);
                 return value == REPLACE_TAG;
@@ -113,11 +113,11 @@ bool VPGFileGenerationService::IsTagForce(const vcc::Xml *child)
     return false;
 }
 
-bool VPGFileGenerationService::IsTagSkip(const vcc::Xml *child)
+bool VPGFileGenerationService::isTagSkip(const vcc::Xml *child)
 {
     TRY
         for (std::shared_ptr<vcc::XmlAttribute> attr : child->getAttributes()){
-            if (IsGeneartionTag(attr->getName())) {
+            if (isGeneartionTag(attr->getName())) {
                 std::wstring value = attr->getValue();
                 vcc::toUpper(value);
                 return value == RESERVE_TAG;
@@ -133,7 +133,7 @@ VPGFileContentGenerationMode VPGFileGenerationService::getGenerationMode(const v
         for (std::shared_ptr<vcc::Xml> child : codeElemet->getChildren()) {
             if (child->getName() == VCC_NAME) {
                 for (std::shared_ptr<vcc::XmlAttribute> attr : child->getAttributes()) {
-                    if (IsGeneartionTag(attr->getName())) {
+                    if (isGeneartionTag(attr->getName())) {
                         std::wstring value = attr->getValue();
                         vcc::toUpper(value);
                         if (value == FORCE_MODE) {
@@ -152,7 +152,7 @@ VPGFileContentGenerationMode VPGFileGenerationService::getGenerationMode(const v
     return VPGFileContentGenerationMode::Demand;
 }
 
-std::wstring VPGFileGenerationService::GenerateForceCode(const vcc::Xml *src, const std::wstring &tagName, const std::wstring &generatedContent, const std::wstring &commandDelimiter)
+std::wstring VPGFileGenerationService::generateForceCode(const vcc::Xml *src, const std::wstring &tagName, const std::wstring &generatedContent, const std::wstring &commandDelimiter)
 {
     std::wstring result = L"";
     TRY
@@ -187,7 +187,7 @@ std::wstring VPGFileGenerationService::GenerateForceCode(const vcc::Xml *src, co
     return result;
 }
 
-std::wstring VPGFileGenerationService::GenerateDemandCode(const vcc::Xml *src, const std::wstring &tagName, const std::wstring &generatedContent, const std::wstring &commandDelimiter)
+std::wstring VPGFileGenerationService::generateDemandCode(const vcc::Xml *src, const std::wstring &tagName, const std::wstring &generatedContent, const std::wstring &commandDelimiter)
 {
     std::wstring result = L"";
     TRY
@@ -197,7 +197,7 @@ std::wstring VPGFileGenerationService::GenerateDemandCode(const vcc::Xml *src, c
         for (const auto &child : src->getChildren()) {
             if (vcc::isStartWith(child->getName(), L"vcc:") && child->getName() == tagName) {            
                 const vcc::Xml *srcTag = VPGFileGenerationService::getTagFromCode(src, child->getName());
-                if (srcTag != nullptr && VPGFileGenerationService::IsTagForce(child.get())) {
+                if (srcTag != nullptr && VPGFileGenerationService::isTagForce(child.get())) {
                     result += commandDelimiter + L" " + child->getOpeningTag() + L"\r\n";
                     size_t noOfSpace = getMinimumLeadingSpace(lines);
                     for (auto line : lines) {
@@ -219,12 +219,12 @@ std::wstring VPGFileGenerationService::GenerateDemandCode(const vcc::Xml *src, c
     return result;
 }
 
-std::wstring VPGFileGenerationService::GenerateSkipCode(const std::wstring &src)
+std::wstring VPGFileGenerationService::generateSkipCode(const std::wstring &src)
 {
     return src;
 }
 
-std::wstring VPGFileGenerationService::GenerateFileContent(const std::wstring &code, const std::wstring &tagName, const std::wstring &generatedContent, const std::wstring &commandDelimiter)
+std::wstring VPGFileGenerationService::generateFileContent(const std::wstring &code, const std::wstring &tagName, const std::wstring &generatedContent, const std::wstring &commandDelimiter)
 {
     TRY
         std::unique_ptr<VPGCodeReader> reader = std::make_unique<VPGCodeReader>(commandDelimiter);
@@ -234,11 +234,11 @@ std::wstring VPGFileGenerationService::GenerateFileContent(const std::wstring &c
         switch (getGenerationMode(codeElement.get()))
         {
         case VPGFileContentGenerationMode::Force:
-            return VPGFileGenerationService::GenerateForceCode(codeElement.get(), tagName, generatedContent, commandDelimiter);
+            return VPGFileGenerationService::generateForceCode(codeElement.get(), tagName, generatedContent, commandDelimiter);
         case VPGFileContentGenerationMode::Demand:
-            return VPGFileGenerationService::GenerateDemandCode(codeElement.get(), tagName, generatedContent, commandDelimiter);
+            return VPGFileGenerationService::generateDemandCode(codeElement.get(), tagName, generatedContent, commandDelimiter);
         case VPGFileContentGenerationMode::Skip:
-            return VPGFileGenerationService::GenerateSkipCode(code);
+            return VPGFileGenerationService::generateSkipCode(code);
         default:
             THROW_EXCEPTION_MSG(ExceptionType::CustomError, L"Unknown File Content Generation Mode");
             break;

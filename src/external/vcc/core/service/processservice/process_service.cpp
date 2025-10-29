@@ -146,7 +146,7 @@ namespace vcc
 
         std::wstring ProcessService::execute(const LogConfig *logConfig, const std::wstring &id, const std::wstring &command)
         {
-            LogService::LogProcess(logConfig, id, command);
+            LogService::logProcess(logConfig, id, command);
 
             std::wstring result = L"";
             try {
@@ -154,7 +154,7 @@ namespace vcc
             } catch (std::exception &e) {
                 THROW_EXCEPTION(e);
             }
-            LogService::LogProcessResult(logConfig, id, result);
+            LogService::logProcessResult(logConfig, id, result);
             trim(result);
             return result;
         }

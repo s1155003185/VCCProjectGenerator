@@ -25,6 +25,13 @@ enum class VPGConfigInputProperty
 };
 
 // @@json
+enum class VPGConfigOutputUnittestProperty
+{
+    ActionDirectoryCpp, // GETSET(std::wstring, ActionDirectoryCpp, L"unittest/action")
+    UnittestNames // VECTOR(std::wstring, UnittestNames) @@Initialize { "Properties": ["L\"Test\""] }
+};
+
+// @@json
 enum class VPGConfigOutputProperty
 {
     ExceptionTypeDirectory, // GETSET(std::wstring, ExceptionTypeDirectory, L"include/type")
@@ -44,7 +51,9 @@ enum class VPGConfigOutputProperty
     ObjectFactoryDirectoryHpp, // GETSET(std::wstring, ObjectFactoryDirectoryHpp, L"include/factory")
     ObjectFactoryDirectoryCpp, // GETSET(std::wstring, ObjectFactoryDirectoryCpp, L"src/factory")
     PropertyAccessorFactoryDirectoryHpp, // GETSET(std::wstring, PropertyAccessorFactoryDirectoryHpp, L"include/factory")
-    PropertyAccessorFactoryDirectoryCpp // GETSET(std::wstring, PropertyAccessorFactoryDirectoryCpp, L"src/factory")
+    PropertyAccessorFactoryDirectoryCpp, // GETSET(std::wstring, PropertyAccessorFactoryDirectoryCpp, L"src/factory")
+
+    Unittest // GETSET_SPTR(VPGConfigOutputUnittest, Unittest)
 };
 
 // @@json
@@ -124,6 +133,8 @@ enum class VPGConfigProperty
     OutputObjectFactoryDirectoryCpp, // GETCUSTOM(std::wstring, OutputObjectFactoryDirectoryCpp, return this->getOutput() != nullptr ? this->getOutput()->getObjectFactoryDirectoryCpp() : std::make_shared<VPGConfigOutput>()->getObjectFactoryDirectoryCpp();) @@NoJson
     OutputPropertyAccessorFactoryDirectoryHpp, // GETCUSTOM(std::wstring, OutputPropertyAccessorFactoryDirectoryHpp, return this->getOutput() != nullptr ? this->getOutput()->getPropertyAccessorFactoryDirectoryHpp() : std::make_shared<VPGConfigOutput>()->getPropertyAccessorFactoryDirectoryHpp();) @@NoJson
     OutputPropertyAccessorFactoryDirectoryCpp, // GETCUSTOM(std::wstring, OutputPropertyAccessorFactoryDirectoryCpp, return this->getOutput() != nullptr ? this->getOutput()->getPropertyAccessorFactoryDirectoryCpp() : std::make_shared<VPGConfigOutput>()->getPropertyAccessorFactoryDirectoryCpp();) @@NoJson
+
+    OutputUnittestActionDirectoryCpp, // GETCUSTOM(std::wstring, OutputUnittestActionDirectoryCpp, return (this->getOutput() != nullptr && this->getOutput()->getUnittest() != nullptr) ? this->getOutput()->getUnittest()->getActionDirectoryCpp() : std::make_shared<VPGConfigOutputUnittest>()->getActionDirectoryCpp();) @@NoJson
 
     Plugins, // VECTOR(std::wstring, Plugins)
 

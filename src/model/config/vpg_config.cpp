@@ -14,7 +14,7 @@
 #include "vpg_config_type.hpp"
 #include "vpg_project_type.hpp"
 
-std::shared_ptr<vcc::Json> VPGConfigTemplate::ToJson() const
+std::shared_ptr<vcc::Json> VPGConfigTemplate::toJson() const
 {
     TRY
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
@@ -53,7 +53,7 @@ void VPGConfigTemplate::deserializeJson(std::shared_ptr<vcc::IDocument> document
     CATCH
 }
 
-std::shared_ptr<vcc::Json> VPGConfigBehavior::ToJson() const
+std::shared_ptr<vcc::Json> VPGConfigBehavior::toJson() const
 {
     TRY
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
@@ -110,7 +110,7 @@ void VPGConfigBehavior::deserializeJson(std::shared_ptr<vcc::IDocument> document
     CATCH
 }
 
-std::shared_ptr<vcc::Json> VPGConfigInput::ToJson() const
+std::shared_ptr<vcc::Json> VPGConfigInput::toJson() const
 {
     TRY
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
@@ -134,7 +134,44 @@ void VPGConfigInput::deserializeJson(std::shared_ptr<vcc::IDocument> document)
     CATCH
 }
 
-std::shared_ptr<vcc::Json> VPGConfigOutput::ToJson() const
+std::shared_ptr<vcc::Json> VPGConfigOutputUnittest::toJson() const
+{
+    TRY
+        vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
+        auto json = std::make_unique<vcc::Json>();
+        // ActionDirectoryCpp
+        json->addString(vcc::convertNamingStyle(L"ActionDirectoryCpp", vcc::NamingStyle::PascalCase, namestyle), getActionDirectoryCpp());
+        // UnittestNames
+        auto tmpUnittestNames = std::make_shared<vcc::Json>();
+        json->addArray(vcc::convertNamingStyle(L"UnittestNames", vcc::NamingStyle::PascalCase, namestyle), tmpUnittestNames);
+        for (auto const &element : getUnittestNames()) {
+            tmpUnittestNames->addArrayString(element);
+        }
+        return json;
+    CATCH
+    return nullptr;
+}
+
+void VPGConfigOutputUnittest::deserializeJson(std::shared_ptr<vcc::IDocument> document)
+{
+    TRY
+        vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
+        auto json = std::dynamic_pointer_cast<vcc::Json>(document);
+        assert(json != nullptr);
+        // ActionDirectoryCpp
+        if (json->isContainKey(vcc::convertNamingStyle(L"ActionDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)))
+            setActionDirectoryCpp(json->getString(vcc::convertNamingStyle(L"ActionDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)));
+        // UnittestNames
+        clearUnittestNames();
+        if (json->isContainKey(vcc::convertNamingStyle(L"UnittestNames", namestyle, vcc::NamingStyle::PascalCase))) {
+            for (auto const &element : json->getArray(vcc::convertNamingStyle(L"UnittestNames", namestyle, vcc::NamingStyle::PascalCase))) {
+                insertUnittestNames(element->getArrayElementString());
+            }
+        }
+    CATCH
+}
+
+std::shared_ptr<vcc::Json> VPGConfigOutput::toJson() const
 {
     TRY
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
@@ -171,6 +208,11 @@ std::shared_ptr<vcc::Json> VPGConfigOutput::ToJson() const
         json->addString(vcc::convertNamingStyle(L"PropertyAccessorFactoryDirectoryHpp", vcc::NamingStyle::PascalCase, namestyle), getPropertyAccessorFactoryDirectoryHpp());
         // PropertyAccessorFactoryDirectoryCpp
         json->addString(vcc::convertNamingStyle(L"PropertyAccessorFactoryDirectoryCpp", vcc::NamingStyle::PascalCase, namestyle), getPropertyAccessorFactoryDirectoryCpp());
+        // Unittest
+        if (getUnittest() != nullptr)
+            json->addObject(vcc::convertNamingStyle(L"Unittest", vcc::NamingStyle::PascalCase, namestyle), getUnittest()->toJson());
+        else
+            json->addNull(vcc::convertNamingStyle(L"Unittest", vcc::NamingStyle::PascalCase, namestyle));
         return json;
     CATCH
     return nullptr;
@@ -230,10 +272,17 @@ void VPGConfigOutput::deserializeJson(std::shared_ptr<vcc::IDocument> document)
         // PropertyAccessorFactoryDirectoryCpp
         if (json->isContainKey(vcc::convertNamingStyle(L"PropertyAccessorFactoryDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)))
             setPropertyAccessorFactoryDirectoryCpp(json->getString(vcc::convertNamingStyle(L"PropertyAccessorFactoryDirectoryCpp", namestyle, vcc::NamingStyle::PascalCase)));
+        // Unittest
+        setUnittest(std::make_shared<VPGConfigOutputUnittest>());
+        if (json->isContainKey(vcc::convertNamingStyle(L"Unittest", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L"Unittest", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {
+            auto tmpObject = std::make_shared<VPGConfigOutputUnittest>();
+            tmpObject->deserializeJson(json->getObject(vcc::convertNamingStyle(L"Unittest", namestyle, vcc::NamingStyle::PascalCase)));
+            setUnittest(tmpObject);
+        }
     CATCH
 }
 
-std::shared_ptr<vcc::Json> VPGConfigExport::ToJson() const
+std::shared_ptr<vcc::Json> VPGConfigExport::toJson() const
 {
     TRY
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
@@ -315,7 +364,7 @@ void VPGConfigExport::deserializeJson(std::shared_ptr<vcc::IDocument> document)
     CATCH
 }
 
-std::shared_ptr<vcc::Json> VPGConfig::ToJson() const
+std::shared_ptr<vcc::Json> VPGConfig::toJson() const
 {
     TRY
         vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;
@@ -364,22 +413,22 @@ std::shared_ptr<vcc::Json> VPGConfig::ToJson() const
         json->addBool(vcc::convertNamingStyle(L"IsGit", vcc::NamingStyle::PascalCase, namestyle), getIsGit());
         // Template
         if (getTemplate() != nullptr)
-            json->addObject(vcc::convertNamingStyle(L"Template", vcc::NamingStyle::PascalCase, namestyle), getTemplate()->ToJson());
+            json->addObject(vcc::convertNamingStyle(L"Template", vcc::NamingStyle::PascalCase, namestyle), getTemplate()->toJson());
         else
             json->addNull(vcc::convertNamingStyle(L"Template", vcc::NamingStyle::PascalCase, namestyle));
         // Behavior
         if (getBehavior() != nullptr)
-            json->addObject(vcc::convertNamingStyle(L"Behavior", vcc::NamingStyle::PascalCase, namestyle), getBehavior()->ToJson());
+            json->addObject(vcc::convertNamingStyle(L"Behavior", vcc::NamingStyle::PascalCase, namestyle), getBehavior()->toJson());
         else
             json->addNull(vcc::convertNamingStyle(L"Behavior", vcc::NamingStyle::PascalCase, namestyle));
         // Input
         if (getInput() != nullptr)
-            json->addObject(vcc::convertNamingStyle(L"Input", vcc::NamingStyle::PascalCase, namestyle), getInput()->ToJson());
+            json->addObject(vcc::convertNamingStyle(L"Input", vcc::NamingStyle::PascalCase, namestyle), getInput()->toJson());
         else
             json->addNull(vcc::convertNamingStyle(L"Input", vcc::NamingStyle::PascalCase, namestyle));
         // Output
         if (getOutput() != nullptr)
-            json->addObject(vcc::convertNamingStyle(L"Output", vcc::NamingStyle::PascalCase, namestyle), getOutput()->ToJson());
+            json->addObject(vcc::convertNamingStyle(L"Output", vcc::NamingStyle::PascalCase, namestyle), getOutput()->toJson());
         else
             json->addNull(vcc::convertNamingStyle(L"Output", vcc::NamingStyle::PascalCase, namestyle));
         // Plugins
@@ -392,7 +441,7 @@ std::shared_ptr<vcc::Json> VPGConfig::ToJson() const
         auto tmpExports = std::make_shared<vcc::Json>();
         json->addArray(vcc::convertNamingStyle(L"Exports", vcc::NamingStyle::PascalCase, namestyle), tmpExports);
         for (auto const &element : getExports()) {
-            tmpExports->addArrayObject(element->ToJson());
+            tmpExports->addArrayObject(element->toJson());
         }
         return json;
     CATCH

@@ -52,66 +52,66 @@ namespace vcc
 		return LogService::_logMessage(logConfig, LogType::Info, id, message);
 	}
 
-	std::wstring LogService::LogDebug(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
+	std::wstring LogService::logDebug(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
 	{
 		if (!logConfig->getIsLogDebug())
 			return L"";
 		return LogService::_logMessage(logConfig, LogType::Debug, id, message);
 	}
 
-	std::wstring LogService::LogWarning(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
+	std::wstring LogService::logWarning(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
 	{
 		return LogService::_logMessage(logConfig, LogType::Warning, id, message);
 	}
 
-	std::wstring LogService::LogError(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
+	std::wstring LogService::logError(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
 	{
 		return LogService::_logMessage(logConfig, LogType::Error, id, message);
 	}
 
-	std::wstring LogService::LogThread(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
+	std::wstring LogService::logThread(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
 	{
 		if (logConfig == nullptr || !logConfig->getIsLogThread())
 			return L"";
 		return LogService::_logMessage(logConfig, LogType::Info, id, message);
 	}
 
-	std::wstring LogService::LogTerminal(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
+	std::wstring LogService::logTerminal(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
 	{
 		if (logConfig == nullptr || !logConfig->getIsLogTerminal())
 			return L"";
 		return LogService::_logMessage(logConfig, LogType::Info, id, message);
 	}
 
-	std::wstring LogService::LogTerminalResult(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
+	std::wstring LogService::logTerminalResult(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
 	{
 		if (logConfig == nullptr || !logConfig->getIsLogTerminalResult())
 			return L"";
 		return LogService::_logMessage(logConfig, LogType::Info, id, message);
 	}
 
-	std::wstring LogService::LogProcess(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
+	std::wstring LogService::logProcess(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
 	{
 		if (logConfig == nullptr || !logConfig->getIsLogProcess())
 			return L"";
 		return LogService::_logMessage(logConfig, LogType::Info, id, message);
 	}
 
-	std::wstring LogService::LogProcessResult(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
+	std::wstring LogService::logProcessResult(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
 	{
 		if (logConfig == nullptr || !logConfig->getIsLogProcessResult())
 			return L"";
 		return LogService::_logMessage(logConfig, LogType::Info, id, message);
 	}
 
-	std::wstring LogService::LogSQL(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
+	std::wstring LogService::logSQL(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
 	{
 		if (logConfig == nullptr || !logConfig->getIsLogSQL())
 			return L"";
 		return LogService::_logMessage(logConfig, LogType::Info, id, message);
 	}
 
-	std::wstring LogService::LogSQLResult(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
+	std::wstring LogService::logSQLResult(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message)
 	{
 		if (logConfig == nullptr || !logConfig->getIsLogSQLResult())
 			return L"";

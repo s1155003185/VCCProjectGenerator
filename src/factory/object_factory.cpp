@@ -34,6 +34,9 @@ std::shared_ptr<vcc::IObject> ObjectFactory::create(const ObjectType &objectType
         case ObjectType::ConfigOutput:
             result = std::make_shared<VPGConfigOutput>();
             break;
+        case ObjectType::ConfigOutputUnittest:
+            result = std::make_shared<VPGConfigOutputUnittest>();
+            break;
         case ObjectType::ConfigTemplate:
             result = std::make_shared<VPGConfigTemplate>();
             break;

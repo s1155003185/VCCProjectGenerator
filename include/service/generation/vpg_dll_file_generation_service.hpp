@@ -33,13 +33,13 @@ class VPGDllFileGenerationService
         VPGDllFileGenerationService() = default;
         ~VPGDllFileGenerationService() {}
 
-        static std::wstring GenerateApplicationHpp(const VPGDllFileGenerationServiceOption *option);
-        static std::wstring GenerateApplicationCpp(const VPGDllFileGenerationServiceOption *option, std::set<std::wstring> &customIncludeFiles);
+        static std::wstring generateApplicationHpp(const VPGDllFileGenerationServiceOption *option);
+        static std::wstring generateApplicationCpp(const VPGDllFileGenerationServiceOption *option, std::set<std::wstring> &customIncludeFiles);
 
-        static std::wstring GeneratePropertyAccessorHpp(const VPGDllFileGenerationServiceOption *option, std::set<std::wstring> &customIncludeFiles);
-        static std::wstring GeneratePropertyAccessorCpp(const VPGDllFileGenerationServiceOption *option, std::set<std::wstring> &customIncludeFiles);
+        static std::wstring generatePropertyAccessorHpp(const VPGDllFileGenerationServiceOption *option, std::set<std::wstring> &customIncludeFiles);
+        static std::wstring generatePropertyAccessorCpp(const VPGDllFileGenerationServiceOption *option, std::set<std::wstring> &customIncludeFiles);
 
     public:
-        static void GenerateHpp(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp, const VPGDllFileGenerationServiceOption *option);
-        static void GenerateCpp(const vcc::LogConfig *logConfig, const std::wstring &filePathCpp, const VPGDllFileGenerationServiceOption *option);
+        static void generateHpp(const vcc::LogConfig *logConfig, const std::wstring &filePathHpp, const VPGDllFileGenerationServiceOption *option);
+        static void generateCpp(const vcc::LogConfig *logConfig, const std::wstring &filePathCpp, const VPGDllFileGenerationServiceOption *option);
 };

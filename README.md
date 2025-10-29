@@ -12,14 +12,14 @@ Please go to following session to see how to create VCC Project to generate c++ 
 - Tutorial for Create VCC DLL Project to generate dll with Java Interface
 
 ## What's new
-Review Function naming
+Generate Action Unittest
 
 ### Important
 Neet to upgrade all platforms g++ to latest version!
 Or you may need to keep version 0.3.x
 
 ## What's next
-Git Manager
+Cpp Check Style and Code Review
 
 ## Features
 - Easy update project to model version instead of rewrite codebase. Just Update Project Genertor to newest version, execute Update and Generation.
@@ -41,7 +41,7 @@ Git Manager
 Must already install following before execute VCCProjectGenerator and VCCProjectGenerator VSCode Extension.
 Or can download the template from git directly.
 
-C++
+C++ (c++23)
 1. git
 2. g++
 3. make
@@ -348,7 +348,14 @@ Sample
         "ObjectFactoryDirectoryHpp": "include/factory",
         "ObjectFactoryDirectoryCpp": "src/factory",
         "PropertyAccessorFactoryDirectoryHpp": "include/factory",
-        "PropertyAccessorFactoryDirectoryCpp": "src/factory"
+        "PropertyAccessorFactoryDirectoryCpp": "src/factory",
+        "Unittest": {
+            "ActionDirectoryCpp": "unittest/action",
+            "UnittestNames": [
+                "EmptyTest",
+                "FullTest"
+            ]
+        }
     },
     "Plugins": [
         "vcc/versioning/git"
@@ -461,6 +468,15 @@ ObjectFactoryDirectoryHpp, ObjectFactoryDirectoryCpp
 PropertyAccessorFactoryDirectoryHpp, PropertyAccessorFactoryDirectoryCpp
     Optional. Empty for no generation.
     In Generation mode, Property Accessor Factory file is generated here.
+
+Unittest
+    ActionDirectoryCpp
+        Optional. Empty for no generation.
+        If ActionDirectoryHpp and ActionDirectoryCpp are non-empty, will generate as seperate mode (<prefix>_<form>_<action>_test.cpp). Otherwise, generate in same files (<prefix>_<form>_test.cpp).
+
+    UnittestNames
+        Optional. Empty for no generation.
+        Unittest. Name of Unittest For Generation.
 
 ##### Plugins
 Plugins
@@ -1274,6 +1290,9 @@ X(Twitter) @VCCProject
 
 ****
 ## Release Log
+
+### [v0.4.2] - 2025-10-29: Generate Action Unittest
+- Generate Action Unittest
 
 ### [v0.4.1] - 2025-08-24: Review Function Name
 - Review function naming from PascalCase to CamelCase

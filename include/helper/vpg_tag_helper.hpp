@@ -211,3 +211,35 @@ inline std::wstring getVccTagTailerCustomTypes(const VPGCodeType &codeType, cons
     CATCH
     return L"";
 }
+
+inline std::wstring getVccTagHeaderCustomClassCustomSetUp(const VPGCodeType &codeType, const std::wstring &className)
+{
+    TRY
+        return getVccTagHeaderCustomClassCustomFunctions(codeType,  L"custom", className, L"SetUp");
+    CATCH
+    return L"";
+}
+
+inline std::wstring getVccTagTailerCustomClassCustomSetUp(const VPGCodeType &codeType, const std::wstring &className)
+{
+    TRY
+        return getVccTagTailerCustomClassCustomFunctions(codeType,  L"custom", className,  L"SetUp");
+    CATCH
+    return L"";
+}
+
+inline std::wstring getVccTagHeaderCustomClassCustomTearDown(const VPGCodeType &codeType, const std::wstring &className)
+{
+    TRY
+        return getVccTagHeaderCustomClassCustomFunctions(codeType,  L"custom", className, L"TearDown");
+    CATCH
+    return L"";
+}
+
+inline std::wstring getVccTagTailerCustomClassCustomTearDown(const VPGCodeType &codeType, const std::wstring &className)
+{
+    TRY
+        return getVccTagTailerCustomClassCustomFunctions(codeType,  L"custom", className,  L"TearDown");
+    CATCH
+    return L"";
+}

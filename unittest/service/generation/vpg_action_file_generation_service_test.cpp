@@ -201,8 +201,8 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile)
     std::map<std::wstring, std::wstring> hppClass, cppClass;
     std::set<std::wstring> sytemIncludeFiles;
     std::set<std::wstring> customIncludeFiles;
-    VPGActionFileGenerationService::GenerateHpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", L"", hppClass, sytemIncludeFiles, customIncludeFiles);
-    VPGActionFileGenerationService::GenerateCpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", L"", cppClass, sytemIncludeFiles, customIncludeFiles);
+    VPGActionFileGenerationService::generateHpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", L"", hppClass, sytemIncludeFiles, customIncludeFiles);
+    VPGActionFileGenerationService::generateCpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", L"", cppClass, sytemIncludeFiles, customIncludeFiles);
     EXPECT_EQ(hppClass.size(), hppResult.size());
     EXPECT_EQ(cppClass.size(), cppResult.size());
 
@@ -261,8 +261,8 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile_Namespace)
     std::map<std::wstring, std::wstring> hppClass, cppClass;
     std::set<std::wstring> sytemIncludeFiles;
     std::set<std::wstring> customIncludeFiles;
-    VPGActionFileGenerationService::GenerateHpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", L"", hppClass, sytemIncludeFiles, customIncludeFiles);
-    VPGActionFileGenerationService::GenerateCpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", L"", cppClass, sytemIncludeFiles, customIncludeFiles);
+    VPGActionFileGenerationService::generateHpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", L"", hppClass, sytemIncludeFiles, customIncludeFiles);
+    VPGActionFileGenerationService::generateCpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", L"", cppClass, sytemIncludeFiles, customIncludeFiles);
     EXPECT_EQ(hppClass.size(), hppResult.size());
     EXPECT_EQ(cppClass.size(), cppResult.size());
 
@@ -309,8 +309,8 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile)
     std::map<std::wstring, std::wstring> hppClass, cppClass;
     std::set<std::wstring> sytemIncludeFiles;
     std::set<std::wstring> customIncludeFiles;
-    VPGActionFileGenerationService::GenerateHpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->getWorkspace(), hppClass, sytemIncludeFiles, customIncludeFiles);
-    VPGActionFileGenerationService::GenerateCpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->getWorkspace(), cppClass, sytemIncludeFiles, customIncludeFiles);
+    VPGActionFileGenerationService::generateHpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->getWorkspace(), hppClass, sytemIncludeFiles, customIncludeFiles);
+    VPGActionFileGenerationService::generateCpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->getWorkspace(), cppClass, sytemIncludeFiles, customIncludeFiles);
     EXPECT_TRUE(hppClass.empty());
     EXPECT_TRUE(cppClass.empty());
 
@@ -423,8 +423,8 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile_Namespace)
     std::map<std::wstring, std::wstring> hppClass, cppClass;
     std::set<std::wstring> sytemIncludeFiles;
     std::set<std::wstring> customIncludeFiles;
-    VPGActionFileGenerationService::GenerateHpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->getWorkspace(), hppClass, sytemIncludeFiles, customIncludeFiles);
-    VPGActionFileGenerationService::GenerateCpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->getWorkspace(), cppClass, sytemIncludeFiles, customIncludeFiles);
+    VPGActionFileGenerationService::generateHpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->getWorkspace(), hppClass, sytemIncludeFiles, customIncludeFiles);
+    VPGActionFileGenerationService::generateCpp(nullptr, classPathMapping, enumClassList.at(0).get(), L"VPG", this->getWorkspace(), cppClass, sytemIncludeFiles, customIncludeFiles);
     EXPECT_TRUE(hppClass.empty());
     EXPECT_TRUE(cppClass.empty());
 

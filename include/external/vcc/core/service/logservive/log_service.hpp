@@ -26,19 +26,19 @@ namespace vcc
 
 		// General
 		static std::wstring logInfo(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
-		static std::wstring LogDebug(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
-		static std::wstring LogWarning(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
-		static std::wstring LogError(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
+		static std::wstring logDebug(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
+		static std::wstring logWarning(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
+		static std::wstring logError(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
 		// Thread
-		static std::wstring LogThread(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
+		static std::wstring logThread(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
 		// Terminal
-		static std::wstring LogTerminal(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
-		static std::wstring LogTerminalResult(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
+		static std::wstring logTerminal(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
+		static std::wstring logTerminalResult(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
 		// Process
-		static std::wstring LogProcess(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
-		static std::wstring LogProcessResult(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
+		static std::wstring logProcess(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
+		static std::wstring logProcessResult(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
 		// SQL
-		static std::wstring LogSQL(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
-		static std::wstring LogSQLResult(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
+		static std::wstring logSQL(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
+		static std::wstring logSQLResult(const LogConfig *logConfig, const std::wstring &id, const std::wstring &message);
 	};
 }

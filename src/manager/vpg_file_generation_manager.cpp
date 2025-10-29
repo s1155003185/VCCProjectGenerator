@@ -23,6 +23,7 @@
 #include "vpg_object_type_file_generation_service.hpp"
 #include "vpg_property_accessor_generation_service.hpp"
 #include "vpg_property_accessor_factory_file_generation_service.hpp"
+#include "vpg_unittest_file_generation_service.hpp"
 
 const std::wstring classMacroFilePath = L"include/external/vcc/core/macro/class_macro.hpp";
 const std::wstring logId = L"File Generation";
@@ -102,7 +103,7 @@ void VPGFileGenerationManager::getFileList(const VPGEnumClassReader *reader, con
                     } else
                         _IncludeFiles.insert(std::make_pair(enumClassName, fileName));
                     // class
-                    if (IsPropertyFile(fileName, projectPrefix) && IsPropertyClass(enumClassName, projectPrefix)) {
+                    if (isPropertyFile(fileName, projectPrefix) && isPropertyClass(enumClassName, projectPrefix)) {
                         std::wstring className = getClassNameFromPropertyClassName(enumClassName);
                         std::wstring classFileName = getClassFilenameFromEnumClassFilename(fileName);
                         if (classFiles.count(className) > 0)
@@ -156,6 +157,7 @@ void VPGFileGenerationManager::generateProperty(const vcc::LogConfig *logConfig,
         std::wstring propertyAccessorDirectoryCpp = option->getOutputPropertyAccessorDirectoryCpp();
         std::wstring actionDirectoryHpp = option->getOutputActionDirectoryHpp();
         std::wstring actionDirectoryCpp = option->getOutputActionDirectoryCpp();
+        std::wstring actionUnittestDirectoryCpp = option->getOutputUnittestActionDirectoryCpp();
         std::wstring formDirectoryHpp = option->getOutputFormDirectoryHpp();
         std::wstring formDirectoryCpp = option->getOutputFormDirectoryCpp();
         std::wstring objectDirectoryHpp = option->getOutputObjectDirectoryHpp();
@@ -165,6 +167,11 @@ void VPGFileGenerationManager::generateProperty(const vcc::LogConfig *logConfig,
         std::wstring objectFactoryDirectoryCpp = option->getOutputObjectFactoryDirectoryCpp();
         std::wstring propertyAccessorFactoryDirectoryHpp = option->getOutputPropertyAccessorFactoryDirectoryHpp();
         std::wstring propertyAccessorFactoryDirectoryCpp = option->getOutputPropertyAccessorFactoryDirectoryCpp();
+        
+        std::vector<std::wstring> actionUnittestNames;
+        if (option->getOutput() != nullptr && option->getOutput()->getUnittest() != nullptr) {
+            actionUnittestNames = option->getOutput()->getUnittest()->getUnittestNames();
+        }
         
         getClassMacroList(projWorkspace);
         VPGEnumClassReader enumClassReader(_ClassMacros);
@@ -212,7 +219,7 @@ void VPGFileGenerationManager::generateProperty(const vcc::LogConfig *logConfig,
         // Generate OperationResult
         for (auto const &exportOption : option->getExports()) {
             if (exportOption->getInterface() == VPGConfigInterfaceType::Java) {
-                VPGJavaGenerationService::GenerateOperationResult(logConfig, projPrefix, exportOption.get(),
+                VPGJavaGenerationService::generateOperationResult(logConfig, projPrefix, exportOption.get(),
                     typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm);
             }
         }
@@ -231,12 +238,12 @@ void VPGFileGenerationManager::generateProperty(const vcc::LogConfig *logConfig,
                 middlePath = L"";
 
             if (!vcc::isBlank(projPrefix) && !vcc::isStartWith(fileName, filePrefix))
-                vcc::LogService::LogWarning(logConfig, logId, L"Class Prefix " + projPrefix + L" missing. Skip: " + path);
+                vcc::LogService::logWarning(logConfig, logId, L"Class Prefix " + projPrefix + L" missing. Skip: " + path);
 
             // ------------------------------------------------------------------------------------------ //
             //                                      Parse File Start                                      //
             // ------------------------------------------------------------------------------------------ //
-            vcc::LogService::LogWarning(logConfig, logId, L"Parse file start: " + path);
+            vcc::LogService::logWarning(logConfig, logId, L"Parse file start: " + path);
 
             std::wstring fileContent = vcc::readFile(path);
             vcc::trim(fileContent);
@@ -260,12 +267,12 @@ void VPGFileGenerationManager::generateProperty(const vcc::LogConfig *logConfig,
             for (auto const &enumClass : enumClassList) {
                 std::wstring propertyClassNameWithoutNamespace = getTypeOrClassWithoutNamespace(enumClass->getName());
                 std::wstring classNameWithoutNamespace = getClassNameFromPropertyClassName(enumClass->getName());
-                if (projPrefix.empty() || IsPropertyClass(propertyClassNameWithoutNamespace, projPrefix)) {
+                if (projPrefix.empty() || isPropertyClass(propertyClassNameWithoutNamespace, projPrefix)) {
                     objectTypes.insert(classNameWithoutNamespace.substr(projPrefix.size()));
                     objectEnumClassList.push_back(enumClass);
                 } else {
                     std::wstring classPrefixStr = !vcc::isBlank(projPrefix) ? (L"Prefix " + projPrefix + L" or ") : L"";
-                    vcc::LogService::LogWarning(logConfig, logId, L"Class " + classPrefixStr + L"Suffix " + propertyClassNameSuffix + L"missing. Not generate object for " + enumClass->getName());
+                    vcc::LogService::logWarning(logConfig, logId, L"Class " + classPrefixStr + L"Suffix " + propertyClassNameSuffix + L"missing. Not generate object for " + enumClass->getName());
                 }
             
                 // ------------------------------------------------------------------------------------------ //
@@ -282,21 +289,21 @@ void VPGFileGenerationManager::generateProperty(const vcc::LogConfig *logConfig,
                     std::wstring workspace = vcc::isAbsolutePath(javaOption->getWorkspace()) ? javaOption->getWorkspace() : vcc::concatPaths({ _Workspace, javaOption->getWorkspace() });
 
                     if (!vcc::isBlank(javaOption->getTypeDirectory()))
-                        VPGJavaGenerationService::GenerateEnum(logConfig, getConcatPath(workspace, javaOption->getTypeDirectory(), middlePath, javaEnumClassName + L".java"), middlePath, enumClass.get(), option, javaOption.get());
+                        VPGJavaGenerationService::generateEnum(logConfig, getConcatPath(workspace, javaOption->getTypeDirectory(), middlePath, javaEnumClassName + L".java"), middlePath, enumClass.get(), option, javaOption.get());
                     
-                    if (IsPropertyClass(propertyClassNameWithoutNamespace, projPrefix)) {
+                    if (isPropertyClass(propertyClassNameWithoutNamespace, projPrefix)) {
                         std::wstring objectDirectory = javaOption->getObjectDirectory();
                         if (enumClass->getType() == VPGEnumClassType::Form && !vcc::isBlank(javaOption->getFormDirectory()))
                             objectDirectory = javaOption->getFormDirectory();
                         if (!vcc::isBlank(objectDirectory))
-                            VPGJavaGenerationService::GenerateObject(logConfig, getConcatPath(workspace, objectDirectory, middlePath, classNameWithoutNamespace + L".java"), middlePath, enumClass.get(),
+                            VPGJavaGenerationService::generateObject(logConfig, getConcatPath(workspace, objectDirectory, middlePath, classNameWithoutNamespace + L".java"), middlePath, enumClass.get(),
                                 typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm,
                                 option, javaOption.get());
                     }
                 }
             }
             
-            if (IsPropertyFile(fileName, filePrefix)) {
+            if (isPropertyFile(fileName, filePrefix)) {
                 // ------------------------------------------------------------------------------------------ //
                 //                               Generate Object Class File                                   //
                 // ------------------------------------------------------------------------------------------ //
@@ -312,14 +319,22 @@ void VPGFileGenerationManager::generateProperty(const vcc::LogConfig *logConfig,
                     std::wstring fileObjectDirectoryCpp = !vcc::isBlank(formDirectoryCpp) ? getConcatPath(projWorkspace, formDirectoryCpp, middlePath, objectFileName + L".cpp") : L"";
                     std::wstring actionFolderHpp = !vcc::isBlank(actionDirectoryHpp) ? getConcatPath(projWorkspace, actionDirectoryHpp, middlePath, L"") : L"";
                     std::wstring actionFolderCpp = !vcc::isBlank(actionDirectoryCpp) ? getConcatPath(projWorkspace, actionDirectoryCpp, middlePath, L"") : L"";
+                    std::wstring actionUnittestFolderPathCpp = !vcc::isBlank(actionUnittestDirectoryCpp) ? getConcatPath(projWorkspace, actionUnittestDirectoryCpp, middlePath, L"") : L"";
                     
-                    VPGObjectFileGenerationService::GenerateHpp(logConfig, option, _IncludeFiles, _EnumClasses, getConcatPath(projWorkspace, objectDirectoryHpp, middlePath, objectFileName + L".hpp"), fileObjectDirectoryHpp, actionFolderHpp, objectEnumClassList);
-                    VPGObjectFileGenerationService::GenerateCpp(logConfig, projPrefix, _IncludeFiles, _EnumClasses, getConcatPath(projWorkspace, objectDirectoryCpp, middlePath, objectFileName + L".cpp"), fileObjectDirectoryCpp, actionFolderCpp, objectEnumClassList);
+                    VPGObjectFileGenerationService::generateHpp(logConfig, option, _IncludeFiles, _EnumClasses, getConcatPath(projWorkspace, objectDirectoryHpp, middlePath, objectFileName + L".hpp"), fileObjectDirectoryHpp, actionFolderHpp, objectEnumClassList);
+                    VPGObjectFileGenerationService::generateCpp(logConfig, projPrefix, _IncludeFiles, _EnumClasses, getConcatPath(projWorkspace, objectDirectoryCpp, middlePath, objectFileName + L".cpp"), fileObjectDirectoryCpp, actionFolderCpp, objectEnumClassList);
                 }
                 if (!propertyAccessorDirectoryHpp.empty() && !propertyAccessorDirectoryCpp.empty()) {
                     propertyAccessorFileNames.insert(propertyAccessorFileName + L".hpp");
-                    VPGPropertyAccessorGenerationService::GenerateHpp(logConfig, projPrefix, getConcatPath(projWorkspace, propertyAccessorDirectoryHpp, middlePath, propertyAccessorFileName + L".hpp"), objectEnumClassList);
-                    VPGPropertyAccessorGenerationService::GenerateCpp(logConfig, projPrefix, _IncludeFiles, getConcatPath(projWorkspace, propertyAccessorDirectoryCpp, middlePath, propertyAccessorFileName + L".cpp"), objectEnumClassList);
+                    VPGPropertyAccessorGenerationService::generateHpp(logConfig, projPrefix, getConcatPath(projWorkspace, propertyAccessorDirectoryHpp, middlePath, propertyAccessorFileName + L".hpp"), objectEnumClassList);
+                    VPGPropertyAccessorGenerationService::generateCpp(logConfig, projPrefix, _IncludeFiles, getConcatPath(projWorkspace, propertyAccessorDirectoryCpp, middlePath, propertyAccessorFileName + L".cpp"), objectEnumClassList);
+                }
+                // ------------------------------------------------------------------------------------------ //
+                //                               Generate Unittest File                                       //
+                // ------------------------------------------------------------------------------------------ //
+                if (!vcc::isBlank(actionUnittestDirectoryCpp) && !actionUnittestNames.empty()) {
+                    // if actionDirectoryHpp is not empty, then sepearte files
+                    VPGUnittestFileGenerationService::generateCppAction(logConfig, projPrefix, fileName, getConcatPath(projWorkspace, actionUnittestDirectoryCpp, middlePath, L""), objectEnumClassList, actionUnittestNames, !actionDirectoryHpp.empty());
                 }
             }
             
@@ -337,28 +352,28 @@ void VPGFileGenerationManager::generateProperty(const vcc::LogConfig *logConfig,
         //                               Generate Object Factory File                                 //
         // ------------------------------------------------------------------------------------------ //
         if (!vcc::isBlank(objectFactoryDirectoryHpp) && !vcc::isBlank(objectFactoryDirectoryCpp)) {
-            VPGObjectFactoryFileGenerationService::GenerateHpp(logConfig, vcc::concatPaths({projWorkspace, objectFactoryDirectoryHpp, objectFactoryFileNameHpp}));
-            VPGObjectFactoryFileGenerationService::GenerateCpp(logConfig, projPrefix, objectFileNames, vcc::concatPaths({projWorkspace, objectFactoryDirectoryCpp, objectFactoryFileNameCpp}), objectTypes);
+            VPGObjectFactoryFileGenerationService::generateHpp(logConfig, vcc::concatPaths({projWorkspace, objectFactoryDirectoryHpp, objectFactoryFileNameHpp}));
+            VPGObjectFactoryFileGenerationService::generateCpp(logConfig, projPrefix, objectFileNames, vcc::concatPaths({projWorkspace, objectFactoryDirectoryCpp, objectFactoryFileNameCpp}), objectTypes);
         }
         // ------------------------------------------------------------------------------------------ //
         //                               Generate Property Accessor Factory File                      //
         // ------------------------------------------------------------------------------------------ //
         if (!vcc::isBlank(propertyAccessorFactoryDirectoryHpp) && !vcc::isBlank(propertyAccessorFactoryDirectoryCpp)) {
             dllOption->setIsGeneratePropertyAccessor(true);
-            VPGPropertyAccessorFactoryFileGenerationService::GenerateHpp(logConfig, vcc::concatPaths({projWorkspace, propertyAccessorFactoryDirectoryHpp, propertyAccessorFactoryFileNameHpp}));
-            VPGPropertyAccessorFactoryFileGenerationService::GenerateCpp(logConfig, projPrefix, propertyAccessorFileNames, vcc::concatPaths({projWorkspace, propertyAccessorFactoryDirectoryCpp, propertyAccessorFactoryFileNameCpp}), objectTypes);
+            VPGPropertyAccessorFactoryFileGenerationService::generateHpp(logConfig, vcc::concatPaths({projWorkspace, propertyAccessorFactoryDirectoryHpp, propertyAccessorFactoryFileNameHpp}));
+            VPGPropertyAccessorFactoryFileGenerationService::generateCpp(logConfig, projPrefix, propertyAccessorFileNames, vcc::concatPaths({projWorkspace, propertyAccessorFactoryDirectoryCpp, propertyAccessorFactoryFileNameCpp}), objectTypes);
         }
 
         // ------------------------------------------------------------------------------------------ //
         //                               Generate DLL inteface File                                   //
         // ------------------------------------------------------------------------------------------ //
-        VPGDllFileGenerationService::GenerateHpp(logConfig, vcc::concatPaths({projWorkspace, L"DllFunctions.h"}), dllOption.get());
-        VPGDllFileGenerationService::GenerateCpp(logConfig, vcc::concatPaths({projWorkspace, L"DllFunctions.cpp"}), dllOption.get());
+        VPGDllFileGenerationService::generateHpp(logConfig, vcc::concatPaths({projWorkspace, L"DllFunctions.h"}), dllOption.get());
+        VPGDllFileGenerationService::generateCpp(logConfig, vcc::concatPaths({projWorkspace, L"DllFunctions.cpp"}), dllOption.get());
 
         // ------------------------------------------------------------------------------------------ //
         //                               Generate JAVA bridge                                         //
         // ------------------------------------------------------------------------------------------ //
-        VPGJavaGenerationService::GenerateJavaBridge(logConfig, _Workspace, vcc::concatPaths({projWorkspace, L"DllFunctions.h"}), option);
+        VPGJavaGenerationService::generateJavaBridge(logConfig, _Workspace, vcc::concatPaths({projWorkspace, L"DllFunctions.h"}), option);
 
         vcc::LogService::logInfo(logConfig, logId, L"Generate Property Finished.");
     CATCH

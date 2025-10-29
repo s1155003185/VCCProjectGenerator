@@ -9,6 +9,7 @@ enum class ObjectType
     , ConfigExport
     , ConfigInput
     , ConfigOutput
+    , ConfigOutputUnittest
     , ConfigTemplate
     , EnumClass
     , EnumClassAttribute

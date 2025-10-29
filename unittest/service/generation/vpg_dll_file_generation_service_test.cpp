@@ -43,8 +43,8 @@ TEST_F(VPGDllFileGenerationServiceTest, Normal)
 {
     auto option = std::make_shared<VPGDllFileGenerationServiceOption>();
     option->setIsGeneratePropertyAccessor(true);
-    VPGDllFileGenerationService::GenerateHpp(this->getLogConfig().get(), this->getFilePathHpp(), option.get());
-    VPGDllFileGenerationService::GenerateCpp(this->getLogConfig().get(), this->getFilePathCpp(), option.get());
+    VPGDllFileGenerationService::generateHpp(this->getLogConfig().get(), this->getFilePathHpp(), option.get());
+    VPGDllFileGenerationService::generateCpp(this->getLogConfig().get(), this->getFilePathCpp(), option.get());
 
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));

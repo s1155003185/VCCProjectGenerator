@@ -21,7 +21,7 @@
 
 #define LOG_ID L"Action File Generation"
 
-void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig,
+void VPGActionFileGenerationService::generateHpp(const vcc::LogConfig *logConfig,
     const std::map<std::wstring, std::wstring> &classPathMapping,
     const VPGEnumClass *enumClass,
     const std::wstring &projectPrefix, const std::wstring &folderPathHpp,
@@ -29,7 +29,7 @@ void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
 {
     TRY
         assert(enumClass != nullptr);
-        if (!IsPropertyClassNameValidToGenerateClass(enumClass->getName(), projectPrefix))
+        if (!isPropertyClassNameValidToGenerateClass(enumClass->getName(), projectPrefix))
             return;
 
         std::wstring className = getClassNameFromPropertyClassName(enumClass->getName());
@@ -152,7 +152,7 @@ void VPGActionFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
     CATCH
 }
 
-void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig,
+void VPGActionFileGenerationService::generateCpp(const vcc::LogConfig *logConfig,
     const std::map<std::wstring, std::wstring> &classPathMapping,
     const VPGEnumClass *enumClass,
     const std::wstring &projectPrefix, const std::wstring &folderPathCpp,
@@ -160,7 +160,7 @@ void VPGActionFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
 {
     TRY
         assert(enumClass != nullptr);
-        if (!IsPropertyClassNameValidToGenerateClass(enumClass->getName(), projectPrefix))
+        if (!isPropertyClassNameValidToGenerateClass(enumClass->getName(), projectPrefix))
             return;
 
         std::wstring className = getClassNameFromPropertyClassName(enumClass->getName());

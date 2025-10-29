@@ -6,7 +6,7 @@
 const std::wstring propertyClassFileSuffix = L"_property.hpp";
 const std::wstring propertyClassSuffix = L"Property";
 
-bool IsFileStartWithProjectPrefix(const std::wstring &str, const std::wstring &projectPrefix)
+bool isFileStartWithProjectPrefix(const std::wstring &str, const std::wstring &projectPrefix)
 {
     TRY
         if (projectPrefix.empty())
@@ -16,7 +16,7 @@ bool IsFileStartWithProjectPrefix(const std::wstring &str, const std::wstring &p
     return false;
 }
 
-bool IsClassStartWithProjectPrefix(const std::wstring &str, const std::wstring &projectPrefix)
+bool isClassStartWithProjectPrefix(const std::wstring &str, const std::wstring &projectPrefix)
 {
     TRY
         if (projectPrefix.empty())
@@ -26,31 +26,31 @@ bool IsClassStartWithProjectPrefix(const std::wstring &str, const std::wstring &
     return false;
 }
 
-bool IsPropertyClassNameValidToGenerateClass(const std::wstring &str, const std::wstring &projectPrefix)
+bool isPropertyClassNameValidToGenerateClass(const std::wstring &str, const std::wstring &projectPrefix)
 {
     TRY
-        return IsClassStartWithProjectPrefix(str, projectPrefix) && vcc::isEndWith(str, propertyClassSuffix);
+        return isClassStartWithProjectPrefix(str, projectPrefix) && vcc::isEndWith(str, propertyClassSuffix);
     CATCH
     return false;
 }
 
-bool IsPropertyFile(const std::wstring &filePath, const std::wstring &projectPrefix)
+bool isPropertyFile(const std::wstring &filePath, const std::wstring &projectPrefix)
 {
     TRY
-        return IsFileStartWithProjectPrefix(vcc::getFileName(filePath), projectPrefix) && vcc::isEndWith(filePath, propertyClassFileSuffix);
+        return isFileStartWithProjectPrefix(vcc::getFileName(filePath), projectPrefix) && vcc::isEndWith(filePath, propertyClassFileSuffix);
     CATCH
     return false;
 }
 
-bool IsPropertyClass(const std::wstring &className, const std::wstring &projectPrefix)
+bool isPropertyClass(const std::wstring &className, const std::wstring &projectPrefix)
 {
     TRY
-        return IsClassStartWithProjectPrefix(className, projectPrefix) && vcc::isEndWith(className, propertyClassSuffix);
+        return isClassStartWithProjectPrefix(className, projectPrefix) && vcc::isEndWith(className, propertyClassSuffix);
     CATCH
     return false;
 }
 
-bool IsCustomType(const std::wstring &value)
+bool isCustomType(const std::wstring &value)
 {
     TRY
         if (value.empty())
@@ -82,7 +82,7 @@ std::wstring getNamespaceFromClassName(const std::wstring &className)
     return L"";
 }
 
-bool IsClassInNamespace(const std::wstring &currentNamespace, const std::wstring &fullClassName)
+bool isClassInNamespace(const std::wstring &currentNamespace, const std::wstring &fullClassName)
 {
     TRY
         return currentNamespace == getNamespaceFromClassName(fullClassName);
@@ -127,6 +127,29 @@ std::wstring getClassNameFromPropertyClassName(const std::wstring &className)
             return className.substr(0, className.length() - propertyClassSuffix.length());
     CATCH
     return className;
+}
+
+std::wstring getClassNameFromFileName(const std::wstring &fileName, const std::wstring &projectPrefix)
+{
+    TRY
+        std::wstring baseFileName = fileName; 
+        if (vcc::isEndWith(baseFileName, propertyClassFileSuffix) && baseFileName.length() > propertyClassFileSuffix.length())
+            baseFileName = baseFileName.substr(0, baseFileName.length() - propertyClassFileSuffix.length());
+
+        baseFileName = baseFileName.find('.') != std::wstring::npos ? baseFileName.substr(0, baseFileName.find('.')) : baseFileName;
+
+        bool isHavingPrefix = false;
+        if (!projectPrefix.empty() && vcc::isStartWith(baseFileName, projectPrefix + L"_", 0, true)) {
+            baseFileName = baseFileName.substr(projectPrefix.length() + 1);
+            isHavingPrefix = true;
+        }
+
+        vcc::toUpper(baseFileName);
+        baseFileName = vcc::convertNamingStyle(baseFileName, vcc::NamingStyle::ConstantCase, vcc::NamingStyle::PascalCase);
+
+        return projectPrefix.empty() || !isHavingPrefix ? baseFileName : (projectPrefix + baseFileName);
+    CATCH
+    return L"";
 }
 
 std::wstring getActionMessage(const std::wstring &id, const std::wstring &msg)

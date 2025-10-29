@@ -14,7 +14,7 @@ class VPGCodeReader : public vcc::XmlBuilder
     public:
         VPGCodeReader(std::wstring commandDelimiter);
         
-        virtual void ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, std::shared_ptr<vcc::Xml> element) const override;
-        virtual void ParseXml(const std::wstring &xmlData, size_t &pos, std::shared_ptr<vcc::Xml> element) const override;
+        virtual void parseXMLTagContent(const std::wstring &xmlData, size_t &pos, std::shared_ptr<vcc::Xml> element) const override;
+        virtual void parseXml(const std::wstring &xmlData, size_t &pos, std::shared_ptr<vcc::Xml> element) const override;
 
 };

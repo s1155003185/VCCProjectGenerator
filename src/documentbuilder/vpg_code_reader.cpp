@@ -10,7 +10,7 @@ VPGCodeReader::VPGCodeReader(std::wstring commandDelimiter)
     this->_CommandDelimiter = commandDelimiter;
 }
 
-void VPGCodeReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, std::shared_ptr<vcc::Xml> element) const
+void VPGCodeReader::parseXMLTagContent(const std::wstring &xmlData, size_t &pos, std::shared_ptr<vcc::Xml> element) const
 {
     TRY
         std::wstring endTag = L"</" + element->getName() + L">";
@@ -25,7 +25,7 @@ void VPGCodeReader::ParseXMLTagContent(const std::wstring &xmlData, size_t &pos,
     CATCH
 }
 
-void VPGCodeReader::ParseXml(const std::wstring &xmlData, size_t &pos, std::shared_ptr<vcc::Xml> element) const
+void VPGCodeReader::parseXml(const std::wstring &xmlData, size_t &pos, std::shared_ptr<vcc::Xml> element) const
 {
    size_t dataLength = xmlData.length();
     TRY
@@ -45,7 +45,7 @@ void VPGCodeReader::ParseXml(const std::wstring &xmlData, size_t &pos, std::shar
                 pos = vcc::find(xmlData, L"<", pos);
 
                 auto tmp = std::make_shared<vcc::Xml>();
-                ParseXMLTag(xmlData, pos, tmp);
+                parseXMLTag(xmlData, pos, tmp);
                 tmp->setFullText(pos < dataLength ? xmlData.substr(startPos, pos - startPos + 1) : xmlData.substr(startPos));
                 element->insertChildren(tmp);
 

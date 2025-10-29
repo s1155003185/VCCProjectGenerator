@@ -34,7 +34,7 @@ std::shared_ptr<vcc::IObject> VPGGitForm::clone() const
     return obj;
 }
 
-std::shared_ptr<vcc::Json> VPGGitForm::ToJson() const
+std::shared_ptr<vcc::Json> VPGGitForm::toJson() const
 {
     TRY
         auto json = std::make_unique<vcc::Json>();

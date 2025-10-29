@@ -333,7 +333,7 @@ TEST_F(VPGVccGenerationManagerTest, Update)
     this->_Option->insertPlugins(L"vcc/versioning/git");
     auto jsonBuilder = std::make_unique<vcc::JsonBuilder>();
     jsonBuilder->setIsBeautify(true);
-    writeFile(concatPaths({this->getWorkspaceTarget(), L".vcc/vcc.json"}), jsonBuilder->serialize(this->_Option->ToJson().get()));
+    writeFile(concatPaths({this->getWorkspaceTarget(), L".vcc/vcc.json"}), jsonBuilder->serialize(this->_Option->toJson().get()));
 
     this->getManager()->update();
     EXPECT_TRUE(isFilePresent(concatPaths({this->getWorkspaceTarget(), L"Makefile"})));

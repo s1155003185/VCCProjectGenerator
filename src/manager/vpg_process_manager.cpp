@@ -98,7 +98,7 @@ void VPGProcessManager::verifyLocalResponse()
             catch(const std::exception& e)
             {
                 std::string msg(e.what());
-                vcc::LogService::LogWarning(this->getLogConfig().get(), L"", vcc::str2wstr(msg));
+                vcc::LogService::logWarning(this->getLogConfig().get(), L"", vcc::str2wstr(msg));
             }
             try
             {            
@@ -111,7 +111,7 @@ void VPGProcessManager::verifyLocalResponse()
             catch(const std::exception& e)
             {
                 std::string msg(e.what());
-                vcc::LogService::LogWarning(this->getLogConfig().get(), L"", vcc::str2wstr(msg));
+                vcc::LogService::logWarning(this->getLogConfig().get(), L"", vcc::str2wstr(msg));
             }
             
             // Switch to correct version
@@ -124,12 +124,12 @@ void VPGProcessManager::verifyLocalResponse()
             catch(const std::exception& e)
             {
                 try {
-                    vcc::LogService::LogError(this->getLogConfig().get(), L"", L"VCC Project Generator version Not Exists. Switch to main");
+                    vcc::LogService::logError(this->getLogConfig().get(), L"", L"VCC Project Generator version Not Exists. Switch to main");
                     vcc::GitService::Switch(this->getLogConfig().get(), localResponseDirectoryProject, L"main");
                     vcc::GitService::Pull(this->getLogConfig().get(), localResponseDirectoryProject);
                     vcc::LogService::logInfo(this->getLogConfig().get(), L"", L"Done.");
                 } catch (const std::exception &e) {
-                    vcc::LogService::LogWarning(this->getLogConfig().get(), L"", vcc::str2wstr(e.what()));
+                    vcc::LogService::logWarning(this->getLogConfig().get(), L"", vcc::str2wstr(e.what()));
                 }
             }
         }

@@ -11,6 +11,9 @@
 - TODO: Support Set for GETSET
 - TODO: Review RESERVE and REPLACE tag
 
+### [v0.4.2] - 2025-10-29: Generate Action Unittest
+- Generate Action Unittest
+
 ### [v0.4.1] - 2025-08-24: Review Function Name
 - Review function naming from PascalCase to CamelCase
 

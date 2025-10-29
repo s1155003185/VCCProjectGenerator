@@ -136,7 +136,7 @@ std::vector<std::wstring> VPGObjectFileGenerationService::getObjectToJsonEnumSwi
         } else if (enumClassMapping.find(L"vcc::" + type) != enumClassMapping.end()) {
             enumEnumClass = enumClassMapping.at(L"vcc::" + type);
         } else
-            THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"VPGObjectFileGenerationService::GenerateCpp Enum Class " + type + L" cannot found");
+            THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"VPGObjectFileGenerationService::generateCpp Enum Class " + type + L" cannot found");
         for (auto const &enumEnumClassProperty : enumEnumClass->getProperties()) {
             result.push_back(L"case " + enumEnumClass->getName() + L"::" + enumEnumClassProperty->getEnum() + L":");
             result.push_back(INDENT + returnVariable + L" = L\"" + enumEnumClassProperty->getEnum() + L"\";");
@@ -170,7 +170,7 @@ std::vector<std::wstring> VPGObjectFileGenerationService::getJsonToObjectEnumSwi
         } else if (enumClassMapping.find(L"vcc::" + type) != enumClassMapping.end()) {
             enumEnumClass = enumClassMapping.at(L"vcc::" + type);
         } else
-            THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"VPGObjectFileGenerationService::GenerateCpp Enum Class " + type + L" cannot found");
+            THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"VPGObjectFileGenerationService::generateCpp Enum Class " + type + L" cannot found");
         
         bool isStart = true;
         for (auto const &enumEnumClassProperty : enumEnumClass->getProperties()) {
@@ -204,7 +204,7 @@ std::vector<std::wstring> VPGObjectFileGenerationService::getObjectToJson(const 
         if (vcc::isContain(macro, L"SPTR")) {
             // Object
             result.push_back(L"if (" +currentPropertyName + L" != nullptr)");
-            result.push_back(INDENT + parentName + L"->add" + arrayStr + L"Object(" + convertedPropertyName + currentPropertyName + L"->ToJson());");
+            result.push_back(INDENT + parentName + L"->add" + arrayStr + L"Object(" + convertedPropertyName + currentPropertyName + L"->toJson());");
             result.push_back(L"else");
             result.push_back(INDENT + parentName + L"->add" + arrayStr + L"Null(" + convertedPropertyNameNoComma + L");");
         } else if (vcc::isCapital(getTypeOrClassWithoutNamespace(type))) {
@@ -325,7 +325,7 @@ std::vector<std::wstring> VPGObjectFileGenerationService::getJsonToObject(const 
             else if (type == L"wstring" || type == L"std::wstring")
                 result.push_back(indentPrefix + insertPrefix + currentParentName + L"->get" + arrayElementStr + L"String(" + convertedPropertyNameForGeneral + L")" + insertSuffix);
             else
-                THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"VPGObjectFileGenerationService::GenerateCpp Unknown type: " + type);
+                THROW_EXCEPTION_MSG(ExceptionType::ParserError, L"VPGObjectFileGenerationService::generateCpp Unknown type: " + type);
         }
     CATCH
     return result;
@@ -362,7 +362,7 @@ void VPGObjectFileGenerationService::getHppIncludeFiles(const std::map<std::wstr
         projectFileList.insert(L"object_type.hpp");
         
         for (auto const &enumClass : enumClassList) {
-            if (!IsPropertyClass(enumClass->getName(), L""))
+            if (!isPropertyClass(enumClass->getName(), L""))
                 continue;
 
             // force insert include file list
@@ -659,7 +659,7 @@ std::wstring VPGObjectFileGenerationService::getHppPublicJsonFunctions(const VPG
     TRY
         if (enumClass->getIsJson())
             result += L"\r\n"
-                + INDENT + INDENT + L"virtual std::shared_ptr<vcc::Json> ToJson() const override;\r\n"
+                + INDENT + INDENT + L"virtual std::shared_ptr<vcc::Json> toJson() const override;\r\n"
                 + INDENT + INDENT + L"virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) override;\r\n";
     CATCH
     return result;
@@ -705,7 +705,7 @@ std::wstring VPGObjectFileGenerationService::getHppPublicCustomFunctions(const V
     return result;    
 }
 
-std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass* enumClass, const VPGConfig *option, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping)
+std::wstring VPGObjectFileGenerationService::generateHppClass(const VPGEnumClass* enumClass, const VPGConfig *option, const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping)
 {
     std::wstring result = L"";
     TRY
@@ -756,7 +756,7 @@ std::wstring VPGObjectFileGenerationService::GenerateHppClass(const VPGEnumClass
     return result;
 }
 
-void VPGObjectFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig,
+void VPGObjectFileGenerationService::generateHpp(const vcc::LogConfig *logConfig,
     const VPGConfig *option,
     const std::map<std::wstring, std::wstring> &projectClassIncludeFiles,
     const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
@@ -793,7 +793,7 @@ void VPGObjectFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
         // ------------------------------------------------------------------------------------------ //
         std::map<std::wstring, std::wstring> actionNameAndActionClassList;
         for (auto const &enumClass : enumClassList)
-            VPGActionFileGenerationService::GenerateHpp(logConfig, projectClassIncludeFiles, enumClass.get(), classPrefix, actionFolderPathHpp, actionNameAndActionClassList, systemFileList, projectFileList);        
+            VPGActionFileGenerationService::generateHpp(logConfig, projectClassIncludeFiles, enumClass.get(), classPrefix, actionFolderPathHpp, actionNameAndActionClassList, systemFileList, projectFileList);        
 
         // ------------------------------------------------------------------------------------------ //
         //                               Generate Script                                              //
@@ -839,12 +839,12 @@ void VPGObjectFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
         std::map<std::wstring, std::vector<std::wstring>> namespaceClassMapping;
         // 1. Generate action argument class
         for (auto const &enumClass : enumClassList) {
-            if (!IsPropertyClass(enumClass->getName(), L"") || enumClass->getType() != VPGEnumClassType::ActionArgument)
+            if (!isPropertyClass(enumClass->getName(), L"") || enumClass->getType() != VPGEnumClassType::ActionArgument)
                 continue;
             std::wstring currentNamespace = getNamespaceFromClassName(enumClass->getName());
             if (!vcc::isContain(namespaceClassMapping, currentNamespace))
                 namespaceClassMapping.insert({currentNamespace, {}});
-            namespaceClassMapping[currentNamespace].push_back(GenerateHppClass(enumClass.get(), option, enumClassMapping));
+            namespaceClassMapping[currentNamespace].push_back(generateHppClass(enumClass.get(), option, enumClassMapping));
         }
 
         // 2. Generate Action
@@ -857,13 +857,13 @@ void VPGObjectFileGenerationService::GenerateHpp(const vcc::LogConfig *logConfig
         
         // 3. Generate class
         for (auto const &enumClass : enumClassList) {
-            if (!IsPropertyClass(enumClass->getName(), L"") || enumClass->getType() == VPGEnumClassType::ActionArgument)
+            if (!isPropertyClass(enumClass->getName(), L"") || enumClass->getType() == VPGEnumClassType::ActionArgument)
                 continue;
             
             std::wstring currentNamespace = getNamespaceFromClassName(enumClass->getName());
             if (!vcc::isContain(namespaceClassMapping, currentNamespace))
                 namespaceClassMapping.insert({currentNamespace, {}});
-            namespaceClassMapping[currentNamespace].push_back(GenerateHppClass(enumClass.get(), option, enumClassMapping));
+            namespaceClassMapping[currentNamespace].push_back(generateHppClass(enumClass.get(), option, enumClassMapping));
         }
 
         // 4. Generate code in namespace
@@ -897,7 +897,7 @@ void VPGObjectFileGenerationService::getCppIncludeFiles(
         customIncludeFiles.insert(L"i_result.hpp");
 
         for (auto const &enumClass : enumClassList) {
-            if (!IsPropertyClass(enumClass->getName(), L""))
+            if (!isPropertyClass(enumClass->getName(), L""))
                 continue;
 
             // Property Enum Class
@@ -942,7 +942,7 @@ void VPGObjectFileGenerationService::getCppIncludeFiles(
         customIncludeFiles.insert(L"string_helper.hpp");
     
         for (auto const &enumClass : enumClassList) {
-            if (!IsPropertyClass(enumClass->getName(), L""))
+            if (!isPropertyClass(enumClass->getName(), L""))
                 continue;
             for (auto const &property : enumClass->getProperties()) {
                 if (property->getPropertyType() != VPGEnumClassAttributeType::Property)
@@ -1082,7 +1082,7 @@ std::wstring VPGObjectFileGenerationService::getCppJsonFunction(const std::wstri
                     + INDENT + INDENT + INDENT + L"for (auto const &element : json->getArray(vcc::convertNamingStyle(L" + convertedPropertyName + L", namestyle, vcc::NamingStyle::PascalCase))) {\r\n";
                 if (vcc::isContain(originalMacro, L"SPTR")) {
                     // Object
-                    toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->addArrayObject(element->ToJson());\r\n";
+                    toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->addArrayObject(element->toJson());\r\n";
 
                     deserializeStr += INDENT + INDENT + INDENT + INDENT + L"auto tmp" + propertyName + L" = std::make_shared<" + originalType + L">();\r\n"
                         + INDENT + INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->deserializeJson(element->getArrayElementObject());\r\n"
@@ -1128,7 +1128,7 @@ std::wstring VPGObjectFileGenerationService::getCppJsonFunction(const std::wstri
                     toJsonStrKeyStr = L"std::to_wstring(element.first)";
                 if (vcc::isContain(originalMacro, L"SPTR")) {
                     // Object
-                    toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->addObject(" + toJsonStrKeyStr + L", element.second->ToJson());\r\n";
+                    toJsonStr += INDENT + INDENT + INDENT + L"tmp" + propertyName + L"->addObject(" + toJsonStrKeyStr + L", element.second->toJson());\r\n";
                 
                     deserializeStr += INDENT + INDENT + INDENT + INDENT + L"if (tmpObject->getObject(key) != nullptr) {\r\n"
                         + INDENT + INDENT + INDENT + INDENT + INDENT + L"auto tmpElementObject = std::make_shared<" + property->getType2() + L">();\r\n"
@@ -1183,7 +1183,7 @@ std::wstring VPGObjectFileGenerationService::getCppJsonFunction(const std::wstri
         }
         
         content += L"\r\n"
-            "std::shared_ptr<vcc::Json> " + className + L"::ToJson() const\r\n"
+            "std::shared_ptr<vcc::Json> " + className + L"::toJson() const\r\n"
             "{\r\n"
             + INDENT + L"TRY\r\n"
             + (!toJsonStr.empty() ? toJsonVarable : L"")
@@ -1331,7 +1331,7 @@ std::wstring VPGObjectFileGenerationService::getCppCustomFunction(const bool &is
     return result;
 }
 
-void VPGObjectFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig,
+void VPGObjectFileGenerationService::generateCpp(const vcc::LogConfig *logConfig,
     const std::wstring &classPrefix,
     const std::map<std::wstring, std::wstring> &classPathMapping,
     const std::map<std::wstring, std::shared_ptr<VPGEnumClass>> &enumClassMapping,
@@ -1376,7 +1376,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
         // ------------------------------------------------------------------------------------------ //
         std::map<std::wstring, std::wstring> actionNameAndActionClassList;
         for (auto const &enumClass : enumClassList)
-            VPGActionFileGenerationService::GenerateCpp(logConfig, classPathMapping, enumClass.get(), classPrefix, actionFolderPathCpp, actionNameAndActionClassList, systemIncludeFiles, customIncludeFiles);      
+            VPGActionFileGenerationService::generateCpp(logConfig, classPathMapping, enumClass.get(), classPrefix, actionFolderPathCpp, actionNameAndActionClassList, systemIncludeFiles, customIncludeFiles);      
 
         // ------------------------------------------------------------------------------------------ //
         //                               Generate Script                                              //
@@ -1410,7 +1410,7 @@ void VPGObjectFileGenerationService::GenerateCpp(const vcc::LogConfig *logConfig
             
         // Generate Part
         for (auto const &enumClass : enumClassList) {
-            if (!IsPropertyClass(enumClass->getName(), L""))
+            if (!isPropertyClass(enumClass->getName(), L""))
                 continue;
                 
             std::wstring className = getClassNameFromPropertyClassName(getTypeOrClassWithoutNamespace(enumClass->getName()));

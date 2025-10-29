@@ -19,22 +19,22 @@ namespace vcc
         protected:
             virtual std::wstring getString(const std::wstring &xmlData, size_t &pos) const;
             virtual std::wstring getTag(const std::wstring &xmlData, size_t &pos) const;
-            virtual bool IsNextCharTagEnd(const std::wstring &xmlData, size_t &pos) const;
-            virtual bool IsXMLHeader(const std::wstring &xmlData, size_t &pos) const;
-            virtual void ParseXMLHeader(const std::wstring &xmlData, size_t &pos) const; // TODO: handle <?...?> and <!...>
+            virtual bool isNextCharTagEnd(const std::wstring &xmlData, size_t &pos) const;
+            virtual bool isXMLHeader(const std::wstring &xmlData, size_t &pos) const;
+            virtual void parseXMLHeader(const std::wstring &xmlData, size_t &pos) const; // TODO: handle <?...?> and <!...>
             
         public:
             XmlBuilder() = default;
             virtual ~XmlBuilder() {}
 
             // tag
-            virtual bool ParseXMLTagHeader(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const; // ture if have tag end
-            virtual void ParseXMLTagContent(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const;
-            virtual void RemoveXMLTagTail(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const;
+            virtual bool parseXMLTagHeader(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const; // ture if have tag end
+            virtual void parseXMLTagContent(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const;
+            virtual void removeXMLTagTail(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const;
 
             // content
-            virtual void ParseXMLTag(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const;
-            virtual void ParseXml(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const;
+            virtual void parseXMLTag(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const;
+            virtual void parseXml(const std::wstring &xmlData, size_t &pos, std::shared_ptr<Xml> element) const;
 
             virtual std::wstring serialize(const IDocument *doc) const  override;
             virtual void deserialize(const std::wstring &str, size_t &pos, std::shared_ptr<IDocument> doc) const override;

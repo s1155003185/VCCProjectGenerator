@@ -600,6 +600,311 @@ void VPGConfigOutputPropertyAccessor::_insertStringAtIndex(const int64_t &object
     CATCH
 }
 
+std::shared_ptr<vcc::IObject> VPGConfigOutputPropertyAccessor::_readObject(const int64_t &objectProperty) const
+{
+    TRY
+        auto obj = std::static_pointer_cast<VPGConfigOutput>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGConfigOutputProperty>(objectProperty))
+        {
+        case VPGConfigOutputProperty::Unittest:
+            return std::static_pointer_cast<vcc::IObject>(obj->getUnittest());
+        default:
+            assert(false);
+        }
+    CATCH
+    return nullptr;
+}
+
+std::shared_ptr<vcc::IObject> VPGConfigOutputPropertyAccessor::_readObjectAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return nullptr;
+}
+
+std::shared_ptr<vcc::IObject> VPGConfigOutputPropertyAccessor::_readObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return nullptr;
+}
+
+void VPGConfigOutputPropertyAccessor::_writeObject(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> value)
+{
+    TRY
+        auto obj = std::static_pointer_cast<VPGConfigOutput>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGConfigOutputProperty>(objectProperty))
+        {
+        case VPGConfigOutputProperty::Unittest:
+            obj->setUnittest(std::static_pointer_cast<VPGConfigOutputUnittest>(value));
+            break;
+        default:
+            assert(false);
+        }
+    CATCH
+}
+
+void VPGConfigOutputPropertyAccessor::_writeObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const int64_t &/*index*/)
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGConfigOutputPropertyAccessor::_writeObjectAtKey(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const void */*key*/)
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGConfigOutputPropertyAccessor::_insertObjectAtIndex(const int64_t &objectProperty, std::shared_ptr<vcc::IObject> /*value*/, const int64_t &/*index*/)
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+std::shared_ptr<vcc::IObject> VPGConfigOutputPropertyAccessor::_cloneObject(const int64_t &objectProperty) const
+{
+    TRY
+        auto obj = std::static_pointer_cast<VPGConfigOutput>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGConfigOutputProperty>(objectProperty))
+        {
+        case VPGConfigOutputProperty::Unittest:
+            return std::static_pointer_cast<vcc::IObject>(obj->getUnittest()->clone());
+        default:
+            assert(false);
+        }
+    CATCH
+    return nullptr;
+}
+
+std::shared_ptr<vcc::IObject> VPGConfigOutputPropertyAccessor::_cloneObjectAtIndex(const int64_t &objectProperty, const int64_t &/*index*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return nullptr;
+}
+
+std::shared_ptr<vcc::IObject> VPGConfigOutputPropertyAccessor::_cloneObjectAtKey(const int64_t &objectProperty, const void */*key*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return nullptr;
+}
+
+std::wstring VPGConfigOutputUnittestPropertyAccessor::_readString(const int64_t &objectProperty) const
+{
+    TRY
+        auto obj = std::static_pointer_cast<VPGConfigOutputUnittest>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGConfigOutputUnittestProperty>(objectProperty))
+        {
+        case VPGConfigOutputUnittestProperty::ActionDirectoryCpp:
+            return obj->getActionDirectoryCpp();
+        default:
+            assert(false);
+        }
+    CATCH
+    return L"";
+}
+
+std::wstring VPGConfigOutputUnittestPropertyAccessor::_readStringAtIndex(const int64_t &objectProperty, const int64_t &index) const
+{
+    TRY
+        assert(index >= -1);
+        auto obj = std::static_pointer_cast<VPGConfigOutputUnittest>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGConfigOutputUnittestProperty>(objectProperty))
+        {
+        case VPGConfigOutputUnittestProperty::UnittestNames:
+            return obj->getUnittestNamesAtIndex(index);
+        default:
+            assert(false);
+        }
+    CATCH
+    return L"";
+}
+
+std::wstring VPGConfigOutputUnittestPropertyAccessor::_readStringAtKey(const int64_t &objectProperty, const void */*key*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return L"";
+}
+
+void VPGConfigOutputUnittestPropertyAccessor::_writeString(const int64_t &objectProperty, const std::wstring &value)
+{
+    TRY
+        auto obj = std::static_pointer_cast<VPGConfigOutputUnittest>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGConfigOutputUnittestProperty>(objectProperty))
+        {
+        case VPGConfigOutputUnittestProperty::ActionDirectoryCpp:
+            obj->setActionDirectoryCpp(value);
+            break;
+        default:
+            assert(false);
+        }
+    CATCH
+}
+
+void VPGConfigOutputUnittestPropertyAccessor::_writeStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
+{
+    TRY
+        assert(index >= -1);
+        auto obj = std::static_pointer_cast<VPGConfigOutputUnittest>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGConfigOutputUnittestProperty>(objectProperty))
+        {
+        case VPGConfigOutputUnittestProperty::UnittestNames:
+            if (index > -1)
+                obj->setUnittestNamesAtIndex(index, value);
+            else
+                obj->insertUnittestNames(value);
+            break;
+        default:
+            assert(false);
+        }
+    CATCH
+}
+
+void VPGConfigOutputUnittestPropertyAccessor::_writeStringAtKey(const int64_t &objectProperty, const std::wstring &/*value*/, const void */*key*/)
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGConfigOutputUnittestPropertyAccessor::_insertStringAtIndex(const int64_t &objectProperty, const std::wstring &value, const int64_t &index)
+{
+    TRY
+        assert(index >= -1);
+        auto obj = std::static_pointer_cast<VPGConfigOutputUnittest>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGConfigOutputUnittestProperty>(objectProperty))
+        {
+        case VPGConfigOutputUnittestProperty::UnittestNames:
+            if (index > -1)
+                obj->insertUnittestNamesAtIndex(index, value);
+            else
+                obj->insertUnittestNames(value);
+            break;
+        default:
+            assert(false);
+        }
+    CATCH
+}
+
+size_t VPGConfigOutputUnittestPropertyAccessor::_getCount(const int64_t &objectProperty) const
+{
+    TRY
+        auto obj = std::static_pointer_cast<VPGConfigOutputUnittest>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGConfigOutputUnittestProperty>(objectProperty))
+        {
+        case VPGConfigOutputUnittestProperty::UnittestNames:
+            return obj->getUnittestNames().size();
+        default:
+            assert(false);
+        }
+    CATCH
+    return 0;
+}
+
+std::set<void *> VPGConfigOutputUnittestPropertyAccessor::_getMapKeys(const int64_t &objectProperty) const
+{
+    std::set<void *> result;
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return result;
+}
+
+bool VPGConfigOutputUnittestPropertyAccessor::_isContainKey(const int64_t &objectProperty, const void */*key*/) const
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+    return false;
+}
+
+void VPGConfigOutputUnittestPropertyAccessor::_remove(const int64_t &objectProperty, const void *value)
+{
+    TRY
+        assert(value != nullptr);
+        auto obj = std::static_pointer_cast<VPGConfigOutputUnittest>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGConfigOutputUnittestProperty>(objectProperty))
+        {
+        case VPGConfigOutputUnittestProperty::UnittestNames: {
+            auto valuePtr = static_cast<const wchar_t *>(value);
+            assert(valuePtr != nullptr);
+            obj->removeUnittestNames(valuePtr);
+            break;
+        }
+        default:
+            assert(false);
+        }
+    CATCH
+}
+
+void VPGConfigOutputUnittestPropertyAccessor::_removeObject(const int64_t &objectProperty, const vcc::IObject */*value*/)
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGConfigOutputUnittestPropertyAccessor::_removeAtIndex(const int64_t &objectProperty, const int64_t &index)
+{
+    TRY
+        assert(index >= -1);
+        auto obj = std::static_pointer_cast<VPGConfigOutputUnittest>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGConfigOutputUnittestProperty>(objectProperty))
+        {
+        case VPGConfigOutputUnittestProperty::UnittestNames:
+            obj->removeUnittestNamesAtIndex(index);
+            break;
+        default:
+            assert(false);
+        }
+    CATCH
+}
+
+void VPGConfigOutputUnittestPropertyAccessor::_removeAtKey(const int64_t &objectProperty, const void */*key*/)
+{
+    TRY
+        THROW_EXCEPTION_MSG_FOR_BASE_PROPERTY_ACCESSOR_DETAIL_PROPERTY_NOT_FOUND
+    CATCH
+}
+
+void VPGConfigOutputUnittestPropertyAccessor::_clear(const int64_t &objectProperty)
+{
+    TRY
+        auto obj = std::static_pointer_cast<VPGConfigOutputUnittest>(_Object);
+        assert(obj != nullptr);
+        switch(static_cast<VPGConfigOutputUnittestProperty>(objectProperty))
+        {
+        case VPGConfigOutputUnittestProperty::UnittestNames:
+            obj->clearUnittestNames();
+            break;
+        default:
+            assert(false);
+        }
+    CATCH
+}
+
 bool VPGConfigPropertyAccessor::_readBool(const int64_t &objectProperty) const
 {
     TRY
@@ -787,6 +1092,8 @@ std::wstring VPGConfigPropertyAccessor::_readString(const int64_t &objectPropert
             return obj->getOutputPropertyAccessorFactoryDirectoryCpp();
         case VPGConfigProperty::OutputPropertyAccessorFactoryDirectoryHpp:
             return obj->getOutputPropertyAccessorFactoryDirectoryHpp();
+        case VPGConfigProperty::OutputUnittestActionDirectoryCpp:
+            return obj->getOutputUnittestActionDirectoryCpp();
         case VPGConfigProperty::ProjectName:
             return obj->getProjectName();
         case VPGConfigProperty::ProjectNameDll:

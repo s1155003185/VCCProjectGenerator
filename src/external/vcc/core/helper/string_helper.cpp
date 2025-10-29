@@ -535,31 +535,34 @@ namespace vcc
 		TRY
 			if (from == to)
 				return str;
+
+			std::wstring tmpStr = str;
 			
 			std::vector<std::wstring> tokens;
 			switch (from)
 			{
 			case NamingStyle::CamelCase:
 			case NamingStyle::PascalCase:
-				tokens = splitStringByUpperCase(str, true, true);
+				tokens = splitStringByUpperCase(tmpStr, true, true);
 				break;
 			case NamingStyle::ConstantCase:
 			case NamingStyle::ScreamingSnakeCase:
 			case NamingStyle::SnakeCase:
-				tokens = splitString(str, { L"_" });
+				toLower(tmpStr);
+				tokens = splitString(tmpStr, { L"_" });
 				break;
 			case NamingStyle::DotSeparatedLowercase:
-				tokens = splitString(str, { L"." });
+				tokens = splitString(tmpStr, { L"." });
 				break;
 			case NamingStyle::KebabCase:
-				tokens = splitString(str, { L"-" });
+				tokens = splitString(tmpStr, { L"-" });
 				break;
 			case NamingStyle::Lowercase:
 			case NamingStyle::Uppercase:
 			{
 				std::vector<std::wstring> sepeartorSet;
 				sepeartorSet.push_back(seperator);
-				tokens = splitString(str, sepeartorSet);
+				tokens = splitString(tmpStr, sepeartorSet);
 				break;				
 			}
 			default:

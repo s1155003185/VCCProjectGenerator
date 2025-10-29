@@ -102,7 +102,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "\r\n"
         "#endif\r\n", true);
 
-    VPGJavaGenerationService::GenerateJavaBridge(this->getLogConfig().get(), L"", vcc::concatPaths({this->getWorkspace(), L"DllFunctions.h"}), this->getOption().get());
+    VPGJavaGenerationService::generateJavaBridge(this->getLogConfig().get(), L"", vcc::concatPaths({this->getWorkspace(), L"DllFunctions.h"}), this->getOption().get());
     EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspace(), this->getJavaOption()->getDllBridgeDirectory(), L"VPGDllFunctions.java"})));
     EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspace(), this->getJavaOption()->getDllBridgeDirectory(), L"VPGDllFunctions.java"})),
         L"package com.vcc.test;\r\n"
@@ -168,8 +168,8 @@ void validateGenerateEnum(const VPGJavaGenerationServiceTest *test, const std::w
     std::wstring filePath1 = vcc::concatPaths({test->getWorkspace(), test->getJavaOption()->getTypeDirectory(), L"VPGTypeA.java"});
     std::wstring filePath2 = vcc::concatPaths({test->getWorkspace(), test->getJavaOption()->getTypeDirectory(), L"VPGTypeBProperty.java"});
     
-    VPGJavaGenerationService::GenerateEnum(test->getLogConfig().get(), filePath1, L"", enumClassList1.at(0).get(), test->getOption().get(), test->getJavaOption().get());
-    VPGJavaGenerationService::GenerateEnum(test->getLogConfig().get(), filePath2, L"", enumClassList2.at(0).get(), test->getOption().get(), test->getJavaOption().get());
+    VPGJavaGenerationService::generateEnum(test->getLogConfig().get(), filePath1, L"", enumClassList1.at(0).get(), test->getOption().get(), test->getJavaOption().get());
+    VPGJavaGenerationService::generateEnum(test->getLogConfig().get(), filePath2, L"", enumClassList2.at(0).get(), test->getOption().get(), test->getJavaOption().get());
     
     EXPECT_TRUE(vcc::isFilePresent(filePath1));
     EXPECT_EQ(vcc::readFile(filePath1),
@@ -288,7 +288,7 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMap;
     std::wstring filePath = vcc::concatPaths({test->getWorkspace(), test->getJavaOption()->getObjectDirectory(), L"VPGTypeB.java"});
-    VPGJavaGenerationService::GenerateObject(test->getLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMap, typeWorkspaceClassRelativePathMap, test->getOption().get(), test->getJavaOption().get());
+    VPGJavaGenerationService::generateObject(test->getLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMap, typeWorkspaceClassRelativePathMap, test->getOption().get(), test->getJavaOption().get());
     
     EXPECT_TRUE(vcc::isFilePresent(filePath));
     EXPECT_EQ(vcc::readFile(filePath),
@@ -747,7 +747,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
     typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));
     std::wstring filePath = vcc::concatPaths({this->getWorkspace(), this->getJavaOption()->getObjectDirectory(), L"VPGGitLog.java"});
-    VPGJavaGenerationService::GenerateObject(this->getLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm, this->getOption().get(), this->getJavaOption().get());
+    VPGJavaGenerationService::generateObject(this->getLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm, this->getOption().get(), this->getJavaOption().get());
     
     EXPECT_TRUE(vcc::isFilePresent(filePath));
     EXPECT_EQ(vcc::readFile(filePath),
@@ -847,7 +847,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateResult)
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
     typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));
     std::wstring filePath = vcc::concatPaths({this->getWorkspace(), this->getJavaOption()->getObjectDirectory(), L"VPGGitLog.java"});
-    VPGJavaGenerationService::GenerateObject(this->getLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm, this->getOption().get(), this->getJavaOption().get());
+    VPGJavaGenerationService::generateObject(this->getLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm, this->getOption().get(), this->getJavaOption().get());
     
     EXPECT_TRUE(vcc::isFilePresent(filePath));
     EXPECT_EQ(vcc::readFile(filePath),

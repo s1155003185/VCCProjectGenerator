@@ -34,9 +34,9 @@ int main(int argc, char **argv)
 	} catch (std::exception &ex) {
 		const vcc::IException *ie = dynamic_cast<const vcc::IException *>(&ex);
 		if (ie != nullptr)
-			vcc::LogService::LogError(logConfig.get(), L"", ie->getErrorMessage());
+			vcc::LogService::logError(logConfig.get(), L"", ie->getErrorMessage());
 		else
-			vcc::LogService::LogError(logConfig.get(), L"", vcc::str2wstr(ex.what()));
+			vcc::LogService::logError(logConfig.get(), L"", vcc::str2wstr(ex.what()));
 		return -1;
 	}
 	return 0;
