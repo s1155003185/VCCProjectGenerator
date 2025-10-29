@@ -2,3 +2,4 @@
 bin/Debug/
 bin/Release/
 *.DS_Store
+cppcheck_report.txt

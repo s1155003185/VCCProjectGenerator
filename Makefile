@@ -540,17 +540,25 @@ endif
 #----------------------------------#
 #----------- CPP Check ------------#
 #----------------------------------#
+
 .PHONY: cppcheck format
 
 format:
-    @echo "Running clang-format on source and include files..."
-    @{ \
-        [ -d $(SRC) ] && find $(SRC) -type f \( -name '*.cpp' -o -name '*.cc' -o -name '*.c' -o -name '*.hpp' -o -name '*.h' \) -print0 || true; \
-        [ -d $(INC) ] && find $(INC) -type f \( -name '*.cpp' -o -name '*.cc' -o -name '*.c' -o -name '*.hpp' -o -name '*.h' \) -print0 || true; \
-    } | xargs -0 -r clang-format -i
+	@if command -v clang-format >/dev/null 2>&1; then \
+		echo "Running clang-format on source and include files..."; \
+		{ \
+			[ -d $(SRC) ] && find $(SRC) -type f \( -name '*.cpp' -o -name '*.cc' -o -name '*.c' -o -name '*.hpp' -o -name '*.h' \) -print0 || true; \
+			[ -d $(INC) ] && find $(INC) -type f \( -name '*.cpp' -o -name '*.cc' -o -name '*.c' -o -name '*.hpp' -o -name '*.h' \) -print0 || true; \
+		} | xargs -0 -r clang-format -i; \
+	else \
+		echo "clang-format not found; skipping format. Install with: brew install clang-format"; \
+	fi
 
 cppcheck: format
-    cppcheck --enable=all --inconclusive --std=$(CXXVERSION) . 2> cppcheck_report.txt
+	@command -v cppcheck >/dev/null 2>&1 || { echo "cppcheck not found. Install with: brew install cppcheck"; exit 1; }
+	@echo "Running cppcheck..."
+	@cppcheck --enable=all --inconclusive --std=$(CXXVERSION) . 2> cppcheck_report.txt || true
+	@echo "cppcheck finished, report at cppcheck_report.txt"
 
 #----------------------------------#
 #------------- Export -------------#
