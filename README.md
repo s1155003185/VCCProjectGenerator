@@ -12,7 +12,7 @@ Please go to following session to see how to create VCC Project to generate c++ 
 - Tutorial for Create VCC DLL Project to generate dll with Java Interface
 
 ## What's new
-Generate Action Unittest
+Support CppCheck
 
 ### Important
 Neet to upgrade all platforms g++ to latest version!
@@ -46,6 +46,7 @@ C++ (c++23)
 2. g++
 3. make
 4. gtest
+5. cppcheck
 
 Optional if using Java Interface
 1. Maven Project

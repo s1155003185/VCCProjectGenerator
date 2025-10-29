@@ -197,7 +197,7 @@ ALL_PROJECT_FILES_EXE := $(filter-out $(DLL_MAIN_HPP_FILES) $(DLL_MAIN_CPP_FILES
 ALL_PROJECT_FILES_DLL := $(filter-out $(EXE_MAIN_CPP_FILES), $(ALL_PROJECT_FILES))
 
 ALL_PROJECT_CPP_FILES_EXE := $(filter-out %.h %.c %.hpp, $(ALL_PROJECT_FILES_EXE))
-ALL_PROJECT_CPP_FILES_DLL := $(filter-out %.h %.c %.hpp, $(ALL_PROJECT_FILES_DLL))
+ALL_PROJECT_CPP_FILES_DLL := $(filter_out %.h %.c %.hpp, $(ALL_PROJECT_FILES_DLL))
 ALL_PROJECT_CPP_FOLDERS := *.cpp $(patsubst %, %$\\*.cpp, $(filter-out .%, $(sort $(dir $(filter-out %.h %.c %.hpp, $(ALL_PROJECT_FILES))))))
 
 GTEST_FILES := $(filter-out $(GTEST_EXCLUDE_FOLDER) $(EXE_MAIN_CPP_FILES) $(DLL_MAIN_CPP_FILES) $(DLL_MAIN_HPP_FILES), $(ALL_FILES))
@@ -243,7 +243,7 @@ ALL_DIRECTORY := $(filter-out $(EXCLUDE_FOLDER),$(patsubst %, %, $(shell find $(
 # cpp
 ALL_PROJECT_CPP_FILES := $(filter-out $(PROJECT_EXCLUDE_FOLDER), $(patsubst %,%, $(shell find $(SRC) -type f -name "*.cpp")))
 ALL_PROJECT_FILES :=  $(filter-out $(PROJECT_EXCLUDE_FOLDER), $(patsubst %,%, $(shell find $(INC) -type f -name "*.h")))
-ALL_PROJECT_FILES +=  $(filter-out $(PROJECT_EXCLUDE_FOLDER), $(patsubst %,%, $(shell find $(INC) -type f -name "*.hpp")))
+ALL_PROJECT_FILES +=  $(filter_out $(PROJECT_EXCLUDE_FOLDER), $(patsubst %,%, $(shell find $(INC) -type f -name "*.hpp")))
 ALL_PROJECT_FILES +=  $(filter-out $(PROJECT_EXCLUDE_FOLDER), $(patsubst %,%, $(shell find $(SRC) -type f -name "*.c")))
 ALL_PROJECT_FILES +=  $(ALL_PROJECT_CPP_FILES)
 
@@ -536,6 +536,21 @@ else
 	$(MKDIR) "$(LIB)"
 	$(CP) "$(LIB)/."  "$(RELEASE_FOLDER)"
 endif
+
+#----------------------------------#
+#----------- CPP Check ------------#
+#----------------------------------#
+.PHONY: cppcheck format
+
+format:
+    @echo "Running clang-format on source and include files..."
+    @{ \
+        [ -d $(SRC) ] && find $(SRC) -type f \( -name '*.cpp' -o -name '*.cc' -o -name '*.c' -o -name '*.hpp' -o -name '*.h' \) -print0 || true; \
+        [ -d $(INC) ] && find $(INC) -type f \( -name '*.cpp' -o -name '*.cc' -o -name '*.c' -o -name '*.hpp' -o -name '*.h' \) -print0 || true; \
+    } | xargs -0 -r clang-format -i
+
+cppcheck: format
+    cppcheck --enable=all --inconclusive --std=$(CXXVERSION) . 2> cppcheck_report.txt
 
 #----------------------------------#
 #------------- Export -------------#
