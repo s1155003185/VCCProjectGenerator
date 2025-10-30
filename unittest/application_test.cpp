@@ -8,6 +8,7 @@
 #include "property_accessor_factory.hpp"
 #include "vpg_main_form.hpp"
 #include "vpg_main_form_property.hpp"
+#include <gtest/gtest.h>
 
 // Mode
 TEST(ApplicationTest, CreateForm)

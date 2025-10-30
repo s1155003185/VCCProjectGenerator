@@ -12,6 +12,12 @@
 #include "git_service.hpp"
 #include "log_config.hpp"
 #include "terminal_service.hpp"
+#include <gtest/gtest.h>
+#include <filesystem>
+#include <fstream>
+#include <regex>
+#include <string>
+#include <iostream>
 
 using namespace vcc;
 

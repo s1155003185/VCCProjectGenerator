@@ -13,6 +13,11 @@
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_global.hpp"
 #include "vpg_property_accessor_generation_service.hpp"
+#include <gtest/gtest.h>
+#include <filesystem>
+#include <map>
+#include <string>
+#include <vector>
 
 // same as TEST_F(VPGVccGenerationManagerTest, XXX)
 // need to change TEST_F(VPGVccGenerationManagerTest, XXX)

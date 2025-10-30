@@ -2,6 +2,7 @@
 
 #include "thread.hpp"
 #include "thread_manager.hpp"
+#include <gtest/gtest.h>
 
 class ThreadManagerTest : public testing::Test 
 {

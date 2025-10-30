@@ -9,6 +9,9 @@
 #include "process_service.hpp"
 
 #include "vpg_cpp_generation_manager.hpp"
+#include <gtest/gtest.h>
+#include <filesystem>
+#include <string>
 
 using namespace vcc;
 

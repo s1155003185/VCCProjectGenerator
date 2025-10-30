@@ -30,8 +30,8 @@ void VPGProcessManager::verifyLocalResponse() {
         // (vcc::isBlank(localResponseDirectory))
         //     localResponseDirectory =
         //     VPGGlobal::getConvertedPath(VPGGlobal::getVccLocalResponseFolder());
-            std::wstring localResponseDirectoryBase =
-                VPGGlobal::getConvertedPath(VPGGlobal::getVccLocalResponseFolder());
+        std::wstring localResponseDirectoryBase =
+            VPGGlobal::getConvertedPath(VPGGlobal::getVccLocalResponseFolder());
     std::wstring localResponseDirectoryProject = VPGGlobal::getConvertedPath(
         VPGGlobal::getVccProjectLocalResponseDirectory(_Option->getProjectType()));
     std::wstring gitUrl =

@@ -9,6 +9,10 @@
 #include "log_config.hpp"
 #include "vpg_global.hpp"
 #include "vpg_process_manager.hpp"
+#include <gtest/gtest.h>
+#include <filesystem>
+#include <string>
+#include <vector>
 
 class VPGProcessManagerTest : public testing::Test 
 {

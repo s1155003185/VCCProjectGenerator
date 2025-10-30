@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "git_manager.hpp"
+#include <gtest/gtest.h>
 
 class GitManagerTest : public testing::Test 
 {

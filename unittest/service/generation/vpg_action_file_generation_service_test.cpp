@@ -11,6 +11,10 @@
 #include "vpg_enum_class_reader.hpp"
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_global.hpp"
+#include <gtest/gtest.h>
+#include <filesystem>
+#include <string>
+#include <vector>
 
 class VPGActionFileGenerationServiceTest : public testing::Test 
 {

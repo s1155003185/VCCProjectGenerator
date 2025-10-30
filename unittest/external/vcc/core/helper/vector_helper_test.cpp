@@ -6,6 +6,9 @@
 #include "base_object.hpp"
 #include "i_object.hpp"
 #include "vector_helper.hpp"
+#include <gtest/gtest.h>
+#include <memory>
+#include <vector>
 
 class VectorHelperTestObj : public vcc::BaseObject
 {

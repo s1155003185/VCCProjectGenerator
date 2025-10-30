@@ -5,6 +5,9 @@
 #else
 #include <dlfcn.h>
 #endif
+#include <dlfcn.h>
+#include <windows.h>
+
 #include <string>
 
 #include "exception_macro.hpp"

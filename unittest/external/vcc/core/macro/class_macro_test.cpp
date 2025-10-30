@@ -7,6 +7,10 @@
 #include "base_object.hpp"
 #include "class_macro.hpp"
 #include "object_type.hpp"
+#include <gtest/gtest.h>
+#include <map>
+#include <memory>
+#include <set>
 
 class ClassMacroTestClassElement : public vcc::BaseObject
 {

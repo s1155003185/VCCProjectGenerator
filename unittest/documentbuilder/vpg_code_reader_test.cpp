@@ -5,6 +5,9 @@
 
 #include "class_macro.hpp"
 #include "vpg_code_reader.hpp"
+#include <gtest/gtest.h>
+#include <memory>
+#include <string>
 
 class VPGCodeReaderTest : public testing::Test 
 {

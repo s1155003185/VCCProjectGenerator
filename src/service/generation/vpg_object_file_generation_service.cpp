@@ -442,7 +442,7 @@ void VPGObjectFileGenerationService::getHppIncludeFiles(
         // /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/V1
         // Window: C:\msys64\mingw64\include\c++\12.2.0
 
-            projectFileList.insert(L"class_macro.hpp");
+        projectFileList.insert(L"class_macro.hpp");
     projectFileList.insert(L"object_type.hpp");
 
     for (auto const& enumClass : enumClassList) {

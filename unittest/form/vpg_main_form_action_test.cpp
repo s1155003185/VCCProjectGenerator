@@ -1,5 +1,6 @@
 // <vcc:vccproj sync="FULL" gen="FULL"/>
 #include <gtest/gtest.h>
+#include <gtest/gtest.h>
 
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
 // </vcc:customHeader>

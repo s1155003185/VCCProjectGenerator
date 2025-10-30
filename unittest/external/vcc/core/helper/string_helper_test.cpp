@@ -5,6 +5,10 @@
 #include <vector>
 
 #include "string_helper.hpp"
+#include <gtest/gtest.h>
+#include <regex>
+#include <string>
+#include <vector>
 
 /* ---------------------------------------------------------------------------------------------------- */
 /*                                      Has Prefix                                                      */

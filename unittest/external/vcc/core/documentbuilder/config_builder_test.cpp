@@ -5,6 +5,9 @@
 
 #include "config.hpp"
 #include "config_builder.hpp"
+#include <gtest/gtest.h>
+#include <memory>
+#include <string>
 
 TEST(ConfigBuilderTest, Full)
 {

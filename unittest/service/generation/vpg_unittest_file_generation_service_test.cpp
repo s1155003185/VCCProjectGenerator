@@ -10,6 +10,9 @@
 #include "vpg_enum_class.hpp"
 #include "vpg_global.hpp"
 #include "vpg_unittest_file_generation_service.hpp"
+#include <gtest/gtest.h>
+#include <filesystem>
+#include <string>
 
 class VPGUnittestFileGenerationServiceTest : public testing::Test, public vcc::BaseObject
 {

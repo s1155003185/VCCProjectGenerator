@@ -6,6 +6,10 @@
 
 #include "file_helper.hpp"
 #include "log_service.hpp"
+#include <gtest/gtest.h>
+#include <filesystem>
+#include <memory>
+#include <string>
 
 TEST(LogServiceTest, LogTest) 
 {

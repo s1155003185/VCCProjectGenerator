@@ -16,6 +16,14 @@
 #ifdef __WIN32
 #include "file_helper_win.hpp"
 #else
+#include <assert.h>
+
+#include <filesystem>
+#include <fstream>
+#include <regex>
+#include <sstream>
+#include <string>
+
 #include "file_helper_linux.hpp"
 #endif
 

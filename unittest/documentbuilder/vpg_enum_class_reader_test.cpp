@@ -2,6 +2,7 @@
 
 #include "vpg_enum_class_reader.hpp"
 #include "vpg_global.hpp"
+#include <gtest/gtest.h>
 
 TEST(VPGEnumClassReaderTest, GetCodeLine)
 {

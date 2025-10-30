@@ -10,6 +10,9 @@
 #include "log_config.hpp"
 #include "process_service.hpp"
 #include "vpg_vcc_generation_manager.hpp"
+#include <gtest/gtest.h>
+#include <filesystem>
+#include <string>
 
 using namespace vcc;
 

@@ -8,6 +8,11 @@
 #include "class_macro.hpp"
 #include "file_helper.hpp"
 #include "log_config.hpp"
+#include <gtest/gtest.h>
+#include <filesystem>
+#include <regex>
+#include <string>
+#include <vector>
 
 class FileHelperTest : public testing::Test 
 {

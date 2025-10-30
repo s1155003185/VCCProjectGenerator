@@ -7,6 +7,8 @@
 #include "lock_type.hpp"
 
 #include <memory>
+#include <gtest/gtest.h>
+#include <memory>
 
 class BasePropertyAccessorTestObject : public vcc::BaseObject
 {

@@ -4,6 +4,9 @@
 #include <string>
 
 #include "xml_builder.hpp"
+#include <gtest/gtest.h>
+#include <memory>
+#include <string>
 
 TEST(XMLBuilderTest, ParserSimple_String)
 {

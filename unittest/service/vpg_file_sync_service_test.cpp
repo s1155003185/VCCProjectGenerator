@@ -4,6 +4,8 @@
 #include "vpg_file_sync_service.hpp"
 
 #include <string>
+#include <gtest/gtest.h>
+#include <string>
 
 class VPGFileSyncServiceTest : public testing::Test 
 {    

@@ -4,6 +4,8 @@
 
 #include "vpg_main_form.hpp"
 #include "vpg_main_form_property.hpp"
+#include <gtest/gtest.h>
+#include <memory>
 
 TEST(VPGMainFormTest, AddDeleteWorkspaceForm_Property)
 {

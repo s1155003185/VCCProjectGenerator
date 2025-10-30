@@ -8,6 +8,10 @@
 #include "base_action.hpp"
 #include "action_manager.hpp"
 #include "operation_result.hpp"
+#include <gtest/gtest.h>
+#include <map>
+#include <memory>
+#include <string>
 
 class ActionManagerTestClass final : public vcc::BaseAction
 {

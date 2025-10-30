@@ -9,6 +9,9 @@
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_global.hpp"
 #include "vpg_java_generation_service.hpp"
+#include <gtest/gtest.h>
+#include <filesystem>
+#include <string>
 
 class VPGJavaGenerationServiceTest : public testing::Test 
 {

@@ -6,6 +6,9 @@
 #include "platform_type.hpp"
 #include "string_helper.hpp"
 #include "vpg_include_path_reader.hpp"
+#include <gtest/gtest.h>
+#include <string>
+#include <vector>
 
 TEST(VPGIncludePathReaderTest, Normal)
 {

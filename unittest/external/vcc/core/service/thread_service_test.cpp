@@ -5,6 +5,8 @@
 #include "thread.hpp"
 #include "thread_service.hpp"
 #include "log_config.hpp"
+#include <gtest/gtest.h>
+#include <iostream>
 
 TEST(ThreadServiceTest, Join)
 {

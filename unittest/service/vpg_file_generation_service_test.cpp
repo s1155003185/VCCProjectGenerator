@@ -3,6 +3,8 @@
 #include "vpg_file_generation_service.hpp"
 
 #include <string>
+#include <gtest/gtest.h>
+#include <string>
 
 class VPGFileGenerationServiceTest : public testing::Test 
 {

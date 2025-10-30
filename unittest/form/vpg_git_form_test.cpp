@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "vpg_git_form.hpp"
+#include <gtest/gtest.h>
 
 class VPGGitFormTest : public testing::Test 
 {

@@ -15,6 +15,15 @@
 #include <unistd.h>
 #endif
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+#include <filesystem>
+#include <string>
+#include <vector>
+
 #include "exception_macro.hpp"
 #include "exception_type.hpp"
 #include "log_config.hpp"

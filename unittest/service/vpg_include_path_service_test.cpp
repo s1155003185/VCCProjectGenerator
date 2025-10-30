@@ -3,6 +3,7 @@
 #include "platform_type.hpp"
 #include "vpg_global.hpp"
 #include "vpg_include_path_service.hpp"
+#include <gtest/gtest.h>
 
 // Mode
 TEST(VPGIncludePathSerciceTest, getWorkspaceIncludePath)

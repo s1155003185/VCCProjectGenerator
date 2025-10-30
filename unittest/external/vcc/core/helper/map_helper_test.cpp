@@ -8,6 +8,11 @@
 #include "base_object.hpp"
 #include "i_object.hpp"
 #include "map_helper.hpp"
+#include <gtest/gtest.h>
+#include <algorithm>
+#include <map>
+#include <memory>
+#include <string>
 
 class MapHelperTestObj : public vcc::BaseObject
 {

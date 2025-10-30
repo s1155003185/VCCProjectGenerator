@@ -14,6 +14,9 @@
 #include "object_type.hpp"
 #include "property_accessor_factory.hpp"
 #include "property_accessor_macro.hpp"
+#include <locale.h>
+#include <stdio.h>
+#include <wchar.h>
 // </vcc:dllInterfaceHeader>
 
 int getVersion(wchar_t **str)

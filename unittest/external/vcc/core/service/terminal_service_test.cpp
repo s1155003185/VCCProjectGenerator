@@ -3,6 +3,7 @@
 #include "terminal_service.hpp"
 #include "log_config.hpp"
 #include "string_helper.hpp"
+#include <gtest/gtest.h>
 
 TEST(TerminalServiceTest, Normal)
 {

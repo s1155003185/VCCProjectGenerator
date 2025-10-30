@@ -22,6 +22,11 @@
 #include "vpg_workspace_form.hpp"
 
 // <vcc:customHeader sync="RESERVE" gen="RESERVE">
+#include <assert.h>
+
+#include <memory>
+#include <string>
+
 #include "file_helper.hpp"
 #include "i_property_accessor.hpp"
 #include "lock_type.hpp"

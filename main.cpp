@@ -7,6 +7,9 @@
 #include "log_config.hpp"
 #include "vpg_process_manager.hpp"
 #include "string_helper.hpp"
+#include <iostream>
+#include <string>
+#include <vector>
 
 int main(int argc, char **argv)
 {

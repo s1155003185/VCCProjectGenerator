@@ -8,6 +8,10 @@
 #include "file_helper.hpp"
 
 #include "vpg_object_type_file_generation_service.hpp"
+#include <gtest/gtest.h>
+#include <filesystem>
+#include <string>
+#include <vector>
 
 class VPGObjectTypeFileGenerationServiceTest : public testing::Test 
 {

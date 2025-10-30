@@ -6,6 +6,10 @@
 
 #include "json.hpp"
 #include "json_builder.hpp"
+#include <gtest/gtest.h>
+#include <iostream>
+#include <memory>
+#include <string>
 
 TEST(JsonBuilderTest, String)
 {

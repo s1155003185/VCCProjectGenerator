@@ -2,6 +2,7 @@
 
 #include "json.hpp"
 #include "json_builder.hpp"
+#include <gtest/gtest.h>
 
 TEST(JsonTest, Full) 
 {

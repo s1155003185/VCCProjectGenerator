@@ -3,6 +3,8 @@
 #include <string>
 
 #include "dll.hpp"
+#include <gtest/gtest.h>
+#include <string>
 
 #define DLL_NAME L"libvpg"
 

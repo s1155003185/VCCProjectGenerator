@@ -14,6 +14,12 @@
 #include "vpg_global.hpp"
 #include "vpg_include_path_service.hpp"
 #include "vpg_object_file_generation_service.hpp"
+#include <gtest/gtest.h>
+#include <filesystem>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
 static std::map<std::wstring, std::wstring> _IncludeFiles;
 static std::map<std::wstring, std::shared_ptr<VPGEnumClass>> _EnumClasses;

@@ -6,6 +6,9 @@
 #include "process_service.hpp"
 #include "log_config.hpp"
 #include "string_helper.hpp"
+#include <gtest/gtest.h>
+#include <string>
+#include <vector>
 
 TEST(ProcessServiceTest, Normal)
 {

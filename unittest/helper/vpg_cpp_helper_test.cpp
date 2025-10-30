@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "vpg_cpp_helper.hpp"
+#include <gtest/gtest.h>
 
 // Mode
 TEST(VPGCppHelperTest, getSimpleCode)

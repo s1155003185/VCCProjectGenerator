@@ -1309,6 +1309,10 @@ std::wstring VPGJavaGenerationService::generateFormAction(const std::wstring& pr
     return result;
 }
 
+#include <assert.h>
+
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 std::wstring VPGJavaGenerationService::generateFormCustomAction(
     const std::wstring& projectPrefix, const VPGEnumClass* enumClass,

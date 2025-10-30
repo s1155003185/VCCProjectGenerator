@@ -6,6 +6,9 @@
 #include <ctime>
 #endif
 
+#include <ctime>
+#include <memory>
+
 #include "base_object.hpp"
 #include "base_service.hpp"
 #include "class_macro.hpp"

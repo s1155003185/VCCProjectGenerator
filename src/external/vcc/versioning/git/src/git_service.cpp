@@ -14,6 +14,17 @@
 #include <ctime>
 #endif
 
+#include <assert.h>
+#include <math.h>
+
+#include <ctime>
+#include <filesystem>
+#include <map>
+#include <memory>
+#include <regex>
+#include <string>
+#include <vector>
+
 #include "config.hpp"
 #include "config_builder.hpp"
 #include "exception_macro.hpp"
