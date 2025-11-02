@@ -93,6 +93,8 @@ endif
 CPPCHECK_DEFS_FILE := cppcheck_defines.txt
 #  - put suppressions (cppcheck suppression entries) in cppcheck_suppressions.txt
 CPPCHECK_SUPPRESS_FILE := cppcheck_suppressions.txt
+# cppcheck result file
+CPPCHECK_RESULT_FILE := cppcheck_report.txt
 
 #----------------------------------#
 #---------- Compile Info ----------#
@@ -321,8 +323,9 @@ all: release
 debug:
 	$(MAKE) create_debug_folder
 	$(MAKE) copy_debug_lib
-ifneq ($(IS_CPPCHECK_ENABLED),N)
-	$(MAKE) run_cppcheck
+ifeq ($(IS_CPPCHECK_ENABLED),Y)
+	$(MAKE) cppcheck
+	@if [ $$? -ne 0 ]; then exit 1; fi
 endif
 ifneq ($(PROJ_NAME_DLL),)
 	$(MAKE) compile_debug_dll
@@ -349,8 +352,9 @@ endif
 debug_dll:
 	$(MAKE) create_debug_folder
 	$(MAKE) copy_debug_lib
-ifneq ($(IS_CPPCHECK_ENABLED),N)
-	$(MAKE) run_cppcheck
+ifeq ($(IS_CPPCHECK_ENABLED),Y)
+	$(MAKE) cppcheck
+	@if [ $$? -ne 0 ]; then exit 1; fi
 endif
 ifneq ($(PROJ_NAME_DLL),)
 	$(MAKE) compile_debug_dll
@@ -371,8 +375,9 @@ endif
 debug_exe:
 	$(MAKE) create_debug_folder
 	$(MAKE) copy_debug_lib
-ifneq ($(IS_CPPCHECK_ENABLED),N)
-	$(MAKE) run_cppcheck
+ifeq ($(IS_CPPCHECK_ENABLED),Y)
+	$(MAKE) cppcheck
+	@if [ $$? -ne 0 ]; then exit 1; fi
 endif
 ifneq ($(PROJ_NAME_EXE),)
 	$(MAKE) compile_debug_exe
@@ -393,9 +398,10 @@ endif
 unittest:
 	$(MAKE) create_debug_folder
 	$(MAKE) copy_debug_lib
-	ifneq ($(IS_CPPCHECK_ENABLED),N)
-		$(MAKE) run_cppcheck
-	endif
+ifeq ($(IS_CPPCHECK_ENABLED),Y)
+	$(MAKE) cppcheck
+	@if [ $$? -ne 0 ]; then exit 1; fi
+endif
 	$(MAKE) gtest
 	@echo Build Unittest Complete!
 
@@ -575,7 +581,7 @@ endif
 #----------------------------------#
 #----------- CPP Check ------------#
 #----------------------------------#
-.PHONY: cppcheck format
+.PHONY: cppcheck format check_cppcheck_result
 
 format:
 	@echo Running clang-format...
@@ -584,8 +590,21 @@ format:
 
 cppcheck:
 	@echo Running cppcheck...
-	cppcheck --enable=all --inconclusive --std=$(CXXVERSION) $(INCDIRS) $(CPPCHECK_DEFS) $(CPPCHECK_SUPPRESS) . 2> cppcheck_report.txt
-	@echo Cppcheck Complete
+	cppcheck --enable=all --inconclusive --std=$(CXXVERSION) $(INCDIRS) $(CPPCHECK_DEFS) $(CPPCHECK_SUPPRESS) . 2> $(CPPCHECK_RESULT_FILE)
+	@$(MAKE) check_cppcheck_result
+
+check_cppcheck_result:
+	@if grep -q "error:" $(CPPCHECK_RESULT_FILE); then \
+		echo ""; \
+		echo "=== CPPCHECK ERRORS FOUND ==="; \
+		grep "error:" $(CPPCHECK_RESULT_FILE); \
+		echo ""; \
+		echo "Full report in: $(CPPCHECK_RESULT_FILE)"; \
+		echo ""; \
+		exit 1; \
+	else \
+		echo "Cppcheck Complete - No errors found"; \
+	fi
 
 #----------------------------------#
 #------------- Export -------------#
