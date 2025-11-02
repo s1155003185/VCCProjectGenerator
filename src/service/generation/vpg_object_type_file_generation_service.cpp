@@ -36,8 +36,7 @@ void VPGObjectTypeFileGenerationService::generate(const vcc::LogConfig* logConfi
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
-        "enum class ObjectType\r\n"
-        "{\r\n" +
+        "enum class ObjectType {\r\n" +
         INDENT + L"NA\r\n";
     if (!overallPropertyTypes.empty())
         content +=

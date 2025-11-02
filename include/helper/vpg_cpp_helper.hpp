@@ -99,8 +99,7 @@ inline std::wstring generateCodeWithNamespace(
                 namespaceRemain = namespaceRemain.substr(2);
             for (auto ns : vcc::splitString(namespaceRemain, {L"::"})) {
                 content += L"\r\n" + getIndentStringWithNamespaceLevel(currentNamespaceLevel) +
-                           L"namespace " + ns + L"\r\n" +
-                           getIndentStringWithNamespaceLevel(currentNamespaceLevel) + L"{\r\n";
+                           L"namespace " + ns + L" {\r\n";
                 currentNamespaceLevel++;
             }
         }

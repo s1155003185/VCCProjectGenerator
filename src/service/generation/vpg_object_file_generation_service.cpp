@@ -840,8 +840,7 @@ std::wstring VPGObjectFileGenerationService::generateHppClass(
         L"\r\n"
         "class " +
         className + L" : public " + baseClassName + inheritClass +
-        L"\r\n"
-        "{\r\n" +
+        L" {\r\n" +
         getHppProperties(enumClass, className, enumClassMapping) +
         getHppPrivateFunctions(enumClass, className) +
         getHppProtectedFunctions(enumClass, className) + L"\r\n" + INDENT + L"public:\r\n" +

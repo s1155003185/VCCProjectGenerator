@@ -15,16 +15,16 @@ const std::wstring logId = L"Unittest File Generation";
 
 std::wstring VPGUnittestFileGenerationService::generateUnittestClass(
     const std::wstring& className) {
-    TRY return L"class " + className + L" : public testing::Test \r\n" + L"{\r\n" + INDENT +
+    TRY return L"class " + className + L" : public testing::Test {\r\n" + INDENT +
         getVccTagHeaderCustomClassProperties(VPGCodeType::Cpp, className) + L"\r\n" + INDENT +
         getVccTagTailerCustomClassProperties(VPGCodeType::Cpp, className) + L"\r\n" + L"\r\n" +
         INDENT + L"public:\r\n" + INDENT + INDENT + className + L"() {}\r\n" + INDENT + INDENT +
         L"virtual ~" + className + L"() {}\r\n" + L"\r\n" + INDENT + INDENT +
-        L"void SetUp() override\r\n" + INDENT + INDENT + L"{\r\n" + INDENT + INDENT + INDENT +
+        L"void SetUp() override {\r\n" + INDENT + INDENT + INDENT +
         getVccTagHeaderCustomClassCustomSetUp(VPGCodeType::Cpp, className) + L"\r\n" + INDENT +
         INDENT + INDENT + getVccTagTailerCustomClassCustomSetUp(VPGCodeType::Cpp, className) +
         L"\r\n" + INDENT + INDENT + L"}\r\n" + L"\r\n" + INDENT + INDENT +
-        L"void TearDown() override\r\n" + INDENT + INDENT + L"{\r\n" + INDENT + INDENT + INDENT +
+        L"void TearDown() override {\r\n" + INDENT + INDENT + INDENT +
         getVccTagHeaderCustomClassCustomTearDown(VPGCodeType::Cpp, className) + L"\r\n" + INDENT +
         INDENT + INDENT + getVccTagTailerCustomClassCustomTearDown(VPGCodeType::Cpp, className) +
         L"\r\n" + INDENT + INDENT + L"}\r\n" + L"\r\n" + INDENT + INDENT +

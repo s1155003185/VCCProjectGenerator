@@ -217,8 +217,7 @@ void VPGPropertyAccessorGenerationService::generateHpp(
             L"\r\n"
             "class " +
             className +
-            L" : public vcc::BasePropertyAccessor\r\n"
-            "{\r\n";
+            L" : public vcc::BasePropertyAccessor {\r\n";
         bool isCollection = false;
         bool isObject = false;
         std::map<std::wstring, std::wstring> types;

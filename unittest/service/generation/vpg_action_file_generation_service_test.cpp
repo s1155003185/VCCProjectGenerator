@@ -36,8 +36,7 @@ std::wstring getHppClass(const std::wstring& np, const std::wstring& actionName,
         L"\r\n"
         "class VPGGitForm" +
         actionName +
-        L" : public vcc::BaseAction\r\n"
-        "{\r\n" +
+        L" : public vcc::BaseAction {\r\n" +
         propertyStr + (!propertyStr.empty() ? L"\r\n" : L"") + L"    // <vcc:customVPGGitForm" +
         actionName +
         L"Properties sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
@@ -236,8 +235,7 @@ TEST_F(VPGActionFileGenerationServiceTest, NoFile) {
         "#pragma once\r\n"
         "\r\n"
         "//@@Form\r\n"
-        "enum class VPGGitFormProperty\r\n"
-        "{\r\n"
+        "enum class VPGGitFormProperty {\r\n"
         "    AddWorkspace // ACTION(AddWorkspace)\r\n"
         "    , DeleteWorkspace // ACTION_WITH_ARG_SPTR(DeleteWorkspace, "
         "VPGGitFormDeleteWorkspaceArgument)\r\n"
@@ -370,8 +368,7 @@ TEST_F(VPGActionFileGenerationServiceTest, SeperateFile) {
         L""
         "#pragma once\r\n"
         "//@@Form\r\n"
-        "enum class VPGGitFormProperty\r\n"
-        "{\r\n"
+        "enum class VPGGitFormProperty {\r\n"
         "    AddWorkspace // ACTION(AddWorkspace)\r\n"
         "    , DeleteWorkspace // ACTION_WITH_ARG_SPTR(DeleteWorkspace, "
         "VPGGitFormDeleteWorkspaceArgument)\r\n"

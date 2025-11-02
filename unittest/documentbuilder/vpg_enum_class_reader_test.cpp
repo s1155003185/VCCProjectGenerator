@@ -131,8 +131,7 @@ TEST(VPGEnumClassReaderTest, TableAttribute) {
         "#include <vector>\r\n"
         "\r\n"
         "// @@Json\r\n"
-        "enum class VCCObjectProperty\r\n"
-        "{\r\n"
+        "enum class VCCObjectProperty {\r\n"
         "    EnumA // GETSET(EnumTypeA, EnumA, L\"Default\") CommandA\r\n"
         "};\r\n";
 
@@ -153,8 +152,7 @@ TEST(VPGEnumClassReaderTest, TableAttribute) {
         "#include <vector>\r\n"
         "\r\n"
         "// @@Inherit{\"Class\":\"BaseObject\"}\r\n"
-        "enum class VCCObjectProperty\r\n"
-        "{\r\n"
+        "enum class VCCObjectProperty {\r\n"
         "    EnumA // GETSET(EnumTypeA, EnumA, L\"Default\") CommandA\r\n"
         "};\r\n";
 
@@ -499,8 +497,7 @@ TEST(VPGEnumClassReaderTest, VCCEnumClassMultiMacro) {
     std::wstring code =
         L"#pragma once\r\n"
         "\r\n"
-        "enum class VCCObjectProperty\r\n"
-        "{\r\n"
+        "enum class VCCObjectProperty {\r\n"
         "    EnumA, // GETCUSTOM(int64_t, EnumA, return 100;)\r\n"
         "    EnumB, // SETCUSTOM(EnumB , int64_t, return 100;) @@NoProperty\r\n"
         "    EnumC // GETCUSTOM(int64_t, EnumC, return 100;) SETCUSTOM(EnumC, int64_t, _EnumC = "
@@ -558,8 +555,7 @@ TEST(VPGEnumClassReaderTest, AccessMode) {
         L""
         "#pragma once\r\n"
         ""
-        "enum class VCCObjectProperty\r\n"
-        "{\r\n"
+        "enum class VCCObjectProperty {\r\n"
         "    EnumA, // GETSET(int, EnumA, 0)\r\n"
         "    EnumB, // GETSET(int, EnumB, 0) @@ReadOnly\r\n"
         "    EnumC, // GETSET(int, EnumC, 0) @@WriteOnly\r\n"

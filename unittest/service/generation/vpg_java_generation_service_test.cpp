@@ -62,8 +62,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge) {
         "\r\n"
         "// </vcc:dllInterfaceHeader>\r\n"
         "\r\n"
-        "extern \"C\"\r\n"
-        "{\r\n"
+        "extern \"C\" {\r\n"
         "\r\n"
         "DLLEXPORT int getVersion(wchar_t **str);\r\n"
         "\r\n"
@@ -275,8 +274,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum) {
 TEST_F(VPGJavaGenerationServiceTest, GenerateEnum_Namespace) {
     std::wstring enumClass1 =
         L"#param once\r\n"
-        "namespace vcc\r\n"
-        "{\r\n"
+        "namespace vcc {\r\n"
         "    enum class VPGTypeA {\r\n"
         "        EnumA,\r\n"
         "        EnumB,\r\n"
