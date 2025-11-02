@@ -216,8 +216,7 @@ void VPGPropertyAccessorGenerationService::generateHpp(
         code +=
             L"\r\n"
             "class " +
-            className +
-            L" : public vcc::BasePropertyAccessor {\r\n";
+            className + L" : public vcc::BasePropertyAccessor {\r\n";
         bool isCollection = false;
         bool isObject = false;
         std::map<std::wstring, std::wstring> types;
@@ -371,8 +370,7 @@ void VPGPropertyAccessorGenerationService::generateRead(
 
     // General Type
     result += L"\r\n" + convertedType + L" " + propertyName + L"Accessor::_read" + convertedName +
-              L"(const int64_t &objectProperty) const {\r\n" +
-              INDENT + L"TRY\r\n";
+              L"(const int64_t &objectProperty) const {\r\n" + INDENT + L"TRY\r\n";
     if (!generalCases.empty()) {
         result += getGeneralTypeContentHeader(propertyName);
         for (auto const& pair : generalCases)
@@ -389,9 +387,8 @@ void VPGPropertyAccessorGenerationService::generateRead(
     // Vector Type
     result += L"\r\n" + convertedType + L" " + propertyName + L"Accessor::_read" + convertedName +
               L"AtIndex(const int64_t &objectProperty, const int64_t &" +
-              (!vectorCases.empty() ? L"index" : L"/*index*/") +
-              L") const {\r\n" +
-              INDENT + L"TRY\r\n";
+              (!vectorCases.empty() ? L"index" : L"/*index*/") + L") const {\r\n" + INDENT +
+              L"TRY\r\n";
     if (!vectorCases.empty()) {
         result += getGeneralTypeIndexContentHeader(propertyName);
         for (auto const& pair : vectorCases)
@@ -408,9 +405,7 @@ void VPGPropertyAccessorGenerationService::generateRead(
     // Map Type
     result += L"\r\n" + convertedType + L" " + propertyName + L"Accessor::_read" + convertedName +
               L"AtKey(const int64_t &objectProperty, const void *" +
-              (!mapCases.empty() ? L"key" : L"/*key*/") +
-              L") const {\r\n" +
-              INDENT + L"TRY\r\n";
+              (!mapCases.empty() ? L"key" : L"/*key*/") + L") const {\r\n" + INDENT + L"TRY\r\n";
     if (!mapCases.empty()) {
         result += getGeneralTypeMapContentHeader(propertyName);
         for (auto const& pair : mapCases)
@@ -566,9 +561,7 @@ void VPGPropertyAccessorGenerationService::generateWrite(
         propertyName + L"Accessor::_write" + convertedName + L"(const int64_t &objectProperty, " +
         (vcc::isEqual(type, objectToken) ? L"" : L"const ") + convertedType + L" " +
         (vcc::isEqual(type, objectToken) ? L"" : L"&") +
-        (!generalCases.empty() ? L"value" : L"/*value*/") +
-        L") {\r\n" +
-        INDENT + L"TRY\r\n";
+        (!generalCases.empty() ? L"value" : L"/*value*/") + L") {\r\n" + INDENT + L"TRY\r\n";
     if (!generalCases.empty()) {
         result += getGeneralTypeContentHeader(propertyName);
         for (auto const& pair : generalCases)
@@ -592,9 +585,7 @@ void VPGPropertyAccessorGenerationService::generateWrite(
         (vcc::isEqual(type, objectToken) ? L"" : L"const ") + convertedType + L" " +
         (vcc::isEqual(type, objectToken) ? L"" : L"&") +
         (!vectorCases.empty() ? L"value" : L"/*value*/") + L", const int64_t &" +
-        (!vectorCases.empty() ? L"index" : L"/*index*/") +
-        L") {\r\n" +
-        INDENT + L"TRY\r\n";
+        (!vectorCases.empty() ? L"index" : L"/*index*/") + L") {\r\n" + INDENT + L"TRY\r\n";
     if (!vectorCases.empty()) {
         result += getGeneralTypeIndexContentHeader(propertyName);
         for (auto const& pair : vectorCases)
@@ -617,9 +608,7 @@ void VPGPropertyAccessorGenerationService::generateWrite(
         (vcc::isEqual(type, objectToken) ? L"" : L"const ") + convertedType + L" " +
         (vcc::isEqual(type, objectToken) ? L"" : L"&") +
         (!mapCases.empty() ? L"value" : L"/*value*/") + L", const void *" +
-        (!mapCases.empty() ? L"key" : L"/*key*/") +
-        L") {\r\n" +
-        INDENT + L"TRY\r\n";
+        (!mapCases.empty() ? L"key" : L"/*key*/") + L") {\r\n" + INDENT + L"TRY\r\n";
     if (!mapCases.empty()) {
         result += getGeneralTypeMapContentHeader(propertyName);
         for (auto const& pair : mapCases)
@@ -700,9 +689,7 @@ void VPGPropertyAccessorGenerationService::generateInsert(
         (vcc::isEqual(type, objectToken) ? L"" : L"const ") + convertedType + L" " +
         (vcc::isEqual(type, objectToken) ? L"" : L"&") +
         (!vectorCases.empty() ? L"value" : L"/*value*/") + L", const int64_t &" +
-        (!vectorCases.empty() ? L"index" : L"/*index*/") +
-        L") {\r\n" +
-        INDENT + L"TRY\r\n";
+        (!vectorCases.empty() ? L"index" : L"/*index*/") + L") {\r\n" + INDENT + L"TRY\r\n";
     if (!vectorCases.empty()) {
         result += getGeneralTypeIndexContentHeader(propertyName);
         for (auto const& pair : vectorCases)
@@ -774,8 +761,7 @@ void VPGPropertyAccessorGenerationService::generateClone(
 
     // General Type
     result += L"\r\n" + convertedType + L" " + propertyName + L"Accessor::_clone" + convertedName +
-              L"(const int64_t &objectProperty) const {\r\n" +
-              INDENT + L"TRY\r\n";
+              L"(const int64_t &objectProperty) const {\r\n" + INDENT + L"TRY\r\n";
     if (!generalCases.empty()) {
         result += getGeneralTypeContentHeader(propertyName);
         for (auto const& pair : generalCases)
@@ -792,9 +778,8 @@ void VPGPropertyAccessorGenerationService::generateClone(
     // Vector
     result += L"\r\n" + convertedType + L" " + propertyName + L"Accessor::_clone" + convertedName +
               L"AtIndex(const int64_t &objectProperty, const int64_t &" +
-              (!vectorCases.empty() ? L"index" : L"/*index*/") +
-              L") const {\r\n" +
-              INDENT + L"TRY\r\n";
+              (!vectorCases.empty() ? L"index" : L"/*index*/") + L") const {\r\n" + INDENT +
+              L"TRY\r\n";
     if (!vectorCases.empty()) {
         result += getGeneralTypeIndexContentHeader(propertyName);
         for (auto const& pair : vectorCases)
@@ -811,9 +796,7 @@ void VPGPropertyAccessorGenerationService::generateClone(
     // Map
     result += L"\r\n" + convertedType + L" " + propertyName + L"Accessor::_clone" + convertedName +
               L"AtKey(const int64_t &objectProperty, const void *" +
-              (!mapCases.empty() ? L"key" : L"/*key*/") +
-              L") const {\r\n" +
-              INDENT + L"TRY\r\n";
+              (!mapCases.empty() ? L"key" : L"/*key*/") + L") const {\r\n" + INDENT + L"TRY\r\n";
     if (!mapCases.empty()) {
         result += getGeneralTypeMapContentHeader(propertyName);
         for (auto const& pair : mapCases)
@@ -837,9 +820,8 @@ void VPGPropertyAccessorGenerationService::generateContainerCount(
     TRY result +=
         L"\r\n"
         "size_t " +
-        propertyName +
-        L"Accessor::_getCount(const int64_t &objectProperty) const {\r\n" +
-        INDENT + L"TRY\r\n" + getGeneralContentHeader(propertyName);
+        propertyName + L"Accessor::_getCount(const int64_t &objectProperty) const {\r\n" + INDENT +
+        L"TRY\r\n" + getGeneralContentHeader(propertyName);
     for (auto const& property : enumClassProperties) {
         if (!property->getIsCollection()) continue;
         result += INDENT + INDENT + L"case " + propertyName + L"::" + property->getEnum() +
@@ -866,8 +848,7 @@ void VPGPropertyAccessorGenerationService::generateContainerMapKey(
     result +=
         L"\r\n"
         "std::set<void *> " +
-        propertyName +
-        L"Accessor::_getMapKeys(const int64_t &objectProperty) const {\r\n" +
+        propertyName + L"Accessor::_getMapKeys(const int64_t &objectProperty) const {\r\n" +
         INDENT + L"std::set<void *> result;\r\n" + INDENT + L"TRY\r\n";
     if (!mapCases.empty()) {
         result += getGeneralContentHeader(propertyName);
@@ -916,9 +897,7 @@ void VPGPropertyAccessorGenerationService::generateContainerIsContainKey(
         L"\r\n"
         "bool " +
         propertyName + L"Accessor::_isContainKey(const int64_t &objectProperty, const void *" +
-        (!mapCases.empty() ? L"key" : L"/*key*/") +
-        L") const {\r\n" +
-        INDENT + L"TRY\r\n";
+        (!mapCases.empty() ? L"key" : L"/*key*/") + L") const {\r\n" + INDENT + L"TRY\r\n";
     if (!mapCases.empty()) {
         result += getGeneralTypeMapContentHeader(propertyName);
         for (auto const& pair : mapCases)
@@ -998,9 +977,7 @@ void VPGPropertyAccessorGenerationService::generateContainerRemove(
         L"\r\n"
         "void " +
         propertyName + L"Accessor::_remove(const int64_t &objectProperty, const void *" +
-        (!vectorCasesGeneral.empty() ? L"value" : L"/*value*/") +
-        L") {\r\n" +
-        INDENT + L"TRY\r\n";
+        (!vectorCasesGeneral.empty() ? L"value" : L"/*value*/") + L") {\r\n" + INDENT + L"TRY\r\n";
     if (!vectorCasesGeneral.empty()) {
         result += INDENT + INDENT + L"assert(value != nullptr);\r\n" + INDENT + INDENT +
                   L"auto obj = std::static_pointer_cast<" + className + L">(_Object);\r\n" +
@@ -1025,9 +1002,7 @@ void VPGPropertyAccessorGenerationService::generateContainerRemove(
         "void " +
         propertyName +
         L"Accessor::_removeObject(const int64_t &objectProperty, const vcc::IObject *" +
-        (!vectorCasesObject.empty() ? L"value" : L"/*value*/") +
-        L") {\r\n" +
-        INDENT + L"TRY\r\n";
+        (!vectorCasesObject.empty() ? L"value" : L"/*value*/") + L") {\r\n" + INDENT + L"TRY\r\n";
     if (!vectorCasesObject.empty()) {
         result += INDENT + INDENT + L"assert(value != nullptr);\r\n" + INDENT + INDENT +
                   L"auto obj = std::static_pointer_cast<" + className + L">(_Object);\r\n" +
@@ -1049,9 +1024,7 @@ void VPGPropertyAccessorGenerationService::generateContainerRemove(
         L"\r\n"
         "void " +
         propertyName + L"Accessor::_removeAtIndex(const int64_t &objectProperty, const int64_t &" +
-        (!vectorCasesIndex.empty() ? L"index" : L"/*index*/") +
-        L") {\r\n" +
-        INDENT + L"TRY\r\n";
+        (!vectorCasesIndex.empty() ? L"index" : L"/*index*/") + L") {\r\n" + INDENT + L"TRY\r\n";
     if (!vectorCasesIndex.empty()) {
         result += getGeneralTypeIndexContentHeader(propertyName);
         for (auto const& pair : vectorCasesIndex)
@@ -1088,9 +1061,8 @@ void VPGPropertyAccessorGenerationService::generateContainerRemove(
     result +=
         L"\r\n"
         "void " +
-        propertyName +
-        L"Accessor::_clear(const int64_t &objectProperty) {\r\n" +
-        INDENT + L"TRY\r\n" + getGeneralContentHeader(propertyName);
+        propertyName + L"Accessor::_clear(const int64_t &objectProperty) {\r\n" + INDENT +
+        L"TRY\r\n" + getGeneralContentHeader(propertyName);
     for (auto const& property : enumClassProperties) {
         if (!property->getIsCollection()) continue;
         result += INDENT + INDENT + L"case " + propertyName + L"::" + property->getEnum() +

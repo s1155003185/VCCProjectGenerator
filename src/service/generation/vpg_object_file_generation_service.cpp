@@ -621,15 +621,13 @@ std::wstring VPGObjectFileGenerationService::getHppConstructor(
                       className.substr(!classPrefix.empty() ? classPrefix.length() : 0) +
                       L", exceptionType, errorMessage)";
             if (!initializeStr.empty()) {
-                result += L" {\r\n" + initializeStr + INDENT + INDENT +
-                          L"}\r\n";
+                result += L" {\r\n" + initializeStr + INDENT + INDENT + L"}\r\n";
             } else
                 result += L" {}\r\n";
         } else {
             if (!vcc::isBlank(enumClass->getInheritClass()))
                 result += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote +
-                          L"() {\r\n" + INDENT + INDENT + INDENT +
-                          L"_ObjectType = ObjectType::" +
+                          L"() {\r\n" + INDENT + INDENT + INDENT + L"_ObjectType = ObjectType::" +
                           className.substr(!classPrefix.empty() ? classPrefix.length() : 0) +
                           L";\r\n" + initializeStr + INDENT + INDENT + L"}\r\n";
             else {
@@ -637,8 +635,7 @@ std::wstring VPGObjectFileGenerationService::getHppConstructor(
                           L"(ObjectType::" +
                           className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L")";
                 if (!initializeStr.empty())
-                    result +=
-                        L" {\r\n" + initializeStr + INDENT + INDENT;
+                    result += L" {\r\n" + initializeStr + INDENT + INDENT;
                 else
                     result += L" {";
                 result += L"}\r\n";
@@ -839,8 +836,7 @@ std::wstring VPGObjectFileGenerationService::generateHppClass(
     result +=
         L"\r\n"
         "class " +
-        className + L" : public " + baseClassName + inheritClass +
-        L" {\r\n" +
+        className + L" : public " + baseClassName + inheritClass + L" {\r\n" +
         getHppProperties(enumClass, className, enumClassMapping) +
         getHppPrivateFunctions(enumClass, className) +
         getHppProtectedFunctions(enumClass, className) + L"\r\n" + INDENT + L"public:\r\n" +
@@ -1335,20 +1331,18 @@ std::wstring VPGObjectFileGenerationService::getCppJsonFunction(
     content +=
         L"\r\n"
         "std::shared_ptr<vcc::Json> " +
-        className +
-        L"::toJson() const {\r\n" +
-        INDENT + L"TRY\r\n" + (!toJsonStr.empty() ? toJsonVarable : L"") + INDENT + INDENT +
+        className + L"::toJson() const {\r\n" + INDENT + L"TRY\r\n" +
+        (!toJsonStr.empty() ? toJsonVarable : L"") + INDENT + INDENT +
         L"auto json = std::make_unique<vcc::Json>();\r\n" + toJsonStr + INDENT + INDENT +
         L"return json;\r\n" + INDENT + L"CATCH\r\n" + INDENT +
         L"return nullptr;\r\n"
         "}\r\n"
         "\r\n"
         "void " +
-        className +
-        L"::deserializeJson(std::shared_ptr<vcc::IDocument> document) {\r\n" +
-        INDENT + L"TRY\r\n" + (!deserializeStr.empty() ? deserializeVariable : L"") + INDENT +
-        INDENT + L"auto json = std::dynamic_pointer_cast<vcc::Json>(document);\r\n" + INDENT +
-        INDENT + L"assert(json != nullptr);\r\n" + deserializeStr + INDENT +
+        className + L"::deserializeJson(std::shared_ptr<vcc::IDocument> document) {\r\n" + INDENT +
+        L"TRY\r\n" + (!deserializeStr.empty() ? deserializeVariable : L"") + INDENT + INDENT +
+        L"auto json = std::dynamic_pointer_cast<vcc::Json>(document);\r\n" + INDENT + INDENT +
+        L"assert(json != nullptr);\r\n" + deserializeStr + INDENT +
         L"CATCH\r\n"
         "}\r\n";
     CATCH

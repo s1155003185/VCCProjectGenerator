@@ -35,10 +35,8 @@ std::wstring getHppClass(const std::wstring& np, const std::wstring& actionName,
     std::wstring action =
         L"\r\n"
         "class VPGGitForm" +
-        actionName +
-        L" : public vcc::BaseAction {\r\n" +
-        propertyStr + (!propertyStr.empty() ? L"\r\n" : L"") + L"    // <vcc:customVPGGitForm" +
-        actionName +
+        actionName + L" : public vcc::BaseAction {\r\n" + propertyStr +
+        (!propertyStr.empty() ? L"\r\n" : L"") + L"    // <vcc:customVPGGitForm" + actionName +
         L"Properties sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "    // </vcc:customVPGGitForm" +
         actionName +

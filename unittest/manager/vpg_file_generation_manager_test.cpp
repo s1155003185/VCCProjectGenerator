@@ -161,9 +161,9 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty) {
                   L"VECTOR(ExceptionType, EnumE)\r\n" + L"\r\n" + INDENT + L"public:\r\n" + INDENT +
                   INDENT + L"VCCObject() : vcc::BaseObject(ObjectType::Object) {}\r\n" + INDENT +
                   INDENT + L"virtual ~VCCObject() {}\r\n" + L"\r\n" + INDENT + INDENT +
-                  L"virtual std::shared_ptr<vcc::IObject> clone() const override\r\n" + INDENT +
-                  INDENT + L"{\r\n" + INDENT + INDENT + INDENT +
-                  L"return std::make_shared<VCCObject>(*this);\r\n" + INDENT + INDENT + L"}\r\n" +
+                  L"virtual std::shared_ptr<vcc::IObject> clone() const override {\r\n" + INDENT +
+                  INDENT + INDENT + L"return std::make_shared<VCCObject>(*this);\r\n" + INDENT +
+                  INDENT + L"}\r\n" +
                   L"};\r\n"
                   "\r\n"
                   "class VCCObjectPtr : public vcc::BaseObject\r\n"
@@ -179,12 +179,11 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty) {
                   L"}\r\n"
                   "\r\n" +
                   INDENT + INDENT + L"virtual ~VCCObjectPtr() {}\r\n" + L"\r\n" + INDENT + INDENT +
-                  L"virtual std::shared_ptr<vcc::IObject> clone() const override\r\n" + INDENT +
-                  INDENT + L"{\r\n" + INDENT + INDENT + INDENT +
-                  L"auto obj = std::make_shared<VCCObjectPtr>(*this);\r\n" + INDENT + INDENT +
-                  INDENT + L"obj->cloneEnumA(this->_EnumA.get());\r\n" + INDENT + INDENT + INDENT +
-                  L"obj->cloneEnumB(this->_EnumB.get());\r\n" + INDENT + INDENT + INDENT +
-                  L"obj->cloneEnumC(this->_EnumC);\r\n" + INDENT + INDENT + INDENT +
+                  L"virtual std::shared_ptr<vcc::IObject> clone() const override {\r\n" + INDENT +
+                  INDENT + INDENT + L"auto obj = std::make_shared<VCCObjectPtr>(*this);\r\n" +
+                  INDENT + INDENT + INDENT + L"obj->cloneEnumA(this->_EnumA.get());\r\n" + INDENT +
+                  INDENT + INDENT + L"obj->cloneEnumB(this->_EnumB.get());\r\n" + INDENT + INDENT +
+                  INDENT + L"obj->cloneEnumC(this->_EnumC);\r\n" + INDENT + INDENT + INDENT +
                   L"obj->cloneEnumD(this->_EnumD);\r\n" + INDENT + INDENT + INDENT +
                   L"return obj;\r\n" + INDENT + INDENT +
                   L"}\r\n"

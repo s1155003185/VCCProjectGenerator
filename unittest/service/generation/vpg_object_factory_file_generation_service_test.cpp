@@ -81,7 +81,7 @@ TEST_F(VPGObjectFactoryFileGenerationServiceTest, Empty) {
         "        switch (objectType) {\r\n"
         "        default:\r\n"
         "            assert(false);\r\n"
-            "            break;\r\n"
+        "            break;\r\n"
         "        }\r\n"
         "        if (result != nullptr)\r\n"
         "            result->setParentObject(parentObject);\r\n"
