@@ -6,3 +6,7 @@
 # */generated/*:missingInclude
 
 # Add project-specific suppressions below (one per line)
+
+# Suppress missingIncludeSystem warnings - cppcheck doesn't need system headers for proper analysis
+missingIncludeSystem
+
