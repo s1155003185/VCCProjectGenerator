@@ -64,8 +64,7 @@ void VPGObjectFactoryFileGenerationService::generateCpp(
     content +=
         L"\r\n"
         "std::shared_ptr<vcc::IObject> ObjectFactory::create(const ObjectType &objectType, "
-        "std::shared_ptr<vcc::IObject> parentObject)\r\n"
-        "{\r\n" +
+        "std::shared_ptr<vcc::IObject> parentObject) {\r\n" +
         INDENT + L"std::shared_ptr<vcc::IObject> result = nullptr;\r\n" + INDENT + L"TRY\r\n" +
         INDENT + INDENT + L"switch (objectType) {\r\n";
     for (auto const& propertyType : propertyTypes) {

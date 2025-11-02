@@ -40,8 +40,7 @@ std::wstring VPGUnittestFileGenerationService::generateUnittestTestCase(
     TRY return L"\r\n"
                "TEST_F(" +
         testClassName + L", " + testName +
-        L")\r\n"
-        "{\r\n" +
+        L") {\r\n" +
         INDENT +
         getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"custom",
                                                   testClassName + testName, L"") +

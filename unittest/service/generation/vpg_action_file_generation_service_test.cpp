@@ -113,8 +113,7 @@ std::wstring getCppClass(const std::wstring& np, const std::wstring& actionName,
         "VPGGitForm" +
         actionName + L"::VPGGitForm" + actionName +
         L"(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm) : "
-        L"vcc::BaseAction()\r\n"
-        "{\r\n" +
+        L"vcc::BaseAction() {\r\n" +
         propertyStrSimple + L"}\r\n";
     if (propertyStr != propertyStrSimple)
         action +=
@@ -131,8 +130,7 @@ std::wstring getCppClass(const std::wstring& np, const std::wstring& actionName,
         L"\r\n"
         "std::wstring VPGGitForm" +
         actionName +
-        L"::getRedoMessageStart() const\r\n"
-        "{\r\n"
+        L"::getRedoMessageStart() const {\r\n"
         "    TRY\r\n"
         "        // <vcc:VPGGitForm" +
         actionName +
@@ -149,8 +147,7 @@ std::wstring getCppClass(const std::wstring& np, const std::wstring& actionName,
         "\r\n"
         "std::wstring VPGGitForm" +
         actionName +
-        L"::getRedoMessageComplete() const\r\n"
-        "{\r\n"
+        L"::getRedoMessageComplete() const {\r\n"
         "    TRY\r\n"
         "        // <vcc:VPGGitForm" +
         actionName +
@@ -167,8 +164,7 @@ std::wstring getCppClass(const std::wstring& np, const std::wstring& actionName,
         "\r\n"
         "std::wstring VPGGitForm" +
         actionName +
-        L"::GetUndoMessageStart() const\r\n"
-        "{\r\n"
+        L"::GetUndoMessageStart() const {\r\n"
         "    TRY\r\n"
         "        // <vcc:VPGGitForm" +
         actionName +
@@ -185,8 +181,7 @@ std::wstring getCppClass(const std::wstring& np, const std::wstring& actionName,
         "\r\n"
         "std::wstring VPGGitForm" +
         actionName +
-        L"::GetUndoMessageComplete() const\r\n"
-        "{\r\n"
+        L"::GetUndoMessageComplete() const {\r\n"
         "    TRY\r\n"
         "        // <vcc:VPGGitForm" +
         actionName +
@@ -203,8 +198,7 @@ std::wstring getCppClass(const std::wstring& np, const std::wstring& actionName,
         "\r\n"
         "std::shared_ptr<vcc::IResult> VPGGitForm" +
         actionName +
-        L"::onRedo()\r\n"
-        "{\r\n"
+        L"::onRedo() {\r\n"
         "    TRY\r\n"
         "        // <vcc:VPGGitForm" +
         actionName +
@@ -218,8 +212,7 @@ std::wstring getCppClass(const std::wstring& np, const std::wstring& actionName,
         "\r\n"
         "std::shared_ptr<vcc::IResult> VPGGitForm" +
         actionName +
-        L"::onUndo()\r\n"
-        "{\r\n"
+        L"::onUndo() {\r\n"
         "    TRY\r\n"
         "        // <vcc:VPGGitForm" +
         actionName +

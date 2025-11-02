@@ -67,8 +67,7 @@ void VPGPropertyAccessorFactoryFileGenerationService::generateCpp(
     content +=
         L"\r\n"
         "std::shared_ptr<vcc::IPropertyAccessor> "
-        "PropertyAccessorFactory::create(std::shared_ptr<vcc::IObject> object)\r\n"
-        "{\r\n" +
+        "PropertyAccessorFactory::create(std::shared_ptr<vcc::IObject> object) {\r\n" +
         INDENT +
         L"assert(object != nullptr);\r\n"
         "\r\n" +

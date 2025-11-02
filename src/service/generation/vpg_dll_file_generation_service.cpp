@@ -122,8 +122,7 @@ std::wstring VPGDllFileGenerationService::generateApplicationCpp(
     // Initialize Form
     functionMap.insert(std::make_pair(
         L"applicationCreateForm",
-        L"void *applicationCreateForm(int64_t objectType)\r\n"
-        "{\r\n"
+        L"void *applicationCreateForm(int64_t objectType) {\r\n"
         "    TRY\r\n"
         "        return Application::createForm(static_cast<ObjectType>(objectType)).get();\r\n"
         "    CATCH\r\n"
@@ -133,8 +132,7 @@ std::wstring VPGDllFileGenerationService::generateApplicationCpp(
     // Result
     functionMap.insert(std::make_pair(
         L"applicationGetResultErrorCode",
-        L"int64_t applicationGetResultErrorCode(void *result)\r\n"
-        "{\r\n"
+        L"int64_t applicationGetResultErrorCode(void *result) {\r\n"
         "    TRY\r\n"
         "        return Application::getResultErrorCode(static_cast<vcc::IObject *>(result));\r\n"
         "    CATCH\r\n"
@@ -155,8 +153,7 @@ std::wstring VPGDllFileGenerationService::generateApplicationCpp(
 
     functionMap.insert(std::make_pair(
         L"applicationIsErrorResult",
-        L"bool applicationIsErrorResult(void *result)\r\n"
-        "{\r\n"
+        L"bool applicationIsErrorResult(void *result) {\r\n"
         "    TRY\r\n"
         "        return Application::isErrorResult(static_cast<vcc::IObject *>(result));\r\n"
         "    CATCH\r\n"
@@ -164,8 +161,7 @@ std::wstring VPGDllFileGenerationService::generateApplicationCpp(
         "}\r\n"));
     functionMap.insert(std::make_pair(
         L"applicationIsWarningResult",
-        L"bool applicationIsWarningResult(void *result)\r\n"
-        "{\r\n"
+        L"bool applicationIsWarningResult(void *result) {\r\n"
         "    TRY\r\n"
         "        return Application::isWarningResult(static_cast<vcc::IObject *>(result));\r\n"
         "    CATCH\r\n"
@@ -183,8 +179,7 @@ std::wstring VPGDllFileGenerationService::generateApplicationCpp(
     // Form Action
     functionMap.insert(std::make_pair(
         L"applicationCreateActionArgument",
-        L"void *applicationCreateActionArgument(int64_t objectType)\r\n"
-        "{\r\n"
+        L"void *applicationCreateActionArgument(int64_t objectType) {\r\n"
         "    TRY\r\n"
         "        return "
         "Application::createActionArgument(static_cast<ObjectType>(objectType)).get();\r\n"
@@ -194,8 +189,7 @@ std::wstring VPGDllFileGenerationService::generateApplicationCpp(
 
     functionMap.insert(std::make_pair(
         L"applicationDoFormAction",
-        L"void *applicationDoFormAction(void *form, int64_t formProperty, void *argument)\r\n"
-        "{\r\n"
+        L"void *applicationDoFormAction(void *form, int64_t formProperty, void *argument) {\r\n"
         "    TRY\r\n"
         "        return Application::doFormAction(static_cast<vcc::IObject *>(form), formProperty, "
         "static_cast<vcc::IObject *>(argument)).get();\r\n"
@@ -204,8 +198,7 @@ std::wstring VPGDllFileGenerationService::generateApplicationCpp(
         "}\r\n"));
     functionMap.insert(std::make_pair(
         L"applicationGetFormActionCurrentSeqNo",
-        L"int64_t applicationGetFormActionCurrentSeqNo(void *form)\r\n"
-        "{\r\n"
+        L"int64_t applicationGetFormActionCurrentSeqNo(void *form) {\r\n"
         "    TRY\r\n"
         "        return Application::getFormActionCurrentSeqNo(static_cast<vcc::IObject "
         "*>(form));\r\n"
@@ -214,8 +207,7 @@ std::wstring VPGDllFileGenerationService::generateApplicationCpp(
         "}\r\n"));
     functionMap.insert(std::make_pair(
         L"applicationGetFormActionFirstSeqNo",
-        L"int64_t applicationGetFormActionFirstSeqNo(void *form)\r\n"
-        "{\r\n"
+        L"int64_t applicationGetFormActionFirstSeqNo(void *form) {\r\n"
         "    TRY\r\n"
         "        return Application::getFormActionFirstSeqNo(static_cast<vcc::IObject "
         "*>(form));\r\n"
@@ -224,8 +216,7 @@ std::wstring VPGDllFileGenerationService::generateApplicationCpp(
         "}\r\n"));
     functionMap.insert(std::make_pair(
         L"applicationGetFormActionLastSeqNo",
-        L"int64_t applicationGetFormActionLastSeqNo(void *form)\r\n"
-        "{\r\n"
+        L"int64_t applicationGetFormActionLastSeqNo(void *form) {\r\n"
         "    TRY\r\n"
         "        return Application::getFormActionLastSeqNo(static_cast<vcc::IObject *>(form));\r\n"
         "    CATCH\r\n"
@@ -234,16 +225,14 @@ std::wstring VPGDllFileGenerationService::generateApplicationCpp(
 
     functionMap.insert(std::make_pair(
         L"applicationRedoFormAction",
-        L"void applicationRedoFormAction(void *form, int64_t noOfStep)\r\n"
-        "{\r\n"
+        L"void applicationRedoFormAction(void *form, int64_t noOfStep) {\r\n"
         "    TRY\r\n"
         "        Application::redoFormAction(static_cast<vcc::IObject *>(form), noOfStep);\r\n"
         "    CATCH\r\n"
         "}\r\n"));
     functionMap.insert(std::make_pair(
         L"applicationRedoFormActionToSeqNo",
-        L"void applicationRedoFormActionToSeqNo(void *form, int64_t seqNo)\r\n"
-        "{\r\n"
+        L"void applicationRedoFormActionToSeqNo(void *form, int64_t seqNo) {\r\n"
         "    TRY\r\n"
         "        Application::redoFormActionToSeqNo(static_cast<vcc::IObject *>(form), seqNo);\r\n"
         "    CATCH\r\n"
@@ -251,16 +240,14 @@ std::wstring VPGDllFileGenerationService::generateApplicationCpp(
 
     functionMap.insert(std::make_pair(
         L"applicationUndoFormAction",
-        L"void applicationUndoFormAction(void *form, int64_t noOfStep)\r\n"
-        "{\r\n"
+        L"void applicationUndoFormAction(void *form, int64_t noOfStep) {\r\n"
         "    TRY\r\n"
         "        Application::undoFormAction(static_cast<vcc::IObject *>(form), noOfStep);\r\n"
         "    CATCH\r\n"
         "}\r\n"));
     functionMap.insert(std::make_pair(
         L"applicationUndoFormActionToSeqNo",
-        L"void applicationUndoFormActionToSeqNo(void *form, int64_t seqNo)\r\n"
-        "{\r\n"
+        L"void applicationUndoFormActionToSeqNo(void *form, int64_t seqNo) {\r\n"
         "    TRY\r\n"
         "        Application::undoFormActionToSeqNo(static_cast<vcc::IObject *>(form), seqNo);\r\n"
         "    CATCH\r\n"
@@ -268,8 +255,7 @@ std::wstring VPGDllFileGenerationService::generateApplicationCpp(
 
     functionMap.insert(std::make_pair(
         L"applicationClearFormAction",
-        L"int64_t applicationClearFormAction(void *form)\r\n"
-        "{\r\n"
+        L"int64_t applicationClearFormAction(void *form) {\r\n"
         "    TRY\r\n"
         "        return Application::clearFormAction(static_cast<vcc::IObject *>(form));\r\n"
         "    CATCH\r\n"
@@ -277,8 +263,7 @@ std::wstring VPGDllFileGenerationService::generateApplicationCpp(
         "}\r\n"));
     functionMap.insert(std::make_pair(
         L"applicationTruncateFormAction",
-        L"int64_t applicationTruncateFormAction(void *form)\r\n"
-        "{\r\n"
+        L"int64_t applicationTruncateFormAction(void *form) {\r\n"
         "    TRY\r\n"
         "        return Application::truncateFormAction(static_cast<vcc::IObject *>(form));\r\n"
         "    CATCH\r\n"
@@ -288,8 +273,7 @@ std::wstring VPGDllFileGenerationService::generateApplicationCpp(
     // Close Form
     functionMap.insert(std::make_pair(
         L"applicationIsFormClosable",
-        L"bool applicationIsFormClosed(void *form)\r\n"
-        "{\r\n"
+        L"bool applicationIsFormClosed(void *form) {\r\n"
         "    TRY\r\n"
         "        return Application::isFormClosed(static_cast<vcc::IObject *>(form));\r\n"
         "    CATCH\r\n"
@@ -297,8 +281,7 @@ std::wstring VPGDllFileGenerationService::generateApplicationCpp(
         "}\r\n"));
     functionMap.insert(std::make_pair(
         L"applicationIsFormClosed",
-        L"bool applicationIsFormClosable(void *form)\r\n"
-        "{\r\n"
+        L"bool applicationIsFormClosable(void *form) {\r\n"
         "    TRY\r\n"
         "        return Application::isFormClosable(static_cast<vcc::IObject *>(form));\r\n"
         "    CATCH\r\n"
@@ -306,8 +289,7 @@ std::wstring VPGDllFileGenerationService::generateApplicationCpp(
         "}\r\n"));
     functionMap.insert(std::make_pair(
         L"applicationCloseForm",
-        L"bool applicationCloseForm(void *form, bool isForce)\r\n"
-        "{\r\n"
+        L"bool applicationCloseForm(void *form, bool isForce) {\r\n"
         "    TRY\r\n"
         "        return Application::closeForm(static_cast<vcc::IObject *>(form), isForce);\r\n"
         "    CATCH\r\n"
