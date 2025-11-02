@@ -621,14 +621,14 @@ std::wstring VPGObjectFileGenerationService::getHppConstructor(
                       className.substr(!classPrefix.empty() ? classPrefix.length() : 0) +
                       L", exceptionType, errorMessage)";
             if (!initializeStr.empty()) {
-                result += L"\r\n" + INDENT + INDENT + L"{\r\n" + initializeStr + INDENT + INDENT +
+                result += L" {\r\n" + initializeStr + INDENT + INDENT +
                           L"}\r\n";
             } else
                 result += L" {}\r\n";
         } else {
             if (!vcc::isBlank(enumClass->getInheritClass()))
                 result += INDENT + INDENT + className + L"() : " + baseClassNameWithoutQuote +
-                          L"()\r\n" + INDENT + INDENT + L"{\r\n" + INDENT + INDENT + INDENT +
+                          L"() {\r\n" + INDENT + INDENT + INDENT +
                           L"_ObjectType = ObjectType::" +
                           className.substr(!classPrefix.empty() ? classPrefix.length() : 0) +
                           L";\r\n" + initializeStr + INDENT + INDENT + L"}\r\n";
@@ -638,7 +638,7 @@ std::wstring VPGObjectFileGenerationService::getHppConstructor(
                           className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L")";
                 if (!initializeStr.empty())
                     result +=
-                        L"\r\n" + INDENT + INDENT + L"{\r\n" + initializeStr + INDENT + INDENT;
+                        L" {\r\n" + initializeStr + INDENT + INDENT;
                 else
                     result += L" {";
                 result += L"}\r\n";
@@ -1431,7 +1431,7 @@ std::wstring VPGObjectFileGenerationService::getCppAction(const VPGEnumClass* en
             L")\r\n"
             "{\r\n" +
             INDENT + L"TRY\r\n" + INDENT + INDENT + L"switch(static_cast<" + enumClass->getName() +
-            L">(formProperty))\r\n" + INDENT + INDENT + L"{\r\n";
+            L">(formProperty)) {\r\n";
         for (auto const& property : enumClass->getProperties()) {
             if (property->getPropertyType() != VPGEnumClassAttributeType::Action) continue;
             result += INDENT + INDENT + L"case " + enumClass->getName() + L"::" +
