@@ -395,16 +395,6 @@ ifneq ($(PROJ_NAME_EXE),)
 endif
 	@echo Build Debug EXE Complete!
 
-unittest:
-	$(MAKE) create_debug_folder
-	$(MAKE) copy_debug_lib
-ifeq ($(IS_CPPCHECK_ENABLED),Y)
-	$(MAKE) cppcheck
-	@if [ $$? -ne 0 ]; then exit 1; fi
-endif
-	$(MAKE) gtest
-	@echo Build Unittest Complete!
-
 release:
 	$(MAKE) release_no_export
 ifneq ($(EXPORT_DLL_DIR),)
@@ -497,9 +487,9 @@ $(MAIN_EXE): $(ALL_PROJECT_CPP_FILES_EXE) $(ALL_PROJECT_O_FILES_EXE)
 	-o $(DEBUG_FOLDER)/$(MAIN_EXE)
 	@echo Build DEBUG EXE Complete
 
-gtest: $(GTEST_FILES) $(GTESTMAIN)
+gtest: $(GTEST_FILES) ${DEBUG_FOLDER}/${GTESTMAIN}
 
-$(GTESTMAIN): $(GTEST_CPP_FILES) $(GTEST_O_FILES)
+${DEBUG_FOLDER}/${GTESTMAIN}: $(GTEST_CPP_FILES) $(GTEST_O_FILES)
 	@echo Build gtest Start
 	$(CXX) $(CXXFLAGS_GTEST) \
 	$(GTEST_CPP_FOLDERS) \
@@ -509,6 +499,16 @@ $(GTESTMAIN): $(GTEST_CPP_FILES) $(GTEST_O_FILES)
 	-o ${DEBUG_FOLDER}/${GTESTMAIN} $(GTESTFLAGS)
 	@echo Build gtest Complete
 	${DEBUG_FOLDER}/${GTESTMAIN}
+
+unittest:
+	$(MAKE) create_debug_folder
+	$(MAKE) copy_debug_lib
+ifeq ($(IS_CPPCHECK_ENABLED),Y)
+	$(MAKE) cppcheck
+	@if [ $$? -ne 0 ]; then exit 1; fi
+endif
+	$(MAKE) gtest
+	@echo Build Unittest Complete!
 
 .cpp.o:
 	$(CXX) $(CXXFLAGS_DEBUG_CONTENT) $(INCDIRS) -c $< -o $@
