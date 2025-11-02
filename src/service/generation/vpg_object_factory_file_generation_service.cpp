@@ -67,13 +67,13 @@ void VPGObjectFactoryFileGenerationService::generateCpp(
         "std::shared_ptr<vcc::IObject> parentObject)\r\n"
         "{\r\n" +
         INDENT + L"std::shared_ptr<vcc::IObject> result = nullptr;\r\n" + INDENT + L"TRY\r\n" +
-        INDENT + INDENT + L"switch (objectType)\r\n" + INDENT + INDENT + L"{\r\n";
+        INDENT + INDENT + L"switch (objectType) {\r\n";
     for (auto const& propertyType : propertyTypes) {
         content += INDENT + INDENT + L"case ObjectType::" + propertyType + L":\r\n" + INDENT +
                    INDENT + INDENT + L"result = std::make_shared<" + projectPrefix + propertyType +
                    L">();\r\n" + INDENT + INDENT + INDENT + L"break;\r\n";
     }
-    content += L"" + INDENT + INDENT + L"default:\r\n" + INDENT + INDENT + INDENT +
+    content += INDENT + INDENT + L"default:\r\n" + INDENT + INDENT + INDENT +
                L"assert(false);\r\n" + INDENT + INDENT + INDENT + L"break;\r\n" + INDENT + INDENT +
                L"}\r\n" + INDENT + INDENT + L"if (result != nullptr)\r\n" + INDENT + INDENT +
                INDENT + L"result->setParentObject(parentObject);\r\n" + INDENT + L"CATCH\r\n" +

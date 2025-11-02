@@ -72,13 +72,13 @@ void VPGPropertyAccessorFactoryFileGenerationService::generateCpp(
         INDENT +
         L"assert(object != nullptr);\r\n"
         "\r\n" +
-        INDENT + L"switch (object->getObjectType())\r\n" + INDENT + L"{\r\n";
+        INDENT + L"switch (object->getObjectType()) {\r\n";
     for (auto const& propertyType : propertyTypes) {
         content += INDENT + L"case ObjectType::" + propertyType + L":\r\n" + INDENT + INDENT +
                    L"return std::make_shared<" + projectPrefix + propertyType +
                    L"PropertyAccessor>(object);\r\n";
     }
-    content += L"" + INDENT + L"default:\r\n" + INDENT + INDENT + L"assert(false);\r\n" + INDENT +
+    content += INDENT + L"default:\r\n" + INDENT + INDENT + L"assert(false);\r\n" + INDENT +
                INDENT + L"break;\r\n" + INDENT + L"}\r\n" + INDENT +
                L"return nullptr;\r\n"
                "}\r\n";

@@ -20,32 +20,30 @@ std::wstring getGeneralTypeContentHeader(const std::wstring& classPropertyName) 
     const std::wstring className = getClassNameFromPropertyClassName(classPropertyName);
     return INDENT + INDENT + L"auto obj = std::static_pointer_cast<" + className +
            L">(_Object);\r\n" + INDENT + INDENT + L"assert(obj != nullptr);\r\n" + INDENT + INDENT +
-           L"switch(static_cast<" + classPropertyName + L">(objectProperty))\r\n" + INDENT +
-           INDENT + L"{\r\n";
+           L"switch (static_cast<" + classPropertyName + L">(objectProperty)) {\r\n";
 }
 
 std::wstring getGeneralTypeIndexContentHeader(const std::wstring& classPropertyName) {
     const std::wstring className = getClassNameFromPropertyClassName(classPropertyName);
     return INDENT + INDENT + L"assert(index >= -1);\r\n" + INDENT + INDENT +
            L"auto obj = std::static_pointer_cast<" + className + L">(_Object);\r\n" + INDENT +
-           INDENT + L"assert(obj != nullptr);\r\n" + INDENT + INDENT + L"switch(static_cast<" +
-           classPropertyName + L">(objectProperty))\r\n" + INDENT + INDENT + L"{\r\n";
+           INDENT + L"assert(obj != nullptr);\r\n" + INDENT + INDENT + L"switch (static_cast<" +
+           classPropertyName + L">(objectProperty)) {\r\n";
 }
 
 std::wstring getGeneralTypeMapContentHeader(const std::wstring& classPropertyName) {
     const std::wstring className = getClassNameFromPropertyClassName(classPropertyName);
     return INDENT + INDENT + L"auto obj = std::static_pointer_cast<" + className +
            L">(_Object);\r\n" + INDENT + INDENT + L"assert(obj != nullptr);\r\n" + INDENT + INDENT +
-           L"assert(key != nullptr);\r\n" + INDENT + INDENT + L"switch(static_cast<" +
-           classPropertyName + L">(objectProperty))\r\n" + INDENT + INDENT + L"{\r\n";
+           L"assert(key != nullptr);\r\n" + INDENT + INDENT + L"switch (static_cast<" +
+           classPropertyName + L">(objectProperty)) {\r\n";
 }
 
 std::wstring getGeneralContentHeader(const std::wstring& classPropertyName) {
     const std::wstring className = getClassNameFromPropertyClassName(classPropertyName);
     return INDENT + INDENT + L"auto obj = std::static_pointer_cast<" + className +
            L">(_Object);\r\n" + INDENT + INDENT + L"assert(obj != nullptr);\r\n" + INDENT + INDENT +
-           L"switch(static_cast<" + classPropertyName + L">(objectProperty))\r\n" + INDENT +
-           INDENT + L"{\r\n";
+           L"switch (static_cast<" + classPropertyName + L">(objectProperty)) {\r\n";
 }
 
 bool VPGPropertyAccessorGenerationService::isIncludeString(
@@ -1022,8 +1020,7 @@ void VPGPropertyAccessorGenerationService::generateContainerRemove(
         result += INDENT + INDENT + L"assert(value != nullptr);\r\n" + INDENT + INDENT +
                   L"auto obj = std::static_pointer_cast<" + className + L">(_Object);\r\n" +
                   INDENT + INDENT + L"assert(obj != nullptr);\r\n" + INDENT + INDENT +
-                  L"switch(static_cast<" + propertyName + L">(objectProperty))\r\n" + INDENT +
-                  INDENT + L"{\r\n";
+                  L"switch (static_cast<" + propertyName + L">(objectProperty)) {\r\n";
 
         for (auto const& pair : vectorCasesGeneral) {
             result += INDENT + INDENT + L"case " + propertyName + L"::" + pair.first + L": {\r\n" +
@@ -1051,8 +1048,7 @@ void VPGPropertyAccessorGenerationService::generateContainerRemove(
         result += INDENT + INDENT + L"assert(value != nullptr);\r\n" + INDENT + INDENT +
                   L"auto obj = std::static_pointer_cast<" + className + L">(_Object);\r\n" +
                   INDENT + INDENT + L"assert(obj != nullptr);\r\n" + INDENT + INDENT +
-                  L"switch(static_cast<" + propertyName + L">(objectProperty))\r\n" + INDENT +
-                  INDENT + L"{\r\n";
+                  L"switch (static_cast<" + propertyName + L">(objectProperty)) {\r\n";
         for (auto const& pair : vectorCasesObject) {
             result += INDENT + INDENT + L"case " + propertyName + L"::" + pair.first + L":\r\n" +
                       pair.second + INDENT + INDENT + INDENT + L"break;\r\n";
