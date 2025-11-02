@@ -1,3 +1,5 @@
+#include "log_service.hpp"
+
 #include <gtest/gtest.h>
 
 #include <filesystem>
@@ -5,17 +7,12 @@
 #include <string>
 
 #include "file_helper.hpp"
-#include "log_service.hpp"
-#include <gtest/gtest.h>
-#include <filesystem>
-#include <memory>
-#include <string>
 
-TEST(LogServiceTest, LogTest) 
-{
-    std::wstring filePath = vcc::concatPaths({std::filesystem::current_path().wstring(), L"bin/Debug/AppLogs/LogServiceTest.log"});
+TEST(LogServiceTest, LogTest) {
+    std::wstring filePath = vcc::concatPaths(
+        {std::filesystem::current_path().wstring(), L"bin/Debug/AppLogs/LogServiceTest.log"});
     vcc::removeFile(filePath);
-    
+
     auto property = std::make_shared<vcc::LogConfig>(vcc::LogConfigInitialType::None);
     property->setUserID(L"user");
     property->setIsConsoleLog(false);
@@ -30,9 +27,11 @@ TEST(LogServiceTest, LogTest)
     std::wstring logWarningStr = vcc::LogService::logWarning(property.get(), L"id", L"message");
     std::wstring logErrorStr = vcc::LogService::logError(property.get(), L"id", L"message");
     std::wstring LogTerminalStr = vcc::LogService::logTerminal(property.get(), L"id", L"message");
-    std::wstring LogTerminalResultStr = vcc::LogService::logTerminalResult(property.get(), L"id", L"message");
+    std::wstring LogTerminalResultStr =
+        vcc::LogService::logTerminalResult(property.get(), L"id", L"message");
     std::wstring logProcessStr = vcc::LogService::logProcess(property.get(), L"id", L"message");
-    std::wstring logProcessResultStr = vcc::LogService::logProcessResult(property.get(), L"id", L"message");
+    std::wstring logProcessResultStr =
+        vcc::LogService::logProcessResult(property.get(), L"id", L"message");
     std::wstring logSQLStr = vcc::LogService::logSQL(property.get(), L"id", L"message");
     std::wstring logSQLResultStr = vcc::LogService::logSQLResult(property.get(), L"id", L"message");
     EXPECT_EQ(logInfoStr, vcc::readFileOneLine(filePath, 0));

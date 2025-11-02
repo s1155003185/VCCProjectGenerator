@@ -1,3 +1,5 @@
+#include "map_helper.hpp"
+
 #include <gtest/gtest.h>
 
 #include <algorithm>
@@ -7,41 +9,28 @@
 
 #include "base_object.hpp"
 #include "i_object.hpp"
-#include "map_helper.hpp"
-#include <gtest/gtest.h>
-#include <algorithm>
-#include <map>
-#include <memory>
-#include <string>
 
-class MapHelperTestObj : public vcc::BaseObject
-{
-    public:
-        MapHelperTestObj() = default;
-        ~MapHelperTestObj() {}
-        
-        virtual std::shared_ptr<vcc::IObject> clone() const override { return nullptr; };
+class MapHelperTestObj : public vcc::BaseObject {
+   public:
+    MapHelperTestObj() = default;
+    ~MapHelperTestObj() {}
+
+    virtual std::shared_ptr<vcc::IObject> clone() const override { return nullptr; };
 };
 
-TEST(MapHelperTest, FlipMap)
-{
+TEST(MapHelperTest, FlipMap) {
     std::map<int, int> m, result;
-    m.insert(std::make_pair(1,2));
-    result.insert(std::make_pair(2,1));
+    m.insert(std::make_pair(1, 2));
+    result.insert(std::make_pair(2, 1));
     EXPECT_EQ(vcc::flip(m), result);
 }
 
-TEST(MapHelperTest, FlipPair)
-{
-    EXPECT_EQ(vcc::flip(std::make_pair(1,2)), std::make_pair(2,1));
-}
+TEST(MapHelperTest, FlipPair) { EXPECT_EQ(vcc::flip(std::make_pair(1, 2)), std::make_pair(2, 1)); }
 
-TEST(MapHelperTest, Find)
-{
+TEST(MapHelperTest, Find) {
     std::map<int64_t, std::shared_ptr<MapHelperTestObj>> tmp;
     vcc::setIObject(tmp, (int64_t)1, std::make_shared<MapHelperTestObj>());
     std::set<int64_t> result;
     result.insert(1);
     EXPECT_EQ(vcc::find(tmp, tmp[1]), result);
 }
-

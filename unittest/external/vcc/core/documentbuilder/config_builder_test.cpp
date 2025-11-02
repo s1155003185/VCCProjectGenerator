@@ -1,18 +1,15 @@
+#include "config_builder.hpp"
+
 #include <gtest/gtest.h>
 
 #include <memory>
 #include <string>
 
 #include "config.hpp"
-#include "config_builder.hpp"
-#include <gtest/gtest.h>
-#include <memory>
-#include <string>
 
-TEST(ConfigBuilderTest, Full)
-{
+TEST(ConfigBuilderTest, Full) {
     auto reader = std::make_unique<vcc::ConfigBuilder>();
-    
+
     auto element = std::make_shared<vcc::Config>();
     std::wstring str = L"";
     str += L"# command\r\n";

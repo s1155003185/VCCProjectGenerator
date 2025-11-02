@@ -3,45 +3,38 @@
 #include <vector>
 
 #include "application.hpp"
-
 #include "log_config.hpp"
-#include "vpg_process_manager.hpp"
 #include "string_helper.hpp"
-#include <iostream>
-#include <string>
-#include <vector>
+#include "vpg_process_manager.hpp"
 
-int main(int argc, char **argv)
-{
-	Application::Run();
+int main(int argc, char** argv) {
+    Application::Run();
 
-	auto logConfig = std::make_shared<vcc::LogConfig>();
-	logConfig->initialize(vcc::LogConfigInitialType::None);
-	logConfig->setIsConsoleLog(false);
-	try {
-		if (argc < 2) {
-			std::wcout << L"No Argument" << std::endl;
-			return 0;
-		}
-		std::vector<std::wstring> argList;
-		for (int i = 0; i < argc; i++)
-			argList.push_back(vcc::str2wstr(argv[i]));
+    auto logConfig = std::make_shared<vcc::LogConfig>();
+    logConfig->initialize(vcc::LogConfigInitialType::None);
+    logConfig->setIsConsoleLog(false);
+    try {
+        if (argc < 2) {
+            std::wcout << L"No Argument" << std::endl;
+            return 0;
+        }
+        std::vector<std::wstring> argList;
+        for (int i = 0; i < argc; i++) argList.push_back(vcc::str2wstr(argv[i]));
 
-		// debug use
-		// argList.clear();
-		// argList.push_back(L"vpg");
-		// argList.push_back(L"-Generate");
+        // debug use
+        // argList.clear();
+        // argList.push_back(L"vpg");
+        // argList.push_back(L"-Generate");
 
-		VPGProcessManager process(logConfig);
-		process.execute(argList);
-	} catch (std::exception &ex) {
-		const vcc::IException *ie = dynamic_cast<const vcc::IException *>(&ex);
-		if (ie != nullptr)
-			vcc::LogService::logError(logConfig.get(), L"", ie->getErrorMessage());
-		else
-			vcc::LogService::logError(logConfig.get(), L"", vcc::str2wstr(ex.what()));
-		return -1;
-	}
-	return 0;
+        VPGProcessManager process(logConfig);
+        process.execute(argList);
+    } catch (std::exception& ex) {
+        const vcc::IException* ie = dynamic_cast<const vcc::IException*>(&ex);
+        if (ie != nullptr)
+            vcc::LogService::logError(logConfig.get(), L"", ie->getErrorMessage());
+        else
+            vcc::LogService::logError(logConfig.get(), L"", vcc::str2wstr(ex.what()));
+        return -1;
+    }
+    return 0;
 }
-

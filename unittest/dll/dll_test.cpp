@@ -1,9 +1,7 @@
-#include <gtest/gtest.h>
-
-#include <string>
-
 #include "dll.hpp"
+
 #include <gtest/gtest.h>
+
 #include <string>
 
 #define DLL_NAME L"libvpg"
@@ -11,20 +9,21 @@
 TEST(DllTest, LoadDll) {
     std::wstring dllName = DLL_NAME;
 
-    #ifdef _WIN32
+#ifdef _WIN32
     dllName += L".dll";
-    #elif __aarch64__
+#elif __aarch64__
     dllName = L"bin/Debug/" + dllName + L".dylib";
-    #else
+#else
     dllName = L"bin/Debug/" + dllName + L".so";
-    #endif
+#endif
     vcc::Dll h(dllName);
     EXPECT_TRUE(h.getH());
-    
-    typedef int (*getVersionFunction)(wchar_t **);
-    const getVersionFunction getVersion = reinterpret_cast<getVersionFunction>(h.getProcedure(L"getVersion"));
+
+    typedef int (*getVersionFunction)(wchar_t**);
+    const getVersionFunction getVersion =
+        reinterpret_cast<getVersionFunction>(h.getProcedure(L"getVersion"));
     EXPECT_TRUE(getVersion != nullptr);
-    
+
     wchar_t* versionStr = nullptr;
     int result = getVersion(&versionStr);
     EXPECT_EQ(result, 0);

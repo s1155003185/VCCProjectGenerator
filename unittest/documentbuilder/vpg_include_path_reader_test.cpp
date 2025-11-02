@@ -1,3 +1,5 @@
+#include "vpg_include_path_reader.hpp"
+
 #include <gtest/gtest.h>
 
 #include <string>
@@ -5,15 +7,11 @@
 
 #include "platform_type.hpp"
 #include "string_helper.hpp"
-#include "vpg_include_path_reader.hpp"
-#include <gtest/gtest.h>
-#include <string>
-#include <vector>
 
-TEST(VPGIncludePathReaderTest, Normal)
-{
+TEST(VPGIncludePathReaderTest, Normal) {
     auto reader = std::make_unique<VPGIncludePathReader>();
-    std::wstring code = L""
+    std::wstring code =
+        L""
         L"#parma once\r\n"
         L"#include <sth>\r\n"
         L"\r\n"
@@ -146,7 +144,7 @@ TEST(VPGIncludePathReaderTest, Normal)
 //         // L"typedef basic_string<char, char_traits<char>, allocator<char> >\r\n"
 //         // L"string;\r\n"
 //         // L"_STD_END\r\n";
-    
+
 //     std::set<std::wstring> classList;
 //     reader->parse(vcc::PlatformType::Window, code, classList);
 
@@ -160,7 +158,7 @@ TEST(VPGIncludePathReaderTest, Normal)
 // TEST(VPGIncludePathReaderTest, Linux)
 // {
 //     //assert(false);
-//     DECLARE_UPTR(VPGIncludePathReader, reader); 
+//     DECLARE_UPTR(VPGIncludePathReader, reader);
 //     std::wstring code = L"";
 //     std::set<std::wstring> classList;
 //     reader->parse(vcc::PlatformType::Linux, code, classList);

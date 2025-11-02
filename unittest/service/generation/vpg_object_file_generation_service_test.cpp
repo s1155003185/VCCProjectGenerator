@@ -1,3 +1,5 @@
+#include "vpg_object_file_generation_service.hpp"
+
 #include <gtest/gtest.h>
 
 #include <filesystem>
@@ -8,24 +10,15 @@
 
 #include "class_macro.hpp"
 #include "file_helper.hpp"
-
 #include "vpg_enum_class_reader.hpp"
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_global.hpp"
 #include "vpg_include_path_service.hpp"
-#include "vpg_object_file_generation_service.hpp"
-#include <gtest/gtest.h>
-#include <filesystem>
-#include <map>
-#include <memory>
-#include <string>
-#include <vector>
 
 static std::map<std::wstring, std::wstring> _IncludeFiles;
 static std::map<std::wstring, std::shared_ptr<VPGEnumClass>> _EnumClasses;
 
-class VPGObjectFileGenerationServiceTest : public testing::Test 
-{
+class VPGObjectFileGenerationServiceTest : public testing::Test {
     GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGObjectFileGenerationServiceTest/");
     GETSET(std::wstring, FilePathHpp, L"");
@@ -33,40 +26,39 @@ class VPGObjectFileGenerationServiceTest : public testing::Test
     GETSET(std::wstring, ActionFolderPathHpp, L"");
     GETSET(std::wstring, ActionFolderPathCpp, L"");
 
-    public:
-        void SetUp() override
-        {
-            this->_LogConfig = std::make_shared<vcc::LogConfig>();
-            this->_LogConfig->setIsConsoleLog(false);
-            std::filesystem::remove_all(PATH(this->getWorkspace()));
+   public:
+    void SetUp() override {
+        this->_LogConfig = std::make_shared<vcc::LogConfig>();
+        this->_LogConfig->setIsConsoleLog(false);
+        std::filesystem::remove_all(PATH(this->getWorkspace()));
 
-            this->_FilePathHpp = vcc::concatPaths({this->_Workspace, L"vcc_object.hpp"});
-            this->_FilePathCpp = vcc::concatPaths({this->_Workspace, L"vcc_object.cpp"});
+        this->_FilePathHpp = vcc::concatPaths({this->_Workspace, L"vcc_object.hpp"});
+        this->_FilePathCpp = vcc::concatPaths({this->_Workspace, L"vcc_object.cpp"});
 
-            if (_IncludeFiles.empty())
-                VPGIncludePathService::getWorkspaceIncludePath(L"", VPGGlobal::getFileGenerationManager()->getClassMacros(), _IncludeFiles, _EnumClasses);
-        }
+        if (_IncludeFiles.empty())
+            VPGIncludePathService::getWorkspaceIncludePath(
+                L"", VPGGlobal::getFileGenerationManager()->getClassMacros(), _IncludeFiles,
+                _EnumClasses);
+    }
 
-        void TearDown() override
-        {
-            std::filesystem::remove_all(PATH(this->getWorkspace()));
-        }
+    void TearDown() override { std::filesystem::remove_all(PATH(this->getWorkspace())); }
 };
 
-TEST_F(VPGObjectFileGenerationServiceTest, Empty)
-{
+TEST_F(VPGObjectFileGenerationServiceTest, Empty) {
     auto option = std::make_shared<VPGConfig>();
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);    
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_FALSE(vcc::isFilePresent(this->getFilePathCpp()));
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, Single)
-{
-    std::wstring enumClass = L"#pragma once\r\n"
+TEST_F(VPGObjectFileGenerationServiceTest, Single) {
+    std::wstring enumClass =
+        L"#pragma once\r\n"
         "\r\n"
         "enum class VPGObjectProperty\r\n"
         "{\r\n"
@@ -74,7 +66,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
         "    EnumB // MAP(int, std::wstring, EnumB)\r\n"
         "};\r\n"
         "\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -86,39 +79,42 @@ TEST_F(VPGObjectFileGenerationServiceTest, Single)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_FALSE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()), L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#pragma once\r\n"
-        "\r\n"
-        "#include <string>\r\n"
-        "\r\n"
-        "#include \"base_object.hpp\"\r\n"
-        "#include \"class_macro.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "\r\n"
-        "class VPGObject : public vcc::BaseObject\r\n"
-        "{\r\n"
-        "    GETSET(std::wstring, EnumA, L\"\")\r\n"
-        "    MAP(int, std::wstring, EnumB)\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGObject() : vcc::BaseObject(ObjectType::Object) {}\r\n"
-        "        virtual ~VPGObject() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
-        "        {\r\n"
-        "            return std::make_shared<VPGObject>(*this);\r\n"
-        "        }\r\n"
-        "};\r\n");
+    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#pragma once\r\n"
+              "\r\n"
+              "#include <string>\r\n"
+              "\r\n"
+              "#include \"base_object.hpp\"\r\n"
+              "#include \"class_macro.hpp\"\r\n"
+              "#include \"object_type.hpp\"\r\n"
+              "\r\n"
+              "class VPGObject : public vcc::BaseObject\r\n"
+              "{\r\n"
+              "    GETSET(std::wstring, EnumA, L\"\")\r\n"
+              "    MAP(int, std::wstring, EnumB)\r\n"
+              "\r\n"
+              "    public:\r\n"
+              "        VPGObject() : vcc::BaseObject(ObjectType::Object) {}\r\n"
+              "        virtual ~VPGObject() {}\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
+              "        {\r\n"
+              "            return std::make_shared<VPGObject>(*this);\r\n"
+              "        }\r\n"
+              "};\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, Namespace)
-{
-    std::wstring enumClass = L"#pragma once\r\n"
+TEST_F(VPGObjectFileGenerationServiceTest, Namespace) {
+    std::wstring enumClass =
+        L"#pragma once\r\n"
         "\r\n"
         "enum class VPGObjectAProperty\r\n"
         "{\r\n"
@@ -157,7 +153,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Namespace)
         "    }\r\n"
         "};"
         "\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -166,12 +163,16 @@ TEST_F(VPGObjectFileGenerationServiceTest, Namespace)
     auto option = std::make_shared<VPGConfig>();
     option->setProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_FALSE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()), L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+    EXPECT_EQ(
+        vcc::readFile(this->getFilePathHpp()),
+        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
         "#include <string>\r\n"
@@ -231,7 +232,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Namespace)
         "            GETSET(std::wstring, EnumA, L\"\")\r\n"
         "\r\n"
         "            public:\r\n"
-        "                VPGObjectNamespaceNested() : vcc::BaseObject(ObjectType::ObjectNamespaceNested) {}\r\n"
+        "                VPGObjectNamespaceNested() : "
+        "vcc::BaseObject(ObjectType::ObjectNamespaceNested) {}\r\n"
         "                virtual ~VPGObjectNamespaceNested() {}\r\n"
         "\r\n"
         "                virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
@@ -265,7 +267,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Namespace)
         "            GETSET(std::wstring, EnumA, L\"\")\r\n"
         "\r\n"
         "            public:\r\n"
-        "                VPGObjectNamespaceNested() : vcc::BaseObject(ObjectType::ObjectNamespaceNested) {}\r\n"
+        "                VPGObjectNamespaceNested() : "
+        "vcc::BaseObject(ObjectType::ObjectNamespaceNested) {}\r\n"
         "                virtual ~VPGObjectNamespaceNested() {}\r\n"
         "\r\n"
         "                virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
@@ -277,16 +280,17 @@ TEST_F(VPGObjectFileGenerationServiceTest, Namespace)
         "}\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, Object)
-{
-    std::wstring enumClass = L"#pragma once\r\n"
+TEST_F(VPGObjectFileGenerationServiceTest, Object) {
+    std::wstring enumClass =
+        L"#pragma once\r\n"
         "\r\n"
         "enum class VPGObjectProperty\r\n"
         "{\r\n"
         "    EnumA, // GETSET_SPTR(VPGClassA, EnumA)\r\n"
         "    EnumB //MAP_SPTR_R(std::wstring, VPGClassB, EnumB)\r\n"
         "};\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -299,60 +303,64 @@ TEST_F(VPGObjectFileGenerationServiceTest, Object)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
 
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_FALSE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()), 
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#pragma once\r\n"
-        "\r\n"
-        "#include <memory>\r\n"
-        "#include <string>\r\n"
-        "\r\n"
-        "#include \"base_object.hpp\"\r\n"
-        "#include \"class_macro.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "#include \"vpg_class_a.hpp\"\r\n"
-        "#include \"vpg_class_b.hpp\"\r\n"
-        "\r\n"
-        "class VPGObject : public vcc::BaseObject\r\n"
-        "{\r\n"
-        "    GETSET_SPTR(VPGClassA, EnumA)\r\n"
-        "    MAP_SPTR_R(std::wstring, VPGClassB, EnumB)\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGObject() : vcc::BaseObject(ObjectType::Object)\r\n"
-        "        {\r\n"
-        "            _EnumA = std::make_shared<VPGClassA>();\r\n"
-        "        }\r\n"
-        "\r\n"
-        "        virtual ~VPGObject() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
-        "        {\r\n"
-        "            auto obj = std::make_shared<VPGObject>(*this);\r\n"
-        "            obj->cloneEnumA(this->_EnumA.get());\r\n"
-        "            obj->cloneEnumB(this->_EnumB);\r\n"
-        "            return obj;\r\n"
-        "        }\r\n"
-        "};\r\n");
+    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#pragma once\r\n"
+              "\r\n"
+              "#include <memory>\r\n"
+              "#include <string>\r\n"
+              "\r\n"
+              "#include \"base_object.hpp\"\r\n"
+              "#include \"class_macro.hpp\"\r\n"
+              "#include \"object_type.hpp\"\r\n"
+              "#include \"vpg_class_a.hpp\"\r\n"
+              "#include \"vpg_class_b.hpp\"\r\n"
+              "\r\n"
+              "class VPGObject : public vcc::BaseObject\r\n"
+              "{\r\n"
+              "    GETSET_SPTR(VPGClassA, EnumA)\r\n"
+              "    MAP_SPTR_R(std::wstring, VPGClassB, EnumB)\r\n"
+              "\r\n"
+              "    public:\r\n"
+              "        VPGObject() : vcc::BaseObject(ObjectType::Object)\r\n"
+              "        {\r\n"
+              "            _EnumA = std::make_shared<VPGClassA>();\r\n"
+              "        }\r\n"
+              "\r\n"
+              "        virtual ~VPGObject() {}\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
+              "        {\r\n"
+              "            auto obj = std::make_shared<VPGObject>(*this);\r\n"
+              "            obj->cloneEnumA(this->_EnumA.get());\r\n"
+              "            obj->cloneEnumB(this->_EnumB);\r\n"
+              "            return obj;\r\n"
+              "        }\r\n"
+              "};\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, getSetCustom)
-{
-    std::wstring enumClass = L"#pragma once\r\n"
+TEST_F(VPGObjectFileGenerationServiceTest, getSetCustom) {
+    std::wstring enumClass =
+        L"#pragma once\r\n"
         "\r\n"
         "enum class VPGObjectProperty\r\n"
         "{\r\n"
         "    EnumA, // GETCUSTOM(int64_t, EnumA, return 100;)\r\n"
         "    EnumB, // SETCUSTOM(EnumB , int64_t, argument, return 100;)\r\n"
-        "    EnumC, // GETCUSTOM(int64_t, EnumC, return 100;) SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;)\r\n"
+        "    EnumC, // GETCUSTOM(int64_t, EnumC, return 100;) SETCUSTOM(EnumC, int64_t, enumC, "
+        "_EnumC = enumC;)\r\n"
         "    EnumD, // GETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
         "    EnumE // SETCUSTOM_SPTR(EnumE, VPGClassA, enumC, _EnumC = enumC;)\r\n"
         "};\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -362,45 +370,47 @@ TEST_F(VPGObjectFileGenerationServiceTest, getSetCustom)
     option->setProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_FALSE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()), 
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#pragma once\r\n"
-        "\r\n"
-        "#include <memory>\r\n"
-        "\r\n"
-        "#include \"base_object.hpp\"\r\n"
-        "#include \"class_macro.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "#include \"vpg_class_a.hpp\"\r\n"
-        "\r\n"
-        "class VPGObject : public vcc::BaseObject\r\n"
-        "{\r\n"
-        "    GETCUSTOM(int64_t, EnumA, return 100;)\r\n"
-        "    SETCUSTOM(EnumB , int64_t, argument, return 100;)\r\n"
-        "    GETCUSTOM(int64_t, EnumC, return 100;)\r\n"
-        "    SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;)\r\n"
-        "    GETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
-        "    SETCUSTOM_SPTR(EnumE, VPGClassA, enumC, _EnumC = enumC;)\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGObject() : vcc::BaseObject(ObjectType::Object) {}\r\n"
-        "        virtual ~VPGObject() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
-        "        {\r\n"
-        "            return std::make_shared<VPGObject>(*this);\r\n"
-        "        }\r\n"
-        "};\r\n");
+    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#pragma once\r\n"
+              "\r\n"
+              "#include <memory>\r\n"
+              "\r\n"
+              "#include \"base_object.hpp\"\r\n"
+              "#include \"class_macro.hpp\"\r\n"
+              "#include \"object_type.hpp\"\r\n"
+              "#include \"vpg_class_a.hpp\"\r\n"
+              "\r\n"
+              "class VPGObject : public vcc::BaseObject\r\n"
+              "{\r\n"
+              "    GETCUSTOM(int64_t, EnumA, return 100;)\r\n"
+              "    SETCUSTOM(EnumB , int64_t, argument, return 100;)\r\n"
+              "    GETCUSTOM(int64_t, EnumC, return 100;)\r\n"
+              "    SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;)\r\n"
+              "    GETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
+              "    SETCUSTOM_SPTR(EnumE, VPGClassA, enumC, _EnumC = enumC;)\r\n"
+              "\r\n"
+              "    public:\r\n"
+              "        VPGObject() : vcc::BaseObject(ObjectType::Object) {}\r\n"
+              "        virtual ~VPGObject() {}\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
+              "        {\r\n"
+              "            return std::make_shared<VPGObject>(*this);\r\n"
+              "        }\r\n"
+              "};\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, inheritClass)
-{
-    std::wstring enumClass = L""
+TEST_F(VPGObjectFileGenerationServiceTest, inheritClass) {
+    std::wstring enumClass =
+        L""
         "#pragma once\r\n"
         "\r\n"
         "//@@Inherit{ \"Class\": \"GitLog\" }\r\n"
@@ -417,7 +427,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, inheritClass)
         "    EnumVisible  // GETSET(std::wstring, EnumVisible, L\"\")\r\n"
         "};\r\n"
         "\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -427,47 +438,48 @@ TEST_F(VPGObjectFileGenerationServiceTest, inheritClass)
     option->setProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"GitLog", L"git_service.hpp"));
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_FALSE(vcc::isFilePresent(this->getFilePathCpp()));
 
     EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#pragma once\r\n"
-        "\r\n"
-        "#include <string>\r\n"
-        "\r\n"
-        "#include \"base_object.hpp\"\r\n"
-        "#include \"class_macro.hpp\"\r\n"
-        "#include \"git_service.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "\r\n"
-        "class VPGGitLog : public GitLog\r\n"
-        "{\r\n"
-        "    GETSET(std::wstring, EnumVisible, L\"\")\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGGitLog() : GitLog()\r\n"
-        "        {\r\n"
-        "            _ObjectType = ObjectType::GitLog;\r\n"
-        "        }\r\n"
-        "        virtual ~VPGGitLog() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
-        "        {\r\n"
-        "            auto obj = std::make_shared<VPGGitLog>(*this);\r\n"
-        "            obj->cloneEnumA1(this->_EnumA1.get());\r\n"
-        "            obj->cloneEnumB1(this->_EnumB1);\r\n"
-        "            obj->cloneEnumC1(this->_EnumC1);\r\n"
-        "            obj->cloneEnumD1(this->_EnumD1);\r\n"
-        "            return obj;\r\n"
-        "        }\r\n"
-        "};\r\n");
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#pragma once\r\n"
+              "\r\n"
+              "#include <string>\r\n"
+              "\r\n"
+              "#include \"base_object.hpp\"\r\n"
+              "#include \"class_macro.hpp\"\r\n"
+              "#include \"git_service.hpp\"\r\n"
+              "#include \"object_type.hpp\"\r\n"
+              "\r\n"
+              "class VPGGitLog : public GitLog\r\n"
+              "{\r\n"
+              "    GETSET(std::wstring, EnumVisible, L\"\")\r\n"
+              "\r\n"
+              "    public:\r\n"
+              "        VPGGitLog() : GitLog()\r\n"
+              "        {\r\n"
+              "            _ObjectType = ObjectType::GitLog;\r\n"
+              "        }\r\n"
+              "        virtual ~VPGGitLog() {}\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
+              "        {\r\n"
+              "            auto obj = std::make_shared<VPGGitLog>(*this);\r\n"
+              "            obj->cloneEnumA1(this->_EnumA1.get());\r\n"
+              "            obj->cloneEnumB1(this->_EnumB1);\r\n"
+              "            obj->cloneEnumC1(this->_EnumC1);\r\n"
+              "            obj->cloneEnumD1(this->_EnumD1);\r\n"
+              "            return obj;\r\n"
+              "        }\r\n"
+              "};\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, Multi)
-{
+TEST_F(VPGObjectFileGenerationServiceTest, Multi) {
     std::wstring enumClass =
         L"#pragma once\r\n"
         "\r\n"
@@ -480,7 +492,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Multi)
         "{\r\n"
         "    EnumA // GETSET(std::wstring, EnumA, L\"\")\r\n"
         "};\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -493,62 +506,66 @@ TEST_F(VPGObjectFileGenerationServiceTest, Multi)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassB", L"vpg_class_b.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassC", L"vpg_class_c.hpp"));
 
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_FALSE(vcc::isFilePresent(this->getFilePathCpp()));
 
     EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#pragma once\r\n"
-        "\r\n"
-        "#include <string>\r\n"
-        "\r\n"
-        "#include \"base_object.hpp\"\r\n"
-        "#include \"class_macro.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "\r\n"
-        "class VPGObjectA : public vcc::BaseObject\r\n"
-        "{\r\n"
-        "    GETSET(std::wstring, EnumA, L\"\")\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGObjectA() : vcc::BaseObject(ObjectType::ObjectA) {}\r\n"
-        "        virtual ~VPGObjectA() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
-        "        {\r\n"
-        "            return std::make_shared<VPGObjectA>(*this);\r\n"
-        "        }\r\n"
-        "};\r\n"
-        "\r\n"
-        "class VPGObjectB : public vcc::BaseObject\r\n"
-        "{\r\n"
-        "    GETSET(std::wstring, EnumA, L\"\")\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGObjectB() : vcc::BaseObject(ObjectType::ObjectB) {}\r\n"
-        "        virtual ~VPGObjectB() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
-        "        {\r\n"
-        "            return std::make_shared<VPGObjectB>(*this);\r\n"
-        "        }\r\n"
-        "};\r\n");
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#pragma once\r\n"
+              "\r\n"
+              "#include <string>\r\n"
+              "\r\n"
+              "#include \"base_object.hpp\"\r\n"
+              "#include \"class_macro.hpp\"\r\n"
+              "#include \"object_type.hpp\"\r\n"
+              "\r\n"
+              "class VPGObjectA : public vcc::BaseObject\r\n"
+              "{\r\n"
+              "    GETSET(std::wstring, EnumA, L\"\")\r\n"
+              "\r\n"
+              "    public:\r\n"
+              "        VPGObjectA() : vcc::BaseObject(ObjectType::ObjectA) {}\r\n"
+              "        virtual ~VPGObjectA() {}\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
+              "        {\r\n"
+              "            return std::make_shared<VPGObjectA>(*this);\r\n"
+              "        }\r\n"
+              "};\r\n"
+              "\r\n"
+              "class VPGObjectB : public vcc::BaseObject\r\n"
+              "{\r\n"
+              "    GETSET(std::wstring, EnumA, L\"\")\r\n"
+              "\r\n"
+              "    public:\r\n"
+              "        VPGObjectB() : vcc::BaseObject(ObjectType::ObjectB) {}\r\n"
+              "        virtual ~VPGObjectB() {}\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
+              "        {\r\n"
+              "            return std::make_shared<VPGObjectB>(*this);\r\n"
+              "        }\r\n"
+              "};\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, includeFiles)
-{
-    std::wstring enumClass = L""
+TEST_F(VPGObjectFileGenerationServiceTest, includeFiles) {
+    std::wstring enumClass =
+        L""
         "#pragma once\r\n"
         "\r\n"
-        "//@@Include{ \"SystemFiles\": [ \"vector\", \"map\" ], \"CustomFiles\" : [\"a.hpp\", \"b.hpp\"] }\r\n"
+        "//@@Include{ \"SystemFiles\": [ \"vector\", \"map\" ], \"CustomFiles\" : [\"a.hpp\", "
+        "\"b.hpp\"] }\r\n"
         "enum class VPGGitLogProperty\r\n"
         "{\r\n"
         "    EnumA // GETSET(std::wstring, EnumA, L\"\") \r\n"
         "};\r\n"
         "\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -557,53 +574,58 @@ TEST_F(VPGObjectFileGenerationServiceTest, includeFiles)
     auto option = std::make_shared<VPGConfig>();
     option->setProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_FALSE(vcc::isFilePresent(this->getFilePathCpp()));
 
     EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#pragma once\r\n"
-        "\r\n"
-        "#include <map>\r\n"
-        "#include <string>\r\n"
-        "#include <vector>\r\n"
-        "\r\n"
-        "#include \"a.hpp\"\r\n"
-        "#include \"b.hpp\"\r\n"
-        "#include \"base_object.hpp\"\r\n"
-        "#include \"class_macro.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "\r\n"
-        "class VPGGitLog : public vcc::BaseObject\r\n"
-        "{\r\n"
-        "    GETSET(std::wstring, EnumA, L\"\")\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGGitLog() : vcc::BaseObject(ObjectType::GitLog) {}\r\n"
-        "        virtual ~VPGGitLog() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
-        "        {\r\n"
-        "            return std::make_shared<VPGGitLog>(*this);\r\n"
-        "        }\r\n"
-        "};\r\n");
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#pragma once\r\n"
+              "\r\n"
+              "#include <map>\r\n"
+              "#include <string>\r\n"
+              "#include <vector>\r\n"
+              "\r\n"
+              "#include \"a.hpp\"\r\n"
+              "#include \"b.hpp\"\r\n"
+              "#include \"base_object.hpp\"\r\n"
+              "#include \"class_macro.hpp\"\r\n"
+              "#include \"object_type.hpp\"\r\n"
+              "\r\n"
+              "class VPGGitLog : public vcc::BaseObject\r\n"
+              "{\r\n"
+              "    GETSET(std::wstring, EnumA, L\"\")\r\n"
+              "\r\n"
+              "    public:\r\n"
+              "        VPGGitLog() : vcc::BaseObject(ObjectType::GitLog) {}\r\n"
+              "        virtual ~VPGGitLog() {}\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
+              "        {\r\n"
+              "            return std::make_shared<VPGGitLog>(*this);\r\n"
+              "        }\r\n"
+              "};\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, Properties)
-{
-    std::wstring enumClass = L""
+TEST_F(VPGObjectFileGenerationServiceTest, Properties) {
+    std::wstring enumClass =
+        L""
         "#pragma once\r\n"
         "\r\n"
         "//@@Private{ \"Properties\": {\"a\":\"int64_t=0\", \"b\":\"VPGObjectB=nullptr\" } }\r\n"
-        "//@@Protected{ \"Properties\": {\"c\":\"VPGObjectC=std::make_shared<VPGObjectC>(1,2,3);\", \"d\":\"ExceptionType=ExceptionType::NA\" } }\r\n"
+        "//@@Protected{ \"Properties\": "
+        "{\"c\":\"VPGObjectC=std::make_shared<VPGObjectC>(1,2,3);\", "
+        "\"d\":\"ExceptionType=ExceptionType::NA\" } }\r\n"
         "enum class VPGGitLogProperty\r\n"
         "{\r\n"
         "    EnumA // GETSET(std::wstring, EnumA, L\"\") \r\n"
         "};\r\n"
         "\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -616,71 +638,80 @@ TEST_F(VPGObjectFileGenerationServiceTest, Properties)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectB", L"vpg_class_b.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectC", L"vpg_class_c.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"ExceptionType", L"exception_type.hpp"));
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_FALSE(vcc::isFilePresent(this->getFilePathCpp()));
 
     EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#pragma once\r\n"
-        "\r\n"
-        "#include <memory>\r\n"
-        "#include <string>\r\n"
-        "\r\n"
-        "#include \"base_object.hpp\"\r\n"
-        "#include \"class_macro.hpp\"\r\n"
-        "#include \"exception_type.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "#include \"vpg_class_b.hpp\"\r\n"
-        "#include \"vpg_class_c.hpp\"\r\n"
-        "\r\n"
-        "class VPGGitLog : public vcc::BaseObject\r\n"
-        "{\r\n"
-        "    private:\r\n"
-        "        mutable int64_t a = 0;\r\n"
-        "        mutable std::shared_ptr<VPGObjectB> b = nullptr;\r\n"
-        "\r\n"
-        "    protected:\r\n"
-        "        mutable std::shared_ptr<VPGObjectC> c = nullptr;\r\n"
-        "        mutable ExceptionType d = ExceptionType::NA;\r\n"
-        "\r\n"
-        "    GETSET(std::wstring, EnumA, L\"\")\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGGitLog() : vcc::BaseObject(ObjectType::GitLog)\r\n"
-        "        {\r\n"
-        "            c = std::make_shared<VPGObjectC>(1,2,3);\r\n"
-        "        }\r\n"
-        "\r\n"
-        "        virtual ~VPGGitLog() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
-        "        {\r\n"
-        "            auto obj = std::make_shared<VPGGitLog>(*this);\r\n"
-        "            obj->b = std::dynamic_pointer_cast<VPGObjectB>(this->b->clone());\r\n"
-        "            obj->c = std::dynamic_pointer_cast<VPGObjectC>(this->c->clone());\r\n"
-        "            return obj;\r\n"
-        "        }\r\n"
-        "};\r\n");
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#pragma once\r\n"
+              "\r\n"
+              "#include <memory>\r\n"
+              "#include <string>\r\n"
+              "\r\n"
+              "#include \"base_object.hpp\"\r\n"
+              "#include \"class_macro.hpp\"\r\n"
+              "#include \"exception_type.hpp\"\r\n"
+              "#include \"object_type.hpp\"\r\n"
+              "#include \"vpg_class_b.hpp\"\r\n"
+              "#include \"vpg_class_c.hpp\"\r\n"
+              "\r\n"
+              "class VPGGitLog : public vcc::BaseObject\r\n"
+              "{\r\n"
+              "    private:\r\n"
+              "        mutable int64_t a = 0;\r\n"
+              "        mutable std::shared_ptr<VPGObjectB> b = nullptr;\r\n"
+              "\r\n"
+              "    protected:\r\n"
+              "        mutable std::shared_ptr<VPGObjectC> c = nullptr;\r\n"
+              "        mutable ExceptionType d = ExceptionType::NA;\r\n"
+              "\r\n"
+              "    GETSET(std::wstring, EnumA, L\"\")\r\n"
+              "\r\n"
+              "    public:\r\n"
+              "        VPGGitLog() : vcc::BaseObject(ObjectType::GitLog)\r\n"
+              "        {\r\n"
+              "            c = std::make_shared<VPGObjectC>(1,2,3);\r\n"
+              "        }\r\n"
+              "\r\n"
+              "        virtual ~VPGGitLog() {}\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
+              "        {\r\n"
+              "            auto obj = std::make_shared<VPGGitLog>(*this);\r\n"
+              "            obj->b = std::dynamic_pointer_cast<VPGObjectB>(this->b->clone());\r\n"
+              "            obj->c = std::dynamic_pointer_cast<VPGObjectC>(this->c->clone());\r\n"
+              "            return obj;\r\n"
+              "        }\r\n"
+              "};\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, InitializeProperties)
-{
-    std::wstring enumClass = L""
+TEST_F(VPGObjectFileGenerationServiceTest, InitializeProperties) {
+    std::wstring enumClass =
+        L""
         "#pragma once\r\n"
         "\r\n"
         "enum class VPGObjectProperty\r\n"
         "{\r\n"
-        "    String, // GETSET(std::wstring, String, L\"\")  @@Initialize { \"Properties\" : [\"L\\\"Test\\\"\"] } \r\n"
-        "    Integer, // GETSET(int64_t, Integer, 0)  @@Initialize { \"Properties\" : [\"0\"] } \r\n"
-        "    Enum, // GETSET(ExceptionType, Enum, ExceptionType::NA) @@Initialize { \"Properties\" : [\"0\"] } \r\n"
-        "    Object, // GETSET_SPTR(VPGObjectA, Object, L\"\")  @@Initialize { \"Properties\" : [\"L\\\"Test\\\"\"] } \r\n"
-        "    Vector, // VECTOR(int64_t, Vector)  @@Initialize { \"Properties\" : [\"0\", \"1\"] } \r\n"
-        "    Map // MAP(int64_t, int64_t, Map)  @@Initialize { \"Properties\" : [\"{0, 0}\", \"{1,1}\"] } \r\n"
+        "    String, // GETSET(std::wstring, String, L\"\")  @@Initialize { \"Properties\" : "
+        "[\"L\\\"Test\\\"\"] } \r\n"
+        "    Integer, // GETSET(int64_t, Integer, 0)  @@Initialize { \"Properties\" : [\"0\"] } "
+        "\r\n"
+        "    Enum, // GETSET(ExceptionType, Enum, ExceptionType::NA) @@Initialize { \"Properties\" "
+        ": [\"0\"] } \r\n"
+        "    Object, // GETSET_SPTR(VPGObjectA, Object, L\"\")  @@Initialize { \"Properties\" : "
+        "[\"L\\\"Test\\\"\"] } \r\n"
+        "    Vector, // VECTOR(int64_t, Vector)  @@Initialize { \"Properties\" : [\"0\", \"1\"] } "
+        "\r\n"
+        "    Map // MAP(int64_t, int64_t, Map)  @@Initialize { \"Properties\" : [\"{0, 0}\", "
+        "\"{1,1}\"] } \r\n"
         "};\r\n"
         "\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -691,60 +722,62 @@ TEST_F(VPGObjectFileGenerationServiceTest, InitializeProperties)
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectA", L"vpg_class_a.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"ExceptionType", L"exception_type.hpp"));
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_FALSE(vcc::isFilePresent(this->getFilePathCpp()));
 
     EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#pragma once\r\n"
-        "\r\n"
-        "#include <memory>\r\n"
-        "#include <string>\r\n"
-        "\r\n"
-        "#include \"base_object.hpp\"\r\n"
-        "#include \"class_macro.hpp\"\r\n"
-        "#include \"exception_type.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "#include \"vpg_class_a.hpp\"\r\n"
-        "\r\n"
-        "class VPGObject : public vcc::BaseObject\r\n"
-        "{\r\n"
-        "    GETSET(std::wstring, String, L\"\")\r\n"
-        "    GETSET(int64_t, Integer, 0)\r\n"
-        "    GETSET(ExceptionType, Enum, ExceptionType::NA)\r\n"
-        "    GETSET_SPTR(VPGObjectA, Object, L\"\")\r\n"
-        "    VECTOR(int64_t, Vector)\r\n"
-        "    MAP(int64_t, int64_t, Map)\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGObject() : vcc::BaseObject(ObjectType::Object)\r\n"
-        "        {\r\n"
-        "            _String = L\"Test\";\r\n"
-        "            _Integer = 0;\r\n"
-        "            _Enum = 0;\r\n"
-        "            _Object = std::make_shared<VPGObjectA>(L\"Test\");\r\n"
-        "            insertVector(0);\r\n"
-        "            insertVector(1);\r\n"
-        "            insertMap({0, 0});\r\n"
-        "            insertMap({1,1});\r\n"
-        "        }\r\n"
-        "\r\n"
-        "        virtual ~VPGObject() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
-        "        {\r\n"
-        "            auto obj = std::make_shared<VPGObject>(*this);\r\n"
-        "            obj->cloneObject(this->_Object.get());\r\n"
-        "            return obj;\r\n"
-        "        }\r\n"
-        "};\r\n");
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#pragma once\r\n"
+              "\r\n"
+              "#include <memory>\r\n"
+              "#include <string>\r\n"
+              "\r\n"
+              "#include \"base_object.hpp\"\r\n"
+              "#include \"class_macro.hpp\"\r\n"
+              "#include \"exception_type.hpp\"\r\n"
+              "#include \"object_type.hpp\"\r\n"
+              "#include \"vpg_class_a.hpp\"\r\n"
+              "\r\n"
+              "class VPGObject : public vcc::BaseObject\r\n"
+              "{\r\n"
+              "    GETSET(std::wstring, String, L\"\")\r\n"
+              "    GETSET(int64_t, Integer, 0)\r\n"
+              "    GETSET(ExceptionType, Enum, ExceptionType::NA)\r\n"
+              "    GETSET_SPTR(VPGObjectA, Object, L\"\")\r\n"
+              "    VECTOR(int64_t, Vector)\r\n"
+              "    MAP(int64_t, int64_t, Map)\r\n"
+              "\r\n"
+              "    public:\r\n"
+              "        VPGObject() : vcc::BaseObject(ObjectType::Object)\r\n"
+              "        {\r\n"
+              "            _String = L\"Test\";\r\n"
+              "            _Integer = 0;\r\n"
+              "            _Enum = 0;\r\n"
+              "            _Object = std::make_shared<VPGObjectA>(L\"Test\");\r\n"
+              "            insertVector(0);\r\n"
+              "            insertVector(1);\r\n"
+              "            insertMap({0, 0});\r\n"
+              "            insertMap({1,1});\r\n"
+              "        }\r\n"
+              "\r\n"
+              "        virtual ~VPGObject() {}\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
+              "        {\r\n"
+              "            auto obj = std::make_shared<VPGObject>(*this);\r\n"
+              "            obj->cloneObject(this->_Object.get());\r\n"
+              "            return obj;\r\n"
+              "        }\r\n"
+              "};\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, Form_Simple)
-{
-    std::wstring enumClass = L""
+TEST_F(VPGObjectFileGenerationServiceTest, Form_Simple) {
+    std::wstring enumClass =
+        L""
         "#pragma once\r\n"
         "\r\n"
         "//@@Form\r\n"
@@ -753,7 +786,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form_Simple)
         "    String // GETSET(std::wstring, String, L\"\")\r\n"
         "};\r\n"
         "\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -762,17 +796,23 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form_Simple)
     auto option = std::make_shared<VPGConfig>();
     option->setProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    //projectClassIncludeFiles.insert(std::make_pair(L"GitLog", L"git_service.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathCpp(), this->getFilePathCpp(), this->getActionFolderPathCpp(), enumClassList);
+    // projectClassIncludeFiles.insert(std::make_pair(L"GitLog", L"git_service.hpp"));
+    projectClassIncludeFiles.insert(
+        std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix,
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathCpp(), this->getFilePathCpp(),
+                                                this->getActionFolderPathCpp(), enumClassList);
 
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
+    EXPECT_EQ(
+        vcc::readFile(this->getFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
@@ -810,84 +850,91 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form_Simple)
         "\r\n"
         "        virtual void initializeComponents() override;\r\n"
         "\r\n"
-        "        virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;\r\n"
+        "        virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, "
+        "std::shared_ptr<vcc::IObject> argument) override;\r\n"
         "\r\n"
         "        // <vcc:customVPGGitFormPublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "        // </vcc:customVPGGitFormPublicFunctions>\r\n"
         "};\r\n");
 
     EXPECT_EQ(vcc::readFile(this->getFilePathCpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#include \"vcc_object.hpp\"\r\n"
-        "\r\n"
-        "#include <assert.h>\r\n"
-        "#include <memory>\r\n"
-        "\r\n"
-        "#include \"base_form.hpp\"\r\n"
-        "#include \"exception_macro.hpp\"\r\n"
-        "#include \"git_form_property.hpp\"\r\n"
-        "#include \"i_result.hpp\"\r\n"
-        "\r\n"
-        "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "// </vcc:customHeader>\r\n"
-        "\r\n"
-        "VPGGitForm::VPGGitForm() : vcc::BaseForm()\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        _ObjectType = ObjectType::GitForm;\r\n"
-        "        initialize();\r\n"
-        "    CATCH\r\n"
-        "}\r\n"
-        "\r\n"
-        "std::shared_ptr<vcc::IObject> VPGGitForm::clone() const\r\n"
-        "{\r\n"
-        "    return std::make_shared<VPGGitForm>(*this);\r\n"
-        "}\r\n"
-        "\r\n"
-        "void VPGGitForm::initializeComponents()\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        vcc::BaseForm::initializeComponents();\r\n"
-        "        _LogConfig = nullptr;\r\n"
-        "        _ActionManager = nullptr;\r\n"
-        "        _ThreadManager = nullptr;\r\n"
-        "        onInitializeComponents();\r\n"
-        "    CATCH\r\n"
-        "}\r\n"
-        "\r\n"
-        "std::shared_ptr<vcc::IResult> VPGGitForm::doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> /*argument*/)\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        switch(static_cast<VPGGitFormProperty>(formProperty))\r\n"
-        "        {\r\n"
-        "        default:\r\n"
-        "            assert(false);\r\n"
-        "            break;\r\n"
-        "        }\r\n"
-        "    CATCH\r\n"
-        "    return nullptr;\r\n"
-        "}\r\n"
-        "\r\n"
-        "// <vcc:customFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "// </vcc:customFunctions>\r\n");
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#include \"vcc_object.hpp\"\r\n"
+              "\r\n"
+              "#include <assert.h>\r\n"
+              "#include <memory>\r\n"
+              "\r\n"
+              "#include \"base_form.hpp\"\r\n"
+              "#include \"exception_macro.hpp\"\r\n"
+              "#include \"git_form_property.hpp\"\r\n"
+              "#include \"i_result.hpp\"\r\n"
+              "\r\n"
+              "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+              "// </vcc:customHeader>\r\n"
+              "\r\n"
+              "VPGGitForm::VPGGitForm() : vcc::BaseForm()\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        _ObjectType = ObjectType::GitForm;\r\n"
+              "        initialize();\r\n"
+              "    CATCH\r\n"
+              "}\r\n"
+              "\r\n"
+              "std::shared_ptr<vcc::IObject> VPGGitForm::clone() const\r\n"
+              "{\r\n"
+              "    return std::make_shared<VPGGitForm>(*this);\r\n"
+              "}\r\n"
+              "\r\n"
+              "void VPGGitForm::initializeComponents()\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        vcc::BaseForm::initializeComponents();\r\n"
+              "        _LogConfig = nullptr;\r\n"
+              "        _ActionManager = nullptr;\r\n"
+              "        _ThreadManager = nullptr;\r\n"
+              "        onInitializeComponents();\r\n"
+              "    CATCH\r\n"
+              "}\r\n"
+              "\r\n"
+              "std::shared_ptr<vcc::IResult> VPGGitForm::doAction(const int64_t &formProperty, "
+              "std::shared_ptr<vcc::IObject> /*argument*/)\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        switch(static_cast<VPGGitFormProperty>(formProperty))\r\n"
+              "        {\r\n"
+              "        default:\r\n"
+              "            assert(false);\r\n"
+              "            break;\r\n"
+              "        }\r\n"
+              "    CATCH\r\n"
+              "    return nullptr;\r\n"
+              "}\r\n"
+              "\r\n"
+              "// <vcc:customFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+              "// </vcc:customFunctions>\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, Form_Complex)
-{
-    std::wstring enumClass = L""
+TEST_F(VPGObjectFileGenerationServiceTest, Form_Complex) {
+    std::wstring enumClass =
+        L""
         "#pragma once\r\n"
         "\r\n"
         "//@@Form\r\n"
         "//@@Private{ \"Properties\": {\"a\":\"int64_t=0\", \"b\":\"VPGObjectB=nullptr\" } }\r\n"
-        "//@@Protected{ \"Properties\": {\"c\":\"VPGObjectC=std::make_shared<VPGObjectC>(1,2,3);\", \"d\":\"ExceptionType=ExceptionType::NA\" } }\r\n"
+        "//@@Protected{ \"Properties\": "
+        "{\"c\":\"VPGObjectC=std::make_shared<VPGObjectC>(1,2,3);\", "
+        "\"d\":\"ExceptionType=ExceptionType::NA\" } }\r\n"
         "enum class VPGGitFormProperty\r\n"
         "{\r\n"
         "    String // GETSET(std::wstring, String, L\"\")\r\n"
-        "    getSetCustom, // GETCUSTOM(int64_t, getSetCustom, return 100;) SETCUSTOM(GetSetCustom, ExceptionType, enumC, _EnumC = ExceptionType::NA;)\r\n"
-        "    getSetCustom_SPTR // GETCUSTOM_SPTR(VPGClassA, getSetCustom_SPTR, return 100;) SETCUSTOM_SPTR(EnumE, VPGClassA, enumC, _EnumC = enumC;)\r\n"
+        "    getSetCustom, // GETCUSTOM(int64_t, getSetCustom, return 100;) "
+        "SETCUSTOM(GetSetCustom, ExceptionType, enumC, _EnumC = ExceptionType::NA;)\r\n"
+        "    getSetCustom_SPTR // GETCUSTOM_SPTR(VPGClassA, getSetCustom_SPTR, return 100;) "
+        "SETCUSTOM_SPTR(EnumE, VPGClassA, enumC, _EnumC = enumC;)\r\n"
         "};\r\n"
         "\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -900,17 +947,24 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form_Complex)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_object_a.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectB", L"vpg_object_b.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectC", L"vpg_object_c.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"vcc::OperationResult", L"operation_result.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"vpg_object_property.hpp"));
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathCpp(), this->getFilePathCpp(), this->getActionFolderPathCpp(), enumClassList);
+    projectClassIncludeFiles.insert(
+        std::make_pair(L"vcc::OperationResult", L"operation_result.hpp"));
+    projectClassIncludeFiles.insert(
+        std::make_pair(L"VPGGitFormProperty", L"vpg_object_property.hpp"));
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix,
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathCpp(), this->getFilePathCpp(),
+                                                this->getActionFolderPathCpp(), enumClassList);
 
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
+    EXPECT_EQ(
+        vcc::readFile(this->getFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
@@ -964,85 +1018,90 @@ TEST_F(VPGObjectFileGenerationServiceTest, Form_Complex)
         "\r\n"
         "        virtual void initializeComponents() override;\r\n"
         "\r\n"
-        "        virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;\r\n"
+        "        virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, "
+        "std::shared_ptr<vcc::IObject> argument) override;\r\n"
         "\r\n"
         "        // <vcc:customVPGGitFormPublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "        // </vcc:customVPGGitFormPublicFunctions>\r\n"
         "};\r\n");
 
     EXPECT_EQ(vcc::readFile(this->getFilePathCpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#include \"vcc_object.hpp\"\r\n"
-        "\r\n"
-        "#include <assert.h>\r\n"
-        "#include <memory>\r\n"
-        "\r\n"
-        "#include \"base_form.hpp\"\r\n"
-        "#include \"exception_macro.hpp\"\r\n"
-        "#include \"i_result.hpp\"\r\n"
-        "#include \"vpg_object_property.hpp\"\r\n"
-        "\r\n"
-        "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "// </vcc:customHeader>\r\n"
-        "\r\n"
-        "VPGGitForm::VPGGitForm() : vcc::BaseForm()\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        _ObjectType = ObjectType::GitForm;\r\n"
-        "        c = std::make_shared<VPGObjectC>(1,2,3);\r\n"
-        "        initialize();\r\n"
-        "    CATCH\r\n"
-        "}\r\n"
-        "\r\n"
-        "std::shared_ptr<vcc::IObject> VPGGitForm::clone() const\r\n"
-        "{\r\n"
-        "    auto obj = std::make_shared<VPGGitForm>(*this);\r\n"
-        "    obj->b = std::dynamic_pointer_cast<VPGObjectB>(this->b->clone());\r\n"
-        "    obj->c = std::dynamic_pointer_cast<VPGObjectC>(this->c->clone());\r\n"
-        "    return obj;\r\n"
-        "}\r\n"
-        "\r\n"
-        "void VPGGitForm::initializeComponents()\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        vcc::BaseForm::initializeComponents();\r\n"
-        "        _LogConfig = nullptr;\r\n"
-        "        _ActionManager = nullptr;\r\n"
-        "        _ThreadManager = nullptr;\r\n"
-        "        onInitializeComponents();\r\n"
-        "    CATCH\r\n"
-        "}\r\n"
-        "\r\n"
-        "std::shared_ptr<vcc::IResult> VPGGitForm::doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> /*argument*/)\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        switch(static_cast<VPGGitFormProperty>(formProperty))\r\n"
-        "        {\r\n"
-        "        default:\r\n"
-        "            assert(false);\r\n"
-        "            break;\r\n"
-        "        }\r\n"
-        "    CATCH\r\n"
-        "    return nullptr;\r\n"
-        "}\r\n"
-        "\r\n"
-        "// <vcc:customFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "// </vcc:customFunctions>\r\n");
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#include \"vcc_object.hpp\"\r\n"
+              "\r\n"
+              "#include <assert.h>\r\n"
+              "#include <memory>\r\n"
+              "\r\n"
+              "#include \"base_form.hpp\"\r\n"
+              "#include \"exception_macro.hpp\"\r\n"
+              "#include \"i_result.hpp\"\r\n"
+              "#include \"vpg_object_property.hpp\"\r\n"
+              "\r\n"
+              "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+              "// </vcc:customHeader>\r\n"
+              "\r\n"
+              "VPGGitForm::VPGGitForm() : vcc::BaseForm()\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        _ObjectType = ObjectType::GitForm;\r\n"
+              "        c = std::make_shared<VPGObjectC>(1,2,3);\r\n"
+              "        initialize();\r\n"
+              "    CATCH\r\n"
+              "}\r\n"
+              "\r\n"
+              "std::shared_ptr<vcc::IObject> VPGGitForm::clone() const\r\n"
+              "{\r\n"
+              "    auto obj = std::make_shared<VPGGitForm>(*this);\r\n"
+              "    obj->b = std::dynamic_pointer_cast<VPGObjectB>(this->b->clone());\r\n"
+              "    obj->c = std::dynamic_pointer_cast<VPGObjectC>(this->c->clone());\r\n"
+              "    return obj;\r\n"
+              "}\r\n"
+              "\r\n"
+              "void VPGGitForm::initializeComponents()\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        vcc::BaseForm::initializeComponents();\r\n"
+              "        _LogConfig = nullptr;\r\n"
+              "        _ActionManager = nullptr;\r\n"
+              "        _ThreadManager = nullptr;\r\n"
+              "        onInitializeComponents();\r\n"
+              "    CATCH\r\n"
+              "}\r\n"
+              "\r\n"
+              "std::shared_ptr<vcc::IResult> VPGGitForm::doAction(const int64_t &formProperty, "
+              "std::shared_ptr<vcc::IObject> /*argument*/)\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        switch(static_cast<VPGGitFormProperty>(formProperty))\r\n"
+              "        {\r\n"
+              "        default:\r\n"
+              "            assert(false);\r\n"
+              "            break;\r\n"
+              "        }\r\n"
+              "    CATCH\r\n"
+              "    return nullptr;\r\n"
+              "}\r\n"
+              "\r\n"
+              "// <vcc:customFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+              "// </vcc:customFunctions>\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, FormWithIndependentManager)
-{
-    // If there is inherited properties, please add all properties here so that initiailize() is hidden
-    std::wstring enumClass = L""
+TEST_F(VPGObjectFileGenerationServiceTest, FormWithIndependentManager) {
+    // If there is inherited properties, please add all properties here so that initiailize() is
+    // hidden
+    std::wstring enumClass =
+        L""
         "#pragma once\r\n"
         "\r\n"
-        "//@@Form @@Log { \"IsIndependent\": true } @@Action { \"IsIndependent\": true } @@Thread { \"IsIndependent\": true } \r\n"
+        "//@@Form @@Log { \"IsIndependent\": true } @@Action { \"IsIndependent\": true } @@Thread "
+        "{ \"IsIndependent\": true } \r\n"
         "enum class VPGGitFormProperty\r\n"
         "{\r\n"
         "    String // GETSET(std::wstring, String, L\"\")\r\n"
         "};\r\n"
         "\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -1051,16 +1110,22 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormWithIndependentManager)
     auto option = std::make_shared<VPGConfig>();
     option->setProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathCpp(), this->getFilePathCpp(), this->getActionFolderPathCpp(), enumClassList);
+    projectClassIncludeFiles.insert(
+        std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix,
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathCpp(), this->getFilePathCpp(),
+                                                this->getActionFolderPathCpp(), enumClassList);
 
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
+    EXPECT_EQ(
+        vcc::readFile(this->getFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
@@ -1098,74 +1163,76 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormWithIndependentManager)
         "\r\n"
         "        virtual void initializeComponents() override;\r\n"
         "\r\n"
-        "        virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;\r\n"
+        "        virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, "
+        "std::shared_ptr<vcc::IObject> argument) override;\r\n"
         "\r\n"
         "        // <vcc:customVPGGitFormPublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "        // </vcc:customVPGGitFormPublicFunctions>\r\n"
         "};\r\n");
 
     EXPECT_EQ(vcc::readFile(this->getFilePathCpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#include \"vcc_object.hpp\"\r\n"
-        "\r\n"
-        "#include <assert.h>\r\n"
-        "#include <memory>\r\n"
-        "\r\n"
-        "#include \"action_manager.hpp\"\r\n"
-        "#include \"base_form.hpp\"\r\n"
-        "#include \"exception_macro.hpp\"\r\n"
-        "#include \"git_form_property.hpp\"\r\n"
-        "#include \"i_result.hpp\"\r\n"
-        "#include \"log_config.hpp\"\r\n"
-        "#include \"thread_manager.hpp\"\r\n"
-        "\r\n"
-        "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "// </vcc:customHeader>\r\n"
-        "\r\n"
-        "VPGGitForm::VPGGitForm() : vcc::BaseForm()\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        _ObjectType = ObjectType::GitForm;\r\n"
-        "        initialize();\r\n"
-        "    CATCH\r\n"
-        "}\r\n"
-        "\r\n"
-        "std::shared_ptr<vcc::IObject> VPGGitForm::clone() const\r\n"
-        "{\r\n"
-        "    return std::make_shared<VPGGitForm>(*this);\r\n"
-        "}\r\n"
-        "\r\n"
-        "void VPGGitForm::initializeComponents()\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        vcc::BaseForm::initializeComponents();\r\n"
-        "        _LogConfig = std::make_shared<vcc::LogConfig>();\r\n"
-        "        _ActionManager = std::make_shared<ActionManager>(_LogConfig);\r\n"
-        "        _ThreadManager = std::make_shared<ThreadManager>(_LogConfig);\r\n"
-        "        onInitializeComponents();\r\n"
-        "    CATCH\r\n"
-        "}\r\n"
-        "\r\n"
-        "std::shared_ptr<vcc::IResult> VPGGitForm::doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> /*argument*/)\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        switch(static_cast<VPGGitFormProperty>(formProperty))\r\n"
-        "        {\r\n"
-        "        default:\r\n"
-        "            assert(false);\r\n"
-        "            break;\r\n"
-        "        }\r\n"
-        "    CATCH\r\n"
-        "    return nullptr;\r\n"
-        "}\r\n"
-        "\r\n"
-        "// <vcc:customFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "// </vcc:customFunctions>\r\n");
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#include \"vcc_object.hpp\"\r\n"
+              "\r\n"
+              "#include <assert.h>\r\n"
+              "#include <memory>\r\n"
+              "\r\n"
+              "#include \"action_manager.hpp\"\r\n"
+              "#include \"base_form.hpp\"\r\n"
+              "#include \"exception_macro.hpp\"\r\n"
+              "#include \"git_form_property.hpp\"\r\n"
+              "#include \"i_result.hpp\"\r\n"
+              "#include \"log_config.hpp\"\r\n"
+              "#include \"thread_manager.hpp\"\r\n"
+              "\r\n"
+              "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+              "// </vcc:customHeader>\r\n"
+              "\r\n"
+              "VPGGitForm::VPGGitForm() : vcc::BaseForm()\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        _ObjectType = ObjectType::GitForm;\r\n"
+              "        initialize();\r\n"
+              "    CATCH\r\n"
+              "}\r\n"
+              "\r\n"
+              "std::shared_ptr<vcc::IObject> VPGGitForm::clone() const\r\n"
+              "{\r\n"
+              "    return std::make_shared<VPGGitForm>(*this);\r\n"
+              "}\r\n"
+              "\r\n"
+              "void VPGGitForm::initializeComponents()\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        vcc::BaseForm::initializeComponents();\r\n"
+              "        _LogConfig = std::make_shared<vcc::LogConfig>();\r\n"
+              "        _ActionManager = std::make_shared<ActionManager>(_LogConfig);\r\n"
+              "        _ThreadManager = std::make_shared<ThreadManager>(_LogConfig);\r\n"
+              "        onInitializeComponents();\r\n"
+              "    CATCH\r\n"
+              "}\r\n"
+              "\r\n"
+              "std::shared_ptr<vcc::IResult> VPGGitForm::doAction(const int64_t &formProperty, "
+              "std::shared_ptr<vcc::IObject> /*argument*/)\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        switch(static_cast<VPGGitFormProperty>(formProperty))\r\n"
+              "        {\r\n"
+              "        default:\r\n"
+              "            assert(false);\r\n"
+              "            break;\r\n"
+              "        }\r\n"
+              "    CATCH\r\n"
+              "    return nullptr;\r\n"
+              "}\r\n"
+              "\r\n"
+              "// <vcc:customFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+              "// </vcc:customFunctions>\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, inheritForm)
-{
-    std::wstring enumClass = L""
+TEST_F(VPGObjectFileGenerationServiceTest, inheritForm) {
+    std::wstring enumClass =
+        L""
         "#pragma once\r\n"
         "\r\n"
         "//@@Form \r\n"
@@ -1176,7 +1243,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, inheritForm)
         "    , String1 // GETSET(std::wstring, String1, L\"\")\r\n"
         "};\r\n"
         "\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -1186,15 +1254,21 @@ TEST_F(VPGObjectFileGenerationServiceTest, inheritForm)
     option->setProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"GitBaseForm", L"git_form.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathCpp(), this->getFilePathCpp(), this->getActionFolderPathCpp(), enumClassList);
+    projectClassIncludeFiles.insert(
+        std::make_pair(L"VPGGitFormProperty", L"git_form_property.hpp"));
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix,
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathCpp(), this->getFilePathCpp(),
+                                                this->getActionFolderPathCpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
-        
-    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
+
+    EXPECT_EQ(
+        vcc::readFile(this->getFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
@@ -1233,70 +1307,72 @@ TEST_F(VPGObjectFileGenerationServiceTest, inheritForm)
         "\r\n"
         "        virtual void initializeComponents() override;\r\n"
         "\r\n"
-        "        virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;\r\n"
+        "        virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, "
+        "std::shared_ptr<vcc::IObject> argument) override;\r\n"
         "\r\n"
         "        // <vcc:customVPGGitFormPublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "        // </vcc:customVPGGitFormPublicFunctions>\r\n"
         "};\r\n");
     EXPECT_EQ(vcc::readFile(this->getFilePathCpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#include \"vcc_object.hpp\"\r\n"
-        "\r\n"
-        "#include <assert.h>\r\n"
-        "#include <memory>\r\n"
-        "\r\n"
-        "#include \"exception_macro.hpp\"\r\n"
-        "#include \"git_form.hpp\"\r\n"
-        "#include \"git_form_property.hpp\"\r\n"
-        "#include \"i_result.hpp\"\r\n"
-        "\r\n"
-        "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "// </vcc:customHeader>\r\n"
-        "\r\n"
-        "VPGGitForm::VPGGitForm() : GitBaseForm()\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        _ObjectType = ObjectType::GitForm;\r\n"
-        "        initialize();\r\n"
-        "    CATCH\r\n"
-        "}\r\n"
-        "\r\n"
-        "std::shared_ptr<vcc::IObject> VPGGitForm::clone() const\r\n"
-        "{\r\n"
-        "    return std::make_shared<VPGGitForm>(*this);\r\n"
-        "}\r\n"
-        "\r\n"
-        "void VPGGitForm::initializeComponents()\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        GitBaseForm::initializeComponents();\r\n"
-        "        _LogConfig = nullptr;\r\n"
-        "        _ActionManager = nullptr;\r\n"
-        "        _ThreadManager = nullptr;\r\n"
-        "        onInitializeComponents();\r\n"
-        "    CATCH\r\n"
-        "}\r\n"
-        "\r\n"
-        "std::shared_ptr<vcc::IResult> VPGGitForm::doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> /*argument*/)\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        switch(static_cast<VPGGitFormProperty>(formProperty))\r\n"
-        "        {\r\n"
-        "        default:\r\n"
-        "            assert(false);\r\n"
-        "            break;\r\n"
-        "        }\r\n"
-        "    CATCH\r\n"
-        "    return nullptr;\r\n"
-        "}\r\n"
-        "\r\n"
-        "// <vcc:customFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "// </vcc:customFunctions>\r\n");
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#include \"vcc_object.hpp\"\r\n"
+              "\r\n"
+              "#include <assert.h>\r\n"
+              "#include <memory>\r\n"
+              "\r\n"
+              "#include \"exception_macro.hpp\"\r\n"
+              "#include \"git_form.hpp\"\r\n"
+              "#include \"git_form_property.hpp\"\r\n"
+              "#include \"i_result.hpp\"\r\n"
+              "\r\n"
+              "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+              "// </vcc:customHeader>\r\n"
+              "\r\n"
+              "VPGGitForm::VPGGitForm() : GitBaseForm()\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        _ObjectType = ObjectType::GitForm;\r\n"
+              "        initialize();\r\n"
+              "    CATCH\r\n"
+              "}\r\n"
+              "\r\n"
+              "std::shared_ptr<vcc::IObject> VPGGitForm::clone() const\r\n"
+              "{\r\n"
+              "    return std::make_shared<VPGGitForm>(*this);\r\n"
+              "}\r\n"
+              "\r\n"
+              "void VPGGitForm::initializeComponents()\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        GitBaseForm::initializeComponents();\r\n"
+              "        _LogConfig = nullptr;\r\n"
+              "        _ActionManager = nullptr;\r\n"
+              "        _ThreadManager = nullptr;\r\n"
+              "        onInitializeComponents();\r\n"
+              "    CATCH\r\n"
+              "}\r\n"
+              "\r\n"
+              "std::shared_ptr<vcc::IResult> VPGGitForm::doAction(const int64_t &formProperty, "
+              "std::shared_ptr<vcc::IObject> /*argument*/)\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        switch(static_cast<VPGGitFormProperty>(formProperty))\r\n"
+              "        {\r\n"
+              "        default:\r\n"
+              "            assert(false);\r\n"
+              "            break;\r\n"
+              "        }\r\n"
+              "    CATCH\r\n"
+              "    return nullptr;\r\n"
+              "}\r\n"
+              "\r\n"
+              "// <vcc:customFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+              "// </vcc:customFunctions>\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
-{
-    std::wstring enumClass = L""
+TEST_F(VPGObjectFileGenerationServiceTest, FormManager) {
+    std::wstring enumClass =
+        L""
         "#pragma once\r\n"
         "\r\n"
         "//@@Form @@Json\r\n"
@@ -1308,7 +1384,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
         "    , GitManager3 // MANAGER_SPTR_PARENT(GitManager, GitManager3, BaseGitManager)\r\n"
         "};\r\n"
         "\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -1319,16 +1396,22 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"GitManager", L"git_manager.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"BaseGitManager", L"base_git_manager.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"vpg_git_form_property.hpp"));
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathCpp(), this->getFilePathCpp(), this->getActionFolderPathCpp(), enumClassList);
+    projectClassIncludeFiles.insert(
+        std::make_pair(L"VPGGitFormProperty", L"vpg_git_form_property.hpp"));
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix,
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathCpp(), this->getFilePathCpp(),
+                                                this->getActionFolderPathCpp(), enumClassList);
 
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()), 
+    EXPECT_EQ(
+        vcc::readFile(this->getFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
@@ -1373,119 +1456,127 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormManager)
         "        virtual std::shared_ptr<vcc::IObject> clone() const override;\r\n"
         "\r\n"
         "        virtual std::shared_ptr<vcc::Json> toJson() const override;\r\n"
-        "        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) override;\r\n"
+        "        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) "
+        "override;\r\n"
         "\r\n"
         "        virtual void initializeComponents() override;\r\n"
         "\r\n"
-        "        virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;\r\n"
+        "        virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, "
+        "std::shared_ptr<vcc::IObject> argument) override;\r\n"
         "\r\n"
         "        // <vcc:customVPGGitFormPublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "        // </vcc:customVPGGitFormPublicFunctions>\r\n"
         "};\r\n");
     EXPECT_EQ(vcc::readFile(this->getFilePathCpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#include \"vcc_object.hpp\"\r\n"
-        "\r\n"
-        "#include <assert.h>\r\n"
-        "#include <memory>\r\n"
-        "#include <string>\r\n"
-        "\r\n"
-        "#include \"base_form.hpp\"\r\n"
-        "#include \"exception_macro.hpp\"\r\n"
-        "#include \"i_document.hpp\"\r\n"
-        "#include \"i_document_builder.hpp\"\r\n"
-        "#include \"i_result.hpp\"\r\n"
-        "#include \"json.hpp\"\r\n"
-        "#include \"number_helper.hpp\"\r\n"
-        "#include \"string_helper.hpp\"\r\n"
-        "#include \"vpg_git_form_property.hpp\"\r\n"
-        "\r\n"
-        "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "// </vcc:customHeader>\r\n"
-        "\r\n"
-        "VPGGitForm::VPGGitForm() : vcc::BaseForm()\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        _ObjectType = ObjectType::GitForm;\r\n"
-        "        _GitManager1 = std::make_shared<GitManager>(_LogProperty);\r\n"
-        "        initialize();\r\n"
-        "    CATCH\r\n"
-        "}\r\n"
-        "\r\n"
-        "std::shared_ptr<vcc::IObject> VPGGitForm::clone() const\r\n"
-        "{\r\n"
-        "    return std::make_shared<VPGGitForm>(*this);\r\n"
-        "}\r\n"
-        "\r\n"
-        "std::shared_ptr<vcc::Json> VPGGitForm::toJson() const\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;\r\n"
-        "        auto json = std::make_unique<vcc::Json>();\r\n"
-        "        // String\r\n"
-        "        json->addString(vcc::convertNamingStyle(L\"String\", vcc::NamingStyle::PascalCase, namestyle), getString());\r\n"
-        "        return json;\r\n"
-        "    CATCH\r\n"
-        "    return nullptr;\r\n"
-        "}\r\n"
-        "\r\n"
-        "void VPGGitForm::deserializeJson(std::shared_ptr<vcc::IDocument> document)\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;\r\n"
-        "        auto json = std::dynamic_pointer_cast<vcc::Json>(document);\r\n"
-        "        assert(json != nullptr);\r\n"
-        "        // String\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"String\", namestyle, vcc::NamingStyle::PascalCase)))\r\n"
-        "            setString(json->getString(vcc::convertNamingStyle(L\"String\", namestyle, vcc::NamingStyle::PascalCase)));\r\n"
-        "    CATCH\r\n"
-        "}\r\n"
-        "\r\n"
-        "void VPGGitForm::initializeComponents()\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        vcc::BaseForm::initializeComponents();\r\n"
-        "        _LogConfig = nullptr;\r\n"
-        "        _ActionManager = nullptr;\r\n"
-        "        _ThreadManager = nullptr;\r\n"
-        "        // Custom Managers\r\n"
-        "        _GitManager1 = std::make_shared<GitManager>(_LogProperty);\r\n"
-        "        _GitManager2 = std::make_shared<GitManager>();\r\n"
-        "        _GitManager3 = nullptr;\r\n"
-        "        onInitializeComponents();\r\n"
-        "    CATCH\r\n"
-        "}\r\n"
-        "\r\n"
-        "std::shared_ptr<vcc::IResult> VPGGitForm::doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> /*argument*/)\r\n"
-        "{\r\n"
-        "    TRY\r\n"
-        "        switch(static_cast<VPGGitFormProperty>(formProperty))\r\n"
-        "        {\r\n"
-        "        default:\r\n"
-        "            assert(false);\r\n"
-        "            break;\r\n"
-        "        }\r\n"
-        "    CATCH\r\n"
-        "    return nullptr;\r\n"
-        "}\r\n"
-        "\r\n"
-        "// <vcc:customFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
-        "// </vcc:customFunctions>\r\n");
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#include \"vcc_object.hpp\"\r\n"
+              "\r\n"
+              "#include <assert.h>\r\n"
+              "#include <memory>\r\n"
+              "#include <string>\r\n"
+              "\r\n"
+              "#include \"base_form.hpp\"\r\n"
+              "#include \"exception_macro.hpp\"\r\n"
+              "#include \"i_document.hpp\"\r\n"
+              "#include \"i_document_builder.hpp\"\r\n"
+              "#include \"i_result.hpp\"\r\n"
+              "#include \"json.hpp\"\r\n"
+              "#include \"number_helper.hpp\"\r\n"
+              "#include \"string_helper.hpp\"\r\n"
+              "#include \"vpg_git_form_property.hpp\"\r\n"
+              "\r\n"
+              "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+              "// </vcc:customHeader>\r\n"
+              "\r\n"
+              "VPGGitForm::VPGGitForm() : vcc::BaseForm()\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        _ObjectType = ObjectType::GitForm;\r\n"
+              "        _GitManager1 = std::make_shared<GitManager>(_LogProperty);\r\n"
+              "        initialize();\r\n"
+              "    CATCH\r\n"
+              "}\r\n"
+              "\r\n"
+              "std::shared_ptr<vcc::IObject> VPGGitForm::clone() const\r\n"
+              "{\r\n"
+              "    return std::make_shared<VPGGitForm>(*this);\r\n"
+              "}\r\n"
+              "\r\n"
+              "std::shared_ptr<vcc::Json> VPGGitForm::toJson() const\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;\r\n"
+              "        auto json = std::make_unique<vcc::Json>();\r\n"
+              "        // String\r\n"
+              "        json->addString(vcc::convertNamingStyle(L\"String\", "
+              "vcc::NamingStyle::PascalCase, namestyle), getString());\r\n"
+              "        return json;\r\n"
+              "    CATCH\r\n"
+              "    return nullptr;\r\n"
+              "}\r\n"
+              "\r\n"
+              "void VPGGitForm::deserializeJson(std::shared_ptr<vcc::IDocument> document)\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;\r\n"
+              "        auto json = std::dynamic_pointer_cast<vcc::Json>(document);\r\n"
+              "        assert(json != nullptr);\r\n"
+              "        // String\r\n"
+              "        if (json->isContainKey(vcc::convertNamingStyle(L\"String\", namestyle, "
+              "vcc::NamingStyle::PascalCase)))\r\n"
+              "            setString(json->getString(vcc::convertNamingStyle(L\"String\", "
+              "namestyle, vcc::NamingStyle::PascalCase)));\r\n"
+              "    CATCH\r\n"
+              "}\r\n"
+              "\r\n"
+              "void VPGGitForm::initializeComponents()\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        vcc::BaseForm::initializeComponents();\r\n"
+              "        _LogConfig = nullptr;\r\n"
+              "        _ActionManager = nullptr;\r\n"
+              "        _ThreadManager = nullptr;\r\n"
+              "        // Custom Managers\r\n"
+              "        _GitManager1 = std::make_shared<GitManager>(_LogProperty);\r\n"
+              "        _GitManager2 = std::make_shared<GitManager>();\r\n"
+              "        _GitManager3 = nullptr;\r\n"
+              "        onInitializeComponents();\r\n"
+              "    CATCH\r\n"
+              "}\r\n"
+              "\r\n"
+              "std::shared_ptr<vcc::IResult> VPGGitForm::doAction(const int64_t &formProperty, "
+              "std::shared_ptr<vcc::IObject> /*argument*/)\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        switch(static_cast<VPGGitFormProperty>(formProperty))\r\n"
+              "        {\r\n"
+              "        default:\r\n"
+              "            assert(false);\r\n"
+              "            break;\r\n"
+              "        }\r\n"
+              "    CATCH\r\n"
+              "    return nullptr;\r\n"
+              "}\r\n"
+              "\r\n"
+              "// <vcc:customFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+              "// </vcc:customFunctions>\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
-{
-    std::wstring enumClass = L""
+TEST_F(VPGObjectFileGenerationServiceTest, FormAction) {
+    std::wstring enumClass =
+        L""
         "#pragma once\r\n"
         "\r\n"
         "//@@Form\r\n"
         "enum class VPGGitFormProperty\r\n"
         "{\r\n"
         "    AddWorkspace // ACTION(AddWorkspace)\r\n"
-        "    , DeleteWorkspace // ACTION_WITH_ARG_SPTR(DeleteWorkspace, VPGGitFormDeleteWorkspaceArgument)\r\n"
+        "    , DeleteWorkspace // ACTION_WITH_ARG_SPTR(DeleteWorkspace, "
+        "VPGGitFormDeleteWorkspaceArgument)\r\n"
         "};\r\n"
         "\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -1494,18 +1585,25 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
     auto option = std::make_shared<VPGConfig>();
     option->setProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgument", L"vpg_git_form.hpp"));
+    projectClassIncludeFiles.insert(
+        std::make_pair(L"VPGGitFormDeleteWorkspaceArgument", L"vpg_git_form.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormProperty", L"vpg_git_form.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"vcc::OperationResult", L"operation_result.hpp"));
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathCpp(), this->getFilePathCpp(), this->getActionFolderPathCpp(), enumClassList);
+    projectClassIncludeFiles.insert(
+        std::make_pair(L"vcc::OperationResult", L"operation_result.hpp"));
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix,
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathCpp(), this->getFilePathCpp(),
+                                                this->getActionFolderPathCpp(), enumClassList);
 
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()), 
+    EXPECT_EQ(
+        vcc::readFile(this->getFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
@@ -1530,7 +1628,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "    // </vcc:customVPGGitFormAddWorkspaceProperties>\r\n"
         "\r\n"
         "    private:\r\n"
-        "        // <vcc:customVPGGitFormAddWorkspacePrivateFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // <vcc:customVPGGitFormAddWorkspacePrivateFunctions sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "        // </vcc:customVPGGitFormAddWorkspacePrivateFunctions>\r\n"
         "\r\n"
         "    protected:\r\n"
@@ -1542,15 +1641,18 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "        virtual std::shared_ptr<vcc::IResult> onRedo() override;\r\n"
         "        virtual std::shared_ptr<vcc::IResult> onUndo() override;\r\n"
         "\r\n"
-        "        // <vcc:customVPGGitFormAddWorkspaceProtectedFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // <vcc:customVPGGitFormAddWorkspaceProtectedFunctions sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "        // </vcc:customVPGGitFormAddWorkspaceProtectedFunctions>\r\n"
         "\r\n"
         "    public:\r\n"
         "        VPGGitFormAddWorkspace() : vcc::BaseAction() {}\r\n"
-        "        VPGGitFormAddWorkspace(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm);\r\n"
+        "        VPGGitFormAddWorkspace(std::shared_ptr<vcc::LogConfig> logConfig, "
+        "std::shared_ptr<vcc::IObject> parentForm);\r\n"
         "        ~VPGGitFormAddWorkspace() {}\r\n"
         "\r\n"
-        "        // <vcc:customVPGGitFormAddWorkspacePublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // <vcc:customVPGGitFormAddWorkspacePublicFunctions sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "        // </vcc:customVPGGitFormAddWorkspacePublicFunctions>\r\n"
         "};\r\n"
         "\r\n"
@@ -1558,11 +1660,13 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "{\r\n"
         "    GETSET_SPTR_NULL(VPGGitFormDeleteWorkspaceArgument, Argument)\r\n"
         "\r\n"
-        "    // <vcc:customVPGGitFormDeleteWorkspaceProperties sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "    // <vcc:customVPGGitFormDeleteWorkspaceProperties sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "    // </vcc:customVPGGitFormDeleteWorkspaceProperties>\r\n"
         "\r\n"
         "    private:\r\n"
-        "        // <vcc:customVPGGitFormDeleteWorkspacePrivateFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // <vcc:customVPGGitFormDeleteWorkspacePrivateFunctions sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "        // </vcc:customVPGGitFormDeleteWorkspacePrivateFunctions>\r\n"
         "\r\n"
         "    protected:\r\n"
@@ -1574,16 +1678,21 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "        virtual std::shared_ptr<vcc::IResult> onRedo() override;\r\n"
         "        virtual std::shared_ptr<vcc::IResult> onUndo() override;\r\n"
         "\r\n"
-        "        // <vcc:customVPGGitFormDeleteWorkspaceProtectedFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // <vcc:customVPGGitFormDeleteWorkspaceProtectedFunctions sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "        // </vcc:customVPGGitFormDeleteWorkspaceProtectedFunctions>\r\n"
         "\r\n"
         "    public:\r\n"
         "        VPGGitFormDeleteWorkspace() : vcc::BaseAction() {}\r\n"
-        "        VPGGitFormDeleteWorkspace(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm);\r\n"
-        "        VPGGitFormDeleteWorkspace(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm, std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument);\r\n"
+        "        VPGGitFormDeleteWorkspace(std::shared_ptr<vcc::LogConfig> logConfig, "
+        "std::shared_ptr<vcc::IObject> parentForm);\r\n"
+        "        VPGGitFormDeleteWorkspace(std::shared_ptr<vcc::LogConfig> logConfig, "
+        "std::shared_ptr<vcc::IObject> parentForm, "
+        "std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument);\r\n"
         "        ~VPGGitFormDeleteWorkspace() {}\r\n"
         "\r\n"
-        "        // <vcc:customVPGGitFormDeleteWorkspacePublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // <vcc:customVPGGitFormDeleteWorkspacePublicFunctions sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "        // </vcc:customVPGGitFormDeleteWorkspacePublicFunctions>\r\n"
         "};\r\n"
         "\r\n"
@@ -1611,12 +1720,14 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "\r\n"
         "        virtual void initializeComponents() override;\r\n"
         "\r\n"
-        "        virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;\r\n"
+        "        virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, "
+        "std::shared_ptr<vcc::IObject> argument) override;\r\n"
         "\r\n"
         "        // <vcc:customVPGGitFormPublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "        // </vcc:customVPGGitFormPublicFunctions>\r\n"
         "};\r\n");
-    EXPECT_EQ(vcc::readFile(this->getFilePathCpp()),
+    EXPECT_EQ(
+        vcc::readFile(this->getFilePathCpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#include \"vcc_object.hpp\"\r\n"
         "\r\n"
@@ -1636,7 +1747,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "// <vcc:customHeader sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "// </vcc:customHeader>\r\n"
         "\r\n"
-        "VPGGitFormAddWorkspace::VPGGitFormAddWorkspace(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm) : vcc::BaseAction()\r\n"
+        "VPGGitFormAddWorkspace::VPGGitFormAddWorkspace(std::shared_ptr<vcc::LogConfig> logConfig, "
+        "std::shared_ptr<vcc::IObject> parentForm) : vcc::BaseAction()\r\n"
         "{\r\n"
         "    _LogConfig = logConfig;\r\n"
         "    _ParentObject = parentForm;\r\n"
@@ -1645,7 +1757,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "std::wstring VPGGitFormAddWorkspace::getRedoMessageStart() const\r\n"
         "{\r\n"
         "    TRY\r\n"
-        "        // <vcc:VPGGitFormAddWorkspaceGetRedoMessageStart sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // <vcc:VPGGitFormAddWorkspaceGetRedoMessageStart sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "        return L\"execute VPGGitFormAddWorkspace start\";\r\n"
         "        // </vcc:VPGGitFormAddWorkspaceGetRedoMessageStart>\r\n"
         "    CATCH\r\n"
@@ -1655,7 +1768,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "std::wstring VPGGitFormAddWorkspace::getRedoMessageComplete() const\r\n"
         "{\r\n"
         "    TRY\r\n"
-        "        // <vcc:VPGGitFormAddWorkspaceGetRedoMessageComplete sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // <vcc:VPGGitFormAddWorkspaceGetRedoMessageComplete sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "        return L\"execute VPGGitFormAddWorkspace complete\";\r\n"
         "        // </vcc:VPGGitFormAddWorkspaceGetRedoMessageComplete>\r\n"
         "    CATCH\r\n"
@@ -1665,7 +1779,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "std::wstring VPGGitFormAddWorkspace::GetUndoMessageStart() const\r\n"
         "{\r\n"
         "    TRY\r\n"
-        "        // <vcc:VPGGitFormAddWorkspaceGetUndoMessageStart sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // <vcc:VPGGitFormAddWorkspaceGetUndoMessageStart sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "        return L\"Undo VPGGitFormAddWorkspace start\";\r\n"
         "        // </vcc:VPGGitFormAddWorkspaceGetUndoMessageStart>\r\n"
         "    CATCH\r\n"
@@ -1675,7 +1790,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "std::wstring VPGGitFormAddWorkspace::GetUndoMessageComplete() const\r\n"
         "{\r\n"
         "    TRY\r\n"
-        "        // <vcc:VPGGitFormAddWorkspaceGetUndoMessageComplete sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // <vcc:VPGGitFormAddWorkspaceGetUndoMessageComplete sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "        return L\"Undo VPGGitFormAddWorkspace complete\";\r\n"
         "        // </vcc:VPGGitFormAddWorkspaceGetUndoMessageComplete>\r\n"
         "    CATCH\r\n"
@@ -1700,13 +1816,16 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "    return std::make_shared<vcc::OperationResult>();\r\n"
         "}\r\n"
         "\r\n"
-        "VPGGitFormDeleteWorkspace::VPGGitFormDeleteWorkspace(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm) : vcc::BaseAction()\r\n"
+        "VPGGitFormDeleteWorkspace::VPGGitFormDeleteWorkspace(std::shared_ptr<vcc::LogConfig> "
+        "logConfig, std::shared_ptr<vcc::IObject> parentForm) : vcc::BaseAction()\r\n"
         "{\r\n"
         "    _LogConfig = logConfig;\r\n"
         "    _ParentObject = parentForm;\r\n"
         "}\r\n"
         "\r\n"
-        "VPGGitFormDeleteWorkspace::VPGGitFormDeleteWorkspace(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm, std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument) : vcc::BaseAction()\r\n"
+        "VPGGitFormDeleteWorkspace::VPGGitFormDeleteWorkspace(std::shared_ptr<vcc::LogConfig> "
+        "logConfig, std::shared_ptr<vcc::IObject> parentForm, "
+        "std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument) : vcc::BaseAction()\r\n"
         "{\r\n"
         "    _LogConfig = logConfig;\r\n"
         "    _ParentObject = parentForm;\r\n"
@@ -1716,7 +1835,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "std::wstring VPGGitFormDeleteWorkspace::getRedoMessageStart() const\r\n"
         "{\r\n"
         "    TRY\r\n"
-        "        // <vcc:VPGGitFormDeleteWorkspaceGetRedoMessageStart sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // <vcc:VPGGitFormDeleteWorkspaceGetRedoMessageStart sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "        return L\"execute VPGGitFormDeleteWorkspace start\";\r\n"
         "        // </vcc:VPGGitFormDeleteWorkspaceGetRedoMessageStart>\r\n"
         "    CATCH\r\n"
@@ -1726,7 +1846,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "std::wstring VPGGitFormDeleteWorkspace::getRedoMessageComplete() const\r\n"
         "{\r\n"
         "    TRY\r\n"
-        "        // <vcc:VPGGitFormDeleteWorkspaceGetRedoMessageComplete sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // <vcc:VPGGitFormDeleteWorkspaceGetRedoMessageComplete sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "        return L\"execute VPGGitFormDeleteWorkspace complete\";\r\n"
         "        // </vcc:VPGGitFormDeleteWorkspaceGetRedoMessageComplete>\r\n"
         "    CATCH\r\n"
@@ -1736,7 +1857,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "std::wstring VPGGitFormDeleteWorkspace::GetUndoMessageStart() const\r\n"
         "{\r\n"
         "    TRY\r\n"
-        "        // <vcc:VPGGitFormDeleteWorkspaceGetUndoMessageStart sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // <vcc:VPGGitFormDeleteWorkspaceGetUndoMessageStart sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "        return L\"Undo VPGGitFormDeleteWorkspace start\";\r\n"
         "        // </vcc:VPGGitFormDeleteWorkspaceGetUndoMessageStart>\r\n"
         "    CATCH\r\n"
@@ -1746,7 +1868,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "std::wstring VPGGitFormDeleteWorkspace::GetUndoMessageComplete() const\r\n"
         "{\r\n"
         "    TRY\r\n"
-        "        // <vcc:VPGGitFormDeleteWorkspaceGetUndoMessageComplete sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // <vcc:VPGGitFormDeleteWorkspaceGetUndoMessageComplete sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "        return L\"Undo VPGGitFormDeleteWorkspace complete\";\r\n"
         "        // </vcc:VPGGitFormDeleteWorkspaceGetUndoMessageComplete>\r\n"
         "    CATCH\r\n"
@@ -1795,7 +1918,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "    CATCH\r\n"
         "}\r\n"
         "\r\n"
-        "std::shared_ptr<vcc::IResult> VPGGitForm::doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument)\r\n"
+        "std::shared_ptr<vcc::IResult> VPGGitForm::doAction(const int64_t &formProperty, "
+        "std::shared_ptr<vcc::IObject> argument)\r\n"
         "{\r\n"
         "    TRY\r\n"
         "        switch(static_cast<VPGGitFormProperty>(formProperty))\r\n"
@@ -1803,7 +1927,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "        case VPGGitFormProperty::AddWorkspace:\r\n"
         "            return doAddWorkspace();\r\n"
         "        case VPGGitFormProperty::DeleteWorkspace:\r\n"
-        "            return doDeleteWorkspace(std::dynamic_pointer_cast<VPGGitFormDeleteWorkspaceArgument>(argument));\r\n"
+        "            return "
+        "doDeleteWorkspace(std::dynamic_pointer_cast<VPGGitFormDeleteWorkspaceArgument>(argument));"
+        "\r\n"
         "        default:\r\n"
         "            assert(false);\r\n"
         "            break;\r\n"
@@ -1815,7 +1941,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "std::shared_ptr<vcc::IResult> VPGGitForm::doAddWorkspace()\r\n"
         "{\r\n"
         "    TRY\r\n"
-        "        auto action = std::make_shared<VPGGitFormAddWorkspace>(_LogConfig, sharedPtr());\r\n"
+        "        auto action = std::make_shared<VPGGitFormAddWorkspace>(_LogConfig, "
+        "sharedPtr());\r\n"
         "        // <vcc:VPGGitFormDoAddWorkspace sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "        // </vcc:VPGGitFormDoAddWorkspace>\r\n"
         "        return executeAction(action, false);\r\n"
@@ -1823,10 +1950,13 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "    return nullptr;\r\n"
         "}\r\n"
         "\r\n"
-        "std::shared_ptr<vcc::IResult> VPGGitForm::doDeleteWorkspace(std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> argument)\r\n"
+        "std::shared_ptr<vcc::IResult> "
+        "VPGGitForm::doDeleteWorkspace(std::shared_ptr<VPGGitFormDeleteWorkspaceArgument> "
+        "argument)\r\n"
         "{\r\n"
         "    TRY\r\n"
-        "        auto action = std::make_shared<VPGGitFormDeleteWorkspace>(_LogConfig, sharedPtr(), argument);\r\n"
+        "        auto action = std::make_shared<VPGGitFormDeleteWorkspace>(_LogConfig, "
+        "sharedPtr(), argument);\r\n"
         "        // <vcc:VPGGitFormDoDeleteWorkspace sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "        // </vcc:VPGGitFormDoDeleteWorkspace>\r\n"
         "        return executeAction(action, false);\r\n"
@@ -1838,10 +1968,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction)
         "// </vcc:customFunctions>\r\n");
 }
 
-
-TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
-{
-    std::wstring enumClass = L""
+TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace) {
+    std::wstring enumClass =
+        L""
         "#pragma once\r\n"
         "\r\n"
         "namespace Namespace {\r\n"
@@ -1851,7 +1980,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
         "        AddWorkspace // ACTION(AddWorkspace)\r\n"
         "    };\r\n"
         "}\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -1860,18 +1990,26 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
     auto option = std::make_shared<VPGConfig>();
     option->setProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    projectClassIncludeFiles.insert(std::make_pair(L"VPGGitFormDeleteWorkspaceArgument", L"vpg_git_form.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"Namespace::VPGGitFormProperty", L"vpg_git_form.hpp"));
-    projectClassIncludeFiles.insert(std::make_pair(L"vcc::OperationResult", L"operation_result.hpp"));
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix, projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathCpp(), this->getFilePathCpp(), this->getActionFolderPathCpp(), enumClassList);
+    projectClassIncludeFiles.insert(
+        std::make_pair(L"VPGGitFormDeleteWorkspaceArgument", L"vpg_git_form.hpp"));
+    projectClassIncludeFiles.insert(
+        std::make_pair(L"Namespace::VPGGitFormProperty", L"vpg_git_form.hpp"));
+    projectClassIncludeFiles.insert(
+        std::make_pair(L"vcc::OperationResult", L"operation_result.hpp"));
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix,
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathCpp(), this->getFilePathCpp(),
+                                                this->getActionFolderPathCpp(), enumClassList);
 
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()), 
+    EXPECT_EQ(
+        vcc::readFile(this->getFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
@@ -1893,11 +2031,13 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
         "{\r\n"
         "    class VPGGitFormAddWorkspace : public vcc::BaseAction\r\n"
         "    {\r\n"
-        "        // <vcc:customVPGGitFormAddWorkspaceProperties sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "        // <vcc:customVPGGitFormAddWorkspaceProperties sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "        // </vcc:customVPGGitFormAddWorkspaceProperties>\r\n"
         "\r\n"
         "        private:\r\n"
-        "            // <vcc:customVPGGitFormAddWorkspacePrivateFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "            // <vcc:customVPGGitFormAddWorkspacePrivateFunctions sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "            // </vcc:customVPGGitFormAddWorkspacePrivateFunctions>\r\n"
         "\r\n"
         "        protected:\r\n"
@@ -1909,15 +2049,18 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
         "            virtual std::shared_ptr<vcc::IResult> onRedo() override;\r\n"
         "            virtual std::shared_ptr<vcc::IResult> onUndo() override;\r\n"
         "\r\n"
-        "            // <vcc:customVPGGitFormAddWorkspaceProtectedFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "            // <vcc:customVPGGitFormAddWorkspaceProtectedFunctions sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "            // </vcc:customVPGGitFormAddWorkspaceProtectedFunctions>\r\n"
         "\r\n"
         "        public:\r\n"
         "            VPGGitFormAddWorkspace() : vcc::BaseAction() {}\r\n"
-        "            VPGGitFormAddWorkspace(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm);\r\n"
+        "            VPGGitFormAddWorkspace(std::shared_ptr<vcc::LogConfig> logConfig, "
+        "std::shared_ptr<vcc::IObject> parentForm);\r\n"
         "            ~VPGGitFormAddWorkspace() {}\r\n"
         "\r\n"
-        "            // <vcc:customVPGGitFormAddWorkspacePublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "            // <vcc:customVPGGitFormAddWorkspacePublicFunctions sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "            // </vcc:customVPGGitFormAddWorkspacePublicFunctions>\r\n"
         "    };\r\n"
         "\r\n"
@@ -1933,7 +2076,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
         "            // </vcc:customVPGGitFormPrivateFunctions>\r\n"
         "\r\n"
         "        protected:\r\n"
-        "            // <vcc:customVPGGitFormProtectedFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "            // <vcc:customVPGGitFormProtectedFunctions sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "            // </vcc:customVPGGitFormProtectedFunctions>\r\n"
         "\r\n"
         "        public:\r\n"
@@ -1944,13 +2088,15 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
         "\r\n"
         "            virtual void initializeComponents() override;\r\n"
         "\r\n"
-        "            virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> argument) override;\r\n"
+        "            virtual std::shared_ptr<vcc::IResult> doAction(const int64_t &formProperty, "
+        "std::shared_ptr<vcc::IObject> argument) override;\r\n"
         "\r\n"
         "            // <vcc:customVPGGitFormPublicFunctions sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "            // </vcc:customVPGGitFormPublicFunctions>\r\n"
         "    };\r\n"
         "}\r\n");
-    EXPECT_EQ(vcc::readFile(this->getFilePathCpp()),
+    EXPECT_EQ(
+        vcc::readFile(this->getFilePathCpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#include \"vcc_object.hpp\"\r\n"
         "\r\n"
@@ -1972,7 +2118,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
         "\r\n"
         "namespace Namespace\r\n"
         "{\r\n"
-        "    VPGGitFormAddWorkspace::VPGGitFormAddWorkspace(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> parentForm) : vcc::BaseAction()\r\n"
+        "    VPGGitFormAddWorkspace::VPGGitFormAddWorkspace(std::shared_ptr<vcc::LogConfig> "
+        "logConfig, std::shared_ptr<vcc::IObject> parentForm) : vcc::BaseAction()\r\n"
         "    {\r\n"
         "        _LogConfig = logConfig;\r\n"
         "        _ParentObject = parentForm;\r\n"
@@ -1981,7 +2128,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
         "    std::wstring VPGGitFormAddWorkspace::getRedoMessageStart() const\r\n"
         "    {\r\n"
         "        TRY\r\n"
-        "            // <vcc:VPGGitFormAddWorkspaceGetRedoMessageStart sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "            // <vcc:VPGGitFormAddWorkspaceGetRedoMessageStart sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "            return L\"execute VPGGitFormAddWorkspace start\";\r\n"
         "            // </vcc:VPGGitFormAddWorkspaceGetRedoMessageStart>\r\n"
         "        CATCH\r\n"
@@ -1991,7 +2139,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
         "    std::wstring VPGGitFormAddWorkspace::getRedoMessageComplete() const\r\n"
         "    {\r\n"
         "        TRY\r\n"
-        "            // <vcc:VPGGitFormAddWorkspaceGetRedoMessageComplete sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "            // <vcc:VPGGitFormAddWorkspaceGetRedoMessageComplete sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "            return L\"execute VPGGitFormAddWorkspace complete\";\r\n"
         "            // </vcc:VPGGitFormAddWorkspaceGetRedoMessageComplete>\r\n"
         "        CATCH\r\n"
@@ -2001,7 +2150,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
         "    std::wstring VPGGitFormAddWorkspace::GetUndoMessageStart() const\r\n"
         "    {\r\n"
         "        TRY\r\n"
-        "            // <vcc:VPGGitFormAddWorkspaceGetUndoMessageStart sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "            // <vcc:VPGGitFormAddWorkspaceGetUndoMessageStart sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "            return L\"Undo VPGGitFormAddWorkspace start\";\r\n"
         "            // </vcc:VPGGitFormAddWorkspaceGetUndoMessageStart>\r\n"
         "        CATCH\r\n"
@@ -2011,7 +2161,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
         "    std::wstring VPGGitFormAddWorkspace::GetUndoMessageComplete() const\r\n"
         "    {\r\n"
         "        TRY\r\n"
-        "            // <vcc:VPGGitFormAddWorkspaceGetUndoMessageComplete sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
+        "            // <vcc:VPGGitFormAddWorkspaceGetUndoMessageComplete sync=\"RESERVE\" "
+        "gen=\"RESERVE\">\r\n"
         "            return L\"Undo VPGGitFormAddWorkspace complete\";\r\n"
         "            // </vcc:VPGGitFormAddWorkspaceGetUndoMessageComplete>\r\n"
         "        CATCH\r\n"
@@ -2060,7 +2211,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
         "        CATCH\r\n"
         "    }\r\n"
         "\r\n"
-        "    std::shared_ptr<vcc::IResult> VPGGitForm::doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> /*argument*/)\r\n"
+        "    std::shared_ptr<vcc::IResult> VPGGitForm::doAction(const int64_t &formProperty, "
+        "std::shared_ptr<vcc::IObject> /*argument*/)\r\n"
         "    {\r\n"
         "        TRY\r\n"
         "            switch(static_cast<Namespace::VPGGitFormProperty>(formProperty))\r\n"
@@ -2078,7 +2230,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
         "    std::shared_ptr<vcc::IResult> VPGGitForm::doAddWorkspace()\r\n"
         "    {\r\n"
         "        TRY\r\n"
-        "            auto action = std::make_shared<Namespace::VPGGitFormAddWorkspace>(_LogConfig, sharedPtr());\r\n"
+        "            auto action = std::make_shared<Namespace::VPGGitFormAddWorkspace>(_LogConfig, "
+        "sharedPtr());\r\n"
         "            // <vcc:VPGGitFormDoAddWorkspace sync=\"RESERVE\" gen=\"RESERVE\">\r\n"
         "            // </vcc:VPGGitFormDoAddWorkspace>\r\n"
         "            return executeAction(action, false);\r\n"
@@ -2091,9 +2244,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, FormAction_Namespace)
         "// </vcc:customFunctions>\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, ActionArgument)
-{
-    std::wstring enumClass = L"#pragma once\r\n"
+TEST_F(VPGObjectFileGenerationServiceTest, ActionArgument) {
+    std::wstring enumClass =
+        L"#pragma once\r\n"
         "\r\n"
         "// @@ActionArgument\r\n"
         "enum class VPGActionArgumentProperty\r\n"
@@ -2101,7 +2254,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, ActionArgument)
         "    EnumA, // GETSET(bool, EnumA, false)\r\n"
         "    EnumB // GETSET(int64_t, EnumB, 0)\r\n"
         "};\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_action_argument_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_action_argument_property.hpp"}),
+                   enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -2110,12 +2264,15 @@ TEST_F(VPGObjectFileGenerationServiceTest, ActionArgument)
     auto option = std::make_shared<VPGConfig>();
     option->setProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_FALSE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()), 
+    EXPECT_EQ(
+        vcc::readFile(this->getFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
@@ -2139,16 +2296,17 @@ TEST_F(VPGObjectFileGenerationServiceTest, ActionArgument)
         "};\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, Result)
-{
-    std::wstring enumClass = L"#pragma once\r\n"
+TEST_F(VPGObjectFileGenerationServiceTest, Result) {
+    std::wstring enumClass =
+        L"#pragma once\r\n"
         "\r\n"
         "// @@Result\r\n"
         "enum class VPGActionResultProperty\r\n"
         "{\r\n"
         "    EnumA // GETSET(bool, EnumA, false)\r\n"
         "};\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_action_result_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_action_result_property.hpp"}),
+                   enumClass, true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -2157,12 +2315,15 @@ TEST_F(VPGObjectFileGenerationServiceTest, Result)
     auto option = std::make_shared<VPGConfig>();
     option->setProjectPrefix(classPrefix);
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_FALSE(vcc::isFilePresent(this->getFilePathCpp()));
 
-    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()), 
+    EXPECT_EQ(
+        vcc::readFile(this->getFilePathHpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#pragma once\r\n"
         "\r\n"
@@ -2180,7 +2341,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Result)
         "\r\n"
         "    public:\r\n"
         "        VPGActionResult() : VPGActionResult(ExceptionType::NoError, L\"\") {}\r\n"
-        "        VPGActionResult(const ExceptionType &exceptionType, const std::wstring &errorMessage) : BaseResult(ObjectType::ActionResult, exceptionType, errorMessage) {}\r\n"
+        "        VPGActionResult(const ExceptionType &exceptionType, const std::wstring "
+        "&errorMessage) : BaseResult(ObjectType::ActionResult, exceptionType, errorMessage) {}\r\n"
         "        virtual ~VPGActionResult() {}\r\n"
         "\r\n"
         "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
@@ -2190,9 +2352,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, Result)
         "};\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, Json)
-{
-    std::wstring enumClass = L""
+TEST_F(VPGObjectFileGenerationServiceTest, Json) {
+    std::wstring enumClass =
+        L""
         "#pragma once\r\n"
         "\r\n"
         "// @@Json\r\n"
@@ -2216,7 +2378,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "    SetObject, // SET_SPTR(VPGObject, SetObject)\r\n"
         "    OrderedMapObject // ORDERED_MAP_SPTR_R(int, VPGObject, OrderedMapObject)\r\n"
         "};\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -2227,71 +2390,77 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObject", L"vcc_object.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"vcc::JsonInternalType", L"json.hpp"));
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
-        this->getFilePathCpp(), this->getFilePathCpp(), this->getActionFolderPathCpp(), enumClassList);
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix,
+                                                _IncludeFiles, _EnumClasses, this->getFilePathCpp(),
+                                                this->getFilePathCpp(),
+                                                this->getActionFolderPathCpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
     EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#pragma once\r\n"
-        "\r\n"
-        "#include <memory>\r\n"
-        "#include <string>\r\n"
-        "\r\n"
-        "#include \"base_json_object.hpp\"\r\n"
-        "#include \"base_object.hpp\"\r\n"
-        "#include \"class_macro.hpp\"\r\n"
-        "#include \"i_document.hpp\"\r\n"
-        "#include \"json.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "\r\n"
-        "class VPGObject : public vcc::BaseObject, public vcc::BaseJsonObject\r\n"
-        "{\r\n"
-        "    GETSET(bool, Boolean, false)\r\n"
-        "    GETSET(int, Integer, 0)\r\n"
-        "    GETSET(vcc::JsonInternalType, Enum, JsonInternalType::String)\r\n"
-        "    GETSET(double, Double, 0)\r\n"
-        "    GETSET(std::string, String, \"\")\r\n"
-        "    GETSET(std::wstring, Wstring, L\"\")\r\n"
-        "    VECTOR(int, Vector)\r\n"
-        "    MAP(int, int, Map)\r\n"
-        "    MAP(vcc::JsonInternalType, std::wstring, MapEnumString)\r\n"
-        "    MAP(std::wstring, vcc::JsonInternalType, MapStringEnum)\r\n"
-        "    SET(int, Set)\r\n"
-        "    ORDERED_MAP(int, int, OrderedMap)\r\n"
-        "    GETSET_SPTR(VPGObject, Object)\r\n"
-        "    VECTOR_SPTR(VPGObject, VectorObject)\r\n"
-        "    MAP_SPTR_R(int, VPGObject, MapObject)\r\n"
-        "    SET_SPTR(VPGObject, SetObject)\r\n"
-        "    ORDERED_MAP_SPTR_R(int, VPGObject, OrderedMapObject)\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGObject() : vcc::BaseObject(ObjectType::Object)\r\n"
-        "        {\r\n"
-        "            _Object = std::make_shared<VPGObject>();\r\n"
-        "        }\r\n"
-        "\r\n"
-        "        virtual ~VPGObject() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
-        "        {\r\n"
-        "            auto obj = std::make_shared<VPGObject>(*this);\r\n"
-        "            obj->cloneMapObject(this->_MapObject);\r\n"
-        "            obj->cloneObject(this->_Object.get());\r\n"
-        "            obj->cloneOrderedMapObject(this->_OrderedMapObject);\r\n"
-        "            obj->cloneSetObject(this->_SetObject);\r\n"
-        "            obj->cloneVectorObject(this->_VectorObject);\r\n"
-        "            return obj;\r\n"
-        "        }\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::Json> toJson() const override;\r\n"
-        "        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) override;\r\n"
-        "};\r\n");
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#pragma once\r\n"
+              "\r\n"
+              "#include <memory>\r\n"
+              "#include <string>\r\n"
+              "\r\n"
+              "#include \"base_json_object.hpp\"\r\n"
+              "#include \"base_object.hpp\"\r\n"
+              "#include \"class_macro.hpp\"\r\n"
+              "#include \"i_document.hpp\"\r\n"
+              "#include \"json.hpp\"\r\n"
+              "#include \"object_type.hpp\"\r\n"
+              "\r\n"
+              "class VPGObject : public vcc::BaseObject, public vcc::BaseJsonObject\r\n"
+              "{\r\n"
+              "    GETSET(bool, Boolean, false)\r\n"
+              "    GETSET(int, Integer, 0)\r\n"
+              "    GETSET(vcc::JsonInternalType, Enum, JsonInternalType::String)\r\n"
+              "    GETSET(double, Double, 0)\r\n"
+              "    GETSET(std::string, String, \"\")\r\n"
+              "    GETSET(std::wstring, Wstring, L\"\")\r\n"
+              "    VECTOR(int, Vector)\r\n"
+              "    MAP(int, int, Map)\r\n"
+              "    MAP(vcc::JsonInternalType, std::wstring, MapEnumString)\r\n"
+              "    MAP(std::wstring, vcc::JsonInternalType, MapStringEnum)\r\n"
+              "    SET(int, Set)\r\n"
+              "    ORDERED_MAP(int, int, OrderedMap)\r\n"
+              "    GETSET_SPTR(VPGObject, Object)\r\n"
+              "    VECTOR_SPTR(VPGObject, VectorObject)\r\n"
+              "    MAP_SPTR_R(int, VPGObject, MapObject)\r\n"
+              "    SET_SPTR(VPGObject, SetObject)\r\n"
+              "    ORDERED_MAP_SPTR_R(int, VPGObject, OrderedMapObject)\r\n"
+              "\r\n"
+              "    public:\r\n"
+              "        VPGObject() : vcc::BaseObject(ObjectType::Object)\r\n"
+              "        {\r\n"
+              "            _Object = std::make_shared<VPGObject>();\r\n"
+              "        }\r\n"
+              "\r\n"
+              "        virtual ~VPGObject() {}\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
+              "        {\r\n"
+              "            auto obj = std::make_shared<VPGObject>(*this);\r\n"
+              "            obj->cloneMapObject(this->_MapObject);\r\n"
+              "            obj->cloneObject(this->_Object.get());\r\n"
+              "            obj->cloneOrderedMapObject(this->_OrderedMapObject);\r\n"
+              "            obj->cloneSetObject(this->_SetObject);\r\n"
+              "            obj->cloneVectorObject(this->_VectorObject);\r\n"
+              "            return obj;\r\n"
+              "        }\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::Json> toJson() const override;\r\n"
+              "        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) "
+              "override;\r\n"
+              "};\r\n");
 
-    EXPECT_EQ(vcc::readFile(this->getFilePathCpp()),
+    EXPECT_EQ(
+        vcc::readFile(this->getFilePathCpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#include \"vcc_object.hpp\"\r\n"
         "\r\n"
@@ -2313,9 +2482,11 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "        int64_t decimalPlaces = -1;\r\n"
         "        auto json = std::make_unique<vcc::Json>();\r\n"
         "        // Boolean\r\n"
-        "        json->addBool(vcc::convertNamingStyle(L\"Boolean\", vcc::NamingStyle::PascalCase, namestyle), getBoolean());\r\n"
+        "        json->addBool(vcc::convertNamingStyle(L\"Boolean\", vcc::NamingStyle::PascalCase, "
+        "namestyle), getBoolean());\r\n"
         "        // Integer\r\n"
-        "        json->addInt(vcc::convertNamingStyle(L\"Integer\", vcc::NamingStyle::PascalCase, namestyle), getInteger());\r\n"
+        "        json->addInt(vcc::convertNamingStyle(L\"Integer\", vcc::NamingStyle::PascalCase, "
+        "namestyle), getInteger());\r\n"
         "        // Enum\r\n"
         "        std::wstring enumValueStr = L\"\";\r\n"
         "        switch (getEnum())\r\n"
@@ -2345,28 +2516,36 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "            assert(false);\r\n"
         "            break;\r\n"
         "        }\r\n"
-        "        json->addString(vcc::convertNamingStyle(L\"Enum\", vcc::NamingStyle::PascalCase, namestyle), enumValueStr);\r\n"
+        "        json->addString(vcc::convertNamingStyle(L\"Enum\", vcc::NamingStyle::PascalCase, "
+        "namestyle), enumValueStr);\r\n"
         "        // Double\r\n"
-        "        json->addDouble(vcc::convertNamingStyle(L\"Double\", vcc::NamingStyle::PascalCase, namestyle), getDouble(), decimalPlaces >= 0 ? decimalPlaces : getDecimalPlaces(getDouble()));\r\n"
+        "        json->addDouble(vcc::convertNamingStyle(L\"Double\", "
+        "vcc::NamingStyle::PascalCase, namestyle), getDouble(), decimalPlaces >= 0 ? decimalPlaces "
+        ": getDecimalPlaces(getDouble()));\r\n"
         "        // String\r\n"
-        "        json->addString(vcc::convertNamingStyle(L\"String\", vcc::NamingStyle::PascalCase, namestyle), str2wstr(getString()));\r\n"
+        "        json->addString(vcc::convertNamingStyle(L\"String\", "
+        "vcc::NamingStyle::PascalCase, namestyle), str2wstr(getString()));\r\n"
         "        // Wstring\r\n"
-        "        json->addString(vcc::convertNamingStyle(L\"Wstring\", vcc::NamingStyle::PascalCase, namestyle), getWstring());\r\n"
+        "        json->addString(vcc::convertNamingStyle(L\"Wstring\", "
+        "vcc::NamingStyle::PascalCase, namestyle), getWstring());\r\n"
         "        // Vector\r\n"
         "        auto tmpVector = std::make_shared<vcc::Json>();\r\n"
-        "        json->addArray(vcc::convertNamingStyle(L\"Vector\", vcc::NamingStyle::PascalCase, namestyle), tmpVector);\r\n"
+        "        json->addArray(vcc::convertNamingStyle(L\"Vector\", vcc::NamingStyle::PascalCase, "
+        "namestyle), tmpVector);\r\n"
         "        for (auto const &element : getVector()) {\r\n"
         "            tmpVector->addArrayInt(element);\r\n"
         "        }\r\n"
         "        // Map\r\n"
         "        auto tmpMap = std::make_shared<vcc::Json>();\r\n"
-        "        json->addObject(vcc::convertNamingStyle(L\"Map\", vcc::NamingStyle::PascalCase, namestyle), tmpMap);\r\n"
+        "        json->addObject(vcc::convertNamingStyle(L\"Map\", vcc::NamingStyle::PascalCase, "
+        "namestyle), tmpMap);\r\n"
         "        for (auto const &element : getMap()) {\r\n"
         "            tmpMap->addInt(std::to_wstring(element.first), element.second);\r\n"
         "        }\r\n"
         "        // MapEnumString\r\n"
         "        auto tmpMapEnumString = std::make_shared<vcc::Json>();\r\n"
-        "        json->addObject(vcc::convertNamingStyle(L\"MapEnumString\", vcc::NamingStyle::PascalCase, namestyle), tmpMapEnumString);\r\n"
+        "        json->addObject(vcc::convertNamingStyle(L\"MapEnumString\", "
+        "vcc::NamingStyle::PascalCase, namestyle), tmpMapEnumString);\r\n"
         "        for (auto const &element : getMapEnumString()) {\r\n"
         "            std::wstring keyStr = L\"\";\r\n"
         "            switch (element.first)\r\n"
@@ -2400,7 +2579,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "        }\r\n"
         "        // MapStringEnum\r\n"
         "        auto tmpMapStringEnum = std::make_shared<vcc::Json>();\r\n"
-        "        json->addObject(vcc::convertNamingStyle(L\"MapStringEnum\", vcc::NamingStyle::PascalCase, namestyle), tmpMapStringEnum);\r\n"
+        "        json->addObject(vcc::convertNamingStyle(L\"MapStringEnum\", "
+        "vcc::NamingStyle::PascalCase, namestyle), tmpMapStringEnum);\r\n"
         "        for (auto const &element : getMapStringEnum()) {\r\n"
         "            std::wstring valueStr = L\"\";\r\n"
         "            switch (element.second)\r\n"
@@ -2434,44 +2614,54 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "        }\r\n"
         "        // Set\r\n"
         "        auto tmpSet = std::make_shared<vcc::Json>();\r\n"
-        "        json->addArray(vcc::convertNamingStyle(L\"Set\", vcc::NamingStyle::PascalCase, namestyle), tmpSet);\r\n"
+        "        json->addArray(vcc::convertNamingStyle(L\"Set\", vcc::NamingStyle::PascalCase, "
+        "namestyle), tmpSet);\r\n"
         "        for (auto const &element : getSet()) {\r\n"
         "            tmpSet->addArrayInt(element);\r\n"
         "        }\r\n"
         "        // OrderedMap\r\n"
         "        auto tmpOrderedMap = std::make_shared<vcc::Json>();\r\n"
-        "        json->addObject(vcc::convertNamingStyle(L\"OrderedMap\", vcc::NamingStyle::PascalCase, namestyle), tmpOrderedMap);\r\n"
+        "        json->addObject(vcc::convertNamingStyle(L\"OrderedMap\", "
+        "vcc::NamingStyle::PascalCase, namestyle), tmpOrderedMap);\r\n"
         "        for (auto const &element : getOrderedMap()) {\r\n"
         "            tmpOrderedMap->addInt(std::to_wstring(element.first), element.second);\r\n"
         "        }\r\n"
         "        // Object\r\n"
         "        if (getObject() != nullptr)\r\n"
-        "            json->addObject(vcc::convertNamingStyle(L\"Object\", vcc::NamingStyle::PascalCase, namestyle), getObject()->toJson());\r\n"
+        "            json->addObject(vcc::convertNamingStyle(L\"Object\", "
+        "vcc::NamingStyle::PascalCase, namestyle), getObject()->toJson());\r\n"
         "        else\r\n"
-        "            json->addNull(vcc::convertNamingStyle(L\"Object\", vcc::NamingStyle::PascalCase, namestyle));\r\n"
+        "            json->addNull(vcc::convertNamingStyle(L\"Object\", "
+        "vcc::NamingStyle::PascalCase, namestyle));\r\n"
         "        // VectorObject\r\n"
         "        auto tmpVectorObject = std::make_shared<vcc::Json>();\r\n"
-        "        json->addArray(vcc::convertNamingStyle(L\"VectorObject\", vcc::NamingStyle::PascalCase, namestyle), tmpVectorObject);\r\n"
+        "        json->addArray(vcc::convertNamingStyle(L\"VectorObject\", "
+        "vcc::NamingStyle::PascalCase, namestyle), tmpVectorObject);\r\n"
         "        for (auto const &element : getVectorObject()) {\r\n"
         "            tmpVectorObject->addArrayObject(element->toJson());\r\n"
         "        }\r\n"
         "        // MapObject\r\n"
         "        auto tmpMapObject = std::make_shared<vcc::Json>();\r\n"
-        "        json->addObject(vcc::convertNamingStyle(L\"MapObject\", vcc::NamingStyle::PascalCase, namestyle), tmpMapObject);\r\n"
+        "        json->addObject(vcc::convertNamingStyle(L\"MapObject\", "
+        "vcc::NamingStyle::PascalCase, namestyle), tmpMapObject);\r\n"
         "        for (auto const &element : getMapObject()) {\r\n"
-        "            tmpMapObject->addObject(std::to_wstring(element.first), element.second->toJson());\r\n"
+        "            tmpMapObject->addObject(std::to_wstring(element.first), "
+        "element.second->toJson());\r\n"
         "        }\r\n"
         "        // SetObject\r\n"
         "        auto tmpSetObject = std::make_shared<vcc::Json>();\r\n"
-        "        json->addArray(vcc::convertNamingStyle(L\"SetObject\", vcc::NamingStyle::PascalCase, namestyle), tmpSetObject);\r\n"
+        "        json->addArray(vcc::convertNamingStyle(L\"SetObject\", "
+        "vcc::NamingStyle::PascalCase, namestyle), tmpSetObject);\r\n"
         "        for (auto const &element : getSetObject()) {\r\n"
         "            tmpSetObject->addArrayObject(element->toJson());\r\n"
         "        }\r\n"
         "        // OrderedMapObject\r\n"
         "        auto tmpOrderedMapObject = std::make_shared<vcc::Json>();\r\n"
-        "        json->addObject(vcc::convertNamingStyle(L\"OrderedMapObject\", vcc::NamingStyle::PascalCase, namestyle), tmpOrderedMapObject);\r\n"
+        "        json->addObject(vcc::convertNamingStyle(L\"OrderedMapObject\", "
+        "vcc::NamingStyle::PascalCase, namestyle), tmpOrderedMapObject);\r\n"
         "        for (auto const &element : getOrderedMapObject()) {\r\n"
-        "            tmpOrderedMapObject->addObject(std::to_wstring(element.first), element.second->toJson());\r\n"
+        "            tmpOrderedMapObject->addObject(std::to_wstring(element.first), "
+        "element.second->toJson());\r\n"
         "        }\r\n"
         "        return json;\r\n"
         "    CATCH\r\n"
@@ -2485,14 +2675,22 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "        auto json = std::dynamic_pointer_cast<vcc::Json>(document);\r\n"
         "        assert(json != nullptr);\r\n"
         "        // Boolean\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Boolean\", namestyle, vcc::NamingStyle::PascalCase)))\r\n"
-        "            setBoolean(json->getBool(vcc::convertNamingStyle(L\"Boolean\", namestyle, vcc::NamingStyle::PascalCase)));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Boolean\", namestyle, "
+        "vcc::NamingStyle::PascalCase)))\r\n"
+        "            setBoolean(json->getBool(vcc::convertNamingStyle(L\"Boolean\", namestyle, "
+        "vcc::NamingStyle::PascalCase)));\r\n"
         "        // Integer\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Integer\", namestyle, vcc::NamingStyle::PascalCase)))\r\n"
-        "            setInteger(static_cast<int>(json->getInt64(vcc::convertNamingStyle(L\"Integer\", namestyle, vcc::NamingStyle::PascalCase))));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Integer\", namestyle, "
+        "vcc::NamingStyle::PascalCase)))\r\n"
+        "            "
+        "setInteger(static_cast<int>(json->getInt64(vcc::convertNamingStyle(L\"Integer\", "
+        "namestyle, vcc::NamingStyle::PascalCase))));\r\n"
         "        // Enum\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Enum\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
-        "            std::wstring valueEnumStr = json->getString(vcc::convertNamingStyle(L\"Enum\", namestyle, vcc::NamingStyle::PascalCase));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Enum\", namestyle, "
+        "vcc::NamingStyle::PascalCase))) {\r\n"
+        "            std::wstring valueEnumStr = "
+        "json->getString(vcc::convertNamingStyle(L\"Enum\", namestyle, "
+        "vcc::NamingStyle::PascalCase));\r\n"
         "            std::wstring valueEnumStrUpper = valueEnumStr;\r\n"
         "            vcc::toUpper(valueEnumStrUpper);\r\n"
         "            int64_t valueEnum = -1;\r\n"
@@ -2514,34 +2712,52 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "                setEnum(static_cast<JsonInternalType>(valueEnum));\r\n"
         "        }\r\n"
         "        // Double\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Double\", namestyle, vcc::NamingStyle::PascalCase)))\r\n"
-        "            setDouble(static_cast<double>(json->getDouble(vcc::convertNamingStyle(L\"Double\", namestyle, vcc::NamingStyle::PascalCase))));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Double\", namestyle, "
+        "vcc::NamingStyle::PascalCase)))\r\n"
+        "            "
+        "setDouble(static_cast<double>(json->getDouble(vcc::convertNamingStyle(L\"Double\", "
+        "namestyle, vcc::NamingStyle::PascalCase))));\r\n"
         "        // String\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"String\", namestyle, vcc::NamingStyle::PascalCase)))\r\n"
-        "            setString(wstr2str(json->getString(vcc::convertNamingStyle(L\"String\", namestyle, vcc::NamingStyle::PascalCase))));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"String\", namestyle, "
+        "vcc::NamingStyle::PascalCase)))\r\n"
+        "            setString(wstr2str(json->getString(vcc::convertNamingStyle(L\"String\", "
+        "namestyle, vcc::NamingStyle::PascalCase))));\r\n"
         "        // Wstring\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Wstring\", namestyle, vcc::NamingStyle::PascalCase)))\r\n"
-        "            setWstring(json->getString(vcc::convertNamingStyle(L\"Wstring\", namestyle, vcc::NamingStyle::PascalCase)));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Wstring\", namestyle, "
+        "vcc::NamingStyle::PascalCase)))\r\n"
+        "            setWstring(json->getString(vcc::convertNamingStyle(L\"Wstring\", namestyle, "
+        "vcc::NamingStyle::PascalCase)));\r\n"
         "        // Vector\r\n"
         "        clearVector();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Vector\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
-        "            for (auto const &element : json->getArray(vcc::convertNamingStyle(L\"Vector\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Vector\", namestyle, "
+        "vcc::NamingStyle::PascalCase))) {\r\n"
+        "            for (auto const &element : "
+        "json->getArray(vcc::convertNamingStyle(L\"Vector\", namestyle, "
+        "vcc::NamingStyle::PascalCase))) {\r\n"
         "                insertVector(static_cast<int>(element->getArrayElementInt64()));\r\n"
         "            }\r\n"
         "        }\r\n"
         "        // Map\r\n"
         "        clearMap();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Map\", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"Map\", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
-        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"Map\", namestyle, vcc::NamingStyle::PascalCase));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Map\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"Map\", "
+        "namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
+        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"Map\", namestyle, "
+        "vcc::NamingStyle::PascalCase));\r\n"
         "            auto tmpKeys = tmpObject->getKeys();\r\n"
         "            for (auto const &key : tmpKeys) {\r\n"
-        "                insertMapAtKey(std::stoi(key), static_cast<int>(tmpObject->getInt64(key)));\r\n"
+        "                insertMapAtKey(std::stoi(key), "
+        "static_cast<int>(tmpObject->getInt64(key)));\r\n"
         "            }\r\n"
         "        }\r\n"
         "        // MapEnumString\r\n"
         "        clearMapEnumString();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"MapEnumString\", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"MapEnumString\", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
-        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"MapEnumString\", namestyle, vcc::NamingStyle::PascalCase));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"MapEnumString\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) && "
+        "json->getObject(vcc::convertNamingStyle(L\"MapEnumString\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
+        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"MapEnumString\", "
+        "namestyle, vcc::NamingStyle::PascalCase));\r\n"
         "            auto tmpKeys = tmpObject->getKeys();\r\n"
         "            for (auto const &key : tmpKeys) {\r\n"
         "                std::wstring keyEnumStr = key;\r\n"
@@ -2563,16 +2779,23 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "                else if (keyEnumStrUpper == L\"STRING\")\r\n"
         "                    keyEnum = static_cast<int64_t>(vcc::JsonInternalType::String);\r\n"
         "                if (keyEnum > -1)\r\n"
-        "                    insertMapEnumStringAtKey(static_cast<vcc::JsonInternalType>(keyEnum), tmpObject->getString(keyEnumStr));\r\n"
+        "                    insertMapEnumStringAtKey(static_cast<vcc::JsonInternalType>(keyEnum), "
+        "tmpObject->getString(keyEnumStr));\r\n"
         "            }\r\n"
         "        }\r\n"
         "        // MapStringEnum\r\n"
         "        clearMapStringEnum();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"MapStringEnum\", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"MapStringEnum\", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
-        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"MapStringEnum\", namestyle, vcc::NamingStyle::PascalCase));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"MapStringEnum\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) && "
+        "json->getObject(vcc::convertNamingStyle(L\"MapStringEnum\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
+        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"MapStringEnum\", "
+        "namestyle, vcc::NamingStyle::PascalCase));\r\n"
         "            auto tmpKeys = tmpObject->getKeys();\r\n"
         "            for (auto const &key : tmpKeys) {\r\n"
-        "                std::wstring valueEnumStr = json->getString(vcc::convertNamingStyle(L\"MapStringEnum\", namestyle, vcc::NamingStyle::PascalCase));\r\n"
+        "                std::wstring valueEnumStr = "
+        "json->getString(vcc::convertNamingStyle(L\"MapStringEnum\", namestyle, "
+        "vcc::NamingStyle::PascalCase));\r\n"
         "                std::wstring valueEnumStrUpper = valueEnumStr;\r\n"
         "                vcc::toUpper(valueEnumStrUpper);\r\n"
         "                int64_t valueEnum = -1;\r\n"
@@ -2591,36 +2814,51 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "                else if (valueEnumStrUpper == L\"STRING\")\r\n"
         "                    valueEnum = static_cast<int64_t>(vcc::JsonInternalType::String);\r\n"
         "                if (valueEnum > -1)\r\n"
-        "                    insertMapStringEnumAtKey(key, static_cast<vcc::JsonInternalType>(valueEnum));\r\n"
+        "                    insertMapStringEnumAtKey(key, "
+        "static_cast<vcc::JsonInternalType>(valueEnum));\r\n"
         "            }\r\n"
         "        }\r\n"
         "        // Set\r\n"
         "        clearSet();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Set\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
-        "            for (auto const &element : json->getArray(vcc::convertNamingStyle(L\"Set\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Set\", namestyle, "
+        "vcc::NamingStyle::PascalCase))) {\r\n"
+        "            for (auto const &element : json->getArray(vcc::convertNamingStyle(L\"Set\", "
+        "namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
         "                insertSet(static_cast<int>(element->getArrayElementInt64()));\r\n"
         "            }\r\n"
         "        }\r\n"
         "        // OrderedMap\r\n"
         "        clearOrderedMap();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"OrderedMap\", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"OrderedMap\", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
-        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"OrderedMap\", namestyle, vcc::NamingStyle::PascalCase));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"OrderedMap\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) && "
+        "json->getObject(vcc::convertNamingStyle(L\"OrderedMap\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
+        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"OrderedMap\", "
+        "namestyle, vcc::NamingStyle::PascalCase));\r\n"
         "            auto tmpKeys = tmpObject->getKeys();\r\n"
         "            for (auto const &key : tmpKeys) {\r\n"
-        "                insertOrderedMapAtKey(std::stoi(key), static_cast<int>(tmpObject->getInt64(key)));\r\n"
+        "                insertOrderedMapAtKey(std::stoi(key), "
+        "static_cast<int>(tmpObject->getInt64(key)));\r\n"
         "            }\r\n"
         "        }\r\n"
         "        // Object\r\n"
         "        setObject(std::make_shared<VPGObject>());\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Object\", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"Object\", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Object\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"Object\", "
+        "namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
         "            auto tmpObject = std::make_shared<VPGObject>();\r\n"
-        "            tmpObject->deserializeJson(json->getObject(vcc::convertNamingStyle(L\"Object\", namestyle, vcc::NamingStyle::PascalCase)));\r\n"
+        "            "
+        "tmpObject->deserializeJson(json->getObject(vcc::convertNamingStyle(L\"Object\", "
+        "namestyle, vcc::NamingStyle::PascalCase)));\r\n"
         "            setObject(tmpObject);\r\n"
         "        }\r\n"
         "        // VectorObject\r\n"
         "        clearVectorObject();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"VectorObject\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
-        "            for (auto const &element : json->getArray(vcc::convertNamingStyle(L\"VectorObject\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"VectorObject\", namestyle, "
+        "vcc::NamingStyle::PascalCase))) {\r\n"
+        "            for (auto const &element : "
+        "json->getArray(vcc::convertNamingStyle(L\"VectorObject\", namestyle, "
+        "vcc::NamingStyle::PascalCase))) {\r\n"
         "                auto tmpVectorObject = std::make_shared<VPGObject>();\r\n"
         "                tmpVectorObject->deserializeJson(element->getArrayElementObject());\r\n"
         "                insertVectorObject(tmpVectorObject);\r\n"
@@ -2628,8 +2866,11 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "        }\r\n"
         "        // MapObject\r\n"
         "        clearMapObject();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"MapObject\", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"MapObject\", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
-        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"MapObject\", namestyle, vcc::NamingStyle::PascalCase));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"MapObject\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"MapObject\", "
+        "namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
+        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"MapObject\", "
+        "namestyle, vcc::NamingStyle::PascalCase));\r\n"
         "            auto tmpKeys = tmpObject->getKeys();\r\n"
         "            for (auto const &key : tmpKeys) {\r\n"
         "                if (tmpObject->getObject(key) != nullptr) {\r\n"
@@ -2642,8 +2883,11 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "        }\r\n"
         "        // SetObject\r\n"
         "        clearSetObject();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"SetObject\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
-        "            for (auto const &element : json->getArray(vcc::convertNamingStyle(L\"SetObject\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"SetObject\", namestyle, "
+        "vcc::NamingStyle::PascalCase))) {\r\n"
+        "            for (auto const &element : "
+        "json->getArray(vcc::convertNamingStyle(L\"SetObject\", namestyle, "
+        "vcc::NamingStyle::PascalCase))) {\r\n"
         "                auto tmpSetObject = std::make_shared<VPGObject>();\r\n"
         "                tmpSetObject->deserializeJson(element->getArrayElementObject());\r\n"
         "                insertSetObject(tmpSetObject);\r\n"
@@ -2651,8 +2895,13 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "        }\r\n"
         "        // OrderedMapObject\r\n"
         "        clearOrderedMapObject();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"OrderedMapObject\", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"OrderedMapObject\", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
-        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"OrderedMapObject\", namestyle, vcc::NamingStyle::PascalCase));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"OrderedMapObject\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) && "
+        "json->getObject(vcc::convertNamingStyle(L\"OrderedMapObject\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
+        "            auto tmpObject = "
+        "json->getObject(vcc::convertNamingStyle(L\"OrderedMapObject\", namestyle, "
+        "vcc::NamingStyle::PascalCase));\r\n"
         "            auto tmpKeys = tmpObject->getKeys();\r\n"
         "            for (auto const &key : tmpKeys) {\r\n"
         "                if (tmpObject->getObject(key) != nullptr) {\r\n"
@@ -2667,9 +2916,9 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json)
         "}\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
-{
-    std::wstring enumClass = L""
+TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi) {
+    std::wstring enumClass =
+        L""
         "#pragma once\r\n"
         "\r\n"
         "// @@Json\r\n"
@@ -2683,7 +2932,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
         "{\r\n"
         "    Object // GETSET_SPTR_NULL(VPGObjectA, Object)\r\n"
         "};\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -2695,64 +2945,71 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObject", L"vcc_object.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"vcc::JsonInternalType", L"json.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectA", L"vpg_object_a.hpp"));
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
-        this->getFilePathCpp(), this->getFilePathCpp(), this->getActionFolderPathCpp(), enumClassList);
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix,
+                                                _IncludeFiles, _EnumClasses, this->getFilePathCpp(),
+                                                this->getFilePathCpp(),
+                                                this->getActionFolderPathCpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
     EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#pragma once\r\n"
-        "\r\n"
-        "#include <memory>\r\n"
-        "\r\n"
-        "#include \"base_json_object.hpp\"\r\n"
-        "#include \"base_object.hpp\"\r\n"
-        "#include \"class_macro.hpp\"\r\n"
-        "#include \"i_document.hpp\"\r\n"
-        "#include \"json.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "#include \"vpg_object_a.hpp\"\r\n"
-        "\r\n"
-        "class VPGObjectA : public vcc::BaseObject, public vcc::BaseJsonObject\r\n"
-        "{\r\n"
-        "    GETSET(bool, Boolean, false)\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGObjectA() : vcc::BaseObject(ObjectType::ObjectA) {}\r\n"
-        "        virtual ~VPGObjectA() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
-        "        {\r\n"
-        "            return std::make_shared<VPGObjectA>(*this);\r\n"
-        "        }\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::Json> toJson() const override;\r\n"
-        "        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) override;\r\n"
-        "};\r\n"
-        "\r\n"
-        "class VPGObjectB : public vcc::BaseObject, public vcc::BaseJsonObject\r\n"
-        "{\r\n"
-        "    GETSET_SPTR_NULL(VPGObjectA, Object)\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGObjectB() : vcc::BaseObject(ObjectType::ObjectB) {}\r\n"
-        "        virtual ~VPGObjectB() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
-        "        {\r\n"
-        "            auto obj = std::make_shared<VPGObjectB>(*this);\r\n"
-        "            obj->cloneObject(this->_Object.get());\r\n"
-        "            return obj;\r\n"
-        "        }\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::Json> toJson() const override;\r\n"
-        "        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) override;\r\n"
-        "};\r\n");
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#pragma once\r\n"
+              "\r\n"
+              "#include <memory>\r\n"
+              "\r\n"
+              "#include \"base_json_object.hpp\"\r\n"
+              "#include \"base_object.hpp\"\r\n"
+              "#include \"class_macro.hpp\"\r\n"
+              "#include \"i_document.hpp\"\r\n"
+              "#include \"json.hpp\"\r\n"
+              "#include \"object_type.hpp\"\r\n"
+              "#include \"vpg_object_a.hpp\"\r\n"
+              "\r\n"
+              "class VPGObjectA : public vcc::BaseObject, public vcc::BaseJsonObject\r\n"
+              "{\r\n"
+              "    GETSET(bool, Boolean, false)\r\n"
+              "\r\n"
+              "    public:\r\n"
+              "        VPGObjectA() : vcc::BaseObject(ObjectType::ObjectA) {}\r\n"
+              "        virtual ~VPGObjectA() {}\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
+              "        {\r\n"
+              "            return std::make_shared<VPGObjectA>(*this);\r\n"
+              "        }\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::Json> toJson() const override;\r\n"
+              "        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) "
+              "override;\r\n"
+              "};\r\n"
+              "\r\n"
+              "class VPGObjectB : public vcc::BaseObject, public vcc::BaseJsonObject\r\n"
+              "{\r\n"
+              "    GETSET_SPTR_NULL(VPGObjectA, Object)\r\n"
+              "\r\n"
+              "    public:\r\n"
+              "        VPGObjectB() : vcc::BaseObject(ObjectType::ObjectB) {}\r\n"
+              "        virtual ~VPGObjectB() {}\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
+              "        {\r\n"
+              "            auto obj = std::make_shared<VPGObjectB>(*this);\r\n"
+              "            obj->cloneObject(this->_Object.get());\r\n"
+              "            return obj;\r\n"
+              "        }\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::Json> toJson() const override;\r\n"
+              "        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) "
+              "override;\r\n"
+              "};\r\n");
 
-    EXPECT_EQ(vcc::readFile(this->getFilePathCpp()),
+    EXPECT_EQ(
+        vcc::readFile(this->getFilePathCpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#include \"vcc_object.hpp\"\r\n"
         "\r\n"
@@ -2773,7 +3030,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
         "        vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;\r\n"
         "        auto json = std::make_unique<vcc::Json>();\r\n"
         "        // Boolean\r\n"
-        "        json->addBool(vcc::convertNamingStyle(L\"Boolean\", vcc::NamingStyle::PascalCase, namestyle), getBoolean());\r\n"
+        "        json->addBool(vcc::convertNamingStyle(L\"Boolean\", vcc::NamingStyle::PascalCase, "
+        "namestyle), getBoolean());\r\n"
         "        return json;\r\n"
         "    CATCH\r\n"
         "    return nullptr;\r\n"
@@ -2786,8 +3044,10 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
         "        auto json = std::dynamic_pointer_cast<vcc::Json>(document);\r\n"
         "        assert(json != nullptr);\r\n"
         "        // Boolean\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Boolean\", namestyle, vcc::NamingStyle::PascalCase)))\r\n"
-        "            setBoolean(json->getBool(vcc::convertNamingStyle(L\"Boolean\", namestyle, vcc::NamingStyle::PascalCase)));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Boolean\", namestyle, "
+        "vcc::NamingStyle::PascalCase)))\r\n"
+        "            setBoolean(json->getBool(vcc::convertNamingStyle(L\"Boolean\", namestyle, "
+        "vcc::NamingStyle::PascalCase)));\r\n"
         "    CATCH\r\n"
         "}\r\n"
         "\r\n"
@@ -2798,9 +3058,11 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
         "        auto json = std::make_unique<vcc::Json>();\r\n"
         "        // Object\r\n"
         "        if (getObject() != nullptr)\r\n"
-        "            json->addObject(vcc::convertNamingStyle(L\"Object\", vcc::NamingStyle::PascalCase, namestyle), getObject()->toJson());\r\n"
+        "            json->addObject(vcc::convertNamingStyle(L\"Object\", "
+        "vcc::NamingStyle::PascalCase, namestyle), getObject()->toJson());\r\n"
         "        else\r\n"
-        "            json->addNull(vcc::convertNamingStyle(L\"Object\", vcc::NamingStyle::PascalCase, namestyle));\r\n"
+        "            json->addNull(vcc::convertNamingStyle(L\"Object\", "
+        "vcc::NamingStyle::PascalCase, namestyle));\r\n"
         "        return json;\r\n"
         "    CATCH\r\n"
         "    return nullptr;\r\n"
@@ -2814,17 +3076,20 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Multi)
         "        assert(json != nullptr);\r\n"
         "        // Object\r\n"
         "        setObject(nullptr);\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Object\", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"Object\", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Object\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"Object\", "
+        "namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
         "            auto tmpObject = std::make_shared<VPGObjectA>();\r\n"
-        "            tmpObject->deserializeJson(json->getObject(vcc::convertNamingStyle(L\"Object\", namestyle, vcc::NamingStyle::PascalCase)));\r\n"
+        "            "
+        "tmpObject->deserializeJson(json->getObject(vcc::convertNamingStyle(L\"Object\", "
+        "namestyle, vcc::NamingStyle::PascalCase)));\r\n"
         "            setObject(tmpObject);\r\n"
         "        }\r\n"
         "    CATCH\r\n"
         "}\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
-{
+TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute) {
     // Camel Case = camelCase
     // Snake Case = snake_case
     // Pascal Case = PascalCase
@@ -2832,7 +3097,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
     // Uppercase = UPPERCASE
     // Lowercase = lowercase
     // dot-separated lowercase = my.variable.name
-    std::wstring enumClass = L""
+    std::wstring enumClass =
+        L""
         "#pragma once\r\n"
         "\r\n"
         "// @@Json{ \"Key.NamingStyle\": \"SnakeCase\", \"Value.DecimalPlaces\":2 }\r\n"
@@ -2854,7 +3120,8 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
         "    SetObject, // SET_SPTR(VPGObject, SetObject)\r\n"
         "    OrderedMapObject // ORDERED_MAP_SPTR_R(int, VPGObject, OrderedMapObject)\r\n"
         "};\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -2866,69 +3133,75 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
     projectClassIncludeFiles.insert(std::make_pair(L"VPGObject", L"vcc_object.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"vcc::JsonInternalType", L"json.hpp"));
 
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
-        this->getFilePathCpp(), this->getFilePathCpp(), this->getActionFolderPathCpp(), enumClassList);
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix,
+                                                _IncludeFiles, _EnumClasses, this->getFilePathCpp(),
+                                                this->getFilePathCpp(),
+                                                this->getActionFolderPathCpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
     EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#pragma once\r\n"
-        "\r\n"
-        "#include <memory>\r\n"
-        "#include <string>\r\n"
-        "\r\n"
-        "#include \"base_json_object.hpp\"\r\n"
-        "#include \"base_object.hpp\"\r\n"
-        "#include \"class_macro.hpp\"\r\n"
-        "#include \"i_document.hpp\"\r\n"
-        "#include \"json.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "\r\n"
-        "class VPGObject : public vcc::BaseObject, public vcc::BaseJsonObject\r\n"
-        "{\r\n"
-        "    GETSET(bool, Boolean, false)\r\n"
-        "    GETSET(int, Integer, 0)\r\n"
-        "    GETSET(vcc::JsonInternalType, Enum, JsonInternalType::String)\r\n"
-        "    GETSET(double, Double, 0)\r\n"
-        "    GETSET(std::string, String, \"\")\r\n"
-        "    GETSET(std::wstring, Wstring, L\"\")\r\n"
-        "    VECTOR(int, Vector)\r\n"
-        "    MAP(int, int, Map)\r\n"
-        "    SET(int, Set)\r\n"
-        "    ORDERED_MAP(int, int, OrderedMap)\r\n"
-        "    GETSET_SPTR(VPGObject, Object)\r\n"
-        "    VECTOR_SPTR(VPGObject, VectorObject)\r\n"
-        "    MAP_SPTR_R(int, VPGObject, MapObject)\r\n"
-        "    SET_SPTR(VPGObject, SetObject)\r\n"
-        "    ORDERED_MAP_SPTR_R(int, VPGObject, OrderedMapObject)\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGObject() : vcc::BaseObject(ObjectType::Object)\r\n"
-        "        {\r\n"
-        "            _Object = std::make_shared<VPGObject>();\r\n"
-        "        }\r\n"
-        "\r\n"
-        "        virtual ~VPGObject() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
-        "        {\r\n"
-        "            auto obj = std::make_shared<VPGObject>(*this);\r\n"
-        "            obj->cloneMapObject(this->_MapObject);\r\n"
-        "            obj->cloneObject(this->_Object.get());\r\n"
-        "            obj->cloneOrderedMapObject(this->_OrderedMapObject);\r\n"
-        "            obj->cloneSetObject(this->_SetObject);\r\n"
-        "            obj->cloneVectorObject(this->_VectorObject);\r\n"
-        "            return obj;\r\n"
-        "        }\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::Json> toJson() const override;\r\n"
-        "        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) override;\r\n"
-        "};\r\n");
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#pragma once\r\n"
+              "\r\n"
+              "#include <memory>\r\n"
+              "#include <string>\r\n"
+              "\r\n"
+              "#include \"base_json_object.hpp\"\r\n"
+              "#include \"base_object.hpp\"\r\n"
+              "#include \"class_macro.hpp\"\r\n"
+              "#include \"i_document.hpp\"\r\n"
+              "#include \"json.hpp\"\r\n"
+              "#include \"object_type.hpp\"\r\n"
+              "\r\n"
+              "class VPGObject : public vcc::BaseObject, public vcc::BaseJsonObject\r\n"
+              "{\r\n"
+              "    GETSET(bool, Boolean, false)\r\n"
+              "    GETSET(int, Integer, 0)\r\n"
+              "    GETSET(vcc::JsonInternalType, Enum, JsonInternalType::String)\r\n"
+              "    GETSET(double, Double, 0)\r\n"
+              "    GETSET(std::string, String, \"\")\r\n"
+              "    GETSET(std::wstring, Wstring, L\"\")\r\n"
+              "    VECTOR(int, Vector)\r\n"
+              "    MAP(int, int, Map)\r\n"
+              "    SET(int, Set)\r\n"
+              "    ORDERED_MAP(int, int, OrderedMap)\r\n"
+              "    GETSET_SPTR(VPGObject, Object)\r\n"
+              "    VECTOR_SPTR(VPGObject, VectorObject)\r\n"
+              "    MAP_SPTR_R(int, VPGObject, MapObject)\r\n"
+              "    SET_SPTR(VPGObject, SetObject)\r\n"
+              "    ORDERED_MAP_SPTR_R(int, VPGObject, OrderedMapObject)\r\n"
+              "\r\n"
+              "    public:\r\n"
+              "        VPGObject() : vcc::BaseObject(ObjectType::Object)\r\n"
+              "        {\r\n"
+              "            _Object = std::make_shared<VPGObject>();\r\n"
+              "        }\r\n"
+              "\r\n"
+              "        virtual ~VPGObject() {}\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
+              "        {\r\n"
+              "            auto obj = std::make_shared<VPGObject>(*this);\r\n"
+              "            obj->cloneMapObject(this->_MapObject);\r\n"
+              "            obj->cloneObject(this->_Object.get());\r\n"
+              "            obj->cloneOrderedMapObject(this->_OrderedMapObject);\r\n"
+              "            obj->cloneSetObject(this->_SetObject);\r\n"
+              "            obj->cloneVectorObject(this->_VectorObject);\r\n"
+              "            return obj;\r\n"
+              "        }\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::Json> toJson() const override;\r\n"
+              "        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) "
+              "override;\r\n"
+              "};\r\n");
 
-    EXPECT_EQ(vcc::readFile(this->getFilePathCpp()),
+    EXPECT_EQ(
+        vcc::readFile(this->getFilePathCpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#include \"vcc_object.hpp\"\r\n"
         "\r\n"
@@ -2950,9 +3223,11 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
         "        int64_t decimalPlaces = 2;\r\n"
         "        auto json = std::make_unique<vcc::Json>();\r\n"
         "        // Boolean\r\n"
-        "        json->addBool(vcc::convertNamingStyle(L\"Boolean\", vcc::NamingStyle::PascalCase, namestyle), getBoolean());\r\n"
+        "        json->addBool(vcc::convertNamingStyle(L\"Boolean\", vcc::NamingStyle::PascalCase, "
+        "namestyle), getBoolean());\r\n"
         "        // Integer\r\n"
-        "        json->addInt(vcc::convertNamingStyle(L\"Integer\", vcc::NamingStyle::PascalCase, namestyle), getInteger());\r\n"
+        "        json->addInt(vcc::convertNamingStyle(L\"Integer\", vcc::NamingStyle::PascalCase, "
+        "namestyle), getInteger());\r\n"
         "        // Enum\r\n"
         "        std::wstring enumValueStr = L\"\";\r\n"
         "        switch (getEnum())\r\n"
@@ -2982,65 +3257,82 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
         "            assert(false);\r\n"
         "            break;\r\n"
         "        }\r\n"
-        "        json->addString(vcc::convertNamingStyle(L\"Enum\", vcc::NamingStyle::PascalCase, namestyle), enumValueStr);\r\n"
+        "        json->addString(vcc::convertNamingStyle(L\"Enum\", vcc::NamingStyle::PascalCase, "
+        "namestyle), enumValueStr);\r\n"
         "        // Double\r\n"
-        "        json->addDouble(vcc::convertNamingStyle(L\"Double\", vcc::NamingStyle::PascalCase, namestyle), getDouble(), decimalPlaces >= 0 ? decimalPlaces : getDecimalPlaces(getDouble()));\r\n"
+        "        json->addDouble(vcc::convertNamingStyle(L\"Double\", "
+        "vcc::NamingStyle::PascalCase, namestyle), getDouble(), decimalPlaces >= 0 ? decimalPlaces "
+        ": getDecimalPlaces(getDouble()));\r\n"
         "        // String\r\n"
-        "        json->addString(vcc::convertNamingStyle(L\"String\", vcc::NamingStyle::PascalCase, namestyle), str2wstr(getString()));\r\n"
+        "        json->addString(vcc::convertNamingStyle(L\"String\", "
+        "vcc::NamingStyle::PascalCase, namestyle), str2wstr(getString()));\r\n"
         "        // Wstring\r\n"
-        "        json->addString(vcc::convertNamingStyle(L\"Wstring\", vcc::NamingStyle::PascalCase, namestyle), getWstring());\r\n"
+        "        json->addString(vcc::convertNamingStyle(L\"Wstring\", "
+        "vcc::NamingStyle::PascalCase, namestyle), getWstring());\r\n"
         "        // Vector\r\n"
         "        auto tmpVector = std::make_shared<vcc::Json>();\r\n"
-        "        json->addArray(vcc::convertNamingStyle(L\"Vector\", vcc::NamingStyle::PascalCase, namestyle), tmpVector);\r\n"
+        "        json->addArray(vcc::convertNamingStyle(L\"Vector\", vcc::NamingStyle::PascalCase, "
+        "namestyle), tmpVector);\r\n"
         "        for (auto const &element : getVector()) {\r\n"
         "            tmpVector->addArrayInt(element);\r\n"
         "        }\r\n"
         "        // Map\r\n"
         "        auto tmpMap = std::make_shared<vcc::Json>();\r\n"
-        "        json->addObject(vcc::convertNamingStyle(L\"Map\", vcc::NamingStyle::PascalCase, namestyle), tmpMap);\r\n"
+        "        json->addObject(vcc::convertNamingStyle(L\"Map\", vcc::NamingStyle::PascalCase, "
+        "namestyle), tmpMap);\r\n"
         "        for (auto const &element : getMap()) {\r\n"
         "            tmpMap->addInt(std::to_wstring(element.first), element.second);\r\n"
         "        }\r\n"
         "        // Set\r\n"
         "        auto tmpSet = std::make_shared<vcc::Json>();\r\n"
-        "        json->addArray(vcc::convertNamingStyle(L\"Set\", vcc::NamingStyle::PascalCase, namestyle), tmpSet);\r\n"
+        "        json->addArray(vcc::convertNamingStyle(L\"Set\", vcc::NamingStyle::PascalCase, "
+        "namestyle), tmpSet);\r\n"
         "        for (auto const &element : getSet()) {\r\n"
         "            tmpSet->addArrayInt(element);\r\n"
         "        }\r\n"
         "        // OrderedMap\r\n"
         "        auto tmpOrderedMap = std::make_shared<vcc::Json>();\r\n"
-        "        json->addObject(vcc::convertNamingStyle(L\"OrderedMap\", vcc::NamingStyle::PascalCase, namestyle), tmpOrderedMap);\r\n"
+        "        json->addObject(vcc::convertNamingStyle(L\"OrderedMap\", "
+        "vcc::NamingStyle::PascalCase, namestyle), tmpOrderedMap);\r\n"
         "        for (auto const &element : getOrderedMap()) {\r\n"
         "            tmpOrderedMap->addInt(std::to_wstring(element.first), element.second);\r\n"
         "        }\r\n"
         "        // Object\r\n"
         "        if (getObject() != nullptr)\r\n"
-        "            json->addObject(vcc::convertNamingStyle(L\"Object\", vcc::NamingStyle::PascalCase, namestyle), getObject()->toJson());\r\n"
+        "            json->addObject(vcc::convertNamingStyle(L\"Object\", "
+        "vcc::NamingStyle::PascalCase, namestyle), getObject()->toJson());\r\n"
         "        else\r\n"
-        "            json->addNull(vcc::convertNamingStyle(L\"Object\", vcc::NamingStyle::PascalCase, namestyle));\r\n"
+        "            json->addNull(vcc::convertNamingStyle(L\"Object\", "
+        "vcc::NamingStyle::PascalCase, namestyle));\r\n"
         "        // VectorObject\r\n"
         "        auto tmpVectorObject = std::make_shared<vcc::Json>();\r\n"
-        "        json->addArray(vcc::convertNamingStyle(L\"VectorObject\", vcc::NamingStyle::PascalCase, namestyle), tmpVectorObject);\r\n"
+        "        json->addArray(vcc::convertNamingStyle(L\"VectorObject\", "
+        "vcc::NamingStyle::PascalCase, namestyle), tmpVectorObject);\r\n"
         "        for (auto const &element : getVectorObject()) {\r\n"
         "            tmpVectorObject->addArrayObject(element->toJson());\r\n"
         "        }\r\n"
         "        // MapObject\r\n"
         "        auto tmpMapObject = std::make_shared<vcc::Json>();\r\n"
-        "        json->addObject(vcc::convertNamingStyle(L\"MapObject\", vcc::NamingStyle::PascalCase, namestyle), tmpMapObject);\r\n"
+        "        json->addObject(vcc::convertNamingStyle(L\"MapObject\", "
+        "vcc::NamingStyle::PascalCase, namestyle), tmpMapObject);\r\n"
         "        for (auto const &element : getMapObject()) {\r\n"
-        "            tmpMapObject->addObject(std::to_wstring(element.first), element.second->toJson());\r\n"
+        "            tmpMapObject->addObject(std::to_wstring(element.first), "
+        "element.second->toJson());\r\n"
         "        }\r\n"
         "        // SetObject\r\n"
         "        auto tmpSetObject = std::make_shared<vcc::Json>();\r\n"
-        "        json->addArray(vcc::convertNamingStyle(L\"SetObject\", vcc::NamingStyle::PascalCase, namestyle), tmpSetObject);\r\n"
+        "        json->addArray(vcc::convertNamingStyle(L\"SetObject\", "
+        "vcc::NamingStyle::PascalCase, namestyle), tmpSetObject);\r\n"
         "        for (auto const &element : getSetObject()) {\r\n"
         "            tmpSetObject->addArrayObject(element->toJson());\r\n"
         "        }\r\n"
         "        // OrderedMapObject\r\n"
         "        auto tmpOrderedMapObject = std::make_shared<vcc::Json>();\r\n"
-        "        json->addObject(vcc::convertNamingStyle(L\"OrderedMapObject\", vcc::NamingStyle::PascalCase, namestyle), tmpOrderedMapObject);\r\n"
+        "        json->addObject(vcc::convertNamingStyle(L\"OrderedMapObject\", "
+        "vcc::NamingStyle::PascalCase, namestyle), tmpOrderedMapObject);\r\n"
         "        for (auto const &element : getOrderedMapObject()) {\r\n"
-        "            tmpOrderedMapObject->addObject(std::to_wstring(element.first), element.second->toJson());\r\n"
+        "            tmpOrderedMapObject->addObject(std::to_wstring(element.first), "
+        "element.second->toJson());\r\n"
         "        }\r\n"
         "        return json;\r\n"
         "    CATCH\r\n"
@@ -3054,14 +3346,22 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
         "        auto json = std::dynamic_pointer_cast<vcc::Json>(document);\r\n"
         "        assert(json != nullptr);\r\n"
         "        // Boolean\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Boolean\", namestyle, vcc::NamingStyle::PascalCase)))\r\n"
-        "            setBoolean(json->getBool(vcc::convertNamingStyle(L\"Boolean\", namestyle, vcc::NamingStyle::PascalCase)));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Boolean\", namestyle, "
+        "vcc::NamingStyle::PascalCase)))\r\n"
+        "            setBoolean(json->getBool(vcc::convertNamingStyle(L\"Boolean\", namestyle, "
+        "vcc::NamingStyle::PascalCase)));\r\n"
         "        // Integer\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Integer\", namestyle, vcc::NamingStyle::PascalCase)))\r\n"
-        "            setInteger(static_cast<int>(json->getInt64(vcc::convertNamingStyle(L\"Integer\", namestyle, vcc::NamingStyle::PascalCase))));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Integer\", namestyle, "
+        "vcc::NamingStyle::PascalCase)))\r\n"
+        "            "
+        "setInteger(static_cast<int>(json->getInt64(vcc::convertNamingStyle(L\"Integer\", "
+        "namestyle, vcc::NamingStyle::PascalCase))));\r\n"
         "        // Enum\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Enum\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
-        "            std::wstring valueEnumStr = json->getString(vcc::convertNamingStyle(L\"Enum\", namestyle, vcc::NamingStyle::PascalCase));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Enum\", namestyle, "
+        "vcc::NamingStyle::PascalCase))) {\r\n"
+        "            std::wstring valueEnumStr = "
+        "json->getString(vcc::convertNamingStyle(L\"Enum\", namestyle, "
+        "vcc::NamingStyle::PascalCase));\r\n"
         "            std::wstring valueEnumStrUpper = valueEnumStr;\r\n"
         "            vcc::toUpper(valueEnumStrUpper);\r\n"
         "            int64_t valueEnum = -1;\r\n"
@@ -3083,57 +3383,85 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
         "                setEnum(static_cast<JsonInternalType>(valueEnum));\r\n"
         "        }\r\n"
         "        // Double\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Double\", namestyle, vcc::NamingStyle::PascalCase)))\r\n"
-        "            setDouble(static_cast<double>(json->getDouble(vcc::convertNamingStyle(L\"Double\", namestyle, vcc::NamingStyle::PascalCase))));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Double\", namestyle, "
+        "vcc::NamingStyle::PascalCase)))\r\n"
+        "            "
+        "setDouble(static_cast<double>(json->getDouble(vcc::convertNamingStyle(L\"Double\", "
+        "namestyle, vcc::NamingStyle::PascalCase))));\r\n"
         "        // String\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"String\", namestyle, vcc::NamingStyle::PascalCase)))\r\n"
-        "            setString(wstr2str(json->getString(vcc::convertNamingStyle(L\"String\", namestyle, vcc::NamingStyle::PascalCase))));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"String\", namestyle, "
+        "vcc::NamingStyle::PascalCase)))\r\n"
+        "            setString(wstr2str(json->getString(vcc::convertNamingStyle(L\"String\", "
+        "namestyle, vcc::NamingStyle::PascalCase))));\r\n"
         "        // Wstring\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Wstring\", namestyle, vcc::NamingStyle::PascalCase)))\r\n"
-        "            setWstring(json->getString(vcc::convertNamingStyle(L\"Wstring\", namestyle, vcc::NamingStyle::PascalCase)));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Wstring\", namestyle, "
+        "vcc::NamingStyle::PascalCase)))\r\n"
+        "            setWstring(json->getString(vcc::convertNamingStyle(L\"Wstring\", namestyle, "
+        "vcc::NamingStyle::PascalCase)));\r\n"
         "        // Vector\r\n"
         "        clearVector();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Vector\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
-        "            for (auto const &element : json->getArray(vcc::convertNamingStyle(L\"Vector\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Vector\", namestyle, "
+        "vcc::NamingStyle::PascalCase))) {\r\n"
+        "            for (auto const &element : "
+        "json->getArray(vcc::convertNamingStyle(L\"Vector\", namestyle, "
+        "vcc::NamingStyle::PascalCase))) {\r\n"
         "                insertVector(static_cast<int>(element->getArrayElementInt64()));\r\n"
         "            }\r\n"
         "        }\r\n"
         "        // Map\r\n"
         "        clearMap();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Map\", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"Map\", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
-        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"Map\", namestyle, vcc::NamingStyle::PascalCase));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Map\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"Map\", "
+        "namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
+        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"Map\", namestyle, "
+        "vcc::NamingStyle::PascalCase));\r\n"
         "            auto tmpKeys = tmpObject->getKeys();\r\n"
         "            for (auto const &key : tmpKeys) {\r\n"
-        "                insertMapAtKey(std::stoi(key), static_cast<int>(tmpObject->getInt64(key)));\r\n"
+        "                insertMapAtKey(std::stoi(key), "
+        "static_cast<int>(tmpObject->getInt64(key)));\r\n"
         "            }\r\n"
         "        }\r\n"
         "        // Set\r\n"
         "        clearSet();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Set\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
-        "            for (auto const &element : json->getArray(vcc::convertNamingStyle(L\"Set\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Set\", namestyle, "
+        "vcc::NamingStyle::PascalCase))) {\r\n"
+        "            for (auto const &element : json->getArray(vcc::convertNamingStyle(L\"Set\", "
+        "namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
         "                insertSet(static_cast<int>(element->getArrayElementInt64()));\r\n"
         "            }\r\n"
         "        }\r\n"
         "        // OrderedMap\r\n"
         "        clearOrderedMap();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"OrderedMap\", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"OrderedMap\", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
-        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"OrderedMap\", namestyle, vcc::NamingStyle::PascalCase));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"OrderedMap\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) && "
+        "json->getObject(vcc::convertNamingStyle(L\"OrderedMap\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
+        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"OrderedMap\", "
+        "namestyle, vcc::NamingStyle::PascalCase));\r\n"
         "            auto tmpKeys = tmpObject->getKeys();\r\n"
         "            for (auto const &key : tmpKeys) {\r\n"
-        "                insertOrderedMapAtKey(std::stoi(key), static_cast<int>(tmpObject->getInt64(key)));\r\n"
+        "                insertOrderedMapAtKey(std::stoi(key), "
+        "static_cast<int>(tmpObject->getInt64(key)));\r\n"
         "            }\r\n"
         "        }\r\n"
         "        // Object\r\n"
         "        setObject(std::make_shared<VPGObject>());\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Object\", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"Object\", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"Object\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"Object\", "
+        "namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
         "            auto tmpObject = std::make_shared<VPGObject>();\r\n"
-        "            tmpObject->deserializeJson(json->getObject(vcc::convertNamingStyle(L\"Object\", namestyle, vcc::NamingStyle::PascalCase)));\r\n"
+        "            "
+        "tmpObject->deserializeJson(json->getObject(vcc::convertNamingStyle(L\"Object\", "
+        "namestyle, vcc::NamingStyle::PascalCase)));\r\n"
         "            setObject(tmpObject);\r\n"
         "        }\r\n"
         "        // VectorObject\r\n"
         "        clearVectorObject();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"VectorObject\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
-        "            for (auto const &element : json->getArray(vcc::convertNamingStyle(L\"VectorObject\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"VectorObject\", namestyle, "
+        "vcc::NamingStyle::PascalCase))) {\r\n"
+        "            for (auto const &element : "
+        "json->getArray(vcc::convertNamingStyle(L\"VectorObject\", namestyle, "
+        "vcc::NamingStyle::PascalCase))) {\r\n"
         "                auto tmpVectorObject = std::make_shared<VPGObject>();\r\n"
         "                tmpVectorObject->deserializeJson(element->getArrayElementObject());\r\n"
         "                insertVectorObject(tmpVectorObject);\r\n"
@@ -3141,8 +3469,11 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
         "        }\r\n"
         "        // MapObject\r\n"
         "        clearMapObject();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"MapObject\", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"MapObject\", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
-        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"MapObject\", namestyle, vcc::NamingStyle::PascalCase));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"MapObject\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"MapObject\", "
+        "namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
+        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"MapObject\", "
+        "namestyle, vcc::NamingStyle::PascalCase));\r\n"
         "            auto tmpKeys = tmpObject->getKeys();\r\n"
         "            for (auto const &key : tmpKeys) {\r\n"
         "                if (tmpObject->getObject(key) != nullptr) {\r\n"
@@ -3155,8 +3486,11 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
         "        }\r\n"
         "        // SetObject\r\n"
         "        clearSetObject();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"SetObject\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
-        "            for (auto const &element : json->getArray(vcc::convertNamingStyle(L\"SetObject\", namestyle, vcc::NamingStyle::PascalCase))) {\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"SetObject\", namestyle, "
+        "vcc::NamingStyle::PascalCase))) {\r\n"
+        "            for (auto const &element : "
+        "json->getArray(vcc::convertNamingStyle(L\"SetObject\", namestyle, "
+        "vcc::NamingStyle::PascalCase))) {\r\n"
         "                auto tmpSetObject = std::make_shared<VPGObject>();\r\n"
         "                tmpSetObject->deserializeJson(element->getArrayElementObject());\r\n"
         "                insertSetObject(tmpSetObject);\r\n"
@@ -3164,8 +3498,13 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
         "        }\r\n"
         "        // OrderedMapObject\r\n"
         "        clearOrderedMapObject();\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"OrderedMapObject\", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"OrderedMapObject\", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
-        "            auto tmpObject = json->getObject(vcc::convertNamingStyle(L\"OrderedMapObject\", namestyle, vcc::NamingStyle::PascalCase));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"OrderedMapObject\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) && "
+        "json->getObject(vcc::convertNamingStyle(L\"OrderedMapObject\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
+        "            auto tmpObject = "
+        "json->getObject(vcc::convertNamingStyle(L\"OrderedMapObject\", namestyle, "
+        "vcc::NamingStyle::PascalCase));\r\n"
         "            auto tmpKeys = tmpObject->getKeys();\r\n"
         "            for (auto const &key : tmpKeys) {\r\n"
         "                if (tmpObject->getObject(key) != nullptr) {\r\n"
@@ -3180,20 +3519,22 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_Attribute)
         "}\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, Json_GetSetCustom)
-{
-    std::wstring enumClass = L"#pragma once\r\n"
+TEST_F(VPGObjectFileGenerationServiceTest, Json_GetSetCustom) {
+    std::wstring enumClass =
+        L"#pragma once\r\n"
         "\r\n"
         "// @@Json\r\n"
         "enum class VPGObjectProperty\r\n"
         "{\r\n"
         "    EnumA, // GETCUSTOM(int64_t, EnumA, return 100;)\r\n"
         "    EnumB, // SETCUSTOM(EnumB , int64_t, argument, return 100;)\r\n"
-        "    EnumC, // GETCUSTOM(int64_t, EnumC, return 100;) SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;)\r\n"
+        "    EnumC, // GETCUSTOM(int64_t, EnumC, return 100;) SETCUSTOM(EnumC, int64_t, enumC, "
+        "_EnumC = enumC;)\r\n"
         "    EnumD, // GETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
         "    EnumE // SETCUSTOM_SPTR(EnumE, VPGClassA, enumC, _EnumC = enumC;)\r\n"
         "};\r\n";
-    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
@@ -3204,50 +3545,56 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_GetSetCustom)
     std::map<std::wstring, std::wstring> projectClassIncludeFiles;
     projectClassIncludeFiles.insert(std::make_pair(L"VPGClassA", L"vpg_class_a.hpp"));
     projectClassIncludeFiles.insert(std::make_pair(L"vcc::JsonInternalType", L"json.hpp"));
-    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-        this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
-    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
-        this->getFilePathCpp(), this->getFilePathCpp(), this->getActionFolderPathCpp(), enumClassList);
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix,
+                                                _IncludeFiles, _EnumClasses, this->getFilePathCpp(),
+                                                this->getFilePathCpp(),
+                                                this->getActionFolderPathCpp(), enumClassList);
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
     EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
     EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
-        L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-        "#pragma once\r\n"
-        "\r\n"
-        "#include <memory>\r\n"
-        "\r\n"
-        "#include \"base_json_object.hpp\"\r\n"
-        "#include \"base_object.hpp\"\r\n"
-        "#include \"class_macro.hpp\"\r\n"
-        "#include \"i_document.hpp\"\r\n"
-        "#include \"json.hpp\"\r\n"
-        "#include \"object_type.hpp\"\r\n"
-        "#include \"vpg_class_a.hpp\"\r\n"
-        "\r\n"
-        "class VPGObject : public vcc::BaseObject, public vcc::BaseJsonObject\r\n"
-        "{\r\n"
-        "    GETCUSTOM(int64_t, EnumA, return 100;)\r\n"
-        "    SETCUSTOM(EnumB , int64_t, argument, return 100;)\r\n"
-        "    GETCUSTOM(int64_t, EnumC, return 100;)\r\n"
-        "    SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;)\r\n"
-        "    GETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
-        "    SETCUSTOM_SPTR(EnumE, VPGClassA, enumC, _EnumC = enumC;)\r\n"
-        "\r\n"
-        "    public:\r\n"
-        "        VPGObject() : vcc::BaseObject(ObjectType::Object) {}\r\n"
-        "        virtual ~VPGObject() {}\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
-        "        {\r\n"
-        "            return std::make_shared<VPGObject>(*this);\r\n"
-        "        }\r\n"
-        "\r\n"
-        "        virtual std::shared_ptr<vcc::Json> toJson() const override;\r\n"
-        "        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) override;\r\n"
-        "};\r\n");
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#pragma once\r\n"
+              "\r\n"
+              "#include <memory>\r\n"
+              "\r\n"
+              "#include \"base_json_object.hpp\"\r\n"
+              "#include \"base_object.hpp\"\r\n"
+              "#include \"class_macro.hpp\"\r\n"
+              "#include \"i_document.hpp\"\r\n"
+              "#include \"json.hpp\"\r\n"
+              "#include \"object_type.hpp\"\r\n"
+              "#include \"vpg_class_a.hpp\"\r\n"
+              "\r\n"
+              "class VPGObject : public vcc::BaseObject, public vcc::BaseJsonObject\r\n"
+              "{\r\n"
+              "    GETCUSTOM(int64_t, EnumA, return 100;)\r\n"
+              "    SETCUSTOM(EnumB , int64_t, argument, return 100;)\r\n"
+              "    GETCUSTOM(int64_t, EnumC, return 100;)\r\n"
+              "    SETCUSTOM(EnumC, int64_t, enumC, _EnumC = enumC;)\r\n"
+              "    GETCUSTOM_SPTR(VPGClassA, EnumF, return 100;)\r\n"
+              "    SETCUSTOM_SPTR(EnumE, VPGClassA, enumC, _EnumC = enumC;)\r\n"
+              "\r\n"
+              "    public:\r\n"
+              "        VPGObject() : vcc::BaseObject(ObjectType::Object) {}\r\n"
+              "        virtual ~VPGObject() {}\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
+              "        {\r\n"
+              "            return std::make_shared<VPGObject>(*this);\r\n"
+              "        }\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::Json> toJson() const override;\r\n"
+              "        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) "
+              "override;\r\n"
+              "};\r\n");
 
-    EXPECT_EQ(vcc::readFile(this->getFilePathCpp()),
+    EXPECT_EQ(
+        vcc::readFile(this->getFilePathCpp()),
         L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
         "#include \"vcc_object.hpp\"\r\n"
         "\r\n"
@@ -3268,14 +3615,18 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_GetSetCustom)
         "        vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;\r\n"
         "        auto json = std::make_unique<vcc::Json>();\r\n"
         "        // EnumA\r\n"
-        "        json->addInt(vcc::convertNamingStyle(L\"EnumA\", vcc::NamingStyle::PascalCase, namestyle), getEnumA());\r\n"
+        "        json->addInt(vcc::convertNamingStyle(L\"EnumA\", vcc::NamingStyle::PascalCase, "
+        "namestyle), getEnumA());\r\n"
         "        // EnumC\r\n"
-        "        json->addInt(vcc::convertNamingStyle(L\"EnumC\", vcc::NamingStyle::PascalCase, namestyle), getEnumC());\r\n"
+        "        json->addInt(vcc::convertNamingStyle(L\"EnumC\", vcc::NamingStyle::PascalCase, "
+        "namestyle), getEnumC());\r\n"
         "        // EnumF\r\n"
         "        if (getEnumF() != nullptr)\r\n"
-        "            json->addObject(vcc::convertNamingStyle(L\"EnumF\", vcc::NamingStyle::PascalCase, namestyle), getEnumF()->toJson());\r\n"
+        "            json->addObject(vcc::convertNamingStyle(L\"EnumF\", "
+        "vcc::NamingStyle::PascalCase, namestyle), getEnumF()->toJson());\r\n"
         "        else\r\n"
-        "            json->addNull(vcc::convertNamingStyle(L\"EnumF\", vcc::NamingStyle::PascalCase, namestyle));\r\n"
+        "            json->addNull(vcc::convertNamingStyle(L\"EnumF\", "
+        "vcc::NamingStyle::PascalCase, namestyle));\r\n"
         "        return json;\r\n"
         "    CATCH\r\n"
         "    return nullptr;\r\n"
@@ -3288,138 +3639,159 @@ TEST_F(VPGObjectFileGenerationServiceTest, Json_GetSetCustom)
         "        auto json = std::dynamic_pointer_cast<vcc::Json>(document);\r\n"
         "        assert(json != nullptr);\r\n"
         "        // EnumB\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"EnumB\", namestyle, vcc::NamingStyle::PascalCase)))\r\n"
-        "            setEnumB(static_cast<int64_t>(json->getInt64(vcc::convertNamingStyle(L\"EnumB\", namestyle, vcc::NamingStyle::PascalCase))));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"EnumB\", namestyle, "
+        "vcc::NamingStyle::PascalCase)))\r\n"
+        "            "
+        "setEnumB(static_cast<int64_t>(json->getInt64(vcc::convertNamingStyle(L\"EnumB\", "
+        "namestyle, vcc::NamingStyle::PascalCase))));\r\n"
         "        // EnumC\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"EnumC\", namestyle, vcc::NamingStyle::PascalCase)))\r\n"
-        "            setEnumC(static_cast<int64_t>(json->getInt64(vcc::convertNamingStyle(L\"EnumC\", namestyle, vcc::NamingStyle::PascalCase))));\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"EnumC\", namestyle, "
+        "vcc::NamingStyle::PascalCase)))\r\n"
+        "            "
+        "setEnumC(static_cast<int64_t>(json->getInt64(vcc::convertNamingStyle(L\"EnumC\", "
+        "namestyle, vcc::NamingStyle::PascalCase))));\r\n"
         "        // EnumE\r\n"
-        "        if (json->isContainKey(vcc::convertNamingStyle(L\"EnumE\", namestyle, vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"EnumE\", namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
+        "        if (json->isContainKey(vcc::convertNamingStyle(L\"EnumE\", namestyle, "
+        "vcc::NamingStyle::PascalCase)) && json->getObject(vcc::convertNamingStyle(L\"EnumE\", "
+        "namestyle, vcc::NamingStyle::PascalCase)) != nullptr) {\r\n"
         "            auto tmpObject = std::make_shared<VPGClassA>();\r\n"
-        "            tmpObject->deserializeJson(json->getObject(vcc::convertNamingStyle(L\"EnumE\", namestyle, vcc::NamingStyle::PascalCase)));\r\n"
+        "            "
+        "tmpObject->deserializeJson(json->getObject(vcc::convertNamingStyle(L\"EnumE\", namestyle, "
+        "vcc::NamingStyle::PascalCase)));\r\n"
         "            setEnumE(tmpObject);\r\n"
         "        }\r\n"
         "    CATCH\r\n"
         "}\r\n");
 }
 
-TEST_F(VPGObjectFileGenerationServiceTest, Json_Properties)
-{
-    std::wstring enumClass = L""
+TEST_F(VPGObjectFileGenerationServiceTest, Json_Properties) {
+    std::wstring enumClass =
+        L""
         "#pragma once\r\n"
         "\r\n"
         "//@@Json\r\n"
         "//@@Private{ \"Properties\": {\"a\":\"int64_t=0\", \"b\":\"VPGObjectB=nullptr\" } }\r\n"
-        "//@@Protected{ \"Properties\": {\"c\":\"VPGObjectC=std::make_shared<VPGObjectC>(1,2,3);\", \"d\":\"ExceptionType=ExceptionType::NA\" } }\r\n"
+        "//@@Protected{ \"Properties\": "
+        "{\"c\":\"VPGObjectC=std::make_shared<VPGObjectC>(1,2,3);\", "
+        "\"d\":\"ExceptionType=ExceptionType::NA\" } }\r\n"
         "enum class VPGObjectProperty\r\n"
         "{\r\n"
         "    String // GETSET(std::wstring, String, L\"\") \r\n"
         "};\r\n"
         "\r\n";
-vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass, true);
+    vcc::writeFile(vcc::concatPaths({this->_Workspace, L"vcc_object_property.hpp"}), enumClass,
+                   true);
 
-std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
-VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
+    std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
+    VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
 
-std::wstring classPrefix = L"VPG";
-auto option = std::make_shared<VPGConfig>();
-option->setProjectPrefix(classPrefix);
-std::map<std::wstring, std::wstring> projectClassIncludeFiles;
-projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectB", L"vpg_object_b.hpp"));
-projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectC", L"vpg_object_c.hpp"));
-projectClassIncludeFiles.insert(std::make_pair(L"ExceptionType", L"exception_type.hpp"));
-VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(), projectClassIncludeFiles, _EnumClasses,
-    this->getFilePathHpp(), this->getFilePathHpp(), this->getActionFolderPathHpp(), enumClassList);
-VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix, _IncludeFiles, _EnumClasses,
-    this->getFilePathCpp(), this->getFilePathCpp(), this->getActionFolderPathCpp(), enumClassList);
-EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
-EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
+    std::wstring classPrefix = L"VPG";
+    auto option = std::make_shared<VPGConfig>();
+    option->setProjectPrefix(classPrefix);
+    std::map<std::wstring, std::wstring> projectClassIncludeFiles;
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectB", L"vpg_object_b.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"VPGObjectC", L"vpg_object_c.hpp"));
+    projectClassIncludeFiles.insert(std::make_pair(L"ExceptionType", L"exception_type.hpp"));
+    VPGObjectFileGenerationService::generateHpp(this->getLogConfig().get(), option.get(),
+                                                projectClassIncludeFiles, _EnumClasses,
+                                                this->getFilePathHpp(), this->getFilePathHpp(),
+                                                this->getActionFolderPathHpp(), enumClassList);
+    VPGObjectFileGenerationService::generateCpp(this->getLogConfig().get(), classPrefix,
+                                                _IncludeFiles, _EnumClasses, this->getFilePathCpp(),
+                                                this->getFilePathCpp(),
+                                                this->getActionFolderPathCpp(), enumClassList);
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathHpp()));
+    EXPECT_TRUE(vcc::isFilePresent(this->getFilePathCpp()));
 
-EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
-    L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-    "#pragma once\r\n"
-    "\r\n"
-    "#include <memory>\r\n"
-    "#include <string>\r\n"
-    "\r\n"
-    "#include \"base_json_object.hpp\"\r\n"
-    "#include \"base_object.hpp\"\r\n"
-    "#include \"class_macro.hpp\"\r\n"
-    "#include \"exception_type.hpp\"\r\n"
-    "#include \"i_document.hpp\"\r\n"
-    "#include \"json.hpp\"\r\n"
-    "#include \"object_type.hpp\"\r\n"
-    "#include \"vpg_object_b.hpp\"\r\n"
-    "#include \"vpg_object_c.hpp\"\r\n"
-    "\r\n"
-    "class VPGObject : public vcc::BaseObject, public vcc::BaseJsonObject\r\n"
-    "{\r\n"
-    "    private:\r\n"
-    "        mutable int64_t a = 0;\r\n"
-    "        mutable std::shared_ptr<VPGObjectB> b = nullptr;\r\n"
-    "\r\n"
-    "    protected:\r\n"
-    "        mutable std::shared_ptr<VPGObjectC> c = nullptr;\r\n"
-    "        mutable ExceptionType d = ExceptionType::NA;\r\n"
-    "\r\n"
-    "    GETSET(std::wstring, String, L\"\")\r\n"
-    "\r\n"
-    "    public:\r\n"
-    "        VPGObject() : vcc::BaseObject(ObjectType::Object)\r\n"
-    "        {\r\n"
-    "            c = std::make_shared<VPGObjectC>(1,2,3);\r\n"
-    "        }\r\n"
-    "\r\n"
-    "        virtual ~VPGObject() {}\r\n"
-    "\r\n"
-    "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
-    "        {\r\n"
-    "            auto obj = std::make_shared<VPGObject>(*this);\r\n"
-    "            obj->b = std::dynamic_pointer_cast<VPGObjectB>(this->b->clone());\r\n"
-    "            obj->c = std::dynamic_pointer_cast<VPGObjectC>(this->c->clone());\r\n"
-    "            return obj;\r\n"
-    "        }\r\n"
-    "\r\n"
-    "        virtual std::shared_ptr<vcc::Json> toJson() const override;\r\n"
-    "        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) override;\r\n"
-    "};\r\n");
+    EXPECT_EQ(vcc::readFile(this->getFilePathHpp()),
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#pragma once\r\n"
+              "\r\n"
+              "#include <memory>\r\n"
+              "#include <string>\r\n"
+              "\r\n"
+              "#include \"base_json_object.hpp\"\r\n"
+              "#include \"base_object.hpp\"\r\n"
+              "#include \"class_macro.hpp\"\r\n"
+              "#include \"exception_type.hpp\"\r\n"
+              "#include \"i_document.hpp\"\r\n"
+              "#include \"json.hpp\"\r\n"
+              "#include \"object_type.hpp\"\r\n"
+              "#include \"vpg_object_b.hpp\"\r\n"
+              "#include \"vpg_object_c.hpp\"\r\n"
+              "\r\n"
+              "class VPGObject : public vcc::BaseObject, public vcc::BaseJsonObject\r\n"
+              "{\r\n"
+              "    private:\r\n"
+              "        mutable int64_t a = 0;\r\n"
+              "        mutable std::shared_ptr<VPGObjectB> b = nullptr;\r\n"
+              "\r\n"
+              "    protected:\r\n"
+              "        mutable std::shared_ptr<VPGObjectC> c = nullptr;\r\n"
+              "        mutable ExceptionType d = ExceptionType::NA;\r\n"
+              "\r\n"
+              "    GETSET(std::wstring, String, L\"\")\r\n"
+              "\r\n"
+              "    public:\r\n"
+              "        VPGObject() : vcc::BaseObject(ObjectType::Object)\r\n"
+              "        {\r\n"
+              "            c = std::make_shared<VPGObjectC>(1,2,3);\r\n"
+              "        }\r\n"
+              "\r\n"
+              "        virtual ~VPGObject() {}\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::IObject> clone() const override\r\n"
+              "        {\r\n"
+              "            auto obj = std::make_shared<VPGObject>(*this);\r\n"
+              "            obj->b = std::dynamic_pointer_cast<VPGObjectB>(this->b->clone());\r\n"
+              "            obj->c = std::dynamic_pointer_cast<VPGObjectC>(this->c->clone());\r\n"
+              "            return obj;\r\n"
+              "        }\r\n"
+              "\r\n"
+              "        virtual std::shared_ptr<vcc::Json> toJson() const override;\r\n"
+              "        virtual void deserializeJson(std::shared_ptr<vcc::IDocument> document) "
+              "override;\r\n"
+              "};\r\n");
 
-EXPECT_EQ(vcc::readFile(this->getFilePathCpp()),
-    L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
-    "#include \"vcc_object.hpp\"\r\n"
-    "\r\n"
-    "#include <assert.h>\r\n"
-    "#include <memory>\r\n"
-    "#include <string>\r\n"
-    "\r\n"
-    "#include \"exception_macro.hpp\"\r\n"
-    "#include \"i_document.hpp\"\r\n"
-    "#include \"i_document_builder.hpp\"\r\n"
-    "#include \"json.hpp\"\r\n"
-    "#include \"number_helper.hpp\"\r\n"
-    "#include \"string_helper.hpp\"\r\n"
-    "\r\n"
-    "std::shared_ptr<vcc::Json> VPGObject::toJson() const\r\n"
-    "{\r\n"
-    "    TRY\r\n"
-    "        vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;\r\n"
-    "        auto json = std::make_unique<vcc::Json>();\r\n"
-    "        // String\r\n"
-    "        json->addString(vcc::convertNamingStyle(L\"String\", vcc::NamingStyle::PascalCase, namestyle), getString());\r\n"
-    "        return json;\r\n"
-    "    CATCH\r\n"
-    "    return nullptr;\r\n"
-    "}\r\n"
-    "\r\n"
-    "void VPGObject::deserializeJson(std::shared_ptr<vcc::IDocument> document)\r\n"
-    "{\r\n"
-    "    TRY\r\n"
-    "        vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;\r\n"
-    "        auto json = std::dynamic_pointer_cast<vcc::Json>(document);\r\n"
-    "        assert(json != nullptr);\r\n"
-    "        // String\r\n"
-    "        if (json->isContainKey(vcc::convertNamingStyle(L\"String\", namestyle, vcc::NamingStyle::PascalCase)))\r\n"
-    "            setString(json->getString(vcc::convertNamingStyle(L\"String\", namestyle, vcc::NamingStyle::PascalCase)));\r\n"
-    "    CATCH\r\n"
-    "}\r\n");
+    EXPECT_EQ(vcc::readFile(this->getFilePathCpp()),
+              L"// <vcc:vccproj sync=\"FULL\" gen=\"FULL\"/>\r\n"
+              "#include \"vcc_object.hpp\"\r\n"
+              "\r\n"
+              "#include <assert.h>\r\n"
+              "#include <memory>\r\n"
+              "#include <string>\r\n"
+              "\r\n"
+              "#include \"exception_macro.hpp\"\r\n"
+              "#include \"i_document.hpp\"\r\n"
+              "#include \"i_document_builder.hpp\"\r\n"
+              "#include \"json.hpp\"\r\n"
+              "#include \"number_helper.hpp\"\r\n"
+              "#include \"string_helper.hpp\"\r\n"
+              "\r\n"
+              "std::shared_ptr<vcc::Json> VPGObject::toJson() const\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;\r\n"
+              "        auto json = std::make_unique<vcc::Json>();\r\n"
+              "        // String\r\n"
+              "        json->addString(vcc::convertNamingStyle(L\"String\", "
+              "vcc::NamingStyle::PascalCase, namestyle), getString());\r\n"
+              "        return json;\r\n"
+              "    CATCH\r\n"
+              "    return nullptr;\r\n"
+              "}\r\n"
+              "\r\n"
+              "void VPGObject::deserializeJson(std::shared_ptr<vcc::IDocument> document)\r\n"
+              "{\r\n"
+              "    TRY\r\n"
+              "        vcc::NamingStyle namestyle = vcc::NamingStyle::PascalCase;\r\n"
+              "        auto json = std::dynamic_pointer_cast<vcc::Json>(document);\r\n"
+              "        assert(json != nullptr);\r\n"
+              "        // String\r\n"
+              "        if (json->isContainKey(vcc::convertNamingStyle(L\"String\", namestyle, "
+              "vcc::NamingStyle::PascalCase)))\r\n"
+              "            setString(json->getString(vcc::convertNamingStyle(L\"String\", "
+              "namestyle, vcc::NamingStyle::PascalCase)));\r\n"
+              "    CATCH\r\n"
+              "}\r\n");
 }

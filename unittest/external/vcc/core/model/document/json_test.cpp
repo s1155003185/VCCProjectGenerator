@@ -1,11 +1,10 @@
-#include <gtest/gtest.h>
-
 #include "json.hpp"
-#include "json_builder.hpp"
+
 #include <gtest/gtest.h>
 
-TEST(JsonTest, Full) 
-{
+#include "json_builder.hpp"
+
+TEST(JsonTest, Full) {
     auto builder = std::make_unique<vcc::JsonBuilder>();
 
     auto json = std::make_shared<vcc::Json>();
@@ -14,11 +13,11 @@ TEST(JsonTest, Full)
     json->addDouble(L"Price", 2.33, 2);
     json->addInt(L"State", 1);
     json->addNull(L"Action");
-    
+
     auto plugins = std::make_shared<vcc::Json>();
     json->addArray(L"Plugins", plugins);
     plugins->addArrayString(L"/path/of/Git");
-    
+
     std::wstring jsonStr = builder->serialize(json.get());
 
     auto resultJson = std::make_shared<vcc::Json>();
@@ -30,7 +29,8 @@ TEST(JsonTest, Full)
     EXPECT_EQ(json->getInt64(L"State"), resultJson->getInt64(L"State"));
     EXPECT_EQ(json->isNull(L"Action"), resultJson->isNull(L"Action"));
     EXPECT_EQ(json->getArray(L"Plugins").size(), resultJson->getArray(L"Plugins").size());
-    EXPECT_EQ(json->getArray(L"Plugins").at(0)->getJsonInternalValue(), resultJson->getArray(L"Plugins").at(0)->getJsonInternalValue());
+    EXPECT_EQ(json->getArray(L"Plugins").at(0)->getJsonInternalValue(),
+              resultJson->getArray(L"Plugins").at(0)->getJsonInternalValue());
 
     // Set
     json->setString(L"Version", L"v0.0.1");
@@ -44,6 +44,6 @@ TEST(JsonTest, Full)
     EXPECT_EQ(json->getInt64(L"State"), 12);
     EXPECT_EQ(json->isNull(L"Action"), true);
     // EXPECT_EQ(json->getArray(L"Plugins").size(), resultJson->getArray(L"Plugins").size());
-    // EXPECT_EQ(json->getArray(L"Plugins").at(0)->getJsonInternalValue(), resultJson->getArray(L"Plugins").at(0)->getJsonInternalValue());
-
+    // EXPECT_EQ(json->getArray(L"Plugins").at(0)->getJsonInternalValue(),
+    // resultJson->getArray(L"Plugins").at(0)->getJsonInternalValue());
 }

@@ -1,13 +1,13 @@
+#include "terminal_service.hpp"
+
 #include <gtest/gtest.h>
 
-#include "terminal_service.hpp"
 #include "log_config.hpp"
 #include "string_helper.hpp"
-#include <gtest/gtest.h>
 
-TEST(TerminalServiceTest, Normal)
-{
-    EXPECT_TRUE(vcc::TerminalService::execute(nullptr, L"", L"git --version").starts_with(L"git version"));
+TEST(TerminalServiceTest, Normal) {
+    EXPECT_TRUE(
+        vcc::TerminalService::execute(nullptr, L"", L"git --version").starts_with(L"git version"));
 }
 
 // Terminal cannot cap exception console log

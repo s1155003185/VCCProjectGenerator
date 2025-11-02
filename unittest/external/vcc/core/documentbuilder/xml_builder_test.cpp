@@ -1,15 +1,11 @@
-#include <gtest/gtest.h>
-
-#include <memory>
-#include <string>
-
 #include "xml_builder.hpp"
+
 #include <gtest/gtest.h>
+
 #include <memory>
 #include <string>
 
-TEST(XMLBuilderTest, ParserSimple_String)
-{
+TEST(XMLBuilderTest, ParserSimple_String) {
     std::unique_ptr<vcc::XmlBuilder> reader = std::make_unique<vcc::XmlBuilder>();
     std::wstring xml = L" abc  ";
     auto element = std::make_shared<vcc::Xml>();
@@ -23,8 +19,7 @@ TEST(XMLBuilderTest, ParserSimple_String)
     EXPECT_EQ(element->getFullText(), xml);
 }
 
-TEST(XMLBuilderTest, ParserSimple_SingleTag)
-{
+TEST(XMLBuilderTest, ParserSimple_SingleTag) {
     std::unique_ptr<vcc::XmlBuilder> reader = std::make_unique<vcc::XmlBuilder>();
     std::wstring xml = L"<br/>";
     auto element = std::make_shared<vcc::Xml>();
@@ -38,8 +33,7 @@ TEST(XMLBuilderTest, ParserSimple_SingleTag)
     EXPECT_EQ(element->getFullText(), xml);
 }
 
-TEST(XMLBuilderTest, ParserSimple_TagWithString)
-{
+TEST(XMLBuilderTest, ParserSimple_TagWithString) {
     std::unique_ptr<vcc::XmlBuilder> reader = std::make_unique<vcc::XmlBuilder>();
     std::wstring xml = L"<h1>abc</h1>";
     auto element = std::make_shared<vcc::Xml>();
@@ -53,8 +47,7 @@ TEST(XMLBuilderTest, ParserSimple_TagWithString)
     EXPECT_EQ(element->getFullText(), xml);
 }
 
-TEST(XMLBuilderTest, ParserSimple_EmptyTag)
-{
+TEST(XMLBuilderTest, ParserSimple_EmptyTag) {
     std::unique_ptr<vcc::XmlBuilder> reader = std::make_unique<vcc::XmlBuilder>();
     std::wstring xml = L"<h2></h2>";
     auto element = std::make_shared<vcc::Xml>();
@@ -68,8 +61,7 @@ TEST(XMLBuilderTest, ParserSimple_EmptyTag)
     EXPECT_EQ(element->getFullText(), xml);
 }
 
-TEST(XMLBuilderTest, ParserSimple_Namespace)
-{
+TEST(XMLBuilderTest, ParserSimple_Namespace) {
     std::unique_ptr<vcc::XmlBuilder> reader = std::make_unique<vcc::XmlBuilder>();
     std::wstring xml = L"<a:h2></a:h2>";
     auto element = std::make_shared<vcc::Xml>();
@@ -83,8 +75,7 @@ TEST(XMLBuilderTest, ParserSimple_Namespace)
     EXPECT_EQ(element->getFullText(), xml);
 }
 
-TEST(XMLBuilderTest, ParserSimple_TagWithEscapeString)
-{
+TEST(XMLBuilderTest, ParserSimple_TagWithEscapeString) {
     std::unique_ptr<vcc::XmlBuilder> reader = std::make_unique<vcc::XmlBuilder>();
     std::wstring xml = L"<b:h3>&quot;&amp;&quot;</b:h3>";
     auto element = std::make_shared<vcc::Xml>();
@@ -98,8 +89,7 @@ TEST(XMLBuilderTest, ParserSimple_TagWithEscapeString)
     EXPECT_EQ(element->getFullText(), xml);
 }
 
-TEST(XMLBuilderTest, ParserSimple_TagWithProperties)
-{
+TEST(XMLBuilderTest, ParserSimple_TagWithProperties) {
     std::unique_ptr<vcc::XmlBuilder> reader = std::make_unique<vcc::XmlBuilder>();
     std::wstring xml = L"<img src=\"img.jpg\" width=\"111\" height=\"222.222\">abc</img>";
     auto element = std::make_shared<vcc::Xml>();
@@ -119,8 +109,7 @@ TEST(XMLBuilderTest, ParserSimple_TagWithProperties)
     EXPECT_EQ(element->getFullText(), xml);
 }
 
-TEST(XMLBuilderTest, Full) 
-{
+TEST(XMLBuilderTest, Full) {
     std::unique_ptr<vcc::XmlBuilder> reader = std::make_unique<vcc::XmlBuilder>();
     std::wstring xml = L"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
     xml += L"<f:table>\r\n";
@@ -135,7 +124,10 @@ TEST(XMLBuilderTest, Full)
     EXPECT_EQ(element->getChildren().size(), (size_t)3);
     EXPECT_EQ(element->getOpeningTag(), L"<f:table>");
     EXPECT_EQ(element->getClosingTag(), L"</f:table>");
-    EXPECT_EQ(element->getFullText(), L"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<f:table>\r\n    <f:td>Alpha</f:td>\r\n    <f:td>&quot;Beta&quot;</f:td>\r\n    <f:td>&amp;gamma</f:td>\r\n</f:table>");
+    EXPECT_EQ(
+        element->getFullText(),
+        L"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<f:table>\r\n    <f:td>Alpha</f:td>\r\n    "
+        L"<f:td>&quot;Beta&quot;</f:td>\r\n    <f:td>&amp;gamma</f:td>\r\n</f:table>");
     EXPECT_EQ(element->getChildren().at(0)->getName(), L"f:td");
     EXPECT_EQ(element->getChildren().at(0)->getOpeningTag(), L"<f:td>");
     EXPECT_EQ(element->getChildren().at(0)->getClosingTag(), L"</f:td>");
@@ -145,7 +137,8 @@ TEST(XMLBuilderTest, Full)
     EXPECT_EQ(element->getChildren().at(1)->getOpeningTag(), L"<f:td>");
     EXPECT_EQ(element->getChildren().at(1)->getClosingTag(), L"</f:td>");
     EXPECT_EQ(element->getChildren().at(1)->getText(), L"\"Beta\"");
-    EXPECT_EQ(element->getChildren().at(1)->getFullText(), L"\r\n    <f:td>&quot;Beta&quot;</f:td>");
+    EXPECT_EQ(element->getChildren().at(1)->getFullText(),
+              L"\r\n    <f:td>&quot;Beta&quot;</f:td>");
     EXPECT_EQ(element->getChildren().at(2)->getName(), L"f:td");
     EXPECT_EQ(element->getChildren().at(2)->getOpeningTag(), L"<f:td>");
     EXPECT_EQ(element->getChildren().at(2)->getClosingTag(), L"</f:td>");

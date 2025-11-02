@@ -1,32 +1,21 @@
+#include "vpg_code_reader.hpp"
+
 #include <gtest/gtest.h>
 
 #include <memory>
 #include <string>
 
 #include "class_macro.hpp"
-#include "vpg_code_reader.hpp"
-#include <gtest/gtest.h>
-#include <memory>
-#include <string>
 
-class VPGCodeReaderTest : public testing::Test 
-{
+class VPGCodeReaderTest : public testing::Test {
     MANAGER_SPTR_NULL(VPGCodeReader, Reader)
-    public:
+   public:
+    void SetUp() override { _Reader = std::make_shared<VPGCodeReader>(L"//"); }
 
-        void SetUp() override
-        {
-            _Reader = std::make_shared<VPGCodeReader>(L"//");
-        }
-
-        void TearDown() override
-        {
-
-        }
+    void TearDown() override {}
 };
 
-TEST_F(VPGCodeReaderTest, SimpleString)
-{
+TEST_F(VPGCodeReaderTest, SimpleString) {
     std::wstring str = L"abc";
     auto element = std::make_shared<vcc::Xml>();
     this->getReader()->deserialize(str, element);
@@ -34,19 +23,17 @@ TEST_F(VPGCodeReaderTest, SimpleString)
     EXPECT_EQ(element->getChildren().at(0)->getFullText(), str);
 }
 
-TEST_F(VPGCodeReaderTest, Command)
-{
+TEST_F(VPGCodeReaderTest, Command) {
     std::wstring str = L"  // comment\r\n";
-                    str += L" abc // abc \r\n";
-                    str += L" not for vcc // <abc edf/> \r\n";
+    str += L" abc // abc \r\n";
+    str += L" not for vcc // <abc edf/> \r\n";
     auto element = std::make_shared<vcc::Xml>();
     this->getReader()->deserialize(str, element);
     EXPECT_EQ(element->getChildren().size(), (size_t)1);
     EXPECT_EQ(element->getChildren().at(0)->getFullText(), str);
 }
 
-TEST_F(VPGCodeReaderTest, VCCTag)
-{
+TEST_F(VPGCodeReaderTest, VCCTag) {
     std::wstring str = L"  // <vcc:vccproj sync=\"FULL\"/>\r\n";
     auto element = std::make_shared<vcc::Xml>();
     this->getReader()->deserialize(str, element);
@@ -64,11 +51,9 @@ TEST_F(VPGCodeReaderTest, VCCTag)
         fullText += element->getChildren().at(i)->getFullText();
     }
     EXPECT_EQ(fullText, str);
-
 }
 
-TEST_F(VPGCodeReaderTest, Mixed)
-{
+TEST_F(VPGCodeReaderTest, Mixed) {
     std::wstring str = L"";
     str += L"    // <vcc:vccproj sync=\"FULL\"/>\r\n";
     str += L"    a\r\n";
@@ -90,12 +75,14 @@ TEST_F(VPGCodeReaderTest, Mixed)
     EXPECT_EQ(element->getChildren().at(1)->getAttributes().at(0)->getName(), L"sync");
     EXPECT_EQ(element->getChildren().at(1)->getAttributes().at(0)->getValue(), L"FULL");
     EXPECT_EQ(element->getChildren().at(1)->getFullText(), L"// <vcc:vccproj sync=\"FULL\"/>");
-    EXPECT_EQ(element->getChildren().at(2)->getFullText(), L"\r\n    a\r\n    // <h1>\r\n    content\r\n    // </h1>\r\n    b\r\n    ");
+    EXPECT_EQ(element->getChildren().at(2)->getFullText(),
+              L"\r\n    a\r\n    // <h1>\r\n    content\r\n    // </h1>\r\n    b\r\n    ");
     EXPECT_EQ(element->getChildren().at(3)->getName(), L"vcc:tagB");
     EXPECT_EQ(element->getChildren().at(3)->getAttributes().size(), (size_t)1);
     EXPECT_EQ(element->getChildren().at(3)->getAttributes().at(0)->getName(), L"action");
     EXPECT_EQ(element->getChildren().at(3)->getAttributes().at(0)->getValue(), L"REPLACE");
-    EXPECT_EQ(element->getChildren().at(3)->getFullText(), L"// <vcc:tagB action=\"REPLACE\">\r\n    BLOCK B\r\n    // </vcc:tagB>");
+    EXPECT_EQ(element->getChildren().at(3)->getFullText(),
+              L"// <vcc:tagB action=\"REPLACE\">\r\n    BLOCK B\r\n    // </vcc:tagB>");
     EXPECT_EQ(element->getChildren().at(4)->getFullText(), L"\r\n    END");
 
     std::wstring fullText = L"";
@@ -105,8 +92,7 @@ TEST_F(VPGCodeReaderTest, Mixed)
     EXPECT_EQ(fullText, str);
 }
 
-TEST_F(VPGCodeReaderTest, Nested)
-{
+TEST_F(VPGCodeReaderTest, Nested) {
     std::wstring str = L"";
     str += L"    // <vcc:vccproj sync=\"FULL\"/>\r\n";
     str += L"    a\r\n";
@@ -131,7 +117,9 @@ TEST_F(VPGCodeReaderTest, Nested)
     EXPECT_EQ(element->getChildren().at(3)->getAttributes().size(), (size_t)1);
     EXPECT_EQ(element->getChildren().at(3)->getAttributes().at(0)->getName(), L"action");
     EXPECT_EQ(element->getChildren().at(3)->getAttributes().at(0)->getValue(), L"REPLACE");
-    EXPECT_EQ(element->getChildren().at(3)->getFullText(), L"// <vcc:tagA action=\"REPLACE\">\r\n    // <vcc:tagB action=\"REPLACE\">\r\n    BLOCK B\r\n    // </vcc:tagB>\r\n    // </vcc:tagA>");
+    EXPECT_EQ(element->getChildren().at(3)->getFullText(),
+              L"// <vcc:tagA action=\"REPLACE\">\r\n    // <vcc:tagB action=\"REPLACE\">\r\n    "
+              L"BLOCK B\r\n    // </vcc:tagB>\r\n    // </vcc:tagA>");
     EXPECT_EQ(element->getChildren().at(4)->getFullText(), L"\r\n    END");
     std::wstring fullText = L"";
     for (size_t i = 0; i < 5; i++) {
@@ -140,8 +128,7 @@ TEST_F(VPGCodeReaderTest, Nested)
     EXPECT_EQ(fullText, str);
 }
 
-TEST_F(VPGCodeReaderTest, FULL)
-{
+TEST_F(VPGCodeReaderTest, FULL) {
     std::wstring str = L"";
     str += L"    // <vcc:vccproj sync=\"FULL\"/>\r\n";
     str += L"    a\r\n";
@@ -168,13 +155,15 @@ TEST_F(VPGCodeReaderTest, FULL)
     EXPECT_EQ(element->getChildren().at(3)->getAttributes().size(), (size_t)1);
     EXPECT_EQ(element->getChildren().at(3)->getAttributes().at(0)->getName(), L"action");
     EXPECT_EQ(element->getChildren().at(3)->getAttributes().at(0)->getValue(), L"RESERVE");
-    EXPECT_EQ(element->getChildren().at(3)->getFullText(), L"// <vcc:tagA action=\"RESERVE\">\r\n    BLOCK A\r\n    // </vcc:tagA>");
+    EXPECT_EQ(element->getChildren().at(3)->getFullText(),
+              L"// <vcc:tagA action=\"RESERVE\">\r\n    BLOCK A\r\n    // </vcc:tagA>");
     EXPECT_EQ(element->getChildren().at(4)->getFullText(), L"\r\n    b\r\n    ");
     EXPECT_EQ(element->getChildren().at(5)->getName(), L"vcc:tagB");
     EXPECT_EQ(element->getChildren().at(5)->getAttributes().size(), (size_t)1);
     EXPECT_EQ(element->getChildren().at(5)->getAttributes().at(0)->getName(), L"action");
     EXPECT_EQ(element->getChildren().at(5)->getAttributes().at(0)->getValue(), L"REPLACE");
-    EXPECT_EQ(element->getChildren().at(5)->getFullText(), L"// <vcc:tagB action=\"REPLACE\">\r\n    BLOCK B\r\n    // </vcc:tagB>");
+    EXPECT_EQ(element->getChildren().at(5)->getFullText(),
+              L"// <vcc:tagB action=\"REPLACE\">\r\n    BLOCK B\r\n    // </vcc:tagB>");
     EXPECT_EQ(element->getChildren().at(6)->getFullText(), L"\r\n    END");
 
     std::wstring fullText = L"";
@@ -184,8 +173,7 @@ TEST_F(VPGCodeReaderTest, FULL)
     EXPECT_EQ(fullText, str);
 }
 
-TEST_F(VPGCodeReaderTest, ReadMe)
-{
+TEST_F(VPGCodeReaderTest, ReadMe) {
     std::wstring str = L"";
     str += L"#\t<vcc:vccproj sync=\"FULL\"/>\r\n";
     str += L"\t\ta\r\n";
@@ -212,13 +200,15 @@ TEST_F(VPGCodeReaderTest, ReadMe)
     EXPECT_EQ(element->getChildren().at(2)->getAttributes().size(), (size_t)1);
     EXPECT_EQ(element->getChildren().at(2)->getAttributes().at(0)->getName(), L"action");
     EXPECT_EQ(element->getChildren().at(2)->getAttributes().at(0)->getValue(), L"RESERVE");
-    EXPECT_EQ(element->getChildren().at(2)->getFullText(), L"#\t<vcc:tagA action=\"RESERVE\">\r\n\t\tBLOCK A\r\n#\t</vcc:tagA>");
+    EXPECT_EQ(element->getChildren().at(2)->getFullText(),
+              L"#\t<vcc:tagA action=\"RESERVE\">\r\n\t\tBLOCK A\r\n#\t</vcc:tagA>");
     EXPECT_EQ(element->getChildren().at(3)->getFullText(), L"\r\n\t\tb\r\n");
     EXPECT_EQ(element->getChildren().at(4)->getName(), L"vcc:tagB");
     EXPECT_EQ(element->getChildren().at(4)->getAttributes().size(), (size_t)1);
     EXPECT_EQ(element->getChildren().at(4)->getAttributes().at(0)->getName(), L"action");
     EXPECT_EQ(element->getChildren().at(4)->getAttributes().at(0)->getValue(), L"REPLACE");
-    EXPECT_EQ(element->getChildren().at(4)->getFullText(), L"#\t<vcc:tagB action=\"REPLACE\">\r\n\t\tBLOCK B\r\n#\t</vcc:tagB>");
+    EXPECT_EQ(element->getChildren().at(4)->getFullText(),
+              L"#\t<vcc:tagB action=\"REPLACE\">\r\n\t\tBLOCK B\r\n#\t</vcc:tagB>");
     EXPECT_EQ(element->getChildren().at(5)->getFullText(), L"\r\n\t\tEND");
 
     std::wstring fullText = L"";

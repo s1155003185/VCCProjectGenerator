@@ -1,3 +1,5 @@
+#include "vector_helper.hpp"
+
 #include <gtest/gtest.h>
 
 #include <memory>
@@ -5,29 +7,22 @@
 
 #include "base_object.hpp"
 #include "i_object.hpp"
-#include "vector_helper.hpp"
-#include <gtest/gtest.h>
-#include <memory>
-#include <vector>
 
-class VectorHelperTestObj : public vcc::BaseObject
-{
-    public:
-        VectorHelperTestObj() = default;
-        ~VectorHelperTestObj() {}
-        
-        virtual std::shared_ptr<vcc::IObject> clone() const override { return nullptr; };
+class VectorHelperTestObj : public vcc::BaseObject {
+   public:
+    VectorHelperTestObj() = default;
+    ~VectorHelperTestObj() {}
+
+    virtual std::shared_ptr<vcc::IObject> clone() const override { return nullptr; };
 };
 
-TEST(VectorHelperTest, FindIObject)
-{
+TEST(VectorHelperTest, FindIObject) {
     std::vector<std::shared_ptr<VectorHelperTestObj>> v;
     v.push_back(std::make_shared<VectorHelperTestObj>());
     EXPECT_EQ(vcc::findIObject(v, v.at(0).get()), 0);
 }
 
-TEST(VectorHelperTest, InsertAndRemoveIObject)
-{
+TEST(VectorHelperTest, InsertAndRemoveIObject) {
     std::vector<std::shared_ptr<VectorHelperTestObj>> v;
     vcc::insertIObject(v, std::make_shared<VectorHelperTestObj>());
     vcc::insertIObject(v, std::make_shared<VectorHelperTestObj>());

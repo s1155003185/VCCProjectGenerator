@@ -1,17 +1,17 @@
+#include "vpg_include_path_service.hpp"
+
 #include <gtest/gtest.h>
 
 #include "platform_type.hpp"
 #include "vpg_global.hpp"
-#include "vpg_include_path_service.hpp"
-#include <gtest/gtest.h>
 
 // Mode
-TEST(VPGIncludePathSerciceTest, getWorkspaceIncludePath)
-{
+TEST(VPGIncludePathSerciceTest, getWorkspaceIncludePath) {
     std::map<std::wstring, std::wstring> classPathMapping;
     std::set<std::wstring> classMacroList;
     std::map<std::wstring, std::shared_ptr<VPGEnumClass>> enumClassMapping;
-    VPGIncludePathService::getWorkspaceIncludePath(L"", classMacroList, classPathMapping, enumClassMapping);
+    VPGIncludePathService::getWorkspaceIncludePath(L"", classMacroList, classPathMapping,
+                                                   enumClassMapping);
     EXPECT_EQ(classPathMapping.at(L"vcc::Json"), L"json.hpp");
     EXPECT_TRUE(enumClassMapping.find(L"vcc::JsonInternalType") != enumClassMapping.end());
 }

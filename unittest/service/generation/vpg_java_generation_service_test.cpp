@@ -1,3 +1,5 @@
+#include "vpg_java_generation_service.hpp"
+
 #include <gtest/gtest.h>
 
 #include <filesystem>
@@ -5,54 +7,43 @@
 
 #include "class_macro.hpp"
 #include "file_helper.hpp"
-
 #include "vpg_file_generation_manager.hpp"
 #include "vpg_global.hpp"
-#include "vpg_java_generation_service.hpp"
-#include <gtest/gtest.h>
-#include <filesystem>
-#include <string>
 
-class VPGJavaGenerationServiceTest : public testing::Test 
-{
+class VPGJavaGenerationServiceTest : public testing::Test {
     GETSET_SPTR_NULL(vcc::LogConfig, LogConfig);
     GETSET(std::wstring, Workspace, L"bin/Debug/VPGJavaGenerationServiceTest/");
     GETSET_SPTR_NULL(VPGConfigExport, JavaOption);
-    
+
     GETSET_SPTR_NULL(VPGConfig, Option);
-    
-    public:
-        void SetUp() override
-        {
-            this->_LogConfig = std::make_shared<vcc::LogConfig>();
-            this->_LogConfig->setIsConsoleLog(false);
 
-            std::filesystem::remove_all(PATH(this->getWorkspace()));
-            _Option = std::make_shared<VPGConfig>();
-            _Option->setProjectPrefix(L"VPG");
-            if (_Option->getInput() == nullptr)
-                _Option->setInput(std::make_shared<VPGConfigInput>());
-            _Option->getInput()->setTypeWorkspace(_Workspace);
+   public:
+    void SetUp() override {
+        this->_LogConfig = std::make_shared<vcc::LogConfig>();
+        this->_LogConfig->setIsConsoleLog(false);
 
-            _JavaOption = std::make_shared<VPGConfigExport>();
-            _Option->insertExports(_JavaOption);
-            _JavaOption->setInterface(VPGConfigInterfaceType::Java);
-            _JavaOption->setWorkspace(_Workspace);
-            _JavaOption->setDllBridgeDirectory(L"src/main/java/com/vcc/test/");
-            _JavaOption->setTypeDirectory(L"src/main/java/com/vcc/type");
-            _JavaOption->setObjectDirectory(L"src/main/java/com/vcc/module");
-            _JavaOption->setFormDirectory(L"src/main/java/com/vcc/form");
-        }
+        std::filesystem::remove_all(PATH(this->getWorkspace()));
+        _Option = std::make_shared<VPGConfig>();
+        _Option->setProjectPrefix(L"VPG");
+        if (_Option->getInput() == nullptr) _Option->setInput(std::make_shared<VPGConfigInput>());
+        _Option->getInput()->setTypeWorkspace(_Workspace);
 
-        void TearDown() override
-        {
-            std::filesystem::remove_all(PATH(this->getWorkspace()));
-        }
+        _JavaOption = std::make_shared<VPGConfigExport>();
+        _Option->insertExports(_JavaOption);
+        _JavaOption->setInterface(VPGConfigInterfaceType::Java);
+        _JavaOption->setWorkspace(_Workspace);
+        _JavaOption->setDllBridgeDirectory(L"src/main/java/com/vcc/test/");
+        _JavaOption->setTypeDirectory(L"src/main/java/com/vcc/type");
+        _JavaOption->setObjectDirectory(L"src/main/java/com/vcc/module");
+        _JavaOption->setFormDirectory(L"src/main/java/com/vcc/form");
+    }
+
+    void TearDown() override { std::filesystem::remove_all(PATH(this->getWorkspace())); }
 };
 
-TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
-{
-    vcc::writeFile(vcc::concatPaths({this->getWorkspace(), L"DllFunctions.h"}),
+TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge) {
+    vcc::writeFile(
+        vcc::concatPaths({this->getWorkspace(), L"DllFunctions.h"}),
         L"// <vcc:vccproj gen=\"DEMAND\"/>\r\n"
         "#ifndef DLL_FUNCTIONS_H\r\n"
         "#define DLL_FUNCTIONS_H\r\n"
@@ -90,7 +81,8 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "    TRY\r\n"
         "         IObject *object = static_cast<IObject *>(ref);\r\n"
         "         std::shared_ptr<vcc::IObject> ptr(object, [](IObject*){});\r\n"
-        "         return PropertyAccessorFactory::create(ptr)->readBool(LockType::ReadLock, property, index);\r\n"
+        "         return PropertyAccessorFactory::create(ptr)->readBool(LockType::ReadLock, "
+        "property, index);\r\n"
         "     CATCH \r\n"
         "     return false;\r\n"
         "} \r\n"
@@ -103,11 +95,19 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "\r\n"
         "}\r\n"
         "\r\n"
-        "#endif\r\n", true);
+        "#endif\r\n",
+        true);
 
-    VPGJavaGenerationService::generateJavaBridge(this->getLogConfig().get(), L"", vcc::concatPaths({this->getWorkspace(), L"DllFunctions.h"}), this->getOption().get());
-    EXPECT_TRUE(vcc::isFilePresent(vcc::concatPaths({this->getWorkspace(), this->getJavaOption()->getDllBridgeDirectory(), L"VPGDllFunctions.java"})));
-    EXPECT_EQ(vcc::readFile(vcc::concatPaths({this->getWorkspace(), this->getJavaOption()->getDllBridgeDirectory(), L"VPGDllFunctions.java"})),
+    VPGJavaGenerationService::generateJavaBridge(
+        this->getLogConfig().get(), L"",
+        vcc::concatPaths({this->getWorkspace(), L"DllFunctions.h"}), this->getOption().get());
+    EXPECT_TRUE(vcc::isFilePresent(
+        vcc::concatPaths({this->getWorkspace(), this->getJavaOption()->getDllBridgeDirectory(),
+                          L"VPGDllFunctions.java"})));
+    EXPECT_EQ(
+        vcc::readFile(
+            vcc::concatPaths({this->getWorkspace(), this->getJavaOption()->getDllBridgeDirectory(),
+                              L"VPGDllFunctions.java"})),
         L"package com.vcc.test;\r\n"
         "\r\n"
         "import com.sun.jna.Library;\r\n"
@@ -119,8 +119,10 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "    VPGDllFunctions Instance = loadLibrary();\r\n"
         "\r\n"
         "    static private VPGDllFunctions loadLibrary() {\r\n"
-        "        String prefix = System.getProperty(\"os.name\").startsWith(\"Windows\") ? \"lib\" : \"\";\r\n"
-        "        var lib = (VPGDllFunctions)Native.load(prefix + \"vpg\", VPGDllFunctions.class);\r\n"
+        "        String prefix = System.getProperty(\"os.name\").startsWith(\"Windows\") ? \"lib\" "
+        ": \"\";\r\n"
+        "        var lib = (VPGDllFunctions)Native.load(prefix + \"vpg\", "
+        "VPGDllFunctions.class);\r\n"
         "        lib.applicationStart();\r\n"
         "        return lib;\r\n"
         "    }\r\n"
@@ -136,12 +138,17 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "    void writeCharAtKey(Pointer ref, long property, byte value, Pointer key);\r\n"
         "    void insertCharAtIndex(Pointer ref, long property, byte value, long index);\r\n"
         "    void readString(Pointer ref, long property, PointerByReference value);\r\n"
-        "    void readStringAtIndex(Pointer ref, long property, PointerByReference value, long index);\r\n"
-        "    void readStringAtKey(Pointer ref, long property, PointerByReference value, Pointer key);\r\n"
+        "    void readStringAtIndex(Pointer ref, long property, PointerByReference value, long "
+        "index);\r\n"
+        "    void readStringAtKey(Pointer ref, long property, PointerByReference value, Pointer "
+        "key);\r\n"
         "    void writeString(Pointer ref, long property, PointerByReference value);\r\n"
-        "    void writeStringAtIndex(Pointer ref, long property, PointerByReference value, long index);\r\n"
-        "    void writeStringAtKey(Pointer ref, long property, PointerByReference value, Pointer key);\r\n"
-        "    void insertStringAtIndex(Pointer ref, long property, PointerByReference value, long index);\r\n"
+        "    void writeStringAtIndex(Pointer ref, long property, PointerByReference value, long "
+        "index);\r\n"
+        "    void writeStringAtKey(Pointer ref, long property, PointerByReference value, Pointer "
+        "key);\r\n"
+        "    void insertStringAtIndex(Pointer ref, long property, PointerByReference value, long "
+        "index);\r\n"
         "    Pointer readObject(Pointer ref, long property);\r\n"
         "    Pointer readObjectAtIndex(Pointer ref, long property, long index);\r\n"
         "    Pointer readObjectAtKey(Pointer ref, long property, Pointer key);\r\n"
@@ -157,25 +164,32 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateJavaBridge)
         "    void removeAtIndex(Pointer ref, long property, long index);\r\n"
         "    void removeAtKey(Pointer ref, long property, Pointer key);\r\n"
         "    void clear(Pointer ref, long property);\r\n"
-        "}\r\n"
-        );
+        "}\r\n");
 }
 
-void validateGenerateEnum(const VPGJavaGenerationServiceTest *test, const std::wstring &enumClass1, const std::wstring &enumClass2)
-{
+void validateGenerateEnum(const VPGJavaGenerationServiceTest* test, const std::wstring& enumClass1,
+                          const std::wstring& enumClass2) {
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList1;
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList2;
     VPGGlobal::getEnumClassReader()->parse(enumClass1, enumClassList1);
     VPGGlobal::getEnumClassReader()->parse(enumClass2, enumClassList2);
 
-    std::wstring filePath1 = vcc::concatPaths({test->getWorkspace(), test->getJavaOption()->getTypeDirectory(), L"VPGTypeA.java"});
-    std::wstring filePath2 = vcc::concatPaths({test->getWorkspace(), test->getJavaOption()->getTypeDirectory(), L"VPGTypeBProperty.java"});
-    
-    VPGJavaGenerationService::generateEnum(test->getLogConfig().get(), filePath1, L"", enumClassList1.at(0).get(), test->getOption().get(), test->getJavaOption().get());
-    VPGJavaGenerationService::generateEnum(test->getLogConfig().get(), filePath2, L"", enumClassList2.at(0).get(), test->getOption().get(), test->getJavaOption().get());
-    
+    std::wstring filePath1 = vcc::concatPaths(
+        {test->getWorkspace(), test->getJavaOption()->getTypeDirectory(), L"VPGTypeA.java"});
+    std::wstring filePath2 =
+        vcc::concatPaths({test->getWorkspace(), test->getJavaOption()->getTypeDirectory(),
+                          L"VPGTypeBProperty.java"});
+
+    VPGJavaGenerationService::generateEnum(test->getLogConfig().get(), filePath1, L"",
+                                           enumClassList1.at(0).get(), test->getOption().get(),
+                                           test->getJavaOption().get());
+    VPGJavaGenerationService::generateEnum(test->getLogConfig().get(), filePath2, L"",
+                                           enumClassList2.at(0).get(), test->getOption().get(),
+                                           test->getJavaOption().get());
+
     EXPECT_TRUE(vcc::isFilePresent(filePath1));
-    EXPECT_EQ(vcc::readFile(filePath1),
+    EXPECT_EQ(
+        vcc::readFile(filePath1),
         L"package com.vcc.type;\r\n"
         "\r\n"
         "import java.util.Objects;\r\n"
@@ -208,39 +222,39 @@ void validateGenerateEnum(const VPGJavaGenerationServiceTest *test, const std::w
 
     EXPECT_TRUE(vcc::isFilePresent(filePath2));
     EXPECT_EQ(vcc::readFile(filePath2),
-        L"package com.vcc.type;\r\n"
-        "\r\n"
-        "import java.util.Objects;\r\n"
-        "\r\n"
-        "public enum VPGTypeBProperty {\r\n"
-        "    EnumA(0),\r\n"
-        "    EnumB(1),\r\n"
-        "    EnumC(999);\r\n"
-        "\r\n"
-        "    public final Integer value;\r\n"
-        "\r\n"
-        "    VPGTypeBProperty(Integer value) {\r\n"
-        "        this.value = value;\r\n"
-        "    }\r\n"
-        "\r\n"
-        "    public Integer getValue() {\r\n"
-        "        return value;\r\n"
-        "    }\r\n"
-        "\r\n"
-        "    public static VPGTypeBProperty parse(Integer value) {\r\n"
-        "        for (VPGTypeBProperty type : values()) {\r\n"
-        "            if (Objects.equals(type.value, value)) {\r\n"
-        "                return type;\r\n"
-        "            }\r\n"
-        "        }\r\n"
-        "        throw new IllegalArgumentException(\"Invalid VPGTypeBProperty value: \" + value);\r\n"
-        "    }\r\n"
-        "\r\n"
-        "}\r\n");
+              L"package com.vcc.type;\r\n"
+              "\r\n"
+              "import java.util.Objects;\r\n"
+              "\r\n"
+              "public enum VPGTypeBProperty {\r\n"
+              "    EnumA(0),\r\n"
+              "    EnumB(1),\r\n"
+              "    EnumC(999);\r\n"
+              "\r\n"
+              "    public final Integer value;\r\n"
+              "\r\n"
+              "    VPGTypeBProperty(Integer value) {\r\n"
+              "        this.value = value;\r\n"
+              "    }\r\n"
+              "\r\n"
+              "    public Integer getValue() {\r\n"
+              "        return value;\r\n"
+              "    }\r\n"
+              "\r\n"
+              "    public static VPGTypeBProperty parse(Integer value) {\r\n"
+              "        for (VPGTypeBProperty type : values()) {\r\n"
+              "            if (Objects.equals(type.value, value)) {\r\n"
+              "                return type;\r\n"
+              "            }\r\n"
+              "        }\r\n"
+              "        throw new IllegalArgumentException(\"Invalid VPGTypeBProperty value: \" + "
+              "value);\r\n"
+              "    }\r\n"
+              "\r\n"
+              "}\r\n");
 }
 
-TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
-{
+TEST_F(VPGJavaGenerationServiceTest, GenerateEnum) {
     std::wstring enumClass1 =
         L"#param once\r\n"
         "enum class VPGTypeA {\r\n"
@@ -252,15 +266,15 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum)
     std::wstring enumClass2 =
         L"#param once\r\n"
         "enum class VPGTypeBProperty {\r\n"
-        "   EnumA = 0, // GETSET(std::wstring, EnumA, L"")\r\n"
+        "   EnumA = 0, // GETSET(std::wstring, EnumA, L"
+        ")\r\n"
         "   EnumB, // GETSET(int64_t, EnumB, 1)\r\n"
         "   EnumC = 999 // VECTOR(double, EnumC)\r\n"
         "};\r\n";
     validateGenerateEnum(this, enumClass1, enumClass2);
 }
 
-TEST_F(VPGJavaGenerationServiceTest, GenerateEnum_Namespace)
-{
+TEST_F(VPGJavaGenerationServiceTest, GenerateEnum_Namespace) {
     std::wstring enumClass1 =
         L"#param once\r\n"
         "namespace vcc\r\n"
@@ -276,7 +290,8 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum_Namespace)
         L"#param once\r\n"
         "namespace vcc {\r\n"
         "    enum class VPGTypeBProperty {\r\n"
-        "        EnumA = 0, // GETSET(std::wstring, EnumA, L"")\r\n"
+        "        EnumA = 0, // GETSET(std::wstring, EnumA, L"
+        ")\r\n"
         "        EnumB, // GETSET(int64_t, EnumB, 1)\r\n"
         "        EnumC = 999 // VECTOR(double, EnumC)\r\n"
         "    };\r\n"
@@ -284,17 +299,21 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateEnum_Namespace)
     validateGenerateEnum(this, enumClass1, enumClass2);
 }
 
-void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std::wstring &code)
-{
+void validateGenerateObject(const VPGJavaGenerationServiceTest* test, const std::wstring& code) {
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(code, enumClassList);
 
     std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMap;
-    std::wstring filePath = vcc::concatPaths({test->getWorkspace(), test->getJavaOption()->getObjectDirectory(), L"VPGTypeB.java"});
-    VPGJavaGenerationService::generateObject(test->getLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMap, typeWorkspaceClassRelativePathMap, test->getOption().get(), test->getJavaOption().get());
-    
+    std::wstring filePath = vcc::concatPaths(
+        {test->getWorkspace(), test->getJavaOption()->getObjectDirectory(), L"VPGTypeB.java"});
+    VPGJavaGenerationService::generateObject(
+        test->getLogConfig().get(), filePath, L"", enumClassList.at(0).get(),
+        typeWorkspaceClassRelativePathMap, typeWorkspaceClassRelativePathMap,
+        test->getOption().get(), test->getJavaOption().get());
+
     EXPECT_TRUE(vcc::isFilePresent(filePath));
-    EXPECT_EQ(vcc::readFile(filePath),
+    EXPECT_EQ(
+        vcc::readFile(filePath),
         L"package com.vcc.module;\r\n"
         "\r\n"
         "import com.sun.jna.Memory;\r\n"
@@ -316,48 +335,59 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "\r\n"
         "    // <editor-fold defaultstate=\"collapsed\" desc=\"Generated Properties\">\r\n"
         "    public boolean getBool() {\r\n"
-        "        return VPGDllFunctions.Instance.readBool(Handle, VPGTypeBProperty.Bool.getValue());\r\n"
+        "        return VPGDllFunctions.Instance.readBool(Handle, "
+        "VPGTypeBProperty.Bool.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public void setBool(boolean value) {\r\n"
-        "        VPGDllFunctions.Instance.writeBool(Handle, VPGTypeBProperty.Bool.getValue(), value);\r\n"
+        "        VPGDllFunctions.Instance.writeBool(Handle, VPGTypeBProperty.Bool.getValue(), "
+        "value);\r\n"
         "    }\r\n"
         "\r\n"
         "    public long getLong() {\r\n"
-        "        return VPGDllFunctions.Instance.readLong(Handle, VPGTypeBProperty.Long.getValue());\r\n"
+        "        return VPGDllFunctions.Instance.readLong(Handle, "
+        "VPGTypeBProperty.Long.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public void setLong(long value) {\r\n"
-        "        VPGDllFunctions.Instance.writeLong(Handle, VPGTypeBProperty.Long.getValue(), value);\r\n"
+        "        VPGDllFunctions.Instance.writeLong(Handle, VPGTypeBProperty.Long.getValue(), "
+        "value);\r\n"
         "    }\r\n"
         "\r\n"
         "    public float getFloat() {\r\n"
-        "        return VPGDllFunctions.Instance.readFloat(Handle, VPGTypeBProperty.Float.getValue());\r\n"
+        "        return VPGDllFunctions.Instance.readFloat(Handle, "
+        "VPGTypeBProperty.Float.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public void setFloat(float value) {\r\n"
-        "        VPGDllFunctions.Instance.writeFloat(Handle, VPGTypeBProperty.Float.getValue(), value);\r\n"
+        "        VPGDllFunctions.Instance.writeFloat(Handle, VPGTypeBProperty.Float.getValue(), "
+        "value);\r\n"
         "    }\r\n"
         "\r\n"
         "    public byte getChar() {\r\n"
-        "        return VPGDllFunctions.Instance.readChar(Handle, VPGTypeBProperty.Char.getValue());\r\n"
+        "        return VPGDllFunctions.Instance.readChar(Handle, "
+        "VPGTypeBProperty.Char.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public void setChar(byte value) {\r\n"
-        "        VPGDllFunctions.Instance.writeChar(Handle, VPGTypeBProperty.Char.getValue(), value);\r\n"
+        "        VPGDllFunctions.Instance.writeChar(Handle, VPGTypeBProperty.Char.getValue(), "
+        "value);\r\n"
         "    }\r\n"
         "\r\n"
         "    public char getWChar() {\r\n"
-        "        return VPGDllFunctions.Instance.readWchar(Handle, VPGTypeBProperty.WChar.getValue());\r\n"
+        "        return VPGDllFunctions.Instance.readWchar(Handle, "
+        "VPGTypeBProperty.WChar.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public void setWChar(char value) {\r\n"
-        "        VPGDllFunctions.Instance.writeWchar(Handle, VPGTypeBProperty.WChar.getValue(), value);\r\n"
+        "        VPGDllFunctions.Instance.writeWchar(Handle, VPGTypeBProperty.WChar.getValue(), "
+        "value);\r\n"
         "    }\r\n"
         "\r\n"
         "    public String getString() {\r\n"
         "        PointerByReference result = new PointerByReference();\r\n"
-        "        VPGDllFunctions.Instance.readString(Handle, VPGTypeBProperty.String.getValue(), result);\r\n"
+        "        VPGDllFunctions.Instance.readString(Handle, VPGTypeBProperty.String.getValue(), "
+        "result);\r\n"
         "        return result.getValue().getWideString(0);\r\n"
         "    }\r\n"
         "\r\n"
@@ -366,35 +396,43 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "        valuePtr.setWideString(0, value);\r\n"
         "        PointerByReference valueReference = new PointerByReference();\r\n"
         "        valueReference.setValue(valuePtr);\r\n"
-        "        VPGDllFunctions.Instance.writeString(Handle, VPGTypeBProperty.String.getValue(), valueReference);\r\n"
+        "        VPGDllFunctions.Instance.writeString(Handle, VPGTypeBProperty.String.getValue(), "
+        "valueReference);\r\n"
         "    }\r\n"
         "\r\n"
         "    public VPGTypeBProperty getEnum() {\r\n"
-        "        return VPGTypeBProperty.parse((int)VPGDllFunctions.Instance.readLong(Handle, VPGTypeBProperty.Enum.getValue()));\r\n"
+        "        return VPGTypeBProperty.parse((int)VPGDllFunctions.Instance.readLong(Handle, "
+        "VPGTypeBProperty.Enum.getValue()));\r\n"
         "    }\r\n"
         "\r\n"
         "    public void setEnum(VPGTypeBProperty value) {\r\n"
-        "        VPGDllFunctions.Instance.writeLong(Handle, VPGTypeBProperty.Enum.getValue(), value.getValue());\r\n"
+        "        VPGDllFunctions.Instance.writeLong(Handle, VPGTypeBProperty.Enum.getValue(), "
+        "value.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public VPGTypeB getObject() {\r\n"
-        "        return new VPGTypeB(VPGDllFunctions.Instance.readObject(Handle, VPGTypeBProperty.Object.getValue()));\r\n"
+        "        return new VPGTypeB(VPGDllFunctions.Instance.readObject(Handle, "
+        "VPGTypeBProperty.Object.getValue()));\r\n"
         "    }\r\n"
         "\r\n"
         "    public void setObject(VPGTypeB value) {\r\n"
-        "        VPGDllFunctions.Instance.writeObject(Handle, VPGTypeBProperty.Object.getValue(), value.Handle);\r\n"
+        "        VPGDllFunctions.Instance.writeObject(Handle, VPGTypeBProperty.Object.getValue(), "
+        "value.Handle);\r\n"
         "    }\r\n"
         "\r\n"
         "    public long getVectorDoubleCount() {\r\n"
-        "        return VPGDllFunctions.Instance.getCount(Handle, VPGTypeBProperty.VectorDouble.getValue());\r\n"
+        "        return VPGDllFunctions.Instance.getCount(Handle, "
+        "VPGTypeBProperty.VectorDouble.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public double getVectorDoubleAtIndex(long index) {\r\n"
-        "        return VPGDllFunctions.Instance.readDoubleAtIndex(Handle, VPGTypeBProperty.VectorDouble.getValue(), index);\r\n"
+        "        return VPGDllFunctions.Instance.readDoubleAtIndex(Handle, "
+        "VPGTypeBProperty.VectorDouble.getValue(), index);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void setVectorDoubleAtIndex(long index, double value) {\r\n"
-        "        VPGDllFunctions.Instance.writeDoubleAtIndex(Handle, VPGTypeBProperty.VectorDouble.getValue(), value, index);\r\n"
+        "        VPGDllFunctions.Instance.writeDoubleAtIndex(Handle, "
+        "VPGTypeBProperty.VectorDouble.getValue(), value, index);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void insertVectorDouble(double value) {\r\n"
@@ -402,24 +440,29 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    }\r\n"
         "\r\n"
         "    public void insertVectorDoubleAtIndex(long index, double value) {\r\n"
-        "        VPGDllFunctions.Instance.insertDoubleAtIndex(Handle, VPGTypeBProperty.VectorDouble.getValue(), value, index);\r\n"
+        "        VPGDllFunctions.Instance.insertDoubleAtIndex(Handle, "
+        "VPGTypeBProperty.VectorDouble.getValue(), value, index);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void removeVectorDoubleAtIndex(long index) {\r\n"
-        "        VPGDllFunctions.Instance.removeAtIndex(Handle, VPGTypeBProperty.VectorDouble.getValue(), index);\r\n"
+        "        VPGDllFunctions.Instance.removeAtIndex(Handle, "
+        "VPGTypeBProperty.VectorDouble.getValue(), index);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void clearVectorDouble() {\r\n"
-        "        VPGDllFunctions.Instance.clear(Handle, VPGTypeBProperty.VectorDouble.getValue());\r\n"
+        "        VPGDllFunctions.Instance.clear(Handle, "
+        "VPGTypeBProperty.VectorDouble.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public long getVectorStringCount() {\r\n"
-        "        return VPGDllFunctions.Instance.getCount(Handle, VPGTypeBProperty.VectorString.getValue());\r\n"
+        "        return VPGDllFunctions.Instance.getCount(Handle, "
+        "VPGTypeBProperty.VectorString.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public String getVectorStringAtIndex(long index) {\r\n"
         "        PointerByReference result = new PointerByReference();\r\n"
-        "        VPGDllFunctions.Instance.readStringAtIndex(Handle, VPGTypeBProperty.VectorString.getValue(), result, index);\r\n"
+        "        VPGDllFunctions.Instance.readStringAtIndex(Handle, "
+        "VPGTypeBProperty.VectorString.getValue(), result, index);\r\n"
         "        return result.getValue().getWideString(0);\r\n"
         "    }\r\n"
         "\r\n"
@@ -428,7 +471,8 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "        valuePtr.setWideString(0, value);\r\n"
         "        PointerByReference valueReference = new PointerByReference();\r\n"
         "        valueReference.setValue(valuePtr);\r\n"
-        "        VPGDllFunctions.Instance.writeStringAtIndex(Handle, VPGTypeBProperty.VectorString.getValue(), valueReference, index);\r\n"
+        "        VPGDllFunctions.Instance.writeStringAtIndex(Handle, "
+        "VPGTypeBProperty.VectorString.getValue(), valueReference, index);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void insertVectorString(String value) {\r\n"
@@ -440,36 +484,43 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "        valuePtr.setWideString(0, value);\r\n"
         "        PointerByReference valueReference = new PointerByReference();\r\n"
         "        valueReference.setValue(valuePtr);\r\n"
-        "        VPGDllFunctions.Instance.insertStringAtIndex(Handle, VPGTypeBProperty.VectorString.getValue(), valueReference, index);\r\n"
+        "        VPGDllFunctions.Instance.insertStringAtIndex(Handle, "
+        "VPGTypeBProperty.VectorString.getValue(), valueReference, index);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void removeVectorStringAtIndex(long index) {\r\n"
-        "        VPGDllFunctions.Instance.removeAtIndex(Handle, VPGTypeBProperty.VectorString.getValue(), index);\r\n"
+        "        VPGDllFunctions.Instance.removeAtIndex(Handle, "
+        "VPGTypeBProperty.VectorString.getValue(), index);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void clearVectorString() {\r\n"
-        "        VPGDllFunctions.Instance.clear(Handle, VPGTypeBProperty.VectorString.getValue());\r\n"
+        "        VPGDllFunctions.Instance.clear(Handle, "
+        "VPGTypeBProperty.VectorString.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public long getMapCount() {\r\n"
-        "        return VPGDllFunctions.Instance.getCount(Handle, VPGTypeBProperty.Map.getValue());\r\n"
+        "        return VPGDllFunctions.Instance.getCount(Handle, "
+        "VPGTypeBProperty.Map.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public double getMapAtKey(int key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(int.class));\r\n"
         "        keyPtr.setInt(0, key);\r\n"
-        "        return VPGDllFunctions.Instance.readDoubleAtKey(Handle, VPGTypeBProperty.Map.getValue(), keyPtr);\r\n"
+        "        return VPGDllFunctions.Instance.readDoubleAtKey(Handle, "
+        "VPGTypeBProperty.Map.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void setMapAtKey(int key, double value) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(int.class));\r\n"
         "        keyPtr.setInt(0, key);\r\n"
-        "        VPGDllFunctions.Instance.writeIntAtKey(Handle, VPGTypeBProperty.Map.getValue(), value, keyPtr);\r\n"
+        "        VPGDllFunctions.Instance.writeIntAtKey(Handle, VPGTypeBProperty.Map.getValue(), "
+        "value, keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public Set<Integer> getMapKeys() {\r\n"
         "        Set<Integer> result = new HashSet<>();\r\n"
-        "        Pointer ptrs = VPGDllFunctions.Instance.getMapKeys(Handle, VPGTypeBProperty.Map.getValue());\r\n"
+        "        Pointer ptrs = VPGDllFunctions.Instance.getMapKeys(Handle, "
+        "VPGTypeBProperty.Map.getValue());\r\n"
         "        long total = getMapCount();\r\n"
         "        for (var ptr : ptrs.getPointerArray(0)) {\r\n"
         "            if (ptr == null) {\r\n"
@@ -486,13 +537,15 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    public boolean isMapContainKey(int key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(int.class));\r\n"
         "        keyPtr.setInt(0, key);\r\n"
-        "        return VPGDllFunctions.Instance.isContainKey(Handle, VPGTypeBProperty.Map.getValue(), keyPtr);\r\n"
+        "        return VPGDllFunctions.Instance.isContainKey(Handle, "
+        "VPGTypeBProperty.Map.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void removeMapAtKey(int key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(int.class));\r\n"
         "        keyPtr.setInt(0, key);\r\n"
-        "        VPGDllFunctions.Instance.removeAtKey(Handle, VPGTypeBProperty.Map.getValue(), keyPtr);\r\n"
+        "        VPGDllFunctions.Instance.removeAtKey(Handle, VPGTypeBProperty.Map.getValue(), "
+        "keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void clearMap() {\r\n"
@@ -500,24 +553,28 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    }\r\n"
         "\r\n"
         "    public long getOrderedMapCount() {\r\n"
-        "        return VPGDllFunctions.Instance.getCount(Handle, VPGTypeBProperty.OrderedMap.getValue());\r\n"
+        "        return VPGDllFunctions.Instance.getCount(Handle, "
+        "VPGTypeBProperty.OrderedMap.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public double getOrderedMapAtKey(int key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(int.class));\r\n"
         "        keyPtr.setInt(0, key);\r\n"
-        "        return VPGDllFunctions.Instance.readDoubleAtKey(Handle, VPGTypeBProperty.OrderedMap.getValue(), keyPtr);\r\n"
+        "        return VPGDllFunctions.Instance.readDoubleAtKey(Handle, "
+        "VPGTypeBProperty.OrderedMap.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void setOrderedMapAtKey(int key, double value) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(int.class));\r\n"
         "        keyPtr.setInt(0, key);\r\n"
-        "        VPGDllFunctions.Instance.writeIntAtKey(Handle, VPGTypeBProperty.OrderedMap.getValue(), value, keyPtr);\r\n"
+        "        VPGDllFunctions.Instance.writeIntAtKey(Handle, "
+        "VPGTypeBProperty.OrderedMap.getValue(), value, keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public Set<Integer> getOrderedMapKeys() {\r\n"
         "        Set<Integer> result = new HashSet<>();\r\n"
-        "        Pointer ptrs = VPGDllFunctions.Instance.getMapKeys(Handle, VPGTypeBProperty.OrderedMap.getValue());\r\n"
+        "        Pointer ptrs = VPGDllFunctions.Instance.getMapKeys(Handle, "
+        "VPGTypeBProperty.OrderedMap.getValue());\r\n"
         "        long total = getOrderedMapCount();\r\n"
         "        for (var ptr : ptrs.getPointerArray(0)) {\r\n"
         "            if (ptr == null) {\r\n"
@@ -534,29 +591,35 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    public boolean isOrderedMapContainKey(int key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(int.class));\r\n"
         "        keyPtr.setInt(0, key);\r\n"
-        "        return VPGDllFunctions.Instance.isContainKey(Handle, VPGTypeBProperty.OrderedMap.getValue(), keyPtr);\r\n"
+        "        return VPGDllFunctions.Instance.isContainKey(Handle, "
+        "VPGTypeBProperty.OrderedMap.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void removeOrderedMapAtKey(int key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(int.class));\r\n"
         "        keyPtr.setInt(0, key);\r\n"
-        "        VPGDllFunctions.Instance.removeAtKey(Handle, VPGTypeBProperty.OrderedMap.getValue(), keyPtr);\r\n"
+        "        VPGDllFunctions.Instance.removeAtKey(Handle, "
+        "VPGTypeBProperty.OrderedMap.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void clearOrderedMap() {\r\n"
-        "        VPGDllFunctions.Instance.clear(Handle, VPGTypeBProperty.OrderedMap.getValue());\r\n"
+        "        VPGDllFunctions.Instance.clear(Handle, "
+        "VPGTypeBProperty.OrderedMap.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public long getVectorObjectCount() {\r\n"
-        "        return VPGDllFunctions.Instance.getCount(Handle, VPGTypeBProperty.VectorObject.getValue());\r\n"
+        "        return VPGDllFunctions.Instance.getCount(Handle, "
+        "VPGTypeBProperty.VectorObject.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public VPGTypeB getVectorObjectAtIndex(long index) {\r\n"
-        "        return new VPGTypeB(VPGDllFunctions.Instance.readObjectAtIndex(Handle, VPGTypeBProperty.VectorObject.getValue(), index));\r\n"
+        "        return new VPGTypeB(VPGDllFunctions.Instance.readObjectAtIndex(Handle, "
+        "VPGTypeBProperty.VectorObject.getValue(), index));\r\n"
         "    }\r\n"
         "\r\n"
         "    public void setVectorObjectAtIndex(long index, VPGTypeB value) {\r\n"
-        "        VPGDllFunctions.Instance.writeObjectAtIndex(Handle, VPGTypeBProperty.VectorObject.getValue(), value.Handle, index);\r\n"
+        "        VPGDllFunctions.Instance.writeObjectAtIndex(Handle, "
+        "VPGTypeBProperty.VectorObject.getValue(), value.Handle, index);\r\n"
         "    }\r\n"
         "\r\n"
         "    public VPGTypeB addVectorObject() {\r\n"
@@ -564,7 +627,8 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    }\r\n"
         "\r\n"
         "    public VPGTypeB addVectorObjectAtIndex(long index) {\r\n"
-        "        return new VPGTypeB(VPGDllFunctions.Instance.addObjectAtIndex(Handle, VPGTypeBProperty.VectorObject.getValue(), VPGObjectType.TypeB.getValue(), index));\r\n"
+        "        return new VPGTypeB(VPGDllFunctions.Instance.addObjectAtIndex(Handle, "
+        "VPGTypeBProperty.VectorObject.getValue(), VPGObjectType.TypeB.getValue(), index));\r\n"
         "    }\r\n"
         "\r\n"
         "    public void insertVectorObject(VPGTypeB value) {\r\n"
@@ -572,40 +636,48 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    }\r\n"
         "\r\n"
         "    public void insertVectorObjectAtIndex(long index, VPGTypeB value) {\r\n"
-        "        VPGDllFunctions.Instance.insertObjectAtIndex(Handle, VPGTypeBProperty.VectorObject.getValue(), value.Handle, index);\r\n"
+        "        VPGDllFunctions.Instance.insertObjectAtIndex(Handle, "
+        "VPGTypeBProperty.VectorObject.getValue(), value.Handle, index);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void removeVectorObject(VPGTypeB value) {\r\n"
-        "        VPGDllFunctions.Instance.removeObject(Handle, VPGTypeBProperty.VectorObject.getValue(), value.Handle);\r\n"
+        "        VPGDllFunctions.Instance.removeObject(Handle, "
+        "VPGTypeBProperty.VectorObject.getValue(), value.Handle);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void removeVectorObjectAtIndex(long index) {\r\n"
-        "        VPGDllFunctions.Instance.removeAtIndex(Handle, VPGTypeBProperty.VectorObject.getValue(), index);\r\n"
+        "        VPGDllFunctions.Instance.removeAtIndex(Handle, "
+        "VPGTypeBProperty.VectorObject.getValue(), index);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void clearVectorObject() {\r\n"
-        "        VPGDllFunctions.Instance.clear(Handle, VPGTypeBProperty.VectorObject.getValue());\r\n"
+        "        VPGDllFunctions.Instance.clear(Handle, "
+        "VPGTypeBProperty.VectorObject.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public long getMapObjectCount() {\r\n"
-        "        return VPGDllFunctions.Instance.getCount(Handle, VPGTypeBProperty.MapObject.getValue());\r\n"
+        "        return VPGDllFunctions.Instance.getCount(Handle, "
+        "VPGTypeBProperty.MapObject.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public VPGTypeB getMapObjectAtKey(String key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.WCHAR_SIZE * (key.length() + 1));\r\n"
         "        keyPtr.setWideString(0, key);\r\n"
-        "        return new VPGTypeB(VPGDllFunctions.Instance.readObjectAtKey(Handle, VPGTypeBProperty.MapObject.getValue(), keyPtr));\r\n"
+        "        return new VPGTypeB(VPGDllFunctions.Instance.readObjectAtKey(Handle, "
+        "VPGTypeBProperty.MapObject.getValue(), keyPtr));\r\n"
         "    }\r\n"
         "\r\n"
         "    public void setMapObjectAtKey(String key, VPGTypeB value) {\r\n"
         "        Pointer keyPtr = new Memory(Native.WCHAR_SIZE * (key.length() + 1));\r\n"
         "        keyPtr.setWideString(0, key);\r\n"
-        "        VPGDllFunctions.Instance.writeObjectAtKey(Handle, VPGTypeBProperty.MapObject.getValue(), value.Handle, keyPtr);\r\n"
+        "        VPGDllFunctions.Instance.writeObjectAtKey(Handle, "
+        "VPGTypeBProperty.MapObject.getValue(), value.Handle, keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public Set<String> getMapObjectKeys() {\r\n"
         "        Set<String> result = new HashSet<>();\r\n"
-        "        Pointer ptrs = VPGDllFunctions.Instance.getMapKeys(Handle, VPGTypeBProperty.MapObject.getValue());\r\n"
+        "        Pointer ptrs = VPGDllFunctions.Instance.getMapKeys(Handle, "
+        "VPGTypeBProperty.MapObject.getValue());\r\n"
         "        long total = getMapObjectCount();\r\n"
         "        for (var ptr : ptrs.getPointerArray(0)) {\r\n"
         "            if (ptr == null) {\r\n"
@@ -622,13 +694,15 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    public boolean isMapObjectContainKey(String key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.WCHAR_SIZE * (key.length() + 1));\r\n"
         "        keyPtr.setWideString(0, key);\r\n"
-        "        return VPGDllFunctions.Instance.isContainKey(Handle, VPGTypeBProperty.MapObject.getValue(), keyPtr);\r\n"
+        "        return VPGDllFunctions.Instance.isContainKey(Handle, "
+        "VPGTypeBProperty.MapObject.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void removeMapObjectAtKey(String key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.WCHAR_SIZE * (key.length() + 1));\r\n"
         "        keyPtr.setWideString(0, key);\r\n"
-        "        VPGDllFunctions.Instance.removeAtKey(Handle, VPGTypeBProperty.MapObject.getValue(), keyPtr);\r\n"
+        "        VPGDllFunctions.Instance.removeAtKey(Handle, "
+        "VPGTypeBProperty.MapObject.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void clearMapObject() {\r\n"
@@ -636,24 +710,28 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    }\r\n"
         "\r\n"
         "    public long getOrderedMapObjectCount() {\r\n"
-        "        return VPGDllFunctions.Instance.getCount(Handle, VPGTypeBProperty.OrderedMapObject.getValue());\r\n"
+        "        return VPGDllFunctions.Instance.getCount(Handle, "
+        "VPGTypeBProperty.OrderedMapObject.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    public VPGTypeB getOrderedMapObjectAtKey(double key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(double.class));\r\n"
         "        keyPtr.setDouble(0, key);\r\n"
-        "        return new VPGTypeB(VPGDllFunctions.Instance.readObjectAtKey(Handle, VPGTypeBProperty.OrderedMapObject.getValue(), keyPtr));\r\n"
+        "        return new VPGTypeB(VPGDllFunctions.Instance.readObjectAtKey(Handle, "
+        "VPGTypeBProperty.OrderedMapObject.getValue(), keyPtr));\r\n"
         "    }\r\n"
         "\r\n"
         "    public void setOrderedMapObjectAtKey(double key, VPGTypeB value) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(double.class));\r\n"
         "        keyPtr.setDouble(0, key);\r\n"
-        "        VPGDllFunctions.Instance.writeObjectAtKey(Handle, VPGTypeBProperty.OrderedMapObject.getValue(), value.Handle, keyPtr);\r\n"
+        "        VPGDllFunctions.Instance.writeObjectAtKey(Handle, "
+        "VPGTypeBProperty.OrderedMapObject.getValue(), value.Handle, keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public Set<Double> getOrderedMapObjectKeys() {\r\n"
         "        Set<Double> result = new HashSet<>();\r\n"
-        "        Pointer ptrs = VPGDllFunctions.Instance.getMapKeys(Handle, VPGTypeBProperty.OrderedMapObject.getValue());\r\n"
+        "        Pointer ptrs = VPGDllFunctions.Instance.getMapKeys(Handle, "
+        "VPGTypeBProperty.OrderedMapObject.getValue());\r\n"
         "        long total = getOrderedMapObjectCount();\r\n"
         "        for (var ptr : ptrs.getPointerArray(0)) {\r\n"
         "            if (ptr == null) {\r\n"
@@ -670,25 +748,28 @@ void validateGenerateObject(const VPGJavaGenerationServiceTest *test, const std:
         "    public boolean isOrderedMapObjectContainKey(double key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(double.class));\r\n"
         "        keyPtr.setDouble(0, key);\r\n"
-        "        return VPGDllFunctions.Instance.isContainKey(Handle, VPGTypeBProperty.OrderedMapObject.getValue(), keyPtr);\r\n"
+        "        return VPGDllFunctions.Instance.isContainKey(Handle, "
+        "VPGTypeBProperty.OrderedMapObject.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void removeOrderedMapObjectAtKey(double key) {\r\n"
         "        Pointer keyPtr = new Memory(Native.getNativeSize(double.class));\r\n"
         "        keyPtr.setDouble(0, key);\r\n"
-        "        VPGDllFunctions.Instance.removeAtKey(Handle, VPGTypeBProperty.OrderedMapObject.getValue(), keyPtr);\r\n"
+        "        VPGDllFunctions.Instance.removeAtKey(Handle, "
+        "VPGTypeBProperty.OrderedMapObject.getValue(), keyPtr);\r\n"
         "    }\r\n"
         "\r\n"
         "    public void clearOrderedMapObject() {\r\n"
-        "        VPGDllFunctions.Instance.clear(Handle, VPGTypeBProperty.OrderedMapObject.getValue());\r\n"
+        "        VPGDllFunctions.Instance.clear(Handle, "
+        "VPGTypeBProperty.OrderedMapObject.getValue());\r\n"
         "    }\r\n"
         "    // </editor-fold>\r\n"
         "}\r\n");
 }
 
-TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
-{
-    validateGenerateObject(this, 
+TEST_F(VPGJavaGenerationServiceTest, GenerateObject) {
+    validateGenerateObject(
+        this,
         L"#param once\r\n"
         "enum class VPGTypeBProperty {\r\n"
         "    Bool = 0, // GETSET(bool, Bool, false)\r\n"
@@ -705,12 +786,11 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObject)
         "    OrderedMap, // ORDERED_MAP(int, double, OrderedMap)\r\n"
         "    VectorObject, // VECTOR_SPTR(VPGTypeB, VectorObject)\r\n"
         "    MapObject, // MAP_SPTR_R(std::wstring, VPGTypeB, MapObject)\r\n"
-        "    OrderedMapObject // ORDERED_MAP_SPTR_R(double, VPGTypeB, OrderedMapObject)\r\n" 
+        "    OrderedMapObject // ORDERED_MAP_SPTR_R(double, VPGTypeB, OrderedMapObject)\r\n"
         "};\r\n");
 }
 
-TEST_F(VPGJavaGenerationServiceTest, GenerateObjectWithNamespace)
-{   
+TEST_F(VPGJavaGenerationServiceTest, GenerateObjectWithNamespace) {
     validateGenerateObject(
         this,
         L"#param once\r\n"
@@ -730,13 +810,13 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateObjectWithNamespace)
         "        OrderedMap, // ORDERED_MAP(int, double, OrderedMap)\r\n"
         "        VectorObject, // VECTOR_SPTR(vcc::VPGTypeB, VectorObject)\r\n"
         "        MapObject, // MAP_SPTR_R(std::wstring, vcc::VPGTypeB, MapObject)\r\n"
-        "        OrderedMapObject // ORDERED_MAP_SPTR_R(double, vcc::VPGTypeB, OrderedMapObject)\r\n" 
+        "        OrderedMapObject // ORDERED_MAP_SPTR_R(double, vcc::VPGTypeB, "
+        "OrderedMapObject)\r\n"
         "    };\r\n"
         "};\r\n");
 }
 
-TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
-{
+TEST_F(VPGJavaGenerationServiceTest, GenerateForm) {
     std::wstring enumClass =
         L"#param once\r\n"
         "// @@Form\r\n"
@@ -747,13 +827,19 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
 
-    std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
+    std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject,
+        typeWorkspaceClassRelativePathMapForm;
     typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));
-    std::wstring filePath = vcc::concatPaths({this->getWorkspace(), this->getJavaOption()->getObjectDirectory(), L"VPGGitLog.java"});
-    VPGJavaGenerationService::generateObject(this->getLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm, this->getOption().get(), this->getJavaOption().get());
-    
+    std::wstring filePath = vcc::concatPaths(
+        {this->getWorkspace(), this->getJavaOption()->getObjectDirectory(), L"VPGGitLog.java"});
+    VPGJavaGenerationService::generateObject(
+        this->getLogConfig().get(), filePath, L"", enumClassList.at(0).get(),
+        typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm,
+        this->getOption().get(), this->getJavaOption().get());
+
     EXPECT_TRUE(vcc::isFilePresent(filePath));
-    EXPECT_EQ(vcc::readFile(filePath),
+    EXPECT_EQ(
+        vcc::readFile(filePath),
         L"package com.vcc.form;\r\n"
         "\r\n"
         "import com.sun.jna.Pointer;\r\n"
@@ -770,16 +856,19 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
         "    }\r\n"
         "\r\n"
         "    public VPGGitForm() {\r\n"
-        "        this.Handle = VPGDllFunctions.Instance.applicationCreateForm(VPGObjectType.GitForm.getValue());\r\n"
+        "        this.Handle = "
+        "VPGDllFunctions.Instance.applicationCreateForm(VPGObjectType.GitForm.getValue());\r\n"
         "    }\r\n"
         "\r\n"
         "    // <editor-fold defaultstate=\"collapsed\" desc=\"Generated Properties\">\r\n"
         "    public VPGGitLog getLog() {\r\n"
-        "        return new VPGGitLog(VPGDllFunctions.Instance.readObject(Handle, VPGGitFormProperty.Log.getValue()));\r\n"
+        "        return new VPGGitLog(VPGDllFunctions.Instance.readObject(Handle, "
+        "VPGGitFormProperty.Log.getValue()));\r\n"
         "    }\r\n"
         "\r\n"
         "    public void setLog(VPGGitLog value) {\r\n"
-        "        VPGDllFunctions.Instance.writeObject(Handle, VPGGitFormProperty.Log.getValue(), value.Handle);\r\n"
+        "        VPGDllFunctions.Instance.writeObject(Handle, VPGGitFormProperty.Log.getValue(), "
+        "value.Handle);\r\n"
         "    }\r\n"
         "    // </editor-fold>\r\n"
         "\r\n"
@@ -835,8 +924,7 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateForm)
         "}\r\n");
 }
 
-TEST_F(VPGJavaGenerationServiceTest, GenerateResult)
-{
+TEST_F(VPGJavaGenerationServiceTest, GenerateResult) {
     std::wstring enumClass =
         L"#param once\r\n"
         "// @@Result\r\n"
@@ -847,33 +935,40 @@ TEST_F(VPGJavaGenerationServiceTest, GenerateResult)
     std::vector<std::shared_ptr<VPGEnumClass>> enumClassList;
     VPGGlobal::getEnumClassReader()->parse(enumClass, enumClassList);
 
-    std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm;
+    std::map<std::wstring, std::wstring> typeWorkspaceClassRelativePathMapObject,
+        typeWorkspaceClassRelativePathMapForm;
     typeWorkspaceClassRelativePathMapObject.insert(std::make_pair(L"VPGGit", L"com.vcc.object"));
-    std::wstring filePath = vcc::concatPaths({this->getWorkspace(), this->getJavaOption()->getObjectDirectory(), L"VPGGitLog.java"});
-    VPGJavaGenerationService::generateObject(this->getLogConfig().get(), filePath, L"", enumClassList.at(0).get(), typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm, this->getOption().get(), this->getJavaOption().get());
-    
+    std::wstring filePath = vcc::concatPaths(
+        {this->getWorkspace(), this->getJavaOption()->getObjectDirectory(), L"VPGGitLog.java"});
+    VPGJavaGenerationService::generateObject(
+        this->getLogConfig().get(), filePath, L"", enumClassList.at(0).get(),
+        typeWorkspaceClassRelativePathMapObject, typeWorkspaceClassRelativePathMapForm,
+        this->getOption().get(), this->getJavaOption().get());
+
     EXPECT_TRUE(vcc::isFilePresent(filePath));
     EXPECT_EQ(vcc::readFile(filePath),
-        L"package com.vcc.module;\r\n"
-        "\r\n"
-        "import com.sun.jna.Pointer;\r\n"
-        "import com.vcc.test.VPGDllFunctions;\r\n"
-        "import com.vcc.type.VPGGitResultProperty;\r\n"
-        "\r\n"
-        "public class VPGGitResult extends VPGOperationResult {\r\n"
-        "\r\n"
-        "    public VPGGitResult(Pointer handle) {\r\n"
-        "        super(handle);\r\n"
-        "    }\r\n"
-        "\r\n"
-        "    // <editor-fold defaultstate=\"collapsed\" desc=\"Generated Properties\">\r\n"
-        "    public VPGGitLog getLog() {\r\n"
-        "        return new VPGGitLog(VPGDllFunctions.Instance.readObject(Handle, VPGGitResultProperty.Log.getValue()));\r\n"
-        "    }\r\n"
-        "\r\n"
-        "    public void setLog(VPGGitLog value) {\r\n"
-        "        VPGDllFunctions.Instance.writeObject(Handle, VPGGitResultProperty.Log.getValue(), value.Handle);\r\n"
-        "    }\r\n"
-        "    // </editor-fold>\r\n"
-        "}\r\n");
+              L"package com.vcc.module;\r\n"
+              "\r\n"
+              "import com.sun.jna.Pointer;\r\n"
+              "import com.vcc.test.VPGDllFunctions;\r\n"
+              "import com.vcc.type.VPGGitResultProperty;\r\n"
+              "\r\n"
+              "public class VPGGitResult extends VPGOperationResult {\r\n"
+              "\r\n"
+              "    public VPGGitResult(Pointer handle) {\r\n"
+              "        super(handle);\r\n"
+              "    }\r\n"
+              "\r\n"
+              "    // <editor-fold defaultstate=\"collapsed\" desc=\"Generated Properties\">\r\n"
+              "    public VPGGitLog getLog() {\r\n"
+              "        return new VPGGitLog(VPGDllFunctions.Instance.readObject(Handle, "
+              "VPGGitResultProperty.Log.getValue()));\r\n"
+              "    }\r\n"
+              "\r\n"
+              "    public void setLog(VPGGitLog value) {\r\n"
+              "        VPGDllFunctions.Instance.writeObject(Handle, "
+              "VPGGitResultProperty.Log.getValue(), value.Handle);\r\n"
+              "    }\r\n"
+              "    // </editor-fold>\r\n"
+              "}\r\n");
 }

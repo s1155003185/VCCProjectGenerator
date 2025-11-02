@@ -575,35 +575,17 @@ endif
 #----------------------------------#
 #----------- CPP Check ------------#
 #----------------------------------#
-.PHONY: cppcheck format run_cppcheck
+.PHONY: cppcheck format
 
 format:
-	@if command -v clang-format >/dev/null 2>&1; then \
-		echo "Running clang-format on source and include files..."; \
-		{ \
-			[ -d $(SRC) ] && find $(SRC) -type f \( -name '*.cpp' -o -name '*.cc' -o -name '*.c' -o -name '*.hpp' -o -name '*.h' \) -print0 || true; \
-			[ -d $(INC) ] && find $(INC) -type f \( -name '*.cpp' -o -name '*.cc' -o -name '*.c' -o -name '*.hpp' -o -name '*.h' \) -print0 || true; \
-		} | xargs -0 -r clang-format -i; \
-	else \
-		echo "clang-format not found; skipping format. Install with: brew install clang-format"; \
-	fi
+	@echo Running clang-format...
+	find . -name "*.cpp" -o -name "*.hpp" -o -name "*.h" | xargs clang-format -i
+	@echo Format Complete
 
-cppcheck: format
-	@command -v cppcheck >/dev/null 2>&1 || { echo "cppcheck not found. Install with: brew install cppcheck"; exit 1; }
-	@echo "Running cppcheck..."
-	@cppcheck --enable=all --inconclusive --std=$(CXXVERSION) $(INCDIRS) $(CPPCHECK_DEFS) $(CPPCHECK_SUPPRESS) . 2> cppcheck_report.txt || true
-	@echo "cppcheck finished, report at cppcheck_report.txt"
-
-run_cppcheck:
-	@echo "Checking IS_CPPCHECK_ENABLED=$(IS_CPPCHECK_ENABLED)"
-	@if [ "$(IS_CPPCHECK_ENABLED)" = "Y" ]; then \
-		command -v cppcheck >/dev/null 2>&1 || { echo "cppcheck not found. Install with: brew install cppcheck"; exit 1; } ; \
-		echo "Running cppcheck (strict)..." ; \
-		cppcheck --enable=all --inconclusive --std=$(CXXVERSION) $(INCDIRS) $(CPPCHECK_DEFS) $(CPPCHECK_SUPPRESS) . 2> cppcheck_report.txt || true ; \
-		if [ -s cppcheck_report.txt ]; then echo "cppcheck found issues (see cppcheck_report.txt)"; cat cppcheck_report.txt; exit 1; else echo "cppcheck passed"; fi ; \
-	else \
-		echo "Skipping cppcheck (IS_CPPCHECK_ENABLED=$(IS_CPPCHECK_ENABLED))" ; \
-	fi
+cppcheck:
+	@echo Running cppcheck...
+	cppcheck --enable=all --inconclusive --std=$(CXXVERSION) $(INCDIRS) $(CPPCHECK_DEFS) $(CPPCHECK_SUPPRESS) . 2> cppcheck_report.txt
+	@echo Cppcheck Complete
 
 #----------------------------------#
 #------------- Export -------------#
