@@ -73,8 +73,7 @@ void VPGActionFileGenerationService::generateHpp(
             L"\r\n"
             "class " +
             actionClassName +
-            L" : public vcc::BaseAction\r\n"
-            "{\r\n" +
+            L" : public vcc::BaseAction {\r\n" +
             propertyStr + (!propertyStr.empty() ? L"\r\n" : L"") + INDENT +
             getVccTagHeaderCustomClassProperties(VPGCodeType::Cpp, actionClassName) + L"\r\n" +
             INDENT + getVccTagTailerCustomClassProperties(VPGCodeType::Cpp, actionClassName) +
@@ -231,14 +230,12 @@ void VPGActionFileGenerationService::generateCpp(
 
         std::wstring action = L"\r\n" + actionClassName + L"::" + actionClassName + L"(" +
                               assignmentStrSimple +
-                              L") : vcc::BaseAction()\r\n"
-                              "{\r\n";
+                              L") : vcc::BaseAction() {\r\n";
         for (auto const& str : propertyAssignmentsSimple) action += INDENT + str + L";\r\n";
         action += L"}\r\n";
         if (assignmentStrSimple != assignmentStr) {
             action += L"\r\n" + actionClassName + L"::" + actionClassName + L"(" + assignmentStr +
-                      L") : vcc::BaseAction()\r\n"
-                      "{\r\n";
+                      L") : vcc::BaseAction() {\r\n";
             for (auto const& str : propertyAssignments) action += INDENT + str + L";\r\n";
             action += L"}\r\n";
         }
@@ -247,8 +244,7 @@ void VPGActionFileGenerationService::generateCpp(
             L"\r\n"
             "std::wstring " +
             actionClassName +
-            L"::getRedoMessageStart() const\r\n"
-            "{\r\n" +
+            L"::getRedoMessageStart() const {\r\n" +
             INDENT + L"TRY\r\n" + INDENT + INDENT +
             getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName,
                                                       L"GetRedoMessageStart") +
@@ -262,8 +258,7 @@ void VPGActionFileGenerationService::generateCpp(
             "\r\n"
             "std::wstring " +
             actionClassName +
-            L"::getRedoMessageComplete() const\r\n"
-            "{\r\n" +
+            L"::getRedoMessageComplete() const {\r\n" +
             INDENT + L"TRY\r\n" + INDENT + INDENT +
             getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName,
                                                       L"GetRedoMessageComplete") +
@@ -280,8 +275,7 @@ void VPGActionFileGenerationService::generateCpp(
                 L"\r\n"
                 "std::wstring " +
                 actionClassName +
-                L"::GetUndoMessageStart() const\r\n"
-                "{\r\n" +
+                L"::GetUndoMessageStart() const {\r\n" +
                 INDENT + L"TRY\r\n" + INDENT + INDENT +
                 getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName,
                                                           L"GetUndoMessageStart") +
@@ -295,8 +289,7 @@ void VPGActionFileGenerationService::generateCpp(
                 "\r\n"
                 "std::wstring " +
                 actionClassName +
-                L"::GetUndoMessageComplete() const\r\n"
-                "{\r\n" +
+                L"::GetUndoMessageComplete() const {\r\n" +
                 INDENT + L"TRY\r\n" + INDENT + INDENT +
                 getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName,
                                                           L"GetUndoMessageComplete") +
@@ -315,8 +308,7 @@ void VPGActionFileGenerationService::generateCpp(
             L"\r\n"
             "std::shared_ptr<vcc::IResult> " +
             actionClassName +
-            L"::onRedo()\r\n"
-            "{\r\n" +
+            L"::onRedo() {\r\n" +
             INDENT + L"TRY\r\n" + INDENT + INDENT +
             getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName,
                                                       L"OnRedo") +
@@ -336,8 +328,7 @@ void VPGActionFileGenerationService::generateCpp(
                 L"\r\n"
                 "std::shared_ptr<vcc::IResult> " +
                 actionClassName +
-                L"::onUndo()\r\n"
-                "{\r\n" +
+                L"::onUndo() {\r\n" +
                 INDENT + L"TRY\r\n" + INDENT + INDENT +
                 getVccTagHeaderCustomClassCustomFunctions(VPGCodeType::Cpp, L"", actionClassName,
                                                           L"OnUndo") +

@@ -31,19 +31,19 @@ std::wstring VPGObjectFileGenerationService::getCloneFunction(
     if (enumClass->getType() == VPGEnumClassType::Form) {
         if (isCpp) {
             result +=
-                indent + L"std::shared_ptr<vcc::IObject> " + className + L"::clone() const\r\n";
+                indent + L"std::shared_ptr<vcc::IObject> " + className + L"::clone() const";
             isContentNeeded = true;
         } else {
             result += indent + L"virtual std::shared_ptr<vcc::IObject> clone() const override;\r\n";
             isContentNeeded = false;
         }
     } else {
-        result += indent + L"virtual std::shared_ptr<vcc::IObject> clone() const override\r\n";
+        result += indent + L"virtual std::shared_ptr<vcc::IObject> clone() const override";
         isContentNeeded = true;
     }
 
     if (isContentNeeded) {
-        result += indent + L"{\r\n";
+        result += L" {\r\n";
         std::map<std::wstring, std::wstring> cloneObjs;
         std::wstring cloneContent = L"";
         auto propertyList = enumClass->getPrivateProperties();
@@ -158,8 +158,7 @@ std::vector<std::wstring> VPGObjectFileGenerationService::getObjectToJsonEnumSwi
     const std::map<std::wstring, std::shared_ptr<VPGEnumClass>>& enumClassMapping) {
     std::vector<std::wstring> result;
     TRY result.push_back(L"std::wstring " + returnVariable + L" = L\"\";");
-    result.push_back(L"switch (" + switchVariable + L")");
-    result.push_back(L"{");
+    result.push_back(L"switch (" + switchVariable + L") {");
 
     std::shared_ptr<VPGEnumClass> enumEnumClass = nullptr;
     if (enumClassMapping.find(type) != enumClassMapping.end()) {
@@ -1069,8 +1068,7 @@ std::wstring VPGObjectFileGenerationService::getCppConstructor(
     std::wstring result = L"";
     TRY if (enumClass->getType() == VPGEnumClassType::Form) {
         result += L"\r\n" + className + L"::" + className + L"() : " + baseClassNameWithoutQuote +
-                  L"()\r\n"
-                  "{\r\n" +
+                  L"() {\r\n" +
                   INDENT + L"TRY\r\n" + INDENT + INDENT + L"_ObjectType = ObjectType::" +
                   className.substr(!classPrefix.empty() ? classPrefix.length() : 0) + L";\r\n" +
                   getConstructorContent(enumClass, enumClassMapping, false) + INDENT + INDENT +
@@ -1358,8 +1356,7 @@ std::wstring VPGObjectFileGenerationService::getCppInitialize(const VPGEnumClass
             L"\r\n"
             "void " +
             className +
-            L"::initializeComponents()\r\n"
-            "{\r\n" +
+            L"::initializeComponents() {\r\n" +
             INDENT + L"TRY\r\n" + INDENT + INDENT + baseClassName +
             L"::initializeComponents();\r\n";
         if (enumClass->getIsLogConfigIndependent())
@@ -1421,9 +1418,8 @@ std::wstring VPGObjectFileGenerationService::getCppAction(const VPGEnumClass* en
             "std::shared_ptr<vcc::IResult> " +
             className + L"::doAction(const int64_t &formProperty, std::shared_ptr<vcc::IObject> " +
             (isContainArgument ? L"argument" : L"/*argument*/") +
-            L")\r\n"
-            "{\r\n" +
-            INDENT + L"TRY\r\n" + INDENT + INDENT + L"switch(static_cast<" + enumClass->getName() +
+            L") {\r\n" +
+            INDENT + L"TRY\r\n" + INDENT + INDENT + L"switch (static_cast<" + enumClass->getName() +
             L">(formProperty)) {\r\n";
         for (auto const& property : enumClass->getProperties()) {
             if (property->getPropertyType() != VPGEnumClassAttributeType::Action) continue;
@@ -1460,8 +1456,7 @@ std::wstring VPGObjectFileGenerationService::getCppAction(const VPGEnumClass* en
                 L"\r\n"
                 "std::shared_ptr<vcc::IResult> " +
                 className + L"::do" + property->getPropertyName() + L"(" + argumentList +
-                L")\r\n"
-                "{\r\n" +
+                L") {\r\n" +
                 INDENT + L"TRY\r\n" + INDENT + INDENT + L"auto action = std::make_shared<" +
                 getActionClassName(enumClass, property.get()) + L">(" + assignmentStr + L");\r\n" +
                 INDENT + INDENT +

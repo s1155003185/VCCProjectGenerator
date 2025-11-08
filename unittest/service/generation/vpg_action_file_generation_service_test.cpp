@@ -120,8 +120,7 @@ std::wstring getCppClass(const std::wstring& np, const std::wstring& actionName,
             L"(std::shared_ptr<vcc::LogConfig> logConfig, std::shared_ptr<vcc::IObject> "
             L"parentForm" +
             (!assignment.empty() ? L", " : L"") + assignment +
-            L") : vcc::BaseAction()\r\n"
-            "{\r\n" +
+            L") : vcc::BaseAction() {\r\n" +
             propertyStr + L"}\r\n";
     action +=
         L"\r\n"
