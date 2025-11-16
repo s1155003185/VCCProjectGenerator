@@ -10,7 +10,8 @@
         "Url": "https://github.com/s1155003185/VCCModule.git",
         "Workspace": "${userHome}/Documents/vcc/VCCModule",
         "IsExcludeUnittest": false,
-        "IsExcludeVCCUnitTest": false
+        "IsExcludeVCCUnitTest": false,
+        "IsCppCheckerEnabled": false
     },
     "Behavior": {
         "ActionHistoryType": "NoHistory",
