@@ -217,3 +217,24 @@ TEST_F(VPGCodeReaderTest, ReadMe) {
     }
     EXPECT_EQ(fullText, str);
 }
+
+TEST_F(VPGCodeReaderTest, MultiLineCommand) {
+    std::wstring str = L"";
+    str += L"    // <vcc:multi\r\n// action=\"REPLACE\"\r\n//>\r\n";
+    str += L"    // LINE 1\r\n";
+    str += L"    // </vcc:multi>\r\n";
+    str += L"    END";
+
+    auto element = std::make_shared<vcc::Xml>();
+    this->getReader()->deserialize(str, element);
+    EXPECT_EQ(element->getChildren().size(), (size_t)3);
+    EXPECT_EQ(element->getChildren().at(0)->getFullText(), L"    ");
+    EXPECT_EQ(element->getChildren().at(1)->getName(), L"vcc:multi");
+    EXPECT_EQ(element->getChildren().at(1)->getAttributes().size(), (size_t)1);
+    EXPECT_EQ(element->getChildren().at(1)->getAttributes().at(0)->getName(), L"action");
+    EXPECT_EQ(element->getChildren().at(1)->getAttributes().at(0)->getValue(), L"REPLACE");
+    EXPECT_EQ(element->getChildren().at(1)->getFullText(),
+              L"// <vcc:multi\r\n// action=\"REPLACE\"\r\n//>\r\n    // LINE 1\r\n    // </vcc:multi>");
+    EXPECT_EQ(element->getChildren().at(2)->getFullText(), L"\r\n    END");
+}
+
