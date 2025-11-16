@@ -236,7 +236,8 @@ std::wstring VPGBaseGenerationManager::AdjustMakefile(const std::wstring& fileCo
             result += L"PROJ_NAME_DLL :=" + dllName + L"\r\n";
             result += L"PROJ_NAME_EXE :=" + exeName + L"\r\n";
             result += L"IS_EXCLUDE_UNITTEST :=" + IsExcludeUnittest + L"\r\n";
-            // TODO: IS_CPPCHECK
+            // result += L"IS_CPP_CHECKER_ENABLED :=" +
+            //           (_Option->getIsCppCheckerEnabled() ? L" Y" : L" N") + L"\r\n";
             result += L"# </vcc:name>";
         } else if (element->getName() == L"vcc:export") {
             std::wstring exportDllDirWindow = L"";

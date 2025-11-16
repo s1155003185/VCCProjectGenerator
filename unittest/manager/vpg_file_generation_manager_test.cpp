@@ -166,8 +166,7 @@ TEST_F(VPGFileGenerationManagerTest, GenerateProperty) {
                   INDENT + L"}\r\n" +
                   L"};\r\n"
                   "\r\n"
-                  "class VCCObjectPtr : public vcc::BaseObject\r\n"
-                  "{\r\n" +
+                  "class VCCObjectPtr : public vcc::BaseObject {\r\n" +
                   INDENT + L"GETSET_SPTR(vcc::Json, EnumA)\r\n" + INDENT +
                   L"GETSET_SPTR(vcc::Json, EnumB, 1, 2, 3)\r\n" + INDENT +
                   L"VECTOR_SPTR(vcc::Json, EnumC)\r\n" + INDENT +

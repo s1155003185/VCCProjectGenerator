@@ -178,7 +178,12 @@ void XmlBuilder::parseXMLTagContent(const std::wstring& xmlData, size_t& pos,
 
 void XmlBuilder::removeXMLTagTail(const std::wstring& xmlData, size_t& pos,
                                   std::shared_ptr<Xml> element) const {
-    TRY getNextCharPos(xmlData, pos, true);
+    TRY 
+    if (pos >= xmlData.length())
+        return;
+    getNextCharPos(xmlData, pos, true);
+    if (pos >= xmlData.length())
+        return;
     std::wstring endTag = L"</" + element->_Name + L">";
     element->setClosingTag(endTag);
     if (!xmlData.substr(pos).starts_with(endTag))
